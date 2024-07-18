@@ -1,10 +1,14 @@
-package com.ody.meeting.dto;
+package com.ody.meeting.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
-public record MeetingSaveRequest(
+public record MeetingSaveResponse(
+
+        @Schema(description = "모임 ID", example = "1")
+        Long id,
 
         @Schema(description = "모임 이름", example = "우테코 16조")
         String name,
@@ -24,17 +28,14 @@ public record MeetingSaveRequest(
         @Schema(description = "도착지 경도", example = "127.103113")
         String targetLongitude,
 
-        @Schema(description = "모임장 닉네임", example = "오디")
-        String nickname,
+        @Schema(description = "모임 인원 수", example = "1")
+        int mateCount,
 
-        @Schema(description = "출발지 주소", example = "서울 강남구 테헤란로 411")
-        String originAddress,
+        @Schema(description = "모임원 닉네임 목록", example = "[{\"nickname\": \"오디\"}]")
+        List<MateResponse> mates,
 
-        @Schema(description = "출발지 위도", example = "37.505713")
-        String originLatitude,
-
-        @Schema(description = "출발지 경도", example = "127.050691")
-        String originLongitude
+        @Schema(description = "초대코드", example = "초대코드")
+        String inviteCode
 ) {
 
 }
