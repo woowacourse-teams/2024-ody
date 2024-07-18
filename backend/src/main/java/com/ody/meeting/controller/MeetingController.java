@@ -40,6 +40,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String fcmToken,
             @PathVariable String inviteCode
     ) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .build();
     }
 }

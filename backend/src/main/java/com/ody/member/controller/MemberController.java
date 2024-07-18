@@ -15,6 +15,7 @@ public class MemberController implements MemberControllerSwagger {
     @Override
     @PostMapping("/members")
     public ResponseEntity<Void> save(@RequestHeader(HttpHeaders.AUTHORIZATION) String fcmToken) {
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
 }
