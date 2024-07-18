@@ -1,7 +1,7 @@
 package com.ody.meeting.controller;
 
-import com.ody.meeting.dto.MeetingRequest;
-import com.ody.meeting.dto.MeetingResponse;
+import com.ody.meeting.dto.MeetingSaveRequest;
+import com.ody.meeting.dto.MeetingSaveResponse;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
@@ -18,17 +18,17 @@ public interface MeetingControllerSwagger {
 
     @Operation(
             summary = "모임 개설",
-            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingRequest.class))),
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequest.class))),
             responses = {
                     @ApiResponse(
                             responseCode = "201",
                             description = "모임 개설 성공",
-                            content = @Content(schema = @Schema(implementation = MeetingResponse.class))
+                            content = @Content(schema = @Schema(implementation = MeetingSaveResponse.class))
                     )
             }
     )
     @ErrorCode400
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<MeetingResponse> save(String fcmToken, MeetingRequest meetingRequest);
+    ResponseEntity<MeetingSaveResponse> save(String fcmToken, MeetingSaveRequest meetingSaveRequest);
 }
