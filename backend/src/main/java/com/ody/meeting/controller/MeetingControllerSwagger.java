@@ -2,6 +2,7 @@ package com.ody.meeting.controller;
 
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
+import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
@@ -15,6 +16,20 @@ import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Meeting API")
 public interface MeetingControllerSwagger {
+
+    @Operation(
+            summary = "참여중인 모임 목록 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "모임 목록 조회 성공",
+                            content = @Content(schema = @Schema(implementation = MeetingSaveResponses.class))
+                    )
+            }
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<MeetingSaveResponses> findMine(String fcmToken);
 
     @Operation(
             summary = "모임 개설",
