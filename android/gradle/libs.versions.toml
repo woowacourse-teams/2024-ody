@@ -1,0 +1,69 @@
+[versions]
+activity = "1.9.0"
+agp = "8.5.0"
+appcompat = "1.7.0"
+constraintlayout = "2.1.4"
+coreKtx = "1.13.1"
+espressoCore = "3.6.1"
+firebaseBom = "33.1.2"
+fragmentKtx = "1.8.1"
+firebaseMessagingKtx = "24.0.0"
+googleServices = "4.4.2"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+kotlin = "1.9.0"
+ksp = "1.6.10-1.0.4"
+ktlint = "12.1.0"
+lifecycle = "2.2.0"
+lifecycleViewmodel = "2.8.3"
+material = "1.12.0"
+moshi = "1.15.1"
+retrofit = "2.11.0"
+timber = "5.0.1"
+viewPager = "1.1.0"
+webkit = "1.11.0"
+
+[libraries]
+# androidx
+androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-view-pager = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewPager" }
+androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "lifecycle" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodel" }
+
+# junit
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+# material
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# firebase
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+
+# retrofit
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
+
+# moshi
+moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
+moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
+
+# timber
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
+[plugins]
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
