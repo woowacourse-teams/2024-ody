@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Schema(name = "모임 개설 Response")
 public record MeetingResponse(
 
         @Schema(description = "모임 ID", example = "1")

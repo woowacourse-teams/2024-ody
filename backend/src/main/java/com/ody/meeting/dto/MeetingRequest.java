@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Schema(name = "모임 개설 Request")
 public record MeetingRequest(
 
         @Schema(description = "모임 이름", example = "우테코 16조")
