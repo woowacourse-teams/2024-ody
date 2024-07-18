@@ -14,9 +14,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Getter
 public class Meeting {
 
     @Id
@@ -32,17 +32,14 @@ public class Meeting {
     @NotNull
     private LocalTime time;
 
-    @NotNull
-    private String address;
-
     @Embedded
     @NotNull
-    private Coordinates coordinates;
+    private Location target;
 
     @NotNull
     private String inviteCode;
 
-    public Meeting(String name, LocalDate date, LocalTime time, String address, Coordinates coordinates, String inviteCode) {
-        this(null, name, date, time, address, coordinates, inviteCode);
+    public Meeting(String name, LocalDate date, LocalTime time, Location target, String inviteCode) {
+        this(null, name, date, time, target, inviteCode);
     }
 }

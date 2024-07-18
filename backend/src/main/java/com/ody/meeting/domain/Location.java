@@ -8,10 +8,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Coordinates {
+@Getter
+public class Location {
+
+    @NotNull
+    private String address;
 
     @NotNull
     private String latitude;
