@@ -1,8 +1,8 @@
 package com.ody.meeting.controller;
 
-import com.ody.meeting.dto.MateResponse;
-import com.ody.meeting.dto.MeetingSaveRequest;
-import com.ody.meeting.dto.MeetingSaveResponse;
+import com.ody.meeting.dto.response.MateResponse;
+import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.meeting.dto.response.MeetingSaveResponse;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -1,7 +1,7 @@
 package com.ody.meeting.controller;
 
-import com.ody.meeting.dto.MeetingSaveRequest;
-import com.ody.meeting.dto.MeetingSaveResponse;
+import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
