@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="pretendard_bold_28">
+        <item name="android:textSize">28dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="pretendard_bold_24">
+        <item name="android:textSize">24dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="pretendard_bold_20">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="pretendard_bold_16">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="pretendard_medium_20">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretendard_medium_18">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretendard_medium_16">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretendard_medium_14">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretendard_medium_12">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretendart_regular_16">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="pretendart_regular_14">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+    </style>
+
+</resources>
