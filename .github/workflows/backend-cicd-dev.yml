@@ -64,8 +64,6 @@ jobs:
 
     needs: build-docker-push
     runs-on: self-hosted
-#    permissions:
-#      contents: read
 
     steps:
       - name: Login to Docker Hub
@@ -75,7 +73,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Pull Docker image from DockerHub
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
+        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
 
       - name: Stop existing Docker container
         run: docker stop $DOCKERHUB_REPOSITORY || true
