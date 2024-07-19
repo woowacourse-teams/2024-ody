@@ -59,9 +59,7 @@ jobs:
 #          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ody-official:${{ github.sha }}
 
       - name: Docker Image Build And Push
-        run: |
-          docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/x64/v8 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }} -f Dockerfile . --push
+        run: docker build --platform linux/x64/v8 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }} -f Dockerfile . --push
 
   docker-pull-deploy:
 
