@@ -26,6 +26,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: develop
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -73,7 +75,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Pull Docker image from DockerHub
-        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
 
       - name: Stop existing Docker container
         run: docker stop $DOCKERHUB_REPOSITORY || true
