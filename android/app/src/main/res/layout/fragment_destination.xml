@@ -32,6 +32,7 @@
         android:id="@+id/et_destination"
         style="@style/edit_text_style"
         android:layout_marginTop="32dp"
+        android:focusable="false"
         android:hint="@string/destination_question_hint"
         app:layout_constraintBottom_toTopOf="@id/tv_destination_information"
         app:layout_constraintEnd_toEndOf="parent"
