@@ -67,4 +67,11 @@
         <item name="android:fontFamily">@font/pretendard_regular</item>
     </style>
 
+    <style name="toolbar_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="android:background">@color/cream</item>
+        <item name="contentInsetStart">0dp</item>
+    </style>
+
 </resources>
