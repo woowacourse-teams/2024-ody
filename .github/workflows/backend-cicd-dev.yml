@@ -76,7 +76,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Pull Docker image from DockerHub
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
+        run: docker pull --platform linux/x64/v8 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
 
       - name: Stop existing Docker container
         run: docker stop $DOCKERHUB_REPOSITORY || true
