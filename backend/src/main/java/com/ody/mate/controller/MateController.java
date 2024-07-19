@@ -1,5 +1,6 @@
 package com.ody.mate.controller;
 
+import com.ody.common.annotaion.AuthMember;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.service.MateService;
@@ -23,24 +24,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class MateController implements MateControllerSwagger {
 
     private final MeetingService meetingService;
-    private final MemberService memberService;
     private final MateService mateService;
     private final NotificationService notificationService;
 
     @Override
     @PostMapping("/mates")
     public ResponseEntity<MeetingSaveResponse> save(
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String deviceToken,
+            @AuthMember Member member,
             MateSaveRequest mateSaveRequest
     ) {
         // TODO: MateSaveRequest -> inviteCode -> meetingId 디코딩으로 추출해야함
         Meeting meeting = meetingService.findById(1L);
-        Member member = memberService.findByDeviceToken(deviceToken);
         Mate mate = mateService.save(mateSaveRequest, meeting, member);
+
+        notificationService.saveAndSendDepartureReminder(meeting, mate, member.getDeviceToken());
+
         List<Mate> mates = mateService.findAllByMeetingId(meeting.getId());
-
-        notificationService.saveAndSendDepartureReminder(meeting, mate, deviceToken);
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(MeetingSaveResponse.of(meeting, mates));
     }
