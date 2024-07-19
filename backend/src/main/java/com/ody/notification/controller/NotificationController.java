@@ -1,7 +1,7 @@
 package com.ody.notification.controller;
 
-import com.ody.notification.dto.request.NotificationSaveResponse;
 import com.ody.notification.dto.response.NotiLogFindResponse;
+import com.ody.notification.dto.response.NotificationSaveResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class NotificationController implements NotificationControllerSwagger {
 
     @Override

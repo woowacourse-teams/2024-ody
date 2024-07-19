@@ -1,6 +1,5 @@
 package com.ody.notification.dto.response;
 
-import com.ody.notification.dto.request.NotificationSaveResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 

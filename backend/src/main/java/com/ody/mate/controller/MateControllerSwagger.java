@@ -1,6 +1,6 @@
-package com.ody.mate.domain.controller;
+package com.ody.mate.controller;
 
-import com.ody.mate.domain.dto.MateSaveRequest;
+import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
