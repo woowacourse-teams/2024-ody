@@ -26,10 +26,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - run: ls -al
         with:
          ref: develop
-      - run: ls -al
+      - run: git rev-parse --abbrev-ref HEAD
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
