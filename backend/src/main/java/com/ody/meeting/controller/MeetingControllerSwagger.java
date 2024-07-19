@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Meeting API")
@@ -46,4 +47,20 @@ public interface MeetingControllerSwagger {
     @ErrorCode401
     @ErrorCode500
     ResponseEntity<MeetingSaveResponse> save(String fcmToken, MeetingSaveRequest meetingSaveRequest);
+
+    @Operation(
+            summary = "초대코드 유효성 검사",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "유효한 초대 코드"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "유효하지 않은 초대코드",
+                            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+                    )
+            }
+    )
+    @ErrorCode400
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<Void> validateInviteCode(String fcmToken, String inviteCode);
 }
