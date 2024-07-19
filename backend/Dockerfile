@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64,linux/x64 openjdk:17-jdk
+FROM --platform=linux/arm64 openjdk:17-jdk
 
 ARG JAR_FILE=./build/libs/*.jar
 
