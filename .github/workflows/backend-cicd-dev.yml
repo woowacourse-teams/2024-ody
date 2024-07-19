@@ -10,10 +10,6 @@ on:
 #    paths:
 #      - backend/**
 
-defaults:
-  run:
-    working-directory: backend
-
 env:
   DOCKERHUB_REPOSITORY: ody-official
 
@@ -23,6 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
       - uses: actions/checkout@v4
