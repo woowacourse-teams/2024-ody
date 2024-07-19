@@ -50,14 +50,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-#      - name: Docker Build and Push
-#        uses: docker/build-push-action@v4
-#        with:
-#          context: .
-#          platforms: linux/amd64,linux/arm64
-#          push: true
-#          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ody-official:${{ github.sha }}
-
       - name: Docker Image Build And Push
         run: docker build --platform linux/x64/v8 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }} -f Dockerfile . --push
 
