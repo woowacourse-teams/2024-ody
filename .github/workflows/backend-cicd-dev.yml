@@ -83,4 +83,4 @@ jobs:
         run: docker rm $DOCKERHUB_REPOSITORY || true
 
       - name: Run new Docker container
-        run: docker run -d --name ody-backend -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
+        run: docker run -d --name ody-backend -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
