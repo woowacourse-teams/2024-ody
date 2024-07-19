@@ -49,9 +49,7 @@ jobs:
 
       - name: Docker Image Build
         run: |
-          echo "========== 현위치 : "
-          pwd
-          docker build --platform linux/amd64,linux/x64/v8 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }} -f ./Dockerfile
+          docker build --platform linux/amd64,linux/x64/v8 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }} -f Dockerfile .
 
       - name: Docker Hub Push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
