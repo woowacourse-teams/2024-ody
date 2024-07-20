@@ -12,6 +12,7 @@ on:
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
+  DOCKER_CONTAINER_NAME: ody-backend
 
 jobs:
   build-docker-push:
@@ -68,11 +69,8 @@ jobs:
       - name: Pull Docker image from DockerHub
         run: docker pull --platform linux/x64/v8 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
 
-      - name: Stop existing Docker container
-        run: docker stop $DOCKERHUB_REPOSITORY || true
-
-      - name: Remove existing Docker container
-        run: docker rm $DOCKERHUB_REPOSITORY || true
-
       - name: Run new Docker container
-        run: docker run -d --name ody-backend -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
+        run: |
+          docker stop $DOCKER_CONTAINER_NAME || true
+          docker rm $DOCKER_CONTAINER_NAME || true
+          docker run -d --name $DOCKER_CONTAINER_NAME -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
