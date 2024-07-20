@@ -26,9 +26,16 @@ public class NotificationController implements NotificationControllerSwagger {
     ) {
         return ResponseEntity.ok(
                 new NotiLogFindResponse(List.of(
-                        new NotificationSaveResponse("ENTRY", "조조", LocalDateTime.parse("2024-07-17 08:59:32")),
-                        new NotificationSaveResponse("DEPARTURE_REMINDER", "조조",
-                                LocalDateTime.parse("2024-07-17 09:00:01"))
+                        new NotificationSaveResponse(
+                                "ENTRY",
+                                "조조",
+                                LocalDateTime.parse("2024-07-17 08:59:32"))
+                        ,
+                        new NotificationSaveResponse(
+                                "DEPARTURE_REMINDER",
+                                "조조",
+                                LocalDateTime.parse("2024-07-17 09:00:01")
+                        )
                 ))
         );
     }
