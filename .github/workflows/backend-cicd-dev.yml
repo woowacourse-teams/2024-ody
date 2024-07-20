@@ -42,8 +42,6 @@ jobs:
       - name: Build And BootJar with Gradle Wrapper
         run: |
           ./gradlew build
-          echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "
-          pwd
           ./gradlew bootJar
           echo "========================= jar 있나?"
           cd ./build/libs/
