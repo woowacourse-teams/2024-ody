@@ -45,6 +45,9 @@ jobs:
           echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "
           pwd
           ./gradlew bootJar
+          echo "========================= jar 있나?"
+          cd ./build/libs/
+          ls
 
 #      - name: BootJar with Gradle Wrapper
 #        run: |
