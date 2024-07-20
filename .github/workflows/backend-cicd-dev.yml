@@ -76,17 +76,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Pull Docker image from DockerHub
+      - name: Pull Docker image And Run
         run: |
           docker image prune -a -f
           docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
-          echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-          pwd
-          echo "===================================="
-          ls -al
-
-      - name: Run new Docker container
-        run: |
           docker stop $DOCKER_CONTAINER_NAME || true
           docker rm $DOCKER_CONTAINER_NAME || true
           echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
@@ -94,4 +87,14 @@ jobs:
           echo "===================================="
           ls -al
           docker run --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
+
+#      - name: Run new Docker container
+#        run: |
+#          docker stop $DOCKER_CONTAINER_NAME || true
+#          docker rm $DOCKER_CONTAINER_NAME || true
+#          echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+#          pwd
+#          echo "===================================="
+#          ls -al
+#          docker run --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
 #          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
