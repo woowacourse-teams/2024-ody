@@ -14,6 +14,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
     public Member save(String deviceToken) {
         return memberRepository.save(new Member(deviceToken));
     }

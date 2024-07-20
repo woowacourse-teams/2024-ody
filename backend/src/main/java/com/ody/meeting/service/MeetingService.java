@@ -15,6 +15,7 @@ public class MeetingService {
 
     private final MeetingRepository meetingRepository;
 
+    @Transactional
     public Meeting save(MeetingSaveRequest meetingSaveRequest) {
         return meetingRepository.save(meetingSaveRequest.toMeeting(generateInviteCode()));
     }
