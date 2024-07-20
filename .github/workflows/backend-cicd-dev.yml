@@ -78,7 +78,7 @@ jobs:
 
       - name: Pull Docker image from DockerHub
         run: |
-          docker image prune -a
+          docker image prune -a -f
           docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
           echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
           pwd
