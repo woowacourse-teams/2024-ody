@@ -70,13 +70,15 @@ jobs:
         run: |
           docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
           echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-          echo pwd
+          pwd
 
       - name: Run new Docker container
         run: |
           docker stop $DOCKER_CONTAINER_NAME || true
           docker rm $DOCKER_CONTAINER_NAME || true
           echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-          echo pwd
+          pwd
+          echo "===================================="
+          ll
           docker run --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
 #          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
