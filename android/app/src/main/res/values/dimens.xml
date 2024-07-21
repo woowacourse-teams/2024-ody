@@ -4,5 +4,6 @@
     <dimen name="page_vertical_margin">18dp</dimen>
     <dimen name="scroll_bottom_margin">28dp</dimen>
     <dimen name="toolbar_height">60dp</dimen>
+    <dimen name="rectangle_radius_15">15dp</dimen>
     <dimen name="rectangle_radius_20">20dp</dimen>
 </resources>
