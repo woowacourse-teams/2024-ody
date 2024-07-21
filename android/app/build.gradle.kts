@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.googleServices)
 }
 val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
@@ -55,6 +56,7 @@ dependencies {
     implementation(libs.androidx.view.pager)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.firebase.messaging)
     androidTestImplementation(libs.androidx.junit)
     implementation(libs.androidx.lifecycle.viewmodel)
     androidTestImplementation(libs.androidx.espresso.core)
