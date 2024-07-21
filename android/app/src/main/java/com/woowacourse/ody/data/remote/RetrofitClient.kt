@@ -17,7 +17,7 @@ object RetrofitClient {
         }
     }
     private val interceptor: Interceptor by lazy {
-        Interceptor{
+        Interceptor {
             val newRequest = it.request().newBuilder().addHeader("Authorization", "token=$token").build()
             it.proceed(newRequest)
         }
@@ -27,7 +27,7 @@ object RetrofitClient {
         builder.build()
     }
     val retrofit: Retrofit by lazy {
-         Retrofit.Builder()
+        Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())

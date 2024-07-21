@@ -6,7 +6,7 @@ interface MemberService {
     @POST(MEMBER_URL)
     suspend fun postMember()
 
-    companion object{
+    companion object {
         private const val MEMBER_URL = "/members"
     }
 }
