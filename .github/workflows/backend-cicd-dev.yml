@@ -5,14 +5,14 @@ on:
     branches:
 #      - develop
       - feature/57
-    paths:
-      - backend/**
+#    paths:
+#      - backend/**
   pull_request:
     branches:
 #      - develop
       - feature/57
-    paths:
-      - backend/**
+#    paths:
+#      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
