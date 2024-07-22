@@ -4,7 +4,7 @@ import android.app.Application
 import com.woowacourse.ody.BuildConfig.DEBUG
 import timber.log.Timber
 
-class OdyApplication : Application() {
+class OdyApplication :Application() {
     override fun onCreate() {
         super.onCreate()
         if (DEBUG) {
