@@ -1,6 +1,6 @@
 package com.ody.notification.controller;
 
-import com.ody.notification.dto.request.NotificationSaveResponse;
+import com.ody.notification.dto.response.NotificationSaveResponse;
 import com.ody.notification.dto.response.NotiLogFindResponse;
 import java.time.LocalDateTime;
 import java.util.List;
