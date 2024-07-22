@@ -24,6 +24,6 @@ class RouteServiceTest {
 
         Duration duration = routeService.calcualteDuration(origin, target);
 
-        assertThat(duration.getMinutes()).isPositive();
+        assertThat(duration.getMinutes()).isEqualTo(16);
     }
 }
