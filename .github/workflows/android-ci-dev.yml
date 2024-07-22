@@ -1,9 +1,7 @@
-name: Android CI
+name: ody android CI
 on:
-    push:
-        branches: [ "feature/53" ]
     pull_request:
-        branches: [ "feature/53" ]
+        branches: [ "develop" ]
 
 defaults:
   run:
