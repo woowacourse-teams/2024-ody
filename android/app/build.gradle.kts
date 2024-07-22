@@ -56,7 +56,6 @@ dependencies {
     implementation(libs.androidx.view.pager)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.firebase.messaging)
     androidTestImplementation(libs.androidx.junit)
     implementation(libs.androidx.lifecycle.viewmodel)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -64,6 +63,7 @@ dependencies {
     // firebase
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging.ktx)
+    implementation(libs.firebase.messaging)
     implementation(platform(libs.firebase.bom))
 
     // junit

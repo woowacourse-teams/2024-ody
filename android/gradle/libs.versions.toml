@@ -7,6 +7,7 @@ coreKtx = "1.13.1"
 espressoCore = "3.6.1"
 firebaseBom = "33.1.2"
 fragmentKtx = "1.8.1"
+firebaseMessaging = "24.0.0"
 firebaseMessagingKtx = "24.0.0"
 googleServices = "4.4.2"
 junit = "4.13.2"
@@ -22,7 +23,6 @@ retrofit = "2.11.0"
 timber = "5.0.1"
 viewPager = "1.1.0"
 webkit = "1.11.0"
-firebaseMessaging = "24.0.0"
 
 [libraries]
 # androidx
@@ -47,6 +47,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 # firebase
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 
 # retrofit
@@ -61,7 +62,6 @@ moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", ver
 
 # timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
