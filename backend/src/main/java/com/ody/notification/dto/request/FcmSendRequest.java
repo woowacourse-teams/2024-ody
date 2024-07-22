@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public record FcmSendRequest(
         String topic,
         NotificationType notificationType,
+        String nickname,
         LocalDateTime sendAt
 ) {
 

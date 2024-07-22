@@ -21,9 +21,10 @@ public class FcmPushSender {
                 .setTopic(fcmSendRequest.topic())
                 .setNotification(Notification.builder()
                         .setTitle(TEST_TITLE)
-                        .setBody(fcmSendRequest.notificationType().name())
+                        .setBody("")
                         .build())
                 .putData("type", fcmSendRequest.notificationType().name())
+                .putData("nickname", fcmSendRequest.nickname())
                 .setAndroidConfig(
                         AndroidConfig.builder()
                                 .setNotification(

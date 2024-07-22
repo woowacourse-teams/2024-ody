@@ -28,6 +28,7 @@ class FcmEventSchedulerTest {
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
                 "testToken",
                 NotificationType.DEPARTURE_REMINDER,
+                "차람",
                 sendAt
         );
 

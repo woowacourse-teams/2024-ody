@@ -54,7 +54,12 @@ public class NotificationService {
             throw new OdyException("모임 구독에 실패했습니다");
         }
 
-        FcmSendRequest fcmSendRequest = new FcmSendRequest(deviceToken, NotificationType.DEPARTURE_REMINDER, sendAt);
+        FcmSendRequest fcmSendRequest = new FcmSendRequest(
+                deviceToken,
+                NotificationType.DEPARTURE_REMINDER,
+                mate.getNickname(),
+                sendAt
+        );
         publisher.publishEvent(fcmSendRequest);
 
         notification.updateDone();
