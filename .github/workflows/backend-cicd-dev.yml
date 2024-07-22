@@ -3,18 +3,17 @@ name: backend cicd dev
 on:
   push:
     branches:
-#      - develop
-      - feature/57
-#    paths:
-#      - backend/**
+      - develop
+    paths:
+      - backend/**
   pull_request:
     branches:
-#      - develop
-      - feature/57
-#    paths:
-#      - backend/**
+      - develop
+    paths:
+      - backend/**
 
 env:
+  TEST_REPORT_PATH: ${{ github.workspace }}/backend/build/test-results/**/*.xml
   DOCKERHUB_REPOSITORY: ody-official
   DOCKER_CONTAINER_NAME: ody-backend
 
@@ -30,8 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-#          ref: develop
-          ref: feature/57
+          ref: develop
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -49,13 +47,13 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: ${{ github.workspace }}/backend/build/test-results/**/*.xml
+          files: $TEST_REPORT_PATH
 
       - name: JUnit Report Action
         uses: mikepenz/action-junit-report@v4
         if: always()
         with:
-          report_paths: ${{ github.workspace }}/backend/build/test-results/**/*.xml
+          report_paths: $TEST_REPORT_PATH
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
