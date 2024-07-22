@@ -4,6 +4,7 @@ agp = "8.5.0"
 appcompat = "1.7.0"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
+dotsindicator = "5.0"
 espressoCore = "3.6.1"
 firebaseBom = "33.1.2"
 fragmentKtx = "1.8.1"
@@ -62,6 +63,9 @@ moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", ver
 
 # timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
+# dotsindicator
+dotsibdicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotsindicator" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

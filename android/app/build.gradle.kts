@@ -63,14 +63,14 @@ dependencies {
     implementation(libs.androidx.view.pager)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.constraintlayout)
-    androidTestImplementation(libs.androidx.junit)
     implementation(libs.androidx.lifecycle.viewmodel)
+    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     // firebase
     implementation(libs.firebase.analytics)
-    implementation(libs.firebase.messaging.ktx)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.messaging.ktx)
     implementation(platform(libs.firebase.bom))
 
     // junit
@@ -91,4 +91,7 @@ dependencies {
 
     // timber
     implementation(libs.timber)
+
+    // dotsibdicator
+    implementation(libs.dotsibdicator)
 }
