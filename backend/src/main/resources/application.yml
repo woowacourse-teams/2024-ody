@@ -1,3 +1,7 @@
+spring:
+  config:
+    import: private/private.yml
+
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
@@ -8,3 +12,6 @@ springdoc:
     display-request-duration: true
     operations-sorter: alpha
     enabled: true
+
+odsay:
+  url: https://api.odsay.com/v1/api/searchPubTransPathT
