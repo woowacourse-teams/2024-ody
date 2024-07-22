@@ -2,32 +2,34 @@ name: backend cicd dev
 
 on:
   push:
-    branches: [ "feature/19" ]
-  #    paths:
-  #      - backend/**
+    branches:
+      - develop
+    paths:
+      - backend/**
   pull_request:
-    branches: [ "feature/19" ]
-#    paths:
-#      - backend/**
-
-defaults:
-  run:
-    working-directory: backend
+    branches:
+      - develop
+    paths:
+      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
+  DOCKER_CONTAINER_NAME: ody-backend
 
 jobs:
-  build-docker-push:
+  build-and-push:
 
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
       - uses: actions/checkout@v4
         with:
           ref: develop
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -37,10 +39,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
-      - name: Build with Gradle Wrapper
-        run: ./gradlew build
+      - name: Clean Build With Gradle Wrapper
+        run: ./gradlew clean build
 
-      - name: Setup Docker buildx
+      - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2.9.1
 
       - name: Login to Docker Hub
@@ -49,22 +51,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-#      - name: Docker Build and Push
-#        uses: docker/build-push-action@v4
-#        with:
-#          context: .
-#          platforms: linux/amd64,linux/arm64
-#          push: true
-#          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ody-official:${{ github.sha }}
-
       - name: Docker Image Build And Push
-        run: |
-          docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/x64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }} -f Dockerfile . --push
+        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }} -f Dockerfile . --push
 
-  deploy:
+  pull-and-deploy:
 
-    needs: build-docker-push
+    needs: build-and-push
     runs-on: self-hosted
 
     steps:
@@ -74,14 +66,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Pull Docker image from DockerHub
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
+      - name: Pull Docker Image
+        run: docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
 
-      - name: Stop existing Docker container
-        run: docker stop $DOCKERHUB_REPOSITORY || true
+      - name: Set up Container And Run Docker Image
+        run: |
+          docker image prune -a -f
+          docker stop $DOCKER_CONTAINER_NAME || true
+          docker rm $DOCKER_CONTAINER_NAME || true
+          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
 
-      - name: Remove existing Docker container
-        run: docker rm $DOCKERHUB_REPOSITORY || true
-
-      - name: Run new Docker container
-        run: docker run -d --name ody-backend -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}
+      - name: Check Docker Process
+        run: docker ps
