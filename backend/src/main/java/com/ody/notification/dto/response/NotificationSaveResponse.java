@@ -1,5 +1,6 @@
 package com.ody.notification.dto.response;
 
+import com.ody.notification.domain.Notification;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 
@@ -15,4 +16,11 @@ public record NotificationSaveResponse(
         LocalDateTime createdAt
 ) {
 
+    public NotificationSaveResponse(Notification notification) {
+        this(
+                notification.getType().toString(),
+                notification.getMate().getNickname(),
+                notification.getCreatedAt()
+        );
+    }
 }
