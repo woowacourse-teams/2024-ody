@@ -6,5 +6,9 @@
     <color name="red">#FFFF4C4C</color>
     <color name="white">#FFFFFFFF</color>
     <color name="dark_gray">#FF2F2F2F</color>
+    <color name="dark_gray_20">#332F2F2F</color>
     <color name="gray">#FFD6D6D6</color>
+
+    <drawable name="drawable_purple">#FF5C47AE</drawable>
+    <drawable name="drawable_gray">#FFD6D6D6</drawable>
 </resources>

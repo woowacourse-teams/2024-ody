@@ -1,9 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.googleServices)
+    id("kotlin-kapt")
 }
+
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "com.woowacourse.ody"
@@ -17,6 +24,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
     }
 
     buildTypes {
@@ -28,12 +36,20 @@ android {
             )
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    buildFeatures {
+        buildConfig = true
+        dataBinding = true
+        viewBinding = true
     }
 }
 
@@ -54,6 +70,7 @@ dependencies {
     // firebase
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging.ktx)
+    implementation(libs.firebase.messaging)
     implementation(platform(libs.firebase.bom))
 
     // junit
