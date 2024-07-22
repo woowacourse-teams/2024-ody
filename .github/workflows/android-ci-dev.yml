@@ -33,9 +33,6 @@ jobs:
           distribution: "zulu"
           java-version: 17
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Change gradlew permissions
         run: chmod +x ./gradlew
 
