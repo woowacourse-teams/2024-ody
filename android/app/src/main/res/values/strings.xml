@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">오디</string>
 
+    <!-- activity_intro.xml -->
+    <string name="intro_hello">안녕하세요!</string>
+    <string name="intro_guide_front">오디</string>
+    <string name="intro_guide_back">가 약속을 지켜드릴게요</string>
+    <string name="intro_join_meeting">약속 참여하기</string>
+    <string name="intro_create_meeting">약속 만들기</string>
+
     <!-- fragment_destination.xml -->
     <string name="destination_question_front">오디</string>
     <string name="destination_question_back">서 만나시나요?</string>
