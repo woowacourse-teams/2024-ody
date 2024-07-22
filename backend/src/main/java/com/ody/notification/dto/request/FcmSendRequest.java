@@ -4,7 +4,7 @@ import com.ody.notification.domain.NotificationType;
 import java.time.LocalDateTime;
 
 public record FcmSendRequest(
-        String token,
+        String topic,
         NotificationType notificationType,
         LocalDateTime sendAt
 ) {

@@ -18,7 +18,7 @@ public class FcmPushSender {
 
     public String sendPushNotification(FcmSendRequest fcmSendRequest) {
         Message message = Message.builder()
-                .setToken(fcmSendRequest.token())
+                .setTopic(fcmSendRequest.topic())
                 .setNotification(Notification.builder()
                         .setTitle(TEST_TITLE)
                         .setBody(fcmSendRequest.notificationType().name())

@@ -1,5 +1,9 @@
 package com.ody.meeting.controller;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.TopicManagementResponse;
+import com.ody.common.exception.OdyException;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MateResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
@@ -64,6 +68,15 @@ public class MeetingController implements MeetingControllerSwagger {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String fcmToken,
             @RequestBody MeetingSaveRequest meetingSaveRequest
     ) {
+        try {
+            TopicManagementResponse topicManagementResponse = FirebaseMessaging.getInstance()
+                    .subscribeToTopic(List.of(fcmToken), meetingSaveRequest.name());
+            log.info("모임 구독에 성공했습니다 {}", topicManagementResponse);
+        } catch (FirebaseMessagingException exception) {
+            log.error(exception.getMessage());
+            throw new OdyException("모임 구독에 실패했습니다");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new MeetingSaveResponse(
                         1L,
