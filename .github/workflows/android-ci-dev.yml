@@ -1,11 +1,17 @@
-name: ody android CI
+name: android ci
 on:
     pull_request:
-        branches: [ "develop" ]
+        branches: 
+          - develop
+        paths:
+          - android/**
 
 defaults:
   run:
     working-directory: android
+
+env:
+  TEST_REPORT_PATH: ${{ github.workspace }}/android/gradle/test-results/*.xml
 
 jobs:
   build:
@@ -53,3 +59,9 @@ jobs:
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest
+
+      - name: JUnit Report Action
+        uses: mikepenz/action-junit-report@v4
+        if: always()
+        with:
+          report_paths: $TEST_REPORT_PATH
