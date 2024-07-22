@@ -35,4 +35,8 @@ public class Notification extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     @NotNull
     private NotificationType type;
+
+    public Notification(Mate mate, NotificationType type) {
+        this(null, mate, type);
+    }
 }
