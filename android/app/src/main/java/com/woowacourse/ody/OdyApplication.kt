@@ -8,7 +8,12 @@ class OdyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         if (DEBUG) {
-            Timber.plant(Timber.DebugTree())
+            Timber.plant(OdyDebugTree)
         }
     }
+}
+
+object OdyDebugTree : Timber.DebugTree() {
+    override fun createStackElementTag(element: StackTraceElement): String =
+        "${element.fileName}:${element.lineNumber}#${element.methodName}"
 }
