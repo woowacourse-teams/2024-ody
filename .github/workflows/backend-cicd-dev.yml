@@ -3,12 +3,14 @@ name: backend cicd dev
 on:
   push:
     branches:
-      - develop
+#      - develop
+      - feature/57
     paths:
       - backend/**
   pull_request:
     branches:
-      - develop
+#      - develop
+      - feature/57
     paths:
       - backend/**
 
@@ -28,7 +30,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: develop
+#          ref: develop
+          ref: feature/57
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
