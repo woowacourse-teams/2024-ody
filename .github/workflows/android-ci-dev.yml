@@ -4,6 +4,11 @@ on:
         branches: [ "feature/53" ]
     pull_request:
         branches: [ "feature/53" ]
+
+defaults:
+  run:
+    working-directory: android
+
 jobs:
   build:
     name: PR Checker
