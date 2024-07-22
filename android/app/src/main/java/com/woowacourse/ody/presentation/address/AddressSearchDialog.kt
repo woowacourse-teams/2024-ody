@@ -13,7 +13,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.webkit.WebViewAssetLoader
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
 
-class AddressSearchDialog : DialogFragment() {
+class AddressSearchDialog : DialogFragment(), AddressListener {
     private var _binding: DialogAddressSearchBinding? = null
     private val binding get() = _binding!!
 
@@ -53,13 +53,15 @@ class AddressSearchDialog : DialogFragment() {
 
         with(binding.wvAddressSearch) {
             settings.javaScriptEnabled = true
-            addJavascriptInterface(AddressSearchInterface(onReceive = { address ->
-                setFragmentResult(REQUEST_KEY, bundleOf(ADDRESS_KEY to address))
-                dismiss()
-            }), JS_BRIDGE)
+            addJavascriptInterface(AddressSearchInterface(this@AddressSearchDialog), JS_BRIDGE)
             webViewClient = LocalContentWebViewClient(assetLoader)
             loadUrl("https://${DOMAIN}/${PATH}/${FILE_NAME}")
         }
+    }
+
+    override fun onReceive(address: String) {
+        setFragmentResult(REQUEST_KEY, bundleOf(ADDRESS_KEY to address))
+        dismiss()
     }
 
     override fun onDestroyView() {
