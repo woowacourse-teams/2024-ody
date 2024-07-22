@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.webkit.WebViewAssetLoader
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
 
@@ -48,9 +50,13 @@ class AddressSearchDialog : DialogFragment() {
                 .addPathHandler("/${PATH}/", WebViewAssetLoader.AssetsPathHandler(requireContext()))
                 .setDomain(DOMAIN)
                 .build()
+
         with(binding.wvAddressSearch) {
             settings.javaScriptEnabled = true
-            addJavascriptInterface(AddressSearchInterface {}, JS_BRIDGE)
+            addJavascriptInterface(AddressSearchInterface(onReceive = { address ->
+                setFragmentResult(REQUEST_KEY, bundleOf(ADDRESS_KEY to address))
+                dismiss()
+            }), JS_BRIDGE)
             webViewClient = LocalContentWebViewClient(assetLoader)
             loadUrl("https://${DOMAIN}/${PATH}/${FILE_NAME}")
         }
@@ -62,6 +68,9 @@ class AddressSearchDialog : DialogFragment() {
     }
 
     companion object {
+        const val REQUEST_KEY = "address_search_request_key"
+        const val ADDRESS_KEY = "address_key"
+
         private const val DOMAIN = "com.woowacourse.ody"
         private const val JS_BRIDGE = "address_search"
         private const val FILE_NAME = "address.html"

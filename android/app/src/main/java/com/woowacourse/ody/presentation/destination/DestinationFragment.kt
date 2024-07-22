@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import com.woowacourse.ody.databinding.FragmentDestinationBinding
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
 
@@ -32,6 +33,10 @@ class DestinationFragment : Fragment() {
     private fun initializeView() {
         binding.etDestination.setOnClickListener {
             AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+        }
+        setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
+            val address = bundle.getString(AddressSearchDialog.ADDRESS_KEY)
+            binding.etDestination.setText(address)
         }
     }
 
