@@ -47,7 +47,7 @@ class AddressSearchDialog : DialogFragment(), AddressListener {
     private fun showAddressSearchWebView() {
         val assetLoader =
             WebViewAssetLoader.Builder()
-                .addPathHandler("/${PATH}/", WebViewAssetLoader.AssetsPathHandler(requireContext()))
+                .addPathHandler("/$PATH/", WebViewAssetLoader.AssetsPathHandler(requireContext()))
                 .setDomain(DOMAIN)
                 .build()
 
@@ -55,7 +55,7 @@ class AddressSearchDialog : DialogFragment(), AddressListener {
             settings.javaScriptEnabled = true
             addJavascriptInterface(AddressSearchInterface(this@AddressSearchDialog), JS_BRIDGE)
             webViewClient = LocalContentWebViewClient(assetLoader)
-            loadUrl("https://${DOMAIN}/${PATH}/${FILE_NAME}")
+            loadUrl("https://$DOMAIN/$PATH/${FILE_NAME}")
         }
     }
 
