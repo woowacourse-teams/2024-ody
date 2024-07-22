@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
+
     @Query("""
             select noti
             from Notification noti
@@ -14,5 +15,4 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             where meet.id = :meetingId
             """)
     List<Notification> findAllMeetingLogsById(Long meetingId);
-
 }
