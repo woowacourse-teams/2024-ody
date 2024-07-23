@@ -14,7 +14,7 @@ import com.woowacourse.ody.databinding.FragmentMeetingTimeBinding
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import com.woowacourse.ody.util.observeEvent
 
-class MeetingTimeFragment : Fragment() {
+class MeetingTimeFragment : Fragment(), MeetingTimeListener {
     private var _binding: FragmentMeetingTimeBinding? = null
     private val binding get() = _binding!!
 
@@ -43,6 +43,7 @@ class MeetingTimeFragment : Fragment() {
     }
 
     private fun initializeBinding() {
+        binding.listener = this
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
     }
@@ -77,11 +78,6 @@ class MeetingTimeFragment : Fragment() {
     private fun initializeView() = with(binding) {
         npMeetingTimeHour.setRangeValues(hours)
         npMeetingTimeMinute.setRangeValues(minutes)
-        btnNextMeetingTime.setOnClickListener {
-            val hour = hours[npMeetingTimeHour.value].toInt()
-            val minute = minutes[npMeetingTimeMinute.value].toInt()
-            viewModel.validMeetingTime(hour, minute)
-        }
     }
 
     private fun IntRange.toStrings() = map { it.toTwoLengthString() }
@@ -96,6 +92,12 @@ class MeetingTimeFragment : Fragment() {
         minValue = 0
         maxValue = values.size - 1
         displayedValues = values.toTypedArray()
+    }
+
+    override fun onClickNextButton() {
+        val hour = hours[binding.npMeetingTimeMinute.value].toInt()
+        val minute = minutes[binding.npMeetingTimeMinute.value].toInt()
+        viewModel.validMeetingTime(hour, minute)
     }
 
     override fun onDestroyView() {

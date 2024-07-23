@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="listener"
+            type="com.woowacourse.ody.presentation.time.MeetingTimeFragment" />
+
+        <variable
             name="vm"
             type="com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel" />
     </data>
@@ -77,6 +81,7 @@
             android:id="@+id/btn_next_meeting_time"
             style="@style/bottom_button_style"
             android:text="@string/next_button"
+            android:onClick="@{() -> listener.onClickNextButton()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
