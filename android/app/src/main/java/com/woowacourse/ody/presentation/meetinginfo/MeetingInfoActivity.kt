@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingInfoBinding
@@ -20,6 +21,7 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityMeetingInfoBinding by lazy {
         ActivityMeetingInfoBinding.inflate(layoutInflater)
     }
+    private val viewModel: MeetingInfoViewModel by viewModels<MeetingInfoViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +65,8 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeMeetingInfoViewPager() {
-        val meetingInfoViewPagerAdapter: InfoViewPagerAdapter = InfoViewPagerAdapter(this, getMeetingInfoFragments())
+        val meetingInfoViewPagerAdapter: InfoViewPagerAdapter =
+            InfoViewPagerAdapter(this, getMeetingInfoFragments())
 
         binding.vpMeetingInfo.adapter = meetingInfoViewPagerAdapter
         binding.wdMeetingInfo.attachTo(binding.vpMeetingInfo)
