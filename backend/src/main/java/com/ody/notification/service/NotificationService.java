@@ -5,6 +5,7 @@ import com.ody.notification.dto.response.NotiLogFindResponse;
 import com.ody.notification.dto.response.NotificationSaveResponse;
 import com.ody.notification.repository.NotificationRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,8 @@ public class NotificationService {
     }
 
     private NotiLogFindResponse makeNotiLogResponse(List<Notification> notifications) {
-        List<NotificationSaveResponse> responses = notifications.stream()
+        return notifications.stream()
                 .map(NotificationSaveResponse::new)
-                .toList();
-
-        return new NotiLogFindResponse(responses);
+                .collect(Collectors.collectingAndThen(Collectors.toList(), NotiLogFindResponse::new));
     }
 }
