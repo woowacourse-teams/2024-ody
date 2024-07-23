@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingInfoBinding
 import com.woowacourse.ody.presentation.IntroActivity
 import com.woowacourse.ody.presentation.date.MeetingDateFragment
-import com.woowacourse.ody.presentation.destination.DestinationFragment
+import com.woowacourse.ody.presentation.destination.MeetingDestinationFragment
 import com.woowacourse.ody.presentation.meetinginfo.adapter.InfoViewPagerAdapter
 import com.woowacourse.ody.presentation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
@@ -80,7 +80,7 @@ class MeetingInfoActivity : AppCompatActivity(), MeetingInfoListener {
             MeetingNameFragment(),
             MeetingDateFragment(),
             MeetingTimeFragment(),
-            DestinationFragment(),
+            MeetingDestinationFragment(),
         )
     }
 
