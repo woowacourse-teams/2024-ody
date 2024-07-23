@@ -56,6 +56,5 @@ class MeetingDateFragment : Fragment() {
         _binding = null
     }
 
-    private fun showSnackBar(message: String) =
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    private fun showSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
 }
