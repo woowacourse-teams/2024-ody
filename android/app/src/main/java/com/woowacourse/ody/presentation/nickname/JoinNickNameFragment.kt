@@ -24,6 +24,16 @@ class JoinNickNameFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initializeBinding()
+    }
+
+    private fun initializeBinding() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
