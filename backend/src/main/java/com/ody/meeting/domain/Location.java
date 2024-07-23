@@ -14,13 +14,8 @@ public class Location {
 
     private static final List<String> SUPPORT_REGION = List.of("서울", "경기", "인천");
 
-    @NotNull
     private String address;
-
-    @NotNull
     private String latitude;
-
-    @NotNull
     private String longitude;
 
     public Location(String address, String latitude, String longitude) {
