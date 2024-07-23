@@ -81,8 +81,7 @@ class IntroActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSnackBar(message: String) =
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    private fun showSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
 
     companion object {
         fun getIntent(context: Context): Intent = Intent(context, IntroActivity::class.java)

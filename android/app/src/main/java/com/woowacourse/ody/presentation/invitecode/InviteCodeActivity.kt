@@ -41,7 +41,9 @@ class InviteCodeActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSnackBar(@StringRes messageId: Int) {
+    private fun showSnackBar(
+        @StringRes messageId: Int,
+    ) {
         Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
     }
 }

@@ -6,7 +6,7 @@ import com.woowacourse.ody.domain.repository.MeetingRepository
 object DefaultMeetingRepository : MeetingRepository {
     private val service = RetrofitClient.retrofit.create(MeetingService::class.java)
 
-    override suspend fun getInviteCodeValidity(inviteCode: String):Result<Unit> {
+    override suspend fun getInviteCodeValidity(inviteCode: String): Result<Unit> {
         return runCatching { service.getInviteCodeValidity(inviteCode) }
     }
 }
