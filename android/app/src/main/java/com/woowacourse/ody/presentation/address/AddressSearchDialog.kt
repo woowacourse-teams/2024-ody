@@ -11,6 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.webkit.WebViewAssetLoader
+import com.woowacourse.ody.data.remote.location.KakaoGeoLocationRepository
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
 
 class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
@@ -60,7 +61,8 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     }
 
     override fun onReceive(address: String) {
-        setFragmentResult(REQUEST_KEY, bundleOf(ADDRESS_KEY to address))
+        val geoLocation = KakaoGeoLocationRepository.fetchGeoLocation(address)
+        setFragmentResult(REQUEST_KEY, bundleOf(GEO_LOCATION_KEY to geoLocation))
         dismiss()
     }
 
@@ -71,7 +73,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
 
     companion object {
         const val REQUEST_KEY = "address_search_request_key"
-        const val ADDRESS_KEY = "address_key"
+        const val GEO_LOCATION_KEY = "geo_location_key"
 
         private const val DOMAIN = "com.woowacourse.ody"
         private const val JS_BRIDGE = "address_search"

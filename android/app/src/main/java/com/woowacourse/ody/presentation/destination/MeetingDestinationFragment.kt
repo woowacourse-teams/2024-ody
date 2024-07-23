@@ -1,5 +1,6 @@
 package com.woowacourse.ody.presentation.destination
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import com.woowacourse.ody.databinding.FragmentMeetingDestinationBinding
+import com.woowacourse.ody.domain.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
 
 class MeetingDestinationFragment : Fragment() {
@@ -35,8 +37,12 @@ class MeetingDestinationFragment : Fragment() {
             AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
         }
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
-            val address = bundle.getString(AddressSearchDialog.ADDRESS_KEY)
-            binding.etDestination.setText(address)
+            val geoLocation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getParcelable(AddressSearchDialog.GEO_LOCATION_KEY, GeoLocation::class.java)
+            } else {
+                bundle.getParcelable<GeoLocation>(AddressSearchDialog.GEO_LOCATION_KEY)
+            } ?: return@setFragmentResultListener
+            binding.etDestination.setText(geoLocation.address)
         }
     }
 
