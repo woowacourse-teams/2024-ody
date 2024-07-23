@@ -19,14 +19,14 @@ class JoinInfoActivity : AppCompatActivity(), InfoListener {
         setContentView(binding.root)
 
         initializeDataBinding()
-        initVisitorInfoViewPager()
     }
 
     private fun initializeDataBinding() {
         binding.infoListener = this
+        initializeVisitorInfoViewPager()
     }
 
-    private fun initVisitorInfoViewPager() {
+    private fun initializeVisitorInfoViewPager() {
         val visitorOnBodingInfoAdapter: InfoViewPagerAdapter =
             InfoViewPagerAdapter(this, getVisitorOnBodingInfoFragments())
 
@@ -34,9 +34,7 @@ class JoinInfoActivity : AppCompatActivity(), InfoListener {
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)
     }
 
-    private fun getVisitorOnBodingInfoFragments(): List<Fragment> {
-        return listOf(JoinNickNameFragment(), JoinStartingPointFragment())
-    }
+    private fun getVisitorOnBodingInfoFragments(): List<Fragment> = listOf(JoinNickNameFragment(), JoinStartingPointFragment())
 
     override fun onBack() {
         if (binding.vpJoinInfo.currentItem > 0) {
