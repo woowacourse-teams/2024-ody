@@ -1,20 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".presentation.nickname.JoinNickNameFragment">
+        android:layout_height="match_parent">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="닉네임 화면" />
+            android:id="@+id/tv_nickname_front"
+            style="@style/pretendard_bold_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:text="@string/nickname_question_front"
+            android:textColor="@color/purple"
+            app:layout_constraintEnd_toStartOf="@id/tv_nickname_back"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/tv_nickname_back"
+            style="@style/pretendard_bold_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nickname_question_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/tv_nickname_front"
+            app:layout_constraintTop_toTopOf="@id/tv_nickname_front" />
+
+        <EditText
+            android:id="@+id/et_nickname_form"
+            style="@style/edit_text_style"
+            android:layout_marginHorizontal="42dp"
+            android:layout_marginTop="32dp"
+            android:focusable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_nickname_front" />
+
+        <EditText
+            android:id="@+id/et_nickname"
+            style="@style/edit_text_style"
+            android:layout_width="0dp"
+            android:gravity="center_vertical"
+            android:hint="@string/nickname_question_hint"
+            app:layout_constraintBottom_toBottomOf="@id/et_nickname_form"
+            app:layout_constraintEnd_toStartOf="@id/tv_nickname_count"
+            app:layout_constraintStart_toStartOf="@id/et_nickname_form"
+            app:layout_constraintTop_toTopOf="@id/et_nickname_form" />
+
+        <TextView
+            android:id="@+id/tv_nickname_count"
+            style="@style/pretendard_medium_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="@id/et_nickname_form"
+            app:layout_constraintEnd_toStartOf="@id/tv_nickname_count_form"
+            app:layout_constraintStart_toEndOf="@id/et_nickname"
+            app:layout_constraintTop_toTopOf="@id/et_nickname_form"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/tv_nickname_count_form"
+            style="@style/pretendard_medium_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="@id/et_nickname_form"
+            app:layout_constraintEnd_toStartOf="@id/iv_cancel"
+            app:layout_constraintStart_toEndOf="@id/tv_nickname_count"
+            app:layout_constraintTop_toTopOf="@id/et_nickname_form"
+            tools:text="/9" />
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cancel"
+            app:layout_constraintBottom_toBottomOf="@id/et_nickname_form"
+            app:layout_constraintEnd_toEndOf="@id/et_nickname_form"
+            app:layout_constraintStart_toEndOf="@id/tv_nickname_count_form"
+            app:layout_constraintTop_toTopOf="@id/et_nickname_form" />
+
+        <Button
+            android:id="@+id/btn_next_destination"
+            style="@style/bottom_button_style"
+            android:enabled="false"
+            android:text="@string/next_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -94,4 +94,12 @@
         <item name="android:fontFamily">@font/pretendard_bold</item>
     </style>
 
+    <style name="number_picker_style">
+        <item name="android:textSize">28dp</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColorPrimary">@color/dark_gray</item>
+        <item name="colorControlNormal">@color/light_purple</item>
+    </style>
+
 </resources>
