@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.woowacourse.ody.databinding.ActivityIntroBinding
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoActivity
 import com.woowacourse.ody.util.observeEvent
 
 class IntroActivity : AppCompatActivity() {
@@ -35,7 +36,7 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun navigateToMeetingInfoActivity() {
-        Log.d("Hello", "모임 정보를 입력하는 액티비티로 이동")
+        startActivity(MeetingInfoActivity.getIntent(this))
     }
 
     private fun navigateToInviteCodeActivity() {
