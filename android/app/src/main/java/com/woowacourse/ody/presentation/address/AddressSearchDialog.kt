@@ -11,7 +11,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.webkit.WebViewAssetLoader
 import com.woowacourse.ody.data.remote.location.KakaoGeoLocationRepository
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
@@ -21,10 +20,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<AddressSearchViewModel> {
-        AddressSearchViewModelFactory(
-            requireParentFragment().viewLifecycleOwner.lifecycleScope,
-            KakaoGeoLocationRepository
-        )
+        AddressSearchViewModelFactory(KakaoGeoLocationRepository)
     }
 
     override fun onCreateView(
@@ -51,8 +47,9 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
         showAddressSearchWebView()
-        viewModel.geoLocation.observe(requireParentFragment().viewLifecycleOwner) {
+        viewModel.geoLocation.observe(viewLifecycleOwner) {
             setFragmentResult(REQUEST_KEY, bundleOf(GEO_LOCATION_KEY to it))
+            dismiss()
         }
     }
 
@@ -74,7 +71,6 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
 
     override fun onReceive(address: String) {
         viewModel.fetchGeoLocation(address)
-        dismiss()
     }
 
     override fun onDestroyView() {
