@@ -26,7 +26,6 @@ class IntroActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission(),
         ) { isGranted: Boolean ->
             if (isGranted.not()) {
-                // 권한 요청 거부한 경우 안내 토스트 띄우기
                 showSnackBar(getString(R.string.intro_notification_permission_required))
             }
         }
@@ -70,7 +69,6 @@ class IntroActivity : AppCompatActivity() {
         ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                    // 권한 설정 안내 토스트 띄우기
                     showSnackBar(getString(R.string.intro_notification_permission_guide))
                 } else {
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
