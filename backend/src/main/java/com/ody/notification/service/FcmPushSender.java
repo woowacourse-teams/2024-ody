@@ -14,32 +14,40 @@ import org.springframework.stereotype.Component;
 @Component
 public class FcmPushSender {
 
-    private static final String TEST_TITLE = "오디 메시지 임시 타이틀";
+    private static final String TITLE = "오디 타이틀";
+    public static final String BODY = "오디 바디";
 
     public String sendPushNotification(FcmSendRequest fcmSendRequest) {
         Message message = Message.builder()
                 .setTopic(fcmSendRequest.topic())
-                .setNotification(Notification.builder()
-                        .setTitle(TEST_TITLE)
-                        .setBody("")
-                        .build())
+                .setNotification(buildNotification())
                 .putData("type", fcmSendRequest.notificationType().name())
                 .putData("nickname", fcmSendRequest.nickname())
-                .setAndroidConfig(
-                        AndroidConfig.builder()
-                                .setNotification(
-                                        AndroidNotification.builder()
-                                                .setTitle(TEST_TITLE)
-                                                .setBody(fcmSendRequest.notificationType().name())
-                                                .setClickAction("push_click")
-                                                .build()
-                                ).build()
-                ).build();
+                .setAndroidConfig(buildAndroidConfig())
+                .build();
         try {
             return FirebaseMessaging.getInstance().send(message);
         } catch (FirebaseMessagingException exception) {
             log.error("Fcm 메시지 전송 실패 : {}", exception.getMessage());
             throw new RuntimeException(exception);
         }
+    }
+
+    private static Notification buildNotification() {
+        return Notification.builder()
+                .setTitle(TITLE)
+                .setBody(BODY)
+                .build();
+    }
+
+    private static AndroidConfig buildAndroidConfig() {
+        return AndroidConfig.builder()
+                .setNotification(
+                        AndroidNotification.builder()
+                                .setTitle(TITLE)
+                                .setBody(BODY)
+                                .setClickAction("push_click")
+                                .build()
+                ).build();
     }
 }
