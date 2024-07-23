@@ -1,5 +1,5 @@
 package com.woowacourse.ody.domain
 
 interface GeoLocationRepository {
-    fun fetchGeoLocation(address: String): GeoLocation
+    suspend fun fetchGeoLocation(address: String): Result<GeoLocation>
 }
