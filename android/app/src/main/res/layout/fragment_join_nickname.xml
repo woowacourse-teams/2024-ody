@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="com.woowacourse.ody.presentation.joininfo.JoinInfoViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,34 +57,47 @@
             android:inputType="text"
             android:maxLines="1"
             app:layout_constraintBottom_toBottomOf="@id/et_nickname_form"
-            app:layout_constraintEnd_toStartOf="@id/tv_nickname_count"
+            app:layout_constraintEnd_toStartOf="@id/tv_nickname_length"
             app:layout_constraintStart_toStartOf="@id/et_nickname_form"
             app:layout_constraintTop_toTopOf="@id/et_nickname_form" />
 
         <TextView
-            android:id="@+id/tv_nickname_count"
+            android:id="@+id/tv_nickname_length"
             style="@style/pretendard_medium_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/gray"
             app:layout_constraintBottom_toBottomOf="@id/et_nickname_form"
-            app:layout_constraintEnd_toStartOf="@id/tv_nickname_count_form"
+            app:layout_constraintEnd_toStartOf="@id/tv_nickname_length_separator"
             app:layout_constraintStart_toEndOf="@id/et_nickname"
             app:layout_constraintTop_toTopOf="@id/et_nickname_form"
             tools:text="3" />
 
         <TextView
-            android:id="@+id/tv_nickname_count_form"
+            android:id="@+id/tv_nickname_length_separator"
+            style="@style/pretendard_medium_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nickname_length_separator"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="@id/et_nickname_form"
+            app:layout_constraintEnd_toStartOf="@id/tv_nickname_max_length"
+            app:layout_constraintStart_toEndOf="@id/tv_nickname_length"
+            app:layout_constraintTop_toTopOf="@id/et_nickname_form" />
+
+        <TextView
+            android:id="@+id/tv_nickname_max_length"
             style="@style/pretendard_medium_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
+            android:text="@{String.valueOf(vm.NICK_NAME_MAX_LENGTH)}"
             android:textColor="@color/gray"
             app:layout_constraintBottom_toBottomOf="@id/et_nickname_form"
             app:layout_constraintEnd_toStartOf="@id/iv_cancel"
-            app:layout_constraintStart_toEndOf="@id/tv_nickname_count"
+            app:layout_constraintStart_toEndOf="@id/tv_nickname_length_separator"
             app:layout_constraintTop_toTopOf="@id/et_nickname_form"
-            tools:text="/9" />
+            tools:text="9" />
 
         <ImageView
             android:id="@+id/iv_cancel"
@@ -90,7 +106,7 @@
             android:src="@drawable/ic_cancel"
             app:layout_constraintBottom_toBottomOf="@id/et_nickname_form"
             app:layout_constraintEnd_toEndOf="@id/et_nickname_form"
-            app:layout_constraintStart_toEndOf="@id/tv_nickname_count_form"
+            app:layout_constraintStart_toEndOf="@id/tv_nickname_max_length"
             app:layout_constraintTop_toTopOf="@id/et_nickname_form" />
 
         <Button

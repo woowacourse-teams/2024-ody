@@ -1,6 +1,7 @@
 package com.woowacourse.ody.presentation.joininfo
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityJoinInfoBinding
@@ -13,6 +14,7 @@ class JoinInfoActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityJoinInfoBinding by lazy {
         ActivityJoinInfoBinding.inflate(layoutInflater)
     }
+    private val viewModel: JoinInfoViewModel by viewModels<JoinInfoViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +36,8 @@ class JoinInfoActivity : AppCompatActivity(), BackListener {
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)
     }
 
-    private fun getJoinInfoFragments(): List<Fragment> = listOf(JoinNickNameFragment(), JoinStartingPointFragment())
+    private fun getJoinInfoFragments(): List<Fragment> =
+        listOf(JoinNickNameFragment(), JoinStartingPointFragment())
 
     override fun onBack() {
         if (binding.vpJoinInfo.currentItem > 0) {

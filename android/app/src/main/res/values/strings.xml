@@ -28,6 +28,8 @@
     <string name="nickname_question_front">닉네임</string>
     <string name="nickname_question_back">을 알려주세요!</string>
     <string name="nickname_question_hint">올리브</string>
+    <string name="nickname_length_separator">/</string>
+
 
     <!-- activity_join_completion.xml -->
     <string name="join_completion_second_explain">약속에 참여했어요!</string>
