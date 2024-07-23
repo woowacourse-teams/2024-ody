@@ -1,7 +1,7 @@
 package com.woowacourse.ody.data.local
 
 import com.google.firebase.messaging.FirebaseMessagingService
-import com.woowacourse.ody.data.remote.MemberService
+import com.woowacourse.ody.data.remote.service.MemberService
 import com.woowacourse.ody.data.remote.RetrofitClient
 import kotlinx.coroutines.runBlocking
 
