@@ -24,6 +24,11 @@
     <!-- activity_meeting_completion.xml -->
     <string name="meeting_completion_explain">거의 다 왔어요!\n이제 당신을 소개해 주세요</string>
 
+    <!-- fragment_join_nickname.xml -->
+    <string name="nickname_question_front">닉네임</string>
+    <string name="nickname_question_back">을 알려주세요!</string>
+    <string name="nickname_question_hint">올리브</string>
+
     <!-- activity_join_completion.xml -->
     <string name="join_completion_second_explain">약속에 참여했어요!</string>
 
