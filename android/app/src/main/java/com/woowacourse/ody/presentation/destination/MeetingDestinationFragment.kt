@@ -34,7 +34,7 @@ class MeetingDestinationFragment : Fragment() {
 
     private fun initializeView() {
         binding.etDestination.setOnClickListener {
-            AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+            AddressSearchDialog().show(childFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
         }
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

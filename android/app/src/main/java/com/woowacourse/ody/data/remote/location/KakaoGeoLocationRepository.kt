@@ -15,7 +15,7 @@ object KakaoGeoLocationRepository : GeoLocationRepository {
             )
             val longitude = locationSearchResponse.documents[0].x
             val latitude = locationSearchResponse.documents[0].y
-            return Result.success(GeoLocation(address, longitude, latitude))
+            GeoLocation(address, longitude, latitude)
         }
     }
 }
