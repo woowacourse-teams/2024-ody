@@ -6,7 +6,6 @@ import com.google.firebase.FirebaseOptions;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
@@ -14,26 +13,20 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 public class FcmConfig {
 
-    @Value("${fcm.enabled}")
-    private boolean fcmEnabled;
-
     @PostConstruct
     public void initialize() {
-        if (!fcmEnabled) {
-            log.info("Fcm 설정이 비활성화되었습니다.");
-            return;
-        }
-
         try {
-            FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(
-                            GoogleCredentials.fromStream(new ClassPathResource("fcm-admin-sdk.json").getInputStream())
-                    )
-                    .build();
-            FirebaseApp.initializeApp(options);
+            FirebaseApp.initializeApp(buildOptions());
             log.info("Fcm 설정 성공");
         } catch (IOException exception) {
             log.error("Fcm 연결 오류 {}", exception.getMessage());
         }
+    }
+
+    private FirebaseOptions buildOptions() throws IOException {
+        return FirebaseOptions.builder()
+                .setCredentials(GoogleCredentials.fromStream(new ClassPathResource("fcm-admin-sdk.json")
+                        .getInputStream()))
+                .build();
     }
 }

@@ -6,7 +6,6 @@ import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.service.MemberService;
-import com.ody.notification.service.FcmSubscriber;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
@@ -14,14 +13,10 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 class MateControllerTest extends IntegrationTest {
-
-    @MockBean
-    private FcmSubscriber fcmSubscriber;
 
     @Autowired
     private MeetingService meetingService;

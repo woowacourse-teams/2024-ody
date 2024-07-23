@@ -16,6 +16,3 @@ spring:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
-
-fcm:
-  enabled: false

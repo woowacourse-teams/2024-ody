@@ -27,6 +27,3 @@ springdoc:
     display-request-duration: true
     operations-sorter: alpha
     enabled: true
-
-fcm:
-  enabled: true
