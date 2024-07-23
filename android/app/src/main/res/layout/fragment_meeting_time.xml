@@ -47,8 +47,7 @@
             app:layout_constraintEnd_toStartOf="@id/tv_meeting_time_separator"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_meeting_time_front"
-            app:values="@{vm.hours}" />
+            app:layout_constraintTop_toBottomOf="@id/tv_meeting_time_front" />
 
         <TextView
             android:id="@+id/tv_meeting_time_separator"
@@ -72,8 +71,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/tv_meeting_time_separator"
-            app:layout_constraintTop_toTopOf="@id/np_meeting_time_hour"
-            app:values="@{vm.minutes}" />
+            app:layout_constraintTop_toTopOf="@id/np_meeting_time_hour" />
 
         <Button
             android:id="@+id/btn_next_meeting_time"
