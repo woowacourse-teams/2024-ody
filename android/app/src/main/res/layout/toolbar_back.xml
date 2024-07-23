@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="meetingInfoListener"
-            type="com.woowacourse.ody.presentation.meetinginfo.MeetingInfoListener" />
+            name="InfoListener"
+            type="com.woowacourse.ody.presentation.meetinginfo.InfoListener" />
     </data>
 
     <androidx.appcompat.widget.Toolbar
@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
-                android:onClick="@{() -> meetingInfoListener.onBack()}"
+                android:onClick="@{() -> InfoListener.onBack()}"
                 android:src="@drawable/ic_arrow_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

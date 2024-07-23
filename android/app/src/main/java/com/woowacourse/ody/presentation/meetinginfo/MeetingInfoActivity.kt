@@ -16,7 +16,7 @@ import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
 import com.woowacourse.ody.presentation.time.MeetingTimeFragment
 
-class MeetingInfoActivity : AppCompatActivity(), MeetingInfoListener {
+class MeetingInfoActivity : AppCompatActivity(), InfoListener {
     private val binding: ActivityMeetingInfoBinding by lazy {
         ActivityMeetingInfoBinding.inflate(layoutInflater)
     }
@@ -31,7 +31,7 @@ class MeetingInfoActivity : AppCompatActivity(), MeetingInfoListener {
     }
 
     private fun initDataBinding() {
-        binding.meetingInfoListener = this
+        binding.infoListener = this
     }
 
     private fun handleBackClick() {
@@ -63,17 +63,17 @@ class MeetingInfoActivity : AppCompatActivity(), MeetingInfoListener {
     }
 
     private fun initMeetingInfoViewPager() {
-        val aAdapter: InfoViewPagerAdapter = InfoViewPagerAdapter(this, getMeetingInfoFragments())
+        val meetingInfoViewPagerAdapter: InfoViewPagerAdapter = InfoViewPagerAdapter(this, getMeetingInfoFragments())
 
-        binding.vpMeetingInfo.adapter = aAdapter
+        binding.vpMeetingInfo.adapter = meetingInfoViewPagerAdapter
         binding.wdMeetingInfo.attachTo(binding.vpMeetingInfo)
     }
 
     private fun initVisitorOnBodingInfoViewPager() {
-        val bAdapter: InfoViewPagerAdapter =
+        val visitorOnBodingInfoAdapter: InfoViewPagerAdapter =
             InfoViewPagerAdapter(this, getVisitorOnBodingInfoFragments())
 
-        binding.vpJoinInfo.adapter = bAdapter
+        binding.vpJoinInfo.adapter = visitorOnBodingInfoAdapter
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)
     }
 
