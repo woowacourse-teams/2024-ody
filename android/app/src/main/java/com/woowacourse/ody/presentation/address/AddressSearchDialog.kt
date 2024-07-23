@@ -13,7 +13,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.webkit.WebViewAssetLoader
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
 
-class AddressSearchDialog : DialogFragment(), AddressListener {
+class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private var _binding: DialogAddressSearchBinding? = null
     private val binding get() = _binding!!
 

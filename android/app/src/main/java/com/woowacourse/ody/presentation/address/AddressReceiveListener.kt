@@ -1,5 +1,5 @@
 package com.woowacourse.ody.presentation.address
 
-interface AddressListener {
+interface AddressReceiveListener {
     fun onReceive(address: String)
 }
