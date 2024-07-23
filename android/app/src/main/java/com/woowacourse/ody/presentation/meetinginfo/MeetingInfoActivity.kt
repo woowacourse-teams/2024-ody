@@ -1,13 +1,15 @@
 package com.woowacourse.ody.presentation.meetinginfo
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingInfoBinding
-import com.woowacourse.ody.presentation.IntroActivity
 import com.woowacourse.ody.presentation.date.MeetingDateFragment
 import com.woowacourse.ody.presentation.destination.MeetingDestinationFragment
+import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.meetinginfo.adapter.InfoViewPagerAdapter
 import com.woowacourse.ody.presentation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
@@ -90,5 +92,9 @@ class MeetingInfoActivity : AppCompatActivity(), MeetingInfoListener {
 
     override fun onBack() {
         handleBackClick()
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent = Intent(context, MeetingInfoActivity::class.java)
     }
 }
