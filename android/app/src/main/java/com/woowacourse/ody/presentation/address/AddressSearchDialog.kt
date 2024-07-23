@@ -38,6 +38,8 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeView()
+        initializeObservingData()
+        showAddressSearchWebView()
     }
 
     private fun initializeView() {
@@ -46,7 +48,9 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
-        showAddressSearchWebView()
+    }
+
+    private fun initializeObservingData() {
         viewModel.geoLocation.observe(viewLifecycleOwner) {
             setFragmentResult(REQUEST_KEY, bundleOf(GEO_LOCATION_KEY to it))
             dismiss()

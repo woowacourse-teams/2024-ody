@@ -37,13 +37,16 @@ class MeetingDestinationFragment : Fragment() {
             AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
         }
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
-            val geoLocation =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    bundle.getParcelable(AddressSearchDialog.GEO_LOCATION_KEY, GeoLocation::class.java)
-                } else {
-                    bundle.getParcelable<GeoLocation>(AddressSearchDialog.GEO_LOCATION_KEY)
-                } ?: return@setFragmentResultListener
+            val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
             binding.etDestination.setText(geoLocation.address)
+        }
+    }
+
+    private fun Bundle.getGeoLocation(): GeoLocation? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getParcelable(AddressSearchDialog.GEO_LOCATION_KEY, GeoLocation::class.java)
+        } else {
+            getParcelable<GeoLocation>(AddressSearchDialog.GEO_LOCATION_KEY)
         }
     }
 
