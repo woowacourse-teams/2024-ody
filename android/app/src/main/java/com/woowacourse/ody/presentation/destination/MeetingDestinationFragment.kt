@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import com.woowacourse.ody.databinding.FragmentDestinationBinding
+import com.woowacourse.ody.databinding.FragmentMeetingDestinationBinding
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
 
-class DestinationFragment : Fragment() {
-    private var _binding: FragmentDestinationBinding? = null
+class MeetingDestinationFragment : Fragment() {
+    private var _binding: FragmentMeetingDestinationBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -18,7 +18,7 @@ class DestinationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentDestinationBinding.inflate(inflater, container, false)
+        _binding = FragmentMeetingDestinationBinding.inflate(inflater, container, false)
         return binding.root
     }
 
