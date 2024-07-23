@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.completion.JoinCompleteActivity"
+            android:exported="true" />
+        <activity
             android:name=".presentation.completion.MeetingCompletionActivity"
             android:exported="true" />
         <activity
