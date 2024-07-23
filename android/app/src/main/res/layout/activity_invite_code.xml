@@ -36,6 +36,7 @@
         style="@style/edit_text_style"
         android:layout_marginHorizontal="42dp"
         android:layout_marginTop="52dp"
+        android:focusable="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_invite_front" />
@@ -47,10 +48,11 @@
         android:layout_marginEnd="5dp"
         android:gravity="center_vertical"
         android:hint="@string/invite_code_input_hint"
+        android:inputType="text"
+        android:maxLines="1"
         app:layout_constraintEnd_toStartOf="@id/iv_cancel"
         app:layout_constraintStart_toStartOf="@id/et_invite_code_form"
         app:layout_constraintTop_toTopOf="@id/et_invite_code_form" />
-
 
     <ImageView
         android:id="@+id/iv_cancel"
