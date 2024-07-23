@@ -7,16 +7,16 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingInfoBinding
+import com.woowacourse.ody.presentation.adapter.InfoViewPagerAdapter
 import com.woowacourse.ody.presentation.date.MeetingDateFragment
 import com.woowacourse.ody.presentation.destination.MeetingDestinationFragment
 import com.woowacourse.ody.presentation.intro.IntroActivity
-import com.woowacourse.ody.presentation.meetinginfo.adapter.InfoViewPagerAdapter
 import com.woowacourse.ody.presentation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
 import com.woowacourse.ody.presentation.time.MeetingTimeFragment
 
-class MeetingInfoActivity : AppCompatActivity(), MeetingInfoListener {
+class MeetingInfoActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityMeetingInfoBinding by lazy {
         ActivityMeetingInfoBinding.inflate(layoutInflater)
     }
@@ -25,13 +25,13 @@ class MeetingInfoActivity : AppCompatActivity(), MeetingInfoListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initDataBinding()
-        initMeetingInfoViewPager()
-        initVisitorOnBodingInfoViewPager()
+        initializeDataBinding()
     }
 
-    private fun initDataBinding() {
-        binding.meetingInfoListener = this
+    private fun initializeDataBinding() {
+        binding.infoListener = this
+        initializeMeetingInfoViewPager()
+        initializeVisitorOnBodingInfoViewPager()
     }
 
     private fun handleBackClick() {
@@ -62,18 +62,18 @@ class MeetingInfoActivity : AppCompatActivity(), MeetingInfoListener {
         }
     }
 
-    private fun initMeetingInfoViewPager() {
-        val aAdapter: InfoViewPagerAdapter = InfoViewPagerAdapter(this, getMeetingInfoFragments())
+    private fun initializeMeetingInfoViewPager() {
+        val meetingInfoViewPagerAdapter: InfoViewPagerAdapter = InfoViewPagerAdapter(this, getMeetingInfoFragments())
 
-        binding.vpMeetingInfo.adapter = aAdapter
+        binding.vpMeetingInfo.adapter = meetingInfoViewPagerAdapter
         binding.wdMeetingInfo.attachTo(binding.vpMeetingInfo)
     }
 
-    private fun initVisitorOnBodingInfoViewPager() {
-        val bAdapter: InfoViewPagerAdapter =
+    private fun initializeVisitorOnBodingInfoViewPager() {
+        val visitorOnBodingInfoAdapter: InfoViewPagerAdapter =
             InfoViewPagerAdapter(this, getVisitorOnBodingInfoFragments())
 
-        binding.vpJoinInfo.adapter = bAdapter
+        binding.vpJoinInfo.adapter = visitorOnBodingInfoAdapter
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)
     }
 

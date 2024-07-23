@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meetinginfo.adapter
+package com.woowacourse.ody.presentation.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

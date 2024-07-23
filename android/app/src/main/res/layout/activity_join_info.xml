@@ -13,10 +13,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.meetinginfo.MeetingInfoActivity">
+        tools:context=".presentation.joininfo.JoinInfoActivity">
 
         <include
-            android:id="@+id/tb_meeting_info"
+            android:id="@+id/tb_join_info"
             layout="@layout/toolbar_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,26 +24,10 @@
             app:infoListener="@{infoListener}" />
 
         <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-            android:id="@+id/wd_meeting_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            app:dotsColor="@color/gray"
-            app:dotsCornerRadius="50dp"
-            app:dotsSize="10dp"
-            app:dotsSpacing="7dp"
-            app:dotsWidthFactor="1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tb_meeting_info"
-            app:selectedDotColor="@color/purple" />
-
-        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
             android:id="@+id/wd_join_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:visibility="gone"
             app:dotsColor="@color/gray"
             app:dotsCornerRadius="50dp"
             app:dotsSize="10dp"
@@ -51,23 +35,14 @@
             app:dotsWidthFactor="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tb_meeting_info"
+            app:layout_constraintTop_toBottomOf="@id/tb_join_info"
             app:selectedDotColor="@color/purple" />
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp_meeting_info"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/wd_meeting_info" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_join_info"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/wd_join_info" />
 
