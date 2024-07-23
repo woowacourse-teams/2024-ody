@@ -27,7 +27,10 @@ class MeetingInfoViewModel : ViewModel() {
         _meetingMinute.value = now.minute
     }
 
-    fun validMeetingTime(hour: Int, minute: Int) {
+    fun validMeetingTime(
+        hour: Int,
+        minute: Int,
+    ) {
         // 이전에 선택한 Meeting Date와 함께 유효성 검증
         // 유효한 time이라면 liveData에 반영
         _isValidMeetingTime.emit(false)

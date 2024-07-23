@@ -75,9 +75,9 @@ class MeetingTimeFragment : Fragment(), MeetingTimeListener {
         setValue(index)
     }
 
-    private fun initializeView() = with(binding) {
-        npMeetingTimeHour.setRangeValues(hours)
-        npMeetingTimeMinute.setRangeValues(minutes)
+    private fun initializeView() {
+        binding.npMeetingTimeHour.setRangeValues(hours)
+        binding.npMeetingTimeMinute.setRangeValues(minutes)
     }
 
     private fun IntRange.toStrings() = map { it.toTwoLengthString() }
