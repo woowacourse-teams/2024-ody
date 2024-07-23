@@ -31,6 +31,7 @@ class MeetingTimeFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeBinding()
+        initializeObserve()
         initializeView()
     }
 
@@ -39,22 +40,37 @@ class MeetingTimeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
     }
 
+    private fun initializeObserve() {
+        viewModel.meetingHour.observe(viewLifecycleOwner) {
+            binding.npMeetingTimeHour.setSelectedValue(it)
+        }
+        viewModel.meetingMinute.observe(viewLifecycleOwner) {
+            binding.npMeetingTimeMinute.setSelectedValue(it)
+        }
+    }
+
+    private fun NumberPicker.setSelectedValue(value: Int) {
+        val index = displayedValues.indexOf(value.toTwoLengthString())
+        setValue(index)
+    }
+
     private fun initializeView() {
-        binding.npMeetingTimeHour.setRangeValues(MEETING_HOUR_RANGE)
-        binding.npMeetingTimeMinute.setRangeValues(MEETING_MINUTE_RANGE)
+        binding.npMeetingTimeHour.setRangeValues(MEETING_HOUR_RANGE.toStrings())
+        binding.npMeetingTimeMinute.setRangeValues(MEETING_MINUTE_RANGE.toStrings())
     }
 
-    private fun NumberPicker.setRangeValues(values: IntRange) {
+    private fun IntRange.toStrings() = map { it.toTwoLengthString() }
+
+    private fun Int.toTwoLengthString(): String {
+        val string = toString()
+        return if (string.length == 1) "0$string" else string
+    }
+
+    private fun NumberPicker.setRangeValues(values: List<String>) {
         wrapSelectorWheel = true
-        val displayValues = values.toStrings()
         minValue = 0
-        maxValue = displayValues.size - 1
-        displayedValues = displayValues.toTypedArray()
-    }
-
-    private fun IntRange.toStrings() = map {
-        val string = it.toString()
-        if (string.length == 1) "0$string" else string
+        maxValue = values.size - 1
+        displayedValues = values.toTypedArray()
     }
 
     override fun onDestroyView() {
