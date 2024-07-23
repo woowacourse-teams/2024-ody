@@ -12,4 +12,8 @@ class InviteCodeViewModel(
     val inviteCode: MutableLiveData<String> = MutableLiveData()
 
     val hasInviteCode: LiveData<Boolean> = inviteCode.map { it.isNotEmpty() }
+
+    fun emptyInviteCode() {
+        inviteCode.value = ""
+    }
 }
