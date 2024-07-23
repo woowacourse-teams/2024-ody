@@ -23,34 +23,36 @@
             app:layout_constraintTop_toTopOf="parent"
             app:meetingInfoListener="@{meetingInfoListener}" />
 
-        <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
             android:id="@+id/wd_meeting_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            app:dotsColor="@color/purple"
+            app:dotsColor="@color/gray"
             app:dotsCornerRadius="50dp"
             app:dotsSize="10dp"
             app:dotsSpacing="7dp"
-            app:dotsStrokeColor="@color/gray"
+            app:dotsWidthFactor="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tb_meeting_info" />
+            app:layout_constraintTop_toBottomOf="@id/tb_meeting_info"
+            app:selectedDotColor="@color/purple" />
 
-        <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
             android:id="@+id/wd_join_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:visibility="gone"
-            app:dotsColor="@color/purple"
+            app:dotsColor="@color/gray"
             app:dotsCornerRadius="50dp"
             app:dotsSize="10dp"
             app:dotsSpacing="7dp"
-            app:dotsStrokeColor="@color/gray"
+            app:dotsWidthFactor="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tb_meeting_info" />
+            app:layout_constraintTop_toBottomOf="@id/tb_meeting_info"
+            app:selectedDotColor="@color/purple" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_meeting_info"

@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.woowacourse.ody.databinding.FragmentStartingPointBinding
+import com.woowacourse.ody.databinding.FragmentJoinStartingPointBinding
 
-class StartingPointFragment : Fragment() {
-    private var _binding: FragmentStartingPointBinding? = null
+class JoinStartingPointFragment : Fragment() {
+    private var _binding: FragmentJoinStartingPointBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -16,7 +16,7 @@ class StartingPointFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentStartingPointBinding.inflate(inflater, container, false)
+        _binding = FragmentJoinStartingPointBinding.inflate(inflater, container, false)
         return binding.root
     }
 

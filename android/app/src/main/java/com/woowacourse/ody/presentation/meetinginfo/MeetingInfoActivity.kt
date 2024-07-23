@@ -11,7 +11,7 @@ import com.woowacourse.ody.presentation.destination.DestinationFragment
 import com.woowacourse.ody.presentation.meetinginfo.adapter.InfoViewPagerAdapter
 import com.woowacourse.ody.presentation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.startingpoint.StartingPointFragment
+import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
 import com.woowacourse.ody.presentation.time.MeetingTimeFragment
 
 class MeetingInfoActivity : AppCompatActivity(), MeetingInfoListener {
@@ -85,7 +85,7 @@ class MeetingInfoActivity : AppCompatActivity(), MeetingInfoListener {
     }
 
     private fun getVisitorOnBodingInfoFragments(): List<Fragment> {
-        return listOf(JoinNickNameFragment(), StartingPointFragment())
+        return listOf(JoinNickNameFragment(), JoinStartingPointFragment())
     }
 
     override fun onBack() {
