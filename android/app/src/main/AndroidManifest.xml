@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.IntroActivity"
+            android:name=".presentation.intro.IntroActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
