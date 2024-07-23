@@ -38,7 +38,7 @@ public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver
 
     private String extractDeviceToken(String value) {
         if (!value.startsWith(DEVICE_TOKEN_PREFIX)) {
-            throw new OdyException("잚못된 토큰 형식입니다.");
+            throw new OdyException("잘못된 토큰 형식입니다."); // TODO: 커스텀 예외 제거할지 말지
         }
         return value.substring(DEVICE_TOKEN_PREFIX.length());
     }
