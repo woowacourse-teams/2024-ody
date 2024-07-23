@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityIntroBinding
+import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoActivity
 import com.woowacourse.ody.util.observeEvent
 
@@ -59,6 +60,9 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun navigateToInviteCodeActivity() {
+        Intent(this, InviteCodeActivity::class.java).also {
+            startActivity(it)
+        }
     }
 
     private fun requestNotificationPermission() {
@@ -77,7 +81,8 @@ class IntroActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    private fun showSnackBar(message: String) =
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
 
     companion object {
         fun getIntent(context: Context): Intent = Intent(context, IntroActivity::class.java)
