@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="listener"
             type="com.woowacourse.ody.presentation.intro.IntroListener" />
@@ -14,6 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.intro.IntroActivity">
+
+        <include layout="@layout/toolbar_intro" />
 
         <TextView
             android:id="@+id/tv_intro_hello"
@@ -58,9 +61,9 @@
             android:layout_marginTop="38dp"
             android:background="@drawable/rectangle_purple_radius_20"
             android:gravity="center"
+            android:onClick="@{() -> listener.onClickInputInviteCodeButton()}"
             android:text="@string/intro_join_meeting"
             android:textColor="@color/white"
-            android:onClick="@{() -> listener.onClickInputInviteCodeButton()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_intro_guide_back" />
@@ -72,9 +75,9 @@
             android:layout_marginTop="30dp"
             android:background="@drawable/rectangle_purple_radius_20"
             android:gravity="center"
+            android:onClick="@{() -> listener.onClickMeetingInfoButton()}"
             android:text="@string/intro_create_meeting"
             android:textColor="@color/white"
-            android:onClick="@{() -> listener.onClickMeetingInfoButton()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_intro_join_meeting" />
