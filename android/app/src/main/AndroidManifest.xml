@@ -19,8 +19,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.meetinginfo.MeetingInfoActivity"
+            android:exported="true" />
+        <activity
             android:name=".presentation.splash.SplashActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,8 +34,8 @@
             android:name=".presentation.IntroActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity">
-        </activity>
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+
         <service
             android:name="com.woowacourse.ody.data.local.FCMService"
             android:exported="false">
