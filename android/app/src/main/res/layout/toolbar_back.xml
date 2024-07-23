@@ -6,7 +6,7 @@
 
         <variable
             name="InfoListener"
-            type="com.woowacourse.ody.presentation.meetinginfo.InfoListener" />
+            type="com.woowacourse.ody.presentation.meetinginfo.BackListener" />
     </data>
 
     <androidx.appcompat.widget.Toolbar

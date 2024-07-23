@@ -1,5 +1,5 @@
 package com.woowacourse.ody.presentation.meetinginfo
 
-interface InfoListener {
+interface BackListener {
     fun onBack()
 }

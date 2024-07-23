@@ -7,16 +7,16 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingInfoBinding
+import com.woowacourse.ody.presentation.adapter.InfoViewPagerAdapter
 import com.woowacourse.ody.presentation.date.MeetingDateFragment
 import com.woowacourse.ody.presentation.destination.MeetingDestinationFragment
 import com.woowacourse.ody.presentation.intro.IntroActivity
-import com.woowacourse.ody.presentation.meetinginfo.adapter.InfoViewPagerAdapter
 import com.woowacourse.ody.presentation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
 import com.woowacourse.ody.presentation.time.MeetingTimeFragment
 
-class MeetingInfoActivity : AppCompatActivity(), InfoListener {
+class MeetingInfoActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityMeetingInfoBinding by lazy {
         ActivityMeetingInfoBinding.inflate(layoutInflater)
     }

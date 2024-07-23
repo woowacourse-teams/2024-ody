@@ -4,12 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityJoinInfoBinding
-import com.woowacourse.ody.presentation.meetinginfo.InfoListener
-import com.woowacourse.ody.presentation.meetinginfo.adapter.InfoViewPagerAdapter
+import com.woowacourse.ody.presentation.adapter.InfoViewPagerAdapter
+import com.woowacourse.ody.presentation.meetinginfo.BackListener
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
 
-class JoinInfoActivity : AppCompatActivity(), InfoListener {
+class JoinInfoActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityJoinInfoBinding by lazy {
         ActivityJoinInfoBinding.inflate(layoutInflater)
     }
