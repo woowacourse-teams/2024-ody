@@ -7,7 +7,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.R
-import com.woowacourse.ody.presentation.IntroActivity
+import com.woowacourse.ody.presentation.intro.IntroActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
