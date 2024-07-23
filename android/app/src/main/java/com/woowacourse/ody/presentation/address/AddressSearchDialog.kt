@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.webkit.WebViewAssetLoader
 import com.woowacourse.ody.data.remote.location.repository.KakaoGeoLocationRepository
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
+import com.woowacourse.ody.presentation.address.ui.toGeoLocationUiModel
 
 class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private var _binding: DialogAddressSearchBinding? = null
@@ -52,7 +53,8 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
 
     private fun initializeObservingData() {
         viewModel.geoLocation.observe(viewLifecycleOwner) {
-            setFragmentResult(REQUEST_KEY, bundleOf(GEO_LOCATION_KEY to it))
+            val geoLocationUiModel = it.toGeoLocationUiModel()
+            setFragmentResult(REQUEST_KEY, bundleOf(GEO_LOCATION_UI_MODEL_KEY to geoLocationUiModel))
             dismiss()
         }
     }
@@ -84,7 +86,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
 
     companion object {
         const val REQUEST_KEY = "address_search_request_key"
-        const val GEO_LOCATION_KEY = "geo_location_key"
+        const val GEO_LOCATION_UI_MODEL_KEY = "geo_location_ui_model_key"
 
         private const val DOMAIN = "com.woowacourse.ody"
         private const val JS_BRIDGE = "address_search"

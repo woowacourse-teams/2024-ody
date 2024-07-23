@@ -10,6 +10,8 @@ import androidx.fragment.app.setFragmentResultListener
 import com.woowacourse.ody.databinding.FragmentMeetingDestinationBinding
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
+import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
+import com.woowacourse.ody.presentation.address.ui.toGeoLocation
 
 class MeetingDestinationFragment : Fragment() {
     private var _binding: FragmentMeetingDestinationBinding? = null
@@ -43,11 +45,13 @@ class MeetingDestinationFragment : Fragment() {
     }
 
     private fun Bundle.getGeoLocation(): GeoLocation? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getParcelable(AddressSearchDialog.GEO_LOCATION_KEY, GeoLocation::class.java)
-        } else {
-            getParcelable<GeoLocation>(AddressSearchDialog.GEO_LOCATION_KEY)
-        }
+        val geoLocationUiModel =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                getParcelable(AddressSearchDialog.GEO_LOCATION_UI_MODEL_KEY, GeoLocationUiModel::class.java)
+            } else {
+                getParcelable<GeoLocationUiModel>(AddressSearchDialog.GEO_LOCATION_UI_MODEL_KEY)
+            }
+        return geoLocationUiModel?.toGeoLocation()
     }
 
     override fun onDestroyView() {
