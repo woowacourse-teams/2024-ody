@@ -18,12 +18,16 @@ class IntroActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initObserve()
+        initializeObserve()
+        initializeBinding()
+    }
+
+    private fun initializeBinding() {
         binding.listener = vm
         setContentView(binding.root)
     }
 
-    private fun initObserve() {
+    private fun initializeObserve() {
         vm.navigateAction.observeEvent(this) { navigateAction ->
             when (navigateAction) {
                 is IntroNavigateAction.NavigateToMeetingInfo ->
