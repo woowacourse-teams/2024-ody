@@ -1,5 +1,6 @@
 package com.ody.common;
 
+import com.ody.member.domain.DeviceToken;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
@@ -35,9 +36,9 @@ public class Fixture {
             "초대코드"
     );
 
-    public static Member MEMBER1 = new Member("testToken1");
-    public static Member MEMBER2 = new Member("testToken2");
-    public static Member MEMBER3 = new Member("testToken3");
+    public static Member MEMBER1 = new Member(new DeviceToken("device-token=testToken1"));
+    public static Member MEMBER2 = new Member(new DeviceToken("device-token=testToken2"));
+    public static Member MEMBER3 = new Member(new DeviceToken("device-token=testToken3"));
 
     public static Location ORIGIN_LOCATION = new Location(
             "서울 강남구 테헤란로 411",

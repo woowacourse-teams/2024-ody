@@ -1,5 +1,6 @@
 package com.ody.member.service;
 
+import com.ody.member.domain.DeviceToken;
 import com.ody.common.exception.OdyException;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
@@ -15,11 +16,11 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Member save(String deviceToken) {
+    public Member save(DeviceToken deviceToken) {
         return memberRepository.save(new Member(deviceToken));
     }
 
-    public Member findByDeviceToken(String deviceToken) {
+    public Member findByDeviceToken(DeviceToken deviceToken) {
         return memberRepository.findByDeviceToken(deviceToken)
                 .orElseThrow(() -> new OdyException("존재하지 않는 회원 입니다."));
     }
