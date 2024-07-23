@@ -39,7 +39,7 @@ class MeetingDateFragment : Fragment() {
             val selectedDate = Calendar.getInstance()
             selectedDate.set(year, month, dayOfMonth)
 
-            if (selectedDate.timeInMillis < today) {
+            if (selectedDate.timeInMillis < Calendar.getInstance().timeInMillis) {
                 showSnackBar(getString(R.string.meeting_date_date_guide))
                 binding.cvDate.date = today
             } else {
@@ -56,5 +56,6 @@ class MeetingDateFragment : Fragment() {
         _binding = null
     }
 
-    private fun showSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    private fun showSnackBar(message: String) =
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
 }
