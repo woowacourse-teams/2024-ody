@@ -5,14 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.snackbar.Snackbar
+import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingTimeBinding
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
+import com.woowacourse.ody.util.observeEvent
 
 class MeetingTimeFragment : Fragment() {
     private var _binding: FragmentMeetingTimeBinding? = null
     private val binding get() = _binding!!
+
+    private val hours: List<String> by lazy { MEETING_HOUR_RANGE.toStrings() }
+    private val minutes: List<String> by lazy { MEETING_MINUTE_RANGE.toStrings() }
 
     private val viewModel: MeetingInfoViewModel by activityViewModels<MeetingInfoViewModel>()
 
@@ -47,6 +54,19 @@ class MeetingTimeFragment : Fragment() {
         viewModel.meetingMinute.observe(viewLifecycleOwner) {
             binding.npMeetingTimeMinute.setSelectedValue(it)
         }
+        viewModel.isValidMeetingTime.observeEvent(viewLifecycleOwner) { isValid ->
+            if (isValid) {
+                // 다음 화면으로 이동
+                return@observeEvent
+            }
+            showSnackBar(R.string.invalid_meeting_time)
+        }
+    }
+
+    private fun showSnackBar(
+        @StringRes messageId: Int,
+    ) {
+        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun NumberPicker.setSelectedValue(value: Int) {
@@ -54,9 +74,14 @@ class MeetingTimeFragment : Fragment() {
         setValue(index)
     }
 
-    private fun initializeView() {
-        binding.npMeetingTimeHour.setRangeValues(MEETING_HOUR_RANGE.toStrings())
-        binding.npMeetingTimeMinute.setRangeValues(MEETING_MINUTE_RANGE.toStrings())
+    private fun initializeView() = with(binding) {
+        npMeetingTimeHour.setRangeValues(hours)
+        npMeetingTimeMinute.setRangeValues(minutes)
+        btnNextMeetingTime.setOnClickListener {
+            val hour = hours[npMeetingTimeHour.value].toInt()
+            val minute = minutes[npMeetingTimeMinute.value].toInt()
+            viewModel.validMeetingTime(hour, minute)
+        }
     }
 
     private fun IntRange.toStrings() = map { it.toTwoLengthString() }
