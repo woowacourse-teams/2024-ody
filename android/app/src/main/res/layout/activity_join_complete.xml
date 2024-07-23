@@ -20,7 +20,7 @@
         android:layout_marginTop="34dp"
         android:gravity="center"
         android:textColor="@color/purple"
-        tools:text="@string/join_completion_first_explain" />
+        tools:text="우테코 회식 모임" />
 
     <TextView
         style="@style/pretendard_bold_28"
