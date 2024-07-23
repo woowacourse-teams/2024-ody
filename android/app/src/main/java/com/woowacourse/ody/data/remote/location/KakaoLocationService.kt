@@ -8,8 +8,5 @@ import retrofit2.http.Query
 
 interface KakaoLocationService {
     @GET("v2/local/search/address.json")
-    suspend fun fetchLocation(
-        @Header("Authorization") key: String,
-        @Query("query") query: String
-    ): LocationSearchResponse
+    suspend fun fetchLocation(@Query("query") query: String): LocationSearchResponse
 }
