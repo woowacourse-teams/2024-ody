@@ -19,4 +19,3 @@ spring:
 
 fcm:
   enabled: false
-  access-key-filename: oddy-4482e-firebase-adminsdk-8om1g-e7d1998dad.json

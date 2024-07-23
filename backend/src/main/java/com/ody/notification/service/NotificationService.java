@@ -1,11 +1,8 @@
 package com.ody.notification.service;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.TopicManagementResponse;
-import com.ody.common.exception.OdyException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
+import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
@@ -14,7 +11,6 @@ import com.ody.notification.repository.NotificationRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -29,9 +25,10 @@ public class NotificationService {
 
     private final ApplicationEventPublisher publisher;
     private final NotificationRepository notificationRepository;
+    private final FcmSubscriber fcmSubscriber;
 
     @Transactional
-    public void saveAndSendDepartureReminder(Meeting meeting, Mate mate, String deviceToken) {
+    public void saveAndSendDepartureReminder(Meeting meeting, Mate mate, DeviceToken deviceToken) {
         // TODO : RouteService가 해줄꺼임.
         LocalDate now = meeting.getDate();
         LocalTime departureTime = meeting.getTime().minusMinutes(2);
@@ -45,17 +42,10 @@ public class NotificationService {
         );
         notificationRepository.save(notification);
 
-        try {
-            TopicManagementResponse topicManagementResponse = FirebaseMessaging.getInstance()
-                    .subscribeToTopic(List.of(deviceToken), meeting.getId().toString());
-            log.info("모임 구독에 성공했습니다 {}", topicManagementResponse);
-        } catch (FirebaseMessagingException exception) {
-            log.error(exception.getMessage());
-            throw new OdyException("모임 구독에 실패했습니다");
-        }
+        fcmSubscriber.subscribeTopic(meeting, deviceToken);
 
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
-                deviceToken,
+                deviceToken.getDeviceToken(),
                 NotificationType.DEPARTURE_REMINDER,
                 mate.getNickname(),
                 sendAt

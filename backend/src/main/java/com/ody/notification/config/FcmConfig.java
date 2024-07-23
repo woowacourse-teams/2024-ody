@@ -17,9 +17,6 @@ public class FcmConfig {
     @Value("${fcm.enabled}")
     private boolean fcmEnabled;
 
-    @Value("${fcm.access-key-filename}")
-    private String accessKeyFilename;
-
     @PostConstruct
     public void initialize() {
         if (!fcmEnabled) {
@@ -30,7 +27,7 @@ public class FcmConfig {
         try {
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(
-                            GoogleCredentials.fromStream(new ClassPathResource(accessKeyFilename).getInputStream())
+                            GoogleCredentials.fromStream(new ClassPathResource("fcm-admin-sdk.json").getInputStream())
                     )
                     .build();
             FirebaseApp.initializeApp(options);
