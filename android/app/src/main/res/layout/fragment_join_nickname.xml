@@ -117,7 +117,7 @@
         <Button
             android:id="@+id/btn_next_nickname"
             style="@style/bottom_button_style"
-            android:enabled="false"
+            android:enabled="@{vm.hasNickname}"
             android:text="@string/next_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
