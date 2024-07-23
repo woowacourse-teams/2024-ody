@@ -16,6 +16,11 @@
     <string name="destination_question_hint">주소를 찾아보세요</string>
     <string name="destination_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
 
+    <!-- fragment_meeting_date.xml -->
+    <string name="meeting_date_question_front">언제</string>
+    <string name="meeting_date_question_back">만나시나요?</string>
+    <string name="meeting_date_date_guide">오늘 이후의 날짜를 선택해 주세요!</string>
+
     <!-- activity_meeting_completion.xml -->
     <string name="meeting_completion_explain">거의 다 왔어요!\n이제 당신을 소개해 주세요</string>
 
