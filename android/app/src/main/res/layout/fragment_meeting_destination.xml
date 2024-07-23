@@ -31,6 +31,7 @@
     <EditText
         android:id="@+id/et_destination"
         style="@style/edit_text_style"
+        android:layout_marginHorizontal="42dp"
         android:layout_marginTop="32dp"
         android:focusable="false"
         android:hint="@string/destination_question_hint"

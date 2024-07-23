@@ -5,11 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.woowacourse.ody.databinding.FragmentDestinationBinding
+import androidx.fragment.app.setFragmentResultListener
+import com.woowacourse.ody.databinding.FragmentMeetingDestinationBinding
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
 
-class DestinationFragment : Fragment() {
-    private var _binding: FragmentDestinationBinding? = null
+class MeetingDestinationFragment : Fragment() {
+    private var _binding: FragmentMeetingDestinationBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,7 +18,7 @@ class DestinationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentDestinationBinding.inflate(inflater, container, false)
+        _binding = FragmentMeetingDestinationBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -32,6 +33,10 @@ class DestinationFragment : Fragment() {
     private fun initializeView() {
         binding.etDestination.setOnClickListener {
             AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+        }
+        setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
+            val address = bundle.getString(AddressSearchDialog.ADDRESS_KEY)
+            binding.etDestination.setText(address)
         }
     }
 
