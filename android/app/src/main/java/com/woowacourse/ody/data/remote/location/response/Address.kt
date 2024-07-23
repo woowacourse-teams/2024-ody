@@ -14,5 +14,5 @@ data class Address(
     @Json(name = "region_3depth_name") val region3depthName: String,
     @Json(name = "sub_address_no") val subAddressNo: String,
     @Json(name = "x") val x: String,
-    @Json(name = "y") val y: String
+    @Json(name = "y") val y: String,
 )

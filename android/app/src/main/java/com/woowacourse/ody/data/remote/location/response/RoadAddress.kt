@@ -14,5 +14,5 @@ data class RoadAddress(
     @Json(name = "underground_yn") val undergroundYn: String,
     @Json(name = "x") val x: String,
     @Json(name = "y") val y: String,
-    @Json(name = "zone_no") val zoneNo: String
+    @Json(name = "zone_no") val zoneNo: String,
 )

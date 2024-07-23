@@ -12,8 +12,9 @@ object KakaoRetrofitClient {
     private const val BASE_URL = "https://dapi.kakao.com/"
     private val interceptor: Interceptor by lazy {
         Interceptor {
-            val newRequest = it.request().newBuilder()
-                .addHeader("Authorization", "KakaoAK ${BuildConfig.KAKAO_API_KEY}").build()
+            val newRequest =
+                it.request().newBuilder()
+                    .addHeader("Authorization", "KakaoAK ${BuildConfig.KAKAO_API_KEY}").build()
             it.proceed(newRequest)
         }
     }
