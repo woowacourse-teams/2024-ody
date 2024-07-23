@@ -30,12 +30,17 @@ class MeetingTimeFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeBinding()
-        binding.npMeetingTimeHour.wrapSelectorWheel = true
+        initializeView()
     }
 
     private fun initializeBinding() {
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+    }
+
+    private fun initializeView() {
+        binding.npMeetingTimeHour.wrapSelectorWheel = true
+        binding.npMeetingTimeMinute.wrapSelectorWheel = true
     }
 
     override fun onDestroyView() {
