@@ -36,8 +36,7 @@ class JoinInfoActivity : AppCompatActivity(), BackListener {
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)
     }
 
-    private fun getJoinInfoFragments(): List<Fragment> =
-        listOf(JoinNickNameFragment(), JoinStartingPointFragment())
+    private fun getJoinInfoFragments(): List<Fragment> = listOf(JoinNickNameFragment(), JoinStartingPointFragment())
 
     override fun onBack() {
         if (binding.vpJoinInfo.currentItem > 0) {
