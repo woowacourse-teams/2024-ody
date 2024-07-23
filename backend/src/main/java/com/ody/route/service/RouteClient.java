@@ -3,8 +3,10 @@ package com.ody.route.service;
 import com.ody.meeting.domain.Location;
 import com.ody.route.config.RouteProperties;
 import com.ody.route.domain.Duration;
+import com.ody.route.service.dto.CalculateDurationResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import org.springframework.web.client.RestClient;
 
 public class RouteClient {
@@ -21,10 +23,11 @@ public class RouteClient {
     }
 
     public Duration calculateDuration(Location origin, Location target) {
-        return restClient.get()
+        CalculateDurationResponse response =  restClient.get()
                 .uri(makeURI(origin, target))
                 .retrieve()
-                .body(Duration.class);
+                .body(CalculateDurationResponse.class);
+        return responseToDuration(response);
     }
 
     private URI makeURI(Location origin, Location target) {
@@ -45,5 +48,22 @@ public class RouteClient {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Duration responseToDuration(CalculateDurationResponse response) {
+        if (response.code().isPresent()) {
+            return extractDurationOrThrow(response);
+        }
+        response.minutes().orElseThrow(RuntimeException::new);
+        return new Duration(response.minutes().getAsLong());
+
+    }
+
+    private Duration extractDurationOrThrow(CalculateDurationResponse response) {
+        Optional<String> code = response.code();
+        if (code.isPresent() && code.get().equals("-98")) {
+            return Duration.ZERO;
+        }
+        throw new RuntimeException();
     }
 }

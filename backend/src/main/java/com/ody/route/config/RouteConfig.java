@@ -21,6 +21,7 @@ public class RouteConfig {
 
     @Bean
     public RouteClient routeClient(RestClient.Builder routeRestClientBuilder) {
+        routeRestClientCustomizer().customize(routeRestClientBuilder);
         return new RouteClient(routeProperties, routeRestClientBuilder);
     }
 
@@ -32,8 +33,8 @@ public class RouteConfig {
 
     private ClientHttpRequestFactory clientHttpRequestFactory() {
         ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.DEFAULTS
-                .withConnectTimeout(Duration.ofSeconds(10))
-                .withReadTimeout(Duration.ofSeconds(30));
+                .withConnectTimeout(Duration.ofSeconds(60))
+                .withReadTimeout(Duration.ofSeconds(30)); //TODO: timeout 처리 로직 구현
         return ClientHttpRequestFactories.get(settings);
     }
 }

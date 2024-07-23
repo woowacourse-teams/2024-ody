@@ -7,5 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class Duration {
 
+    public static final Duration ZERO = new Duration(0);
+
     private final long minutes;
 }
