@@ -1,6 +1,6 @@
 spring:
   config:
-    import: private/private.yml
+    import: classpath:private/private.yml
 
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
