@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class NotificationLogs(
+data class NotificationLogEntities(
     @Json(name = "notiLog")
-    val logList: List<NotificationLog>,
+    val logList: List<NotificationLogEntity>,
 )
