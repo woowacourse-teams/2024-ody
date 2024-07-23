@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import com.woowacourse.ody.databinding.FragmentMeetingDestinationBinding
-import com.woowacourse.ody.domain.GeoLocation
+import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
 
 class MeetingDestinationFragment : Fragment() {
