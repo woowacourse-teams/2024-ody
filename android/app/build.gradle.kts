@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.googleServices)
     id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 val properties = Properties()
@@ -25,6 +26,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
+        buildConfigField("String", "KAKAO_API_KEY", properties["KAKAO_API_KEY"].toString())
     }
     buildTypes {
         release {
