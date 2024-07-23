@@ -41,4 +41,5 @@
 
     <!-- all -->
     <string name="next_button">다음</string>
+    <string name="confirm_button">확인</string>
 </resources>
