@@ -1,5 +1,6 @@
 package com.woowacourse.ody.data.remote.location
 
+import com.woowacourse.ody.data.remote.location.response.toGeoLocation
 import com.woowacourse.ody.domain.GeoLocation
 import com.woowacourse.ody.domain.GeoLocationRepository
 
@@ -9,9 +10,7 @@ object KakaoGeoLocationRepository : GeoLocationRepository {
     override suspend fun fetchGeoLocation(address: String): Result<GeoLocation> {
         return runCatching {
             val locationSearchResponse = service.fetchLocation(address)
-            val longitude = locationSearchResponse.documents[0].x
-            val latitude = locationSearchResponse.documents[0].y
-            GeoLocation(address, longitude, latitude)
+            locationSearchResponse.toGeoLocation(address)
         }
     }
 }
