@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">오디</string>
+    <!-- item_notification_log.xml -->
+
+    <string name= "item_notification_log_title">-> %1$s(이)가 들어왔어요.</string>"
 
     <!-- activity_intro.xml -->
     <string name="intro_hello">안녕하세요!</string>
