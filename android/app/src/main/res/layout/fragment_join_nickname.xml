@@ -103,6 +103,7 @@
             tools:text="9" />
 
         <ImageView
+            android:onClick="@{() -> vm.emptyNickname()}"
             android:id="@+id/iv_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -114,7 +115,7 @@
             app:visibility="@{vm.hasNickname}" />
 
         <Button
-            android:id="@+id/btn_next_destination"
+            android:id="@+id/btn_next_nickname"
             style="@style/bottom_button_style"
             android:enabled="false"
             android:text="@string/next_button"
