@@ -4,6 +4,7 @@ import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MateResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -44,7 +45,7 @@ public class MeetingController implements MeetingControllerSwagger {
     @PostMapping("/meetings")
     public ResponseEntity<MeetingSaveResponse> save(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String fcmToken,
-            @RequestBody MeetingSaveRequest meetingSaveRequest
+            @Valid @RequestBody MeetingSaveRequest meetingSaveRequest
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new MeetingSaveResponse(1L, "우테코 16조", LocalDate.parse("2024-07-15"), LocalTime.parse("14:00"),
