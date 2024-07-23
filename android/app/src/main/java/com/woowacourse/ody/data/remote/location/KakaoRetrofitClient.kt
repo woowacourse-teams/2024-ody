@@ -1,7 +1,7 @@
 package com.woowacourse.ody.data.remote.location
 
-import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
