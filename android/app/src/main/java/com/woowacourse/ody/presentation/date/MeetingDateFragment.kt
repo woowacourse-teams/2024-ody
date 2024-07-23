@@ -47,7 +47,6 @@ class MeetingDateFragment : Fragment() {
                 val selectedYear = year
                 val selectedMonth = month + 1
                 val selectedDay = dayOfMonth
-                showSnackBar("$selectedYear $selectedMonth $selectedDay")
             }
         }
     }
