@@ -22,7 +22,7 @@ class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initDataBinding()
+        initializeDataBinding()
         initializePersistentBottomSheet()
     }
 
@@ -33,14 +33,14 @@ class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
         val clip = ClipData.newPlainText(INVITE_CODE_LABEL, inviteCode)
         clipboard.setPrimaryClip(clip)
 
-        showSnackBar(getString(R.string.logs_copy_code_guide))
+        showSnackBar(R.string.logs_copy_code_guide)
     }
 
     override fun share() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun initDataBinding() {
+    private fun initializeDataBinding() {
         binding.logsListener = this
         binding.codeCopyListener = this
     }
@@ -49,8 +49,8 @@ class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
     }
 
-    private fun showSnackBar(message: String) =
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+    private fun showSnackBar(messageId: Int) =
+        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
             .apply {
                 // 날짜 위에 나오게 변경 setAnchorView(binding.tvDate)
             }
