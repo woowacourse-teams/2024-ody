@@ -22,7 +22,7 @@ class JoinInfoActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeDataBinding() {
-        binding.infoListener = this
+        binding.backListener = this
         initializeJoinInfoViewPager()
     }
 

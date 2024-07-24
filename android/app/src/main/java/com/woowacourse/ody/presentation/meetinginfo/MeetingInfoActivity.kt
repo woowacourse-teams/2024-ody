@@ -29,7 +29,7 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeDataBinding() {
-        binding.infoListener = this
+        binding.backListener = this
         initializeMeetingInfoViewPager()
         initializeVisitorOnBodingInfoViewPager()
     }

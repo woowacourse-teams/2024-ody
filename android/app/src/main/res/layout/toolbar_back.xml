@@ -5,7 +5,7 @@
     <data>
 
         <variable
-            name="InfoListener"
+            name="backListener"
             type="com.woowacourse.ody.presentation.meetinginfo.BackListener" />
     </data>
 
@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
-                android:onClick="@{() -> InfoListener.onBack()}"
+                android:onClick="@{() -> backListener.onBack()}"
                 android:src="@drawable/ic_arrow_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

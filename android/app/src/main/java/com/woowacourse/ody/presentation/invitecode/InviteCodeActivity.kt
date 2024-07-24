@@ -29,7 +29,7 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
         setContentView(binding.root)
         binding.vm = viewModel
         binding.lifecycleOwner = this
-        binding.listener = this
+        binding.backListener = this
     }
 
     private fun initializeObserve() {

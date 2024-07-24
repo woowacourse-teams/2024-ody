@@ -9,7 +9,7 @@
             type="com.woowacourse.ody.presentation.invitecode.InviteCodeViewModel" />
 
         <variable
-            name="listener"
+            name="backListener"
             type="com.woowacourse.ody.presentation.meetinginfo.BackListener" />
     </data>
 
@@ -19,7 +19,7 @@
 
         <include
             layout="@layout/toolbar_back"
-            app:infoListener="@{listener}" />
+            app:backListener="@{backListener}" />
 
         <TextView
             android:id="@+id/tv_invite_front"
