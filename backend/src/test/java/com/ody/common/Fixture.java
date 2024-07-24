@@ -1,9 +1,9 @@
 package com.ody.common;
 
-import com.ody.member.domain.DeviceToken;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
@@ -11,7 +11,10 @@ import com.ody.notification.domain.NotificationType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Fixture {
 
     public static Location TARGET_LOCATION = new Location(
