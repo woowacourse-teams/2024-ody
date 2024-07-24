@@ -124,7 +124,7 @@ class MeetingInfoViewModel : ViewModel() {
         isValidInfo.value = isValid
     }
 
-    fun nextPage() {
+    fun moveOnNextPage() {
         checkInfoValidity()
         if (isValidInfo.value == true) {
             _nextPageEvent.emit(Unit)
