@@ -6,7 +6,7 @@ on:
       - develop
     paths:
       - backend/**
-    types: [closed]
+    types: closed
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
