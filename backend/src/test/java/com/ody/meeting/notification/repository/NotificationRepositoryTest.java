@@ -1,4 +1,4 @@
-package com.ody.notification.repository;
+package com.ody.meeting.notification.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,6 +12,7 @@ import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationType;
+import com.ody.notification.repository.NotificationRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
