@@ -1,6 +1,5 @@
 package com.woowacourse.ody.presentation.meetinginfo
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -58,7 +57,7 @@ class MeetingInfoViewModel : ViewModel() {
     }
 
     private fun initializeIsValidInfo() {
-        with (isValidInfo) {
+        with(isValidInfo) {
             addSource(meetingInfoType) { checkInfoValidity() }
             addSource(meetingName) { checkInfoValidity() }
             addSource(destinationGeoLocation) { checkInfoValidity() }

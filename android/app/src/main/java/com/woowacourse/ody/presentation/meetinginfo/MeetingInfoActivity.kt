@@ -51,7 +51,6 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
         binding.backListener = this
         initializeMeetingInfoViewPager()
         initializeVisitorOnBodingInfoViewPager()
-
     }
 
     private fun handleBackClick() {
