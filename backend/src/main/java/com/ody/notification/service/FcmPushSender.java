@@ -41,13 +41,14 @@ public class FcmPushSender {
     }
 
     private static AndroidConfig buildAndroidConfig() {
+        AndroidNotification androidNotification = AndroidNotification.builder()
+                .setTitle(TITLE)
+                .setBody(BODY)
+                .setClickAction("push_click")
+                .build();
+
         return AndroidConfig.builder()
-                .setNotification(
-                        AndroidNotification.builder()
-                                .setTitle(TITLE)
-                                .setBody(BODY)
-                                .setClickAction("push_click")
-                                .build()
-                ).build();
+                .setNotification(androidNotification)
+                .build();
     }
 }
