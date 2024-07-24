@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.ody.databinding.ItemInviteCodeLogBinding
 import com.woowacourse.ody.databinding.ItemNotificationLogBinding
-import com.woowacourse.ody.presentation.notificationlog.CopyInviteCodeButtonListener
+import com.woowacourse.ody.presentation.notificationlog.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.notificationlog.uimodel.NotificationLogUiModel
 
 class NotificationLogListAdapter(
-    private val copyInviteCodeButtonListener: CopyInviteCodeButtonListener,
+    private val copyInviteCodeListener: CopyInviteCodeListener,
 ) : ListAdapter<NotificationLogUiModel, RecyclerView.ViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -38,7 +38,7 @@ class NotificationLogListAdapter(
         position: Int,
     ) {
         when (holder) {
-            is InviteCodeViewHolder -> holder.bind(copyInviteCodeButtonListener)
+            is InviteCodeViewHolder -> holder.bind(copyInviteCodeListener)
             is NotificationLogViewHolder -> holder.bind(getItem(position))
         }
     }
