@@ -9,10 +9,9 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.woowacourse.ody.data.remote.MemberService
 import com.woowacourse.ody.data.remote.RetrofitClient
-import com.woowacourse.ody.presentation.IntroActivity
 import com.woowacourse.ody.data.remote.service.MemberService
+import com.woowacourse.ody.presentation.intro.IntroActivity
 import kotlinx.coroutines.runBlocking
 
 class FCMService : FirebaseMessagingService() {
