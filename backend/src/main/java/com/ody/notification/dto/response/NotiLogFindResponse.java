@@ -14,7 +14,7 @@ public record NotiLogFindResponse(
         List<NotificationSaveResponse> notiLog
 ) {
 
-    public static NotiLogFindResponse toResponse(List<Notification> notifications) {
+    public static NotiLogFindResponse from(List<Notification> notifications) {
         return notifications.stream()
                 .map(NotificationSaveResponse::new)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), NotiLogFindResponse::new));

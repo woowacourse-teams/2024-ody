@@ -53,7 +53,7 @@ public class MeetingController implements MeetingControllerSwagger {
     ) {
 
         List<Notification> notifications = notificationService.findAllMeetingLogs(meetingId);
-        NotiLogFindResponse response = NotiLogFindResponse.toResponse(notifications);
+        NotiLogFindResponse response = NotiLogFindResponse.from(notifications);
         return ResponseEntity.ok(response);
     }
 
