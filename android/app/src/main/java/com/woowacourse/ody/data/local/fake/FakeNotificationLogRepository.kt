@@ -61,7 +61,7 @@ object FakeNotificationLogRepository : NotificationLogRepository {
             LocalDateTime.of(2024, 7, 7, 14, 38),
         )
 
-    override suspend fun getNotificationLogs(): List<NotificationLog> =
+    override suspend fun fetchNotificationLogs(meetingId: Int): List<NotificationLog> =
         listOf(
             entryALog,
             entryBLog,
