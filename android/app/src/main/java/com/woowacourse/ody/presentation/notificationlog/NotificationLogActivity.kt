@@ -13,17 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.local.fake.FakeMeetingRepository
-import com.woowacourse.ody.data.local.fake.FakeNotificationLogRepository
+import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
+import com.woowacourse.ody.data.remote.repository.DefaultNotificationLogRepository
 import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
 import com.woowacourse.ody.presentation.notificationlog.adapter.NotificationLogListAdapter
 
 class NotificationLogActivity : AppCompatActivity(), CopyInviteCodeListener, ShareListener {
     private val viewModel: NotificationLogViewModel by viewModels {
         NotificationLogViewModelFactory(
-            // DefaultNotificationLogRepository,
-            FakeNotificationLogRepository,
-            FakeMeetingRepository,
+            DefaultNotificationLogRepository,
+            DefaultMeetingRepository,
         )
     }
 
