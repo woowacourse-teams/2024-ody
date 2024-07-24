@@ -17,6 +17,10 @@ class MeetingInfoViewModel : ViewModel() {
     private val _isValidMeetingTime: MutableLiveData<Event<Boolean>> = MutableLiveData()
     val isValidMeetingTime: LiveData<Event<Boolean>> get() = _isValidMeetingTime
 
+    val meetingName: MutableLiveData<String> = MutableLiveData()
+    val meetingNameLength: LiveData<Int> = meetingName.map { it.length }
+    val hasMeetingName: LiveData<Boolean> = meetingName.map { it.isNotEmpty() }
+
     private val _destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
     val destinationGeoLocation: LiveData<GeoLocation> get() = _destinationGeoLocation
 
@@ -41,8 +45,13 @@ class MeetingInfoViewModel : ViewModel() {
         _isValidMeetingTime.emit(false)
     }
 
+    fun emptyMeetingName() {
+        meetingName.value = ""
+    }
+
     companion object {
-        val MEETING_HOURS = (0..23).toList()
-        val MEETING_MINUTES = (0..59).toList()
+        val MEETING_HOURS = (0..<24).toList()
+        val MEETING_MINUTES = (0..<60).toList()
+        const val MEETING_NAME_MAX_LENGTH = 15
     }
 }

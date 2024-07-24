@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="52dp"
-            android:text="@string/destination_question_front"
+            android:text="@string/meeting_destination_question_front"
             android:textColor="@color/purple"
             app:layout_constraintEnd_toStartOf="@id/tv_destination_back"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -35,7 +35,7 @@
             style="@style/pretendard_bold_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/destination_question_back"
+            android:text="@string/meeting_destination_question_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/tv_destination_front"
@@ -68,8 +68,8 @@
         <Button
             android:id="@+id/btn_next_destination"
             style="@style/bottom_button_style"
-            android:text="@string/next_button"
             android:enabled="@{vm.isValidDestination()}"
+            android:text="@string/next_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
