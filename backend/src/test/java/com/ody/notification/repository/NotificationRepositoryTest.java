@@ -36,7 +36,7 @@ class NotificationRepositoryTest {
 
     @DisplayName("특정 모임의 Notification 반환")
     @Test
-    void findAllMeetingLogsById() {
+    void findAllMeetingLogs() {
         Location origin = new Location("출발지", "출발 위도", "출발 경도");
         Location target = new Location("도착지", "도착 위도", "도착 경도");
         Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
@@ -57,7 +57,7 @@ class NotificationRepositoryTest {
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogsById(1L);
+        List<Notification> notifications = notificationRepository.findAllMeetingLogs(1L);
 
         assertThat(notifications.size()).isEqualTo(2);
     }
