@@ -3,7 +3,7 @@ package com.ody.route.service;
 import com.ody.meeting.domain.Location;
 import com.ody.route.config.RouteProperties;
 import com.ody.route.domain.Duration;
-import com.ody.route.service.dto.CalculateDurationResponse;
+import com.ody.route.dto.CalculateDurationResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class RouteClient {
     }
 
     public Duration calculateDuration(Location origin, Location target) {
-        CalculateDurationResponse response =  restClient.get()
+        CalculateDurationResponse response = restClient.get()
                 .uri(makeURI(origin, target))
                 .retrieve()
                 .body(CalculateDurationResponse.class);
@@ -56,7 +56,6 @@ public class RouteClient {
         }
         response.minutes().orElseThrow(RuntimeException::new);
         return new Duration(response.minutes().getAsLong());
-
     }
 
     private Duration extractDurationOrThrow(CalculateDurationResponse response) {
