@@ -62,7 +62,7 @@ class JoinStartingPointFragment : Fragment(), AddressSearchListener {
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
             binding.etStartingPoint.setText(geoLocation.address)
-            viewModel.setStartingPointGeoLocation(geoLocation)
+            viewModel.startingPointGeoLocation.value = geoLocation
         }
     }
 

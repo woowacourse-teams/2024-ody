@@ -60,7 +60,7 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
             binding.etDestination.setText(geoLocation.address)
-            viewModel.setDestinationGeoLocation(geoLocation)
+            viewModel.destinationGeoLocation.value = geoLocation
         }
         viewModel.onNextInfo()
     }

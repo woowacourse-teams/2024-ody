@@ -27,8 +27,7 @@ class MeetingInfoViewModel : ViewModel() {
     val meetingName: MutableLiveData<String> = MutableLiveData()
     val meetingNameLength: LiveData<Int> = meetingName.map { it.length }
 
-    private val _destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
-    val destinationGeoLocation: LiveData<GeoLocation> get() = _destinationGeoLocation
+    val destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
 
     private val _invalidDestinationEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
     val invalidDestinationEvent: LiveData<Event<Unit>> get() = _invalidDestinationEvent
@@ -36,8 +35,7 @@ class MeetingInfoViewModel : ViewModel() {
     val nickname: MutableLiveData<String> = MutableLiveData()
     val nicknameLength: LiveData<Int> = nickname.map { it.length }
 
-    private val _startingPointGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
-    val startingPointGeoLocation: LiveData<GeoLocation> get() = _startingPointGeoLocation
+    val startingPointGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
 
     private val _invalidStartingPointEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
     val invalidStartingPointEvent: LiveData<Event<Unit>> get() = _invalidStartingPointEvent
@@ -57,7 +55,7 @@ class MeetingInfoViewModel : ViewModel() {
         isValidInfo.addSource(meetingName) {
             isValidInfo.value = it.isNotEmpty()
         }
-        isValidInfo.addSource(_destinationGeoLocation) {
+        isValidInfo.addSource(destinationGeoLocation) {
             val isValidDestinationEvent = AddressValidator.isValid(it.address)
             isValidInfo.value = isValidDestinationEvent
             if (!isValidDestinationEvent) {
@@ -67,7 +65,7 @@ class MeetingInfoViewModel : ViewModel() {
         isValidInfo.addSource(nickname) {
             isValidInfo.value = it.isNotEmpty()
         }
-        isValidInfo.addSource(_startingPointGeoLocation) {
+        isValidInfo.addSource(startingPointGeoLocation) {
             val isValidStartingPoint = AddressValidator.isValid(it.address)
             isValidInfo.value = isValidStartingPoint
             if (!isValidStartingPoint) {
@@ -76,16 +74,8 @@ class MeetingInfoViewModel : ViewModel() {
         }
     }
 
-    fun setDestinationGeoLocation(geoLocation: GeoLocation) {
-        _destinationGeoLocation.value = geoLocation
-    }
-
     fun emptyNickname() {
         nickname.value = ""
-    }
-
-    fun setStartingPointGeoLocation(geoLocation: GeoLocation) {
-        _startingPointGeoLocation.value = geoLocation
     }
 
     fun validMeetingTime() {
