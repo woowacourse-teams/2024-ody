@@ -3,7 +3,6 @@ package com.ody.mate.controller;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.member.domain.Member;
-import com.ody.swagger.annotation.DeviceTokenHeader;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
@@ -13,11 +12,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Mate API")
+@SecurityRequirement(name = "Authorization")
 public interface MateControllerSwagger {
 
     @Operation(
@@ -36,7 +37,6 @@ public interface MateControllerSwagger {
                     )
             }
     )
-    @DeviceTokenHeader
     @ErrorCode400
     @ErrorCode401
     @ErrorCode500

@@ -1,6 +1,6 @@
 package com.ody.common.argumentresolver;
 
-import com.ody.common.annotaion.AuthMember;
+import com.ody.common.annotation.AuthMember;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.service.MemberService;
 import lombok.RequiredArgsConstructor;

@@ -12,7 +12,7 @@ class DeviceTokenTest {
     @DisplayName("디바이스 토큰 헤더는 접두사가 포함되어야 한다")
     @Test
     void createDeviceTokenSuccess() {
-        assertThatCode(() -> new DeviceToken("device-token=1234"))
+        assertThatCode(() -> new DeviceToken("Bearer device-token=1234"))
                 .doesNotThrowAnyException();
     }
 

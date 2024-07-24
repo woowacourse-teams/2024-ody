@@ -15,10 +15,10 @@ public record MeetingSaveResponse(
         @Schema(description = "모임 이름", example = "우테코 16조")
         String name,
 
-        @Schema(description = "모임 날짜", example = "2024-07-15")
+        @Schema(description = "모임 날짜", type = "string", example = "2024-07-15")
         LocalDate date,
 
-        @Schema(description = "모임 시간", example = "14:00")
+        @Schema(description = "모임 시간", type = "string", example = "14:00")
         LocalTime time,
 
         @Schema(description = "도착지 주소", example = "서울 송파구 올림픽로35다길 42")
