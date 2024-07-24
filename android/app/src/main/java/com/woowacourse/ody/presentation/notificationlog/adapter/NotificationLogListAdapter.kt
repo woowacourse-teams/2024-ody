@@ -51,20 +51,6 @@ class NotificationLogListAdapter(
         return super.getItem(position - ITEM_PRE)
     }
 
-    inner class InviteCodeViewHolder(private val binding: ItemInviteCodeLogBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(listener: CopyInviteCodeButtonListener) {
-            binding.listener = listener
-        }
-    }
-
-    inner class NotificationLogViewHolder(private val binding: ItemNotificationLogBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: NotificationLogUiModel) {
-            binding.log = item
-        }
-    }
-
     class DiffCallback : DiffUtil.ItemCallback<NotificationLogUiModel>() {
         override fun areItemsTheSame(
             oldItem: NotificationLogUiModel,
