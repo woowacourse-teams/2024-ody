@@ -41,6 +41,10 @@
     <string name="nickname_question_hint">올리브</string>
     <string name="nickname_length_separator">/</string>
 
+    <!-- fragment_join_starting_point.xml -->
+    <string name="starting_point_question_front">오디</string>
+    <string name="starting_point_question_back">서 출발하시나요?</string>
+
     <!-- activity_join_completion.xml -->
     <string name="join_completion_second_explain">약속에 참여했어요!</string>
 
@@ -49,7 +53,7 @@
     <string name="invite_code_input_back">를 입력해 주세요!</string>
     <string name="invite_code_input_hint">초대 코드</string>
     <string name="invalid_invite_code">초대 코드가 뭔가 이상한데요? 🤔</string>
-  
+
     <!-- activity_logs.xml -->
     <string name="logs_copy_code_guide">초대 코드가 복사되었습니다.</string>
 
