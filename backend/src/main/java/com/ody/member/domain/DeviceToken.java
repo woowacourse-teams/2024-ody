@@ -19,7 +19,8 @@ public class DeviceToken {
 
     public DeviceToken(String deviceToken) {
         validatePrefix(deviceToken);
-        String token = deviceToken.substring(DEVICE_TOKEN_PREFIX.length());
+        String token = deviceToken.substring(DEVICE_TOKEN_PREFIX.length())
+                .strip();
         validateBlank(token);
         this.deviceToken = token;
     }
