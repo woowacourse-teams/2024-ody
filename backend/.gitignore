@@ -36,3 +36,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### private 파일
+.env
+/backend/resources/private/

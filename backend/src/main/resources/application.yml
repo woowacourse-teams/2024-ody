@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: classpath:private/private.yml
   h2:
     console:
       enabled: true
@@ -27,3 +29,6 @@ springdoc:
     display-request-duration: true
     operations-sorter: alpha
     enabled: true
+
+odsay:
+  url: https://api.odsay.com/v1/api/searchPubTransPathT
