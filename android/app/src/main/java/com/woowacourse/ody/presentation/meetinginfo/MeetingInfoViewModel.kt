@@ -88,10 +88,7 @@ class MeetingInfoViewModel : ViewModel() {
         val hour = meetingHour.value ?: return false
         val minute = meetingMinute.value ?: return false
         val dateTime = LocalDateTime.of(year, month, day, hour, minute)
-        val isValid = LocalDateTime.now().isBefore(dateTime)
-        return isValid.also {
-            if (!it) _invalidMeetingTimeEvent.emit(Unit)
-        }
+        return LocalDateTime.now().isBefore(dateTime)
     }
 
     private fun isValidNickName(): Boolean {
@@ -129,7 +126,13 @@ class MeetingInfoViewModel : ViewModel() {
 
     fun nextPage() {
         checkInfoValidity()
-        if (isValidInfo.value == true) _nextPageEvent.emit(Unit)
+        if (isValidInfo.value == true) {
+            _nextPageEvent.emit(Unit)
+            return
+        }
+        if (meetingInfoType.value == MeetingInfoType.TIME) {
+            _invalidMeetingTimeEvent.emit(Unit)
+        }
     }
 
     companion object {
