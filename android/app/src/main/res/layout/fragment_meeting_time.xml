@@ -5,10 +5,6 @@
     <data>
 
         <variable
-            name="listener"
-            type="com.woowacourse.ody.presentation.time.MeetingTimeFragment" />
-
-        <variable
             name="vm"
             type="com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel" />
     </data>
@@ -48,10 +44,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
             android:theme="@style/number_picker_style"
+            android:value="@={vm.meetingHour}"
             app:layout_constraintEnd_toStartOf="@id/tv_meeting_time_separator"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_meeting_time_front" />
+            app:layout_constraintTop_toBottomOf="@id/tv_meeting_time_front"
+            app:timeValues="@{vm.Companion.MEETING_HOURS}" />
 
         <TextView
             android:id="@+id/tv_meeting_time_separator"
@@ -72,16 +70,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:theme="@style/number_picker_style"
+            android:value="@={vm.meetingMinute}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/tv_meeting_time_separator"
-            app:layout_constraintTop_toTopOf="@id/np_meeting_time_hour" />
+            app:layout_constraintTop_toTopOf="@id/np_meeting_time_hour"
+            app:timeValues="@{vm.Companion.MEETING_MINUTES}" />
 
         <Button
             android:id="@+id/btn_next_meeting_time"
             style="@style/bottom_button_style"
+            android:onClick="@{() -> vm.validMeetingTime()}"
             android:text="@string/next_button"
-            android:onClick="@{() -> listener.onClickNextButton()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
