@@ -31,20 +31,15 @@ public class RouteClient {
     }
 
     private URI makeURI(Location origin, Location target) {
-        String originLongitude = "?SX=";
-        String originLatitude = "&SY=";
-        String targetLongitude = "&EX=";
-        String targetLatitude = "&EY=";
-        String apiKey = "&apiKey=";
-
+        StringBuilder uri = new StringBuilder();
+        uri.append(routeProperties.getUrl())
+                .append("?SX=").append(origin.getLongitude())
+                .append("&SY=").append(origin.getLatitude())
+                .append("&EX=").append(target.getLongitude())
+                .append("&EY=").append(target.getLatitude())
+                .append("&apiKey=").append(routeProperties.getApiKey());
         try {
-            return new URI(routeProperties.getUrl()
-                    + originLongitude + origin.getLongitude()
-                    + originLatitude + origin.getLatitude()
-                    + targetLongitude + target.getLongitude()
-                    + targetLatitude + target.getLatitude()
-                    + apiKey + routeProperties.getApiKey()
-            );
+            return new URI(uri.toString());
         } catch (URISyntaxException exception) {
             throw new RuntimeException(exception);
         }
