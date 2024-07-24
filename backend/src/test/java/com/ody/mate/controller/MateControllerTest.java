@@ -1,6 +1,6 @@
 package com.ody.mate.controller;
 
-import com.ody.common.IntegrationTest;
+import com.ody.common.BaseControllerTest;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.service.MeetingService;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-class MateControllerTest extends IntegrationTest {
+class MateControllerTest extends BaseControllerTest {
 
     @Autowired
     private MeetingService meetingService;

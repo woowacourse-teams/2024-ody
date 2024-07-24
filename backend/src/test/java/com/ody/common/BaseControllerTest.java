@@ -10,7 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public abstract class IntegrationTest {
+public abstract class BaseControllerTest {
 
     @MockBean
     private FcmConfig fcmConfig;
