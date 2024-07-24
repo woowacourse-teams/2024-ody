@@ -10,7 +10,7 @@ public class DepartureTime {
 
     private final LocalDateTime value;
 
-    public DepartureTime(Duration duration, LocalDateTime meetingTime) {
-        this.value = meetingTime.minusMinutes(duration.getMinutes() + MINUTE_GAP);
+    public DepartureTime(RouteTime routeTime, LocalDateTime meetingTime) {
+        this.value = meetingTime.minusMinutes(routeTime.getMinutes() + MINUTE_GAP);
     }
 }

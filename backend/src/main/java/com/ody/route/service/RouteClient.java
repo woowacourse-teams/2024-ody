@@ -2,8 +2,8 @@ package com.ody.route.service;
 
 import com.ody.meeting.domain.Location;
 import com.ody.route.config.RouteProperties;
-import com.ody.route.domain.Duration;
-import com.ody.route.dto.CalculateDurationResponse;
+import com.ody.route.domain.RouteTime;
+import com.ody.route.dto.OdsayResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -22,12 +22,12 @@ public class RouteClient {
         this.restClient = routeRestClientBuilder.build();
     }
 
-    public Duration calculateDuration(Location origin, Location target) {
-        CalculateDurationResponse response = restClient.get()
+    public RouteTime calculateRouteTime(Location origin, Location target) {
+        OdsayResponse response = restClient.get()
                 .uri(makeURI(origin, target))
                 .retrieve()
-                .body(CalculateDurationResponse.class);
-        return responseToDuration(response);
+                .body(OdsayResponse.class);
+        return responseToRouteTime(response); //TODO : NPE 가능성 체크
     }
 
     private URI makeURI(Location origin, Location target) {
@@ -50,18 +50,18 @@ public class RouteClient {
         }
     }
 
-    private Duration responseToDuration(CalculateDurationResponse response) {
+    private RouteTime responseToRouteTime(OdsayResponse response) {
         if (response.code().isPresent()) {
-            return extractDurationOrThrow(response);
+            return extractRouteTimeOrThrow(response);
         }
         response.minutes().orElseThrow(RuntimeException::new);
-        return new Duration(response.minutes().getAsLong());
+        return new RouteTime(response.minutes().getAsLong());
     }
 
-    private Duration extractDurationOrThrow(CalculateDurationResponse response) {
+    private RouteTime extractRouteTimeOrThrow(OdsayResponse response) {
         Optional<String> code = response.code();
         if (code.isPresent() && code.get().equals("-98")) {
-            return Duration.ZERO;
+            return RouteTime.ZERO;
         }
         throw new RuntimeException();
     }

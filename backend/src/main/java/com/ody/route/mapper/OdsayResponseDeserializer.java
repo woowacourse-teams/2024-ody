@@ -4,17 +4,17 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ody.route.dto.CalculateDurationResponse;
+import com.ody.route.dto.OdsayResponse;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.OptionalLong;
 import org.springframework.boot.jackson.JsonComponent;
 
 @JsonComponent
-public class CalculateDurationResponseDeserializer extends JsonDeserializer<CalculateDurationResponse> {
+public class OdsayResponseDeserializer extends JsonDeserializer<OdsayResponse> {
 
     @Override
-    public CalculateDurationResponse deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) {
+    public OdsayResponse deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) {
         try {
             JsonNode node = jsonParser.getCodec()
                     .readTree(jsonParser);
@@ -24,11 +24,11 @@ public class CalculateDurationResponseDeserializer extends JsonDeserializer<Calc
         }
     }
 
-    private CalculateDurationResponse parse(JsonNode node) {
+    private OdsayResponse parse(JsonNode node) {
         Optional<String> code = find(node, "code");
         Optional<String> message = find(node, "message", "msg");
         OptionalLong minutes = findMinutes(node);
-        return new CalculateDurationResponse(code, message, minutes);
+        return new OdsayResponse(code, message, minutes);
     }
 
     private Optional<String> find(JsonNode node, String... fieldName) {

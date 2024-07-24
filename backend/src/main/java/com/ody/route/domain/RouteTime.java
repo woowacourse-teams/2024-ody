@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class Duration {
+public class RouteTime {
 
-    public static final Duration ZERO = new Duration(0);
+    public static final RouteTime ZERO = new RouteTime(0);
 
     private final long minutes;
 }
