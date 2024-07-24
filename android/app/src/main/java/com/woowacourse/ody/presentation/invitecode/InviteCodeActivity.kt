@@ -1,5 +1,7 @@
 package com.woowacourse.ody.presentation.invitecode
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
@@ -50,4 +52,8 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
     }
 
     override fun onBack() = finish()
+
+    companion object {
+        fun getIntent(context: Context): Intent = Intent(context, InviteCodeActivity::class.java)
+    }
 }
