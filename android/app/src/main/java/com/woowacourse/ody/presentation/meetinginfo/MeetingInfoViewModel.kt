@@ -3,6 +3,7 @@ package com.woowacourse.ody.presentation.meetinginfo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import com.woowacourse.ody.util.Event
 import com.woowacourse.ody.util.emit
 import java.time.LocalTime
@@ -13,6 +14,10 @@ class MeetingInfoViewModel : ViewModel() {
 
     private val _isValidMeetingTime: MutableLiveData<Event<Boolean>> = MutableLiveData()
     val isValidMeetingTime: LiveData<Event<Boolean>> get() = _isValidMeetingTime
+
+    val meetingName: MutableLiveData<String> = MutableLiveData()
+    val meetingNameLength: LiveData<Int> = meetingName.map { it.length }
+    val hasMeetingName: LiveData<Boolean> = meetingName.map { it.isNotEmpty() }
 
     init {
         initializeMeetingTime()
@@ -29,8 +34,13 @@ class MeetingInfoViewModel : ViewModel() {
         _isValidMeetingTime.emit(false)
     }
 
+    fun emptyMeetingName() {
+        meetingName.value = ""
+    }
+
     companion object {
         val MEETING_HOURS = (0..23).toList()
         val MEETING_MINUTES = (0..59).toList()
+        const val MEETING_NAME_MAX_LENGTH = 15
     }
 }
