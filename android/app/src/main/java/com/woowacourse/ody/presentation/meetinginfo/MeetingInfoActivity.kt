@@ -109,7 +109,7 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
 
     private fun handleMeetingInfoNextClick() {
         if (binding.vpMeetingInfo.currentItem == meetingInfoFragments.size - 1) {
-            MeetingCompletionActivity.getIntent(this)
+            startActivity(MeetingCompletionActivity.getIntent(this))
             binding.vpMeetingInfo.visibility = View.GONE
             binding.wdMeetingInfo.visibility = View.GONE
             binding.vpJoinInfo.visibility = View.VISIBLE
