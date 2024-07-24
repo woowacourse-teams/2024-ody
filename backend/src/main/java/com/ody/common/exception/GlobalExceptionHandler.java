@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = OdyException.class)
-    public ProblemDetail handleArgumentException(final OdyException exception) {
+    public ProblemDetail handleArgumentException(OdyException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 }
