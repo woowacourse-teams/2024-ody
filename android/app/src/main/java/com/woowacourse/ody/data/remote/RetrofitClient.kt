@@ -18,7 +18,7 @@ object RetrofitClient {
     }
     private val interceptor: Interceptor by lazy {
         Interceptor {
-            val newRequest = it.request().newBuilder().addHeader("Authorization", "token=$token").build()
+            val newRequest = it.request().newBuilder().addHeader("Authorization", "Bearer device-token=$token").build()
             it.proceed(newRequest)
         }
     }
