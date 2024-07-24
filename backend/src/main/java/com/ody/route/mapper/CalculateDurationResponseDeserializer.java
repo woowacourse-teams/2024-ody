@@ -15,9 +15,8 @@ public class CalculateDurationResponseDeserializer extends JsonDeserializer<Calc
 
     @Override
     public CalculateDurationResponse deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) {
-        JsonNode node = null;
         try {
-            node = jsonParser.getCodec()
+            JsonNode node = jsonParser.getCodec()
                     .readTree(jsonParser);
             return parse(node);
         } catch (IOException e) {
