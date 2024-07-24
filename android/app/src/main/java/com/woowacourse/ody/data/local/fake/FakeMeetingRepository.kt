@@ -1,7 +1,7 @@
 package com.woowacourse.ody.data.local.fake
 
-import com.woowacourse.ody.domain.Mate
-import com.woowacourse.ody.domain.Meeting
+import com.woowacourse.ody.domain.model.Mate
+import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.repository.MeetingRepository
 import java.time.LocalDateTime
 

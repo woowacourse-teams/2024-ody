@@ -1,6 +1,6 @@
 package com.woowacourse.ody.domain.repository
 
-import com.woowacourse.ody.domain.Meeting
+import com.woowacourse.ody.domain.model.Meeting
 
 interface MeetingRepository {
     suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit>

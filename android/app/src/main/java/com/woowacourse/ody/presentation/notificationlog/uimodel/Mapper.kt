@@ -1,7 +1,7 @@
 package com.woowacourse.ody.presentation.notificationlog.uimodel
 
-import com.woowacourse.ody.domain.Meeting
-import com.woowacourse.ody.domain.NotificationLog
+import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.NotificationLog
 import java.time.format.DateTimeFormatter
 
 fun NotificationLog.toNotificationUiModel(): NotificationLogUiModel {

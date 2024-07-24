@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.ody.domain.NotificationLogRepository
 import com.woowacourse.ody.domain.repository.MeetingRepository
+import com.woowacourse.ody.domain.repository.NotificationLogRepository
 import com.woowacourse.ody.presentation.notificationlog.uimodel.MeetingUiModel
 import com.woowacourse.ody.presentation.notificationlog.uimodel.NotificationLogUiModel
 import com.woowacourse.ody.presentation.notificationlog.uimodel.toMeetingUiModel

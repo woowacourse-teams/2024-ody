@@ -1,6 +1,6 @@
 package com.woowacourse.ody.presentation.notificationlog.uimodel
 
-import com.woowacourse.ody.domain.NotificationType
+import com.woowacourse.ody.domain.model.NotificationType
 
 data class NotificationLogUiModel(
     val type: NotificationType,

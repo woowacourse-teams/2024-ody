@@ -3,7 +3,7 @@ package com.woowacourse.ody.data.remote.repository
 import com.woowacourse.ody.data.model.toMeeting
 import com.woowacourse.ody.data.remote.RetrofitClient
 import com.woowacourse.ody.data.remote.service.MeetingService
-import com.woowacourse.ody.domain.Meeting
+import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.repository.MeetingRepository
 
 object DefaultMeetingRepository : MeetingRepository {

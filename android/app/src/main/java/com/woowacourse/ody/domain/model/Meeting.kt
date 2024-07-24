@@ -1,4 +1,4 @@
-package com.woowacourse.ody.domain
+package com.woowacourse.ody.domain.model
 
 import java.time.LocalDateTime
 
