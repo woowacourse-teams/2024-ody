@@ -1,6 +1,7 @@
 package com.ody.notification.service;
 
 import com.ody.notification.dto.request.FcmSendRequest;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.TaskScheduler;
@@ -21,8 +22,7 @@ public class FcmEventScheduler {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Async
     public void addDepartureNotification(FcmSendRequest fcmSendRequest) {
-        taskScheduler.schedule(
-                () -> fcmPushSender.sendPushNotification(fcmSendRequest), fcmSendRequest.sendAt().toInstant(KST_OFFSET)
-        );
+        Instant startTime = fcmSendRequest.sendAt().toInstant(KST_OFFSET);
+        taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmSendRequest), startTime);
     }
 }
