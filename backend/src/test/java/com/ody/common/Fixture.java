@@ -11,10 +11,7 @@ import com.ody.notification.domain.NotificationType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Fixture {
 
     public static Location TARGET_LOCATION = new Location(
@@ -66,4 +63,7 @@ public class Fixture {
             LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.parse("13:50")),
             NotificationStatus.DONE
     );
+
+    public Fixture() {
+    }
 }
