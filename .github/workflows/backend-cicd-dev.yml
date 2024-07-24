@@ -13,7 +13,6 @@ on:
       - backend/**
 
 env:
-  TEST_REPORT_PATH: ${{ github.workspace }}/backend/build/test-results/**/*.xml
   DOCKERHUB_REPOSITORY: ody-official
   DOCKER_CONTAINER_NAME: ody-backend
 
@@ -30,6 +29,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: develop
+          submodules: true
+          token: ${{ secrets.GIT_TOKEN }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -47,13 +48,13 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: $TEST_REPORT_PATH
+          files: ${{ github.workspace }}/backend/build/test-results/**/*.xml
 
       - name: JUnit Report Action
         uses: mikepenz/action-junit-report@v4
         if: always()
         with:
-          report_paths: $TEST_REPORT_PATH
+          report_paths: ${{ github.workspace }}/backend/build/test-results/**/*.xml
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3

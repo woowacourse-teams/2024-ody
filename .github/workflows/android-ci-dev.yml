@@ -1,17 +1,14 @@
 name: android ci
 on:
-    pull_request:
-        branches: 
-          - develop
-        paths:
-          - android/**
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - android/**
 
 defaults:
   run:
     working-directory: android
-
-env:
-  TEST_REPORT_PATH: ${{ github.workspace }}/android/gradle/test-results/*.xml
 
 jobs:
   build:
@@ -66,4 +63,4 @@ jobs:
         uses: mikepenz/action-junit-report@v4
         if: always()
         with:
-          report_paths: $TEST_REPORT_PATH
+          report_paths: ${{ github.workspace }}/android/gradle/test-results/*.xml

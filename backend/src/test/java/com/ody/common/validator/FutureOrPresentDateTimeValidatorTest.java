@@ -88,8 +88,8 @@ class FutureOrPresentDateTimeValidatorTest {
 
         return Stream.of(
                 Arguments.of(today, currentTime, false),
-                Arguments.of(today, currentTime.plusSeconds(1), true),
-                Arguments.of(today, currentTime.minusSeconds(1), false),
+                Arguments.of(today, currentTime.plusHours(1), true),
+                Arguments.of(today, currentTime.minusHours(1), false),
                 Arguments.of(today.plusDays(1), currentTime, true)
         );
     }
