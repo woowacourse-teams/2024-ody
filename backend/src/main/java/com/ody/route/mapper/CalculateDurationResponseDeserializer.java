@@ -43,14 +43,13 @@ public class CalculateDurationResponseDeserializer extends JsonDeserializer<Calc
 
     private OptionalLong findMinutes(JsonNode node) {
         try {
-            return OptionalLong.of(
-                    node.get("result")
-                            .get("path")
-                            .get(0)
-                            .get("info")
-                            .get("totalTime")
-                            .asLong()
-            );
+            long minutes = node.get("result")
+                    .get("path")
+                    .get(0)
+                    .get("info")
+                    .get("totalTime")
+                    .asLong();
+            return OptionalLong.of(minutes);
         } catch (NullPointerException e) {
             return OptionalLong.empty();
         }
