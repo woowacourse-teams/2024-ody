@@ -22,7 +22,7 @@ public class Nickname {
     }
 
     private void validateLength(String nickname) {
-        if (nickname.length() < MIN_LENGTH || nickname.length() >= MAX_LENGTH) {
+        if (nickname.isBlank() || nickname.length() >= MAX_LENGTH) {
             String message = String.format("닉네임은 %d글자 이상, %d자 미만으로 입력 가능합니다.", MIN_LENGTH, MAX_LENGTH);
             throw new OdyException(message);
         }
