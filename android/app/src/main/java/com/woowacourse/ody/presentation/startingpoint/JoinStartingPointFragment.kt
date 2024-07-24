@@ -17,13 +17,14 @@ import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.ui.toGeoLocation
-import com.woowacourse.ody.presentation.joininfo.JoinInfoViewModel
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
+import com.woowacourse.ody.util.observeEvent
 
 class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     private var _binding: FragmentJoinStartingPointBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: JoinInfoViewModel by activityViewModels<JoinInfoViewModel>()
+    private val viewModel: MeetingInfoViewModel by activityViewModels<MeetingInfoViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,13 +52,13 @@ class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     }
 
     private fun initializeObserve() {
-        viewModel.isValidStartingPoint.observe(viewLifecycleOwner) { isValid ->
-            if (isValid) return@observe
+        viewModel.invalidStartingPointEvent.observeEvent(viewLifecycleOwner) {
             showSnackBar(R.string.invalid_address)
         }
     }
 
     private fun initializeView() {
+        viewModel.onNextInfo()
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
             binding.etStartingPoint.setText(geoLocation.address)

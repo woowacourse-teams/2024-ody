@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingInfoBinding
 import com.woowacourse.ody.presentation.adapter.InfoViewPagerAdapter
+import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
+import com.woowacourse.ody.presentation.completion.MeetingCompletionActivity
 import com.woowacourse.ody.presentation.date.MeetingDateFragment
 import com.woowacourse.ody.presentation.destination.MeetingDestinationFragment
 import com.woowacourse.ody.presentation.intro.IntroActivity
@@ -16,12 +18,24 @@ import com.woowacourse.ody.presentation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
 import com.woowacourse.ody.presentation.time.MeetingTimeFragment
+import com.woowacourse.ody.util.NextListener
 
-class MeetingInfoActivity : AppCompatActivity(), BackListener {
+class MeetingInfoActivity : AppCompatActivity(), NextListener, BackListener {
     private val binding: ActivityMeetingInfoBinding by lazy {
         ActivityMeetingInfoBinding.inflate(layoutInflater)
     }
     private val viewModel: MeetingInfoViewModel by viewModels<MeetingInfoViewModel>()
+    private val meetingInfoFragments: List<Fragment> by lazy {
+        listOf(
+            MeetingNameFragment(),
+            MeetingDateFragment(),
+            MeetingTimeFragment(),
+            MeetingDestinationFragment(),
+        )
+    }
+    private val joinInfoFragments: List<Fragment> by lazy {
+        listOf(JoinNickNameFragment(), JoinStartingPointFragment())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +45,9 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeDataBinding() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+        binding.nextListener = this
         binding.backListener = this
         initializeMeetingInfoViewPager()
         initializeVisitorOnBodingInfoViewPager()
@@ -66,7 +83,7 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
 
     private fun initializeMeetingInfoViewPager() {
         val meetingInfoViewPagerAdapter: InfoViewPagerAdapter =
-            InfoViewPagerAdapter(this, getMeetingInfoFragments())
+            InfoViewPagerAdapter(this, meetingInfoFragments)
 
         binding.vpMeetingInfo.adapter = meetingInfoViewPagerAdapter
         binding.wdMeetingInfo.attachTo(binding.vpMeetingInfo)
@@ -74,23 +91,39 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
 
     private fun initializeVisitorOnBodingInfoViewPager() {
         val visitorOnBodingInfoAdapter: InfoViewPagerAdapter =
-            InfoViewPagerAdapter(this, getVisitorOnBodingInfoFragments())
+            InfoViewPagerAdapter(this, joinInfoFragments)
 
         binding.vpJoinInfo.adapter = visitorOnBodingInfoAdapter
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)
     }
 
-    private fun getMeetingInfoFragments(): List<Fragment> {
-        return listOf(
-            MeetingNameFragment(),
-            MeetingDateFragment(),
-            MeetingTimeFragment(),
-            MeetingDestinationFragment(),
-        )
+    override fun onNext() {
+        if (binding.vpMeetingInfo.visibility == View.VISIBLE) {
+            handleMeetingInfoNextClick()
+        } else {
+            handleJoinInfoNextClick()
+        }
     }
 
-    private fun getVisitorOnBodingInfoFragments(): List<Fragment> {
-        return listOf(JoinNickNameFragment(), JoinStartingPointFragment())
+    private fun handleMeetingInfoNextClick() {
+        if (binding.vpMeetingInfo.currentItem == meetingInfoFragments.size - 1) {
+            MeetingCompletionActivity.getIntent(this)
+            binding.vpMeetingInfo.visibility = View.GONE
+            binding.wdMeetingInfo.visibility = View.GONE
+            binding.vpJoinInfo.visibility = View.VISIBLE
+            binding.wdJoinInfo.visibility = View.VISIBLE
+            return
+        }
+        binding.vpMeetingInfo.currentItem += 1
+    }
+
+    private fun handleJoinInfoNextClick() {
+        if (binding.vpJoinInfo.currentItem == joinInfoFragments.size - 1) {
+            startActivity(JoinCompleteActivity.getIntent(this))
+            finish()
+            return
+        }
+        binding.vpJoinInfo.currentItem += 1
     }
 
     override fun onBack() {

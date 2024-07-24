@@ -65,14 +65,5 @@
             app:layout_constraintStart_toStartOf="@id/et_destination"
             app:layout_constraintTop_toBottomOf="@id/et_destination" />
 
-        <Button
-            android:id="@+id/btn_next_destination"
-            style="@style/bottom_button_style"
-            android:enabled="@{vm.isValidDestination()}"
-            android:text="@string/next_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

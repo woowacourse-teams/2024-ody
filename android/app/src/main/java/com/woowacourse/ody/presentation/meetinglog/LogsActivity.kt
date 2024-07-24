@@ -3,6 +3,7 @@ package com.woowacourse.ody.presentation.meetinglog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -58,5 +59,7 @@ class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
 
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
+
+        fun getIntent(context: Context): Intent = Intent(context, LogsActivity::class.java)
     }
 }

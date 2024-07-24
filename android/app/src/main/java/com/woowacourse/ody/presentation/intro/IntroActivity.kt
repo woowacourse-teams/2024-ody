@@ -60,9 +60,7 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun navigateToInviteCodeActivity() {
-        Intent(this, InviteCodeActivity::class.java).also {
-            startActivity(it)
-        }
+        startActivity(InviteCodeActivity.getIntent(this))
     }
 
     private fun requestNotificationPermission() {

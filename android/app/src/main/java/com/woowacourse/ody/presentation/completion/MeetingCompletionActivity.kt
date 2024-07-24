@@ -1,5 +1,7 @@
 package com.woowacourse.ody.presentation.completion
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -16,5 +18,9 @@ class MeetingCompletionActivity : AppCompatActivity() {
             delay(1500)
             finish()
         }
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent = Intent(context, MeetingCompletionActivity::class.java)
     }
 }

@@ -124,16 +124,7 @@
             app:layout_constraintEnd_toEndOf="@id/et_meeting_name_form"
             app:layout_constraintStart_toEndOf="@id/tv_meeting_name_max_length"
             app:layout_constraintTop_toTopOf="@id/et_meeting_name_form"
-            app:visibility="@{vm.hasMeetingName}" />
-
-        <Button
-            android:id="@+id/btn_next_meeting_name"
-            style="@style/bottom_button_style"
-            android:enabled="@{vm.hasMeetingName}"
-            android:text="@string/next_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:visibility="@{vm.isValidInfo}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

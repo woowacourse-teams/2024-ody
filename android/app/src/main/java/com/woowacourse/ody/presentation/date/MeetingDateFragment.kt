@@ -5,14 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingDateBinding
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import java.util.Calendar
 
 class MeetingDateFragment : Fragment() {
     private var _binding: FragmentMeetingDateBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: MeetingInfoViewModel by activityViewModels<MeetingInfoViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,6 +34,7 @@ class MeetingDateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initializeCalendar()
+        viewModel.onNextInfo()
     }
 
     private fun initializeCalendar() {
@@ -43,10 +48,9 @@ class MeetingDateFragment : Fragment() {
                 showSnackBar(getString(R.string.meeting_date_date_guide))
                 binding.cvDate.date = today
             } else {
-                // 추후에 ViewModel에서 관리
-                val selectedYear = year
-                val selectedMonth = month + 1
-                val selectedDay = dayOfMonth
+                viewModel.meetingYear.value = year
+                viewModel.meetingMonth.value = month + 1
+                viewModel.meetingDay.value = dayOfMonth
             }
         }
     }

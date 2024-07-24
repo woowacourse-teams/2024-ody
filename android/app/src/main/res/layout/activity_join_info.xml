@@ -6,6 +6,14 @@
     <data>
 
         <variable
+            name="vm"
+            type="com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel" />
+
+        <variable
+            name="nextListener"
+            type="com.woowacourse.ody.util.NextListener" />
+
+        <variable
             name="backListener"
             type="com.woowacourse.ody.presentation.meetinginfo.BackListener" />
     </data>
@@ -20,8 +28,8 @@
             layout="@layout/toolbar_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:backListener="@{backListener}" />
+            app:backListener="@{backListener}"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
             android:id="@+id/wd_join_info"
@@ -43,8 +51,19 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
+            app:enabledSwipe="@{vm.isValidInfo}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/wd_join_info" />
+
+        <Button
+            android:id="@+id/btn_next"
+            style="@style/bottom_button_style"
+            android:enabled="@{vm.isValidInfo}"
+            android:onClick="@{() -> nextListener.onNext()}"
+            android:text="@string/next_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
