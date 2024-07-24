@@ -25,7 +25,7 @@ public class FcmConfig {
 
     private FirebaseOptions buildOptions() throws IOException {
         return FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(new ClassPathResource("fcm-admin-sdk.json")
+                .setCredentials(GoogleCredentials.fromStream(new ClassPathResource("/private/fcm-admin-sdk.json")
                         .getInputStream()))
                 .build();
     }
