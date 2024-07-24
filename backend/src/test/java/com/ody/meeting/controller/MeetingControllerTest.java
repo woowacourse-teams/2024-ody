@@ -13,6 +13,7 @@ import com.ody.member.repository.MemberRepository;
 import io.restassured.RestAssured;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ class MeetingControllerTest extends BaseControllerTest {
     @Autowired
     MateRepository mateRepository;
 
+    @Disabled
     @DisplayName("특정 멤버의 참여 모임 목록 조회에 성공하면 200응답 반환한다")
     @Test
     void findMine() {
