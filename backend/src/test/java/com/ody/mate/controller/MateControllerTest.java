@@ -41,7 +41,7 @@ class MateControllerTest extends BaseControllerTest {
         );
         meetingService.save(meetingRequest);
 
-        String deviceToken = "device-token=testToken";
+        String deviceToken = "Bearer device-token=testToken";
         memberService.save(new DeviceToken(deviceToken));
 
         MateSaveRequest mateSaveRequest = new MateSaveRequest(
