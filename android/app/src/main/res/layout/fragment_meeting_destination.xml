@@ -10,7 +10,7 @@
 
         <variable
             name="addressSearchListener"
-            type="com.woowacourse.ody.presentation.address.AddressSearchListener" />
+            type="com.woowacourse.ody.presentation.address.listener.AddressSearchListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

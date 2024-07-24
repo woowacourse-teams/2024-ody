@@ -10,10 +10,11 @@ import androidx.fragment.app.setFragmentResultListener
 import com.woowacourse.ody.databinding.FragmentJoinStartingPointBinding
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
+import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.ui.toGeoLocation
 
-class JoinStartingPointFragment : Fragment() {
+class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     private var _binding: FragmentJoinStartingPointBinding? = null
     private val binding get() = _binding!!
 
@@ -35,9 +36,6 @@ class JoinStartingPointFragment : Fragment() {
     }
 
     private fun initializeView() {
-        binding.etStartingPoint.setOnClickListener {
-            AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
-        }
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
             binding.etStartingPoint.setText(geoLocation.address)
@@ -56,6 +54,8 @@ class JoinStartingPointFragment : Fragment() {
             }
         return geoLocationUiModel?.toGeoLocation()
     }
+
+    override fun search()  = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
     override fun onDestroyView() {
         super.onDestroyView()

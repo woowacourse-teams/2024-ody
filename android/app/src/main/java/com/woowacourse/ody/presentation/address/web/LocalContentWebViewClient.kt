@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.address
+package com.woowacourse.ody.presentation.address.web
 
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
