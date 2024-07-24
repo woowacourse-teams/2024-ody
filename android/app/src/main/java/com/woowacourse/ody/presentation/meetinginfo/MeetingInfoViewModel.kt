@@ -3,6 +3,9 @@ package com.woowacourse.ody.presentation.meetinginfo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import com.woowacourse.ody.domain.model.GeoLocation
+import com.woowacourse.ody.presentation.address.AddressValidator
 import com.woowacourse.ody.util.Event
 import com.woowacourse.ody.util.emit
 import java.time.LocalTime
@@ -14,6 +17,11 @@ class MeetingInfoViewModel : ViewModel() {
     private val _isValidMeetingTime: MutableLiveData<Event<Boolean>> = MutableLiveData()
     val isValidMeetingTime: LiveData<Event<Boolean>> get() = _isValidMeetingTime
 
+    private val _destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
+    val destinationGeoLocation: LiveData<GeoLocation> get() = _destinationGeoLocation
+
+    val isValidDestination: LiveData<Boolean> = _destinationGeoLocation.map { AddressValidator.isValid(it.address) }
+
     init {
         initializeMeetingTime()
     }
@@ -22,6 +30,10 @@ class MeetingInfoViewModel : ViewModel() {
         val now = LocalTime.now()
         meetingHour.value = now.hour
         meetingMinute.value = now.minute
+    }
+
+    fun setDestinationGeoLocation(geoLocation: GeoLocation) {
+        _destinationGeoLocation.value = geoLocation
     }
 
     fun validMeetingTime() {

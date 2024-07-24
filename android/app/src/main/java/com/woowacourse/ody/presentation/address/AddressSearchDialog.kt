@@ -14,7 +14,10 @@ import androidx.fragment.app.viewModels
 import androidx.webkit.WebViewAssetLoader
 import com.woowacourse.ody.data.remote.location.repository.KakaoGeoLocationRepository
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
+import com.woowacourse.ody.presentation.address.listener.AddressReceiveListener
 import com.woowacourse.ody.presentation.address.ui.toGeoLocationUiModel
+import com.woowacourse.ody.presentation.address.web.AddressSearchInterface
+import com.woowacourse.ody.presentation.address.web.LocalContentWebViewClient
 
 class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private var _binding: DialogAddressSearchBinding? = null
