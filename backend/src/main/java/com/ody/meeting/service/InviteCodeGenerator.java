@@ -13,8 +13,11 @@ public class InviteCodeGenerator {
     private static final int RANDOM_LENGTH = 2;
 
     public String encode(Long meetingId) {
-        byte[] bytes = String.format("%04d", meetingId).getBytes(StandardCharsets.UTF_8);
-        String base64Encoded = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+        byte[] bytes = String.format("%04d", meetingId)
+                .getBytes(StandardCharsets.UTF_8);
+        String base64Encoded = Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(bytes);
         return generateRandomString(base64Encoded);
     }
 
@@ -29,7 +32,8 @@ public class InviteCodeGenerator {
 
     public Long decode(String inviteCode) {
         String base64Part = inviteCode.substring(0, inviteCode.length() - RANDOM_LENGTH);
-        byte[] decodedBytes = Base64.getUrlDecoder().decode(base64Part);
+        byte[] decodedBytes = Base64.getUrlDecoder()
+                .decode(base64Part);
         String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
         return Long.parseLong(decodedString.trim());
     }
