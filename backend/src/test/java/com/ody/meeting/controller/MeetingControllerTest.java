@@ -1,4 +1,4 @@
-package com.ody.notification.controller;
+package com.ody.meeting.controller;
 
 import com.ody.common.BaseControllerTest;
 import com.ody.common.Fixture;
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
-class NotificationControllerTest extends BaseControllerTest {
+class MeetingControllerTest extends BaseControllerTest {
 
     @Autowired
     MeetingRepository meetingRepository;
