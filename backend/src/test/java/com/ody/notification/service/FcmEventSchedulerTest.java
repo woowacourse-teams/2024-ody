@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
+import com.ody.common.BaseServiceTest;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.dto.request.FcmSendRequest;
 import java.time.LocalDateTime;
@@ -11,15 +12,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
-class FcmEventSchedulerTest {
-
-    @MockBean
-    private FcmPushSender fcmPushSender;
+class FcmEventSchedulerTest extends BaseServiceTest {
 
     @DisplayName("예약 알림이 2초 후에 전송된다")
     @Test
@@ -43,15 +37,15 @@ class FcmEventSchedulerTest {
         doAnswer(invocation -> {
             latch.countDown();
             return null;
-        }).when(fcmPushSender).sendPushNotification(fcmSendRequest);
+        }).when(getFcmPushSender()).sendPushNotification(fcmSendRequest);
 
         // 2초후에 메세지가 가도록 설정한 fcmSendRequest를 인자로 넣어 실제 sendPushNotification()를 호출한다.
-        fcmPushSender.sendPushNotification(fcmSendRequest);
+        getFcmPushSender().sendPushNotification(fcmSendRequest);
 
         // latch의 카운트가 0이될 때까지 대기할 시간을 정의한다.
         assertThat(latch.await(2, TimeUnit.SECONDS)).isTrue();
 
         // sendPushNotification() 메서드가 호출되었는지 검증한다.
-        verify(fcmPushSender).sendPushNotification(fcmSendRequest);
+        verify(getFcmPushSender()).sendPushNotification(fcmSendRequest);
     }
 }

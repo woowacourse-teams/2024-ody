@@ -11,6 +11,7 @@ import com.ody.notification.repository.NotificationRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -53,5 +54,9 @@ public class NotificationService {
         publisher.publishEvent(fcmSendRequest);
 
         notification.updateDone();
+    }
+
+    public List<Notification> findAllMeetingLogs(Long meetingId) {
+        return notificationRepository.findAllMeetingLogs(meetingId);
     }
 }

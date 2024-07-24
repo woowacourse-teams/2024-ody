@@ -6,6 +6,16 @@ import com.ody.member.domain.DeviceToken;
 import com.ody.member.service.MemberService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import com.ody.common.Fixture;
+import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
+import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Location;
+import com.ody.meeting.domain.Meeting;
+import com.ody.meeting.repository.MeetingRepository;
+import com.ody.member.domain.Member;
+import com.ody.member.repository.MemberRepository;
+import io.restassured.RestAssured;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +28,12 @@ class MeetingControllerTest extends BaseControllerTest {
 
     @Autowired
     private MemberService memberService;
+  
+    @Autowired
+    private MeetingService meetingService;
+
+    @Autowired
+    private MateService mateService;
 
     @DisplayName("Authorization 헤더로 device token과 모임 개설 정보를 받아 저장하면 201을 응답한다")
     @Test
@@ -46,5 +62,48 @@ class MeetingControllerTest extends BaseControllerTest {
                 .post("/meetings")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("로그 목록 조회에 성공하면 200응답 반환한다")
+    @Test
+    void findAllMeetingLogs() {
+        String deviceToken = "Bearer device-token=testToken";
+        Member member = memberService.save(new DeviceToken(deviceToken));
+
+        Location target = Fixture.TARGET_LOCATION;
+        Location origin = Fixture.ORIGIN_LOCATION;
+        MeetingSaveRequest meetingRequest = new MeetingSaveRequest(
+                "우테코 16조",
+                LocalDate.now().plusDays(1),
+                LocalTime.now().plusHours(1),
+                target.getAddress(),
+                target.getLatitude(),
+                target.getLongitude(),
+                "오디",
+                origin.getAddress(),
+                origin.getLatitude(),
+                origin.getLongitude()
+        );
+        Meeting meeting = meetingService.save(meetingRequest);
+
+        MateSaveRequest mateSaveRequest = new MateSaveRequest(
+                meeting.getInviteCode(),
+                "카키",
+                "서울 강남구 테헤란로 411",
+                "37.505713",
+                "127.050691"
+        );
+        mateService.save(mateSaveRequest, meeting, member);
+
+        RestAssured.given()
+                .log()
+                .all()
+                .header(HttpHeaders.AUTHORIZATION, deviceToken)
+                .when()
+                .get("/meetings/1/noti-log")
+                .then()
+                .log()
+                .all()
+                .statusCode(200);
     }
 }
