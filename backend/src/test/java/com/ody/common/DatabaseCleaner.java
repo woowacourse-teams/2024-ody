@@ -11,6 +11,10 @@ public class DatabaseCleaner {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public DatabaseCleaner(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
     @Transactional
     public void cleanUp() {
         cleanNotification();
