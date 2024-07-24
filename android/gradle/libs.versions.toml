@@ -4,6 +4,7 @@ agp = "8.5.0"
 appcompat = "1.7.0"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
+datastorePreferences = "1.1.1"
 dotsindicator = "5.0"
 espressoCore = "3.6.1"
 firebaseBom = "33.1.2"
@@ -38,6 +39,7 @@ androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-extension
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodel" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 
 # junit
 junit = { group = "junit", name = "junit", version.ref = "junit" }

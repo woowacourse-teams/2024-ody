@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.datastore.preferences)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
