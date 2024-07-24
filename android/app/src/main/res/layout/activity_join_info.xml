@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="backListener"
+            type="com.woowacourse.ody.presentation.meetinginfo.BackListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.joininfo.JoinInfoActivity">
+
+        <include
+            android:id="@+id/tb_join_info"
+            layout="@layout/toolbar_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:backListener="@{backListener}" />
+
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/wd_join_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            app:dotsColor="@color/gray"
+            app:dotsCornerRadius="50dp"
+            app:dotsSize="10dp"
+            app:dotsSpacing="7dp"
+            app:dotsWidthFactor="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_join_info"
+            app:selectedDotColor="@color/purple" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_join_info"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wd_join_info" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

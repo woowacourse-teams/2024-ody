@@ -6,6 +6,7 @@ import com.ody.meeting.dto.response.MateResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.member.domain.Member;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -62,7 +63,7 @@ public class MeetingController implements MeetingControllerSwagger {
     @PostMapping("/meetings")
     public ResponseEntity<MeetingSaveResponse> save(
             @AuthMember Member member,
-            @RequestBody MeetingSaveRequest meetingSaveRequest
+            @Valid @RequestBody MeetingSaveRequest meetingSaveRequest
     ) {
 
         return ResponseEntity.status(HttpStatus.CREATED)

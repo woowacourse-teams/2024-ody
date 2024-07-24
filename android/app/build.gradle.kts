@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.googleServices)
     id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 val properties = Properties()
@@ -25,8 +26,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
+        buildConfigField("String", "KAKAO_API_KEY", properties["KAKAO_API_KEY"].toString())
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -35,9 +36,6 @@ android {
                 "proguard-rules.pro",
             )
         }
-    }
-    buildFeatures {
-        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -63,14 +61,14 @@ dependencies {
     implementation(libs.androidx.view.pager)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.constraintlayout)
-    androidTestImplementation(libs.androidx.junit)
     implementation(libs.androidx.lifecycle.viewmodel)
+    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     // firebase
     implementation(libs.firebase.analytics)
-    implementation(libs.firebase.messaging.ktx)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.messaging.ktx)
     implementation(platform(libs.firebase.bom))
 
     // junit
@@ -91,4 +89,7 @@ dependencies {
 
     // timber
     implementation(libs.timber)
+
+    // dotsibdicator
+    implementation(libs.dotsibdicator)
 }
