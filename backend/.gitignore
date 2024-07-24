@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+**/src/main/resources/fcm-admin-sdk.json
 
 ### STS ###
 .apt_generated
@@ -35,3 +36,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### private 파일
+.env
+/backend/resources/private/

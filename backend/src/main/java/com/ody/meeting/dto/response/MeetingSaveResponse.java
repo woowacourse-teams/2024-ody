@@ -1,5 +1,7 @@
 package com.ody.meeting.dto.response;
 
+import com.ody.mate.domain.Mate;
+import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,10 +15,10 @@ public record MeetingSaveResponse(
         @Schema(description = "모임 이름", example = "우테코 16조")
         String name,
 
-        @Schema(description = "모임 날짜", example = "2024-07-15")
+        @Schema(description = "모임 날짜", type = "string", example = "2024-07-15")
         LocalDate date,
 
-        @Schema(description = "모임 시간", example = "14:00")
+        @Schema(description = "모임 시간", type = "string", example = "14:00")
         LocalTime time,
 
         @Schema(description = "도착지 주소", example = "서울 송파구 올림픽로35다길 42")
@@ -38,4 +40,18 @@ public record MeetingSaveResponse(
         String inviteCode
 ) {
 
+    public static MeetingSaveResponse of(Meeting meeting, List<Mate> mates) {
+        return new MeetingSaveResponse(
+                meeting.getId(),
+                meeting.getName(),
+                meeting.getDate(),
+                meeting.getTime(),
+                meeting.getTarget().getAddress(),
+                meeting.getTarget().getLatitude(),
+                meeting.getTarget().getLongitude(),
+                mates.size(),
+                MateResponse.from(mates),
+                meeting.getInviteCode()
+        );
+    }
 }

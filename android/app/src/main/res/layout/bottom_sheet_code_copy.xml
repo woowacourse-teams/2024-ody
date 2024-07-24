@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="codeCopyListener"
+            type="com.woowacourse.ody.presentation.meetinglog.CodeCopyListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="244dp"
+        android:background="@drawable/bottom_sheet_radius_25"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <TextView
+            android:id="@+id/tv_copy_code"
+            style="@style/pretendard_bold_28"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="@string/code_copy_guide"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            style="@style/pretendard_bold_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:background="@drawable/rectangle_purple_radius_20"
+            android:onClick="@{() -> codeCopyListener.copy()}"
+            android:text="@string/code_copy_copy_code"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@id/tv_copy_code"
+            app:layout_constraintStart_toStartOf="@id/tv_copy_code"
+            app:layout_constraintTop_toBottomOf="@id/tv_copy_code" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

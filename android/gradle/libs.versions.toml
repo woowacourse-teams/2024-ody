@@ -4,6 +4,8 @@ agp = "8.5.0"
 appcompat = "1.7.0"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
+datastorePreferences = "1.1.1"
+dotsindicator = "5.0"
 espressoCore = "3.6.1"
 firebaseBom = "33.1.2"
 fragmentKtx = "1.8.1"
@@ -13,7 +15,7 @@ googleServices = "4.4.2"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 kotlin = "1.9.0"
-ksp = "1.6.10-1.0.4"
+ksp = "1.9.0-1.0.13"
 ktlint = "12.1.0"
 lifecycle = "2.2.0"
 lifecycleViewmodel = "2.8.3"
@@ -37,6 +39,7 @@ androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-extension
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodel" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 
 # junit
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -62,6 +65,9 @@ moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", ver
 
 # timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
+# dotsindicator
+dotsibdicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotsindicator" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

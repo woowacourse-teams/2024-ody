@@ -45,14 +45,15 @@ public class Mate {
     @NotNull
     private Member member;
 
+    @Embedded
     @NotNull
-    private String nickname;
+    private Nickname nickname;
 
     @Embedded
     @NotNull
     private Location origin;
 
-    public Mate(Meeting meeting, Member member, String nickname, Location origin) {
+    public Mate(Meeting meeting, Member member, Nickname nickname, Location origin) {
         this(null, meeting, member, nickname, origin);
     }
 }

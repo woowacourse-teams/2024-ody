@@ -19,7 +19,7 @@ public record NotificationSaveResponse(
     public NotificationSaveResponse(Notification notification) {
         this(
                 notification.getType().toString(),
-                notification.getMate().getNickname(),
+                notification.getMate().getNickname().getNickname(),
                 notification.getCreatedAt()
         );
     }
