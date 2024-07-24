@@ -34,6 +34,10 @@ class JoinInfoViewModel : ViewModel() {
         _startingPointGeoLocation.value = geoLocation
     }
 
+    fun onNextInfo() {
+        isValidInfo.value = false
+    }
+
     companion object {
         const val NICK_NAME_MAX_LENGTH = 9
     }

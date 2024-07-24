@@ -2,6 +2,7 @@ package com.woowacourse.ody.presentation.startingpoint
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,6 +59,7 @@ class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     }
 
     private fun initializeView() {
+        viewModel.onNextInfo()
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
             binding.etStartingPoint.setText(geoLocation.address)

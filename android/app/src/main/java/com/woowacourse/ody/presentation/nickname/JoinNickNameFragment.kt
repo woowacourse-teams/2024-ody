@@ -1,6 +1,7 @@
 package com.woowacourse.ody.presentation.nickname
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ class JoinNickNameFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeBinding()
+        viewModel.onNextInfo()
     }
 
     private fun initializeBinding() {
