@@ -75,11 +75,10 @@ class JoinStartingPointFragment : Fragment(), AddressSearchListener {
         return geoLocationUiModel?.toGeoLocation()
     }
 
-    override fun search() =
-        AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+    override fun search() = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
     private fun showSnackBar(
-        @StringRes messageId: Int
+        @StringRes messageId: Int,
     ) {
         Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
     }

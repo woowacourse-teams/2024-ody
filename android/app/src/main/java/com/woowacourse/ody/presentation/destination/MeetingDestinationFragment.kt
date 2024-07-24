@@ -78,7 +78,7 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
     override fun search() = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
     private fun showSnackBar(
-        @StringRes messageId: Int
+        @StringRes messageId: Int,
     ) {
         Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
     }
