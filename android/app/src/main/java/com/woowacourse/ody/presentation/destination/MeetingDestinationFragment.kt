@@ -2,6 +2,7 @@ package com.woowacourse.ody.presentation.destination
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.ui.toGeoLocation
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 
 class MeetingDestinationFragment : Fragment(), AddressSearchListener {
@@ -62,7 +64,6 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
             binding.etDestination.setText(geoLocation.address)
             viewModel.destinationGeoLocation.value = geoLocation
         }
-        viewModel.onNextInfo()
     }
 
     private fun Bundle.getGeoLocation(): GeoLocation? {
@@ -81,6 +82,11 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
         @StringRes messageId: Int,
     ) {
         Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.meetingInfoType.value = MeetingInfoType.DESTINATION
     }
 
     override fun onDestroyView() {

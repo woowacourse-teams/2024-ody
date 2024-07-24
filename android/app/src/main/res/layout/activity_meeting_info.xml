@@ -10,10 +10,6 @@
             type="com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel" />
 
         <variable
-            name="nextListener"
-            type="com.woowacourse.ody.util.NextListener" />
-
-        <variable
             name="backListener"
             type="com.woowacourse.ody.presentation.meetinginfo.BackListener" />
     </data>
@@ -85,7 +81,7 @@
             android:id="@+id/btn_next"
             style="@style/bottom_button_style"
             android:enabled="@{vm.isValidInfo}"
-            android:onClick="@{() -> nextListener.onNext()}"
+            android:onClick="@{() -> vm.nextPage()}"
             android:text="@string/next_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
