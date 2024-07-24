@@ -77,14 +77,5 @@
             app:layout_constraintTop_toTopOf="@id/np_meeting_time_hour"
             app:timeValues="@{vm.Companion.MEETING_MINUTES}" />
 
-        <Button
-            android:id="@+id/btn_next_meeting_time"
-            style="@style/bottom_button_style"
-            android:onClick="@{() -> vm.validMeetingTime()}"
-            android:text="@string/next_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -23,6 +23,10 @@ class JoinInfoViewModel : ViewModel() {
     val invalidStartingPointEvent: LiveData<Event<Unit>> get() = _invalidStartingPointEvent
 
     init {
+        initializeIsValidInfo()
+    }
+
+    private fun initializeIsValidInfo() {
         isValidInfo.addSource(nickname) {
             isValidInfo.value = it.isNotEmpty()
         }

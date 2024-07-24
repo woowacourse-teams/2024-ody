@@ -1,6 +1,7 @@
 package com.woowacourse.ody.presentation.meetinginfo
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
@@ -11,6 +12,12 @@ import com.woowacourse.ody.util.emit
 import java.time.LocalTime
 
 class MeetingInfoViewModel : ViewModel() {
+    val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData()
+
+    val meetingYear: MutableLiveData<Int> = MutableLiveData()
+    val meetingMonth: MutableLiveData<Int> = MutableLiveData()
+    val meetingDay: MutableLiveData<Int> = MutableLiveData()
+
     val meetingHour: MutableLiveData<Int> = MutableLiveData()
     val meetingMinute: MutableLiveData<Int> = MutableLiveData()
 
@@ -19,21 +26,35 @@ class MeetingInfoViewModel : ViewModel() {
 
     val meetingName: MutableLiveData<String> = MutableLiveData()
     val meetingNameLength: LiveData<Int> = meetingName.map { it.length }
-    val hasMeetingName: LiveData<Boolean> = meetingName.map { it.isNotEmpty() }
 
     private val _destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
     val destinationGeoLocation: LiveData<GeoLocation> get() = _destinationGeoLocation
 
-    val isValidDestination: LiveData<Boolean> = _destinationGeoLocation.map { AddressValidator.isValid(it.address) }
+    private val _invalidDestinationEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val invalidDestinationEvent: LiveData<Event<Unit>> get() = _invalidDestinationEvent
 
     init {
         initializeMeetingTime()
+        initializeIsValidInfo()
     }
 
     private fun initializeMeetingTime() {
         val now = LocalTime.now()
         meetingHour.value = now.hour
         meetingMinute.value = now.minute
+    }
+
+    private fun initializeIsValidInfo() {
+        isValidInfo.addSource(meetingName) {
+            isValidInfo.value = it.isNotEmpty()
+        }
+        isValidInfo.addSource(_destinationGeoLocation) {
+            val isValidDestinationEvent = AddressValidator.isValid(it.address)
+            isValidInfo.value = isValidDestinationEvent
+            if (!isValidDestinationEvent) {
+                _invalidDestinationEvent.emit(Unit)
+            }
+        }
     }
 
     fun setDestinationGeoLocation(geoLocation: GeoLocation) {
@@ -47,6 +68,10 @@ class MeetingInfoViewModel : ViewModel() {
 
     fun emptyMeetingName() {
         meetingName.value = ""
+    }
+
+    fun onNextInfo() {
+        isValidInfo.value = false
     }
 
     companion object {

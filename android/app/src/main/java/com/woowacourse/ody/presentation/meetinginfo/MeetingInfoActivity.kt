@@ -16,12 +16,19 @@ import com.woowacourse.ody.presentation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
 import com.woowacourse.ody.presentation.time.MeetingTimeFragment
+import com.woowacourse.ody.util.NextListener
 
-class MeetingInfoActivity : AppCompatActivity(), BackListener {
+class MeetingInfoActivity : AppCompatActivity(), NextListener, BackListener {
     private val binding: ActivityMeetingInfoBinding by lazy {
         ActivityMeetingInfoBinding.inflate(layoutInflater)
     }
     private val viewModel: MeetingInfoViewModel by viewModels<MeetingInfoViewModel>()
+    private val meetingInfoFragments: List<Fragment> by lazy {
+        listOf(MeetingNameFragment(), MeetingDateFragment(), MeetingTimeFragment(), MeetingDestinationFragment())
+    }
+    private val joinInfoFragments: List<Fragment> by lazy {
+        listOf(JoinNickNameFragment(), JoinStartingPointFragment())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +38,9 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeDataBinding() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+        binding.nextListener = this
         binding.backListener = this
         initializeMeetingInfoViewPager()
         initializeVisitorOnBodingInfoViewPager()
@@ -66,7 +76,7 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
 
     private fun initializeMeetingInfoViewPager() {
         val meetingInfoViewPagerAdapter: InfoViewPagerAdapter =
-            InfoViewPagerAdapter(this, getMeetingInfoFragments())
+            InfoViewPagerAdapter(this, meetingInfoFragments)
 
         binding.vpMeetingInfo.adapter = meetingInfoViewPagerAdapter
         binding.wdMeetingInfo.attachTo(binding.vpMeetingInfo)
@@ -74,23 +84,14 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
 
     private fun initializeVisitorOnBodingInfoViewPager() {
         val visitorOnBodingInfoAdapter: InfoViewPagerAdapter =
-            InfoViewPagerAdapter(this, getVisitorOnBodingInfoFragments())
+            InfoViewPagerAdapter(this, joinInfoFragments)
 
         binding.vpJoinInfo.adapter = visitorOnBodingInfoAdapter
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)
     }
 
-    private fun getMeetingInfoFragments(): List<Fragment> {
-        return listOf(
-            MeetingNameFragment(),
-            MeetingDateFragment(),
-            MeetingTimeFragment(),
-            MeetingDestinationFragment(),
-        )
-    }
-
-    private fun getVisitorOnBodingInfoFragments(): List<Fragment> {
-        return listOf(JoinNickNameFragment(), JoinStartingPointFragment())
+    override fun onNext() {
+        TODO("Not yet implemented")
     }
 
     override fun onBack() {

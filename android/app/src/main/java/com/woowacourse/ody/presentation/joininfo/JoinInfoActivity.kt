@@ -26,7 +26,6 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
         setContentView(binding.root)
 
         initializeDataBinding()
-        initializeJoinInfoViewPager()
     }
 
     private fun initializeDataBinding() {
@@ -34,6 +33,7 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
         binding.lifecycleOwner = this
         binding.nextListener = this
         binding.backListener = this
+        initializeJoinInfoViewPager()
     }
 
     private fun initializeJoinInfoViewPager() {
