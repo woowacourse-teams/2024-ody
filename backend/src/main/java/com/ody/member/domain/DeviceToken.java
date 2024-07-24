@@ -19,12 +19,20 @@ public class DeviceToken {
 
     public DeviceToken(String deviceToken) {
         validatePrefix(deviceToken);
-        this.deviceToken = deviceToken.substring(DEVICE_TOKEN_PREFIX.length());
+        String token = deviceToken.substring(DEVICE_TOKEN_PREFIX.length());
+        validateBlank(token);
+        this.deviceToken = token;
     }
 
     private void validatePrefix(String value) {
         if (!value.startsWith(DEVICE_TOKEN_PREFIX)) {
             throw new OdyException("잘못된 토큰 형식입니다.");
+        }
+    }
+
+    private void validateBlank(String token) {
+        if (token.isBlank()) {
+            throw new OdyException("토큰 값은 공백이 될 수 없습니다.");
         }
     }
 }
