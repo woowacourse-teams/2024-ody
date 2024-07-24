@@ -33,12 +33,6 @@
     <string name="invite_code_input_hint">초대 코드</string>
     <string name="invalid_invite_code">초대 코드가 뭔가 이상한데요? 🤔</string>
 
-    <!-- fragment_meeting_time.xml -->
-    <string name="meeting_time_question_front">몇시</string>
-    <string name="meeting_time_question_back">에 만나시나요?</string>
-    <string name="meeting_time_separator">:</string>
-    <string name="invalid_meeting_time">현재 이후의 시간을 선택해 주세요!</string>
-
     <!-- all -->
     <string name="next_button">다음</string>
     <string name="confirm_button">확인</string>
