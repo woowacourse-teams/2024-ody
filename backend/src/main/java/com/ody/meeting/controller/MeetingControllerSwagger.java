@@ -3,6 +3,7 @@ package com.ody.meeting.controller;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
+import com.ody.notification.dto.response.NotiLogFindResponse;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
@@ -33,20 +34,23 @@ public interface MeetingControllerSwagger {
     ResponseEntity<MeetingSaveResponses> findMine(String fcmToken);
 
     @Operation(
-            summary = "모임 개설",
-            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequest.class))),
+            summary = "로그 목록 조회",
             responses = {
                     @ApiResponse(
-                            responseCode = "201",
-                            description = "모임 개설 성공",
-                            content = @Content(schema = @Schema(implementation = MeetingSaveResponse.class))
+                            responseCode = "200",
+                            description = "로그 목록 조회 성공",
+                            content = @Content(schema = @Schema(implementation = NotiLogFindResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않은 모임방이거나 모임방 일원이 아닌 경우",
+                            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
                     )
             }
     )
-    @ErrorCode400
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<MeetingSaveResponse> save(String fcmToken, MeetingSaveRequest meetingSaveRequest);
+    ResponseEntity<NotiLogFindResponse> findAllMeetingLogs(String fcmToken, Long meetingId);
 
     @Operation(
             summary = "초대코드 유효성 검사",
@@ -63,4 +67,20 @@ public interface MeetingControllerSwagger {
     @ErrorCode401
     @ErrorCode500
     ResponseEntity<Void> validateInviteCode(String fcmToken, String inviteCode);
+
+    @Operation(
+            summary = "모임 개설",
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequest.class))),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "모임 개설 성공",
+                            content = @Content(schema = @Schema(implementation = MeetingSaveResponse.class))
+                    )
+            }
+    )
+    @ErrorCode400
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<MeetingSaveResponse> save(String fcmToken, MeetingSaveRequest meetingSaveRequest);
 }

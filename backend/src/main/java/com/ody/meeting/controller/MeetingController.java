@@ -4,6 +4,9 @@ import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MateResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
+import com.ody.notification.domain.Notification;
+import com.ody.notification.dto.response.NotiLogFindResponse;
+import com.ody.notification.service.NotificationService;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -24,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class MeetingController implements MeetingControllerSwagger {
 
+    private final NotificationService notificationService;
+
     @Override
     @GetMapping("/meetings/me")
     public ResponseEntity<MeetingSaveResponses> findMine(@RequestHeader(HttpHeaders.AUTHORIZATION) String fcmToken) {
@@ -41,14 +46,15 @@ public class MeetingController implements MeetingControllerSwagger {
     }
 
     @Override
-    @PostMapping("/meetings")
-    public ResponseEntity<MeetingSaveResponse> save(
+    @GetMapping("/meetings/{meetingId}/noti-log")
+    public ResponseEntity<NotiLogFindResponse> findAllMeetingLogs(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String fcmToken,
-            @RequestBody MeetingSaveRequest meetingSaveRequest
+            @PathVariable Long meetingId
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new MeetingSaveResponse(1L, "우테코 16조", LocalDate.parse("2024-07-15"), LocalTime.parse("14:00"),
-                        "서울 송파구 올림픽로35다길 42", "37.515298", "127.103113", 1, List.of(new MateResponse("오디")), "초대코드"));
+
+        List<Notification> notifications = notificationService.findAllMeetingLogs(meetingId);
+        NotiLogFindResponse response = NotiLogFindResponse.toResponse(notifications);
+        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -59,5 +65,16 @@ public class MeetingController implements MeetingControllerSwagger {
     ) {
         return ResponseEntity.ok()
                 .build();
+    }
+
+    @Override
+    @PostMapping("/meetings")
+    public ResponseEntity<MeetingSaveResponse> save(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String fcmToken,
+            @RequestBody MeetingSaveRequest meetingSaveRequest
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new MeetingSaveResponse(1L, "우테코 16조", LocalDate.parse("2024-07-15"), LocalTime.parse("14:00"),
+                        "서울 송파구 올림픽로35다길 42", "37.515298", "127.103113", 1, List.of(new MateResponse("오디")), "초대코드"));
     }
 }
