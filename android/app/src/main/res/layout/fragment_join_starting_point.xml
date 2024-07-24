@@ -65,14 +65,5 @@
             app:layout_constraintStart_toStartOf="@id/et_starting_point"
             app:layout_constraintTop_toBottomOf="@id/et_starting_point" />
 
-        <Button
-            android:id="@+id/btn_next_starting_point"
-            style="@style/bottom_button_style"
-            android:enabled="@{vm.isValidStartingPoint()}"
-            android:text="@string/next_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,9 +1,12 @@
 package com.woowacourse.ody.presentation.completion
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.R
+import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -16,5 +19,9 @@ class JoinCompleteActivity : AppCompatActivity() {
             delay(1500)
             finish()
         }
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent = Intent(context, JoinCompleteActivity::class.java)
     }
 }

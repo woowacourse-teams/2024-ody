@@ -51,7 +51,7 @@ class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     }
 
     private fun initializeObserve() {
-        viewModel.isValidStartingPoint.observe(viewLifecycleOwner) { isValid ->
+        viewModel.isValidInfo.observe(viewLifecycleOwner) { isValid ->
             if (isValid) return@observe
             showSnackBar(R.string.invalid_address)
         }
