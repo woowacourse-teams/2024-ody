@@ -51,9 +51,7 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
 
     private fun showSnackBar(
         @StringRes messageId: Int,
-    ) {
-        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
-    }
+    ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
 
     private fun navigateToNotificationLog() {
         val intent = NotificationLogActivity.getIntent(this)
