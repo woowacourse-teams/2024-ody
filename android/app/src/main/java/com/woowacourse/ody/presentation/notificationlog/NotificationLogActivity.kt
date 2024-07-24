@@ -6,15 +6,17 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.woowacourse.ody.data.remote.DefaultNotificationLogRepository
+import com.woowacourse.ody.data.local.fake.FakeMeetingRepository
+import com.woowacourse.ody.data.local.fake.FakeNotificationLogRepository
 import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
 import com.woowacourse.ody.presentation.notificationlog.adapter.NotificationLogListAdapter
 
 class NotificationLogActivity : AppCompatActivity() {
     private val viewModel: NotificationLogViewModel by viewModels {
         NotificationLogViewModelFactory(
-            DefaultNotificationLogRepository,
-            // FakeNotificationLogRepository,
+            // DefaultNotificationLogRepository,
+            FakeNotificationLogRepository,
+            FakeMeetingRepository,
         )
     }
 
