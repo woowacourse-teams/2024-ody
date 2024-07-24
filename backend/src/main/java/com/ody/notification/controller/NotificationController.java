@@ -1,6 +1,6 @@
 package com.ody.notification.controller;
 
-import com.ody.common.annotaion.AuthMember;
+import com.ody.common.annotation.AuthMember;
 import com.ody.member.domain.Member;
 import com.ody.notification.dto.response.NotiLogFindResponse;
 import com.ody.notification.dto.response.NotificationSaveResponse;

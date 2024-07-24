@@ -1,6 +1,6 @@
 package com.ody.meeting.controller;
 
-import com.ody.common.annotaion.AuthMember;
+import com.ody.common.annotation.AuthMember;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MateResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponse;

@@ -1,6 +1,6 @@
 package com.ody.mate.controller;
 
-import com.ody.common.annotaion.AuthMember;
+import com.ody.common.annotation.AuthMember;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.service.MateService;

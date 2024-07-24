@@ -1,4 +1,4 @@
-package com.ody.common.annotaion;
+package com.ody.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
