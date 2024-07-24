@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(uniqueConstraints = {
         @UniqueConstraint(
                 name = "uniqueMeetingAndNickname",
-                columnNames = {"meeting_id", "nick_name"}
+                columnNames = {"meeting_id", "nickname"}
         )
 })
 @Entity
@@ -47,13 +47,13 @@ public class Mate {
 
     @Embedded
     @NotNull
-    private NickName nickname;
+    private Nickname nickname;
 
     @Embedded
     @NotNull
     private Location origin;
 
-    public Mate(Meeting meeting, Member member, NickName nickname, Location origin) {
+    public Mate(Meeting meeting, Member member, Nickname nickname, Location origin) {
         this(null, meeting, member, nickname, origin);
     }
 }
