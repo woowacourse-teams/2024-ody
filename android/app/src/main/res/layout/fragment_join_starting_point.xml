@@ -1,20 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data>
+    <TextView
+        android:id="@+id/tv_starting_point_front"
+        style="@style/pretendard_bold_24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="@string/starting_point_question_front"
+        android:textColor="@color/purple"
+        app:layout_constraintEnd_toStartOf="@id/tv_starting_point_back"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </data>
+    <TextView
+        android:id="@+id/tv_starting_point_back"
+        style="@style/pretendard_bold_24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/starting_point_question_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@id/tv_starting_point_front"
+        app:layout_constraintTop_toTopOf="@id/tv_starting_point_front" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".presentation.startingpoint.JoinStartingPointFragment">
+    <EditText
+        android:id="@+id/et_starting_point"
+        style="@style/edit_text_style"
+        android:layout_marginHorizontal="42dp"
+        android:layout_marginTop="32dp"
+        android:focusable="false"
+        android:hint="@string/address_question_hint"
+        app:layout_constraintBottom_toTopOf="@id/tv_starting_point_information"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_starting_point_front" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="출발지 화면" />
+    <TextView
+        android:id="@+id/tv_starting_point_information"
+        style="@style/pretendart_regular_14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:text="@string/address_question_information"
+        android:textColor="@color/purple"
+        app:layout_constraintStart_toStartOf="@id/et_starting_point"
+        app:layout_constraintTop_toBottomOf="@id/et_starting_point" />
 
-    </FrameLayout>
-</layout>
+    <Button
+        android:id="@+id/btn_next_starting_point"
+        style="@style/bottom_button_style"
+        android:text="@string/next_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
