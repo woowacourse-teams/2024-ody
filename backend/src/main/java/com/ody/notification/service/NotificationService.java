@@ -19,14 +19,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
-    public NotiLogFindResponse findAllMeetingLogs(Long meetingId) {
-        List<Notification> notifications = notificationRepository.findAllMeetingLogsById(meetingId);
-        return makeNotiLogResponse(notifications);
-    }
-
-    private NotiLogFindResponse makeNotiLogResponse(List<Notification> notifications) {
-        return notifications.stream()
-                .map(NotificationSaveResponse::new)
-                .collect(Collectors.collectingAndThen(Collectors.toList(), NotiLogFindResponse::new));
+    public List<Notification> findAllMeetingLogs(Long meetingId) {
+        return notificationRepository.findAllMeetingLogsById(meetingId);
     }
 }

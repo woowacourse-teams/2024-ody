@@ -1,9 +1,8 @@
 package com.ody.notification.controller;
 
-import com.ody.notification.dto.response.NotificationSaveResponse;
+import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.response.NotiLogFindResponse;
 import com.ody.notification.service.NotificationService;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,13 +27,8 @@ public class NotificationController implements NotificationControllerSwagger {
             @PathVariable Long meetingId
     ) {
 
-        NotiLogFindResponse response = notificationService.findAllMeetingLogs(meetingId);
-        return ResponseEntity.ok(
-                new NotiLogFindResponse(List.of(
-                        new NotificationSaveResponse("ENTRY", "조조", LocalDateTime.parse("2024-07-17 08:59:32")),
-                        new NotificationSaveResponse("DEPARTURE_REMINDER", "조조",
-                                LocalDateTime.parse("2024-07-17 09:00:01"))
-                ))
-        );
+        List<Notification> notifications = notificationService.findAllMeetingLogs(meetingId);
+        NotiLogFindResponse response = NotiLogFindResponse.toResponse(notifications);
+        return ResponseEntity.ok(response);
     }
 }

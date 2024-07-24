@@ -1,7 +1,9 @@
 package com.ody.notification.dto.response;
 
+import com.ody.notification.domain.Notification;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record NotiLogFindResponse(
 
@@ -12,4 +14,9 @@ public record NotiLogFindResponse(
         List<NotificationSaveResponse> notiLog
 ) {
 
+    public static NotiLogFindResponse toResponse(List<Notification> notifications) {
+        return notifications.stream()
+                .map(NotificationSaveResponse::new)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), NotiLogFindResponse::new));
+    }
 }
