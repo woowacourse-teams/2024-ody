@@ -1,21 +1,18 @@
 package com.ody.meeting.controller;
 
 import com.ody.common.BaseControllerTest;
+import com.ody.common.Fixture;
+import com.ody.mate.dto.request.MateSaveRequest;
+import com.ody.mate.service.MateService;
+import com.ody.meeting.domain.Location;
+import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.DeviceToken;
+import com.ody.member.domain.Member;
 import com.ody.member.service.MemberService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import com.ody.common.Fixture;
-import com.ody.mate.domain.Mate;
-import com.ody.mate.domain.Nickname;
-import com.ody.mate.repository.MateRepository;
-import com.ody.meeting.domain.Location;
-import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.repository.MeetingRepository;
-import com.ody.member.domain.Member;
-import com.ody.member.repository.MemberRepository;
-import io.restassured.RestAssured;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +25,7 @@ class MeetingControllerTest extends BaseControllerTest {
 
     @Autowired
     private MemberService memberService;
-  
+
     @Autowired
     private MeetingService meetingService;
 
