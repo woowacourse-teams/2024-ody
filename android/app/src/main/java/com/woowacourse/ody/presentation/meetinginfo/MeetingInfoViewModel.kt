@@ -33,6 +33,15 @@ class MeetingInfoViewModel : ViewModel() {
     private val _invalidDestinationEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
     val invalidDestinationEvent: LiveData<Event<Unit>> get() = _invalidDestinationEvent
 
+    val nickname: MutableLiveData<String> = MutableLiveData()
+    val nicknameLength: LiveData<Int> = nickname.map { it.length }
+
+    private val _startingPointGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
+    val startingPointGeoLocation: LiveData<GeoLocation> get() = _startingPointGeoLocation
+
+    private val _invalidStartingPointEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val invalidStartingPointEvent: LiveData<Event<Unit>> get() = _invalidStartingPointEvent
+
     init {
         initializeMeetingTime()
         initializeIsValidInfo()
@@ -55,10 +64,28 @@ class MeetingInfoViewModel : ViewModel() {
                 _invalidDestinationEvent.emit(Unit)
             }
         }
+        isValidInfo.addSource(nickname) {
+            isValidInfo.value = it.isNotEmpty()
+        }
+        isValidInfo.addSource(_startingPointGeoLocation) {
+            val isValidStartingPoint = AddressValidator.isValid(it.address)
+            isValidInfo.value = isValidStartingPoint
+            if (!isValidStartingPoint) {
+                _invalidStartingPointEvent.emit(Unit)
+            }
+        }
     }
 
     fun setDestinationGeoLocation(geoLocation: GeoLocation) {
         _destinationGeoLocation.value = geoLocation
+    }
+
+    fun emptyNickname() {
+        nickname.value = ""
+    }
+
+    fun setStartingPointGeoLocation(geoLocation: GeoLocation) {
+        _startingPointGeoLocation.value = geoLocation
     }
 
     fun validMeetingTime() {
@@ -78,5 +105,6 @@ class MeetingInfoViewModel : ViewModel() {
         val MEETING_HOURS = (0..<24).toList()
         val MEETING_MINUTES = (0..<60).toList()
         const val MEETING_NAME_MAX_LENGTH = 15
+        const val NICK_NAME_MAX_LENGTH = 9
     }
 }

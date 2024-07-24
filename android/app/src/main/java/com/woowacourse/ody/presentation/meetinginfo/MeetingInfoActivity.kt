@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingInfoBinding
 import com.woowacourse.ody.presentation.adapter.InfoViewPagerAdapter
+import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
+import com.woowacourse.ody.presentation.completion.MeetingCompletionActivity
 import com.woowacourse.ody.presentation.date.MeetingDateFragment
 import com.woowacourse.ody.presentation.destination.MeetingDestinationFragment
 import com.woowacourse.ody.presentation.intro.IntroActivity
@@ -24,7 +26,12 @@ class MeetingInfoActivity : AppCompatActivity(), NextListener, BackListener {
     }
     private val viewModel: MeetingInfoViewModel by viewModels<MeetingInfoViewModel>()
     private val meetingInfoFragments: List<Fragment> by lazy {
-        listOf(MeetingNameFragment(), MeetingDateFragment(), MeetingTimeFragment(), MeetingDestinationFragment())
+        listOf(
+            MeetingNameFragment(),
+            MeetingDateFragment(),
+            MeetingTimeFragment(),
+            MeetingDestinationFragment()
+        )
     }
     private val joinInfoFragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinStartingPointFragment())
@@ -91,7 +98,32 @@ class MeetingInfoActivity : AppCompatActivity(), NextListener, BackListener {
     }
 
     override fun onNext() {
-        TODO("Not yet implemented")
+        if (binding.vpMeetingInfo.visibility == View.VISIBLE) {
+            handleMeetingInfoNextClick()
+        } else {
+            handleJoinInfoNextClick()
+        }
+    }
+
+    private fun handleMeetingInfoNextClick() {
+        if (binding.vpMeetingInfo.currentItem == meetingInfoFragments.size - 1) {
+            MeetingCompletionActivity.getIntent(this)
+            binding.vpMeetingInfo.visibility = View.GONE
+            binding.wdMeetingInfo.visibility = View.GONE
+            binding.vpJoinInfo.visibility = View.VISIBLE
+            binding.wdJoinInfo.visibility = View.VISIBLE
+            return
+        }
+        binding.vpMeetingInfo.currentItem += 1
+    }
+
+    private fun handleJoinInfoNextClick() {
+        if (binding.vpJoinInfo.currentItem == joinInfoFragments.size - 1) {
+            startActivity(JoinCompleteActivity.getIntent(this))
+            finish()
+            return
+        }
+        binding.vpJoinInfo.currentItem += 1
     }
 
     override fun onBack() {

@@ -34,6 +34,7 @@ class MeetingDateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initializeCalendar()
+        viewModel.onNextInfo()
     }
 
     private fun initializeCalendar() {

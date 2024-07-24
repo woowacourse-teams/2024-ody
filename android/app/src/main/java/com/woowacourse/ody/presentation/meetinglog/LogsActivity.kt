@@ -3,6 +3,7 @@ package com.woowacourse.ody.presentation.meetinglog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -10,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityLogsBinding
+import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
 
 class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
     private val binding: ActivityLogsBinding by lazy {
@@ -58,5 +60,7 @@ class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
 
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
+
+        fun getIntent(context: Context): Intent = Intent(context, LogsActivity::class.java)
     }
 }

@@ -51,8 +51,7 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
     }
 
     private fun initializeObserve() {
-        viewModel.isValidDestination.observe(viewLifecycleOwner) { isValid ->
-            if (isValid) return@observe
+        viewModel.invalidDestinationEvent.observe(viewLifecycleOwner) {
             showSnackBar(R.string.invalid_address)
         }
     }
@@ -63,6 +62,7 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
             binding.etDestination.setText(geoLocation.address)
             viewModel.setDestinationGeoLocation(geoLocation)
         }
+        viewModel.onNextInfo()
     }
 
     private fun Bundle.getGeoLocation(): GeoLocation? {

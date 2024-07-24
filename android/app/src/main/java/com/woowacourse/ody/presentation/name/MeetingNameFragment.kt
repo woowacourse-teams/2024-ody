@@ -30,6 +30,7 @@ class MeetingNameFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeBinding()
+        viewModel.onNextInfo()
     }
 
     private fun initializeBinding() {

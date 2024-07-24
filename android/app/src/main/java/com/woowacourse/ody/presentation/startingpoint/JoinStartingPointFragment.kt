@@ -18,14 +18,14 @@ import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.ui.toGeoLocation
-import com.woowacourse.ody.presentation.joininfo.JoinInfoViewModel
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import com.woowacourse.ody.util.observeEvent
 
 class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     private var _binding: FragmentJoinStartingPointBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: JoinInfoViewModel by activityViewModels<JoinInfoViewModel>()
+    private val viewModel: MeetingInfoViewModel by activityViewModels<MeetingInfoViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

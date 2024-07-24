@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.R
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
+import com.woowacourse.ody.presentation.meetinglog.LogsActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -17,7 +18,8 @@ class JoinCompleteActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             delay(1500)
-            finish()
+            finishAffinity()
+            startActivity(LogsActivity.getIntent(this@JoinCompleteActivity))
         }
     }
 

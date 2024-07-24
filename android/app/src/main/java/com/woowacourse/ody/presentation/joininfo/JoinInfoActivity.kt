@@ -1,5 +1,7 @@
 package com.woowacourse.ody.presentation.joininfo
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +10,7 @@ import com.woowacourse.ody.databinding.ActivityJoinInfoBinding
 import com.woowacourse.ody.presentation.adapter.InfoViewPagerAdapter
 import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
 import com.woowacourse.ody.presentation.meetinginfo.BackListener
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
 import com.woowacourse.ody.util.NextListener
@@ -16,7 +19,7 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
     private val binding: ActivityJoinInfoBinding by lazy {
         ActivityJoinInfoBinding.inflate(layoutInflater)
     }
-    private val viewModel: JoinInfoViewModel by viewModels<JoinInfoViewModel>()
+    private val viewModel: MeetingInfoViewModel by viewModels<MeetingInfoViewModel>()
     private val fragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinStartingPointFragment())
     }
@@ -59,5 +62,9 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
             return
         }
         finish()
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent = Intent(context, JoinInfoActivity::class.java)
     }
 }
