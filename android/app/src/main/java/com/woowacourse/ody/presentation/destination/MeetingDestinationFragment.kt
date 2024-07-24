@@ -14,11 +14,12 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingDestinationBinding
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
+import com.woowacourse.ody.presentation.address.AddressSearchListener
 import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.ui.toGeoLocation
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 
-class MeetingDestinationFragment : Fragment() {
+class MeetingDestinationFragment : Fragment(), AddressSearchListener {
     private var _binding: FragmentMeetingDestinationBinding? = null
     private val binding get() = _binding!!
 
@@ -46,6 +47,7 @@ class MeetingDestinationFragment : Fragment() {
     private fun initializeBinding() {
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.addressSearchListener = this
     }
 
     private fun initializeObserve() {
@@ -58,9 +60,6 @@ class MeetingDestinationFragment : Fragment() {
     }
 
     private fun initializeView() {
-        binding.etDestination.setOnClickListener {
-            AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
-        }
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
             binding.etDestination.setText(geoLocation.address)
@@ -83,6 +82,8 @@ class MeetingDestinationFragment : Fragment() {
     ) {
         Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
     }
+
+    override fun search() = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
     override fun onDestroyView() {
         super.onDestroyView()
