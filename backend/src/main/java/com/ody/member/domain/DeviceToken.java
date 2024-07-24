@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeviceToken {
 
-    private static final String DEVICE_TOKEN_PREFIX = "device-token=";
+    private static final String DEVICE_TOKEN_PREFIX = "Bearer device-token=";
 
     private String deviceToken;
 
