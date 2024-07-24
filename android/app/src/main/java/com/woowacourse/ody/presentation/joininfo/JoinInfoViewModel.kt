@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressValidator
+import com.woowacourse.ody.util.Event
+import com.woowacourse.ody.util.emit
 
 class JoinInfoViewModel : ViewModel() {
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData()
@@ -17,12 +19,19 @@ class JoinInfoViewModel : ViewModel() {
     private val _startingPointGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
     val startingPointGeoLocation: LiveData<GeoLocation> get() = _startingPointGeoLocation
 
+    private val _invalidStartingPointEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val invalidStartingPointEvent: LiveData<Event<Unit>> get() = _invalidStartingPointEvent
+
     init {
         isValidInfo.addSource(nickname) {
             isValidInfo.value = it.isNotEmpty()
         }
         isValidInfo.addSource(_startingPointGeoLocation) {
-            isValidInfo.value = AddressValidator.isValid(it.address)
+            val isValidStartingPoint = AddressValidator.isValid(it.address)
+            isValidInfo.value = isValidStartingPoint
+            if (!isValidStartingPoint) {
+                _invalidStartingPointEvent.emit(Unit)
+            }
         }
     }
 

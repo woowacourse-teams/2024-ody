@@ -19,6 +19,7 @@ import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.ui.toGeoLocation
 import com.woowacourse.ody.presentation.joininfo.JoinInfoViewModel
+import com.woowacourse.ody.util.observeEvent
 
 class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     private var _binding: FragmentJoinStartingPointBinding? = null
@@ -52,8 +53,7 @@ class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     }
 
     private fun initializeObserve() {
-        viewModel.isValidInfo.observe(viewLifecycleOwner) { isValid ->
-            if (isValid) return@observe
+        viewModel.invalidStartingPointEvent.observeEvent(viewLifecycleOwner) {
             showSnackBar(R.string.invalid_address)
         }
     }
