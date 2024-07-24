@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.data.local.fake.FakeMeetingRepository
 import com.woowacourse.ody.data.local.fake.FakeNotificationLogRepository
 import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
@@ -50,6 +52,12 @@ class NotificationLogActivity : AppCompatActivity() {
             adapter.submitList(it)
         }
     }
+
+    private fun showSnackBar(
+        @StringRes messageId: Int,
+    ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
+        .apply { setAnchorView(binding.tvMeetingDate) }
+        .show()
 
     companion object {
         fun getIntent(context: Context): Intent = Intent(context, NotificationLogActivity::class.java)
