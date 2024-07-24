@@ -1,5 +1,6 @@
-package com.woowacourse.ody.data.remote
+package com.woowacourse.ody.data.remote.repository
 
+import com.woowacourse.ody.data.remote.RetrofitClient
 import com.woowacourse.ody.data.remote.service.MeetingService
 import com.woowacourse.ody.domain.repository.MeetingRepository
 
