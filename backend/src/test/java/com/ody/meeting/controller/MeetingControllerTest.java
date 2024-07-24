@@ -8,8 +8,10 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.member.service.MemberService;
 import io.restassured.RestAssured;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,6 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 class MeetingControllerTest extends BaseControllerTest {
+
+    @Autowired
+    MemberService memberService;
 
     @Autowired
     MeetingRepository meetingRepository;
@@ -53,18 +58,19 @@ class MeetingControllerTest extends BaseControllerTest {
                 .statusCode(200);
     }
 
-    @DisplayName("유효하지 않은 초대 코드일 경우 400 에러를 반환한다.")
+    @DisplayName("유효하지 않은 초대 코드일 경우 404 에러를 반환한다.")
     @Test
     void validateInviteCode() {
         String deviceToken = "Bearer device-token=testToken";
+        memberService.save(new DeviceToken(deviceToken));
 
         RestAssured.given()
                 .header(HttpHeaders.AUTHORIZATION, deviceToken)
                 .when()
-                .get("/invite-codes/1/validate")
+                .get("/invite-codes/testcode/validate")
                 .then()
                 .log()
                 .all()
-                .statusCode(400);
+                .statusCode(404);
     }
 }
