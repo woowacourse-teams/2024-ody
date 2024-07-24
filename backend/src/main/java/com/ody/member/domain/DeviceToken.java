@@ -1,6 +1,7 @@
 package com.ody.member.domain;
 
 import com.ody.common.exception.OdyException;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,6 +14,7 @@ public class DeviceToken {
 
     private static final String DEVICE_TOKEN_PREFIX = "Bearer device-token=";
 
+    @Column(unique = true, nullable = false)
     private String deviceToken;
 
     public DeviceToken(String deviceToken) {
