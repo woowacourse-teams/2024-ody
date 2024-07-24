@@ -1,16 +1,9 @@
 package com.ody.meeting.repository;
 
-import static com.ody.common.Fixture.MATE1;
-import static com.ody.common.Fixture.MATE2;
-import static com.ody.common.Fixture.MATE3;
-import static com.ody.common.Fixture.MEMBER1;
-import static com.ody.common.Fixture.MEMBER2;
-import static com.ody.common.Fixture.MEMBER3;
-import static com.ody.common.Fixture.ODY_MEETING1;
-import static com.ody.common.Fixture.ODY_MEETING2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ody.common.Fixture;
 import com.ody.common.config.JpaAuditingConfig;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
@@ -40,19 +33,19 @@ class MeetingRepositoryTest {
     void findAllMeetingsByMember() {
         //MEMBER1 참여 모임 : ODY_MEETING1, ODY_MEETING2
         //MEMBER2 참여 모임 : ODY_MEETING1
-        meetingRepository.save(ODY_MEETING1);
-        meetingRepository.save(ODY_MEETING2);
+        meetingRepository.save(Fixture.ODY_MEETING1);
+        meetingRepository.save(Fixture.ODY_MEETING2);
 
-        memberRepository.save(MEMBER1);
-        memberRepository.save(MEMBER2);
-        memberRepository.save(MEMBER3);
+        memberRepository.save(Fixture.MEMBER1);
+        memberRepository.save(Fixture.MEMBER2);
+        memberRepository.save(Fixture.MEMBER3);
 
-        mateRepository.save(MATE1);
-        mateRepository.save(MATE2);
-        mateRepository.save(MATE3);
+        mateRepository.save(Fixture.MATE1);
+        mateRepository.save(Fixture.MATE2);
+        mateRepository.save(Fixture.MATE3);
 
-        List<Meeting> memberOneMeetings = meetingRepository.findAllMeetingsByMember(MEMBER1);
-        List<Meeting> memberTwoMeetings = meetingRepository.findAllMeetingsByMember(MEMBER2);
+        List<Meeting> memberOneMeetings = meetingRepository.findAllMeetingsByMember(Fixture.MEMBER1);
+        List<Meeting> memberTwoMeetings = meetingRepository.findAllMeetingsByMember(Fixture.MEMBER2);
 
         assertAll(
                 () -> assertThat(memberOneMeetings.size()).isEqualTo(2),
