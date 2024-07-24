@@ -4,6 +4,8 @@ import com.ody.common.exception.OdyException;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.repository.MeetingRepository;
+import com.ody.member.domain.Member;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,5 +29,9 @@ public class MeetingService {
     public Meeting findById(Long meetingId) {
         return meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new OdyException("존재하지 않는 모임입니다."));
+    }
+
+    public List<Meeting> findAllMeetingsByMember(Member member) {
+        return meetingRepository.findAllMeetingsByMember(member);
     }
 }

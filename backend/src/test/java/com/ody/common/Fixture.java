@@ -49,7 +49,8 @@ public class Fixture {
 
     public static Mate MATE1 = new Mate(ODY_MEETING1, MEMBER1, new Nickname("제리"), ORIGIN_LOCATION);
     public static Mate MATE2 = new Mate(ODY_MEETING1, MEMBER2, new Nickname("카키"), ORIGIN_LOCATION);
-    public static Mate MATE3 = new Mate(ODY_MEETING2, MEMBER3, new Nickname("올리브"), ORIGIN_LOCATION);
+    public static Mate MATE3 = new Mate(ODY_MEETING2, MEMBER1, new Nickname("올리브"), ORIGIN_LOCATION);
+    public static Mate MATE4 = new Mate(ODY_MEETING2, MEMBER3, new Nickname("올리브"), ORIGIN_LOCATION);
 
     public static Notification DEPARTURE_REMINDER_PENDING_NOTIFICATION = new Notification(
             MATE1,
