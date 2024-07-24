@@ -1,4 +1,4 @@
-package com.ody.notification.controller;
+package com.ody.meeting.controller;
 
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.repository.MateRepository;
@@ -20,7 +20,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class NotificationControllerTest {
+class MeetingControllerTest {
 
     @LocalServerPort
     private int port;
