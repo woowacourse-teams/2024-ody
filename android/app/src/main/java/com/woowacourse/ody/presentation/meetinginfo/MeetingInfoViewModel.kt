@@ -39,8 +39,8 @@ class MeetingInfoViewModel : ViewModel() {
     }
 
     companion object {
-        val MEETING_HOURS = (0..23).toList()
-        val MEETING_MINUTES = (0..59).toList()
+        val MEETING_HOURS = (0..<24).toList()
+        val MEETING_MINUTES = (0..<60).toList()
         const val MEETING_NAME_MAX_LENGTH = 15
     }
 }
