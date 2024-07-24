@@ -35,6 +35,11 @@ public class InviteCodeGenerator {
         byte[] decodedBytes = Base64.getUrlDecoder()
                 .decode(base64Part);
         String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
-        return Long.parseLong(decodedString.trim());
+
+        try {
+            return Long.parseLong(decodedString.trim());
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("유효하지 않은 초대 코드입니다.");
+        }
     }
 }
