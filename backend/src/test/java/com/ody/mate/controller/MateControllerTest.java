@@ -27,6 +27,9 @@ class MateControllerTest extends BaseControllerTest {
     @DisplayName("Authorization 헤더로 device token을 받아 참여자를 저장하면 201을 응답한다")
     @Test
     void save() {
+        String deviceToken = "Bearer device-token=testToken";
+        memberService.save(new DeviceToken(deviceToken));
+
         MeetingSaveRequest meetingRequest = new MeetingSaveRequest(
                 "우테코 16조",
                 LocalDate.parse("2024-07-15"),
@@ -40,9 +43,6 @@ class MateControllerTest extends BaseControllerTest {
                 "127.050691"
         );
         meetingService.save(meetingRequest);
-
-        String deviceToken = "Bearer device-token=testToken";
-        memberService.save(new DeviceToken(deviceToken));
 
         MateSaveRequest mateSaveRequest = new MateSaveRequest(
                 "초대코드",
