@@ -19,8 +19,8 @@ public class CalculateDurationResponseDeserializer extends JsonDeserializer<Calc
             JsonNode node = jsonParser.getCodec()
                     .readTree(jsonParser);
             return parse(node);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException exception) {
+            throw new RuntimeException(exception.getMessage());
         }
     }
 
@@ -50,7 +50,7 @@ public class CalculateDurationResponseDeserializer extends JsonDeserializer<Calc
                     .get("totalTime")
                     .asLong();
             return OptionalLong.of(minutes);
-        } catch (NullPointerException e) {
+        } catch (NullPointerException exception) {
             return OptionalLong.empty();
         }
     }

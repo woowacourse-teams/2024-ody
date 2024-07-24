@@ -45,8 +45,8 @@ public class RouteClient {
                     + targetLatitude + target.getLatitude()
                     + apiKey + routeProperties.getApiKey()
             );
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+        } catch (URISyntaxException exception) {
+            throw new RuntimeException(exception);
         }
     }
 
