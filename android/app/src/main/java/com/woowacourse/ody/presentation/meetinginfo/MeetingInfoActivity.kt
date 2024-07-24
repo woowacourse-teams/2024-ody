@@ -31,7 +31,7 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeDataBinding() {
-        binding.infoListener = this
+        binding.backListener = this
         initializeMeetingInfoViewPager()
         initializeVisitorOnBodingInfoViewPager()
     }
@@ -65,7 +65,8 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeMeetingInfoViewPager() {
-        val meetingInfoViewPagerAdapter: InfoViewPagerAdapter = InfoViewPagerAdapter(this, getMeetingInfoFragments())
+        val meetingInfoViewPagerAdapter: InfoViewPagerAdapter =
+            InfoViewPagerAdapter(this, getMeetingInfoFragments())
 
         binding.vpMeetingInfo.adapter = meetingInfoViewPagerAdapter
         binding.wdMeetingInfo.attachTo(binding.vpMeetingInfo)
