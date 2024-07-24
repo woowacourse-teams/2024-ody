@@ -1,7 +1,7 @@
 package com.ody.member.service;
 
-import com.ody.member.domain.DeviceToken;
 import com.ody.common.exception.OdyException;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class MemberService {
     }
 
     public Member findByDeviceToken(DeviceToken deviceToken) {
-        return memberRepository.findByDeviceToken(deviceToken)
+        return memberRepository.findFirstByDeviceToken(deviceToken)
                 .orElseThrow(() -> new OdyException("존재하지 않는 회원 입니다."));
     }
 }
