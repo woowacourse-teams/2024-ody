@@ -28,7 +28,7 @@
     <string name="join_completion_second_explain">약속에 참여했어요!</string>
 
     <!-- activity_logs.xml -->
-    <string name="logs_copy_code_guide">초대 코드가 복사 됐습니다.</string>
+    <string name="logs_copy_code_guide">초대 코드가 복사 복사되었습니다.</string>
 
     <!-- bottom_sheet_code_copy.xml -->
     <string name="code_copy_guide">초대 코드를 복사해\n친구에게 전달해 보세요!</string>
