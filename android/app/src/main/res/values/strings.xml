@@ -30,8 +30,22 @@
     <!-- activity_meeting_completion.xml -->
     <string name="meeting_completion_explain">거의 다 왔어요!\n이제 당신을 소개해 주세요</string>
 
+    <!-- fragment_join_nickname.xml -->
+    <string name="nickname_question_front">닉네임</string>
+    <string name="nickname_question_back">을 알려주세요!</string>
+    <string name="nickname_question_hint">올리브</string>
+    <string name="nickname_length_separator">/</string>
+
+
     <!-- activity_join_completion.xml -->
     <string name="join_completion_second_explain">약속에 참여했어요!</string>
+
+    <!-- activity_logs.xml -->
+    <string name="logs_copy_code_guide">초대 코드가 복사 복사되었습니다.</string>
+
+    <!-- bottom_sheet_code_copy.xml -->
+    <string name="code_copy_guide">초대 코드를 복사해\n친구에게 전달해 보세요!</string>
+    <string name="code_copy_copy_code">초대 코드 복사하기</string>
 
     <!-- all -->
     <string name="next_button">다음</string>
