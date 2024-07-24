@@ -19,6 +19,9 @@ class InviteCodeViewModel(
     private val _isValidInviteCode: MutableLiveData<Event<Boolean>> = MutableLiveData()
     val isValidInviteCode: LiveData<Event<Boolean>> get() = _isValidInviteCode
 
+    private val _navigateAction: MutableLiveData<Event<InviteCodeNavigateAction>> = MutableLiveData()
+    val navigateAction: LiveData<Event<InviteCodeNavigateAction>> get() = _navigateAction
+
     fun emptyInviteCode() {
         inviteCode.value = ""
     }
@@ -29,6 +32,7 @@ class InviteCodeViewModel(
             meetingRepository.getInviteCodeValidity(inviteCode)
                 .onSuccess {
                     _isValidInviteCode.emit(true)
+                    _navigateAction.emit(InviteCodeNavigateAction.CodeNavigateToNotificationLog)
                 }.onFailure {
                     _isValidInviteCode.emit(false)
                 }
