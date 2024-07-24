@@ -11,10 +11,17 @@
     <string name="intro_notification_permission_guide">알림 권한은 앱 설정에서 확인할 수 있어요</string>
 
     <!-- fragment_meeting_destination.xml -->
-    <string name="destination_question_front">오디</string>
-    <string name="destination_question_back">서 만나시나요?</string>
-    <string name="destination_question_hint">주소를 찾아보세요</string>
-    <string name="destination_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
+    <string name="meeting_destination_question_front">오디</string>
+    <string name="meeting_destination_question_back">서 만나시나요?</string>
+    <string name="meeting_destination_question_hint">주소를 찾아보세요</string>
+    <string name="meeting_destination_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
+
+    <!-- fragment_meeting_name.xml -->
+    <string name="meeting_name_question_front">무슨&#160;</string>
+    <string name="meeting_name_question_middle">약속</string>
+    <string name="meeting_name_question_back">인가요?</string>
+    <string name="meeting_name_question_hint">올리브와 저녁에 마라탕</string>
+    <string name="meeting_name_length_separator">/</string>
 
     <!-- fragment_meeting_date.xml -->
     <string name="meeting_date_question_front">언제</string>

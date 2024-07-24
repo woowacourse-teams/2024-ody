@@ -1,24 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <variable
+            name="vm"
+            type="com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".presentation.name.MeetingNameFragment">
+        android:layout_height="match_parent">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="모임 이름" />
+            android:id="@+id/tv_meeting_name_front"
+            style="@style/pretendard_bold_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:text="@string/meeting_name_question_front"
+            app:layout_constraintEnd_toStartOf="@id/tv_meeting_name_middle"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_meeting_name_middle"
+            style="@style/pretendard_bold_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/meeting_name_question_middle"
+            android:textColor="@color/purple"
+            app:layout_constraintEnd_toStartOf="@id/tv_meeting_name_back"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/tv_meeting_name_front"
+            app:layout_constraintTop_toTopOf="@id/tv_meeting_name_front" />
+
+        <TextView
+            android:id="@+id/tv_meeting_name_back"
+            style="@style/pretendard_bold_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/meeting_name_question_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/tv_meeting_name_middle"
+            app:layout_constraintTop_toTopOf="@id/tv_meeting_name_front" />
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:id="@+id/et_meeting_name_form"
+            style="@style/edit_text_style"
+            android:layout_marginHorizontal="42dp"
+            android:layout_marginTop="32dp"
+            android:focusable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_meeting_name_front" />
 
-    </FrameLayout>
+        <EditText
+            android:id="@+id/et_meeting_name"
+            style="@style/edit_text_style"
+            android:layout_width="0dp"
+            android:gravity="center_vertical"
+            android:hint="@string/meeting_name_question_hint"
+            android:inputType="text"
+            android:maxLength="@{vm.NICK_NAME_MAX_LENGTH}"
+            android:maxLines="1"
+            android:text="@={vm.meeting_name}"
+            app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
+            app:layout_constraintEnd_toStartOf="@id/tv_meeting_name_length"
+            app:layout_constraintStart_toStartOf="@id/et_meeting_name_form"
+            app:layout_constraintTop_toTopOf="@id/et_meeting_name_form" />
+
+        <TextView
+            android:id="@+id/tv_meeting_name_length"
+            style="@style/pretendard_medium_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(vm.meeting_nameLength)}"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
+            app:layout_constraintEnd_toStartOf="@id/tv_meeting_name_length_separator"
+            app:layout_constraintStart_toEndOf="@id/et_meeting_name"
+            app:layout_constraintTop_toTopOf="@id/et_meeting_name_form"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/tv_meeting_name_length_separator"
+            style="@style/pretendard_medium_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/meeting_name_length_separator"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
+            app:layout_constraintEnd_toStartOf="@id/tv_meeting_name_max_length"
+            app:layout_constraintStart_toEndOf="@id/tv_meeting_name_length"
+            app:layout_constraintTop_toTopOf="@id/et_meeting_name_form" />
+
+        <TextView
+            android:id="@+id/tv_meeting_name_max_length"
+            style="@style/pretendard_medium_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="@{String.valueOf(vm.NICK_NAME_MAX_LENGTH)}"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
+            app:layout_constraintEnd_toStartOf="@id/iv_cancel"
+            app:layout_constraintStart_toEndOf="@id/tv_meeting_name_length_separator"
+            app:layout_constraintTop_toTopOf="@id/et_meeting_name_form"
+            tools:text="9" />
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> vm.emptymeeting_name()}"
+            android:src="@drawable/ic_cancel"
+            app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
+            app:layout_constraintEnd_toEndOf="@id/et_meeting_name_form"
+            app:layout_constraintStart_toEndOf="@id/tv_meeting_name_max_length"
+            app:layout_constraintTop_toTopOf="@id/et_meeting_name_form"
+            app:visibility="@{vm.hasmeeting_name}" />
+
+        <Button
+            android:id="@+id/btn_next_meeting_name"
+            style="@style/bottom_button_style"
+            android:enabled="@{vm.hasmeeting_name}"
+            android:text="@string/next_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
