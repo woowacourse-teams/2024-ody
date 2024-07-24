@@ -2,6 +2,7 @@ package com.ody.mate.controller;
 
 import com.ody.common.BaseControllerTest;
 import com.ody.mate.dto.request.MateSaveRequest;
+import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.DeviceToken;
@@ -39,13 +40,13 @@ class MateControllerTest extends BaseControllerTest {
                 "37.505713",
                 "127.050691"
         );
-        meetingService.save(meetingRequest);
+        Meeting meeting = meetingService.save(meetingRequest);
 
         String deviceToken = "Bearer device-token=testToken";
         memberService.save(new DeviceToken(deviceToken));
 
         MateSaveRequest mateSaveRequest = new MateSaveRequest(
-                "초대코드",
+                meeting.getInviteCode(),
                 "카키",
                 "서울 강남구 테헤란로 411",
                 "37.505713",
