@@ -22,7 +22,7 @@ public class NotificationController implements NotificationControllerSwagger {
 
     @Override
     @GetMapping("/meetings/{meetingId}/noti-log")
-    public ResponseEntity<NotiLogFindResponse> findAllByMeetingId(
+    public ResponseEntity<NotiLogFindResponse> findAllMeetingLogs( //TODO method 위치 논의
             @RequestHeader(HttpHeaders.AUTHORIZATION) String fcmToken,
             @PathVariable Long meetingId
     ) {

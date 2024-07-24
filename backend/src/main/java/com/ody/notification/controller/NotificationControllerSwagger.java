@@ -32,5 +32,5 @@ public interface NotificationControllerSwagger {
     )
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<NotiLogFindResponse> findAllByMeetingId(String fcmToken, Long meetingId);
+    ResponseEntity<NotiLogFindResponse> findAllMeetingLogs(String fcmToken, Long meetingId);
 }
