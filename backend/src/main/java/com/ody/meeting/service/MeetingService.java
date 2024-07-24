@@ -4,6 +4,7 @@ import com.ody.common.exception.OdyException;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.repository.MeetingRepository;
+import com.ody.util.InviteCodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,15 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MeetingService {
 
+    private static final String DEFAULT_INVITE_CODE = "초대코드";
+
     private final MeetingRepository meetingRepository;
 
     @Transactional
     public Meeting save(MeetingSaveRequest meetingSaveRequest) {
-        return meetingRepository.save(meetingSaveRequest.toMeeting(generateInviteCode()));
-    }
-
-    private String generateInviteCode() {
-        return "초대코드";
+        Meeting meeting = meetingRepository.save(meetingSaveRequest.toMeeting(DEFAULT_INVITE_CODE));
+        String encodedInviteCode = InviteCodeGenerator.encode(meeting.getId());
+        meeting.updateInviteCode(encodedInviteCode);
+        return meeting;
     }
 
     public Meeting findById(Long meetingId) {
