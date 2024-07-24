@@ -2,17 +2,19 @@ package com.woowacourse.ody.data.model.meeting
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.time.LocalDate
+import java.time.LocalTime
 
 @JsonClass(generateAdapter = true)
-data class MeetingEntity(
+data class MeetingResponse(
     @Json(name = "id")
     val id: Int,
     @Json(name = "name")
     val name: String,
     @Json(name = "date")
-    val date: String,
+    val date: LocalDate,
     @Json(name = "time")
-    val time: String,
+    val time: LocalTime,
     @Json(name = "targetAddress")
     val targetAddress: String,
     @Json(name = "targetLatitude")
@@ -22,7 +24,7 @@ data class MeetingEntity(
     @Json(name = "mateCount")
     val mateCount: Int,
     @Json(name = "mates")
-    val mates: List<MateEntity>,
+    val mates: List<MateResponse>,
     @Json(name = "inviteCode")
     val inviteCode: String,
 )

@@ -1,6 +1,6 @@
 package com.woowacourse.ody.data.remote.service
 
-import com.woowacourse.ody.data.model.meeting.MeetingEntity
+import com.woowacourse.ody.data.model.meeting.MeetingResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -11,7 +11,7 @@ interface MeetingService {
     )
 
     @GET(MEETING_PATH)
-    suspend fun getMeeting(): List<MeetingEntity>
+    suspend fun getMeeting(): List<MeetingResponse>
 
     companion object {
         const val MEETING_PATH = "/meetings/me"

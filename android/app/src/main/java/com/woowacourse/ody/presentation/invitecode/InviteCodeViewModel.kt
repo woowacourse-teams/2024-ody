@@ -29,7 +29,7 @@ class InviteCodeViewModel(
     fun checkInviteCode() {
         viewModelScope.launch {
             val inviteCode = inviteCode.value ?: return@launch
-            meetingRepository.getInviteCodeValidity(inviteCode)
+            meetingRepository.fetchInviteCodeValidity(inviteCode)
                 .onSuccess {
                     _isValidInviteCode.emit(true)
                     _navigateAction.emit(InviteCodeNavigateAction.CodeNavigateToNotificationLog)

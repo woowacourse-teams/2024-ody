@@ -2,7 +2,7 @@ package com.woowacourse.ody.data.local.fake
 
 import com.woowacourse.ody.domain.Mate
 import com.woowacourse.ody.domain.Meeting
-import com.woowacourse.ody.domain.MeetingRepository
+import com.woowacourse.ody.domain.repository.MeetingRepository
 import java.time.LocalDateTime
 
 object FakeMeetingRepository : MeetingRepository {
@@ -20,5 +20,7 @@ object FakeMeetingRepository : MeetingRepository {
             mates,
         )
 
-    override suspend fun fetchMeeting(): Meeting = meetingA
+    override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> = Result.success(Unit)
+
+    override suspend fun fetchMeeting(): Result<List<Meeting>> = Result.success(listOf(meetingA))
 }
