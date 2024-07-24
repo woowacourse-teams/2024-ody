@@ -69,6 +69,7 @@
             android:id="@+id/btn_next_destination"
             style="@style/bottom_button_style"
             android:text="@string/next_button"
+            android:enabled="@{vm.isValidDestination()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

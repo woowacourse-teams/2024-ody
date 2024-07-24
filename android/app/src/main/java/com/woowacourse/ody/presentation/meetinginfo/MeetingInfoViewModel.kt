@@ -11,9 +11,7 @@ class MeetingInfoViewModel : ViewModel() {
     private val _destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
     val destinationGeoLocation: LiveData<GeoLocation> get() = _destinationGeoLocation
 
-    val isValidDestination: LiveData<Boolean> = _destinationGeoLocation.map {
-        AddressValidator.isValid(it.address)
-    }
+    val isValidDestination: LiveData<Boolean> = _destinationGeoLocation.map { AddressValidator.isValid(it.address) }
 
     fun setDestinationGeoLocation(geoLocation: GeoLocation) {
         _destinationGeoLocation.value = geoLocation
