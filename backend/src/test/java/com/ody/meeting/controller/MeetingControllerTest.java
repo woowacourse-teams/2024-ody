@@ -29,13 +29,31 @@ class MeetingControllerTest extends BaseControllerTest {
     @Autowired
     MateRepository mateRepository;
 
+    @DisplayName("특정 멤버의 참여 모임 목록 조회에 성공하면 200응답 반환한다")
+    @Test
+    void findMine() {
+        meetingRepository.save(Fixture.ODY_MEETING1);
+        memberRepository.save(Fixture.MEMBER1);
+        mateRepository.save(Fixture.MATE1);
+
+        RestAssured.given()
+                .log()
+                .all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer device-token=" + Fixture.MEMBER1_TOKEN)
+                .when()
+                .get("/meetings/me")
+                .then()
+                .log()
+                .all()
+                .statusCode(200);
+    }
+
     @DisplayName("로그 목록 조회에 성공하면 200응답 반환한다")
     @Test
     void findAllMeetingLogs() {
         Location origin = Fixture.ORIGIN_LOCATION;
         Location target = Fixture.TARGET_LOCATION;
         Member member = memberRepository.save(Fixture.MEMBER1);
-        System.out.println(member.getId());
         Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
         meetingRepository.save(meeting);
         Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin));
@@ -43,7 +61,8 @@ class MeetingControllerTest extends BaseControllerTest {
         RestAssured.given()
                 .log()
                 .all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
                 .when()
                 .get("/meetings/1/noti-log")
                 .then()
