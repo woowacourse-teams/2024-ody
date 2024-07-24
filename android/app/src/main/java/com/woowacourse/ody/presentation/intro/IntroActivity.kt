@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityIntroBinding
+import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoActivity
 import com.woowacourse.ody.util.observeEvent
 
@@ -59,6 +60,9 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun navigateToInviteCodeActivity() {
+        Intent(this, InviteCodeActivity::class.java).also {
+            startActivity(it)
+        }
     }
 
     private fun requestNotificationPermission() {

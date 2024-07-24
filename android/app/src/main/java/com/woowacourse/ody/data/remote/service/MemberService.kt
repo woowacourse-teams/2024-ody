@@ -1,4 +1,4 @@
-package com.woowacourse.ody.data.remote
+package com.woowacourse.ody.data.remote.service
 
 import retrofit2.http.POST
 

@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="infoListener"
+            name="backListener"
             type="com.woowacourse.ody.presentation.meetinginfo.BackListener" />
     </data>
 
@@ -20,8 +20,8 @@
             layout="@layout/toolbar_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:infoListener="@{infoListener}" />
+            app:backListener="@{backListener}"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
             android:id="@+id/wd_meeting_info"

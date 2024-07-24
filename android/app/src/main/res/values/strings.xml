@@ -36,12 +36,17 @@
     <string name="nickname_question_hint">올리브</string>
     <string name="nickname_length_separator">/</string>
 
-
     <!-- activity_join_completion.xml -->
     <string name="join_completion_second_explain">약속에 참여했어요!</string>
 
+    <!-- activity_invite_code.xml -->
+    <string name="invite_code_input_front">초대 코드</string>
+    <string name="invite_code_input_back">를 입력해 주세요!</string>
+    <string name="invite_code_input_hint">초대 코드</string>
+    <string name="invalid_invite_code">초대 코드가 뭔가 이상한데요? 🤔</string>
+  
     <!-- activity_logs.xml -->
-    <string name="logs_copy_code_guide">초대 코드가 복사 복사되었습니다.</string>
+    <string name="logs_copy_code_guide">초대 코드가 복사되었습니다.</string>
 
     <!-- bottom_sheet_code_copy.xml -->
     <string name="code_copy_guide">초대 코드를 복사해\n친구에게 전달해 보세요!</string>
@@ -49,4 +54,5 @@
 
     <!-- all -->
     <string name="next_button">다음</string>
+    <string name="confirm_button">확인</string>
 </resources>
