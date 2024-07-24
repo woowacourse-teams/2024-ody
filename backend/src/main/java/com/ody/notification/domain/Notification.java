@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,4 +36,19 @@ public class Notification extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     @NotNull
     private NotificationType type;
+
+    @NotNull
+    private LocalDateTime sendAt;
+
+    @Enumerated(value = EnumType.STRING)
+    @NotNull
+    private NotificationStatus status;
+
+    public Notification(Mate mate, NotificationType type, LocalDateTime sendAt, NotificationStatus status) {
+        this(null, mate, type, sendAt, status);
+    }
+
+    public void updateDone() {
+        this.status = NotificationStatus.DONE;
+    }
 }

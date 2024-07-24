@@ -1,8 +1,8 @@
 package com.woowacourse.ody.data.local
 
 import com.google.firebase.messaging.FirebaseMessagingService
-import com.woowacourse.ody.data.remote.MemberService
 import com.woowacourse.ody.data.remote.RetrofitClient
+import com.woowacourse.ody.data.remote.service.MemberService
 import kotlinx.coroutines.runBlocking
 
 class FCMService : FirebaseMessagingService() {

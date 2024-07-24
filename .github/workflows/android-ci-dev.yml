@@ -1,17 +1,14 @@
 name: android ci
 on:
-    pull_request:
-        branches: 
-          - develop
-        paths:
-          - android/**
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - android/**
 
 defaults:
   run:
     working-directory: android
-
-env:
-  TEST_REPORT_PATH: ${{ github.workspace }}/android/gradle/test-results/*.xml
 
 jobs:
   build:
@@ -49,7 +46,9 @@ jobs:
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
 
       - name: Add local.properties
-        run:  echo base_url='$${{ secrets.BASE_URL }}' > ./local.properties
+        run: |
+          echo base_url='${{ secrets.BASE_URL }}' > ./local.properties
+          echo kakao_api_key='{{ secrets.KAKAO_API_KEY }}' > ./local.properties
 
       - name: Check ktLint
         run: ./gradlew ktlintCheck
@@ -64,4 +63,4 @@ jobs:
         uses: mikepenz/action-junit-report@v4
         if: always()
         with:
-          report_paths: $TEST_REPORT_PATH
+          report_paths: ${{ github.workspace }}/android/gradle/test-results/*.xml

@@ -1,18 +1,22 @@
 package com.ody.notification.controller;
 
+import com.ody.member.domain.Member;
 import com.ody.notification.dto.response.NotiLogFindResponse;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 
 
 @Tag(name = "Notification API")
+@SecurityRequirement(name = "Authorization")
 public interface NotificationControllerSwagger {
 
     @Operation(
@@ -32,5 +36,5 @@ public interface NotificationControllerSwagger {
     )
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<NotiLogFindResponse> findAllByMeetingId(String fcmToken, Long meetingId);
+    ResponseEntity<NotiLogFindResponse> findAllByMeetingId(@Parameter(hidden = true) Member member, Long meetingId);
 }
