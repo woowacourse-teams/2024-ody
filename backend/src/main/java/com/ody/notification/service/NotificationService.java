@@ -47,7 +47,7 @@ public class NotificationService {
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
                 deviceToken.getDeviceToken(),
                 NotificationType.DEPARTURE_REMINDER,
-                mate.getNickname(),
+                mate.getNickname().getNickName(),
                 sendAt
         );
         publisher.publishEvent(fcmSendRequest);
