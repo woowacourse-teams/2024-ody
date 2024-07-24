@@ -3,6 +3,7 @@ package com.woowacourse.ody.presentation.meetinginfo
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -42,6 +43,10 @@ class MeetingInfoActivity : AppCompatActivity(), NextListener, BackListener {
         setContentView(binding.root)
 
         initializeDataBinding()
+        viewModel.isValidInfo.observe(this) {
+            Log.e("TEST", "지금 유효하니? $it")
+
+        }
     }
 
     private fun initializeDataBinding() {

@@ -34,7 +34,6 @@ class MeetingDateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initializeCalendar()
-        viewModel.onNextInfo()
     }
 
     private fun initializeCalendar() {
@@ -46,7 +45,6 @@ class MeetingDateFragment : Fragment() {
 
             if (selectedDate.timeInMillis < Calendar.getInstance().timeInMillis) {
                 showSnackBar(getString(R.string.meeting_date_date_guide))
-                binding.cvDate.date = today
             } else {
                 viewModel.meetingYear.value = year
                 viewModel.meetingMonth.value = month + 1
