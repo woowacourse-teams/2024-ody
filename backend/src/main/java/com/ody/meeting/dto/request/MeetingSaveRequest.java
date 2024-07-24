@@ -1,5 +1,7 @@
 package com.ody.meeting.dto.request;
 
+import com.ody.meeting.domain.Location;
+import com.ody.meeting.domain.Meeting;
 import com.ody.common.annotation.FutureOrPresentDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
@@ -42,4 +44,8 @@ public record MeetingSaveRequest(
         String originLongitude
 ) {
 
+    public Meeting toMeeting(String inviteCode) {
+        Location target = new Location(targetAddress, targetLatitude, targetLongitude);
+        return new Meeting(name, date, time, target, inviteCode);
+    }
 }

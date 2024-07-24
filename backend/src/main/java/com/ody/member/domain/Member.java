@@ -1,6 +1,7 @@
 package com.ody.member.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,9 +24,10 @@ public class Member {
 
     @NotNull
     @Column(unique = true)
-    private String deviceToken;
+    @Embedded
+    private DeviceToken deviceToken;
 
-    public Member(String deviceToken) {
+    public Member(DeviceToken deviceToken) {
         this(null, deviceToken);
     }
 }

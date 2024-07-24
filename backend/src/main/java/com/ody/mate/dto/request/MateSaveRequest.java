@@ -1,5 +1,9 @@
-package com.ody.mate.domain.dto;
+package com.ody.mate.dto.request;
 
+import com.ody.mate.domain.Mate;
+import com.ody.meeting.domain.Location;
+import com.ody.meeting.domain.Meeting;
+import com.ody.member.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record MateSaveRequest(
@@ -20,4 +24,8 @@ public record MateSaveRequest(
         String originLongitude
 ) {
 
+    public Mate toMate(Meeting meeting, Member member) {
+        Location origin = new Location(originAddress, originLatitude, originLongitude);
+        return new Mate(meeting, member, nickname, origin);
+    }
 }

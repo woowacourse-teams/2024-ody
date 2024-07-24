@@ -3,10 +3,13 @@ package com.ody.meeting.controller;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
+import com.ody.member.domain.Member;
+import com.ody.swagger.annotation.DeviceTokenHeader;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -28,9 +31,10 @@ public interface MeetingControllerSwagger {
                     )
             }
     )
+    @DeviceTokenHeader
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<MeetingSaveResponses> findMine(String fcmToken);
+    ResponseEntity<MeetingSaveResponses> findMine(@Parameter(hidden = true) Member member);
 
     @Operation(
             summary = "모임 개설",
@@ -43,10 +47,12 @@ public interface MeetingControllerSwagger {
                     )
             }
     )
+    @DeviceTokenHeader
     @ErrorCode400
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<MeetingSaveResponse> save(String fcmToken, MeetingSaveRequest meetingSaveRequest);
+    ResponseEntity<MeetingSaveResponse> save(@Parameter(hidden = true) Member member,
+                                             MeetingSaveRequest meetingSaveRequest);
 
     @Operation(
             summary = "초대코드 유효성 검사",
@@ -59,8 +65,9 @@ public interface MeetingControllerSwagger {
                     )
             }
     )
+    @DeviceTokenHeader
     @ErrorCode400
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<Void> validateInviteCode(String fcmToken, String inviteCode);
+    ResponseEntity<Void> validateInviteCode(@Parameter(hidden = true) Member member, String inviteCode);
 }

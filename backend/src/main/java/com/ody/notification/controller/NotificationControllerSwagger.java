@@ -1,9 +1,12 @@
 package com.ody.notification.controller;
 
+import com.ody.member.domain.Member;
 import com.ody.notification.dto.response.NotiLogFindResponse;
+import com.ody.swagger.annotation.DeviceTokenHeader;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,7 +33,8 @@ public interface NotificationControllerSwagger {
                     )
             }
     )
+    @DeviceTokenHeader
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<NotiLogFindResponse> findAllByMeetingId(String fcmToken, Long meetingId);
+    ResponseEntity<NotiLogFindResponse> findAllByMeetingId(@Parameter(hidden = true) Member member, Long meetingId);
 }

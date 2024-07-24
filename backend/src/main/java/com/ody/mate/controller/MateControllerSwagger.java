@@ -1,11 +1,14 @@
-package com.ody.mate.domain.controller;
+package com.ody.mate.controller;
 
-import com.ody.mate.domain.dto.MateSaveRequest;
+import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
+import com.ody.member.domain.Member;
+import com.ody.swagger.annotation.DeviceTokenHeader;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -33,8 +36,9 @@ public interface MateControllerSwagger {
                     )
             }
     )
+    @DeviceTokenHeader
     @ErrorCode400
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<MeetingSaveResponse> save(String fcmToken, MateSaveRequest mateSaveRequest);
+    ResponseEntity<MeetingSaveResponse> save(@Parameter(hidden = true) Member member, MateSaveRequest mateSaveRequest);
 }
