@@ -3,18 +3,16 @@ name: backend cicd dev
 on:
   push:
     branches:
-      - feature/82
-#      - develop
-#    paths:
-#      - backend/**
-#  pull_request:
-#    branches:
-#      - develop
-#    paths:
-#      - backend/**
+      - develop
+    paths:
+      - backend/**
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - backend/**
 
 env:
-#  TEST_REPORT_PATH: ${{ github.workspace }}/backend/build/test-results/**/*.xml
   DOCKERHUB_REPOSITORY: ody-official
   DOCKER_CONTAINER_NAME: ody-backend
 
@@ -30,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feature/82
+          ref: develop
           submodules: true
           token: ${{ secrets.GIT_TOKEN }}
 
