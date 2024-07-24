@@ -17,6 +17,9 @@ public class MemberService {
 
     @Transactional
     public Member save(DeviceToken deviceToken) {
+        if (memberRepository.findFirstByDeviceToken(deviceToken).isPresent()) {
+            throw new OdyException("중복된 토큰이 존재합니다.");
+        }
         return memberRepository.save(new Member(deviceToken));
     }
 
