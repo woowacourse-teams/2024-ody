@@ -11,14 +11,22 @@ import kotlinx.coroutines.launch
 
 class NotificationLogViewModel(
     private val notificationLogRepository: NotificationLogRepository,
-) : ViewModel() {
+) : ViewModel(), CopyInviteCodeButtonListener {
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
     val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs
 
-    fun fetchNotificationLogs() =
+    private fun fetchNotificationLogs() =
         viewModelScope.launch {
             notificationLogRepository.getNotificationLogs().let { notificationLogs ->
                 _notificationLogs.postValue(notificationLogs.toNotificationUiModels())
             }
         }
+
+    fun initialize() {
+        fetchNotificationLogs()
+    }
+
+    override fun onClickCopyInviteCode() {
+        TODO("Not yet implemented")
+    }
 }

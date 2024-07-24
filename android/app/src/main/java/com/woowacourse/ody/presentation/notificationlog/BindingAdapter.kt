@@ -1,3 +1,4 @@
+package com.woowacourse.ody.presentation.notificationlog
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
