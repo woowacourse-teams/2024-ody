@@ -5,7 +5,7 @@ import com.ody.meeting.dto.response.MateResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.notification.domain.Notification;
-import com.ody.notification.dto.response.NotiLogFindResponse;
+import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -47,13 +47,13 @@ public class MeetingController implements MeetingControllerSwagger {
 
     @Override
     @GetMapping("/meetings/{meetingId}/noti-log")
-    public ResponseEntity<NotiLogFindResponse> findAllMeetingLogs(
+    public ResponseEntity<NotiLogFindResponses> findAllMeetingLogs(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String fcmToken,
             @PathVariable Long meetingId
     ) {
 
         List<Notification> notifications = notificationService.findAllMeetingLogs(meetingId);
-        NotiLogFindResponse response = NotiLogFindResponse.from(notifications);
+        NotiLogFindResponses response = NotiLogFindResponses.from(notifications);
         return ResponseEntity.ok(response);
     }
 
