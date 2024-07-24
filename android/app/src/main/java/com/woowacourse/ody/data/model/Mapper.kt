@@ -25,6 +25,7 @@ fun MeetingResponse.toMeeting(): Meeting =
         this.targetAddress,
         LocalDateTime.of(this.date, this.time),
         this.mates.map { it.toMate() },
+        this.inviteCode,
     )
 
 fun MateResponse.toMate(): Mate = Mate(this.nickname)

@@ -5,4 +5,5 @@ data class MeetingUiModel(
     val targetPosition: String,
     val meetingTime: String,
     val mates: List<String>,
+    val inviteCode: String,
 )

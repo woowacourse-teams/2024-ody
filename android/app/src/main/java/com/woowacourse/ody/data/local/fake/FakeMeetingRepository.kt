@@ -18,6 +18,7 @@ object FakeMeetingRepository : MeetingRepository {
             "선릉 캠퍼스",
             LocalDateTime.of(2024, 1, 1, 10, 0, 0),
             mates,
+            "abcd1234",
         )
 
     override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> = Result.success(Unit)

@@ -22,5 +22,6 @@ fun Meeting.toMeetingUiModel(): MeetingUiModel {
         this.targetPosition,
         this.meetingTime.format(dateTimeFormatter),
         this.mates.map { it.nickname },
+        this.inviteCode,
     )
 }
