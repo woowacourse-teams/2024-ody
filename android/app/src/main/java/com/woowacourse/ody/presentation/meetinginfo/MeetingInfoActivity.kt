@@ -30,7 +30,7 @@ class MeetingInfoActivity : AppCompatActivity(), NextListener, BackListener {
             MeetingNameFragment(),
             MeetingDateFragment(),
             MeetingTimeFragment(),
-            MeetingDestinationFragment()
+            MeetingDestinationFragment(),
         )
     }
     private val joinInfoFragments: List<Fragment> by lazy {

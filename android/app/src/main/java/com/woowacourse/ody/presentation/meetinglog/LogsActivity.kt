@@ -11,7 +11,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityLogsBinding
-import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
 
 class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
     private val binding: ActivityLogsBinding by lazy {

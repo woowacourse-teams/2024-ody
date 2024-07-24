@@ -6,8 +6,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.R
-import com.woowacourse.ody.presentation.joininfo.JoinInfoActivity
-import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
