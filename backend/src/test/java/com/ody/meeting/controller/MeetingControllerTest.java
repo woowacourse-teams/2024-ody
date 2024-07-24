@@ -43,12 +43,28 @@ class MeetingControllerTest extends BaseControllerTest {
         RestAssured.given()
                 .log()
                 .all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
                 .when()
                 .get("/meetings/1/noti-log")
                 .then()
                 .log()
                 .all()
                 .statusCode(200);
+    }
+
+    @DisplayName("유효하지 않은 초대 코드일 경우 400 에러를 반환한다.")
+    @Test
+    void validateInviteCode() {
+        String deviceToken = "Bearer device-token=testToken";
+
+        RestAssured.given()
+                .header(HttpHeaders.AUTHORIZATION, deviceToken)
+                .when()
+                .get("/invite-codes/1/validate")
+                .then()
+                .log()
+                .all()
+                .statusCode(400);
     }
 }
