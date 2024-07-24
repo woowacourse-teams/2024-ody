@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class NotificationLogViewModel(
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
-) : ViewModel(), CopyInviteCodeButtonListener {
+) : ViewModel() {
     private val _meeting = MutableLiveData<MeetingUiModel>()
     val meeting: LiveData<MeetingUiModel> = _meeting
 
@@ -43,7 +43,7 @@ class NotificationLogViewModel(
         fetchMeeting()
     }
 
-    override fun onClickCopyInviteCode() {
-        TODO("Not yet implemented")
+    companion object {
+        private const val INVITE_CODE_LABEL = "inviteCode"
     }
 }
