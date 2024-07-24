@@ -52,9 +52,7 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
 
     private fun initializeObserve() {
         viewModel.isValidDestination.observe(viewLifecycleOwner) { isValid ->
-            if (isValid) {
-                return@observe
-            }
+            if (isValid) return@observe
             showSnackBar(R.string.invalid_address)
         }
     }
@@ -77,13 +75,13 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
         return geoLocationUiModel?.toGeoLocation()
     }
 
+    override fun search() = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+
     private fun showSnackBar(
         @StringRes messageId: Int
     ) {
         Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
     }
-
-    override fun search() = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
     override fun onDestroyView() {
         super.onDestroyView()

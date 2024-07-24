@@ -7,6 +7,10 @@
         <variable
             name="vm"
             type="com.woowacourse.ody.presentation.joininfo.JoinInfoViewModel" />
+
+        <variable
+            name="addressSearchListener"
+            type="com.woowacourse.ody.presentation.address.listener.AddressSearchListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,7 +48,7 @@
             android:layout_marginTop="32dp"
             android:focusable="false"
             android:hint="@string/address_question_hint"
-            android:text=""
+            android:onClick="@{() -> addressSearchListener.search()}"
             app:layout_constraintBottom_toTopOf="@id/tv_starting_point_information"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
