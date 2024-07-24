@@ -2,6 +2,12 @@
     <string name="app_name">오디</string>
     <!-- activity_notification_log -->
     <string name="activity_notification_mates">%1$d명 / %2$s </string>"
+
+    <!-- fcm_notification -->
+    <string name="fcm_notification_entry">%1$s (이)가 들어왔어요.</string>"
+    <string name="fcm_notification_departure_reminder">%1$s (이)가 출발할 시간이에요!</string>"
+    <string name="fcm_notification_departure">%1$s (이)가 출발했어요.</string>"
+
     <!-- item_notification_log.xml -->
     <string name="item_notification_entry">-> %1$s (이)가 들어왔어요.</string>"
     <string name="item_notification_departure_reminder">-> %1$s (이)가 출발할 시간이에요!</string>"

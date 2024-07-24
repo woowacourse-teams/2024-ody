@@ -26,15 +26,15 @@ class FCMService : FirebaseMessagingService() {
     ): String =
         when (type) {
             NotificationType.ENTRY -> {
-                getString(R.string.item_notification_entry, nickname)
+                getString(R.string.fcm_notification_entry, nickname)
             }
 
             NotificationType.DEPARTURE_REMINDER -> {
-                getString(R.string.item_notification_departure_reminder, nickname)
+                getString(R.string.fcm_notification_departure_reminder, nickname)
             }
 
             NotificationType.DEPARTURE -> {
-                getString(R.string.item_notification_departure, nickname)
+                getString(R.string.fcm_notification_departure, nickname)
             }
 
             NotificationType.DEFAULT -> {
