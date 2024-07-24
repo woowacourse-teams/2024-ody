@@ -70,7 +70,7 @@ class NotificationRepositoryTest {
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogsById(1L);
+        List<Notification> notifications = notificationRepository.findAllMeetingLogs(1L);
 
         assertThat(notifications.size()).isEqualTo(2);
     }

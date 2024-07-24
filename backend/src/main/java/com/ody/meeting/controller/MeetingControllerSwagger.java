@@ -4,6 +4,7 @@ import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.member.domain.Member;
+import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
@@ -35,6 +36,25 @@ public interface MeetingControllerSwagger {
     @ErrorCode401
     @ErrorCode500
     ResponseEntity<MeetingSaveResponses> findMine(@Parameter(hidden = true) Member member);
+
+    @Operation(
+            summary = "로그 목록 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "로그 목록 조회 성공",
+                            content = @Content(schema = @Schema(implementation = NotiLogFindResponses.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않은 모임방이거나 모임방 일원이 아닌 경우",
+                            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+                    )
+            }
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<NotiLogFindResponses> findAllMeetingLogs(String fcmToken, Long meetingId);
 
     @Operation(
             summary = "모임 개설",

@@ -57,6 +57,6 @@ public class NotificationService {
     }
 
     public List<Notification> findAllMeetingLogs(Long meetingId) {
-        return notificationRepository.findAllMeetingLogsById(meetingId);
+        return notificationRepository.findAllMeetingLogs(meetingId);
     }
 }

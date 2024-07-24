@@ -14,5 +14,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             left join Meeting meet on m.meeting = meet
             where meet.id = :meetingId
             """)
-    List<Notification> findAllMeetingLogsById(Long meetingId);
+    List<Notification> findAllMeetingLogs(Long meetingId);
 }
