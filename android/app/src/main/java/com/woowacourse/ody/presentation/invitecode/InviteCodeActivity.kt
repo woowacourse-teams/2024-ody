@@ -8,9 +8,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.DefaultMeetingRepository
 import com.woowacourse.ody.databinding.ActivityInviteCodeBinding
+import com.woowacourse.ody.presentation.meetinginfo.BackListener
 import com.woowacourse.ody.util.observeEvent
 
-class InviteCodeActivity : AppCompatActivity() {
+class InviteCodeActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityInviteCodeBinding by lazy {
         ActivityInviteCodeBinding.inflate(layoutInflater)
     }
@@ -28,6 +29,7 @@ class InviteCodeActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.vm = viewModel
         binding.lifecycleOwner = this
+        binding.listener = this
     }
 
     private fun initializeObserve() {
@@ -46,4 +48,6 @@ class InviteCodeActivity : AppCompatActivity() {
     ) {
         Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
     }
+
+    override fun onBack() = finish()
 }

@@ -7,13 +7,19 @@
         <variable
             name="vm"
             type="com.woowacourse.ody.presentation.invitecode.InviteCodeViewModel" />
+
+        <variable
+            name="listener"
+            type="com.woowacourse.ody.presentation.meetinginfo.BackListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/toolbar_back" />
+        <include
+            layout="@layout/toolbar_back"
+            app:infoListener="@{listener}" />
 
         <TextView
             android:id="@+id/tv_invite_front"
@@ -81,10 +87,10 @@
             style="@style/pretendard_bold_16"
             android:layout_width="150dp"
             android:layout_height="45dp"
-            android:onClick="@{() -> vm.checkInviteCode()}"
             android:layout_marginTop="32dp"
             android:background="@drawable/selector_confirm_button"
             android:enabled="@{vm.hasInviteCode}"
+            android:onClick="@{() -> vm.checkInviteCode()}"
             android:text="@string/confirm_button"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
