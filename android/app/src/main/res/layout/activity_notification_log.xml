@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
             type="com.woowacourse.ody.presentation.notificationlog.NotificationLogViewModel" />
@@ -19,6 +20,7 @@
             layout="@layout/toolbar_log"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            title="@{vm.meeting.name}"
             layout:layout_constraintBottom_toTopOf="@+id/layout_meeting_info"
             layout:layout_constraintTop_toTopOf="parent" />
 
@@ -34,11 +36,12 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                layout:layout_constraintEnd_toStartOf="@id/tv_meeting_date"
-                layout:layout_constraintTop_toTopOf="@id/tv_meeting_date"
-                layout:layout_constraintBottom_toBottomOf="@id/tv_meeting_date"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_watch" />
+                android:src="@drawable/ic_watch"
+                layout:layout_constraintBottom_toBottomOf="@id/tv_meeting_date"
+                layout:layout_constraintEnd_toStartOf="@id/tv_meeting_date"
+                layout:layout_constraintTop_toTopOf="@id/tv_meeting_date" />
+
             <TextView
                 android:id="@+id/tv_meeting_date"
                 style="@style/pretendard_regular_16"
@@ -46,18 +49,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="56dp"
                 android:layout_marginTop="14dp"
+                android:text="@{vm.meeting.meetingTime}"
                 layout:layout_constraintStart_toStartOf="parent"
                 layout:layout_constraintTop_toTopOf="parent"
                 tools:text="2024년 7월 11일 03시 00분" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_location_on"
-                layout:layout_constraintTop_toTopOf="@id/tv_meeting_position"
                 layout:layout_constraintBottom_toBottomOf="@id/tv_meeting_position"
                 layout:layout_constraintEnd_toStartOf="@id/tv_meeting_position"
-                android:layout_marginEnd="8dp"
-                />
+                layout:layout_constraintTop_toTopOf="@id/tv_meeting_position" />
 
             <TextView
                 android:id="@+id/tv_meeting_position"
@@ -65,6 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:text="@{vm.meeting.targetPosition}"
                 layout:layout_constraintStart_toStartOf="@id/tv_meeting_date"
                 layout:layout_constraintTop_toBottomOf="@id/tv_meeting_date"
                 tools:text="선릉 캠퍼스" />
@@ -72,15 +77,16 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_person"
-                layout:layout_constraintTop_toTopOf="@id/tv_meeting_people"
                 layout:layout_constraintBottom_toBottomOf="@id/tv_meeting_people"
                 layout:layout_constraintEnd_toStartOf="@id/tv_meeting_people"
-                android:layout_marginEnd="8dp"
-                />
+                layout:layout_constraintTop_toTopOf="@id/tv_meeting_people" />
+
             <TextView
                 android:id="@+id/tv_meeting_people"
                 style="@style/pretendard_regular_16"
+                setMatesText="@{vm.meeting.mates}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -97,10 +103,10 @@
             android:layout_height="0dp"
             android:layout_marginStart="18dp"
             android:layout_marginEnd="18dp"
+            layout:layout_constraintBottom_toBottomOf="parent"
             layout:layout_constraintEnd_toEndOf="parent"
             layout:layout_constraintStart_toStartOf="parent"
             layout:layout_constraintTop_toBottomOf="@+id/layout_meeting_info"
-            layout:layout_constraintBottom_toBottomOf="parent"
             tools:itemCount="12"
             tools:listitem="@layout/item_notification_log" />
     </androidx.constraintlayout.widget.ConstraintLayout>
