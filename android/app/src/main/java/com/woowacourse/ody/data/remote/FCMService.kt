@@ -1,48 +1,55 @@
-package com.woowacourse.ody.data.local
+package com.woowacourse.ody.data.remote
 
-import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.woowacourse.ody.data.remote.RetrofitClient
+import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.service.MemberService
-import com.woowacourse.ody.presentation.intro.IntroActivity
+import com.woowacourse.ody.domain.NotificationType
 import kotlinx.coroutines.runBlocking
 
 class FCMService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         val title = message.getNotification()?.title
-        val msg = message.getNotification()?.body
-        notify(title, msg)
+        val type =
+            message.data["type"]?.let { NotificationType.from(it) } ?: NotificationType.DEFAULT
+        val nickname = message.data["nickname"] ?: ""
+        showNotification(title, makeNotificationMessage(type, nickname))
     }
 
-    private fun notify(
+    private fun makeNotificationMessage(
+        type: NotificationType,
+        nickname: String,
+    ): String =
+        when (type) {
+            NotificationType.ENTRY -> {
+                getString(R.string.item_notification_entry, nickname)
+            }
+
+            NotificationType.DEPARTURE_REMINDER -> {
+                getString(R.string.item_notification_departure_reminder, nickname)
+            }
+
+            NotificationType.DEPARTURE -> {
+                getString(R.string.item_notification_departure, nickname)
+            }
+
+            NotificationType.DEFAULT -> {
+                ""
+            }
+        }
+
+    private fun showNotification(
         title: String?,
         msg: String?,
     ) {
-        val intent = Intent(this, IntroActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-
-        val contentIntent =
-            PendingIntent.getActivity(
-                this,
-                0,
-                Intent(
-                    this,
-                    IntroActivity::class.java,
-                ),
-                PendingIntent.FLAG_IMMUTABLE,
-            )
-
         val mBuilder: NotificationCompat.Builder =
             NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(title)
-                .setSmallIcon(R.mipmap.sym_def_app_icon)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(msg)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -51,8 +58,6 @@ class FCMService : FirebaseMessagingService() {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         notificationManager.notify(0, mBuilder.build())
-
-        mBuilder.setContentIntent(contentIntent)
     }
 
     private fun setNotificationChannel() {
