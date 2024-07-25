@@ -44,18 +44,17 @@ class JoinCompleteActivity : AppCompatActivity() {
                     meetingInfo[9],
                 ),
             )
-        } else if (joinInfo != null)
-            {
-                viewModel.postMates(
-                    JoinRequest(
-                        joinInfo[0],
-                        joinInfo[1],
-                        joinInfo[2],
-                        joinInfo[3],
-                        joinInfo[4],
-                    ),
-                )
-            }
+        } else if (joinInfo != null) {
+            viewModel.postMates(
+                JoinRequest(
+                    joinInfo[0],
+                    joinInfo[1],
+                    joinInfo[2],
+                    joinInfo[3],
+                    joinInfo[4],
+                ),
+            )
+        }
 
         viewModel.navigateAction.observe(this) {
             finishAffinity()
