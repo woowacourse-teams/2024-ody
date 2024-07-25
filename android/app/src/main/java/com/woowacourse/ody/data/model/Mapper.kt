@@ -1,5 +1,6 @@
 package com.woowacourse.ody.data.model
 
+import android.util.Log
 import com.woowacourse.ody.data.model.meeting.MateResponse
 import com.woowacourse.ody.data.model.meeting.MeetingResponse
 import com.woowacourse.ody.data.model.notification.NotificationLogsResponse
@@ -32,6 +33,6 @@ fun MeetingResponse.toMeeting(): Meeting =
 fun MateResponse.toMate(): Mate = Mate(this.nickname)
 
 fun String.parseToLocalDateTime(): LocalDateTime {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     return LocalDateTime.parse(this, formatter)
 }

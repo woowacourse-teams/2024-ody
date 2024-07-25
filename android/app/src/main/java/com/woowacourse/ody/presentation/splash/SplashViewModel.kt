@@ -22,10 +22,15 @@ class SplashViewModel(
     private fun fetchMeeting() =
         viewModelScope.launch {
             delay(1500)
-            meetingRepository.fetchMeeting().onSuccess {
-                _meeting.postValue(it.first())
-            }.onFailure {
-                _meeting.postValue(null)
-            }
+            meetingRepository.fetchMeeting()
+                .onSuccess {
+                    if (it.isEmpty()) {
+                        _meeting.postValue(null)
+                    } else {
+                        _meeting.postValue(it.first())
+                    }
+                }.onFailure {
+
+                }
         }
 }
