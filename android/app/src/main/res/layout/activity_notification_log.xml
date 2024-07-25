@@ -44,7 +44,7 @@
                 android:id="@+id/layout_meeting_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rectangle_cream_downside_radius_30"
+                android:background="@drawable/rectangle_cream_downside_shadow_radius_30"
                 android:elevation="8dp"
                 layout:layout_constraintBottom_toTopOf="@+id/rv_notification_log"
                 layout:layout_constraintTop_toBottomOf="@+id/tb_log">

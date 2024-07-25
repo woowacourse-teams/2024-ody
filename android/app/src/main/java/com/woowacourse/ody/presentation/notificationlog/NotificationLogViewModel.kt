@@ -11,6 +11,7 @@ import com.woowacourse.ody.presentation.notificationlog.uimodel.NotificationLogU
 import com.woowacourse.ody.presentation.notificationlog.uimodel.toMeetingUiModel
 import com.woowacourse.ody.presentation.notificationlog.uimodel.toNotificationUiModels
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class NotificationLogViewModel(
     private val notificationLogRepository: NotificationLogRepository,
@@ -32,10 +33,13 @@ class NotificationLogViewModel(
     private fun fetchMeeting() =
         viewModelScope.launch {
             meetingRepository.fetchMeeting().let { meeting ->
-                meeting.onSuccess {
-                    _meeting.postValue(it.first().toMeetingUiModel())
-                    fetchNotificationLogs(it.first().id)
-                }.onFailure {}
+                meeting
+                    .onSuccess {
+                        _meeting.postValue(it.first().toMeetingUiModel())
+                        fetchNotificationLogs(it.first().id)
+                    }.onFailure {
+                        Timber.e(it.message.toString())
+                    }
             }
         }
 

@@ -6,12 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
 import com.woowacourse.ody.data.remote.repository.DefaultNotificationLogRepository
