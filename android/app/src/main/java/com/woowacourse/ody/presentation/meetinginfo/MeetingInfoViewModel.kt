@@ -1,6 +1,5 @@
 package com.woowacourse.ody.presentation.meetinginfo
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -51,7 +50,7 @@ class MeetingInfoViewModel : ViewModel() {
     }
 
     fun initializeMeetingTime() {
-        if (meetingHour.value != null || meetingMinute.value !=null) {
+        if (meetingHour.value != null || meetingMinute.value != null) {
             return
         }
         val now = LocalTime.now()
