@@ -16,6 +16,7 @@ class MeetingCompletionActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             delay(1500)
+            setResult(RESULT_OK)
             finish()
         }
     }

@@ -63,6 +63,7 @@ class MeetingTimeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        viewModel.initializeMeetingTime()
         viewModel.meetingInfoType.value = MeetingInfoType.TIME
     }
 

@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="244dp"
         android:background="@drawable/bottom_sheet_radius_25"
+        android:elevation="10dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
