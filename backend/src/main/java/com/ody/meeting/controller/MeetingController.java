@@ -70,6 +70,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @RequestBody MeetingSaveRequest meetingSaveRequest
     ) {
         Meeting meeting = meetingService.save(meetingSaveRequest);
+
         MateSaveRequest mateSaveRequest = new MateSaveRequest(
                 meeting.getInviteCode(),
                 meetingSaveRequest.nickname(),
@@ -77,7 +78,9 @@ public class MeetingController implements MeetingControllerSwagger {
                 meetingSaveRequest.originLatitude(),
                 meetingSaveRequest.originLongitude()
         );
-        mateService.save(mateSaveRequest, meeting, member);
+        Mate mate = mateService.save(mateSaveRequest, meeting, member);
+        notificationService.saveAndSendDepartureReminder(meeting, mate, member.getDeviceToken());
+
         List<Mate> mates = mateService.findAllByMeetingId(meeting.getId());
         MeetingSaveResponse meetingSaveResponse = MeetingSaveResponse.of(meeting, mates);
         return ResponseEntity.status(HttpStatus.CREATED)
