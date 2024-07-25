@@ -42,7 +42,6 @@ class NotificationRepositoryTest {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @Disabled
     @DisplayName("특정 모임의 Notification 반환")
     @Test
     void findAllMeetingLogsById() {
@@ -72,7 +71,7 @@ class NotificationRepositoryTest {
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogs(1L);
+        List<Notification> notifications = notificationRepository.findAllMeetingLogs(meeting.getId());
 
         assertThat(notifications.size()).isEqualTo(2);
     }

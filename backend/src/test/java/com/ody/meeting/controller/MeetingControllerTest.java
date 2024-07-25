@@ -18,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.transaction.annotation.Transactional;
 
 class MeetingControllerTest extends BaseControllerTest {
 
@@ -30,7 +31,6 @@ class MeetingControllerTest extends BaseControllerTest {
     @Autowired
     MateRepository mateRepository;
 
-    @Disabled
     @DisplayName("특정 멤버의 참여 모임 목록 조회에 성공하면 200응답 반환한다")
     @Test
     void findMine() {
