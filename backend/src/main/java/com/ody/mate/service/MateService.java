@@ -21,11 +21,14 @@ public class MateService {
 
     @Transactional
     public Mate save(MateSaveRequest mateSaveRequest, Meeting meeting, Member member) {
-        try {
-            return mateRepository.save(mateSaveRequest.toMate(meeting, member));
-        } catch (DataIntegrityViolationException exception) {
-            throw new OdyException("모임 내 닉네임이 중복되었습니다.");
+        if (mateRepository.existsByMeetingIdAndNicknameNickname(meeting.getId(), mateSaveRequest.nickname())) {
+            throw new OdyException("모임 내 같은 닉네임이 존재합니다.");
         }
+
+        if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
+            throw new OdyException("모임에 이미 참여한 회원입니다.");
+        }
+        return mateRepository.save(mateSaveRequest.toMate(meeting, member));
     }
 
     public List<Mate> findAllByMeetingId(Long meetingId) {
