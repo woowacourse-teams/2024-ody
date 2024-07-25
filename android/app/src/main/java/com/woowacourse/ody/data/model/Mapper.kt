@@ -34,7 +34,7 @@ fun MeetingResponse.toMeeting(): Meeting =
 fun MateResponse.toMate(): Mate = Mate(this.nickname)
 
 fun String.parseToLocalDateTime(): LocalDateTime {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSS")
     return LocalDateTime.parse(this, formatter)
 }
 
