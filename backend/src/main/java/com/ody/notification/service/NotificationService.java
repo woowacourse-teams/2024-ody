@@ -12,6 +12,7 @@ import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.service.RouteService;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,21 +33,42 @@ public class NotificationService {
 
     @Transactional
     public void saveAndSendDepartureReminder(Meeting meeting, Mate mate, DeviceToken deviceToken) {
+        saveAndSendEntryNotification(meeting, mate);
+        fcmSubscriber.subscribeTopic(meeting, deviceToken);
+        saveAndSendDepartureNotification(meeting, mate);
+    };
+
+    private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
+        Notification entryNotification = new Notification(
+                mate,
+                NotificationType.ENTRY,
+                LocalDateTime.now().withNano(0),
+                NotificationStatus.DONE
+        );
+        Notification savedNotification = notificationRepository.save(entryNotification);
+
+        FcmSendRequest fcmSendRequest = new FcmSendRequest(
+                meeting.getId().toString(),
+                savedNotification.getId(),
+                LocalDateTime.now().withNano(0)
+        );
+        publisher.publishEvent(fcmSendRequest);
+    }
+
+    private void saveAndSendDepartureNotification(Meeting meeting, Mate mate) {
         DepartureTime sendAt = routeService.calculateDepartureTime(
                 mate.getOrigin(),
                 meeting.getTarget(),
                 LocalDateTime.of(meeting.getDate(), meeting.getTime())
         );
 
-        Notification notification = new Notification(
+        Notification departureNotification = new Notification(
                 mate,
                 NotificationType.DEPARTURE_REMINDER,
                 sendAt.getValue(),
                 NotificationStatus.PENDING
         );
-        Notification savedNotification = notificationRepository.save(notification);
-
-        fcmSubscriber.subscribeTopic(meeting, deviceToken);
+        Notification savedNotification = notificationRepository.save(departureNotification);
 
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
                 meeting.getId().toString(),
