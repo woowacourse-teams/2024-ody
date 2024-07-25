@@ -17,6 +17,4 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             """
     )
     List<Meeting> findAllMeetingsByMember(Member member);
-
-    Optional<Meeting> findByInviteCode(String invitedCode);
 }

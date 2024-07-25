@@ -38,8 +38,8 @@ public class MeetingService {
     }
 
     public void validateInvitedCode(String inviteCode) {
-        InviteCodeGenerator.decode(inviteCode);
-        meetingRepository.findByInviteCode(inviteCode)
+        Long meetingId = InviteCodeGenerator.decode(inviteCode);
+        meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 초대 코드 입니다."));
     }
 }
