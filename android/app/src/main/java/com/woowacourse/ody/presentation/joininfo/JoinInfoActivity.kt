@@ -73,7 +73,18 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
         finish()
     }
 
+    private fun getInviteCode(): String? = intent.getStringExtra(INVITE_CODE_KEY)
+
     companion object {
-        fun getIntent(context: Context): Intent = Intent(context, JoinInfoActivity::class.java)
+        private const val INVITE_CODE_KEY = "invite_code_key"
+
+        fun getIntent(
+            inviteCode: String,
+            context: Context,
+        ): Intent {
+            return Intent(context, JoinInfoActivity::class.java).also {
+                it.putExtra(inviteCode, INVITE_CODE_KEY)
+            }
+        }
     }
 }
