@@ -13,6 +13,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             left join fetch Mate m on noti.mate = m
             left join Meeting meet on m.meeting = meet
             where meet.id = :meetingId
+            order by noti.createdAt asc
             """)
     List<Notification> findAllMeetingLogs(Long meetingId);
 }
