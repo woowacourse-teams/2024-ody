@@ -23,6 +23,7 @@ public class Member {
     private Long id;
 
     @Embedded
+    @NotNull
     private DeviceToken deviceToken;
 
     public Member(DeviceToken deviceToken) {
