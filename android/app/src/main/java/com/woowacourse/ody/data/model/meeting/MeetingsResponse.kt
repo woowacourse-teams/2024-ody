@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Meetings(
+data class MeetingsResponse(
     @Json(name = "meetings")
     val meetings: List<MeetingResponse>,
 )

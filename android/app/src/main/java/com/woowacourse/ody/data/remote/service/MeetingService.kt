@@ -2,7 +2,7 @@ package com.woowacourse.ody.data.remote.service
 
 import com.woowacourse.ody.data.model.meeting.MeetingRequest
 import com.woowacourse.ody.data.model.meeting.MeetingResponse
-import com.woowacourse.ody.data.model.meeting.Meetings
+import com.woowacourse.ody.data.model.meeting.MeetingsResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -15,7 +15,7 @@ interface MeetingService {
     )
 
     @GET(MEETING_PATH)
-    suspend fun getMeeting(): Meetings
+    suspend fun getMeeting(): MeetingsResponse
 
     @POST("meetings")
     suspend fun postMeeting(
