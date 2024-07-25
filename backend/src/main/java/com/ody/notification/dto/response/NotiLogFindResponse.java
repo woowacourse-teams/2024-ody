@@ -20,7 +20,7 @@ public record NotiLogFindResponse(
         this(
                 notification.getType().toString(),
                 notification.getMate().getNickname().getNickname(),
-                notification.getCreatedAt()
+                notification.getSendAt()
         );
     }
 }
