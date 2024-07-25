@@ -25,8 +25,6 @@ class SplashViewModel(
                     } else {
                         _meeting.postValue(it.first())
                     }
-                }.onFailure {
-
                 }
         }
 }

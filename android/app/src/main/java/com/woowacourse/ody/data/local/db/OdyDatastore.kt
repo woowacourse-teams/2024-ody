@@ -40,6 +40,5 @@ class OdyDatastore(private val context: Context) {
         private const val ODY_KEY = "ody_key"
         private val INVITE_CODE = stringPreferencesKey("inviteCode")
         private val TOKEN = stringPreferencesKey("token")
-
     }
 }

@@ -2,7 +2,6 @@ package com.woowacourse.ody.presentation.splash
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -14,7 +13,6 @@ import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
 import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {

@@ -20,7 +20,7 @@ object FakeMeetingRepository : MeetingRepository {
             "meetingA",
             "선릉 캠퍼스",
             LocalDate.of(2024, 1, 1),
-            LocalTime.of(10,0),
+            LocalTime.of(10, 0),
             mates,
             "abcd1234",
         )

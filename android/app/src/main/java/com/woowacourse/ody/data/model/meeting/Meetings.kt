@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Meetings(
     @Json(name = "meetings")
-    val meetings: List<MeetingResponse>
+    val meetings: List<MeetingResponse>,
 )
