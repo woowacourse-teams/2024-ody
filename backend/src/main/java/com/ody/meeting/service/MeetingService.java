@@ -36,4 +36,10 @@ public class MeetingService {
     public List<Meeting> findAllMeetingsByMember(Member member) {
         return meetingRepository.findAllMeetingsByMember(member);
     }
+
+    public void validateInvitedCode(String inviteCode) {
+        InviteCodeGenerator.decode(inviteCode);
+        meetingRepository.findByInviteCode(inviteCode)
+                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 초대 코드 입니다."));
+    }
 }

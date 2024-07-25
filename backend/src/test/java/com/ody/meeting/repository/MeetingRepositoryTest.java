@@ -11,6 +11,7 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,20 @@ class MeetingRepositoryTest {
         assertAll(
                 () -> assertThat(memberOneMeetings.size()).isEqualTo(2),
                 () -> assertThat(memberTwoMeetings.size()).isEqualTo(1)
+        );
+    }
+
+    @DisplayName("초대 코드로 모임을 조회할 수 있다")
+    @Test
+    void findByInviteCode() {
+        meetingRepository.save(Fixture.ODY_MEETING1);
+
+        Optional<Meeting> meeting1 = meetingRepository.findByInviteCode(Fixture.ODY_MEETING1.getInviteCode());
+        Optional<Meeting> meeting2 = meetingRepository.findByInviteCode("이 세상에 존재하지 않는 초대코드");
+
+        assertAll(
+                () -> assertThat(meeting1.isPresent()).isTrue(),
+                () -> assertThat(meeting2.isPresent()).isFalse()
         );
     }
 }
