@@ -37,6 +37,7 @@
                 shareListener="@{shareListener}"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:elevation="8dp"
                 layout:layout_constraintBottom_toTopOf="@+id/layout_meeting_info"
                 layout:layout_constraintTop_toTopOf="parent" />
 
