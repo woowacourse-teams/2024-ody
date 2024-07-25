@@ -10,7 +10,6 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.data.model.meeting.MeetingRequest
 import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
 import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
-import timber.log.Timber
 
 class JoinCompleteActivity : AppCompatActivity() {
     private val viewModel: JoinCompleteViewModel by viewModels<JoinCompleteViewModel> {
@@ -42,17 +41,13 @@ class JoinCompleteActivity : AppCompatActivity() {
                     meetingInfo[9],
                 ),
             )
-            Timber.d(meetingInfo.toString())
         } else {
             // viewModel.postJoin()
-            Timber.d(joinInfo.toString())
         }
 
         viewModel.navigateAction.observe(this) {
-            if (viewModel.navigateAction.value != null) {
-                finishAffinity()
-                startActivity(NotificationLogActivity.getIntent(this@JoinCompleteActivity))
-            }
+            finishAffinity()
+            startActivity(NotificationLogActivity.getIntent(this@JoinCompleteActivity, viewModel.meetingResponse.value))
         }
     }
 
@@ -65,7 +60,7 @@ class JoinCompleteActivity : AppCompatActivity() {
             meetingInfo: ArrayList<String>,
         ): Intent {
             return Intent(context, JoinCompleteActivity::class.java).apply {
-                putStringArrayListExtra(JOIN_REQUEST_KEY, meetingInfo)
+                putStringArrayListExtra(MEETING_REQUEST_KEY, meetingInfo)
             }
         }
 
@@ -74,7 +69,7 @@ class JoinCompleteActivity : AppCompatActivity() {
             joinInfo: ArrayList<String>,
         ): Intent {
             return Intent(context, JoinCompleteActivity::class.java).apply {
-                putStringArrayListExtra(MEETING_REQUEST_KEY, joinInfo)
+                putStringArrayListExtra(JOIN_REQUEST_KEY, joinInfo)
             }
         }
     }

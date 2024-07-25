@@ -5,7 +5,6 @@ import com.woowacourse.ody.data.model.meeting.MeetingResponse
 import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.repository.MeetingRepository
-import java.time.LocalDateTime
 
 object FakeMeetingRepository : MeetingRepository {
     private val mateA: Mate = Mate("A")
@@ -34,7 +33,7 @@ object FakeMeetingRepository : MeetingRepository {
                 0,
                 "meetingA",
                 "선릉 캠퍼스",
-                LocalDateTime.of(2024, 1, 1, 10, 0, 0).toString(),
+                "2024, 1, 1, 10, 0, 0",
                 "A,B,C",
                 "A,B,C",
                 "A,B,C",

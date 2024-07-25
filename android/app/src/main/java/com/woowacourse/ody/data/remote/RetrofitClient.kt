@@ -6,8 +6,10 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import timber.log.Timber
 
 object RetrofitClient {
     private val BASE_URL = BuildConfig.BASE_URL
@@ -22,8 +24,17 @@ object RetrofitClient {
             it.proceed(newRequest)
         }
     }
+
+    private val logging by lazy {
+        val logger =
+            HttpLoggingInterceptor.Logger { message ->
+                Timber.tag("OkHttp").d(message)
+            }
+        HttpLoggingInterceptor(logger).setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
     private val okHttpClient: OkHttpClient by lazy {
-        val builder = OkHttpClient.Builder().addInterceptor(interceptor)
+        val builder = OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(logging)
         builder.build()
     }
     val retrofit: Retrofit by lazy {

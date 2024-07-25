@@ -81,6 +81,7 @@ dependencies {
 
     // retrofit
     implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
     implementation(libs.retrofit.converter.moshi)
     implementation(libs.retrofit.converter.scalars)
 

@@ -124,15 +124,25 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
             val meetingInfo =
                 arrayListOf(
                     viewModel.meetingName.value.toString(),
-                    viewModel.meetingDay.value.toString(),
-                    viewModel.meetingHour.value.toString(),
+                    viewModel.meetingYear.value.toString() + "-" +
+                        if (viewModel.meetingMonth.value.toString().length == 1) {
+                            "0${viewModel.meetingMonth.value}"
+                        } else {
+                            "${viewModel.meetingMonth.value}"
+                        } + "-" + viewModel.meetingDay.value.toString(),
+                    viewModel.meetingHour.value.toString() + ":" +
+                        if (viewModel.meetingMinute.value.toString().length == 1) {
+                            "0${viewModel.meetingMinute.value}"
+                        } else {
+                            viewModel.meetingMinute.value.toString()
+                        },
                     viewModel.destinationGeoLocation.value!!.address,
-                    viewModel.destinationGeoLocation.value!!.latitude,
-                    viewModel.destinationGeoLocation.value!!.longitude,
+                    viewModel.destinationGeoLocation.value!!.latitude.slice(0..8),
+                    viewModel.destinationGeoLocation.value!!.longitude.slice(0..8),
                     viewModel.nickname.value.toString(),
                     viewModel.startingPointGeoLocation.value!!.address,
-                    viewModel.startingPointGeoLocation.value!!.latitude,
-                    viewModel.startingPointGeoLocation.value!!.longitude,
+                    viewModel.startingPointGeoLocation.value!!.latitude.slice(0..8),
+                    viewModel.startingPointGeoLocation.value!!.longitude.slice(0..8),
                 )
 
             startActivity(JoinCompleteActivity.getMeetingInfoIntent(this, meetingInfo))

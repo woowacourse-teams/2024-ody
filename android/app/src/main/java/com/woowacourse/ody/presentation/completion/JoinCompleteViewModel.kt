@@ -21,7 +21,7 @@ class JoinCompleteViewModel(
 ) : ViewModel() {
     val meetingResponse: MutableLiveData<Meeting?> = MutableLiveData(null)
 
-    private val _navigateAction: MutableLiveData<Event<Unit>> = MutableLiveData(null)
+    private val _navigateAction: MutableLiveData<Event<Unit>> = MutableLiveData()
     val navigateAction: LiveData<Event<Unit>> get() = _navigateAction
 
     fun postMeeting(meetingRequest: MeetingRequest) {
@@ -33,7 +33,7 @@ class JoinCompleteViewModel(
                     delay(1500)
                     _navigateAction.emit(Unit)
                 }.onFailure {
-                    Timber.e("error")
+                    Timber.e(it.message)
                 }
         }
     }

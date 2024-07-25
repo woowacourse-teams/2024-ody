@@ -16,6 +16,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
 import com.woowacourse.ody.data.remote.repository.DefaultNotificationLogRepository
 import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
+import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.presentation.notificationlog.adapter.NotificationLogListAdapter
 
 class NotificationLogActivity : AppCompatActivity(), CopyInviteCodeListener, ShareListener {
@@ -90,6 +91,9 @@ class NotificationLogActivity : AppCompatActivity(), CopyInviteCodeListener, Sha
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
 
-        fun getIntent(context: Context): Intent = Intent(context, NotificationLogActivity::class.java)
+        fun getIntent(
+            context: Context,
+            meeting: Meeting?,
+        ): Intent = Intent(context, NotificationLogActivity::class.java)
     }
 }
