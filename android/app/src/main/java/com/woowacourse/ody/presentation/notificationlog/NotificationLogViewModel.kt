@@ -22,7 +22,7 @@ class NotificationLogViewModel(
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
     val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs
 
-    private fun fetchNotificationLogs(meetingId: Int) =
+    private fun fetchNotificationLogs(meetingId: Long) =
         viewModelScope.launch {
             notificationLogRepository.fetchNotificationLogs(meetingId).let { notificationLogs ->
                 _notificationLogs.postValue(notificationLogs.toNotificationUiModels())
@@ -34,16 +34,12 @@ class NotificationLogViewModel(
             meetingRepository.fetchMeeting().let { meeting ->
                 meeting.onSuccess {
                     _meeting.postValue(it.first().toMeetingUiModel())
+                    fetchNotificationLogs(it.first().id)
                 }
             }
         }
 
     fun initialize() {
-        fetchNotificationLogs(0)
         fetchMeeting()
-    }
-
-    companion object {
-        private const val INVITE_CODE_LABEL = "inviteCode"
     }
 }

@@ -10,6 +10,6 @@ object DefaultNotificationLogRepository : NotificationLogRepository {
     private val notificationService: NotificationService =
         RetrofitClient.retrofit.create(NotificationService::class.java)
 
-    override suspend fun fetchNotificationLogs(meetingId: Int): List<NotificationLog> =
+    override suspend fun fetchNotificationLogs(meetingId: Long): List<NotificationLog> =
         notificationService.fetchNotificationLogs(meetingId).toNotificationList()
 }
