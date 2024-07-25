@@ -7,7 +7,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
+import com.woowacourse.ody.data.model.join.JoinRequest
 import com.woowacourse.ody.data.model.meeting.MeetingRequest
+import com.woowacourse.ody.data.remote.repository.DefaultJoinRepository
 import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
 import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
 
@@ -15,7 +17,8 @@ class JoinCompleteActivity : AppCompatActivity() {
     private val viewModel: JoinCompleteViewModel by viewModels<JoinCompleteViewModel> {
         JoinCompleteViewModelFactory(
             meetingRepository = DefaultMeetingRepository,
-            (application as OdyApplication).odyDatastore,
+            joinRepository = DefaultJoinRepository,
+            datastore = (application as OdyApplication).odyDatastore,
         )
     }
 
@@ -23,32 +26,50 @@ class JoinCompleteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_join_complete)
 
-        val meetingInfo = intent.getStringArrayListExtra(MEETING_REQUEST_KEY)
-        val joinInfo = intent.getStringArrayListExtra(JOIN_REQUEST_KEY)
-
-        if (meetingInfo != null) {
-            viewModel.postMeeting(
-                MeetingRequest(
-                    meetingInfo[0],
-                    meetingInfo[1],
-                    meetingInfo[2],
-                    meetingInfo[3],
-                    meetingInfo[4],
-                    meetingInfo[5],
-                    meetingInfo[6],
-                    meetingInfo[7],
-                    meetingInfo[8],
-                    meetingInfo[9],
-                ),
-            )
-        } else {
-            // viewModel.postJoin()
+        intent.getStringArrayListExtra(MEETING_REQUEST_KEY)?.let {
+            postMeeting(it)
+        }
+        intent.getStringArrayListExtra(JOIN_REQUEST_KEY)?.let {
+            postMates(it)
         }
 
         viewModel.navigateAction.observe(this) {
             finishAffinity()
             startActivity(NotificationLogActivity.getIntent(this@JoinCompleteActivity, viewModel.meetingResponse.value))
         }
+    }
+
+    private fun postMeeting(meetingInfo: ArrayList<String>?) {
+        meetingInfo ?: return
+
+        viewModel.postMeeting(
+            MeetingRequest(
+                meetingInfo[0],
+                meetingInfo[1],
+                meetingInfo[2],
+                meetingInfo[3],
+                meetingInfo[4],
+                meetingInfo[5],
+                meetingInfo[6],
+                meetingInfo[7],
+                meetingInfo[8],
+                meetingInfo[9],
+            ),
+        )
+    }
+
+    private fun postMates(joinInfo: ArrayList<String>?) {
+        joinInfo ?: return
+
+        viewModel.postMates(
+            JoinRequest(
+                joinInfo[0],
+                joinInfo[1],
+                joinInfo[2],
+                joinInfo[3],
+                joinInfo[4],
+            ),
+        )
     }
 
     companion object {

@@ -49,17 +49,18 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
 
     override fun onNext() {
         if (binding.vpJoinInfo.currentItem == fragments.size - 1) {
+            val startingPointGeoLocation = viewModel.startingPointGeoLocation.value ?: return
+
             val joinInfo =
                 arrayListOf(
-                    "inviteCode",
+                    getInviteCode() ?: return,
                     viewModel.nickname.value.toString(),
-                    viewModel.startingPointGeoLocation.value!!.address,
-                    viewModel.startingPointGeoLocation.value!!.latitude,
-                    viewModel.startingPointGeoLocation.value!!.longitude,
+                    startingPointGeoLocation.address,
+                    startingPointGeoLocation.latitude.slice(0..8),
+                    startingPointGeoLocation.longitude.slice(0..8),
                 )
-
             startActivity(JoinCompleteActivity.getJoinInfoIntent(this, joinInfo))
-            finish()
+            finishAffinity()
             return
         }
         binding.vpJoinInfo.currentItem += 1
@@ -82,8 +83,8 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
             inviteCode: String,
             context: Context,
         ): Intent {
-            return Intent(context, JoinInfoActivity::class.java).also {
-                it.putExtra(inviteCode, INVITE_CODE_KEY)
+            return Intent(context, JoinInfoActivity::class.java).apply {
+                putExtra(INVITE_CODE_KEY, inviteCode)
             }
         }
     }
