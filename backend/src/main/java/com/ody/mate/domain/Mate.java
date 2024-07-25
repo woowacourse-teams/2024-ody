@@ -23,6 +23,10 @@ import lombok.NoArgsConstructor;
         @UniqueConstraint(
                 name = "uniqueMeetingAndNickname",
                 columnNames = {"meeting_id", "nickname"}
+        ),
+        @UniqueConstraint(
+                name = "uniqueMeetingAndMember",
+                columnNames = {"meeting_id", "member_id"}
         )
 })
 @Entity
