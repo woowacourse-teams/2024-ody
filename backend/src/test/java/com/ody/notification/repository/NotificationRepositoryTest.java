@@ -74,4 +74,38 @@ class NotificationRepositoryTest {
 
         assertThat(notifications.size()).isEqualTo(2);
     }
+
+    @DisplayName("현재 시간 이전의 모임 notification만 가져온다")
+    @Test
+    void findAllNotificationsById() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Member member2 = memberRepository.save(Fixture.MEMBER2);
+
+        Location origin = Fixture.ORIGIN_LOCATION;
+        Location target = Fixture.TARGET_LOCATION;
+        Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
+        meetingRepository.save(meeting);
+
+        Mate mate1 = mateRepository.save(new Mate(meeting, member1, new Nickname("은별"), origin));
+        Mate mate2 = mateRepository.save(new Mate(meeting, member2, new Nickname("콜리"), origin));
+
+        Notification pastNotification = new Notification(
+                mate1,
+                NotificationType.DEPARTURE_REMINDER,
+                LocalDateTime.now().minusMinutes(30),
+                NotificationStatus.DONE
+        );
+        Notification futureNotification = new Notification(
+                mate2,
+                NotificationType.DEPARTURE_REMINDER,
+                LocalDateTime.now().plusMinutes(30),
+                NotificationStatus.PENDING
+        );
+        notificationRepository.save(pastNotification);
+        notificationRepository.save(futureNotification);
+
+        List<Notification> notifications = notificationRepository.findAllMeetingLogs(meeting.getId());
+
+        assertThat(notifications.size()).isOne();
+    }
 }
