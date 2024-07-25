@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -46,6 +47,12 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
             }
             binding.vpJoinInfo.visibility = View.VISIBLE
             binding.wdJoinInfo.visibility = View.VISIBLE
+        }
+    private val onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBack()
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,6 +123,7 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
                 handleJoinInfoNextClick()
             }
         }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun handleMeetingInfoNextClick() {

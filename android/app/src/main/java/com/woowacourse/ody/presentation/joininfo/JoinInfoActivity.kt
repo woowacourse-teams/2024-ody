@@ -3,6 +3,7 @@ package com.woowacourse.ody.presentation.joininfo
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -23,12 +24,19 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
     private val fragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinStartingPointFragment())
     }
+    private val onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBack()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         initializeDataBinding()
+        initializeObserve()
     }
 
     private fun initializeDataBinding() {
@@ -45,6 +53,10 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
 
         binding.vpJoinInfo.adapter = visitorOnBodingInfoAdapter
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)
+    }
+
+    private fun initializeObserve() {
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     override fun onNext() {
