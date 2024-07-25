@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class NotificationService {
-    private static final ZoneOffset KST_OFFSET = ZoneOffset.ofHours(9);
 
     private final ApplicationEventPublisher publisher;
     private final NotificationRepository notificationRepository;
@@ -34,8 +33,8 @@ public class NotificationService {
 
     @Transactional
     public void saveAndSendDepartureReminder(Meeting meeting, Mate mate, DeviceToken deviceToken) {
-        fcmSubscriber.subscribeTopic(meeting, deviceToken);
         saveAndSendEntryNotification(meeting, mate);
+        fcmSubscriber.subscribeTopic(meeting, deviceToken);
         saveAndSendDepartureNotification(meeting, mate);
     };
 
