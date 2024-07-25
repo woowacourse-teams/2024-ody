@@ -7,7 +7,7 @@ import retrofit2.http.Path
 interface NotificationService {
     @GET(NOTIFICATION_LOG_PATH)
     suspend fun fetchNotificationLogs(
-        @Path("meetingId") meetingId: Int,
+        @Path("meetingId") meetingId: Long,
     ): NotificationLogsResponse
 
     companion object {
