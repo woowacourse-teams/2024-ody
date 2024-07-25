@@ -37,9 +37,15 @@ public class Fixture {
             "초대코드"
     );
 
+
     public static Member MEMBER1 = new Member(new DeviceToken("Bearer device-token=testToken1"));
     public static Member MEMBER2 = new Member(new DeviceToken("Bearer device-token=testToken2"));
     public static Member MEMBER3 = new Member(new DeviceToken("Bearer device-token=testToken3"));
+
+    public static String MEMBER1_TOKEN = MEMBER1.getDeviceToken().getDeviceToken();
+    public static String MEMBER2_TOKEN = MEMBER2.getDeviceToken().getDeviceToken();
+    public static String MEMBER3_TOKEN = MEMBER3.getDeviceToken().getDeviceToken();
+
 
     public static Location ORIGIN_LOCATION = new Location(
             "서울 강남구 테헤란로 411",
@@ -49,7 +55,8 @@ public class Fixture {
 
     public static Mate MATE1 = new Mate(ODY_MEETING1, MEMBER1, new Nickname("제리"), ORIGIN_LOCATION);
     public static Mate MATE2 = new Mate(ODY_MEETING1, MEMBER2, new Nickname("카키"), ORIGIN_LOCATION);
-    public static Mate MATE3 = new Mate(ODY_MEETING2, MEMBER3, new Nickname("올리브"), ORIGIN_LOCATION);
+    public static Mate MATE3 = new Mate(ODY_MEETING2, MEMBER1, new Nickname("올리브"), ORIGIN_LOCATION);
+    public static Mate MATE4 = new Mate(ODY_MEETING2, MEMBER3, new Nickname("올리브"), ORIGIN_LOCATION);
 
     public static Notification DEPARTURE_REMINDER_PENDING_NOTIFICATION = new Notification(
             MATE1,

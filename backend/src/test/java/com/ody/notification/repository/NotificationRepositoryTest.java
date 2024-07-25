@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ class NotificationRepositoryTest {
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogs(1L);
+        List<Notification> notifications = notificationRepository.findAllMeetingLogs(meeting.getId());
 
         assertThat(notifications.size()).isEqualTo(2);
     }
