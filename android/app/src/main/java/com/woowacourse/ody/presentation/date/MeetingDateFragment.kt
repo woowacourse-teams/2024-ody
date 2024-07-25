@@ -39,15 +39,25 @@ class MeetingDateFragment : Fragment() {
     }
 
     private fun initializeCalendar() {
-        binding.cvDate.minDate = System.currentTimeMillis()
-        binding.cvDate.setOnDateChangeListener { _, year, month, dayOfMonth ->
+        val dpHeaderId =
+            binding.dpDate.getChildAt(0).resources.getIdentifier(
+                "date_picker_header",
+                "id",
+                "android",
+            )
+        binding.dpDate.findViewById<View>(dpHeaderId).visibility = View.GONE
+
+        binding.dpDate.minDate = System.currentTimeMillis()
+
+        binding.dpDate.setOnDateChangedListener { _, year, month, dayOfMonth ->
             val now = LocalDate.now()
             val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
 
             if (now.isAfter(selectedDate)) {
                 showSnackBar(R.string.meeting_date_date_guide)
-                return@setOnDateChangeListener
+                return@setOnDateChangedListener
             }
+
             viewModel.meetingYear.value = year
             viewModel.meetingMonth.value = month + 1
             viewModel.meetingDay.value = dayOfMonth
