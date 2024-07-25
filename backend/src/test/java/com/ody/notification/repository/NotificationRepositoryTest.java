@@ -15,7 +15,9 @@ import com.ody.member.repository.MemberRepository;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,10 +47,11 @@ class NotificationRepositoryTest {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Member member2 = memberRepository.save(Fixture.MEMBER2);
 
-         Meeting meeting = Fixture.ODY_MEETING1;
+        Location origin = Fixture.ORIGIN_LOCATION;
+        Location target = Fixture.TARGET_LOCATION;
+        Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
         meetingRepository.save(meeting);
 
-        Location origin = Fixture.ORIGIN_LOCATION;
         Mate mate1 = mateRepository.save(new Mate(meeting, member1, new Nickname("은별"), origin));
         Mate mate2 = mateRepository.save(new Mate(meeting, member2, new Nickname("콜리"), origin));
 
