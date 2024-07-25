@@ -78,15 +78,7 @@ class NotificationLogActivity : AppCompatActivity(), CopyInviteCodeListener, Sha
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText(INVITE_CODE_LABEL, inviteCode)
         clipboard.setPrimaryClip(clip)
-
-        showSnackBar(R.string.logs_copy_code_guide)
     }
-
-    private fun showSnackBar(
-        @StringRes messageId: Int,
-    ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
-        .apply { setAnchorView(binding.tvMeetingDate) }
-        .show()
 
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
