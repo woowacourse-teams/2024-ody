@@ -2,10 +2,11 @@ package com.woowacourse.ody.presentation.notificationlog.uimodel
 
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.NotificationLog
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 fun NotificationLog.toNotificationUiModel(): NotificationLogUiModel {
-    val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
     return NotificationLogUiModel(
         this.type,
         this.nickname,
@@ -16,12 +17,17 @@ fun NotificationLog.toNotificationUiModel(): NotificationLogUiModel {
 fun List<NotificationLog>.toNotificationUiModels(): List<NotificationLogUiModel> = map { it.toNotificationUiModel() }
 
 fun Meeting.toMeetingUiModel(): MeetingUiModel {
-    val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     return MeetingUiModel(
         this.name,
         this.targetPosition,
-        this.meetingTime.format(dateTimeFormatter),
+        this.toMeetingDateTime(),
         this.mates.map { it.nickname },
         this.inviteCode,
     )
+}
+
+private fun Meeting.toMeetingDateTime(): String {
+    val dateTime = LocalDateTime.of(meetingDate, meetingTime)
+    val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH시 mm분")
+    return dateTime.format(dateTimeFormatter)
 }

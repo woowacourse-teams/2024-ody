@@ -6,12 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
 import com.woowacourse.ody.data.remote.repository.DefaultNotificationLogRepository
@@ -78,15 +76,7 @@ class NotificationLogActivity : AppCompatActivity(), CopyInviteCodeListener, Sha
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText(INVITE_CODE_LABEL, inviteCode)
         clipboard.setPrimaryClip(clip)
-
-        showSnackBar(R.string.logs_copy_code_guide)
     }
-
-    private fun showSnackBar(
-        @StringRes messageId: Int,
-    ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
-        .apply { setAnchorView(binding.tvMeetingDate) }
-        .show()
 
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"

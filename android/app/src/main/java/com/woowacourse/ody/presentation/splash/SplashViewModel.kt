@@ -15,17 +15,16 @@ class SplashViewModel(
     private val _meeting: MutableLiveData<Meeting?> = MutableLiveData()
     val meeting: LiveData<Meeting?> get() = _meeting
 
-    init {
-        fetchMeeting()
-    }
-
-    private fun fetchMeeting() =
+    fun fetchMeeting() =
         viewModelScope.launch {
             delay(1500)
-            meetingRepository.fetchMeeting().onSuccess {
-                _meeting.postValue(it.first())
-            }.onFailure {
-                _meeting.postValue(null)
-            }
+            meetingRepository.fetchMeeting()
+                .onSuccess {
+                    if (it.isEmpty()) {
+                        _meeting.postValue(null)
+                    } else {
+                        _meeting.postValue(it.first())
+                    }
+                }
         }
 }

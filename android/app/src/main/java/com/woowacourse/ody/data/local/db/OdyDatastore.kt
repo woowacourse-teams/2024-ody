@@ -24,8 +24,21 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
+    suspend fun setToken(token: String) {
+        context.dataStore.edit {
+            it[TOKEN] = token
+        }
+    }
+
+    fun getToken(): Flow<String> {
+        return context.dataStore.data.map { preferences ->
+            preferences[TOKEN] ?: ""
+        }
+    }
+
     companion object {
         private const val ODY_KEY = "ody_key"
         private val INVITE_CODE = stringPreferencesKey("inviteCode")
+        private val TOKEN = stringPreferencesKey("token")
     }
 }

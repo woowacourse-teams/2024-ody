@@ -34,14 +34,12 @@ class JoinCompleteActivity : AppCompatActivity() {
         }
 
         viewModel.navigateAction.observe(this) {
-            finishAffinity()
             startActivity(NotificationLogActivity.getIntent(this@JoinCompleteActivity, viewModel.meetingResponse.value))
         }
     }
 
     private fun postMeeting(meetingInfo: ArrayList<String>?) {
         meetingInfo ?: return
-
         viewModel.postMeeting(
             MeetingRequest(
                 meetingInfo[0],
@@ -90,6 +88,7 @@ class JoinCompleteActivity : AppCompatActivity() {
             joinInfo: ArrayList<String>,
         ): Intent {
             return Intent(context, JoinCompleteActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 putStringArrayListExtra(JOIN_REQUEST_KEY, joinInfo)
             }
         }
