@@ -1,7 +1,8 @@
-package com.ody.meeting.service;
+package com.ody.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ody.util.InviteCodeGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

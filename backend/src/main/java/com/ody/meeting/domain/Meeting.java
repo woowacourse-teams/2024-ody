@@ -42,4 +42,8 @@ public class Meeting {
     public Meeting(String name, LocalDate date, LocalTime time, Location target, String inviteCode) {
         this(null, name, date, time, target, inviteCode);
     }
+
+    public void updateInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
+    }
 }

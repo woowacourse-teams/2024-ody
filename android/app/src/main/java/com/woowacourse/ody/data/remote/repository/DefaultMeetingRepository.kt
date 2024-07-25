@@ -1,5 +1,7 @@
 package com.woowacourse.ody.data.remote.repository
 
+import com.woowacourse.ody.data.model.meeting.MeetingRequest
+import com.woowacourse.ody.data.model.meeting.MeetingResponse
 import com.woowacourse.ody.data.model.toMeeting
 import com.woowacourse.ody.data.remote.RetrofitClient
 import com.woowacourse.ody.data.remote.service.MeetingService
@@ -14,4 +16,7 @@ object DefaultMeetingRepository : MeetingRepository {
     }
 
     override suspend fun fetchMeeting(): Result<List<Meeting>> = runCatching { service.getMeeting().map { it.toMeeting() } }
+
+    override suspend fun postMeeting(meetingRequest: MeetingRequest): Result<MeetingResponse> =
+        runCatching { service.postMeeting(meetingRequest) }
 }

@@ -49,7 +49,16 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
 
     override fun onNext() {
         if (binding.vpJoinInfo.currentItem == fragments.size - 1) {
-            startActivity(JoinCompleteActivity.getIntent(this))
+            val joinInfo =
+                arrayListOf(
+                    "inviteCode",
+                    viewModel.nickname.value.toString(),
+                    viewModel.startingPointGeoLocation.value!!.address,
+                    viewModel.startingPointGeoLocation.value!!.latitude,
+                    viewModel.startingPointGeoLocation.value!!.longitude,
+                )
+
+            startActivity(JoinCompleteActivity.getJoinInfoIntent(this, joinInfo))
             finish()
             return
         }
