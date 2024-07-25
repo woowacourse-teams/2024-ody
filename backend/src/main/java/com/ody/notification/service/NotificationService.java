@@ -11,13 +11,12 @@ import com.ody.notification.dto.request.FcmSendRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.service.RouteService;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.TaskScheduler;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,18 +27,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotificationService {
     private static final ZoneOffset KST_OFFSET = ZoneOffset.ofHours(9);
 
-    private final TaskScheduler taskScheduler;
+    private final ApplicationEventPublisher publisher;
     private final NotificationRepository notificationRepository;
     private final FcmSubscriber fcmSubscriber;
     private final RouteService routeService;
-    private final FcmPushSender fcmPushSender;
-      
+
     @Transactional
     public void saveAndSendDepartureReminder(Meeting meeting, Mate mate, DeviceToken deviceToken) {
         fcmSubscriber.subscribeTopic(meeting, deviceToken);
         saveAndSendEntryNotification(meeting, mate);
-        Notification departureNotification = saveAndSendDepartureNotification(meeting, mate);
-        departureNotification.updateDone();
+        saveAndSendDepartureNotification(meeting, mate);
     };
 
     private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
@@ -49,18 +46,17 @@ public class NotificationService {
                 LocalDateTime.now().withNano(0),
                 NotificationStatus.DONE
         );
-        notificationRepository.save(entryNotification);
+        Notification savedNotification = notificationRepository.save(entryNotification);
 
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
                 meeting.getId().toString(),
-                NotificationType.ENTRY,
-                mate.getNickname().getNickname(),
+                savedNotification.getId(),
                 LocalDateTime.now().withNano(0)
         );
-        fcmPushSender.sendPushNotification(fcmSendRequest);
+        publisher.publishEvent(fcmSendRequest);
     }
 
-    private Notification saveAndSendDepartureNotification(Meeting meeting, Mate mate) {
+    private void saveAndSendDepartureNotification(Meeting meeting, Mate mate) {
         DepartureTime sendAt = routeService.calculateDepartureTime(
                 mate.getOrigin(),
                 meeting.getTarget(),
@@ -80,9 +76,7 @@ public class NotificationService {
                 savedNotification.getId(),
                 LocalDateTime.now().plusSeconds(10) // TODO: savedNotification.getSendAt() 으로 변경
         );
-        Instant startTime = fcmSendRequest.sendAt().toInstant(KST_OFFSET);
-        taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmSendRequest), startTime);
-        return departureNotification;
+        publisher.publishEvent(fcmSendRequest);
     }
 
     public List<Notification> findAllMeetingLogs(Long meetingId) {
