@@ -1,6 +1,5 @@
 package com.woowacourse.ody.presentation.notificationlog
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,12 +33,9 @@ class NotificationLogViewModel(
         viewModelScope.launch {
             meetingRepository.fetchMeeting().let { meeting ->
                 meeting.onSuccess {
-                    Log.e("TEST", "onSuccess")
                     _meeting.postValue(it.first().toMeetingUiModel())
                     fetchNotificationLogs(it.first().id)
-                }.onFailure {
-                    Log.e("TEST", "onFailure dddd ${it.message}")
-                }
+                }.onFailure {}
             }
         }
 

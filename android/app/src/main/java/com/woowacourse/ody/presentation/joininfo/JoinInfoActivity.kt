@@ -72,7 +72,7 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
                     startingPointGeoLocation.longitude.slice(0..8),
                 )
             startActivity(JoinCompleteActivity.getJoinInfoIntent(this, joinInfo))
-            finishAffinity()
+            finish()
             return
         }
         binding.vpJoinInfo.currentItem += 1
