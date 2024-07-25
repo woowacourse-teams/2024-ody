@@ -1,6 +1,7 @@
 package com.ody.member.service;
 
-import com.ody.common.exception.OdyException;
+import com.ody.common.exception.OdyBadRequestException;
+import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
@@ -18,13 +19,13 @@ public class MemberService {
     @Transactional
     public Member save(DeviceToken deviceToken) {
         if (memberRepository.findFirstByDeviceToken(deviceToken).isPresent()) {
-            throw new OdyException("중복된 토큰이 존재합니다.");
+            throw new OdyBadRequestException("중복된 토큰이 존재합니다.");
         }
         return memberRepository.save(new Member(deviceToken));
     }
 
     public Member findByDeviceToken(DeviceToken deviceToken) {
         return memberRepository.findFirstByDeviceToken(deviceToken)
-                .orElseThrow(() -> new OdyException("존재하지 않는 회원 입니다."));
+                .orElseThrow(() -> new OdyUnauthorizedException("존재하지 않는 회원 입니다."));
     }
 }

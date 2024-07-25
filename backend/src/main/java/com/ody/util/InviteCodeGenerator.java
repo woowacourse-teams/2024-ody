@@ -1,5 +1,6 @@
 package com.ody.util;
 
+import com.ody.common.exception.OdyNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Random;
@@ -40,7 +41,7 @@ public class InviteCodeGenerator {
         try {
             return Long.parseLong(decodedString.trim());
         } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("유효하지 않은 초대 코드입니다.");
+            throw new OdyNotFoundException("유효하지 않은 초대 코드입니다.");
         }
     }
 }

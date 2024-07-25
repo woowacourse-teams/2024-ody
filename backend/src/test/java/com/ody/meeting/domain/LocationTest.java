@@ -3,7 +3,7 @@ package com.ody.meeting.domain;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.ody.common.exception.OdyException;
+import com.ody.common.exception.OdyBadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +23,7 @@ class LocationTest {
     @Test
     void createLocationException() {
         assertThatThrownBy(() -> new Location("경남 김해시 율하3로 76", "0", "0"))
-                .isInstanceOf(OdyException.class);
+                .isInstanceOf(OdyBadRequestException.class);
     }
 
     @DisplayName("위도는 -90부터 90 범위, 소수점 자리수 6 이하이며 소수점 및 부호를 포함할 수 있다.")
@@ -39,7 +39,7 @@ class LocationTest {
     @ValueSource(strings = {"-90.000001", "90.000001", "-90.0000001", "abc", ""})
     void createWithInvalidLatitude(String latitude) {
         assertThatThrownBy(() -> new Location("서울 강남구 테헤란로 411", latitude, "0"))
-                .isInstanceOf(OdyException.class);
+                .isInstanceOf(OdyBadRequestException.class);
     }
 
     @DisplayName("경도는 -180부터 180 범위, 소수점 자리수 6 이하이며 소수점 및 부호를 포함할 수 있다.")
@@ -55,6 +55,6 @@ class LocationTest {
     @ValueSource(strings = {"-180.000001", "180.000001", "-180.0000001", "abc", ""})
     void createWithInvalidLongitude(String longitude) {
         assertThatThrownBy(() -> new Location("서울 강남구 테헤란로 411", "0", longitude))
-                .isInstanceOf(OdyException.class);
+                .isInstanceOf(OdyBadRequestException.class);
     }
 }

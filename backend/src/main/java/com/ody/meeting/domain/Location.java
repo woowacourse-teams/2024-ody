@@ -1,6 +1,6 @@
 package com.ody.meeting.domain;
 
-import com.ody.common.exception.OdyException;
+import com.ody.common.exception.OdyBadRequestException;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -43,7 +43,7 @@ public class Location {
         SUPPORT_REGION.stream()
                 .filter(address::startsWith)
                 .findAny()
-                .orElseThrow(() -> new OdyException("현재 지원되지 않는 지역입니다."));
+                .orElseThrow(() -> new OdyBadRequestException("현재 지원되지 않는 지역입니다."));
     }
 
     private void validateLatitude(String input) {
@@ -51,10 +51,10 @@ public class Location {
         try {
             BigDecimal latitude = new BigDecimal(input);
             if (latitude.compareTo(MIN_LATITUDE) < 0 || latitude.compareTo(MAX_LATITUDE) > 0) {
-                throw new OdyException("위도는 -90부터 90까지의 범위가 가능합니다.");
+                throw new OdyBadRequestException("위도는 -90부터 90까지의 범위가 가능합니다.");
             }
         } catch (NumberFormatException exception) {
-            throw new OdyException("위도는 소수점 및 부호를 포함한 숫자이어야 합니다.");
+            throw new OdyBadRequestException("위도는 소수점 및 부호를 포함한 숫자이어야 합니다.");
         }
     }
 
@@ -63,10 +63,10 @@ public class Location {
         try {
             BigDecimal longitude = new BigDecimal(input);
             if (longitude.compareTo(MIN_LONGITUDE) < 0 || longitude.compareTo(MAX_LONGITUDE) > 0) {
-                throw new OdyException("경도는 -180부터 180까지의 범위가 가능합니다.");
+                throw new OdyBadRequestException("경도는 -180부터 180까지의 범위가 가능합니다.");
             }
         } catch (NumberFormatException exception) {
-            throw new OdyException("경도는 소수점 및 부호를 포함한 숫자이어야 합니다.");
+            throw new OdyBadRequestException("경도는 소수점 및 부호를 포함한 숫자이어야 합니다.");
         }
     }
 
@@ -76,7 +76,7 @@ public class Location {
         }
         String decimalPart = input.split("\\.")[1];
         if (decimalPart.length() > MAX_DECIMAL_PLACES) {
-            throw new OdyException("좌표는 소수점 이하 최대 6자리까지 가능합니다.");
+            throw new OdyBadRequestException("좌표는 소수점 이하 최대 6자리까지 가능합니다.");
         }
     }
 }

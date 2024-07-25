@@ -3,7 +3,7 @@ package com.ody.member.domain;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.ody.common.exception.OdyException;
+import com.ody.common.exception.OdyUnauthorizedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +20,6 @@ class DeviceTokenTest {
     @Test
     void createDeviceTokenException() {
         assertThatThrownBy(() -> new DeviceToken("1234"))
-                .isInstanceOf(OdyException.class);
+                .isInstanceOf(OdyUnauthorizedException.class);
     }
 }
