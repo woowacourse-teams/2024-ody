@@ -119,7 +119,21 @@ class MeetingInfoActivity : AppCompatActivity(), NextListener, BackListener {
 
     private fun handleJoinInfoNextClick() {
         if (binding.vpJoinInfo.currentItem == joinInfoFragments.size - 1) {
-            startActivity(JoinCompleteActivity.getIntent(this))
+            val meetingInfo =
+                arrayListOf(
+                    viewModel.meetingName.value.toString(),
+                    viewModel.meetingDay.value.toString(),
+                    viewModel.meetingHour.value.toString(),
+                    viewModel.destinationGeoLocation.value!!.address,
+                    viewModel.destinationGeoLocation.value!!.latitude,
+                    viewModel.destinationGeoLocation.value!!.longitude,
+                    viewModel.nickname.value.toString(),
+                    viewModel.startingPointGeoLocation.value!!.address,
+                    viewModel.startingPointGeoLocation.value!!.latitude,
+                    viewModel.startingPointGeoLocation.value!!.longitude,
+                )
+
+            startActivity(JoinCompleteActivity.getMeetingInfoIntent(this, meetingInfo))
             finish()
             return
         }

@@ -1,11 +1,10 @@
 package com.woowacourse.ody.domain
 
-import java.time.LocalDateTime
-
 data class Meeting(
-    val id: Int,
+    val id: Long,
     val name: String,
     val targetPosition: String,
-    val meetingTime: LocalDateTime,
+    val meetingDate: String,
+    val meetingTime: String,
     val mates: List<Mate>,
 )

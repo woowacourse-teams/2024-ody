@@ -12,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityLogsBinding
+import com.woowacourse.ody.domain.Meeting
 
 class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
     private val binding: ActivityLogsBinding by lazy {
@@ -58,6 +59,9 @@ class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
 
-        fun getIntent(context: Context): Intent = Intent(context, LogsActivity::class.java)
+        fun getIntent(
+            context: Context,
+            meetingResponse: Meeting?,
+        ): Intent = Intent(context, LogsActivity::class.java)
     }
 }
