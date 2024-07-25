@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-@Disabled // TODO: RouteClient Mock 테스트 필요
+@Disabled
 class MateControllerTest extends BaseControllerTest {
 
     @Autowired
