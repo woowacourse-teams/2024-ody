@@ -1,4 +1,4 @@
-package com.woowacourse.ody.domain
+package com.woowacourse.ody.domain.model
 
 data class Meeting(
     val id: Long,
@@ -7,4 +7,5 @@ data class Meeting(
     val meetingDate: String,
     val meetingTime: String,
     val mates: List<Mate>,
+    val inviteCode: String,
 )

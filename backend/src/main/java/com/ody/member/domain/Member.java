@@ -22,9 +22,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(unique = true)
     @Embedded
+    @NotNull
     private DeviceToken deviceToken;
 
     public Member(DeviceToken deviceToken) {

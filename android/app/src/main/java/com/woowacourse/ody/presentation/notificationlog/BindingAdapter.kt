@@ -3,7 +3,7 @@ package com.woowacourse.ody.presentation.notificationlog
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.woowacourse.ody.R
-import com.woowacourse.ody.domain.NotificationType
+import com.woowacourse.ody.domain.model.NotificationType
 import com.woowacourse.ody.presentation.notificationlog.uimodel.NotificationLogUiModel
 
 @BindingAdapter("setNotificationLogText")

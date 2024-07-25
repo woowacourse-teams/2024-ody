@@ -22,8 +22,9 @@ public class FutureOrPresentDateTimeValidator implements ConstraintValidator<Fut
     @Override
     public boolean isValid(Object object, ConstraintValidatorContext constraintValidatorContext) {
         try {
-            Method dateGetter = object.getClass().getMethod(dateFieldName);
-            Method timeGetter = object.getClass().getMethod(timeFieldName);
+            Class<?> objectClass = object.getClass();
+            Method dateGetter = objectClass.getMethod(dateFieldName);
+            Method timeGetter = objectClass.getMethod(timeFieldName);
 
             LocalDate dateInput = (LocalDate) dateGetter.invoke(object);
             LocalTime timeInput = (LocalTime) timeGetter.invoke(object);

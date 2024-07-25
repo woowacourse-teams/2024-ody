@@ -17,6 +17,7 @@ import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.ui.toGeoLocation
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import com.woowacourse.ody.util.observeEvent
 
@@ -58,11 +59,10 @@ class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     }
 
     private fun initializeView() {
-        viewModel.onNextInfo()
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
             binding.etStartingPoint.setText(geoLocation.address)
-            viewModel.setStartingPointGeoLocation(geoLocation)
+            viewModel.startingPointGeoLocation.value = geoLocation
         }
     }
 
@@ -84,6 +84,11 @@ class JoinStartingPointFragment : Fragment(), AddressSearchListener {
         Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
             .apply { setAnchorView(activity?.findViewById(R.id.btn_next)) }
             .show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.meetingInfoType.value = MeetingInfoType.STARTING_POINT
     }
 
     override fun onDestroyView() {

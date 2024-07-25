@@ -18,9 +18,9 @@ import com.woowacourse.ody.presentation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
 import com.woowacourse.ody.presentation.time.MeetingTimeFragment
-import com.woowacourse.ody.util.NextListener
+import com.woowacourse.ody.util.observeEvent
 
-class MeetingInfoActivity : AppCompatActivity(), NextListener, BackListener {
+class MeetingInfoActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityMeetingInfoBinding by lazy {
         ActivityMeetingInfoBinding.inflate(layoutInflater)
     }
@@ -42,12 +42,12 @@ class MeetingInfoActivity : AppCompatActivity(), NextListener, BackListener {
         setContentView(binding.root)
 
         initializeDataBinding()
+        initializeObserve()
     }
 
     private fun initializeDataBinding() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
-        binding.nextListener = this
         binding.backListener = this
         initializeMeetingInfoViewPager()
         initializeVisitorOnBodingInfoViewPager()
@@ -97,17 +97,19 @@ class MeetingInfoActivity : AppCompatActivity(), NextListener, BackListener {
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)
     }
 
-    override fun onNext() {
-        if (binding.vpMeetingInfo.visibility == View.VISIBLE) {
-            handleMeetingInfoNextClick()
-        } else {
-            handleJoinInfoNextClick()
+    private fun initializeObserve() {
+        viewModel.nextPageEvent.observeEvent(this) {
+            if (binding.vpMeetingInfo.visibility == View.VISIBLE) {
+                handleMeetingInfoNextClick()
+            } else {
+                handleJoinInfoNextClick()
+            }
         }
     }
 
     private fun handleMeetingInfoNextClick() {
         if (binding.vpMeetingInfo.currentItem == meetingInfoFragments.size - 1) {
-            MeetingCompletionActivity.getIntent(this)
+            startActivity(MeetingCompletionActivity.getIntent(this))
             binding.vpMeetingInfo.visibility = View.GONE
             binding.wdMeetingInfo.visibility = View.GONE
             binding.vpJoinInfo.visibility = View.VISIBLE

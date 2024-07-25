@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingTimeBinding
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import com.woowacourse.ody.util.observeEvent
 
@@ -44,11 +45,7 @@ class MeetingTimeFragment : Fragment() {
     }
 
     private fun initializeObserve() {
-        viewModel.isValidMeetingTime.observeEvent(viewLifecycleOwner) { isValid ->
-            if (isValid) {
-                // 다음 화면으로 이동
-                return@observeEvent
-            }
+        viewModel.invalidMeetingTimeEvent.observeEvent(viewLifecycleOwner) {
             showSnackBar(R.string.invalid_meeting_time)
         }
     }
@@ -62,6 +59,11 @@ class MeetingTimeFragment : Fragment() {
     private fun initializeView() {
         binding.npMeetingTimeHour.wrapSelectorWheel = true
         binding.npMeetingTimeMinute.wrapSelectorWheel = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.meetingInfoType.value = MeetingInfoType.TIME
     }
 
     override fun onDestroyView() {

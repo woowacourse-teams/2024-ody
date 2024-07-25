@@ -14,16 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class FcmPushSender {
 
-    private static final String TITLE = "오디 타이틀";
-    public static final String BODY = "오디 바디";
-
     public String sendPushNotification(FcmSendRequest fcmSendRequest) {
         Message message = Message.builder()
                 .setTopic(fcmSendRequest.topic())
-                .setNotification(buildNotification())
                 .putData("type", fcmSendRequest.notificationType().name())
                 .putData("nickname", fcmSendRequest.nickname())
-                .setAndroidConfig(buildAndroidConfig())
                 .build();
         try {
             return FirebaseMessaging.getInstance().send(message);
@@ -31,24 +26,5 @@ public class FcmPushSender {
             log.error("Fcm 메시지 전송 실패 : {}", exception.getMessage());
             throw new RuntimeException(exception);
         }
-    }
-
-    private static Notification buildNotification() {
-        return Notification.builder()
-                .setTitle(TITLE)
-                .setBody(BODY)
-                .build();
-    }
-
-    private static AndroidConfig buildAndroidConfig() {
-        AndroidNotification androidNotification = AndroidNotification.builder()
-                .setTitle(TITLE)
-                .setBody(BODY)
-                .setClickAction("push_click")
-                .build();
-
-        return AndroidConfig.builder()
-                .setNotification(androidNotification)
-                .build();
     }
 }

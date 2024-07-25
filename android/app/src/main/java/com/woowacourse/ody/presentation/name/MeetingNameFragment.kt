@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.woowacourse.ody.databinding.FragmentMeetingNameBinding
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 
 class MeetingNameFragment : Fragment() {
@@ -30,12 +31,16 @@ class MeetingNameFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeBinding()
-        viewModel.onNextInfo()
     }
 
     private fun initializeBinding() {
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.meetingInfoType.value = MeetingInfoType.NAME
     }
 
     override fun onDestroyView() {

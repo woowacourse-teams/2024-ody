@@ -9,7 +9,7 @@ import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.model.meeting.MeetingRequest
 import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
-import com.woowacourse.ody.presentation.meetinglog.LogsActivity
+import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
 
 class JoinCompleteActivity : AppCompatActivity() {
     private val viewModel: JoinCompleteViewModel by viewModels<JoinCompleteViewModel> {
@@ -47,7 +47,7 @@ class JoinCompleteActivity : AppCompatActivity() {
 
         viewModel.navigateAction.observe(this) {
             finishAffinity()
-            startActivity(LogsActivity.getIntent(this@JoinCompleteActivity, viewModel.meetingResponse.value))
+            startActivity(NotificationLogActivity.getIntent(this@JoinCompleteActivity, viewModel.meetingResponse.value))
         }
     }
 

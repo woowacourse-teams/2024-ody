@@ -11,7 +11,6 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
 import com.woowacourse.ody.databinding.ActivityInviteCodeBinding
 import com.woowacourse.ody.presentation.meetinginfo.BackListener
-import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
 import com.woowacourse.ody.util.observeEvent
 
 class InviteCodeActivity : AppCompatActivity(), BackListener {
@@ -54,8 +53,8 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
     ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
 
     private fun navigateToNotificationLog() {
-        val intent = NotificationLogActivity.getIntent(this)
-        startActivity(intent)
+//        val intent = NotificationLogActivity.getIntent(this)
+//        startActivity(intent)
     }
 
     override fun onBack() = finish()
