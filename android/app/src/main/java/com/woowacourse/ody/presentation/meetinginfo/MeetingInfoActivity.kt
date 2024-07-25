@@ -1,9 +1,12 @@
 package com.woowacourse.ody.presentation.meetinginfo
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -36,6 +39,14 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
     private val joinInfoFragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinStartingPointFragment())
     }
+    private val meetingCompletionLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) {
+                return@registerForActivityResult
+            }
+            binding.vpJoinInfo.visibility = View.VISIBLE
+            binding.wdJoinInfo.visibility = View.VISIBLE
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,11 +120,9 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
 
     private fun handleMeetingInfoNextClick() {
         if (binding.vpMeetingInfo.currentItem == meetingInfoFragments.size - 1) {
-            startActivity(MeetingCompletionActivity.getIntent(this))
+            meetingCompletionLauncher.launch(Intent(MeetingCompletionActivity.getIntent(this)))
             binding.vpMeetingInfo.visibility = View.GONE
             binding.wdMeetingInfo.visibility = View.GONE
-            binding.vpJoinInfo.visibility = View.VISIBLE
-            binding.wdJoinInfo.visibility = View.VISIBLE
             return
         }
         binding.vpMeetingInfo.currentItem += 1
