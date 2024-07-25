@@ -23,7 +23,8 @@ fun MeetingResponse.toMeeting(): Meeting =
         this.id,
         this.name,
         this.targetAddress,
-        LocalDateTime.of(this.date, this.time),
+        this.date,
+        this.time,
         this.mates.map { it.toMate() },
     )
 
