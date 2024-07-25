@@ -1,18 +1,19 @@
-package com.ody.meeting.service;
+package com.ody.util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Random;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InviteCodeGenerator {
 
     private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final Random RANDOM = new Random();
     private static final int RANDOM_LENGTH = 2;
 
-    public String encode(Long meetingId) {
+    public static String encode(Long meetingId) {
         byte[] bytes = String.format("%04d", meetingId)
                 .getBytes(StandardCharsets.UTF_8);
         String base64Encoded = Base64.getUrlEncoder()
@@ -21,7 +22,7 @@ public class InviteCodeGenerator {
         return generateRandomString(base64Encoded);
     }
 
-    private String generateRandomString(String base64Encoded) {
+    private static String generateRandomString(String base64Encoded) {
         StringBuilder randomString = new StringBuilder(base64Encoded);
         for (int i = 0; i < RANDOM_LENGTH; i++) {
             int index = RANDOM.nextInt(CHARACTERS.length());
@@ -30,7 +31,7 @@ public class InviteCodeGenerator {
         return randomString.toString();
     }
 
-    public Long decode(String inviteCode) {
+    public static Long decode(String inviteCode) {
         String base64Part = inviteCode.substring(0, inviteCode.length() - RANDOM_LENGTH);
         byte[] decodedBytes = Base64.getUrlDecoder()
                 .decode(base64Part);

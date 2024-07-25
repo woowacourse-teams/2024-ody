@@ -1,6 +1,7 @@
 package com.ody.member.domain;
 
 import com.ody.common.exception.OdyException;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,16 +14,26 @@ public class DeviceToken {
 
     private static final String DEVICE_TOKEN_PREFIX = "Bearer device-token=";
 
+    @Column(unique = true, nullable = false)
     private String deviceToken;
 
     public DeviceToken(String deviceToken) {
         validatePrefix(deviceToken);
-        this.deviceToken = deviceToken.substring(DEVICE_TOKEN_PREFIX.length());
+        String token = deviceToken.substring(DEVICE_TOKEN_PREFIX.length())
+                .strip();
+        validateBlank(token);
+        this.deviceToken = token;
     }
 
     private void validatePrefix(String value) {
         if (!value.startsWith(DEVICE_TOKEN_PREFIX)) {
             throw new OdyException("잘못된 토큰 형식입니다.");
+        }
+    }
+
+    private void validateBlank(String token) {
+        if (token.isBlank()) {
+            throw new OdyException("토큰 값은 공백이 될 수 없습니다.");
         }
     }
 }
