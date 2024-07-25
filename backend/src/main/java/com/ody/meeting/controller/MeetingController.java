@@ -6,7 +6,6 @@ import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
-import com.ody.meeting.dto.response.MateResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.service.MeetingService;
@@ -15,8 +14,6 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +35,6 @@ public class MeetingController implements MeetingControllerSwagger {
     private final MeetingService meetingService;
     private final MateService mateService;
     private final NotificationService notificationService;
-    private final MeetingService meetingService;
-    private final MateService mateService;
 
     @Override
     @GetMapping("/meetings/me")
