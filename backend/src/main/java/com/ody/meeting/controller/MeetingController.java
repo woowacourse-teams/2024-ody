@@ -14,6 +14,7 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +68,7 @@ public class MeetingController implements MeetingControllerSwagger {
     @PostMapping("/meetings")
     public ResponseEntity<MeetingSaveResponse> save(
             @AuthMember Member member,
-            @RequestBody MeetingSaveRequest meetingSaveRequest
+            @Valid @RequestBody MeetingSaveRequest meetingSaveRequest
     ) {
         Meeting meeting = meetingService.save(meetingSaveRequest);
 

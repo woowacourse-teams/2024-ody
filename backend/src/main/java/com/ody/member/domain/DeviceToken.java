@@ -1,6 +1,6 @@
 package com.ody.member.domain;
 
-import com.ody.common.exception.OdyException;
+import com.ody.common.exception.OdyUnauthorizedException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -27,13 +27,13 @@ public class DeviceToken {
 
     private void validatePrefix(String value) {
         if (!value.startsWith(DEVICE_TOKEN_PREFIX)) {
-            throw new OdyException("잘못된 토큰 형식입니다.");
+            throw new OdyUnauthorizedException("잘못된 토큰 형식입니다.");
         }
     }
 
     private void validateBlank(String token) {
         if (token.isBlank()) {
-            throw new OdyException("토큰 값은 공백이 될 수 없습니다.");
+            throw new OdyUnauthorizedException("토큰 값은 공백이 될 수 없습니다.");
         }
     }
 }

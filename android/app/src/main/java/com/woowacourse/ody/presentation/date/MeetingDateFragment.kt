@@ -12,7 +12,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingDateBinding
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
-import java.util.Calendar
+import java.time.LocalDate
 
 class MeetingDateFragment : Fragment() {
     private var _binding: FragmentMeetingDateBinding? = null
@@ -39,20 +39,18 @@ class MeetingDateFragment : Fragment() {
     }
 
     private fun initializeCalendar() {
-        val today = Calendar.getInstance().timeInMillis
-        binding.cvDate.minDate = today
+        binding.cvDate.minDate = System.currentTimeMillis()
         binding.cvDate.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val selectedDate = Calendar.getInstance()
-            selectedDate.set(year, month, dayOfMonth)
+            val now = LocalDate.now()
+            val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
 
-            if (selectedDate.timeInMillis < Calendar.getInstance().timeInMillis) {
+            if (now.isAfter(selectedDate)) {
                 showSnackBar(R.string.meeting_date_date_guide)
-                binding.cvDate.date = today
-            } else {
-                viewModel.meetingYear.value = year
-                viewModel.meetingMonth.value = month + 1
-                viewModel.meetingDay.value = dayOfMonth
+                return@setOnDateChangeListener
             }
+            viewModel.meetingYear.value = year
+            viewModel.meetingMonth.value = month + 1
+            viewModel.meetingDay.value = dayOfMonth
         }
     }
 

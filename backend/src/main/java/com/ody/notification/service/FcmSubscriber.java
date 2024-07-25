@@ -2,7 +2,7 @@ package com.ody.notification.service;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.TopicManagementResponse;
-import com.ody.common.exception.OdyException;
+import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
 import java.util.List;
@@ -20,7 +20,7 @@ public class FcmSubscriber {
             log.info("모임 구독에 성공했습니다 {}", topicManagementResponse);
         } catch (Exception exception) {
             log.error(exception.getMessage());
-            throw new OdyException("모임 구독에 실패했습니다");
+            throw new OdyServerErrorException("모임 구독에 실패했습니다");
         }
     }
 }

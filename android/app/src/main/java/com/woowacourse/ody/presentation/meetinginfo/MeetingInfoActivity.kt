@@ -1,9 +1,13 @@
 package com.woowacourse.ody.presentation.meetinginfo
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -36,6 +40,20 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
     private val joinInfoFragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinStartingPointFragment())
     }
+    private val meetingCompletionLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) {
+                return@registerForActivityResult
+            }
+            binding.vpJoinInfo.visibility = View.VISIBLE
+            binding.wdJoinInfo.visibility = View.VISIBLE
+        }
+    private val onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBack()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,15 +123,14 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
                 handleJoinInfoNextClick()
             }
         }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun handleMeetingInfoNextClick() {
         if (binding.vpMeetingInfo.currentItem == meetingInfoFragments.size - 1) {
-            startActivity(MeetingCompletionActivity.getIntent(this))
+            meetingCompletionLauncher.launch(Intent(MeetingCompletionActivity.getIntent(this)))
             binding.vpMeetingInfo.visibility = View.GONE
             binding.wdMeetingInfo.visibility = View.GONE
-            binding.vpJoinInfo.visibility = View.VISIBLE
-            binding.wdJoinInfo.visibility = View.VISIBLE
             return
         }
         binding.vpMeetingInfo.currentItem += 1
@@ -124,15 +141,25 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
             val meetingInfo =
                 arrayListOf(
                     viewModel.meetingName.value.toString(),
-                    viewModel.meetingDay.value.toString(),
-                    viewModel.meetingHour.value.toString(),
+                    viewModel.meetingYear.value.toString() + "-" +
+                        if (viewModel.meetingMonth.value.toString().length == 1) {
+                            "0${viewModel.meetingMonth.value}"
+                        } else {
+                            "${viewModel.meetingMonth.value}"
+                        } + "-" + viewModel.meetingDay.value.toString(),
+                    viewModel.meetingHour.value.toString() + ":" +
+                        if (viewModel.meetingMinute.value.toString().length == 1) {
+                            "0${viewModel.meetingMinute.value}"
+                        } else {
+                            viewModel.meetingMinute.value.toString()
+                        },
                     viewModel.destinationGeoLocation.value!!.address,
-                    viewModel.destinationGeoLocation.value!!.latitude,
-                    viewModel.destinationGeoLocation.value!!.longitude,
+                    viewModel.destinationGeoLocation.value!!.latitude.slice(0..8),
+                    viewModel.destinationGeoLocation.value!!.longitude.slice(0..8),
                     viewModel.nickname.value.toString(),
                     viewModel.startingPointGeoLocation.value!!.address,
-                    viewModel.startingPointGeoLocation.value!!.latitude,
-                    viewModel.startingPointGeoLocation.value!!.longitude,
+                    viewModel.startingPointGeoLocation.value!!.latitude.slice(0..8),
+                    viewModel.startingPointGeoLocation.value!!.longitude.slice(0..8),
                 )
 
             startActivity(JoinCompleteActivity.getMeetingInfoIntent(this, meetingInfo))

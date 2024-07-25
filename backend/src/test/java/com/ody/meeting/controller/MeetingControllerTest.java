@@ -121,6 +121,6 @@ class MeetingControllerTest extends BaseControllerTest {
                 .then()
                 .log()
                 .all()
-                .statusCode(500); //TODO : 404로 변경
+                .statusCode(404); //TODO : 404로 변경
     }
 }

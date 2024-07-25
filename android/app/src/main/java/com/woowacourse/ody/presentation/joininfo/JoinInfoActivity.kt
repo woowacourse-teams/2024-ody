@@ -3,6 +3,7 @@ package com.woowacourse.ody.presentation.joininfo
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -23,12 +24,19 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
     private val fragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinStartingPointFragment())
     }
+    private val onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBack()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         initializeDataBinding()
+        initializeObserve()
     }
 
     private fun initializeDataBinding() {
@@ -47,19 +55,24 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)
     }
 
+    private fun initializeObserve() {
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    }
+
     override fun onNext() {
         if (binding.vpJoinInfo.currentItem == fragments.size - 1) {
+            val startingPointGeoLocation = viewModel.startingPointGeoLocation.value ?: return
+
             val joinInfo =
                 arrayListOf(
-                    "inviteCode",
+                    getInviteCode() ?: return,
                     viewModel.nickname.value.toString(),
-                    viewModel.startingPointGeoLocation.value!!.address,
-                    viewModel.startingPointGeoLocation.value!!.latitude,
-                    viewModel.startingPointGeoLocation.value!!.longitude,
+                    startingPointGeoLocation.address,
+                    startingPointGeoLocation.latitude.slice(0..8),
+                    startingPointGeoLocation.longitude.slice(0..8),
                 )
-
             startActivity(JoinCompleteActivity.getJoinInfoIntent(this, joinInfo))
-            finish()
+            finishAffinity()
             return
         }
         binding.vpJoinInfo.currentItem += 1
@@ -73,7 +86,18 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
         finish()
     }
 
+    private fun getInviteCode(): String? = intent.getStringExtra(INVITE_CODE_KEY)
+
     companion object {
-        fun getIntent(context: Context): Intent = Intent(context, JoinInfoActivity::class.java)
+        private const val INVITE_CODE_KEY = "invite_code_key"
+
+        fun getIntent(
+            inviteCode: String,
+            context: Context,
+        ): Intent {
+            return Intent(context, JoinInfoActivity::class.java).apply {
+                putExtra(INVITE_CODE_KEY, inviteCode)
+            }
+        }
     }
 }

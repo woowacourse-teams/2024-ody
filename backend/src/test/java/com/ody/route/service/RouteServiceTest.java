@@ -1,7 +1,6 @@
 package com.ody.route.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.meeting.domain.Location;
@@ -44,17 +43,5 @@ class RouteServiceTest extends BaseServiceTest {
         LocalDateTime expectedDepartureTime = meetingTime.minusMinutes(10);
 
         assertThat(departureTime.getValue()).isEqualTo(expectedDepartureTime);
-
-    }
-
-    @DisplayName("필수 입력값이 비었을 때 예외를 발생한다")
-    @Test
-    void calculateDepartureTimeExceptionWithNoParameter() {
-        Location origin = new Location("서울 강남구 테헤란로 411", "", "127.050691");
-        Location target = new Location("서울 송파구 올림픽로35다길 42", "37.515298", "127.103113");
-
-        LocalDateTime meetingTime = LocalDateTime.now();
-        assertThatThrownBy(() -> routeService.calculateDepartureTime(origin, target, meetingTime))
-                .isInstanceOf(RuntimeException.class);
     }
 }

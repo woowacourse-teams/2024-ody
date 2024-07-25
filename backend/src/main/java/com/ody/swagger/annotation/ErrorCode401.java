@@ -17,4 +17,5 @@ import org.springframework.http.ProblemDetail;
         content = @Content(schema = @Schema(implementation = ProblemDetail.class))
 )
 public @interface ErrorCode401 {
+
 }

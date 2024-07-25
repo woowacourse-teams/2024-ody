@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
-import com.ody.common.exception.OdyException;
+import com.ody.common.exception.OdyBadRequestException;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.mate.dto.request.MateSaveRequest;
@@ -70,6 +70,6 @@ class MateServiceTest extends BaseServiceTest {
                 Fixture.ORIGIN_LOCATION.getLongitude()
         );
         assertThatThrownBy(() -> mateService.save(mateSaveRequest, meeting, member2))
-                .isInstanceOf(OdyException.class);
+                .isInstanceOf(OdyBadRequestException.class);
     }
 }
