@@ -15,9 +15,9 @@ public class FcmPushSender {
     public String sendPushNotification(FcmSendRequest fcmSendRequest) {
 
         Message message = Message.builder()
-                .setTopic("/topics/" + fcmSendRequest.topic())
                 .putData("type", fcmSendRequest.notificationType().name())
                 .putData("nickname", fcmSendRequest.nickname())
+                .setTopic(fcmSendRequest.topic())
                 .build();
         try {
             return FirebaseMessaging.getInstance().send(message);
