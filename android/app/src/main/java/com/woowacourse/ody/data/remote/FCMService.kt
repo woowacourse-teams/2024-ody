@@ -8,7 +8,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.service.MemberService
-import com.woowacourse.ody.domain.NotificationType
+import com.woowacourse.ody.domain.model.NotificationType
 import kotlinx.coroutines.runBlocking
 
 class FCMService : FirebaseMessagingService() {
