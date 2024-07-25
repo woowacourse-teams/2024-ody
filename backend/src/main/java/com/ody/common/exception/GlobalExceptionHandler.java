@@ -12,4 +12,9 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleArgumentException(OdyException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ProblemDetail notFoundExceptionHandler(NotFoundException exception) {
+        return ProblemDetail.forStatusAndDetail(NotFoundException.HTTP_STATUS, exception.getMessage());
+    }
 }
