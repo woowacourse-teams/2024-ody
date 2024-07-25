@@ -13,7 +13,6 @@ import com.ody.member.domain.Member;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
-import com.ody.util.InviteCodeGenerator;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -91,7 +90,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @PathVariable String inviteCode
     ) {
-        InviteCodeGenerator.decode(inviteCode);
+        meetingService.validateInvitedCode(inviteCode);
         return ResponseEntity.ok()
                 .build();
     }
