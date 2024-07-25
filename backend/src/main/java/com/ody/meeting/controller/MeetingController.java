@@ -2,6 +2,7 @@ package com.ody.meeting.controller;
 
 import com.ody.common.annotation.AuthMember;
 import com.ody.mate.domain.Mate;
+import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
@@ -90,6 +91,14 @@ public class MeetingController implements MeetingControllerSwagger {
             @RequestBody MeetingSaveRequest meetingSaveRequest
     ) {
         Meeting meeting = meetingService.save(meetingSaveRequest);
+        MateSaveRequest mateSaveRequest = new MateSaveRequest(
+                meeting.getInviteCode(),
+                meetingSaveRequest.nickname(),
+                meetingSaveRequest.originAddress(),
+                meetingSaveRequest.originLatitude(),
+                meetingSaveRequest.originLongitude()
+        );
+        mateService.save(mateSaveRequest, meeting, member);
         List<Mate> mates = mateService.findAllByMeetingId(meeting.getId());
         MeetingSaveResponse meetingSaveResponse = MeetingSaveResponse.of(meeting, mates);
         return ResponseEntity.status(HttpStatus.CREATED)
