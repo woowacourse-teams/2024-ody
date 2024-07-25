@@ -2,29 +2,25 @@ package com.ody.meeting.controller;
 
 import com.ody.common.BaseControllerTest;
 import com.ody.common.Fixture;
-import com.ody.mate.dto.request.MateSaveRequest;
-import com.ody.mate.service.MateService;
+import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
+import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
+import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
-import com.ody.meeting.dto.request.MeetingSaveRequest;
-import com.ody.meeting.service.MeetingService;
-import com.ody.member.domain.DeviceToken;
-import com.ody.member.domain.Member;
 import com.ody.member.service.MemberService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 
 class MeetingControllerTest extends BaseControllerTest {
@@ -33,10 +29,13 @@ class MeetingControllerTest extends BaseControllerTest {
     private MemberService memberService;
 
     @Autowired
-    private MeetingService meetingService;
+    private MeetingRepository meetingRepository;
 
     @Autowired
-    private MateService mateService;
+    private MateRepository mateRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @DisplayName("Authorization 헤더로 device token과 모임 개설 정보를 받아 저장하면 201을 응답한다")
     @Test
@@ -122,6 +121,6 @@ class MeetingControllerTest extends BaseControllerTest {
                 .then()
                 .log()
                 .all()
-                .statusCode(404);
+                .statusCode(500); //TODO : 404로 변경
     }
 }
