@@ -1,6 +1,6 @@
 package com.ody.mate.domain;
 
-import com.ody.common.exception.OdyException;
+import com.ody.common.exception.OdyBadRequestException;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class Nickname {
     private void validateLength(String nickname) {
         if (nickname.isBlank() || nickname.length() >= MAX_LENGTH) {
             String message = String.format("닉네임은 %d글자 이상, %d자 미만으로 입력 가능합니다.", MIN_LENGTH, MAX_LENGTH);
-            throw new OdyException(message);
+            throw new OdyBadRequestException(message);
         }
     }
 }

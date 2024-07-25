@@ -1,8 +1,15 @@
 package com.ody.common.exception;
 
-public class OdyException extends RuntimeException {
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
-    public OdyException(String message) {
+@Getter
+public abstract class OdyException extends RuntimeException {
+
+    private final HttpStatus httpStatus;
+
+    public OdyException(String message, HttpStatus httpStatus) {
         super(message);
+        this.httpStatus = httpStatus;
     }
 }

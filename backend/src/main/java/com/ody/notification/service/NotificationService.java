@@ -8,9 +8,9 @@ import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.dto.request.FcmSendRequest;
 import com.ody.notification.repository.NotificationRepository;
-import java.time.LocalDate;
+import com.ody.route.domain.DepartureTime;
+import com.ody.route.service.RouteService;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,18 +27,20 @@ public class NotificationService {
     private final ApplicationEventPublisher publisher;
     private final NotificationRepository notificationRepository;
     private final FcmSubscriber fcmSubscriber;
+    private final RouteService routeService;
 
     @Transactional
     public void saveAndSendDepartureReminder(Meeting meeting, Mate mate, DeviceToken deviceToken) {
-        // TODO : RouteService가 해줄꺼임.
-        LocalDate now = meeting.getDate();
-        LocalTime departureTime = meeting.getTime().minusMinutes(2);
-        LocalDateTime sendAt = LocalDateTime.of(now, departureTime);
+        DepartureTime sendAt = routeService.calculateDepartureTime(
+                mate.getOrigin(),
+                meeting.getTarget(),
+                LocalDateTime.of(meeting.getDate(), meeting.getTime())
+        );
 
         Notification notification = new Notification(
                 mate,
                 NotificationType.DEPARTURE_REMINDER,
-                sendAt,
+                sendAt.getValue(),
                 NotificationStatus.PENDING
         );
         notificationRepository.save(notification);
@@ -49,7 +51,7 @@ public class NotificationService {
                 deviceToken.getDeviceToken(),
                 NotificationType.DEPARTURE_REMINDER,
                 mate.getNickname().getNickname(),
-                sendAt
+                sendAt.getValue()
         );
         publisher.publishEvent(fcmSendRequest);
 

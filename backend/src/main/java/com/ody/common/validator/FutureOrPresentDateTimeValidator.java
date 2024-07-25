@@ -1,6 +1,7 @@
 package com.ody.common.validator;
 
 import com.ody.common.annotation.FutureOrPresentDateTime;
+import com.ody.common.exception.OdyServerErrorException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.lang.reflect.Method;
@@ -34,11 +35,10 @@ public class FutureOrPresentDateTimeValidator implements ConstraintValidator<Fut
 
             if (dateInput.isEqual(now.toLocalDate())) {
                 return dateTimeInput.isAfter(now);
-            } else {
-                return dateInput.isAfter(LocalDate.now());
             }
+            return dateInput.isAfter(LocalDate.now());
         } catch (Exception exception) {
-            throw new RuntimeException(exception);
+            throw new OdyServerErrorException(exception.getMessage());
         }
     }
 }

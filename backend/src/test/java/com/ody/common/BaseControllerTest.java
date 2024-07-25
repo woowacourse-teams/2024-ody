@@ -1,6 +1,7 @@
 package com.ody.common;
 
 import com.ody.notification.config.FcmConfig;
+import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.FcmSubscriber;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,9 @@ public abstract class BaseControllerTest {
 
     @MockBean
     private FcmSubscriber fcmSubscriber;
+
+    @MockBean
+    private FcmPushSender fcmPushSender;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;

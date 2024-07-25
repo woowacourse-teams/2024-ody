@@ -3,7 +3,7 @@ package com.ody.mate.domain;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.ody.common.exception.OdyException;
+import com.ody.common.exception.OdyBadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -23,6 +23,6 @@ class NicknameTest {
     @ValueSource(strings = {"", "abcdefghij"})
     void createNicknameException(String nickname) {
         assertThatThrownBy(() -> new Nickname(nickname))
-                .isInstanceOf(OdyException.class);
+                .isInstanceOf(OdyBadRequestException.class);
     }
 }
