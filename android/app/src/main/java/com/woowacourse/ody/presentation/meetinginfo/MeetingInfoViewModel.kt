@@ -9,10 +9,12 @@ import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressValidator
 import com.woowacourse.ody.util.Event
 import com.woowacourse.ody.util.emit
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 class MeetingInfoViewModel : ViewModel() {
-    val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData()
+    val meetingInfoType: MutableLiveData<MeetingInfoType> = MutableLiveData()
+    val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
     val meetingYear: MutableLiveData<Int> = MutableLiveData()
     val meetingMonth: MutableLiveData<Int> = MutableLiveData()
@@ -21,14 +23,13 @@ class MeetingInfoViewModel : ViewModel() {
     val meetingHour: MutableLiveData<Int> = MutableLiveData()
     val meetingMinute: MutableLiveData<Int> = MutableLiveData()
 
-    private val _isValidMeetingTime: MutableLiveData<Event<Boolean>> = MutableLiveData()
-    val isValidMeetingTime: LiveData<Event<Boolean>> get() = _isValidMeetingTime
+    private val _invalidMeetingTimeEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val invalidMeetingTimeEvent: LiveData<Event<Unit>> get() = _invalidMeetingTimeEvent
 
     val meetingName: MutableLiveData<String> = MutableLiveData()
     val meetingNameLength: LiveData<Int> = meetingName.map { it.length }
 
-    private val _destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
-    val destinationGeoLocation: LiveData<GeoLocation> get() = _destinationGeoLocation
+    val destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
 
     private val _invalidDestinationEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
     val invalidDestinationEvent: LiveData<Event<Unit>> get() = _invalidDestinationEvent
@@ -36,11 +37,13 @@ class MeetingInfoViewModel : ViewModel() {
     val nickname: MutableLiveData<String> = MutableLiveData()
     val nicknameLength: LiveData<Int> = nickname.map { it.length }
 
-    private val _startingPointGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
-    val startingPointGeoLocation: LiveData<GeoLocation> get() = _startingPointGeoLocation
+    val startingPointGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
 
     private val _invalidStartingPointEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
     val invalidStartingPointEvent: LiveData<Event<Unit>> get() = _invalidStartingPointEvent
+
+    private val _nextPageEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val nextPageEvent: LiveData<Event<Unit>> = _nextPageEvent
 
     init {
         initializeMeetingTime()
@@ -54,51 +57,82 @@ class MeetingInfoViewModel : ViewModel() {
     }
 
     private fun initializeIsValidInfo() {
-        isValidInfo.addSource(meetingName) {
-            isValidInfo.value = it.isNotEmpty()
+        with(isValidInfo) {
+            addSource(meetingInfoType) { checkInfoValidity() }
+            addSource(meetingName) { checkInfoValidity() }
+            addSource(destinationGeoLocation) { checkInfoValidity() }
+            addSource(nickname) { checkInfoValidity() }
+            addSource(startingPointGeoLocation) { checkInfoValidity() }
+            addSource(meetingHour) { isValidInfo.value = true }
+            addSource(meetingMinute) { isValidInfo.value = true }
         }
-        isValidInfo.addSource(_destinationGeoLocation) {
-            val isValidDestinationEvent = AddressValidator.isValid(it.address)
-            isValidInfo.value = isValidDestinationEvent
-            if (!isValidDestinationEvent) {
-                _invalidDestinationEvent.emit(Unit)
-            }
-        }
-        isValidInfo.addSource(nickname) {
-            isValidInfo.value = it.isNotEmpty()
-        }
-        isValidInfo.addSource(_startingPointGeoLocation) {
-            val isValidStartingPoint = AddressValidator.isValid(it.address)
-            isValidInfo.value = isValidStartingPoint
-            if (!isValidStartingPoint) {
-                _invalidStartingPointEvent.emit(Unit)
-            }
-        }
-    }
-
-    fun setDestinationGeoLocation(geoLocation: GeoLocation) {
-        _destinationGeoLocation.value = geoLocation
     }
 
     fun emptyNickname() {
         nickname.value = ""
     }
 
-    fun setStartingPointGeoLocation(geoLocation: GeoLocation) {
-        _startingPointGeoLocation.value = geoLocation
-    }
-
-    fun validMeetingTime() {
-        // 이전에 선택한 Meeting Date와 함께 유효성 검증
-        _isValidMeetingTime.emit(false)
-    }
-
     fun emptyMeetingName() {
         meetingName.value = ""
     }
 
-    fun onNextInfo() {
-        isValidInfo.value = false
+    private fun isValidMeetingName(): Boolean {
+        val meetingName = meetingName.value ?: return false
+        return meetingName.isNotEmpty()
+    }
+
+    private fun isValidMeetingDateTime(): Boolean {
+        val year = meetingYear.value ?: return false
+        val month = meetingMonth.value ?: return false
+        val day = meetingDay.value ?: return false
+        val hour = meetingHour.value ?: return false
+        val minute = meetingMinute.value ?: return false
+        val dateTime = LocalDateTime.of(year, month, day, hour, minute)
+        return LocalDateTime.now().isBefore(dateTime)
+    }
+
+    private fun isValidNickName(): Boolean {
+        val nickName = nickname.value ?: return false
+        return nickName.isNotEmpty()
+    }
+
+    private fun isValidDestination(): Boolean {
+        val destinationGeoLocation = destinationGeoLocation.value ?: return false
+        return AddressValidator.isValid(destinationGeoLocation.address).also {
+            if (!it) _invalidDestinationEvent.emit(Unit)
+        }
+    }
+
+    private fun isValidStartingPoint(): Boolean {
+        val startingPointGeoLocation = startingPointGeoLocation.value ?: return false
+        return AddressValidator.isValid(startingPointGeoLocation.address).also {
+            if (!it) _invalidStartingPointEvent.emit(Unit)
+        }
+    }
+
+    private fun checkInfoValidity() {
+        val meetingInfoType = meetingInfoType.value ?: return
+        val isValid =
+            when (meetingInfoType) {
+                MeetingInfoType.NAME -> isValidMeetingName()
+                MeetingInfoType.DATE -> true
+                MeetingInfoType.TIME -> isValidMeetingDateTime()
+                MeetingInfoType.DESTINATION -> isValidDestination()
+                MeetingInfoType.NICKNAME -> isValidNickName()
+                MeetingInfoType.STARTING_POINT -> isValidStartingPoint()
+            }
+        isValidInfo.value = isValid
+    }
+
+    fun moveOnNextPage() {
+        checkInfoValidity()
+        if (isValidInfo.value == true) {
+            _nextPageEvent.emit(Unit)
+            return
+        }
+        if (meetingInfoType.value == MeetingInfoType.TIME) {
+            _invalidMeetingTimeEvent.emit(Unit)
+        }
     }
 
     companion object {

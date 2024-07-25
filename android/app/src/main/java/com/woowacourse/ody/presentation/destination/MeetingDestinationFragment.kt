@@ -17,6 +17,7 @@ import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.ui.toGeoLocation
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 
 class MeetingDestinationFragment : Fragment(), AddressSearchListener {
@@ -61,9 +62,8 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
             binding.etDestination.setText(geoLocation.address)
-            viewModel.setDestinationGeoLocation(geoLocation)
+            viewModel.destinationGeoLocation.value = geoLocation
         }
-        viewModel.onNextInfo()
     }
 
     private fun Bundle.getGeoLocation(): GeoLocation? {
@@ -86,6 +86,11 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
     ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
         .apply { setAnchorView(activity?.findViewById(R.id.btn_next)) }
         .show()
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.meetingInfoType.value = MeetingInfoType.DESTINATION
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

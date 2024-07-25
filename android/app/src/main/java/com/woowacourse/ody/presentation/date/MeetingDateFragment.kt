@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingDateBinding
+import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import java.util.Calendar
 
@@ -35,7 +36,6 @@ class MeetingDateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initializeCalendar()
-        viewModel.onNextInfo()
     }
 
     private fun initializeCalendar() {
@@ -54,6 +54,11 @@ class MeetingDateFragment : Fragment() {
                 viewModel.meetingDay.value = dayOfMonth
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.meetingInfoType.value = MeetingInfoType.DATE
     }
 
     override fun onDestroyView() {
