@@ -12,15 +12,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class FcmPushSender {
 
-    public String sendPushNotification(FcmSendRequest fcmSendRequest) {
-
+    public void sendPushNotification(FcmSendRequest fcmSendRequest) {
         Message message = Message.builder()
                 .putData("type", fcmSendRequest.notificationType().name())
                 .putData("nickname", fcmSendRequest.nickname())
                 .setTopic(fcmSendRequest.topic())
                 .build();
         try {
-            return FirebaseMessaging.getInstance().send(message);
+            FirebaseMessaging.getInstance().send(message);
         } catch (FirebaseMessagingException exception) {
             log.error("Fcm 메시지 전송 실패 : {}", exception.getMessage());
             throw new OdyServerErrorException(exception.getMessage());

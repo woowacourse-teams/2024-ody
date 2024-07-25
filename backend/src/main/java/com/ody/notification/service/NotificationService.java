@@ -40,7 +40,7 @@ public class NotificationService {
         Notification notification = new Notification(
                 mate,
                 NotificationType.DEPARTURE_REMINDER,
-                LocalDateTime.now().plusSeconds(30),
+                sendAt.getValue(),
                 NotificationStatus.PENDING
         );
         notificationRepository.save(notification);
@@ -48,7 +48,7 @@ public class NotificationService {
         fcmSubscriber.subscribeTopic(meeting, deviceToken);
 
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
-                deviceToken.getDeviceToken(),
+                meeting.getId().toString(),
                 NotificationType.DEPARTURE_REMINDER,
                 mate.getNickname().getNickname(),
                 sendAt.getValue()
