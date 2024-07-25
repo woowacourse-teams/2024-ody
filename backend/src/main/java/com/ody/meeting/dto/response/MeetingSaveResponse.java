@@ -45,7 +45,7 @@ public record MeetingSaveResponse(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
-                meeting.getTime(),
+                meeting.getTime().withNano(0),
                 meeting.getTarget().getAddress(),
                 meeting.getTarget().getLatitude(),
                 meeting.getTarget().getLongitude(),

@@ -1,5 +1,6 @@
 package com.ody.notification.service;
 
+import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
@@ -32,14 +33,14 @@ public class NotificationService {
     private final FcmSubscriber fcmSubscriber;
     private final RouteService routeService;
     private final FcmPushSender fcmPushSender;
-
+      
     @Transactional
     public void saveAndSendDepartureReminder(Meeting meeting, Mate mate, DeviceToken deviceToken) {
         fcmSubscriber.subscribeTopic(meeting, deviceToken);
         saveAndSendEntryNotification(meeting, mate);
         Notification departureNotification = saveAndSendDepartureNotification(meeting, mate);
         departureNotification.updateDone();
-    }
+    };
 
     private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
         Notification entryNotification = new Notification(
@@ -72,13 +73,12 @@ public class NotificationService {
                 sendAt.getValue(),
                 NotificationStatus.PENDING
         );
-        notificationRepository.save(departureNotification);
+        Notification savedNotification = notificationRepository.save(departureNotification);
 
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
                 meeting.getId().toString(),
-                NotificationType.DEPARTURE_REMINDER,
-                mate.getNickname().getNickname(),
-                sendAt.getValue()
+                savedNotification.getId(),
+                LocalDateTime.now().plusSeconds(10) // TODO: savedNotification.getSendAt() 으로 변경
         );
         Instant startTime = fcmSendRequest.sendAt().toInstant(KST_OFFSET);
         taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmSendRequest), startTime);
@@ -87,5 +87,10 @@ public class NotificationService {
 
     public List<Notification> findAllMeetingLogs(Long meetingId) {
         return notificationRepository.findAllMeetingLogs(meetingId);
+    }
+
+    public Notification findById(Long notificationId) {
+        return notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 알림입니다."));
     }
 }
