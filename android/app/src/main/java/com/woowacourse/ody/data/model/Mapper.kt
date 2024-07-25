@@ -3,10 +3,10 @@ package com.woowacourse.ody.data.model
 import com.woowacourse.ody.data.model.meeting.MateResponse
 import com.woowacourse.ody.data.model.meeting.MeetingResponse
 import com.woowacourse.ody.data.model.notification.NotificationLogsResponse
-import com.woowacourse.ody.domain.Mate
-import com.woowacourse.ody.domain.Meeting
-import com.woowacourse.ody.domain.NotificationLog
-import com.woowacourse.ody.domain.NotificationType
+import com.woowacourse.ody.domain.model.Mate
+import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.NotificationLog
+import com.woowacourse.ody.domain.model.NotificationType
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -26,6 +26,7 @@ fun MeetingResponse.toMeeting(): Meeting =
         this.date,
         this.time,
         this.mates.map { it.toMate() },
+        this.inviteCode,
     )
 
 fun MateResponse.toMate(): Mate = Mate(this.nickname)

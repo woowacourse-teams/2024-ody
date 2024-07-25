@@ -1,7 +1,7 @@
 package com.woowacourse.ody.presentation.notificationlog.uimodel
 
-import com.woowacourse.ody.domain.Meeting
-import com.woowacourse.ody.domain.NotificationLog
+import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.NotificationLog
 import java.time.format.DateTimeFormatter
 
 fun NotificationLog.toNotificationUiModel(): NotificationLogUiModel {
@@ -22,5 +22,6 @@ fun Meeting.toMeetingUiModel(): MeetingUiModel {
         this.targetPosition,
         this.meetingTime.format(dateTimeFormatter),
         this.mates.map { it.nickname },
+        this.inviteCode,
     )
 }

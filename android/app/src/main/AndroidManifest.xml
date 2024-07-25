@@ -26,11 +26,6 @@
             android:windowSoftInputMode="adjustResize"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
-            android:name=".presentation.meetinglog.LogsActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
-        <activity
             android:name=".presentation.joininfo.JoinInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait"

@@ -1,8 +1,8 @@
 package com.woowacourse.ody.data.local.fake
 
-import com.woowacourse.ody.domain.NotificationLog
-import com.woowacourse.ody.domain.NotificationLogRepository
-import com.woowacourse.ody.domain.NotificationType
+import com.woowacourse.ody.domain.model.NotificationLog
+import com.woowacourse.ody.domain.model.NotificationType
+import com.woowacourse.ody.domain.repository.NotificationLogRepository
 import java.time.LocalDateTime
 
 object FakeNotificationLogRepository : NotificationLogRepository {

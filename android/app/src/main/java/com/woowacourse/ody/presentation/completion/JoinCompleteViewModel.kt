@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.data.local.db.OdyDatastore
 import com.woowacourse.ody.data.model.meeting.MeetingRequest
 import com.woowacourse.ody.data.model.toMeeting
-import com.woowacourse.ody.domain.Meeting
+import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.repository.MeetingRepository
 import com.woowacourse.ody.util.Event
 import com.woowacourse.ody.util.emit

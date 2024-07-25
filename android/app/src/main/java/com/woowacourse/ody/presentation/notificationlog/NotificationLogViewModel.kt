@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.ody.domain.NotificationLogRepository
 import com.woowacourse.ody.domain.repository.MeetingRepository
+import com.woowacourse.ody.domain.repository.NotificationLogRepository
 import com.woowacourse.ody.presentation.notificationlog.uimodel.MeetingUiModel
 import com.woowacourse.ody.presentation.notificationlog.uimodel.NotificationLogUiModel
 import com.woowacourse.ody.presentation.notificationlog.uimodel.toMeetingUiModel
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class NotificationLogViewModel(
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
-) : ViewModel(), CopyInviteCodeButtonListener {
+) : ViewModel() {
     private val _meeting = MutableLiveData<MeetingUiModel>()
     val meeting: LiveData<MeetingUiModel> = _meeting
 
@@ -43,7 +43,7 @@ class NotificationLogViewModel(
         fetchMeeting()
     }
 
-    override fun onClickCopyInviteCode() {
-        TODO("Not yet implemented")
+    companion object {
+        private const val INVITE_CODE_LABEL = "inviteCode"
     }
 }
