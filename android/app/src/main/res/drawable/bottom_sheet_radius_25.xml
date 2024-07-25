@@ -3,10 +3,6 @@
 
     <solid android:color="@color/cream" />
 
-    <stroke
-        android:width="2dp"
-        android:color="@color/purple" />
-
     <corners
         android:topLeftRadius="25dp"
         android:topRightRadius="25dp" />
