@@ -40,7 +40,6 @@ public class MeetingController implements MeetingControllerSwagger {
     @Override
     @GetMapping("/meetings/me")
     public ResponseEntity<MeetingSaveResponses> findMine(@AuthMember Member member) {
-
         List<Meeting> memberMeetings = meetingService.findAllMeetingsByMember(member);
         List<MeetingSaveResponse> saveResponses = memberMeetings.stream()
                 .map(this::makeSaveResponse)
@@ -58,7 +57,6 @@ public class MeetingController implements MeetingControllerSwagger {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String fcmToken,
             @PathVariable Long meetingId
     ) {
-
         List<Notification> notifications = notificationService.findAllMeetingLogs(meetingId);
         NotiLogFindResponses response = NotiLogFindResponses.from(notifications);
         return ResponseEntity.ok(response);
