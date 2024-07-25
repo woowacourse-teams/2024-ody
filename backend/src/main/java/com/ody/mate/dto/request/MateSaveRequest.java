@@ -1,6 +1,7 @@
 package com.ody.mate.dto.request;
 
 import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
@@ -26,6 +27,6 @@ public record MateSaveRequest(
 
     public Mate toMate(Meeting meeting, Member member) {
         Location origin = new Location(originAddress, originLatitude, originLongitude);
-        return new Mate(meeting, member, nickname, origin);
+        return new Mate(meeting, member, new Nickname(nickname), origin);
     }
 }

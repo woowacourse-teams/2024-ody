@@ -32,6 +32,7 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMeetingDestinationBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -68,7 +69,10 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
     private fun Bundle.getGeoLocation(): GeoLocation? {
         val geoLocationUiModel =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                getParcelable(AddressSearchDialog.GEO_LOCATION_UI_MODEL_KEY, GeoLocationUiModel::class.java)
+                getParcelable(
+                    AddressSearchDialog.GEO_LOCATION_UI_MODEL_KEY,
+                    GeoLocationUiModel::class.java,
+                )
             } else {
                 getParcelable<GeoLocationUiModel>(AddressSearchDialog.GEO_LOCATION_UI_MODEL_KEY)
             }
@@ -79,9 +83,9 @@ class MeetingDestinationFragment : Fragment(), AddressSearchListener {
 
     private fun showSnackBar(
         @StringRes messageId: Int,
-    ) {
-        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
-    }
+    ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
+        .apply { setAnchorView(activity?.findViewById(R.id.btn_next)) }
+        .show()
 
     override fun onResume() {
         super.onResume()

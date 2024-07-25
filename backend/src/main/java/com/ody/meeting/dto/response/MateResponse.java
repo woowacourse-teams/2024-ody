@@ -7,7 +7,7 @@ public record MateResponse(String nickname) {
 
     public static List<MateResponse> from(List<Mate> mates) {
         return mates.stream()
-                .map(mate -> new MateResponse(mate.getNickname()))
+                .map(mate -> new MateResponse(mate.getNickname().getNickname()))
                 .toList();
     }
 }

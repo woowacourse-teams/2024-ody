@@ -1,6 +1,23 @@
 <resources>
     <string name="app_name">오디</string>
+    <!-- activity_notification_log -->
+    <string name="activity_notification_mates">%1$d명 / %2$s </string>"
+    <!-- item_notification_log.xml -->
+    <string name="item_notification_entry">-> %1$s (이)가 들어왔어요.</string>"
+    <string name="item_notification_departure_reminder">-> %1$s (이)가 출발할 시간이에요!</string>"
+    <string name="item_notification_departure">-> %1$s (이)가 출발했어요.</string>"
 
+    <!-- item_invite_code_log.xml -->
+    <string name="item_invite_code_top">초대 코드를 복사해</string>
+    <string name="item_invite_code_bottom">친구에게 전달해 보세요!</string>"
+    <string name="item_invite_code_copy">복사하기</string>"
+
+
+    <!-- fragment_destination.xml -->
+    <string name="destination_question_front">오디</string>
+    <string name="destination_question_back">서 만나시나요?</string>
+    <string name="destination_question_hint">주소를 찾아보세요</string>
+    <string name="destination_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
     <!-- activity_intro.xml -->
     <string name="intro_hello">안녕하세요!</string>
     <string name="intro_guide_front">오디</string>

@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
@@ -27,7 +28,7 @@ class IntroActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission(),
         ) { isGranted: Boolean ->
             if (isGranted.not()) {
-                showSnackBar(getString(R.string.intro_notification_permission_required))
+                showSnackBar(R.string.intro_notification_permission_required)
             }
         }
 
@@ -71,7 +72,7 @@ class IntroActivity : AppCompatActivity() {
         ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                    showSnackBar(getString(R.string.intro_notification_permission_guide))
+                    showSnackBar(R.string.intro_notification_permission_guide)
                 } else {
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
@@ -79,7 +80,9 @@ class IntroActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    private fun showSnackBar(
+        @StringRes message: Int,
+    ) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
 
     companion object {
         fun getIntent(context: Context): Intent = Intent(context, IntroActivity::class.java)

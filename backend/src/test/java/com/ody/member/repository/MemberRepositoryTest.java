@@ -17,10 +17,10 @@ class MemberRepositoryTest {
 
     @DisplayName("기기 토큰으로 회원을 조회한다")
     @Test
-    void findByDeviceToken() {
+    void findFirstByDeviceToken() {
         Member member = memberRepository.save(Fixture.MEMBER1);
 
-        Member findMember = memberRepository.findByDeviceToken(member.getDeviceToken()).get();
+        Member findMember = memberRepository.findFirstByDeviceToken(member.getDeviceToken()).get();
 
         assertThat(findMember.getId()).isEqualTo(member.getId());
     }

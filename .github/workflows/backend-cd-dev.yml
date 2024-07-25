@@ -1,16 +1,12 @@
-name: backend cicd dev
+name: backend-cd-dev
 
 on:
-  push:
-    branches:
-      - develop
-    paths:
-      - backend/**
   pull_request:
     branches:
       - develop
     paths:
       - backend/**
+    types: closed
 
 env:
   DOCKERHUB_REPOSITORY: ody-official

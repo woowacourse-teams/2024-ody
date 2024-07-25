@@ -5,12 +5,14 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityLogsBinding
+import com.woowacourse.ody.domain.Meeting
 
 class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
     private val binding: ActivityLogsBinding by lazy {
@@ -50,16 +52,16 @@ class LogsActivity : AppCompatActivity(), CodeCopyListener, LogsListener {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
     }
 
-    private fun showSnackBar(messageId: Int) =
-        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
-            .apply {
-                // 날짜 위에 나오게 변경 setAnchorView(binding.tvDate)
-            }
-            .show()
+    private fun showSnackBar(
+        @StringRes messageId: Int,
+    ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
 
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
 
-        fun getIntent(context: Context): Intent = Intent(context, LogsActivity::class.java)
+        fun getIntent(
+            context: Context,
+            meetingResponse: Meeting?,
+        ): Intent = Intent(context, LogsActivity::class.java)
     }
 }

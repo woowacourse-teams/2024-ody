@@ -81,7 +81,9 @@ class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     private fun showSnackBar(
         @StringRes messageId: Int,
     ) {
-        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
+            .apply { setAnchorView(activity?.findViewById(R.id.btn_next)) }
+            .show()
     }
 
     override fun onResume() {

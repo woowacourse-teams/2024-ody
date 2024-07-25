@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
@@ -45,7 +46,8 @@ class MeetingDateFragment : Fragment() {
             selectedDate.set(year, month, dayOfMonth)
 
             if (selectedDate.timeInMillis < Calendar.getInstance().timeInMillis) {
-                showSnackBar(getString(R.string.meeting_date_date_guide))
+                showSnackBar(R.string.meeting_date_date_guide)
+                binding.cvDate.date = today
             } else {
                 viewModel.meetingYear.value = year
                 viewModel.meetingMonth.value = month + 1
@@ -64,5 +66,9 @@ class MeetingDateFragment : Fragment() {
         _binding = null
     }
 
-    private fun showSnackBar(message: String) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    private fun showSnackBar(
+        @StringRes message: Int,
+    ) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+        .apply { setAnchorView(activity?.findViewById(R.id.btn_next)) }
+        .show()
 }

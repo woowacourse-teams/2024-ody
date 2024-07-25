@@ -8,9 +8,10 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.remote.DefaultMeetingRepository
+import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
 import com.woowacourse.ody.databinding.ActivityInviteCodeBinding
 import com.woowacourse.ody.presentation.meetinginfo.BackListener
+import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
 import com.woowacourse.ody.util.observeEvent
 
 class InviteCodeActivity : AppCompatActivity(), BackListener {
@@ -43,12 +44,18 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
             viewModel.emptyInviteCode()
             showSnackBar(R.string.invalid_invite_code)
         }
+        viewModel.navigateAction.observeEvent(this) {
+            navigateToNotificationLog()
+        }
     }
 
     private fun showSnackBar(
         @StringRes messageId: Int,
-    ) {
-        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
+    ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
+
+    private fun navigateToNotificationLog() {
+        val intent = NotificationLogActivity.getIntent(this)
+        startActivity(intent)
     }
 
     override fun onBack() = finish()

@@ -1,6 +1,7 @@
 package com.ody.common;
 
 import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
@@ -36,9 +37,9 @@ public class Fixture {
             "초대코드"
     );
 
-    public static Member MEMBER1 = new Member(new DeviceToken("device-token=testToken1"));
-    public static Member MEMBER2 = new Member(new DeviceToken("device-token=testToken2"));
-    public static Member MEMBER3 = new Member(new DeviceToken("device-token=testToken3"));
+    public static Member MEMBER1 = new Member(new DeviceToken("Bearer device-token=testToken1"));
+    public static Member MEMBER2 = new Member(new DeviceToken("Bearer device-token=testToken2"));
+    public static Member MEMBER3 = new Member(new DeviceToken("Bearer device-token=testToken3"));
 
     public static Location ORIGIN_LOCATION = new Location(
             "서울 강남구 테헤란로 411",
@@ -46,9 +47,9 @@ public class Fixture {
             "127.505691"
     );
 
-    public static Mate MATE1 = new Mate(ODY_MEETING1, MEMBER1, "제리", ORIGIN_LOCATION);
-    public static Mate MATE2 = new Mate(ODY_MEETING1, MEMBER2, "카키", ORIGIN_LOCATION);
-    public static Mate MATE3 = new Mate(ODY_MEETING2, MEMBER3, "올리브", ORIGIN_LOCATION);
+    public static Mate MATE1 = new Mate(ODY_MEETING1, MEMBER1, new Nickname("제리"), ORIGIN_LOCATION);
+    public static Mate MATE2 = new Mate(ODY_MEETING1, MEMBER2, new Nickname("카키"), ORIGIN_LOCATION);
+    public static Mate MATE3 = new Mate(ODY_MEETING2, MEMBER3, new Nickname("올리브"), ORIGIN_LOCATION);
 
     public static Notification DEPARTURE_REMINDER_PENDING_NOTIFICATION = new Notification(
             MATE1,
