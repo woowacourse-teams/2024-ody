@@ -15,8 +15,9 @@ public class FcmSubscriber {
 
     public void subscribeTopic(Meeting meeting, DeviceToken deviceToken) {
         try {
+            String topicName = "/topics/" + meeting.getId().toString();
             TopicManagementResponse topicManagementResponse = FirebaseMessaging.getInstance()
-                    .subscribeToTopic(List.of(deviceToken.getDeviceToken()), meeting.getId().toString());
+                    .subscribeToTopic(List.of(deviceToken.getDeviceToken()), topicName);
             log.info("모임 구독에 성공했습니다 {}", topicManagementResponse);
         } catch (Exception exception) {
             log.error(exception.getMessage());
