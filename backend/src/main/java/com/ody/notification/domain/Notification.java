@@ -48,7 +48,7 @@ public class Notification extends BaseEntity {
         this(null, mate, type, sendAt, status);
     }
 
-    public void updateDone() {
+    public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
     }
 }

@@ -1,5 +1,6 @@
 package com.ody.notification.service;
 
+import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
@@ -43,22 +44,24 @@ public class NotificationService {
                 sendAt.getValue(),
                 NotificationStatus.PENDING
         );
-        notificationRepository.save(notification);
+        Notification savedNotification = notificationRepository.save(notification);
 
         fcmSubscriber.subscribeTopic(meeting, deviceToken);
 
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
                 meeting.getId().toString(),
-                NotificationType.DEPARTURE_REMINDER,
-                mate.getNickname().getNickname(),
-                sendAt.getValue()
+                savedNotification.getId(),
+                LocalDateTime.now().plusSeconds(10) // TODO: savedNotification.getSendAt() 으로 변경
         );
         publisher.publishEvent(fcmSendRequest);
-
-        notification.updateDone();
     }
 
     public List<Notification> findAllMeetingLogs(Long meetingId) {
         return notificationRepository.findAllMeetingLogs(meetingId);
+    }
+
+    public Notification findById(Long notificationId) {
+        return notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 알림입니다."));
     }
 }
