@@ -32,7 +32,7 @@ class InviteCodeViewModel(
             meetingRepository.fetchInviteCodeValidity(inviteCode)
                 .onSuccess {
                     _isValidInviteCode.emit(true)
-                    _navigateAction.emit(InviteCodeNavigateAction.CodeNavigateToNotificationLog)
+                    _navigateAction.emit(InviteCodeNavigateAction.CodeNavigateToJoin)
                 }.onFailure {
                     _isValidInviteCode.emit(false)
                 }
