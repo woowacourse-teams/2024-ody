@@ -40,7 +40,7 @@ public class NotificationService {
         Notification notification = new Notification(
                 mate,
                 NotificationType.DEPARTURE_REMINDER,
-                sendAt.getValue(),
+                LocalDateTime.now().plusSeconds(30),
                 NotificationStatus.PENDING
         );
         notificationRepository.save(notification);
