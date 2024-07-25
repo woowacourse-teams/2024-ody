@@ -14,6 +14,7 @@ import com.ody.member.domain.Member;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
+import com.ody.util.InviteCodeGenerator;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -29,9 +30,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class MeetingController implements MeetingControllerSwagger {
 
     private final MeetingService meetingService;
@@ -111,6 +112,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @PathVariable String inviteCode
     ) {
+        InviteCodeGenerator.decode(inviteCode);
         return ResponseEntity.ok()
                 .build();
     }

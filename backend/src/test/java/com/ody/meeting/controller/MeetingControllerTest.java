@@ -6,6 +6,10 @@ import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
+import com.ody.meeting.repository.MeetingRepository;
+import com.ody.member.domain.DeviceToken;
+import com.ody.member.domain.Member;
+import com.ody.member.repository.MemberRepository;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.DeviceToken;
@@ -102,5 +106,21 @@ class MeetingControllerTest extends BaseControllerTest {
                 .log()
                 .all()
                 .statusCode(200);
+    }
+
+    @DisplayName("유효하지 않은 초대 코드일 경우 404 에러를 반환한다.")
+    @Test
+    void validateInviteCode() {
+        String deviceToken = "Bearer device-token=testToken";
+        memberService.save(new DeviceToken(deviceToken));
+
+        RestAssured.given()
+                .header(HttpHeaders.AUTHORIZATION, deviceToken)
+                .when()
+                .get("/invite-codes/testcode/validate")
+                .then()
+                .log()
+                .all()
+                .statusCode(404);
     }
 }
