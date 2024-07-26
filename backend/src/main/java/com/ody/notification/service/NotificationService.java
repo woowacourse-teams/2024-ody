@@ -31,16 +31,12 @@ public class NotificationService {
 
     @Transactional
     public void saveAndSendDepartureReminder(Meeting meeting, Mate mate, DeviceToken deviceToken) {
-        DepartureTime sendAt = routeService.calculateDepartureTime(
-                mate.getOrigin(),
-                meeting.getTarget(),
-                LocalDateTime.of(meeting.getDate(), meeting.getTime())
-        );
+        LocalDateTime sendAt = calculateSendAt(meeting, mate);
 
         Notification notification = new Notification(
                 mate,
                 NotificationType.DEPARTURE_REMINDER,
-                sendAt.getValue(),
+                sendAt,
                 NotificationStatus.PENDING
         );
         notificationRepository.save(notification);
@@ -51,11 +47,23 @@ public class NotificationService {
                 meeting.getId().toString(),
                 NotificationType.DEPARTURE_REMINDER,
                 mate.getNickname().getNickname(),
-                sendAt.getValue()
+                sendAt
         );
         publisher.publishEvent(fcmSendRequest);
 
         notification.updateDone();
+    }
+
+    private LocalDateTime calculateSendAt(Meeting meeting, Mate mate) {
+        DepartureTime sendAt = routeService.calculateDepartureTime(
+                mate.getOrigin(),
+                meeting.getTarget(),
+                LocalDateTime.of(meeting.getDate(), meeting.getTime())
+        );
+        if (sendAt.getValue().isBefore(LocalDateTime.now())) {
+            return LocalDateTime.now();
+        }
+        return sendAt.getValue();
     }
 
     public List<Notification> findAllMeetingLogs(Long meetingId) {

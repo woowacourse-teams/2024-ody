@@ -2,6 +2,7 @@ package com.ody.common;
 
 import com.ody.notification.config.FcmConfig;
 import com.ody.notification.service.FcmPushSender;
+import com.ody.notification.service.FcmSubscriber;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,9 @@ public abstract class BaseServiceTest {
 
     @MockBean
     private FcmPushSender fcmPushSender;
+
+    @MockBean
+    private FcmSubscriber fcmSubscriber;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
