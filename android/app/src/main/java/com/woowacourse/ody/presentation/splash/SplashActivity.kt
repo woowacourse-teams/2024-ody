@@ -12,7 +12,6 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
 import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
