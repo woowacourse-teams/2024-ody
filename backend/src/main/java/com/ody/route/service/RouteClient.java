@@ -1,5 +1,6 @@
 package com.ody.route.service;
 
+import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Location;
 import com.ody.route.config.RouteProperties;
@@ -52,7 +53,10 @@ public class RouteClient {
         if (response.code().isPresent()) {
             return extractRouteTimeOrThrow(response);
         }
-        response.minutes().orElseThrow(() -> new OdyServerErrorException("ODsay 서버 에러"));
+        response.minutes().orElseThrow(() -> {
+            log.error("OdsayResponse minutes is Empty: {}", response);
+            return new OdyServerErrorException("서버 에러");
+        });
         return new RouteTime(response.minutes().getAsLong());
     }
 
@@ -61,7 +65,10 @@ public class RouteClient {
         if (code.isPresent() && code.get().equals("-98")) {
             return RouteTime.ZERO;
         }
-        log.error("ODsay 에러: ", response.message().get());
-        throw new OdyServerErrorException("ODsay 서버 에러");
+        if (code.isPresent() && code.get().equals("500")) {
+            log.error("ODsay 500 에러: {}", response);
+            throw new OdyServerErrorException("서버 에버");
+        }
+        throw new OdyBadRequestException(response.message().orElseGet(() -> ""));
     }
 }
