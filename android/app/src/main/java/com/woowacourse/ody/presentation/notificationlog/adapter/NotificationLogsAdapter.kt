@@ -10,7 +10,7 @@ import com.woowacourse.ody.databinding.ItemNotificationLogBinding
 import com.woowacourse.ody.presentation.notificationlog.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.notificationlog.uimodel.NotificationLogUiModel
 
-class NotificationLogListAdapter(
+class NotificationLogsAdapter(
     private val copyInviteCodeListener: CopyInviteCodeListener,
 ) : ListAdapter<NotificationLogUiModel, RecyclerView.ViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(

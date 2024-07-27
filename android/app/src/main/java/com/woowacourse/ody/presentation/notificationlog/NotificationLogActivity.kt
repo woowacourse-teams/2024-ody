@@ -15,7 +15,7 @@ import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
 import com.woowacourse.ody.data.remote.ody.repository.DefaultNotificationLogRepository
 import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
 import com.woowacourse.ody.domain.model.Meeting
-import com.woowacourse.ody.presentation.notificationlog.adapter.NotificationLogListAdapter
+import com.woowacourse.ody.presentation.notificationlog.adapter.NotificationLogsAdapter
 
 class NotificationLogActivity : AppCompatActivity(), CopyInviteCodeListener, ShareListener {
     private val viewModel: NotificationLogViewModel by viewModels {
@@ -29,8 +29,8 @@ class NotificationLogActivity : AppCompatActivity(), CopyInviteCodeListener, Sha
         ActivityNotificationLogBinding.inflate(layoutInflater)
     }
 
-    private val adapter: NotificationLogListAdapter by lazy {
-        NotificationLogListAdapter(
+    private val adapter: NotificationLogsAdapter by lazy {
+        NotificationLogsAdapter(
             this,
         )
     }
