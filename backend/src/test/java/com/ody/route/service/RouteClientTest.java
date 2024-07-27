@@ -1,10 +1,12 @@
 package com.ody.route.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Location;
 import com.ody.route.config.RouteConfig;
 import com.ody.route.domain.RouteTime;
@@ -68,6 +70,20 @@ class RouteClientTest {
         RouteTime routeTime = routeClient.calculateRouteTime(origin, target);
 
         assertThat(routeTime.getMinutes()).isZero();
+        mockServer.verify();
+    }
+
+    @DisplayName("잘못된 api-key 요청 시, 서버 에러가 발생한다")
+    @Test
+    void calculateRouteTimeExceptionWithInvalidApiKey() throws IOException {
+        Location origin = new Location("서울특별시 강남구 테헤란로 411", "37.505419", "127.050817");
+        Location target = new Location("서울특별시 송파구 신천동 7-20", "37.515253", "127.102895");
+
+        setMockServer(origin, target, "odsay-api-response/error500Response.json");
+
+        assertThatThrownBy(() -> routeClient.calculateRouteTime(origin, target))
+                .isInstanceOf(OdyServerErrorException.class);
+
         mockServer.verify();
     }
 
