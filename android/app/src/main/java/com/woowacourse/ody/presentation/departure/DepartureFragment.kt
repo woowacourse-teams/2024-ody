@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.startingpoint
+package com.woowacourse.ody.presentation.departure
 
 import android.os.Build
 import android.os.Bundle
@@ -21,7 +21,7 @@ import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import com.woowacourse.ody.presentation.common.observeEvent
 
-class JoinStartingPointFragment : Fragment(), AddressSearchListener {
+class DepartureFragment : Fragment(), AddressSearchListener {
     private var _binding: FragmentJoinStartingPointBinding? = null
     private val binding get() = _binding!!
 

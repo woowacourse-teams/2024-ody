@@ -21,7 +21,7 @@ import com.woowacourse.ody.presentation.destination.MeetingDestinationFragment
 import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
+import com.woowacourse.ody.presentation.departure.DepartureFragment
 import com.woowacourse.ody.presentation.time.MeetingTimeFragment
 import com.woowacourse.ody.presentation.common.observeEvent
 
@@ -39,7 +39,7 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
         )
     }
     private val joinInfoFragments: List<Fragment> by lazy {
-        listOf(JoinNickNameFragment(), JoinStartingPointFragment())
+        listOf(JoinNickNameFragment(), DepartureFragment())
     }
     private val meetingCompletionLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->

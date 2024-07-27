@@ -13,7 +13,7 @@ import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
 import com.woowacourse.ody.presentation.common.BackListener
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
+import com.woowacourse.ody.presentation.departure.DepartureFragment
 import com.woowacourse.ody.presentation.common.NextListener
 
 class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
@@ -22,7 +22,7 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
     }
     private val viewModel: MeetingInfoViewModel by viewModels<MeetingInfoViewModel>()
     private val fragments: List<Fragment> by lazy {
-        listOf(JoinNickNameFragment(), JoinStartingPointFragment())
+        listOf(JoinNickNameFragment(), DepartureFragment())
     }
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
