@@ -11,7 +11,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
 import com.woowacourse.ody.databinding.ActivityInviteCodeBinding
 import com.woowacourse.ody.presentation.joininfo.JoinInfoActivity
-import com.woowacourse.ody.presentation.common.BackListener
+import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.observeEvent
 
 class InviteCodeActivity : AppCompatActivity(), BackListener {

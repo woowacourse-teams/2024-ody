@@ -7,7 +7,7 @@
 
         <variable
             name="listener"
-            type="com.woowacourse.ody.presentation.intro.IntroListener" />
+            type="com.woowacourse.ody.presentation.intro.listener.IntroListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

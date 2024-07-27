@@ -16,6 +16,7 @@ import com.woowacourse.ody.data.remote.ody.repository.DefaultNotificationLogRepo
 import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.presentation.meetingroom.adapter.NotificationLogsAdapter
+import com.woowacourse.ody.presentation.meetingroom.listener.ShareListener
 
 class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareListener {
     private val viewModel: MeetingRoomViewModel by viewModels {

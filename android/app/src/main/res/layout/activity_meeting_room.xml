@@ -12,7 +12,7 @@
 
         <variable
             name="shareListener"
-            type="com.woowacourse.ody.presentation.meetingroom.ShareListener" />
+            type="com.woowacourse.ody.presentation.meetingroom.listener.ShareListener" />
 
         <variable
             name="copyInviteCodeListener"

@@ -11,7 +11,7 @@
 
         <variable
             name="shareListener"
-            type="com.woowacourse.ody.presentation.meetingroom.ShareListener" />
+            type="com.woowacourse.ody.presentation.meetingroom.listener.ShareListener" />
     </data>
 
     <androidx.appcompat.widget.Toolbar

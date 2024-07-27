@@ -10,7 +10,7 @@
 
         <variable
             name="backListener"
-            type="com.woowacourse.ody.presentation.common.BackListener" />
+            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

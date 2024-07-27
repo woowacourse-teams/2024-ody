@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityJoinInfoBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
-import com.woowacourse.ody.presentation.common.BackListener
+import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.departure.DepartureFragment
-import com.woowacourse.ody.presentation.common.NextListener
+import com.woowacourse.ody.presentation.common.listener.NextListener
 
 class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
     private val binding: ActivityJoinInfoBinding by lazy {
