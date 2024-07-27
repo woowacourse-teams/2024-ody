@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.date
+package com.woowacourse.ody.presentation.meeting.date
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +10,8 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingDateBinding
-import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
-import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meeting.MeetingInfoType
+import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
 import java.time.LocalDate
 
 class MeetingDateFragment : Fragment() {

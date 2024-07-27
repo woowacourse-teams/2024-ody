@@ -36,12 +36,12 @@
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
-            android:name=".presentation.completion.MeetingCompletionActivity"
+            android:name=".presentation.meeting.complete.MeetingCompletionActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
-            android:name=".presentation.meetinginfo.MeetingInfoActivity"
+            android:name=".presentation.meeting.MeetingInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />

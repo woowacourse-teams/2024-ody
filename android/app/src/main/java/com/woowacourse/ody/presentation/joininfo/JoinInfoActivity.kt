@@ -11,7 +11,7 @@ import com.woowacourse.ody.databinding.ActivityJoinInfoBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
-import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.departure.DepartureFragment
 import com.woowacourse.ody.presentation.common.listener.NextListener

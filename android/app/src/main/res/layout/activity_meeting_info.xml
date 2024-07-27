@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel" />
+            type="com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel" />
 
         <variable
             name="backListener"
@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.meetinginfo.MeetingInfoActivity">
+        tools:context=".presentation.meeting.MeetingInfoActivity">
 
         <include
             android:id="@+id/tb_meeting_info"

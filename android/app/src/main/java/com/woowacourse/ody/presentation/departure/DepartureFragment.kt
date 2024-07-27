@@ -17,8 +17,8 @@ import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.model.toGeoLocation
-import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
-import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meeting.MeetingInfoType
+import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
 import com.woowacourse.ody.presentation.common.observeEvent
 
 class DepartureFragment : Fragment(), AddressSearchListener {

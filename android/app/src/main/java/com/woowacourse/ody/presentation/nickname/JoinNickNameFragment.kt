@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.woowacourse.ody.databinding.FragmentJoinNicknameBinding
-import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
-import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meeting.MeetingInfoType
+import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
 
 class JoinNickNameFragment : Fragment() {
     private var _binding: FragmentJoinNicknameBinding? = null

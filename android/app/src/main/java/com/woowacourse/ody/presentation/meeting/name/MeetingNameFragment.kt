@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.name
+package com.woowacourse.ody.presentation.meeting.name
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.woowacourse.ody.databinding.FragmentMeetingNameBinding
-import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
-import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meeting.MeetingInfoType
+import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
 
 class MeetingNameFragment : Fragment() {
     private var _binding: FragmentMeetingNameBinding? = null

@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meetinginfo
+package com.woowacourse.ody.presentation.meeting
 
 import android.app.Activity
 import android.content.Context
@@ -15,14 +15,14 @@ import com.woowacourse.ody.databinding.ActivityMeetingInfoBinding
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
-import com.woowacourse.ody.presentation.completion.MeetingCompletionActivity
-import com.woowacourse.ody.presentation.date.MeetingDateFragment
-import com.woowacourse.ody.presentation.destination.MeetingDestinationFragment
+import com.woowacourse.ody.presentation.meeting.complete.MeetingCompletionActivity
+import com.woowacourse.ody.presentation.meeting.date.MeetingDateFragment
+import com.woowacourse.ody.presentation.meeting.destination.MeetingDestinationFragment
 import com.woowacourse.ody.presentation.intro.IntroActivity
-import com.woowacourse.ody.presentation.name.MeetingNameFragment
+import com.woowacourse.ody.presentation.meeting.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.departure.DepartureFragment
-import com.woowacourse.ody.presentation.time.MeetingTimeFragment
+import com.woowacourse.ody.presentation.meeting.time.MeetingTimeFragment
 import com.woowacourse.ody.presentation.common.observeEvent
 
 class MeetingInfoActivity : AppCompatActivity(), BackListener {

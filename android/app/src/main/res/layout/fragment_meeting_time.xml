@@ -6,7 +6,7 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel" />
+            type="com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
