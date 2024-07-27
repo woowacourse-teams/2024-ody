@@ -12,7 +12,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingInfoBinding
-import com.woowacourse.ody.presentation.adapter.InfoViewPagerAdapter
+import com.woowacourse.ody.presentation.common.BackListener
+import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
 import com.woowacourse.ody.presentation.completion.MeetingCompletionActivity
 import com.woowacourse.ody.presentation.date.MeetingDateFragment
@@ -22,7 +23,7 @@ import com.woowacourse.ody.presentation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
 import com.woowacourse.ody.presentation.time.MeetingTimeFragment
-import com.woowacourse.ody.util.observeEvent
+import com.woowacourse.ody.presentation.common.observeEvent
 
 class MeetingInfoActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityMeetingInfoBinding by lazy {
@@ -100,16 +101,16 @@ class MeetingInfoActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeMeetingInfoViewPager() {
-        val meetingInfoViewPagerAdapter: InfoViewPagerAdapter =
-            InfoViewPagerAdapter(this, meetingInfoFragments)
+        val meetingInfoViewPagerAdapter: ViewPagerAdapter =
+            ViewPagerAdapter(this, meetingInfoFragments)
 
         binding.vpMeetingInfo.adapter = meetingInfoViewPagerAdapter
         binding.wdMeetingInfo.attachTo(binding.vpMeetingInfo)
     }
 
     private fun initializeVisitorOnBodingInfoViewPager() {
-        val visitorOnBodingInfoAdapter: InfoViewPagerAdapter =
-            InfoViewPagerAdapter(this, joinInfoFragments)
+        val visitorOnBodingInfoAdapter: ViewPagerAdapter =
+            ViewPagerAdapter(this, joinInfoFragments)
 
         binding.vpJoinInfo.adapter = visitorOnBodingInfoAdapter
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)

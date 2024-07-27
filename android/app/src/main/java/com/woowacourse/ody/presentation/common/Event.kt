@@ -1,4 +1,4 @@
-package com.woowacourse.ody.util
+package com.woowacourse.ody.presentation.common
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData

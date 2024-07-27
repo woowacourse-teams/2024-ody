@@ -3,8 +3,8 @@ package com.woowacourse.ody.presentation.intro
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.woowacourse.ody.util.Event
-import com.woowacourse.ody.util.emit
+import com.woowacourse.ody.presentation.common.Event
+import com.woowacourse.ody.presentation.common.emit
 
 class IntroViewModel : ViewModel(), IntroListener {
     private val _navigateAction: MutableLiveData<Event<IntroNavigateAction>> = MutableLiveData(null)

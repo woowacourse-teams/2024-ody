@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
-import com.woowacourse.ody.util.Event
-import com.woowacourse.ody.util.emit
+import com.woowacourse.ody.presentation.common.Event
+import com.woowacourse.ody.presentation.common.emit
 import kotlinx.coroutines.launch
 
 class InviteCodeViewModel(

@@ -8,13 +8,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityJoinInfoBinding
-import com.woowacourse.ody.presentation.adapter.InfoViewPagerAdapter
+import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
-import com.woowacourse.ody.presentation.meetinginfo.BackListener
+import com.woowacourse.ody.presentation.common.BackListener
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.startingpoint.JoinStartingPointFragment
-import com.woowacourse.ody.util.NextListener
+import com.woowacourse.ody.presentation.common.NextListener
 
 class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
     private val binding: ActivityJoinInfoBinding by lazy {
@@ -48,8 +48,8 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
     }
 
     private fun initializeJoinInfoViewPager() {
-        val visitorOnBodingInfoAdapter: InfoViewPagerAdapter =
-            InfoViewPagerAdapter(this, fragments)
+        val visitorOnBodingInfoAdapter: ViewPagerAdapter =
+            ViewPagerAdapter(this, fragments)
 
         binding.vpJoinInfo.adapter = visitorOnBodingInfoAdapter
         binding.wdJoinInfo.attachTo(binding.vpJoinInfo)

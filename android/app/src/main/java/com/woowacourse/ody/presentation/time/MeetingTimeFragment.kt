@@ -12,7 +12,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingTimeBinding
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
-import com.woowacourse.ody.util.observeEvent
+import com.woowacourse.ody.presentation.common.observeEvent
 
 class MeetingTimeFragment : Fragment() {
     private var _binding: FragmentMeetingTimeBinding? = null

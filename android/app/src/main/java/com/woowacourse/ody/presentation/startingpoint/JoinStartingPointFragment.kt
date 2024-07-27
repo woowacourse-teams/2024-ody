@@ -19,7 +19,7 @@ import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.ui.toGeoLocation
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
-import com.woowacourse.ody.util.observeEvent
+import com.woowacourse.ody.presentation.common.observeEvent
 
 class JoinStartingPointFragment : Fragment(), AddressSearchListener {
     private var _binding: FragmentJoinStartingPointBinding? = null

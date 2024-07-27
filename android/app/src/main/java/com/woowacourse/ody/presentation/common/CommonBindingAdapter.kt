@@ -1,4 +1,4 @@
-package com.woowacourse.ody.util
+package com.woowacourse.ody.presentation.common
 
 import android.view.View
 import androidx.databinding.BindingAdapter

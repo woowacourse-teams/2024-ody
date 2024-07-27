@@ -11,8 +11,8 @@ import com.woowacourse.ody.data.remote.ody.entity.toMeeting
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
-import com.woowacourse.ody.util.Event
-import com.woowacourse.ody.util.emit
+import com.woowacourse.ody.presentation.common.Event
+import com.woowacourse.ody.presentation.common.emit
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber

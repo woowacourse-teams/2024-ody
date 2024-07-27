@@ -11,11 +11,11 @@
 
         <variable
             name="nextListener"
-            type="com.woowacourse.ody.util.NextListener" />
+            type="com.woowacourse.ody.presentation.common.NextListener" />
 
         <variable
             name="backListener"
-            type="com.woowacourse.ody.presentation.meetinginfo.BackListener" />
+            type="com.woowacourse.ody.presentation.common.BackListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
