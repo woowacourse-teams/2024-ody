@@ -13,7 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
 import com.woowacourse.ody.data.remote.ody.repository.DefaultNotificationLogRepository
-import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
+import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.presentation.meetingroom.adapter.NotificationLogsAdapter
 
@@ -25,8 +25,8 @@ class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareLi
         )
     }
 
-    private val binding: ActivityNotificationLogBinding by lazy {
-        ActivityNotificationLogBinding.inflate(layoutInflater)
+    private val binding: ActivityMeetingRoomBinding by lazy {
+        ActivityMeetingRoomBinding.inflate(layoutInflater)
     }
 
     private val adapter: NotificationLogsAdapter by lazy {
