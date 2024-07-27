@@ -6,6 +6,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Location;
 import com.ody.route.config.RouteConfig;
@@ -83,6 +84,20 @@ class RouteClientTest {
 
         assertThatThrownBy(() -> routeClient.calculateRouteTime(origin, target))
                 .isInstanceOf(OdyServerErrorException.class);
+
+        mockServer.verify();
+    }
+
+    @DisplayName("도착지 정류장이 없으면, 클라이언트 에러가 발생한다")
+    @Test
+    void calculateRouteTimeExceptionWithInvalidParameterValue() throws IOException {
+        Location origin = new Location("서울특별시 강남구 테헤란로 411", "37.505419", "127.050817");
+        Location target = new Location("서울특별시 송파구 신천동 7-20", "35.548756", "139.780203"); // 도쿄 국제공항
+
+        setMockServer(origin, target, "odsay-api-response/error4Response.json");
+
+        assertThatThrownBy(() -> routeClient.calculateRouteTime(origin, target))
+                .isInstanceOf(OdyBadRequestException.class);
 
         mockServer.verify();
     }
