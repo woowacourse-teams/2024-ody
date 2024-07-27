@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.notificationlog
+package com.woowacourse.ody.presentation.meetingroom
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
-import com.woowacourse.ody.presentation.notificationlog.uimodel.MeetingUiModel
-import com.woowacourse.ody.presentation.notificationlog.uimodel.NotificationLogUiModel
-import com.woowacourse.ody.presentation.notificationlog.uimodel.toMeetingUiModel
-import com.woowacourse.ody.presentation.notificationlog.uimodel.toNotificationUiModels
+import com.woowacourse.ody.presentation.meetingroom.uimodel.MeetingUiModel
+import com.woowacourse.ody.presentation.meetingroom.uimodel.NotificationLogUiModel
+import com.woowacourse.ody.presentation.meetingroom.uimodel.toMeetingUiModel
+import com.woowacourse.ody.presentation.meetingroom.uimodel.toNotificationUiModels
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class NotificationLogViewModel(
+class MeetingRoomViewModel(
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {

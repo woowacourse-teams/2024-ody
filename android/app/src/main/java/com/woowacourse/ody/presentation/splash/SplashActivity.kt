@@ -11,7 +11,7 @@ import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
 import com.woowacourse.ody.presentation.intro.IntroActivity
-import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
+import com.woowacourse.ody.presentation.meetingroom.MeetingRoomActivity
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
@@ -43,7 +43,7 @@ class SplashActivity : AppCompatActivity() {
                 if (it == null) {
                     IntroActivity.getIntent(this@SplashActivity)
                 } else {
-                    NotificationLogActivity.getIntent(this@SplashActivity, it)
+                    MeetingRoomActivity.getIntent(this@SplashActivity, it)
                 }
             startActivity(intent)
             finish()

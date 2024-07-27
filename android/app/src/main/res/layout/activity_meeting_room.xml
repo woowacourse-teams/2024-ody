@@ -8,15 +8,15 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.notificationlog.NotificationLogViewModel" />
+            type="com.woowacourse.ody.presentation.meetingroom.MeetingRoomViewModel" />
 
         <variable
             name="shareListener"
-            type="com.woowacourse.ody.presentation.notificationlog.ShareListener" />
+            type="com.woowacourse.ody.presentation.meetingroom.ShareListener" />
 
         <variable
             name="copyInviteCodeListener"
-            type="com.woowacourse.ody.presentation.notificationlog.CopyInviteCodeListener" />
+            type="com.woowacourse.ody.presentation.meetingroom.CopyInviteCodeListener" />
 
     </data>
 
@@ -27,7 +27,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".presentation.notificationlog.NotificationLogActivity">
+            tools:context=".presentation.meetingroom.MeetingRoomActivity">
 
             <include
                 android:id="@+id/tb_log"

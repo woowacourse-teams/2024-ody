@@ -1,8 +1,8 @@
-package com.woowacourse.ody.presentation.notificationlog.adapter
+package com.woowacourse.ody.presentation.meetingroom.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.ody.databinding.ItemNotificationLogBinding
-import com.woowacourse.ody.presentation.notificationlog.uimodel.NotificationLogUiModel
+import com.woowacourse.ody.presentation.meetingroom.uimodel.NotificationLogUiModel
 
 class NotificationLogViewHolder(private val binding: ItemNotificationLogBinding) :
     RecyclerView.ViewHolder(binding.root) {

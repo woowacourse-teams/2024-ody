@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.notificationlog
+package com.woowacourse.ody.presentation.meetingroom
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -15,11 +15,11 @@ import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
 import com.woowacourse.ody.data.remote.ody.repository.DefaultNotificationLogRepository
 import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
 import com.woowacourse.ody.domain.model.Meeting
-import com.woowacourse.ody.presentation.notificationlog.adapter.NotificationLogsAdapter
+import com.woowacourse.ody.presentation.meetingroom.adapter.NotificationLogsAdapter
 
-class NotificationLogActivity : AppCompatActivity(), CopyInviteCodeListener, ShareListener {
-    private val viewModel: NotificationLogViewModel by viewModels {
-        NotificationLogViewModelFactory(
+class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareListener {
+    private val viewModel: MeetingRoomViewModel by viewModels {
+        MeetingRoomViewModelFactory(
             DefaultNotificationLogRepository,
             DefaultMeetingRepository,
         )
@@ -84,6 +84,6 @@ class NotificationLogActivity : AppCompatActivity(), CopyInviteCodeListener, Sha
         fun getIntent(
             context: Context,
             meeting: Meeting?,
-        ): Intent = Intent(context, NotificationLogActivity::class.java)
+        ): Intent = Intent(context, MeetingRoomActivity::class.java)
     }
 }

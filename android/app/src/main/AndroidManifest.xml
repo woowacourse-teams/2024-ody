@@ -46,7 +46,7 @@
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
-            android:name=".presentation.notificationlog.NotificationLogActivity"
+            android:name=".presentation.meetingroom.MeetingRoomActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />

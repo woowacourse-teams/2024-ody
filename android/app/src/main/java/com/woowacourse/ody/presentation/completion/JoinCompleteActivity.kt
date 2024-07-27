@@ -11,7 +11,7 @@ import com.woowacourse.ody.data.remote.ody.entity.join.request.JoinRequest
 import com.woowacourse.ody.data.remote.ody.entity.meeting.request.MeetingRequest
 import com.woowacourse.ody.data.remote.ody.repository.DefaultJoinRepository
 import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
-import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
+import com.woowacourse.ody.presentation.meetingroom.MeetingRoomActivity
 
 class JoinCompleteActivity : AppCompatActivity() {
     private val viewModel: JoinCompleteViewModel by viewModels<JoinCompleteViewModel> {
@@ -34,7 +34,7 @@ class JoinCompleteActivity : AppCompatActivity() {
         }
 
         viewModel.navigateAction.observe(this) {
-            startActivity(NotificationLogActivity.getIntent(this@JoinCompleteActivity, viewModel.meetingResponse.value))
+            startActivity(MeetingRoomActivity.getIntent(this@JoinCompleteActivity, viewModel.meetingResponse.value))
         }
     }
 
