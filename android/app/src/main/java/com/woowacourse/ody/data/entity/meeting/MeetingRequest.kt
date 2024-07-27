@@ -1,4 +1,4 @@
-package com.woowacourse.ody.data.model.meeting
+package com.woowacourse.ody.data.entity.meeting
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

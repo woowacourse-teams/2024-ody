@@ -1,8 +1,8 @@
-package com.woowacourse.ody.data.model
+package com.woowacourse.ody.data.entity
 
-import com.woowacourse.ody.data.model.meeting.MateResponse
-import com.woowacourse.ody.data.model.meeting.MeetingResponse
-import com.woowacourse.ody.data.model.notification.NotificationLogsResponse
+import com.woowacourse.ody.data.entity.meeting.MateResponse
+import com.woowacourse.ody.data.entity.meeting.MeetingResponse
+import com.woowacourse.ody.data.entity.notification.NotificationLogsResponse
 import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.NotificationLog

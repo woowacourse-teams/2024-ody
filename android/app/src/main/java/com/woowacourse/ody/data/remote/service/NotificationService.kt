@@ -1,6 +1,6 @@
 package com.woowacourse.ody.data.remote.service
 
-import com.woowacourse.ody.data.model.notification.NotificationLogsResponse
+import com.woowacourse.ody.data.entity.notification.NotificationLogsResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 

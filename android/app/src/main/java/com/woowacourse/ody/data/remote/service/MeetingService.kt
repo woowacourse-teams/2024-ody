@@ -1,8 +1,8 @@
 package com.woowacourse.ody.data.remote.service
 
-import com.woowacourse.ody.data.model.meeting.MeetingRequest
-import com.woowacourse.ody.data.model.meeting.MeetingResponse
-import com.woowacourse.ody.data.model.meeting.MeetingsResponse
+import com.woowacourse.ody.data.entity.meeting.MeetingRequest
+import com.woowacourse.ody.data.entity.meeting.MeetingResponse
+import com.woowacourse.ody.data.entity.meeting.MeetingsResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

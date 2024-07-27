@@ -1,7 +1,7 @@
 package com.woowacourse.ody.domain.repository
 
-import com.woowacourse.ody.data.model.meeting.MeetingRequest
-import com.woowacourse.ody.data.model.meeting.MeetingResponse
+import com.woowacourse.ody.data.entity.meeting.MeetingRequest
+import com.woowacourse.ody.data.entity.meeting.MeetingResponse
 import com.woowacourse.ody.domain.model.Meeting
 
 interface MeetingRepository {

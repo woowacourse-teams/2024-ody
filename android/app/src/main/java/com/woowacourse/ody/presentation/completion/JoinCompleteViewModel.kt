@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.data.local.db.OdyDatastore
-import com.woowacourse.ody.data.model.join.JoinRequest
-import com.woowacourse.ody.data.model.meeting.MeetingRequest
-import com.woowacourse.ody.data.model.toMeeting
+import com.woowacourse.ody.data.entity.join.JoinRequest
+import com.woowacourse.ody.data.entity.meeting.MeetingRequest
+import com.woowacourse.ody.data.entity.toMeeting
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.repository.JoinRepository
 import com.woowacourse.ody.domain.repository.MeetingRepository
