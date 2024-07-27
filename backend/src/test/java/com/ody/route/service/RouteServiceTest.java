@@ -6,12 +6,10 @@ import com.ody.common.BaseServiceTest;
 import com.ody.meeting.domain.Location;
 import com.ody.route.domain.DepartureTime;
 import java.time.LocalDateTime;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Disabled
 class RouteServiceTest extends BaseServiceTest {
 
     @Autowired
