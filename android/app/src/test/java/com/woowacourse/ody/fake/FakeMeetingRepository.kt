@@ -1,4 +1,4 @@
-package com.woowacourse.ody.data.local.fake
+package com.woowacourse.ody.fake
 
 import com.woowacourse.ody.data.remote.ody.entity.meeting.request.MeetingRequest
 import com.woowacourse.ody.data.remote.ody.entity.meeting.response.MeetingResponse

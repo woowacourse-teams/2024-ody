@@ -1,4 +1,4 @@
-package com.woowacourse.ody.data.local.fake
+package com.woowacourse.ody.fake
 
 import com.woowacourse.ody.domain.model.NotificationLog
 import com.woowacourse.ody.domain.model.NotificationType
