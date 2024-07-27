@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.address.ui
+package com.woowacourse.ody.presentation.address.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

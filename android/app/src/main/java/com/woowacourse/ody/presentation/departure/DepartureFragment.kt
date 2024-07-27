@@ -15,8 +15,8 @@ import com.woowacourse.ody.databinding.FragmentDepartureBinding
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
-import com.woowacourse.ody.presentation.address.ui.GeoLocationUiModel
-import com.woowacourse.ody.presentation.address.ui.toGeoLocation
+import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
+import com.woowacourse.ody.presentation.address.model.toGeoLocation
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoType
 import com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel
 import com.woowacourse.ody.presentation.common.observeEvent

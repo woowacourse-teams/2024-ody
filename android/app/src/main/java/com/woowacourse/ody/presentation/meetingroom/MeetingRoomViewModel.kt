@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
-import com.woowacourse.ody.presentation.meetingroom.uimodel.MeetingUiModel
-import com.woowacourse.ody.presentation.meetingroom.uimodel.NotificationLogUiModel
-import com.woowacourse.ody.presentation.meetingroom.uimodel.toMeetingUiModel
-import com.woowacourse.ody.presentation.meetingroom.uimodel.toNotificationUiModels
+import com.woowacourse.ody.presentation.meetingroom.model.MeetingUiModel
+import com.woowacourse.ody.presentation.meetingroom.model.NotificationLogUiModel
+import com.woowacourse.ody.presentation.meetingroom.model.toMeetingUiModel
+import com.woowacourse.ody.presentation.meetingroom.model.toNotificationUiModels
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

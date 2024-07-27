@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meetingroom.uimodel
+package com.woowacourse.ody.presentation.meetingroom.model
 
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.NotificationLog
