@@ -49,24 +49,49 @@ class RouteClientTest {
         Location origin = new Location("서울특별시 강남구 테헤란로 411", "37.505419", "127.050817");
         Location target = new Location("서울특별시 송파구 신천동 7-20", "37.515253", "127.102895");
 
-        String expectedUri = baseUrl
-                + "?SX=" + origin.getLongitude()
-                + "&SY=" + origin.getLatitude()
-                + "&EX=" + target.getLongitude()
-                + "&EY=" + target.getLatitude()
-                + "&apiKey=" + testApiKey;
-
-        String successResponse = new String(Files.readAllBytes(
-                new ClassPathResource("odsay-api-response/successResponse.json").getFile().toPath())
-        );
-
-        mockServer.expect(requestTo(expectedUri))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withSuccess(successResponse, MediaType.APPLICATION_JSON));
+        setMockServer(origin, target, "odsay-api-response/successResponse.json");
 
         RouteTime routeTime = routeClient.calculateRouteTime(origin, target);
 
         assertThat(routeTime.getMinutes()).isEqualTo(15);
         mockServer.verify();
+    }
+
+    @DisplayName("도착지와 출발지가 700m 이내일 때, 소요시간 0분을 반환한다")
+    @Test
+    void calculateRouteTimeWithDistanceWithIn700m() throws IOException {
+        Location origin = new Location("서울특별시 강남구 테헤란로 411", "37.505419", "127.050817");
+        Location target = new Location("서울특별시 강남구 테헤란로 411", "37.505419", "127.050817");
+
+        setMockServer(origin, target, "odsay-api-response/error-98Response.json");
+
+        RouteTime routeTime = routeClient.calculateRouteTime(origin, target);
+
+        assertThat(routeTime.getMinutes()).isZero();
+        mockServer.verify();
+    }
+
+    private void setMockServer(Location origin, Location target, String responseClassPath) throws IOException {
+        String requestUri = makeUri(origin, target);
+        String response = makeResponseByPath(responseClassPath);
+
+        mockServer.expect(requestTo(requestUri))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withSuccess(response, MediaType.APPLICATION_JSON));
+    }
+
+    private String makeUri(Location origin, Location target) {
+        return baseUrl
+                + "?SX=" + origin.getLongitude()
+                + "&SY=" + origin.getLatitude()
+                + "&EX=" + target.getLongitude()
+                + "&EY=" + target.getLatitude()
+                + "&apiKey=" + testApiKey;
+    }
+
+    private static String makeResponseByPath(String path) throws IOException {
+        return new String(Files.readAllBytes(
+                new ClassPathResource(path).getFile().toPath())
+        );
     }
 }
