@@ -1,6 +1,6 @@
 package com.woowacourse.ody.data.remote.repository
 
-import com.woowacourse.ody.data.entity.toNotificationList
+import com.woowacourse.ody.data.remote.entity.toNotificationList
 import com.woowacourse.ody.data.remote.RetrofitClient
 import com.woowacourse.ody.data.remote.service.NotificationService
 import com.woowacourse.ody.domain.model.NotificationLog

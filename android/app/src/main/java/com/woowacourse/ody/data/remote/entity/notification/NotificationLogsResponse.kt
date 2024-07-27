@@ -1,4 +1,4 @@
-package com.woowacourse.ody.data.entity.notification
+package com.woowacourse.ody.data.remote.entity.notification
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

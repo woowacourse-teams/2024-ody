@@ -1,4 +1,4 @@
-package com.woowacourse.ody.data.entity.join
+package com.woowacourse.ody.data.remote.entity.join
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
