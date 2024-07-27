@@ -1,9 +1,9 @@
 package com.woowacourse.ody.data.remote.ody.repository
 
+import com.woowacourse.ody.data.remote.RetrofitClient
 import com.woowacourse.ody.data.remote.ody.entity.meeting.request.MeetingRequest
 import com.woowacourse.ody.data.remote.ody.entity.meeting.response.MeetingResponse
 import com.woowacourse.ody.data.remote.ody.entity.toMeeting
-import com.woowacourse.ody.data.remote.RetrofitClient
 import com.woowacourse.ody.data.remote.ody.service.MeetingService
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository

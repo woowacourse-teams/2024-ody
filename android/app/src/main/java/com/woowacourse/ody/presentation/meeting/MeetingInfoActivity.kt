@@ -12,18 +12,18 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingInfoBinding
-import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
+import com.woowacourse.ody.presentation.common.listener.BackListener
+import com.woowacourse.ody.presentation.common.observeEvent
+import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
+import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
+import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.meeting.complete.MeetingCompletionActivity
 import com.woowacourse.ody.presentation.meeting.date.MeetingDateFragment
 import com.woowacourse.ody.presentation.meeting.destination.MeetingDestinationFragment
-import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.meeting.name.MeetingNameFragment
-import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.meeting.time.MeetingTimeFragment
-import com.woowacourse.ody.presentation.common.observeEvent
 
 class MeetingInfoActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityMeetingInfoBinding by lazy {

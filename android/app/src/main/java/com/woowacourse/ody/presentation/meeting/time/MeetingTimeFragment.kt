@@ -10,9 +10,9 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingTimeBinding
+import com.woowacourse.ody.presentation.common.observeEvent
 import com.woowacourse.ody.presentation.meeting.MeetingInfoType
 import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
-import com.woowacourse.ody.presentation.common.observeEvent
 
 class MeetingTimeFragment : Fragment() {
     private var _binding: FragmentMeetingTimeBinding? = null

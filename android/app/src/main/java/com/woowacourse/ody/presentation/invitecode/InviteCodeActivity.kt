@@ -10,9 +10,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
 import com.woowacourse.ody.databinding.ActivityInviteCodeBinding
-import com.woowacourse.ody.presentation.join.JoinActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.observeEvent
+import com.woowacourse.ody.presentation.join.JoinActivity
 
 class InviteCodeActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityInviteCodeBinding by lazy {

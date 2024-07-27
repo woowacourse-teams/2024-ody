@@ -17,9 +17,9 @@ import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.model.toGeoLocation
+import com.woowacourse.ody.presentation.common.observeEvent
 import com.woowacourse.ody.presentation.meeting.MeetingInfoType
 import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
-import com.woowacourse.ody.presentation.common.observeEvent
 
 class JoinDepartureFragment : Fragment(), AddressSearchListener {
     private var _binding: FragmentJoinDepartureBinding? = null
