@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.nickname
+package com.woowacourse.ody.presentation.join.nickname
 
 import android.os.Bundle
 import android.view.LayoutInflater

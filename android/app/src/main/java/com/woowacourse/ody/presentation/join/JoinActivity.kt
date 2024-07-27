@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.joininfo
+package com.woowacourse.ody.presentation.join
 
 import android.content.Context
 import android.content.Intent
@@ -7,18 +7,18 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.woowacourse.ody.databinding.ActivityJoinInfoBinding
+import com.woowacourse.ody.databinding.ActivityJoinBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
-import com.woowacourse.ody.presentation.completion.JoinCompleteActivity
+import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
-import com.woowacourse.ody.presentation.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.departure.DepartureFragment
+import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
+import com.woowacourse.ody.presentation.join.departure.DepartureFragment
 import com.woowacourse.ody.presentation.common.listener.NextListener
 
-class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
-    private val binding: ActivityJoinInfoBinding by lazy {
-        ActivityJoinInfoBinding.inflate(layoutInflater)
+class JoinActivity : AppCompatActivity(), NextListener, BackListener {
+    private val binding: ActivityJoinBinding by lazy {
+        ActivityJoinBinding.inflate(layoutInflater)
     }
     private val viewModel: MeetingInfoViewModel by viewModels<MeetingInfoViewModel>()
     private val fragments: List<Fragment> by lazy {
@@ -94,7 +94,7 @@ class JoinInfoActivity : AppCompatActivity(), NextListener, BackListener {
             inviteCode: String,
             context: Context,
         ): Intent {
-            return Intent(context, JoinInfoActivity::class.java).apply {
+            return Intent(context, JoinActivity::class.java).apply {
                 putExtra(INVITE_CODE_KEY, inviteCode)
             }
         }

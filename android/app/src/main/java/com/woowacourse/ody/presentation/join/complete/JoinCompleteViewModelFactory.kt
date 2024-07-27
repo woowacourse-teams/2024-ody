@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.completion
+package com.woowacourse.ody.presentation.join.complete
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

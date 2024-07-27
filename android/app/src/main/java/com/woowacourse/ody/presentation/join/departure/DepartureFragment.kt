@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.departure
+package com.woowacourse.ody.presentation.join.departure
 
 import android.os.Build
 import android.os.Bundle
