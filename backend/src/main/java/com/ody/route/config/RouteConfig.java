@@ -21,7 +21,7 @@ public class RouteConfig {
 
     @Bean
     public RouteClient routeClient(RestClient.Builder routeRestClientBuilder) {
-        routeRestClientCustomizer().customize(routeRestClientBuilder);
+//        routeRestClientCustomizer().customize(routeRestClientBuilder);
         return new RouteClient(routeProperties, routeRestClientBuilder);
     }
 
