@@ -25,9 +25,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 
-@RestClientTest(RouteClient.class)
+@RestClientTest(OdsayRouteClient.class)
 @Import(RouteConfig.class)
-class RouteClientTest {
+class OdsayRouteClientTest {
 
     @Autowired
     private MockRestServiceServer mockServer;
