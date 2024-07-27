@@ -1,4 +1,4 @@
-package com.woowacourse.ody.domain.repository
+package com.woowacourse.ody.domain.repository.ody
 
 import com.woowacourse.ody.domain.model.NotificationLog
 

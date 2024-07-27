@@ -1,4 +1,4 @@
-package com.woowacourse.ody.domain.repository
+package com.woowacourse.ody.domain.repository.ody
 
 import com.woowacourse.ody.data.remote.ody.entity.meeting.request.MeetingRequest
 import com.woowacourse.ody.data.remote.ody.entity.meeting.response.MeetingResponse

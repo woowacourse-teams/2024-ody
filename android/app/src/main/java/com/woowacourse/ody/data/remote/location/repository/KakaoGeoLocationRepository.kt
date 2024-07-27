@@ -4,7 +4,7 @@ import com.woowacourse.ody.data.remote.location.KakaoRetrofitClient
 import com.woowacourse.ody.data.remote.location.entity.response.toGeoLocation
 import com.woowacourse.ody.data.remote.location.service.KakaoLocationService
 import com.woowacourse.ody.domain.model.GeoLocation
-import com.woowacourse.ody.domain.repository.GeoLocationRepository
+import com.woowacourse.ody.domain.repository.location.GeoLocationRepository
 
 object KakaoGeoLocationRepository : GeoLocationRepository {
     private val service = KakaoRetrofitClient.retrofit.create(KakaoLocationService::class.java)

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.model.GeoLocation
-import com.woowacourse.ody.domain.repository.GeoLocationRepository
+import com.woowacourse.ody.domain.repository.location.GeoLocationRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

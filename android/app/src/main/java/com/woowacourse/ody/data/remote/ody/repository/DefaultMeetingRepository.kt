@@ -6,7 +6,7 @@ import com.woowacourse.ody.data.remote.ody.entity.toMeeting
 import com.woowacourse.ody.data.remote.RetrofitClient
 import com.woowacourse.ody.data.remote.ody.service.MeetingService
 import com.woowacourse.ody.domain.model.Meeting
-import com.woowacourse.ody.domain.repository.MeetingRepository
+import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 
 object DefaultMeetingRepository : MeetingRepository {
     private val service = RetrofitClient.retrofit.create(MeetingService::class.java)

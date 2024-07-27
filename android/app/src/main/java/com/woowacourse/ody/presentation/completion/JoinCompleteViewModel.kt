@@ -9,8 +9,8 @@ import com.woowacourse.ody.data.remote.ody.entity.join.request.JoinRequest
 import com.woowacourse.ody.data.remote.ody.entity.meeting.request.MeetingRequest
 import com.woowacourse.ody.data.remote.ody.entity.toMeeting
 import com.woowacourse.ody.domain.model.Meeting
-import com.woowacourse.ody.domain.repository.JoinRepository
-import com.woowacourse.ody.domain.repository.MeetingRepository
+import com.woowacourse.ody.domain.repository.ody.JoinRepository
+import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.util.Event
 import com.woowacourse.ody.util.emit
 import kotlinx.coroutines.delay

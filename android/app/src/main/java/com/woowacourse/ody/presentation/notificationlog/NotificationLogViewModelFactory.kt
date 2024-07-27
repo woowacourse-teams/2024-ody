@@ -2,8 +2,8 @@ package com.woowacourse.ody.presentation.notificationlog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.woowacourse.ody.domain.repository.MeetingRepository
-import com.woowacourse.ody.domain.repository.NotificationLogRepository
+import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 
 class NotificationLogViewModelFactory(
     private val notificationLogRepository: NotificationLogRepository,

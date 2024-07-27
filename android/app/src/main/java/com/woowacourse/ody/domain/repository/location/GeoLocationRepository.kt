@@ -1,4 +1,4 @@
-package com.woowacourse.ody.domain.repository
+package com.woowacourse.ody.domain.repository.location
 
 import com.woowacourse.ody.domain.model.GeoLocation
 

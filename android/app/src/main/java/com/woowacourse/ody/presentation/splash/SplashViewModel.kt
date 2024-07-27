@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.model.Meeting
-import com.woowacourse.ody.domain.repository.MeetingRepository
+import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
