@@ -1,7 +1,7 @@
 package com.woowacourse.ody.domain.repository
 
-import com.woowacourse.ody.data.remote.entity.join.JoinRequest
-import com.woowacourse.ody.data.remote.entity.meeting.MeetingResponse
+import com.woowacourse.ody.data.remote.ody.entity.join.request.JoinRequest
+import com.woowacourse.ody.data.remote.ody.entity.meeting.response.MeetingResponse
 
 interface JoinRepository {
     suspend fun postMates(joinRequest: JoinRequest): Result<MeetingResponse>

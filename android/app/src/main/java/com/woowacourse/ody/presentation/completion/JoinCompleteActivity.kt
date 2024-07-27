@@ -7,10 +7,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.remote.entity.join.JoinRequest
-import com.woowacourse.ody.data.remote.entity.meeting.MeetingRequest
-import com.woowacourse.ody.data.remote.repository.DefaultJoinRepository
-import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
+import com.woowacourse.ody.data.remote.ody.entity.join.request.JoinRequest
+import com.woowacourse.ody.data.remote.ody.entity.meeting.request.MeetingRequest
+import com.woowacourse.ody.data.remote.ody.repository.DefaultJoinRepository
+import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
 import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
 
 class JoinCompleteActivity : AppCompatActivity() {

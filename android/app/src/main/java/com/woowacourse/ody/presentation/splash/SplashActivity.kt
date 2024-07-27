@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
+import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
 import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.notificationlog.NotificationLogActivity
 import kotlinx.coroutines.launch

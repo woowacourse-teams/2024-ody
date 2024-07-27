@@ -1,7 +1,7 @@
 package com.woowacourse.ody.data.local.fake
 
-import com.woowacourse.ody.data.remote.entity.meeting.MeetingRequest
-import com.woowacourse.ody.data.remote.entity.meeting.MeetingResponse
+import com.woowacourse.ody.data.remote.ody.entity.meeting.request.MeetingRequest
+import com.woowacourse.ody.data.remote.ody.entity.meeting.response.MeetingResponse
 import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.repository.MeetingRepository

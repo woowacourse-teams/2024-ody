@@ -1,6 +1,6 @@
 package com.woowacourse.ody.data.remote.location.service
 
-import com.woowacourse.ody.data.remote.location.response.LocationSearchResponse
+import com.woowacourse.ody.data.remote.location.entity.response.LocationSearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

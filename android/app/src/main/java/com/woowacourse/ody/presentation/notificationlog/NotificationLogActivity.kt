@@ -11,8 +11,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
-import com.woowacourse.ody.data.remote.repository.DefaultNotificationLogRepository
+import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
+import com.woowacourse.ody.data.remote.ody.repository.DefaultNotificationLogRepository
 import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.presentation.notificationlog.adapter.NotificationLogListAdapter

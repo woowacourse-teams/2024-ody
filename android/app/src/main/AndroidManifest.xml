@@ -68,7 +68,7 @@
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
         <service
-            android:name=".data.remote.FCMService"
+            android:name=".data.remote.fcm.service.FCMService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
