@@ -11,7 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
-import com.woowacourse.ody.databinding.FragmentDepartureBinding
+import com.woowacourse.ody.databinding.FragmentJoinDepartureBinding
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
@@ -21,8 +21,8 @@ import com.woowacourse.ody.presentation.meeting.MeetingInfoType
 import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
 import com.woowacourse.ody.presentation.common.observeEvent
 
-class DepartureFragment : Fragment(), AddressSearchListener {
-    private var _binding: FragmentDepartureBinding? = null
+class JoinDepartureFragment : Fragment(), AddressSearchListener {
+    private var _binding: FragmentJoinDepartureBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: MeetingInfoViewModel by activityViewModels<MeetingInfoViewModel>()
@@ -32,7 +32,7 @@ class DepartureFragment : Fragment(), AddressSearchListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentDepartureBinding.inflate(inflater, container, false)
+        _binding = FragmentJoinDepartureBinding.inflate(inflater, container, false)
         return binding.root
     }
 
