@@ -120,7 +120,7 @@ class RouteClientTest {
                 + "&apiKey=" + testApiKey;
     }
 
-    private static String makeResponseByPath(String path) throws IOException {
+    private String makeResponseByPath(String path) throws IOException {
         return new String(Files.readAllBytes(
                 new ClassPathResource(path).getFile().toPath())
         );
