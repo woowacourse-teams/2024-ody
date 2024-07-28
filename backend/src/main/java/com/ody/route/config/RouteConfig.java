@@ -24,7 +24,6 @@ public class RouteConfig {
     @Bean
     @Profile("!test")
     public RouteClient routeClient(RestClient.Builder routeRestClientBuilder) {
-//        routeRestClientCustomizer().customize(routeRestClientBuilder);
         return new OdsayRouteClient(routeProperties, routeRestClientBuilder);
     }
 

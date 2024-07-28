@@ -36,15 +36,14 @@ public class OdsayRouteClient implements RouteClient {
     }
 
     private URI makeURI(Location origin, Location target) {
-        StringBuilder uri = new StringBuilder();
-        uri.append(routeProperties.getUrl())
-                .append("?SX=").append(origin.getLongitude())
-                .append("&SY=").append(origin.getLatitude())
-                .append("&EX=").append(target.getLongitude())
-                .append("&EY=").append(target.getLatitude())
-                .append("&apiKey=").append(routeProperties.getApiKey());
+        String uri = routeProperties.getUrl()
+                + "?SX=" + origin.getLongitude()
+                + "&SY=" + origin.getLatitude()
+                + "&EX=" + target.getLongitude()
+                + "&EY=" + target.getLatitude()
+                + "&apiKey=" + routeProperties.getApiKey();
         try {
-            return new URI(uri.toString());
+            return new URI(uri);
         } catch (URISyntaxException exception) {
             throw new OdyServerErrorException(exception.getMessage());
         }
