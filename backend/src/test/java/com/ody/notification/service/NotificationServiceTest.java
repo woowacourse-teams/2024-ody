@@ -21,11 +21,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 class NotificationServiceTest extends BaseServiceTest {
 
-    @SpyBean
+    @Autowired
     private NotificationService notificationService;
 
     @MockBean
