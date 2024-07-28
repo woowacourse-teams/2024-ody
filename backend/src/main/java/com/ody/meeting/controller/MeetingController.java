@@ -76,7 +76,7 @@ public class MeetingController implements MeetingControllerSwagger {
                 meetingSaveRequest.originLatitude(),
                 meetingSaveRequest.originLongitude()
         );
-        Mate mate = mateService.save(mateSaveRequest.toMate(meeting, member), meeting);
+        Mate mate = mateService.save(mateSaveRequest.toMate(meeting, member));
         notificationService.saveAndSendDepartureReminder(meeting, mate, member.getDeviceToken());
 
         List<Mate> mates = mateService.findAllByMeetingId(meeting.getId());
