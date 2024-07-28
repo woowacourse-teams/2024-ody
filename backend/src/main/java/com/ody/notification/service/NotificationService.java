@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NotificationService {
 
     private final ApplicationEventPublisher publisher;
@@ -31,13 +31,11 @@ public class NotificationService {
     private final RouteService routeService;
 
     @Transactional
-    public void saveAndSendDepartureReminder(Meeting meeting, Mate mate, DeviceToken deviceToken) {
+    public void saveEntryAndDepartureNotification(Meeting meeting, Mate mate, DeviceToken deviceToken) {
         saveAndSendEntryNotification(meeting, mate);
         fcmSubscriber.subscribeTopic(meeting, deviceToken);
         saveAndSendDepartureNotification(meeting, mate);
     }
-
-    ;
 
     private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
         Notification entryNotification = new Notification(

@@ -35,7 +35,8 @@ public class MateController implements MateControllerSwagger {
         Meeting meeting = meetingService.findById(InviteCodeGenerator.decode(mateSaveRequest.inviteCode()));
         Mate mate = mateSaveRequest.toMate(meeting, member);
         mateService.save(mate);
-        notificationService.saveAndSendDepartureReminder(mate.getMeeting(), mate, mate.getMember().getDeviceToken());
+        notificationService.saveEntryAndDepartureNotification(mate.getMeeting(), mate,
+                mate.getMember().getDeviceToken());
         List<Mate> mates = mateService.findAllByMeetingId(meeting.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(MeetingSaveResponse.of(meeting, mates));
     }
