@@ -8,6 +8,7 @@ import com.ody.route.domain.RouteTime;
 import com.ody.route.dto.OdsayResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClient;
@@ -28,11 +29,16 @@ public class OdsayRouteClient implements RouteClient {
 
     @Override
     public RouteTime calculateRouteTime(Location origin, Location target) {
+        OdsayResponse response = getOdsayResponse(origin, target);
+        return responseToRouteTime(response);
+    }
+
+    private OdsayResponse getOdsayResponse(Location origin, Location target) {
         OdsayResponse response = restClient.get()
                 .uri(makeURI(origin, target))
                 .retrieve()
                 .body(OdsayResponse.class);
-        return responseToRouteTime(response); //TODO : NPE 가능성 체크
+        return Objects.requireNonNullElseGet(response, () -> {throw new OdyServerErrorException("서버 에러");});
     }
 
     private URI makeURI(Location origin, Location target) {
