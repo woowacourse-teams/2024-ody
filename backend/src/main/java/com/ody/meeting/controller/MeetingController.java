@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MeetingController implements MeetingControllerSwagger {
 
+    private static final String DEFAULT_INVITE_CODE = "초대코드";
+
     private final MeetingService meetingService;
     private final MateService mateService;
     private final NotificationService notificationService;
@@ -65,7 +67,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @Valid @RequestBody MeetingSaveRequest meetingSaveRequest
     ) {
-        Meeting meeting = meetingService.save(meetingSaveRequest);
+        Meeting meeting = meetingService.save(meetingSaveRequest.toMeeting(DEFAULT_INVITE_CODE));
 
         MateSaveRequest mateSaveRequest = new MateSaveRequest(
                 meeting.getInviteCode(),
@@ -74,23 +76,18 @@ public class MeetingController implements MeetingControllerSwagger {
                 meetingSaveRequest.originLatitude(),
                 meetingSaveRequest.originLongitude()
         );
-        Mate mate = mateService.save(mateSaveRequest, meeting, member);
+        Mate mate = mateService.save(mateSaveRequest.toMate(meeting, member), meeting);
         notificationService.saveAndSendDepartureReminder(meeting, mate, member.getDeviceToken());
 
         List<Mate> mates = mateService.findAllByMeetingId(meeting.getId());
         MeetingSaveResponse meetingSaveResponse = MeetingSaveResponse.of(meeting, mates);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(meetingSaveResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(meetingSaveResponse);
     }
 
     @Override
     @GetMapping("/invite-codes/{inviteCode}/validate")
-    public ResponseEntity<Void> validateInviteCode(
-            @AuthMember Member member,
-            @PathVariable String inviteCode
-    ) {
+    public ResponseEntity<Void> validateInviteCode(@AuthMember Member member, @PathVariable String inviteCode) {
         meetingService.validateInvitedCode(inviteCode);
-        return ResponseEntity.ok()
-                .build();
+        return ResponseEntity.ok().build();
     }
 }

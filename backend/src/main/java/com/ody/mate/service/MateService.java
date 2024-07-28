@@ -19,15 +19,14 @@ public class MateService {
     private final MateRepository mateRepository;
 
     @Transactional
-    public Mate save(MateSaveRequest mateSaveRequest, Meeting meeting, Member member) {
-        if (mateRepository.existsByMeetingIdAndNicknameNickname(meeting.getId(), mateSaveRequest.nickname())) {
+    public Mate save(Mate mate, Meeting meeting) {
+        if (mateRepository.existsByMeetingIdAndNicknameNickname(meeting.getId(), mate.getNickname().getNickname())) {
             throw new OdyBadRequestException("모임 내 같은 닉네임이 존재합니다.");
         }
-
-        if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
+        if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), mate.getMember().getId())) {
             throw new OdyBadRequestException("모임에 이미 참여한 회원입니다.");
         }
-        return mateRepository.save(mateSaveRequest.toMate(meeting, member));
+        return mateRepository.save(mate);
     }
 
     public List<Mate> findAllByMeetingId(Long meetingId) {

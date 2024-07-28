@@ -16,16 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MeetingService {
 
-    private static final String DEFAULT_INVITE_CODE = "초대코드";
-
     private final MeetingRepository meetingRepository;
 
     @Transactional
-    public Meeting save(MeetingSaveRequest meetingSaveRequest) {
-        Meeting meeting = meetingRepository.save(meetingSaveRequest.toMeeting(DEFAULT_INVITE_CODE));
+    public Meeting save(Meeting meeting) {
+        Meeting savedMeeting = meetingRepository.save(meeting);
         String encodedInviteCode = InviteCodeGenerator.encode(meeting.getId());
         meeting.updateInviteCode(encodedInviteCode);
-        return meeting;
+        return savedMeeting;
     }
 
     public Meeting findById(Long meetingId) {
