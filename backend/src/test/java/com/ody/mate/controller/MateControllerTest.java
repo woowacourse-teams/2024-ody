@@ -1,16 +1,14 @@
 package com.ody.mate.controller;
 
 import com.ody.common.BaseControllerTest;
+import com.ody.common.Fixture;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.service.MemberService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,19 +31,7 @@ class MateControllerTest extends BaseControllerTest {
         String deviceToken = "Bearer device-token=testToken";
         memberService.save(new DeviceToken(deviceToken));
 
-        MeetingSaveRequest meetingRequest = new MeetingSaveRequest(
-                "우테코 16조",
-                LocalDate.parse("2024-07-15"),
-                LocalTime.parse("14:00"),
-                "서울 송파구 올림픽로35다길 42",
-                "37.515298",
-                "127.103113",
-                "오디",
-                "서울 강남구 테헤란로 411",
-                "37.505713",
-                "127.050691"
-        );
-        Meeting meeting = meetingService.save(meetingRequest);
+        Meeting meeting = meetingService.save(Fixture.ODY_MEETING1);
 
         MateSaveRequest mateSaveRequest = new MateSaveRequest(
                 meeting.getInviteCode(),
