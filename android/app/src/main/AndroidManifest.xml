@@ -26,22 +26,22 @@
             android:windowSoftInputMode="adjustResize"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
-            android:name=".presentation.join.JoinActivity"
+            android:name=".presentation.meetingjoin.MeetingJoinActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
-            android:name=".presentation.join.complete.JoinCompleteActivity"
+            android:name=".presentation.meetingjoin.complete.JoinCompleteActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
-            android:name=".presentation.meeting.complete.MeetingCompletionActivity"
+            android:name=".presentation.meetingcreation.complete.MeetingCompletionActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
-            android:name=".presentation.meeting.MeetingInfoActivity"
+            android:name=".presentation.meetingcreation.MeetingCreationActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />

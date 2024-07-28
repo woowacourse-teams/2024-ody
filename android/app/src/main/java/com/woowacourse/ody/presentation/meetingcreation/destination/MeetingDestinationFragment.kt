@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.join.departure
+package com.woowacourse.ody.presentation.meetingcreation.destination
 
 import android.os.Build
 import android.os.Bundle
@@ -11,28 +11,28 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
-import com.woowacourse.ody.databinding.FragmentJoinDepartureBinding
+import com.woowacourse.ody.databinding.FragmentMeetingDestinationBinding
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.model.toGeoLocation
-import com.woowacourse.ody.presentation.common.observeEvent
-import com.woowacourse.ody.presentation.meeting.MeetingInfoType
-import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingCreationViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingInfoType
 
-class JoinDepartureFragment : Fragment(), AddressSearchListener {
-    private var _binding: FragmentJoinDepartureBinding? = null
+class MeetingDestinationFragment : Fragment(), AddressSearchListener {
+    private var _binding: FragmentMeetingDestinationBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MeetingInfoViewModel by activityViewModels<MeetingInfoViewModel>()
+    private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentJoinDepartureBinding.inflate(inflater, container, false)
+        _binding = FragmentMeetingDestinationBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -53,7 +53,7 @@ class JoinDepartureFragment : Fragment(), AddressSearchListener {
     }
 
     private fun initializeObserve() {
-        viewModel.invalidStartingPointEvent.observeEvent(viewLifecycleOwner) {
+        viewModel.invalidDestinationEvent.observe(viewLifecycleOwner) {
             showSnackBar(R.string.invalid_address)
         }
     }
@@ -61,15 +61,18 @@ class JoinDepartureFragment : Fragment(), AddressSearchListener {
     private fun initializeView() {
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
-            binding.etStartingPoint.setText(geoLocation.address)
-            viewModel.startingPointGeoLocation.value = geoLocation
+            binding.etDestination.setText(geoLocation.address)
+            viewModel.destinationGeoLocation.value = geoLocation
         }
     }
 
     private fun Bundle.getGeoLocation(): GeoLocation? {
         val geoLocationUiModel =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                getParcelable(AddressSearchDialog.GEO_LOCATION_UI_MODEL_KEY, GeoLocationUiModel::class.java)
+                getParcelable(
+                    AddressSearchDialog.GEO_LOCATION_UI_MODEL_KEY,
+                    GeoLocationUiModel::class.java,
+                )
             } else {
                 getParcelable<GeoLocationUiModel>(AddressSearchDialog.GEO_LOCATION_UI_MODEL_KEY)
             }
@@ -80,15 +83,13 @@ class JoinDepartureFragment : Fragment(), AddressSearchListener {
 
     private fun showSnackBar(
         @StringRes messageId: Int,
-    ) {
-        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
-            .apply { setAnchorView(activity?.findViewById(R.id.btn_next)) }
-            .show()
-    }
+    ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
+        .apply { setAnchorView(activity?.findViewById(R.id.btn_next)) }
+        .show()
 
     override fun onResume() {
         super.onResume()
-        viewModel.meetingInfoType.value = MeetingInfoType.STARTING_POINT
+        viewModel.meetingInfoType.value = MeetingInfoType.DESTINATION
     }
 
     override fun onDestroyView() {

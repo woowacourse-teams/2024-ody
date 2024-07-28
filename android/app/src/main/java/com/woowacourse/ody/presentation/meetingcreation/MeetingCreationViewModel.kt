@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meeting
+package com.woowacourse.ody.presentation.meetingcreation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -12,7 +12,7 @@ import com.woowacourse.ody.presentation.common.emit
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class MeetingInfoViewModel : ViewModel() {
+class MeetingCreationViewModel : ViewModel() {
     val meetingInfoType: MutableLiveData<MeetingInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 

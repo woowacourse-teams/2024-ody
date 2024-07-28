@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meeting.time
+package com.woowacourse.ody.presentation.meetingcreation.time
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,14 +11,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingTimeBinding
 import com.woowacourse.ody.presentation.common.observeEvent
-import com.woowacourse.ody.presentation.meeting.MeetingInfoType
-import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingCreationViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingInfoType
 
 class MeetingTimeFragment : Fragment() {
     private var _binding: FragmentMeetingTimeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MeetingInfoViewModel by activityViewModels<MeetingInfoViewModel>()
+    private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

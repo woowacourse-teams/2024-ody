@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meeting.name
+package com.woowacourse.ody.presentation.meetingcreation.name
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.woowacourse.ody.databinding.FragmentMeetingNameBinding
-import com.woowacourse.ody.presentation.meeting.MeetingInfoType
-import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingCreationViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingInfoType
 
 class MeetingNameFragment : Fragment() {
     private var _binding: FragmentMeetingNameBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MeetingInfoViewModel by activityViewModels<MeetingInfoViewModel>()
+    private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

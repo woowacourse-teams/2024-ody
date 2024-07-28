@@ -16,7 +16,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityIntroBinding
 import com.woowacourse.ody.presentation.common.observeEvent
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
-import com.woowacourse.ody.presentation.meeting.MeetingInfoActivity
+import com.woowacourse.ody.presentation.meetingcreation.MeetingCreationActivity
 
 class IntroActivity : AppCompatActivity() {
     private val vm: IntroViewModel by viewModels()
@@ -57,7 +57,7 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun navigateToMeetingInfoActivity() {
-        startActivity(MeetingInfoActivity.getIntent(this))
+        startActivity(MeetingCreationActivity.getIntent(this))
     }
 
     private fun navigateToInviteCodeActivity() {

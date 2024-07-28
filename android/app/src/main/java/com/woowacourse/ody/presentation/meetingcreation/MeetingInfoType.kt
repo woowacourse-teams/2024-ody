@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meeting
+package com.woowacourse.ody.presentation.meetingcreation
 
 enum class MeetingInfoType {
     NAME,

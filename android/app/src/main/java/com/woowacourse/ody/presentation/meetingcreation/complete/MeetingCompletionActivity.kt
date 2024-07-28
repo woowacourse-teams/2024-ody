@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meeting.complete
+package com.woowacourse.ody.presentation.meetingcreation.complete
 
 import android.content.Context
 import android.content.Intent

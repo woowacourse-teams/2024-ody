@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meeting.time.adapter
+package com.woowacourse.ody.presentation.meetingcreation.time.adapter
 
 import android.widget.NumberPicker
 import androidx.databinding.BindingAdapter

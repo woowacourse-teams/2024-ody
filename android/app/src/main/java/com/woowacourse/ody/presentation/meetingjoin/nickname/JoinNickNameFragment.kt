@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.join.nickname
+package com.woowacourse.ody.presentation.meetingjoin.nickname
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.woowacourse.ody.databinding.FragmentJoinNicknameBinding
-import com.woowacourse.ody.presentation.meeting.MeetingInfoType
-import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingCreationViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingInfoType
 
 class JoinNickNameFragment : Fragment() {
     private var _binding: FragmentJoinNicknameBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MeetingInfoViewModel by activityViewModels<MeetingInfoViewModel>()
+    private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

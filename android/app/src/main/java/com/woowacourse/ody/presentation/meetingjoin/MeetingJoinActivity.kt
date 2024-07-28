@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.join
+package com.woowacourse.ody.presentation.meetingjoin
 
 import android.content.Context
 import android.content.Intent
@@ -7,20 +7,20 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.woowacourse.ody.databinding.ActivityJoinBinding
+import com.woowacourse.ody.databinding.ActivityMeetingJoinBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.listener.NextListener
-import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
-import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
-import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingCreationViewModel
+import com.woowacourse.ody.presentation.meetingjoin.complete.JoinCompleteActivity
+import com.woowacourse.ody.presentation.meetingjoin.departure.JoinDepartureFragment
+import com.woowacourse.ody.presentation.meetingjoin.nickname.JoinNickNameFragment
 
-class JoinActivity : AppCompatActivity(), NextListener, BackListener {
-    private val binding: ActivityJoinBinding by lazy {
-        ActivityJoinBinding.inflate(layoutInflater)
+class MeetingJoinActivity : AppCompatActivity(), NextListener, BackListener {
+    private val binding: ActivityMeetingJoinBinding by lazy {
+        ActivityMeetingJoinBinding.inflate(layoutInflater)
     }
-    private val viewModel: MeetingInfoViewModel by viewModels<MeetingInfoViewModel>()
+    private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel>()
     private val fragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinDepartureFragment())
     }
@@ -94,7 +94,7 @@ class JoinActivity : AppCompatActivity(), NextListener, BackListener {
             inviteCode: String,
             context: Context,
         ): Intent {
-            return Intent(context, JoinActivity::class.java).apply {
+            return Intent(context, MeetingJoinActivity::class.java).apply {
                 putExtra(INVITE_CODE_KEY, inviteCode)
             }
         }

@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meeting.date
+package com.woowacourse.ody.presentation.meetingcreation.date
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,15 +10,15 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingDateBinding
-import com.woowacourse.ody.presentation.meeting.MeetingInfoType
-import com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingCreationViewModel
+import com.woowacourse.ody.presentation.meetingcreation.MeetingInfoType
 import java.time.LocalDate
 
 class MeetingDateFragment : Fragment() {
     private var _binding: FragmentMeetingDateBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MeetingInfoViewModel by activityViewModels<MeetingInfoViewModel>()
+    private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

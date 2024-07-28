@@ -6,7 +6,7 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.meeting.MeetingInfoViewModel" />
+            type="com.woowacourse.ody.presentation.meetingcreation.MeetingCreationViewModel" />
 
         <variable
             name="addressSearchListener"
