@@ -23,7 +23,7 @@ public class FcmPushSender {
         Notification notification = notificationService.findById(fcmSendRequest.notificationId());
         Message message = Message.builder()
                 .putData("type", notification.getType().toString())
-                .putData("nickname", notification.getMate().getNickname().getNickname())
+                .putData("nickname", notification.getMate().getNickname())
                 .setTopic(fcmSendRequest.topic())
                 .build();
         try {
