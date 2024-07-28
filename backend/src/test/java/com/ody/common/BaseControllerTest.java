@@ -3,7 +3,6 @@ package com.ody.common;
 import com.ody.notification.config.FcmConfig;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.FcmSubscriber;
-import com.ody.route.service.TestRouteConfig;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

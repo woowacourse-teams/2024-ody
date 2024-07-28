@@ -1,7 +1,8 @@
-package com.ody.route.service;
+package com.ody.common;
 
 import com.ody.meeting.domain.Location;
 import com.ody.route.domain.RouteTime;
+import com.ody.route.service.RouteClient;
 
 public class FakeRouteClient implements RouteClient {
 

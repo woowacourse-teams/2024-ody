@@ -2,7 +2,6 @@ package com.ody.common;
 
 import com.ody.notification.config.FcmConfig;
 import com.ody.notification.service.FcmPushSender;
-import com.ody.route.service.TestRouteConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
