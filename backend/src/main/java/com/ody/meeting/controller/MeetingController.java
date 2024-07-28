@@ -77,7 +77,7 @@ public class MeetingController implements MeetingControllerSwagger {
                 meetingSaveRequest.originLongitude()
         );
         Mate mate = mateService.save(mateSaveRequest.toMate(meeting, member));
-        notificationService.saveEntryAndDepartureNotification(meeting, mate, member.getDeviceToken());
+        notificationService.saveEntryAndDepartureNotification(mate);
 
         List<Mate> mates = mateService.findAllByMeetingId(meeting.getId());
         MeetingSaveResponse meetingSaveResponse = MeetingSaveResponse.of(meeting, mates);

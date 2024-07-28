@@ -3,7 +3,6 @@ package com.ody.notification.service;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
-import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
@@ -31,10 +30,10 @@ public class NotificationService {
     private final RouteService routeService;
 
     @Transactional
-    public void saveEntryAndDepartureNotification(Meeting meeting, Mate mate, DeviceToken deviceToken) {
-        saveAndSendEntryNotification(meeting, mate);
-        fcmSubscriber.subscribeTopic(meeting, deviceToken);
-        saveAndSendDepartureNotification(meeting, mate);
+    public void saveEntryAndDepartureNotification(Mate mate) {
+        saveAndSendEntryNotification(mate.getMeeting(), mate);
+        fcmSubscriber.subscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken());
+        saveAndSendDepartureNotification(mate.getMeeting(), mate);
     }
 
     private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
