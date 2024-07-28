@@ -12,7 +12,6 @@ import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.service.RouteService;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class NotificationService {
 
     private final ApplicationEventPublisher publisher;
@@ -36,7 +35,9 @@ public class NotificationService {
         saveAndSendEntryNotification(meeting, mate);
         fcmSubscriber.subscribeTopic(meeting, deviceToken);
         saveAndSendDepartureNotification(meeting, mate);
-    };
+    }
+
+    ;
 
     private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
         Notification entryNotification = new Notification(
@@ -73,7 +74,7 @@ public class NotificationService {
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
                 meeting.getId().toString(),
                 savedNotification.getId(),
-                LocalDateTime.now().plusSeconds(10) // TODO: savedNotification.getSendAt() 으로 변경
+                savedNotification.getSendAt()
         );
         publisher.publishEvent(fcmSendRequest);
     }
