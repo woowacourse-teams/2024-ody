@@ -15,12 +15,12 @@ import com.woowacourse.ody.databinding.ActivityMeetingCreationBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.observeEvent
-import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.creation.complete.MeetingCompletionActivity
 import com.woowacourse.ody.presentation.creation.date.MeetingDateFragment
 import com.woowacourse.ody.presentation.creation.destination.MeetingDestinationFragment
 import com.woowacourse.ody.presentation.creation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.creation.time.MeetingTimeFragment
+import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
 import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
