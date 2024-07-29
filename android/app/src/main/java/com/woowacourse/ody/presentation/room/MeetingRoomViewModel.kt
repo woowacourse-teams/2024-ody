@@ -8,8 +8,6 @@ import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.room.model.MeetingUiModel
 import com.woowacourse.ody.presentation.room.model.NotificationLogUiModel
-import com.woowacourse.ody.presentation.room.model.toMeetingUiModel
-import com.woowacourse.ody.presentation.room.model.toNotificationUiModels
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -26,7 +24,7 @@ class MeetingRoomViewModel(
     private fun fetchNotificationLogs(meetingId: Long) =
         viewModelScope.launch {
             notificationLogRepository.fetchNotificationLogs(meetingId).let { notificationLogs ->
-                _notificationLogs.postValue(notificationLogs.toNotificationUiModels())
+                _notificationLogs.postValue(notificationLogs.map { it.toNotificationUiModel() })
             }
         }
 
