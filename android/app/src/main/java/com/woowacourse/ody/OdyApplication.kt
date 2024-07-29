@@ -13,49 +13,64 @@ import com.woowacourse.ody.data.remote.core.service.NotificationService
 import com.woowacourse.ody.data.remote.thirdparty.location.KakaoRetrofitClient
 import com.woowacourse.ody.data.remote.thirdparty.location.repository.KakaoGeoLocationRepository
 import com.woowacourse.ody.data.remote.thirdparty.location.service.KakaoLocationService
+import com.woowacourse.ody.domain.repository.ody.JoinRepository
+import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.address.AddressSearchViewModelFactory
 import com.woowacourse.ody.presentation.invitecode.InviteCodeViewModelFactory
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteViewModelFactory
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModelFactory
 import com.woowacourse.ody.presentation.splash.SplashViewModelFactory
+import retrofit2.Retrofit
 import timber.log.Timber
 
 class OdyApplication : Application() {
     val odyDatastore by lazy { OdyDatastore(this) }
-    private val retrofit = RetrofitClient().retrofit
-    private val kakaoRetrofit = KakaoRetrofitClient().retrofit
+    private val retrofit: Retrofit = RetrofitClient().retrofit
+    private val kakaoRetrofit: Retrofit = KakaoRetrofitClient().retrofit
 
-    private val joinService = retrofit.create(JoinService::class.java)
-    private val meetingService = retrofit.create(MeetingService::class.java)
+    private val joinService: JoinService = retrofit.create(JoinService::class.java)
+    private val meetingService: MeetingService = retrofit.create(MeetingService::class.java)
     private val notificationService: NotificationService =
         retrofit.create(NotificationService::class.java)
 
-    private val kakaoLocationService = kakaoRetrofit.create(KakaoLocationService::class.java)
+    private val kakaoLocationService: KakaoLocationService =
+        kakaoRetrofit.create(KakaoLocationService::class.java)
 
-    private val joinRepository by lazy { DefaultJoinRepository(joinService) }
-    private val meetingRepository by lazy { DefaultMeetingRepository(meetingService) }
-    private val notificationLogRepository by lazy {
+    private val joinRepository: JoinRepository by lazy { DefaultJoinRepository(joinService) }
+    private val meetingRepository: MeetingRepository by lazy {
+        DefaultMeetingRepository(
+            meetingService,
+        )
+    }
+    private val notificationLogRepository: NotificationLogRepository by lazy {
         DefaultNotificationLogRepository(
             notificationService,
         )
     }
 
-    private val kakaoGeoLocationRepository by lazy { KakaoGeoLocationRepository(kakaoLocationService) }
+    private val kakaoGeoLocationRepository: KakaoGeoLocationRepository by lazy {
+        KakaoGeoLocationRepository(
+            kakaoLocationService,
+        )
+    }
 
-    val meetingRoomViewModelFactory =
+    val meetingRoomViewModelFactory: MeetingRoomViewModelFactory =
         MeetingRoomViewModelFactory(
             notificationLogRepository,
             meetingRepository,
         )
-    val joinCompleteViewModelFactory =
+    val joinCompleteViewModelFactory: JoinCompleteViewModelFactory =
         JoinCompleteViewModelFactory(
             meetingRepository = meetingRepository,
             joinRepository = joinRepository,
             datastore = odyDatastore,
         )
-    val inviteCodeViewModelFactory = InviteCodeViewModelFactory(meetingRepository)
-    val splashViewModelFactory = SplashViewModelFactory(meetingRepository)
-    val addressSearchViewModelFactory = AddressSearchViewModelFactory(kakaoGeoLocationRepository)
+    val inviteCodeViewModelFactory: InviteCodeViewModelFactory =
+        InviteCodeViewModelFactory(meetingRepository)
+    val splashViewModelFactory: SplashViewModelFactory = SplashViewModelFactory(meetingRepository)
+    val addressSearchViewModelFactory: AddressSearchViewModelFactory =
+        AddressSearchViewModelFactory(kakaoGeoLocationRepository)
 
     override fun onCreate() {
         super.onCreate()
