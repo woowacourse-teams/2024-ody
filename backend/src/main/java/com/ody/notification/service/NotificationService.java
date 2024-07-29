@@ -30,13 +30,14 @@ public class NotificationService {
     private final RouteService routeService;
 
     @Transactional
-    public void saveEntryAndDepartureNotification(Mate mate) {
-        saveAndSendEntryNotification(mate.getMeeting(), mate);
+    public List<Notification> saveEntryAndDepartureNotification(Mate mate) {
+        Notification entryNotification = saveAndSendEntryNotification(mate.getMeeting(), mate);
         fcmSubscriber.subscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken());
-        saveAndSendDepartureNotification(mate.getMeeting(), mate);
+        Notification departureNotification = saveAndSendDepartureNotification(mate.getMeeting(), mate);
+        return List.of(entryNotification, departureNotification);
     }
 
-    private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
+    private Notification saveAndSendEntryNotification(Meeting meeting, Mate mate) {
         Notification entryNotification = new Notification(
                 mate,
                 NotificationType.ENTRY,
@@ -51,9 +52,10 @@ public class NotificationService {
                 LocalDateTime.now().withNano(0)
         );
         publisher.publishEvent(fcmSendRequest);
+        return savedNotification;
     }
 
-    private void saveAndSendDepartureNotification(Meeting meeting, Mate mate) {
+    private Notification saveAndSendDepartureNotification(Meeting meeting, Mate mate) {
         DepartureTime sendAt = routeService.calculateDepartureTime(
                 mate.getOrigin(),
                 meeting.getTarget(),
@@ -74,6 +76,7 @@ public class NotificationService {
                 savedNotification.getSendAt()
         );
         publisher.publishEvent(fcmSendRequest);
+        return savedNotification;
     }
 
     public List<Notification> findAllMeetingLogs(Long meetingId) {
