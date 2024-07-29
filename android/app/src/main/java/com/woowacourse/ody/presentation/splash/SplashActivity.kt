@@ -11,7 +11,7 @@ import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
 import com.woowacourse.ody.presentation.intro.IntroActivity
-import com.woowacourse.ody.presentation.meetingroom.MeetingRoomActivity
+import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")

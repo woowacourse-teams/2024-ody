@@ -7,7 +7,7 @@
 
         <variable
             name="log"
-            type="com.woowacourse.ody.presentation.meetingroom.model.NotificationLogUiModel" />
+            type="com.woowacourse.ody.presentation.room.model.NotificationLogUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

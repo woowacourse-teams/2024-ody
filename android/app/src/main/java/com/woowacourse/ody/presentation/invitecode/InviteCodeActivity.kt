@@ -12,7 +12,7 @@ import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
 import com.woowacourse.ody.databinding.ActivityInviteCodeBinding
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.observeEvent
-import com.woowacourse.ody.presentation.meetingjoin.MeetingJoinActivity
+import com.woowacourse.ody.presentation.join.MeetingJoinActivity
 
 class InviteCodeActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityInviteCodeBinding by lazy {

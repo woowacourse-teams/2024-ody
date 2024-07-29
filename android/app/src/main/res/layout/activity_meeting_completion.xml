@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".presentation.meetingcreation.complete.MeetingCompletionActivity">
+    tools:context=".presentation.creation.complete.MeetingCompletionActivity">
 
     <ImageView
         android:layout_width="wrap_content"

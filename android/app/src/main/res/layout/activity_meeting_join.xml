@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.meetingcreation.MeetingCreationViewModel" />
+            type="com.woowacourse.ody.presentation.creation.MeetingCreationViewModel" />
 
         <variable
             name="nextListener"
@@ -21,7 +21,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.meetingjoin.MeetingJoinActivity">
+        tools:context=".presentation.join.MeetingJoinActivity">
 
         <include
             android:id="@+id/tb_join_info"
