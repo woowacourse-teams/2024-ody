@@ -12,10 +12,12 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.notification.domain.Notification;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -54,10 +56,10 @@ class NotificationServiceTest extends BaseServiceTest {
 
         notificationService.saveAndSendDepartureReminder(meeting, mate, member.getDeviceToken());
 
-        assertThat(
-                notificationService.findAllMeetingLogs(meeting.getId()).stream()
-                        .filter(notification -> notification.getSendAt().getDayOfMonth() == today.getDayOfMonth())
-                        .findFirst()
-        ).isPresent();
+        Optional<Notification> departureNotification = notificationService.findAllMeetingLogs(meeting.getId()).stream()
+                .filter(notification -> notification.getSendAt().getDayOfMonth() == today.getDayOfMonth())
+                .findFirst();
+
+        assertThat(departureNotification).isPresent();
     }
 }
