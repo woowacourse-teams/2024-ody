@@ -6,7 +6,6 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.core.RetrofitClient
 import com.woowacourse.ody.data.remote.core.service.MemberService
@@ -77,10 +76,9 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        val retrofit = RetrofitClient.retrofit
+        val retrofit = RetrofitClient().retrofit
         val memberService = retrofit.create(MemberService::class.java)
         runBlocking {
-            (application as OdyApplication).odyDatastore.setToken(token)
             memberService.postMember()
         }
         setNotificationChannel()

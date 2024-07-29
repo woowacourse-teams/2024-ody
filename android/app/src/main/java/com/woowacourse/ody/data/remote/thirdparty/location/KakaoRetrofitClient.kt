@@ -8,8 +8,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-object KakaoRetrofitClient {
-    private const val BASE_URL = "https://dapi.kakao.com/"
+class KakaoRetrofitClient {
     private val interceptor: Interceptor by lazy {
         Interceptor {
             val newRequest =
@@ -32,5 +31,9 @@ object KakaoRetrofitClient {
             .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
+    }
+
+    companion object {
+        private const val BASE_URL = "https://dapi.kakao.com/"
     }
 }

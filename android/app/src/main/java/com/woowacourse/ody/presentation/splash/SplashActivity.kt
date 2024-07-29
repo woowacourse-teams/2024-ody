@@ -9,15 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
-    val viewModel: SplashViewModel by viewModels {
-        SplashViewModelFactory(DefaultMeetingRepository)
+    private val application: OdyApplication by lazy {
+        applicationContext as OdyApplication
+    }
+    private val viewModel: SplashViewModel by viewModels {
+        application.splashViewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +29,7 @@ class SplashActivity : AppCompatActivity() {
         initializeObserve()
 
         lifecycleScope.launch {
-            (application as OdyApplication).odyDatastore.getToken().collect {
+            application.odyDatastore.getToken().collect {
                 if (it.isEmpty()) {
                     startActivity(IntroActivity.getIntent(this@SplashActivity))
                 } else {

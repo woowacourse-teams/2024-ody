@@ -20,7 +20,7 @@ import timber.log.Timber
 class JoinCompleteViewModel(
     private val meetingRepository: MeetingRepository,
     private val joinRepository: JoinRepository,
-    private val datastore: OdyDatastore,
+    private val dataStore: OdyDatastore,
 ) : ViewModel() {
     val meetingResponse: MutableLiveData<Meeting?> = MutableLiveData(null)
 
@@ -31,7 +31,7 @@ class JoinCompleteViewModel(
         viewModelScope.launch {
             meetingRepository.postMeeting(meetingRequest)
                 .onSuccess {
-                    datastore.setInviteCode(it.inviteCode)
+                    dataStore.setInviteCode(it.inviteCode)
                     meetingResponse.value = it.toMeeting()
                     delay(1500)
                     _navigateAction.emit(Unit)
@@ -45,7 +45,7 @@ class JoinCompleteViewModel(
         viewModelScope.launch {
             joinRepository.postMates(joinRequest)
                 .onSuccess {
-                    datastore.setInviteCode(it.inviteCode)
+                    dataStore.setInviteCode(it.inviteCode)
                     meetingResponse.value = it.toMeeting()
                     delay(1500)
                     _navigateAction.emit(Unit)
