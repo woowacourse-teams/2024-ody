@@ -4,6 +4,8 @@ import android.app.Application
 import com.woowacourse.ody.BuildConfig.DEBUG
 import com.woowacourse.ody.data.local.db.OdyDatastore
 import com.woowacourse.ody.data.remote.core.RetrofitClient
+import com.woowacourse.ody.data.remote.core.repository.DefaultFCMTokenRepository
+import com.woowacourse.ody.data.remote.core.repository.DefaultInviteCodeRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultJoinRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultNotificationLogRepository
@@ -13,6 +15,8 @@ import com.woowacourse.ody.data.remote.core.service.NotificationService
 import com.woowacourse.ody.data.remote.thirdparty.location.KakaoRetrofitClient
 import com.woowacourse.ody.data.remote.thirdparty.location.repository.KakaoGeoLocationRepository
 import com.woowacourse.ody.data.remote.thirdparty.location.service.KakaoLocationService
+import com.woowacourse.ody.domain.repository.ody.FCMTokenRepository
+import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
@@ -25,7 +29,7 @@ import retrofit2.Retrofit
 import timber.log.Timber
 
 class OdyApplication : Application() {
-    val odyDatastore by lazy { OdyDatastore(this) }
+    private val odyDatastore by lazy { OdyDatastore(this) }
     private val retrofit: Retrofit = RetrofitClient().retrofit
     private val kakaoRetrofit: Retrofit = KakaoRetrofitClient().retrofit
 
@@ -55,6 +59,14 @@ class OdyApplication : Application() {
         )
     }
 
+    private val inviteCodeRepository: InviteCodeRepository by lazy {
+        DefaultInviteCodeRepository(odyDatastore)
+    }
+
+    val fcmTokenRepository: FCMTokenRepository by lazy {
+        DefaultFCMTokenRepository(odyDatastore)
+    }
+
     val meetingRoomViewModelFactory: MeetingRoomViewModelFactory =
         MeetingRoomViewModelFactory(
             notificationLogRepository,
@@ -64,7 +76,7 @@ class OdyApplication : Application() {
         JoinCompleteViewModelFactory(
             meetingRepository = meetingRepository,
             joinRepository = joinRepository,
-            datastore = odyDatastore,
+            inviteCodeRepository = inviteCodeRepository,
         )
     val inviteCodeViewModelFactory: InviteCodeViewModelFactory =
         InviteCodeViewModelFactory(meetingRepository)

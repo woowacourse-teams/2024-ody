@@ -29,12 +29,10 @@ class SplashActivity : AppCompatActivity() {
         initializeObserve()
 
         lifecycleScope.launch {
-            application.odyDatastore.getToken().collect {
-                if (it.isEmpty()) {
-                    startActivity(IntroActivity.getIntent(this@SplashActivity))
-                } else {
-                    viewModel.fetchMeeting()
-                }
+            application.fcmTokenRepository.fetchFCMToken().onSuccess {
+                viewModel.fetchMeeting()
+            }.onFailure {
+                startActivity(IntroActivity.getIntent(this@SplashActivity))
             }
         }
     }
