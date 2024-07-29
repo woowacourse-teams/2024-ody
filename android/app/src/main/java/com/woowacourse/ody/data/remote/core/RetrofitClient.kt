@@ -12,7 +12,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 
 object RetrofitClient {
-    private const val BASE_URL = BuildConfig.BASE_URL
+    private val BASE_URL = BuildConfig.BASE_URL
     private val token: String by lazy {
         runBlocking {
             FirebaseMessaging.getInstance().token.await()
