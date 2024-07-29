@@ -22,11 +22,17 @@ abstract class SingleLiveData<T> {
 
     fun getValue() = liveData.value?.peekContent()
 
-    fun observe(owner: LifecycleOwner, onResult: (T) -> Unit) {
+    fun observe(
+        owner: LifecycleOwner,
+        onResult: (T) -> Unit,
+    ) {
         liveData.observe(owner) { it.getContentIfNotHandled()?.let(onResult) }
     }
 
-    fun observePeek(owner: LifecycleOwner, onResult: (T) -> Unit) {
+    fun observePeek(
+        owner: LifecycleOwner,
+        onResult: (T) -> Unit,
+    ) {
         liveData.observe(owner) { onResult(it.peekContent()) }
     }
 }
