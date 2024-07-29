@@ -1,6 +1,5 @@
 package com.woowacourse.ody.presentation.join.complete
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,8 +10,8 @@ import com.woowacourse.ody.data.remote.core.entity.toMeeting
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
-import com.woowacourse.ody.presentation.common.Event
-import com.woowacourse.ody.presentation.common.emit
+import com.woowacourse.ody.presentation.common.MutableSingleLiveData
+import com.woowacourse.ody.presentation.common.SingleLiveData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,8 +23,8 @@ class JoinCompleteViewModel(
 ) : ViewModel() {
     val meetingResponse: MutableLiveData<Meeting?> = MutableLiveData(null)
 
-    private val _navigateAction: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val navigateAction: LiveData<Event<Unit>> get() = _navigateAction
+    private val _navigateAction: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val navigateAction: SingleLiveData<Unit> get() = _navigateAction
 
     fun postMeeting(meetingRequest: MeetingRequest) {
         viewModelScope.launch {
@@ -34,7 +33,7 @@ class JoinCompleteViewModel(
                     datastore.setInviteCode(it.inviteCode)
                     meetingResponse.value = it.toMeeting()
                     delay(1500)
-                    _navigateAction.emit(Unit)
+                    _navigateAction.setValue(Unit)
                 }.onFailure {
                     Timber.e(it.message)
                 }
@@ -48,7 +47,7 @@ class JoinCompleteViewModel(
                     datastore.setInviteCode(it.inviteCode)
                     meetingResponse.value = it.toMeeting()
                     delay(1500)
-                    _navigateAction.emit(Unit)
+                    _navigateAction.setValue(Unit)
                 }.onFailure {
                     Timber.e(it.message)
                 }

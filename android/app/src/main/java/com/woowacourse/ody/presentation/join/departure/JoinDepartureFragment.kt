@@ -17,7 +17,6 @@ import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.model.toGeoLocation
-import com.woowacourse.ody.presentation.common.observeEvent
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
 import com.woowacourse.ody.presentation.creation.MeetingInfoType
 
@@ -53,7 +52,7 @@ class JoinDepartureFragment : Fragment(), AddressSearchListener {
     }
 
     private fun initializeObserve() {
-        viewModel.invalidStartingPointEvent.observeEvent(viewLifecycleOwner) {
+        viewModel.invalidStartingPointEvent.observe(viewLifecycleOwner) {
             showSnackBar(R.string.invalid_address)
         }
     }

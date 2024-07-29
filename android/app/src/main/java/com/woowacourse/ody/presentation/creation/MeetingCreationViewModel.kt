@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.validator.AddressValidator
-import com.woowacourse.ody.presentation.common.Event
-import com.woowacourse.ody.presentation.common.emit
+import com.woowacourse.ody.presentation.common.MutableSingleLiveData
+import com.woowacourse.ody.presentation.common.SingleLiveData
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -23,27 +23,27 @@ class MeetingCreationViewModel : ViewModel() {
     val meetingHour: MutableLiveData<Int> = MutableLiveData()
     val meetingMinute: MutableLiveData<Int> = MutableLiveData()
 
-    private val _invalidMeetingTimeEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val invalidMeetingTimeEvent: LiveData<Event<Unit>> get() = _invalidMeetingTimeEvent
+    private val _invalidMeetingTimeEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val invalidMeetingTimeEvent: SingleLiveData<Unit> get() = _invalidMeetingTimeEvent
 
     val meetingName: MutableLiveData<String> = MutableLiveData()
     val meetingNameLength: LiveData<Int> = meetingName.map { it.length }
 
     val destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
 
-    private val _invalidDestinationEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val invalidDestinationEvent: LiveData<Event<Unit>> get() = _invalidDestinationEvent
+    private val _invalidDestinationEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val invalidDestinationEvent: SingleLiveData<Unit> get() = _invalidDestinationEvent
 
     val nickname: MutableLiveData<String> = MutableLiveData()
     val nicknameLength: LiveData<Int> = nickname.map { it.length }
 
     val startingPointGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
 
-    private val _invalidStartingPointEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val invalidStartingPointEvent: LiveData<Event<Unit>> get() = _invalidStartingPointEvent
+    private val _invalidStartingPointEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val invalidStartingPointEvent: SingleLiveData<Unit> get() = _invalidStartingPointEvent
 
-    private val _nextPageEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val nextPageEvent: LiveData<Event<Unit>> = _nextPageEvent
+    private val _nextPageEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val nextPageEvent: SingleLiveData<Unit> = _nextPageEvent
 
     init {
         initializeIsValidInfo()
@@ -101,14 +101,14 @@ class MeetingCreationViewModel : ViewModel() {
     private fun isValidDestination(): Boolean {
         val destinationGeoLocation = destinationGeoLocation.value ?: return false
         return AddressValidator.isValid(destinationGeoLocation.address).also {
-            if (!it) _invalidDestinationEvent.emit(Unit)
+            if (!it) _invalidDestinationEvent.setValue(Unit)
         }
     }
 
     private fun isValidStartingPoint(): Boolean {
         val startingPointGeoLocation = startingPointGeoLocation.value ?: return false
         return AddressValidator.isValid(startingPointGeoLocation.address).also {
-            if (!it) _invalidStartingPointEvent.emit(Unit)
+            if (!it) _invalidStartingPointEvent.setValue(Unit)
         }
     }
 
@@ -129,11 +129,11 @@ class MeetingCreationViewModel : ViewModel() {
     fun moveOnNextPage() {
         checkInfoValidity()
         if (isValidInfo.value == true) {
-            _nextPageEvent.emit(Unit)
+            _nextPageEvent.setValue(Unit)
             return
         }
         if (meetingInfoType.value == MeetingInfoType.TIME) {
-            _invalidMeetingTimeEvent.emit(Unit)
+            _invalidMeetingTimeEvent.setValue(Unit)
         }
     }
 

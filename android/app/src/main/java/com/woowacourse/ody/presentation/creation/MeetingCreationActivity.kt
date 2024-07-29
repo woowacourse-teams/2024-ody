@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingCreationBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.common.listener.BackListener
-import com.woowacourse.ody.presentation.common.observeEvent
 import com.woowacourse.ody.presentation.creation.complete.MeetingCompletionActivity
 import com.woowacourse.ody.presentation.creation.date.MeetingDateFragment
 import com.woowacourse.ody.presentation.creation.destination.MeetingDestinationFragment
@@ -117,7 +116,7 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeObserve() {
-        viewModel.nextPageEvent.observeEvent(this) {
+        viewModel.nextPageEvent.observe(this) {
             if (binding.vpMeetingInfo.visibility == View.VISIBLE) {
                 handleMeetingInfoNextClick()
             } else {
