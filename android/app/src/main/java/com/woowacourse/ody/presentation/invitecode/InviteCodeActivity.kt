@@ -8,7 +8,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.remote.ody.repository.DefaultMeetingRepository
+import com.woowacourse.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.woowacourse.ody.databinding.ActivityInviteCodeBinding
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.observeEvent
