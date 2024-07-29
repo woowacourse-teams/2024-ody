@@ -8,11 +8,11 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
+import com.woowacourse.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.woowacourse.ody.databinding.ActivityInviteCodeBinding
-import com.woowacourse.ody.presentation.joininfo.JoinInfoActivity
-import com.woowacourse.ody.presentation.meetinginfo.BackListener
-import com.woowacourse.ody.util.observeEvent
+import com.woowacourse.ody.presentation.common.listener.BackListener
+import com.woowacourse.ody.presentation.common.observeEvent
+import com.woowacourse.ody.presentation.join.MeetingJoinActivity
 
 class InviteCodeActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityInviteCodeBinding by lazy {
@@ -55,7 +55,7 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
 
     private fun navigateToJoinView() {
         val inviteCode = viewModel.inviteCode.value ?: return
-        startActivity(JoinInfoActivity.getIntent(inviteCode, this))
+        startActivity(MeetingJoinActivity.getIntent(inviteCode, this))
     }
 
     override fun onBack() = finish()
