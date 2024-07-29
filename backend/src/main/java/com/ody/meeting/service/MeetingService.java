@@ -63,10 +63,8 @@ public class MeetingService {
     }
 
     public MeetingSaveResponses findAllMeetingsByMember(Member member) {
-        List<Meeting> meetings = meetingRepository.findAllMeetingsByMember(member);
-        List<MeetingSaveResponse> meetingSaveResponses = meetings.stream()
+        return meetingRepository.findAllMeetingsByMember(member).stream()
                 .map(mateService::findAllByMeetingId)
-                .toList();
-        return new MeetingSaveResponses(meetingSaveResponses);
+                .collect(Collectors.collectingAndThen(Collectors.toList(), MeetingSaveResponses::new));
     }
 }
