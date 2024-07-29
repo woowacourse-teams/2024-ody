@@ -60,7 +60,7 @@ public class NotificationService {
                 meeting.getTarget(),
                 LocalDateTime.of(meeting.getDate(), meeting.getTime())
         );
-        if (sendAt.getValue().isBefore(LocalDateTime.now())) {
+        if (sendAt.isBefore(LocalDateTime.now())) {
             return LocalDateTime.now();
         }
         return sendAt.getValue();
