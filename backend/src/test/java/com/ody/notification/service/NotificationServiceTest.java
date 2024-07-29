@@ -12,12 +12,12 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
-import com.ody.notification.domain.Notification;
+import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -41,6 +41,9 @@ class NotificationServiceTest extends BaseServiceTest {
     @Autowired
     private MateRepository mateRepository;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
     @DisplayName("알림 생성 시점이 전송 시점보다 늦은 경우 즉시 전송된다")
     @Test
     void sendImmediatelyIfDepartureTimeIsPast() {
@@ -56,10 +59,11 @@ class NotificationServiceTest extends BaseServiceTest {
 
         notificationService.saveAndSendDepartureReminder(meeting, mate, member.getDeviceToken());
 
-        Optional<Notification> departureNotification = notificationService.findAllMeetingLogs(meeting.getId()).stream()
-                .filter(notification -> notification.getSendAt().getDayOfMonth() == today.getDayOfMonth())
-                .findAny();
+        LocalDate actualSendAt = notificationRepository.findById(1L).get()
+                .getSendAt()
+                .toLocalDate();
+        LocalDate expectedSendAt = today.toLocalDate();
 
-        assertThat(departureNotification).isPresent();
+        assertThat(actualSendAt).isEqualTo(expectedSendAt);
     }
 }
