@@ -58,7 +58,7 @@ class NotificationServiceTest extends BaseServiceTest {
 
         Optional<Notification> departureNotification = notificationService.findAllMeetingLogs(meeting.getId()).stream()
                 .filter(notification -> notification.getSendAt().getDayOfMonth() == today.getDayOfMonth())
-                .findFirst();
+                .findAny();
 
         assertThat(departureNotification).isPresent();
     }
