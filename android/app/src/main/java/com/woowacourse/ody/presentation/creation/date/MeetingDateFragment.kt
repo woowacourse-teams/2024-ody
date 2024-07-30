@@ -1,6 +1,7 @@
 package com.woowacourse.ody.presentation.creation.date
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.woowacourse.ody.databinding.FragmentMeetingDateBinding
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
 import com.woowacourse.ody.presentation.creation.MeetingInfoType
 import java.time.LocalDate
+import java.time.Month
 
 class MeetingDateFragment : Fragment() {
     private var _binding: FragmentMeetingDateBinding? = null
@@ -36,6 +38,7 @@ class MeetingDateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initializeCalendar()
+        initializeObserve()
     }
 
     private fun initializeCalendar() {
@@ -46,19 +49,19 @@ class MeetingDateFragment : Fragment() {
                 "android",
             )
         binding.dpDate.findViewById<View>(dpHeaderId).visibility = View.GONE
-
         binding.dpDate.minDate = System.currentTimeMillis()
 
         binding.dpDate.setOnDateChangedListener { _, year, month, dayOfMonth ->
-            val now = LocalDate.now()
             val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
+            viewModel.checkMeetingDateValidity(selectedDate)
+        }
+    }
 
-            if (now.isAfter(selectedDate)) {
-                showSnackBar(R.string.meeting_date_date_guide)
-                return@setOnDateChangedListener
-            }
-
-            viewModel.meetingDate.value = selectedDate
+    private fun initializeObserve() {
+        viewModel.invalidMeetingDateEvent.observe(viewLifecycleOwner) {
+            showSnackBar(R.string.meeting_date_date_guide)
+            val meetingDate = viewModel.meetingDate.value ?: return@observe
+            binding.dpDate.updateDate(meetingDate.year, meetingDate.monthValue - 1, meetingDate.dayOfMonth)
         }
     }
 

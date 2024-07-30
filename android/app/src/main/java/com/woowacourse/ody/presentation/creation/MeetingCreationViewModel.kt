@@ -17,7 +17,7 @@ class MeetingCreationViewModel : ViewModel() {
     val meetingInfoType: MutableLiveData<MeetingInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
-    val meetingDate: MutableLiveData<LocalDate> = MutableLiveData()
+    val meetingDate: MutableLiveData<LocalDate> = MutableLiveData(LocalDate.now())
 
     val meetingHour: MutableLiveData<Int> = MutableLiveData()
     val meetingMinute: MutableLiveData<Int> = MutableLiveData()
@@ -43,6 +43,9 @@ class MeetingCreationViewModel : ViewModel() {
 
     private val _nextPageEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
     val nextPageEvent: SingleLiveData<Unit> = _nextPageEvent
+
+    private val _invalidMeetingDateEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val invalidMeetingDateEvent: SingleLiveData<Unit> get() = _invalidMeetingDateEvent
 
     init {
         initializeIsValidInfo()
@@ -121,6 +124,15 @@ class MeetingCreationViewModel : ViewModel() {
                 MeetingInfoType.STARTING_POINT -> isValidStartingPoint()
             }
         isValidInfo.value = isValid
+    }
+
+    fun checkMeetingDateValidity(meetingDate: LocalDate) {
+        val now = LocalDate.now()
+        if (now.isAfter(meetingDate)) {
+            _invalidMeetingDateEvent.setValue(Unit)
+            return
+        }
+        this.meetingDate.value = meetingDate
     }
 
     fun moveOnNextPage() {
