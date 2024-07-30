@@ -3,8 +3,8 @@ package com.ody.route.service;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Location;
 import com.ody.route.config.RouteProperties;
-import com.ody.route.dto.OdsayResponse;
 import com.ody.route.domain.RouteTime;
+import com.ody.route.dto.OdsayResponse;
 import com.ody.route.mapper.OdsayResponseMapper;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,7 +30,7 @@ public class RouteClient {
                 .uri(makeURI(origin, target))
                 .retrieve()
                 .body(OdsayResponse.class);
-        return new RouteTime(OdsayResponseMapper.getMinutes(response)); //TODO : NPE 가능성 체크
+        return new RouteTime(OdsayResponseMapper.mapMinutes(response)); //TODO : NPE 가능성 체크
     }
 
     private URI makeURI(Location origin, Location target) {
