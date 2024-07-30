@@ -1,6 +1,6 @@
 package com.woowacourse.ody.presentation.common
 
-open class Event<out T>(private val content: T) {
+class Event<out T>(private val content: T) {
     var hasBeenHandled = false
         private set
 
