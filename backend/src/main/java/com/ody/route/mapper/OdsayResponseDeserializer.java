@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ody.common.exception.OdyServerErrorException;
-import com.ody.route.domain.OdsayResponse;
+import com.ody.route.dto.OdsayResponse;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.OptionalLong;

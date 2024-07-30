@@ -3,7 +3,7 @@ package com.ody.route.service;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Location;
 import com.ody.route.config.RouteProperties;
-import com.ody.route.domain.OdsayResponse;
+import com.ody.route.dto.OdsayResponse;
 import com.ody.route.domain.RouteTime;
 import java.net.URI;
 import java.net.URISyntaxException;

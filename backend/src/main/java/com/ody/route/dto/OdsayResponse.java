@@ -1,4 +1,4 @@
-package com.ody.route.domain;
+package com.ody.route.dto;
 
 import com.ody.common.exception.OdyServerErrorException;
 import java.util.Optional;
