@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityIntroBinding
-import com.woowacourse.ody.presentation.common.observeEvent
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 
@@ -45,7 +44,7 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun initializeObserve() {
-        vm.navigateAction.observeEvent(this) { navigateAction ->
+        vm.navigateAction.observe(this) { navigateAction ->
             when (navigateAction) {
                 is IntroNavigateAction.NavigateToMeetingInfo ->
                     navigateToMeetingInfoActivity()
