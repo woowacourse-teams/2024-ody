@@ -13,4 +13,8 @@ public class DepartureTime {
     public DepartureTime(RouteTime routeTime, LocalDateTime meetingTime) {
         this.value = meetingTime.minusMinutes(routeTime.getMinutes() + MINUTE_GAP);
     }
+
+    public boolean isBefore(LocalDateTime target) {
+        return value.isBefore(target);
+    }
 }
