@@ -12,12 +12,14 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.NotificationType;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -59,11 +61,19 @@ class NotificationServiceTest extends BaseServiceTest {
 
         notificationService.saveAndSendDepartureReminder(meeting, mate, member.getDeviceToken());
 
-        LocalDate actualSendAt = notificationRepository.findById(1L).get()
-                .getSendAt()
-                .toLocalDate();
-        LocalDate expectedSendAt = today.toLocalDate();
+        Optional<Notification> departureNotification = notificationRepository.findAll().stream()
+                .filter(notification -> isDepartureReminder(notification) && isNow(notification))
+                .findAny();
 
-        assertThat(actualSendAt).isEqualTo(expectedSendAt);
+        assertThat(departureNotification).isPresent();
+    }
+
+    private boolean isDepartureReminder(Notification notification) {
+        return notification.getType() == NotificationType.DEPARTURE_REMINDER;
+    }
+
+    private boolean isNow(Notification notification) {
+        return notification.getSendAt().withNano(0)
+                .isEqual(LocalDateTime.now().withNano(0));
     }
 }
