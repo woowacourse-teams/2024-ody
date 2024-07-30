@@ -1,5 +1,6 @@
 package com.ody.notification.service;
 
+import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
@@ -31,27 +32,45 @@ public class NotificationService {
 
     @Transactional
     public void saveAndSendDepartureReminder(Meeting meeting, Mate mate, DeviceToken deviceToken) {
+        saveAndSendEntryNotification(meeting, mate);
+        fcmSubscriber.subscribeTopic(meeting, deviceToken);
+        saveAndSendDepartureNotification(meeting, mate);
+    }
+
+    private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
+        Notification entryNotification = new Notification(
+                mate,
+                NotificationType.ENTRY,
+                LocalDateTime.now().withNano(0),
+                NotificationStatus.DONE
+        );
+        Notification savedNotification = notificationRepository.save(entryNotification);
+
+        FcmSendRequest fcmSendRequest = new FcmSendRequest(
+                meeting.getId().toString(),
+                savedNotification.getId(),
+                LocalDateTime.now().withNano(0)
+        );
+        publisher.publishEvent(fcmSendRequest);
+    }
+
+    private void saveAndSendDepartureNotification(Meeting meeting, Mate mate) {
         LocalDateTime sendAt = calculateSendAt(meeting, mate);
 
-        Notification notification = new Notification(
+        Notification departureNotification = new Notification(
                 mate,
                 NotificationType.DEPARTURE_REMINDER,
                 sendAt,
                 NotificationStatus.PENDING
         );
-        notificationRepository.save(notification);
-
-        fcmSubscriber.subscribeTopic(meeting, deviceToken);
+        Notification savedNotification = notificationRepository.save(departureNotification);
 
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
                 meeting.getId().toString(),
-                NotificationType.DEPARTURE_REMINDER,
-                mate.getNickname().getNickname(),
-                sendAt
+                savedNotification.getId(),
+                savedNotification.getSendAt()
         );
         publisher.publishEvent(fcmSendRequest);
-
-        notification.updateDone();
     }
 
     private LocalDateTime calculateSendAt(Meeting meeting, Mate mate) {
@@ -61,12 +80,17 @@ public class NotificationService {
                 LocalDateTime.of(meeting.getDate(), meeting.getTime())
         );
         if (sendAt.isBefore(LocalDateTime.now())) {
-            return LocalDateTime.now();
+            return LocalDateTime.now().withNano(0);
         }
-        return sendAt.getValue();
+        return sendAt.getValue().withNano(0);
     }
 
     public List<Notification> findAllMeetingLogs(Long meetingId) {
         return notificationRepository.findAllMeetingLogs(meetingId);
+    }
+
+    public Notification findById(Long notificationId) {
+        return notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 알림입니다."));
     }
 }

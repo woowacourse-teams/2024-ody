@@ -11,6 +11,7 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

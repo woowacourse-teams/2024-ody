@@ -5,24 +5,56 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 import com.ody.common.BaseServiceTest;
+import com.ody.common.Fixture;
+import com.ody.mate.domain.Mate;
+import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Meeting;
+import com.ody.meeting.repository.MeetingRepository;
+import com.ody.member.domain.Member;
+import com.ody.member.repository.MemberRepository;
+import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.dto.request.FcmSendRequest;
+import com.ody.notification.repository.NotificationRepository;
 import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 class FcmEventSchedulerTest extends BaseServiceTest {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private MeetingRepository meetingRepository;
+
+    @Autowired
+    private MateRepository mateRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @DisplayName("예약 알림이 2초 후에 전송된다")
     @Test
     void testScheduledNotificationIsSentAtCorrectTime() throws InterruptedException {
+        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
+        Member member = memberRepository.save(Fixture.MEMBER1);
+        Mate mate = mateRepository.save(Fixture.MATE1);
+
         LocalDateTime sendAt = LocalDateTime.now().plusSeconds(2);
-        FcmSendRequest fcmSendRequest = new FcmSendRequest(
-                "testToken",
+        Notification notification = notificationRepository.save(new Notification(
+                mate,
                 NotificationType.DEPARTURE_REMINDER,
-                "차람",
+                sendAt,
+                NotificationStatus.PENDING
+        ));
+        FcmSendRequest fcmSendRequest = new FcmSendRequest(
+                meeting.getId().toString(),
+                notification.getId(),
                 sendAt
         );
 

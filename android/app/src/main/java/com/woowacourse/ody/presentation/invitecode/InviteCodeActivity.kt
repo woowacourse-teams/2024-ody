@@ -8,11 +8,10 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.remote.repository.DefaultMeetingRepository
+import com.woowacourse.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.woowacourse.ody.databinding.ActivityInviteCodeBinding
-import com.woowacourse.ody.presentation.joininfo.JoinInfoActivity
-import com.woowacourse.ody.presentation.meetinginfo.BackListener
-import com.woowacourse.ody.util.observeEvent
+import com.woowacourse.ody.presentation.common.listener.BackListener
+import com.woowacourse.ody.presentation.join.MeetingJoinActivity
 
 class InviteCodeActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityInviteCodeBinding by lazy {
@@ -36,15 +35,15 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeObserve() {
-        viewModel.isValidInviteCode.observeEvent(this) { isValid ->
+        viewModel.isValidInviteCode.observe(this) { isValid ->
             if (isValid) {
                 // 모임에 참여됨. 로그 화면으로 이동
-                return@observeEvent
+                return@observe
             }
             viewModel.emptyInviteCode()
             showSnackBar(R.string.invalid_invite_code)
         }
-        viewModel.navigateAction.observeEvent(this) {
+        viewModel.navigateAction.observe(this) {
             navigateToJoinView()
         }
     }
@@ -55,7 +54,7 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
 
     private fun navigateToJoinView() {
         val inviteCode = viewModel.inviteCode.value ?: return
-        startActivity(JoinInfoActivity.getIntent(inviteCode, this))
+        startActivity(MeetingJoinActivity.getIntent(inviteCode, this))
     }
 
     override fun onBack() = finish()

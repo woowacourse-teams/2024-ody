@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".presentation.completion.JoinCompleteActivity">
+    tools:context=".presentation.join.complete.JoinCompleteActivity">
 
     <ImageView
         android:layout_width="wrap_content"

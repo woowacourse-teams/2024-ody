@@ -2,7 +2,7 @@ package com.woowacourse.ody.presentation.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.woowacourse.ody.domain.repository.MeetingRepository
+import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 
 class SplashViewModelFactory(
     private val meetingRepository: MeetingRepository,

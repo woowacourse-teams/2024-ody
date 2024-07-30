@@ -1,0 +1,2424 @@
+{
+  "result": {
+    "searchType": 0,
+    "outTrafficCheck": 0,
+    "busCount": 10,
+    "subwayCount": 1,
+    "subwayBusCount": 1,
+    "pointDistance": 4732,
+    "startRadius": 700,
+    "endRadius": 700,
+    "path": [
+      {
+        "pathType": 1,
+        "info": {
+          "trafficDistance": 4700,
+          "totalWalk": 486,
+          "totalTime": 15,
+          "payment": 1400,
+          "busTransitCount": 0,
+          "subwayTransitCount": 1,
+          "mapObj": "2:2:220:216",
+          "firstStartStation": "선릉",
+          "lastEndStation": "잠실",
+          "totalStationCount": 4,
+          "busStationCount": 0,
+          "subwayStationCount": 4,
+          "totalDistance": 5186,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 5
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 165,
+            "sectionTime": 2
+          },
+          {
+            "trafficType": 1,
+            "distance": 4700,
+            "sectionTime": 8,
+            "stationCount": 4,
+            "lane": [
+              {
+                "name": "수도권 2호선",
+                "subwayCode": 2,
+                "subwayCityCode": 1000
+              }
+            ],
+            "intervalTime": 5,
+            "startName": "선릉",
+            "startX": 127.049271,
+            "startY": 37.504577,
+            "endName": "잠실",
+            "endX": 127.100164,
+            "endY": 37.513346,
+            "way": "잠실",
+            "wayCode": 1,
+            "door": "null",
+            "startID": 220,
+            "endID": 216,
+            "startExitNo": "10",
+            "startExitX": 127.0498520542646,
+            "startExitY": 37.50501673853626,
+            "endExitNo": "9",
+            "endExitX": 127.10435997629716,
+            "endExitY": 37.514930148975324,
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 220,
+                  "stationName": "선릉",
+                  "x": "127.049281",
+                  "y": "37.504585"
+                },
+                {
+                  "index": 1,
+                  "stationID": 219,
+                  "stationName": "삼성",
+                  "x": "127.063186",
+                  "y": "37.508872"
+                },
+                {
+                  "index": 2,
+                  "stationID": 218,
+                  "stationName": "종합운동장",
+                  "x": "127.073674",
+                  "y": "37.511037"
+                },
+                {
+                  "index": 3,
+                  "stationID": 217,
+                  "stationName": "잠실새내",
+                  "x": "127.086893",
+                  "y": "37.511574"
+                },
+                {
+                  "index": 4,
+                  "stationID": 216,
+                  "stationName": "잠실",
+                  "x": "127.100171",
+                  "y": "37.51335"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 321,
+            "sectionTime": 5
+          }
+        ]
+      },
+      {
+        "pathType": 2,
+        "info": {
+          "trafficDistance": 4831,
+          "totalWalk": 233,
+          "totalTime": 22,
+          "payment": 1500,
+          "busTransitCount": 1,
+          "subwayTransitCount": 0,
+          "mapObj": "1435:1:63:72",
+          "firstStartStation": "선릉역",
+          "lastEndStation": "잠실역1번.11번출구",
+          "totalStationCount": 9,
+          "busStationCount": 9,
+          "subwayStationCount": 0,
+          "totalDistance": 5064,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 12
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 98,
+            "sectionTime": 1
+          },
+          {
+            "trafficType": 2,
+            "distance": 4831,
+            "sectionTime": 19,
+            "stationCount": 9,
+            "lane": [
+              {
+                "busNo": "341",
+                "type": 11,
+                "busID": 1435,
+                "busLocalBlID": "100100056",
+                "busCityCode": 1000,
+                "busProviderCode": 4
+              }
+            ],
+            "intervalTime": 12,
+            "startName": "선릉역",
+            "startX": 127.050322,
+            "startY": 37.50463,
+            "endName": "잠실역1번.11번출구",
+            "endX": 127.102927,
+            "endY": 37.514034,
+            "startID": 107264,
+            "startStationCityCode": 1000,
+            "startStationProviderCode": 4,
+            "startLocalStationID": "122000156",
+            "startArsID": "23-259",
+            "endID": 163084,
+            "endStationCityCode": 1000,
+            "endStationProviderCode": 4,
+            "endLocalStationID": "123000045",
+            "endArsID": "24-134",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 107264,
+                  "stationName": "선릉역",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000156",
+                  "arsID": "23-259",
+                  "x": "127.050322",
+                  "y": "37.50463",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 107477,
+                  "stationName": "포스코빌딩",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000157",
+                  "arsID": "23-260",
+                  "x": "127.054794",
+                  "y": "37.506054",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 107791,
+                  "stationName": "한국무역센터.삼성역",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000148",
+                  "arsID": "23-251",
+                  "x": "127.06062",
+                  "y": "37.50783",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 167028,
+                  "stationName": "강남경찰서.강남운전면허시험장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000356",
+                  "arsID": "23-473",
+                  "x": "127.066152",
+                  "y": "37.509541",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 108195,
+                  "stationName": "잠실종합운동장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000065",
+                  "arsID": "24-154",
+                  "x": "127.07261",
+                  "y": "37.510511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 108430,
+                  "stationName": "종합운동장사거리",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000068",
+                  "arsID": "24-157",
+                  "x": "127.079259",
+                  "y": "37.511617",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 6,
+                  "stationID": 108572,
+                  "stationName": "잠실새내역4번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000069",
+                  "arsID": "24-158",
+                  "x": "127.084373",
+                  "y": "37.511441",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 7,
+                  "stationID": 108757,
+                  "stationName": "잠실트리지움아파트앞",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000056",
+                  "arsID": "24-145",
+                  "x": "127.091306",
+                  "y": "37.511539",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 8,
+                  "stationID": 108908,
+                  "stationName": "잠실역.롯데월드",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000057",
+                  "arsID": "24-146",
+                  "x": "127.098172",
+                  "y": "37.512511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 9,
+                  "stationID": 163084,
+                  "stationName": "잠실역1번.11번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000045",
+                  "arsID": "24-134",
+                  "x": "127.102927",
+                  "y": "37.514034",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 135,
+            "sectionTime": 2
+          }
+        ]
+      },
+      {
+        "pathType": 2,
+        "info": {
+          "trafficDistance": 4378,
+          "totalWalk": 615,
+          "totalTime": 26,
+          "payment": 1500,
+          "busTransitCount": 1,
+          "subwayTransitCount": 0,
+          "mapObj": "1440:1:74:82",
+          "firstStartStation": "선릉역",
+          "lastEndStation": "잠실역.롯데월드",
+          "totalStationCount": 8,
+          "busStationCount": 8,
+          "subwayStationCount": 0,
+          "totalDistance": 4993,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 6
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 98,
+            "sectionTime": 1
+          },
+          {
+            "trafficType": 2,
+            "distance": 4378,
+            "sectionTime": 17,
+            "stationCount": 8,
+            "lane": [
+              {
+                "busNo": "360",
+                "type": 11,
+                "busID": 1440,
+                "busLocalBlID": "100100057",
+                "busCityCode": 1000,
+                "busProviderCode": 4
+              }
+            ],
+            "intervalTime": 6,
+            "startName": "선릉역",
+            "startX": 127.050322,
+            "startY": 37.50463,
+            "endName": "잠실역.롯데월드",
+            "endX": 127.098172,
+            "endY": 37.512511,
+            "startID": 107264,
+            "startStationCityCode": 1000,
+            "startStationProviderCode": 4,
+            "startLocalStationID": "122000156",
+            "startArsID": "23-259",
+            "endID": 108908,
+            "endStationCityCode": 1000,
+            "endStationProviderCode": 4,
+            "endLocalStationID": "123000057",
+            "endArsID": "24-146",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 107264,
+                  "stationName": "선릉역",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000156",
+                  "arsID": "23-259",
+                  "x": "127.050322",
+                  "y": "37.50463",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 107477,
+                  "stationName": "포스코빌딩",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000157",
+                  "arsID": "23-260",
+                  "x": "127.054794",
+                  "y": "37.506054",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 107791,
+                  "stationName": "한국무역센터.삼성역",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000148",
+                  "arsID": "23-251",
+                  "x": "127.06062",
+                  "y": "37.50783",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 167028,
+                  "stationName": "강남경찰서.강남운전면허시험장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000356",
+                  "arsID": "23-473",
+                  "x": "127.066152",
+                  "y": "37.509541",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 108195,
+                  "stationName": "잠실종합운동장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000065",
+                  "arsID": "24-154",
+                  "x": "127.07261",
+                  "y": "37.510511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 108430,
+                  "stationName": "종합운동장사거리",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000068",
+                  "arsID": "24-157",
+                  "x": "127.079259",
+                  "y": "37.511617",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 6,
+                  "stationID": 108572,
+                  "stationName": "잠실새내역4번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000069",
+                  "arsID": "24-158",
+                  "x": "127.084373",
+                  "y": "37.511441",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 7,
+                  "stationID": 108757,
+                  "stationName": "잠실트리지움아파트앞",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000056",
+                  "arsID": "24-145",
+                  "x": "127.091306",
+                  "y": "37.511539",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 8,
+                  "stationID": 108908,
+                  "stationName": "잠실역.롯데월드",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000057",
+                  "arsID": "24-146",
+                  "x": "127.098172",
+                  "y": "37.512511",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 517,
+            "sectionTime": 8
+          }
+        ]
+      },
+      {
+        "pathType": 2,
+        "info": {
+          "trafficDistance": 5435,
+          "totalWalk": 694,
+          "totalTime": 30,
+          "payment": 1500,
+          "busTransitCount": 1,
+          "subwayTransitCount": 0,
+          "mapObj": "1027:1:42:52",
+          "firstStartStation": "포스코사거리",
+          "lastEndStation": "잠실역1번.11번출구",
+          "totalStationCount": 10,
+          "busStationCount": 10,
+          "subwayStationCount": 0,
+          "totalDistance": 6129,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 11
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 559,
+            "sectionTime": 8
+          },
+          {
+            "trafficType": 2,
+            "distance": 5435,
+            "sectionTime": 20,
+            "stationCount": 10,
+            "lane": [
+              {
+                "busNo": "3411",
+                "type": 12,
+                "busID": 1027,
+                "busLocalBlID": "100100223",
+                "busCityCode": 1000,
+                "busProviderCode": 4
+              }
+            ],
+            "intervalTime": 11,
+            "startName": "포스코사거리",
+            "startX": 127.056401,
+            "startY": 37.507788,
+            "endName": "잠실역1번.11번출구",
+            "endX": 127.102927,
+            "endY": 37.514034,
+            "startID": 110413,
+            "startStationCityCode": 1000,
+            "startStationProviderCode": 4,
+            "startLocalStationID": "122000099",
+            "startArsID": "23-202",
+            "endID": 163084,
+            "endStationCityCode": 1000,
+            "endStationProviderCode": 4,
+            "endLocalStationID": "123000045",
+            "endArsID": "24-134",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 110413,
+                  "stationName": "포스코사거리",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000099",
+                  "arsID": "23-202",
+                  "x": "127.056401",
+                  "y": "37.507788",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 107482,
+                  "stationName": "한별구립어린이집",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000100",
+                  "arsID": "23-203",
+                  "x": "127.054885",
+                  "y": "37.510551",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 107638,
+                  "stationName": "봉은사.코엑스북문",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000088",
+                  "arsID": "23-191",
+                  "x": "127.057618",
+                  "y": "37.513609",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 123460,
+                  "stationName": "무역센터",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000095",
+                  "arsID": "23-198",
+                  "x": "127.061113",
+                  "y": "37.511763",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 107961,
+                  "stationName": "강남경찰서.강남운전면허시험장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000140",
+                  "arsID": "23-243",
+                  "x": "127.067144",
+                  "y": "37.509792",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 108195,
+                  "stationName": "잠실종합운동장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000065",
+                  "arsID": "24-154",
+                  "x": "127.07261",
+                  "y": "37.510511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 6,
+                  "stationID": 108430,
+                  "stationName": "종합운동장사거리",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000068",
+                  "arsID": "24-157",
+                  "x": "127.079259",
+                  "y": "37.511617",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 7,
+                  "stationID": 108572,
+                  "stationName": "잠실새내역4번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000069",
+                  "arsID": "24-158",
+                  "x": "127.084373",
+                  "y": "37.511441",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 8,
+                  "stationID": 108757,
+                  "stationName": "잠실트리지움아파트앞",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000056",
+                  "arsID": "24-145",
+                  "x": "127.091306",
+                  "y": "37.511539",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 9,
+                  "stationID": 108908,
+                  "stationName": "잠실역.롯데월드",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000057",
+                  "arsID": "24-146",
+                  "x": "127.098172",
+                  "y": "37.512511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 10,
+                  "stationID": 163084,
+                  "stationName": "잠실역1번.11번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000045",
+                  "arsID": "24-134",
+                  "x": "127.102927",
+                  "y": "37.514034",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 135,
+            "sectionTime": 2
+          }
+        ]
+      },
+      {
+        "pathType": 2,
+        "info": {
+          "trafficDistance": 5873,
+          "totalWalk": 592,
+          "totalTime": 31,
+          "payment": 1500,
+          "busTransitCount": 1,
+          "subwayTransitCount": 0,
+          "mapObj": "517:1:35:48",
+          "firstStartStation": "선릉역",
+          "lastEndStation": "송파구청.방이맛골",
+          "totalStationCount": 13,
+          "busStationCount": 13,
+          "subwayStationCount": 0,
+          "totalDistance": 6465,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 12
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 98,
+            "sectionTime": 1
+          },
+          {
+            "trafficType": 2,
+            "distance": 5873,
+            "sectionTime": 23,
+            "stationCount": 13,
+            "lane": [
+              {
+                "busNo": "333",
+                "type": 11,
+                "busID": 517,
+                "busLocalBlID": "100100496",
+                "busCityCode": 1000,
+                "busProviderCode": 4
+              }
+            ],
+            "intervalTime": 12,
+            "startName": "선릉역",
+            "startX": 127.050322,
+            "startY": 37.50463,
+            "endName": "송파구청.방이맛골",
+            "endX": 127.107858,
+            "endY": 37.513206,
+            "startID": 107264,
+            "startStationCityCode": 1000,
+            "startStationProviderCode": 4,
+            "startLocalStationID": "122000156",
+            "startArsID": "23-259",
+            "endID": 109103,
+            "endStationCityCode": 1000,
+            "endStationProviderCode": 4,
+            "endLocalStationID": "123000126",
+            "endArsID": "24-215",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 107264,
+                  "stationName": "선릉역",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000156",
+                  "arsID": "23-259",
+                  "x": "127.050322",
+                  "y": "37.50463",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 107477,
+                  "stationName": "포스코빌딩",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000157",
+                  "arsID": "23-260",
+                  "x": "127.054794",
+                  "y": "37.506054",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 107791,
+                  "stationName": "한국무역센터.삼성역",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000148",
+                  "arsID": "23-251",
+                  "x": "127.06062",
+                  "y": "37.50783",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 167028,
+                  "stationName": "강남경찰서.강남운전면허시험장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000356",
+                  "arsID": "23-473",
+                  "x": "127.066152",
+                  "y": "37.509541",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 108195,
+                  "stationName": "잠실종합운동장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000065",
+                  "arsID": "24-154",
+                  "x": "127.07261",
+                  "y": "37.510511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 108430,
+                  "stationName": "종합운동장사거리",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000068",
+                  "arsID": "24-157",
+                  "x": "127.079259",
+                  "y": "37.511617",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 6,
+                  "stationID": 108572,
+                  "stationName": "잠실새내역4번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000069",
+                  "arsID": "24-158",
+                  "x": "127.084373",
+                  "y": "37.511441",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 7,
+                  "stationID": 152582,
+                  "stationName": "새마을시장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000344",
+                  "arsID": "24-436",
+                  "x": "127.086735",
+                  "y": "37.508855",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 8,
+                  "stationID": 152583,
+                  "stationName": "잠실트리지움",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000345",
+                  "arsID": "24-437",
+                  "x": "127.089612",
+                  "y": "37.507606",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 9,
+                  "stationID": 108822,
+                  "stationName": "잠실119안전센터",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000082",
+                  "arsID": "24-171",
+                  "x": "127.092943",
+                  "y": "37.5071",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 10,
+                  "stationID": 194824,
+                  "stationName": "석촌호수서호사거리",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000522",
+                  "arsID": "24-481",
+                  "x": "127.098404",
+                  "y": "37.506349",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 11,
+                  "stationID": 194826,
+                  "stationName": "미켈란호수가아파트",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000520",
+                  "arsID": "24-483",
+                  "x": "127.102505",
+                  "y": "37.507687",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 12,
+                  "stationID": 194828,
+                  "stationName": "호수임광아파트",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000518",
+                  "arsID": "24-485",
+                  "x": "127.106778",
+                  "y": "37.510747",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 13,
+                  "stationID": 109103,
+                  "stationName": "송파구청.방이맛골",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000126",
+                  "arsID": "24-215",
+                  "x": "127.107858",
+                  "y": "37.513206",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 494,
+            "sectionTime": 7
+          }
+        ]
+      },
+      {
+        "pathType": 2,
+        "info": {
+          "trafficDistance": 7727,
+          "totalWalk": 371,
+          "totalTime": 34,
+          "payment": 1500,
+          "busTransitCount": 1,
+          "subwayTransitCount": 0,
+          "mapObj": "1030:1:55:71",
+          "firstStartStation": "선릉역8번출구.선정릉",
+          "lastEndStation": "잠실역1번.11번출구",
+          "totalStationCount": 16,
+          "busStationCount": 16,
+          "subwayStationCount": 0,
+          "totalDistance": 8098,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 13
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 236,
+            "sectionTime": 4
+          },
+          {
+            "trafficType": 2,
+            "distance": 7727,
+            "sectionTime": 28,
+            "stationCount": 16,
+            "lane": [
+              {
+                "busNo": "3414",
+                "type": 12,
+                "busID": 1030,
+                "busLocalBlID": "100100226",
+                "busCityCode": 1000,
+                "busProviderCode": 4
+              }
+            ],
+            "intervalTime": 13,
+            "startName": "선릉역8번출구.선정릉",
+            "startX": 127.048345,
+            "startY": 37.506209,
+            "endName": "잠실역1번.11번출구",
+            "endX": 127.102927,
+            "endY": 37.514034,
+            "startID": 107209,
+            "startStationCityCode": 1000,
+            "startStationProviderCode": 4,
+            "startLocalStationID": "122000111",
+            "startArsID": "23-214",
+            "endID": 163084,
+            "endStationCityCode": 1000,
+            "endStationProviderCode": 4,
+            "endLocalStationID": "123000045",
+            "endArsID": "24-134",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 107209,
+                  "stationName": "선릉역8번출구.선정릉",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000111",
+                  "arsID": "23-214",
+                  "x": "127.048345",
+                  "y": "37.506209",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 106972,
+                  "stationName": "선정릉역.무형문화재전수회관",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000112",
+                  "arsID": "23-215",
+                  "x": "127.04424",
+                  "y": "37.509744",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 106903,
+                  "stationName": "한국토지주택공사앞",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000113",
+                  "arsID": "23-216",
+                  "x": "127.043126",
+                  "y": "37.512817",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 83311,
+                  "stationName": "강남구보건소",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000666",
+                  "arsID": "23-290",
+                  "x": "127.042038",
+                  "y": "37.51562",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 106885,
+                  "stationName": "삼성동서광아파트",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000102",
+                  "arsID": "23-205",
+                  "x": "127.042492",
+                  "y": "37.51729",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 107159,
+                  "stationName": "강남구청.강남세무서",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000103",
+                  "arsID": "23-206",
+                  "x": "127.047865",
+                  "y": "37.518244",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 6,
+                  "stationID": 107377,
+                  "stationName": "진흥아파트청담역",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000083",
+                  "arsID": "23-186",
+                  "x": "127.052334",
+                  "y": "37.519054",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 7,
+                  "stationID": 107556,
+                  "stationName": "청담역.경기고교",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000084",
+                  "arsID": "23-187",
+                  "x": "127.056409",
+                  "y": "37.519763",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 8,
+                  "stationID": 107673,
+                  "stationName": "봉은사.삼성1파출소앞",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000086",
+                  "arsID": "23-189",
+                  "x": "127.05941",
+                  "y": "37.515029",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 9,
+                  "stationID": 123460,
+                  "stationName": "무역센터",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000095",
+                  "arsID": "23-198",
+                  "x": "127.061113",
+                  "y": "37.511763",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 10,
+                  "stationID": 107961,
+                  "stationName": "강남경찰서.강남운전면허시험장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000140",
+                  "arsID": "23-243",
+                  "x": "127.067144",
+                  "y": "37.509792",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 11,
+                  "stationID": 108195,
+                  "stationName": "잠실종합운동장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000065",
+                  "arsID": "24-154",
+                  "x": "127.07261",
+                  "y": "37.510511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 12,
+                  "stationID": 108430,
+                  "stationName": "종합운동장사거리",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000068",
+                  "arsID": "24-157",
+                  "x": "127.079259",
+                  "y": "37.511617",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 13,
+                  "stationID": 108572,
+                  "stationName": "잠실새내역4번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000069",
+                  "arsID": "24-158",
+                  "x": "127.084373",
+                  "y": "37.511441",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 14,
+                  "stationID": 108757,
+                  "stationName": "잠실트리지움아파트앞",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000056",
+                  "arsID": "24-145",
+                  "x": "127.091306",
+                  "y": "37.511539",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 15,
+                  "stationID": 108908,
+                  "stationName": "잠실역.롯데월드",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000057",
+                  "arsID": "24-146",
+                  "x": "127.098172",
+                  "y": "37.512511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 16,
+                  "stationID": 163084,
+                  "stationName": "잠실역1번.11번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000045",
+                  "arsID": "24-134",
+                  "x": "127.102927",
+                  "y": "37.514034",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 135,
+            "sectionTime": 2
+          }
+        ]
+      },
+      {
+        "pathType": 2,
+        "info": {
+          "trafficDistance": 4691,
+          "totalWalk": 435,
+          "totalTime": 21,
+          "payment": 2800,
+          "busTransitCount": 1,
+          "subwayTransitCount": 0,
+          "mapObj": "8014:1:44:51",
+          "firstStartStation": "선릉역",
+          "lastEndStation": "잠실역",
+          "totalStationCount": 7,
+          "busStationCount": 7,
+          "subwayStationCount": 0,
+          "totalDistance": 5126,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 20
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 98,
+            "sectionTime": 1
+          },
+          {
+            "trafficType": 2,
+            "distance": 4691,
+            "sectionTime": 15,
+            "stationCount": 7,
+            "lane": [
+              {
+                "busNo": "9303",
+                "type": 4,
+                "busID": 8014,
+                "busLocalBlID": "227000019",
+                "busCityCode": 1070,
+                "busProviderCode": 2
+              }
+            ],
+            "intervalTime": 20,
+            "startName": "선릉역",
+            "startX": 127.050322,
+            "startY": 37.50463,
+            "endName": "잠실역",
+            "endX": 127.099091,
+            "endY": 37.515068,
+            "startID": 107264,
+            "startStationCityCode": 1070,
+            "startStationProviderCode": 2,
+            "startLocalStationID": "122000156",
+            "startArsID": "91-046",
+            "endID": 197901,
+            "endStationCityCode": 1070,
+            "endStationProviderCode": 2,
+            "endLocalStationID": "123000511",
+            "endArsID": "92-015",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 107264,
+                  "stationName": "선릉역",
+                  "stationCityCode": 1070,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000156",
+                  "arsID": "91-046",
+                  "x": "127.050322",
+                  "y": "37.50463",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 107477,
+                  "stationName": "포스코빌딩",
+                  "stationCityCode": 1070,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000157",
+                  "arsID": "91-062",
+                  "x": "127.054794",
+                  "y": "37.506054",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 107791,
+                  "stationName": "한국무역센터.삼성역",
+                  "stationCityCode": 1070,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000148",
+                  "arsID": "91-156",
+                  "x": "127.06062",
+                  "y": "37.50783",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 107961,
+                  "stationName": "강남경찰서.강남운전면허시험장",
+                  "stationCityCode": 1070,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000140",
+                  "arsID": "91-090",
+                  "x": "127.067144",
+                  "y": "37.509792",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 108195,
+                  "stationName": "잠실종합운동장",
+                  "stationCityCode": 1070,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000065",
+                  "arsID": "92-001",
+                  "x": "127.07261",
+                  "y": "37.510511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 108572,
+                  "stationName": "잠실새내역4번출구",
+                  "stationCityCode": 1070,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000069",
+                  "arsID": "92-006",
+                  "x": "127.084373",
+                  "y": "37.511441",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 6,
+                  "stationID": 108757,
+                  "stationName": "잠실트리지움아파트앞",
+                  "stationCityCode": 1070,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000056",
+                  "arsID": "92-008",
+                  "x": "127.091306",
+                  "y": "37.511539",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 7,
+                  "stationID": 197901,
+                  "stationName": "잠실역",
+                  "stationCityCode": 1070,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000511",
+                  "arsID": "92-015",
+                  "x": "127.099091",
+                  "y": "37.515068",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 337,
+            "sectionTime": 5
+          }
+        ]
+      },
+      {
+        "pathType": 2,
+        "info": {
+          "trafficDistance": 4691,
+          "totalWalk": 435,
+          "totalTime": 21,
+          "payment": 2800,
+          "busTransitCount": 1,
+          "subwayTransitCount": 0,
+          "mapObj": "18523:1:88:95",
+          "firstStartStation": "선릉역",
+          "lastEndStation": "잠실역",
+          "totalStationCount": 7,
+          "busStationCount": 7,
+          "subwayStationCount": 0,
+          "totalDistance": 5126,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 20
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 98,
+            "sectionTime": 1
+          },
+          {
+            "trafficType": 2,
+            "distance": 4691,
+            "sectionTime": 15,
+            "stationCount": 7,
+            "lane": [
+              {
+                "busNo": "2000",
+                "type": 4,
+                "busID": 18523,
+                "busLocalBlID": "222000075",
+                "busCityCode": 1120,
+                "busProviderCode": 2
+              },
+              {
+                "busNo": "1700",
+                "type": 4,
+                "busID": 18522,
+                "busLocalBlID": "222000073",
+                "busCityCode": 1120,
+                "busProviderCode": 2
+              },
+              {
+                "busNo": "7007",
+                "type": 4,
+                "busID": 18553,
+                "busLocalBlID": "222000076",
+                "busCityCode": 1120,
+                "busProviderCode": 2
+              }
+            ],
+            "intervalTime": 20,
+            "startName": "선릉역",
+            "startX": 127.050322,
+            "startY": 37.50463,
+            "endName": "잠실역",
+            "endX": 127.099091,
+            "endY": 37.515068,
+            "startID": 107264,
+            "startStationCityCode": 1120,
+            "startStationProviderCode": 2,
+            "startLocalStationID": "122000156",
+            "startArsID": "91-046",
+            "endID": 197901,
+            "endStationCityCode": 1120,
+            "endStationProviderCode": 2,
+            "endLocalStationID": "123000511",
+            "endArsID": "92-015",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 107264,
+                  "stationName": "선릉역",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000156",
+                  "arsID": "91-046",
+                  "x": "127.050322",
+                  "y": "37.50463",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 107477,
+                  "stationName": "포스코빌딩",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000157",
+                  "arsID": "91-062",
+                  "x": "127.054794",
+                  "y": "37.506054",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 107791,
+                  "stationName": "한국무역센터.삼성역",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000148",
+                  "arsID": "91-156",
+                  "x": "127.06062",
+                  "y": "37.50783",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 107961,
+                  "stationName": "강남경찰서.강남운전면허시험장",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000140",
+                  "arsID": "91-090",
+                  "x": "127.067144",
+                  "y": "37.509792",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 108195,
+                  "stationName": "잠실종합운동장",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000065",
+                  "arsID": "92-001",
+                  "x": "127.07261",
+                  "y": "37.510511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 108572,
+                  "stationName": "잠실새내역4번출구",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000069",
+                  "arsID": "92-006",
+                  "x": "127.084373",
+                  "y": "37.511441",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 6,
+                  "stationID": 108757,
+                  "stationName": "잠실트리지움아파트앞",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000056",
+                  "arsID": "92-008",
+                  "x": "127.091306",
+                  "y": "37.511539",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 7,
+                  "stationID": 197901,
+                  "stationName": "잠실역",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000511",
+                  "arsID": "92-015",
+                  "x": "127.099091",
+                  "y": "37.515068",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 337,
+            "sectionTime": 5
+          }
+        ]
+      },
+      {
+        "pathType": 2,
+        "info": {
+          "trafficDistance": 4722,
+          "totalWalk": 233,
+          "totalTime": 18,
+          "payment": 2800,
+          "busTransitCount": 1,
+          "subwayTransitCount": 0,
+          "mapObj": "18507:1:79:86",
+          "firstStartStation": "선릉역",
+          "lastEndStation": "잠실역1번.11번출구",
+          "totalStationCount": 7,
+          "busStationCount": 7,
+          "subwayStationCount": 0,
+          "totalDistance": 4955,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 30
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 98,
+            "sectionTime": 1
+          },
+          {
+            "trafficType": 2,
+            "distance": 4722,
+            "sectionTime": 15,
+            "stationCount": 7,
+            "lane": [
+              {
+                "busNo": "1100",
+                "type": 4,
+                "busID": 18507,
+                "busLocalBlID": "222000074",
+                "busCityCode": 1120,
+                "busProviderCode": 2
+              }
+            ],
+            "intervalTime": 30,
+            "startName": "선릉역",
+            "startX": 127.050322,
+            "startY": 37.50463,
+            "endName": "잠실역1번.11번출구",
+            "endX": 127.102927,
+            "endY": 37.514034,
+            "startID": 107264,
+            "startStationCityCode": 1120,
+            "startStationProviderCode": 2,
+            "startLocalStationID": "122000156",
+            "startArsID": "91-046",
+            "endID": 163084,
+            "endStationCityCode": 1120,
+            "endStationProviderCode": 2,
+            "endLocalStationID": "123000045",
+            "endArsID": "92-022",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 107264,
+                  "stationName": "선릉역",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000156",
+                  "arsID": "91-046",
+                  "x": "127.050322",
+                  "y": "37.50463",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 107477,
+                  "stationName": "포스코빌딩",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000157",
+                  "arsID": "91-062",
+                  "x": "127.054794",
+                  "y": "37.506054",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 107791,
+                  "stationName": "한국무역센터.삼성역",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000148",
+                  "arsID": "91-156",
+                  "x": "127.06062",
+                  "y": "37.50783",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 107961,
+                  "stationName": "강남경찰서.강남운전면허시험장",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "122000140",
+                  "arsID": "91-090",
+                  "x": "127.067144",
+                  "y": "37.509792",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 108195,
+                  "stationName": "잠실종합운동장",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000065",
+                  "arsID": "92-001",
+                  "x": "127.07261",
+                  "y": "37.510511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 108572,
+                  "stationName": "잠실새내역4번출구",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000069",
+                  "arsID": "92-006",
+                  "x": "127.084373",
+                  "y": "37.511441",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 6,
+                  "stationID": 108757,
+                  "stationName": "잠실트리지움아파트앞",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000056",
+                  "arsID": "92-008",
+                  "x": "127.091306",
+                  "y": "37.511539",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 7,
+                  "stationID": 163084,
+                  "stationName": "잠실역1번.11번출구",
+                  "stationCityCode": 1120,
+                  "stationProviderCode": 2,
+                  "localStationID": "123000045",
+                  "arsID": "92-022",
+                  "x": "127.102927",
+                  "y": "37.514034",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 135,
+            "sectionTime": 2
+          }
+        ]
+      },
+      {
+        "pathType": 2,
+        "info": {
+          "trafficDistance": 6722,
+          "totalWalk": 873,
+          "totalTime": 37,
+          "payment": 1500,
+          "busTransitCount": 1,
+          "subwayTransitCount": 0,
+          "mapObj": "970:1:34:46",
+          "firstStartStation": "포스코사거리",
+          "lastEndStation": "잠실역7번출구",
+          "totalStationCount": 12,
+          "busStationCount": 12,
+          "subwayStationCount": 0,
+          "totalDistance": 7595,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 16
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 559,
+            "sectionTime": 8
+          },
+          {
+            "trafficType": 2,
+            "distance": 6722,
+            "sectionTime": 24,
+            "stationCount": 12,
+            "lane": [
+              {
+                "busNo": "2415",
+                "type": 12,
+                "busID": 970,
+                "busLocalBlID": "100100211",
+                "busCityCode": 1000,
+                "busProviderCode": 4
+              }
+            ],
+            "intervalTime": 16,
+            "startName": "포스코사거리",
+            "startX": 127.056401,
+            "startY": 37.507788,
+            "endName": "잠실역7번출구",
+            "endX": 127.099424,
+            "endY": 37.514638,
+            "startID": 110413,
+            "startStationCityCode": 1000,
+            "startStationProviderCode": 4,
+            "startLocalStationID": "122000099",
+            "startArsID": "23-202",
+            "endID": 108929,
+            "endStationCityCode": 1000,
+            "endStationProviderCode": 4,
+            "endLocalStationID": "123000044",
+            "endArsID": "24-133",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 110413,
+                  "stationName": "포스코사거리",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000099",
+                  "arsID": "23-202",
+                  "x": "127.056401",
+                  "y": "37.507788",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 107482,
+                  "stationName": "한별구립어린이집",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000100",
+                  "arsID": "23-203",
+                  "x": "127.054885",
+                  "y": "37.510551",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 107359,
+                  "stationName": "센트럴아이파크.강남구도시관리공단",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000101",
+                  "arsID": "23-204",
+                  "x": "127.052081",
+                  "y": "37.5158",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 107377,
+                  "stationName": "진흥아파트청담역",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000083",
+                  "arsID": "23-186",
+                  "x": "127.052334",
+                  "y": "37.519054",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 107556,
+                  "stationName": "청담역.경기고교",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000084",
+                  "arsID": "23-187",
+                  "x": "127.056409",
+                  "y": "37.519763",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 107673,
+                  "stationName": "봉은사.삼성1파출소앞",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000086",
+                  "arsID": "23-189",
+                  "x": "127.05941",
+                  "y": "37.515029",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 6,
+                  "stationID": 123460,
+                  "stationName": "무역센터",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000095",
+                  "arsID": "23-198",
+                  "x": "127.061113",
+                  "y": "37.511763",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 7,
+                  "stationID": 107961,
+                  "stationName": "강남경찰서.강남운전면허시험장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000140",
+                  "arsID": "23-243",
+                  "x": "127.067144",
+                  "y": "37.509792",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 8,
+                  "stationID": 108195,
+                  "stationName": "잠실종합운동장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000065",
+                  "arsID": "24-154",
+                  "x": "127.07261",
+                  "y": "37.510511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 9,
+                  "stationID": 108430,
+                  "stationName": "종합운동장사거리",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000068",
+                  "arsID": "24-157",
+                  "x": "127.079259",
+                  "y": "37.511617",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 10,
+                  "stationID": 108572,
+                  "stationName": "잠실새내역4번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000069",
+                  "arsID": "24-158",
+                  "x": "127.084373",
+                  "y": "37.511441",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 11,
+                  "stationID": 108757,
+                  "stationName": "잠실트리지움아파트앞",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000056",
+                  "arsID": "24-145",
+                  "x": "127.091306",
+                  "y": "37.511539",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 12,
+                  "stationID": 108929,
+                  "stationName": "잠실역7번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000044",
+                  "arsID": "24-133",
+                  "x": "127.099424",
+                  "y": "37.514638",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 314,
+            "sectionTime": 5
+          }
+        ]
+      },
+      {
+        "pathType": 2,
+        "info": {
+          "trafficDistance": 4831,
+          "totalWalk": 233,
+          "totalTime": 22,
+          "payment": 2500,
+          "busTransitCount": 1,
+          "subwayTransitCount": 0,
+          "mapObj": "2811584:1:111:120",
+          "firstStartStation": "선릉역",
+          "lastEndStation": "잠실역1번.11번출구",
+          "totalStationCount": 9,
+          "busStationCount": 9,
+          "subwayStationCount": 0,
+          "totalDistance": 5064,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 38
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 98,
+            "sectionTime": 1
+          },
+          {
+            "trafficType": 2,
+            "distance": 4831,
+            "sectionTime": 19,
+            "stationCount": 9,
+            "lane": [
+              {
+                "busNo": "N31",
+                "type": 11,
+                "busID": 2811584,
+                "busLocalBlID": "104000011",
+                "busCityCode": 1000,
+                "busProviderCode": 4
+              }
+            ],
+            "intervalTime": 38,
+            "startName": "선릉역",
+            "startX": 127.050322,
+            "startY": 37.50463,
+            "endName": "잠실역1번.11번출구",
+            "endX": 127.102927,
+            "endY": 37.514034,
+            "startID": 107264,
+            "startStationCityCode": 1000,
+            "startStationProviderCode": 4,
+            "startLocalStationID": "122000156",
+            "startArsID": "23-259",
+            "endID": 163084,
+            "endStationCityCode": 1000,
+            "endStationProviderCode": 4,
+            "endLocalStationID": "123000045",
+            "endArsID": "24-134",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 107264,
+                  "stationName": "선릉역",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000156",
+                  "arsID": "23-259",
+                  "x": "127.050322",
+                  "y": "37.50463",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 107477,
+                  "stationName": "포스코빌딩",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000157",
+                  "arsID": "23-260",
+                  "x": "127.054794",
+                  "y": "37.506054",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 107791,
+                  "stationName": "한국무역센터.삼성역",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000148",
+                  "arsID": "23-251",
+                  "x": "127.06062",
+                  "y": "37.50783",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 167028,
+                  "stationName": "강남경찰서.강남운전면허시험장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000356",
+                  "arsID": "23-473",
+                  "x": "127.066152",
+                  "y": "37.509541",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 108195,
+                  "stationName": "잠실종합운동장",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000065",
+                  "arsID": "24-154",
+                  "x": "127.07261",
+                  "y": "37.510511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 108430,
+                  "stationName": "종합운동장사거리",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000068",
+                  "arsID": "24-157",
+                  "x": "127.079259",
+                  "y": "37.511617",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 6,
+                  "stationID": 108572,
+                  "stationName": "잠실새내역4번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000069",
+                  "arsID": "24-158",
+                  "x": "127.084373",
+                  "y": "37.511441",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 7,
+                  "stationID": 108757,
+                  "stationName": "잠실트리지움아파트앞",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000056",
+                  "arsID": "24-145",
+                  "x": "127.091306",
+                  "y": "37.511539",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 8,
+                  "stationID": 108908,
+                  "stationName": "잠실역.롯데월드",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000057",
+                  "arsID": "24-146",
+                  "x": "127.098172",
+                  "y": "37.512511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 9,
+                  "stationID": 163084,
+                  "stationName": "잠실역1번.11번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000045",
+                  "arsID": "24-134",
+                  "x": "127.102927",
+                  "y": "37.514034",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 135,
+            "sectionTime": 2
+          }
+        ]
+      },
+      {
+        "pathType": 3,
+        "info": {
+          "trafficDistance": 6850,
+          "totalWalk": 580,
+          "totalTime": 36,
+          "payment": 1500,
+          "busTransitCount": 2,
+          "subwayTransitCount": 1,
+          "mapObj": "1073:1:10:11@9:2:927:931@1025:1:41:46",
+          "firstStartStation": "선릉역8번출구.선정릉",
+          "lastEndStation": "잠실역1번.11번출구",
+          "totalStationCount": 10,
+          "busStationCount": 6,
+          "subwayStationCount": 4,
+          "totalDistance": 7430,
+          "totalWalkTime": -1,
+          "checkIntervalTime": 100,
+          "checkIntervalTimeOverYn": "N",
+          "totalIntervalTime": 21
+        },
+        "subPath": [
+          {
+            "trafficType": 3,
+            "distance": 235,
+            "sectionTime": 4
+          },
+          {
+            "trafficType": 2,
+            "distance": 547,
+            "sectionTime": 6,
+            "stationCount": 1,
+            "lane": [
+              {
+                "busNo": "472",
+                "type": 11,
+                "busID": 1073,
+                "busLocalBlID": "100100075",
+                "busCityCode": 1000,
+                "busProviderCode": 4
+              }
+            ],
+            "intervalTime": 7,
+            "startName": "선릉역8번출구.선정릉",
+            "startX": 127.048345,
+            "startY": 37.506209,
+            "endName": "선정릉역.무형문화재전수회관",
+            "endX": 127.04424,
+            "endY": 37.509744,
+            "startID": 107209,
+            "startStationCityCode": 1000,
+            "startStationProviderCode": 4,
+            "startLocalStationID": "122000111",
+            "startArsID": "23-214",
+            "endID": 106972,
+            "endStationCityCode": 1000,
+            "endStationProviderCode": 4,
+            "endLocalStationID": "122000112",
+            "endArsID": "23-215",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 107209,
+                  "stationName": "선릉역8번출구.선정릉",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000111",
+                  "arsID": "23-214",
+                  "x": "127.048345",
+                  "y": "37.506209",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 106972,
+                  "stationName": "선정릉역.무형문화재전수회관",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "122000112",
+                  "arsID": "23-215",
+                  "x": "127.04424",
+                  "y": "37.509744",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 85,
+            "sectionTime": 1
+          },
+          {
+            "trafficType": 1,
+            "distance": 4300,
+            "sectionTime": 10,
+            "stationCount": 4,
+            "lane": [
+              {
+                "name": "수도권 9호선",
+                "subwayCode": 9,
+                "subwayCityCode": 1000
+              }
+            ],
+            "intervalTime": 6,
+            "startName": "선정릉",
+            "startX": 127.043409,
+            "startY": 37.510134,
+            "endName": "삼전",
+            "endX": 127.087422,
+            "endY": 37.50449,
+            "way": "삼전",
+            "wayCode": 1,
+            "door": "null",
+            "startID": 927,
+            "endID": 931,
+            "startExitNo": "3",
+            "startExitX": 127.04454961028009,
+            "startExitY": 37.510365614635575,
+            "endExitNo": "4",
+            "endExitX": 127.08731795825962,
+            "endExitY": 37.504409942167506,
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 927,
+                  "stationName": "선정릉",
+                  "x": "127.043412",
+                  "y": "37.510138"
+                },
+                {
+                  "index": 1,
+                  "stationID": 928,
+                  "stationName": "삼성중앙",
+                  "x": "127.052932",
+                  "y": "37.512946"
+                },
+                {
+                  "index": 2,
+                  "stationID": 929,
+                  "stationName": "봉은사",
+                  "x": "127.06023",
+                  "y": "37.51425"
+                },
+                {
+                  "index": 3,
+                  "stationID": 930,
+                  "stationName": "종합운동장",
+                  "x": "127.076431",
+                  "y": "37.511372"
+                },
+                {
+                  "index": 4,
+                  "stationID": 931,
+                  "stationName": "삼전",
+                  "x": "127.087432",
+                  "y": "37.504491"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 125,
+            "sectionTime": 2
+          },
+          {
+            "trafficType": 2,
+            "distance": 2003,
+            "sectionTime": 11,
+            "stationCount": 5,
+            "lane": [
+              {
+                "busNo": "3315",
+                "type": 12,
+                "busID": 1025,
+                "busLocalBlID": "100100221",
+                "busCityCode": 1000,
+                "busProviderCode": 4
+              }
+            ],
+            "intervalTime": 8,
+            "startName": "삼전역.잠실현대아파트",
+            "startX": 127.087413,
+            "startY": 37.503364,
+            "endName": "잠실역1번.11번출구",
+            "endX": 127.102927,
+            "endY": 37.514034,
+            "startID": 108644,
+            "startStationCityCode": 1000,
+            "startStationProviderCode": 4,
+            "startLocalStationID": "123000084",
+            "startArsID": "24-173",
+            "endID": 163084,
+            "endStationCityCode": 1000,
+            "endStationProviderCode": 4,
+            "endLocalStationID": "123000045",
+            "endArsID": "24-134",
+            "passStopList": {
+              "stations": [
+                {
+                  "index": 0,
+                  "stationID": 108644,
+                  "stationName": "삼전역.잠실현대아파트",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000084",
+                  "arsID": "24-173",
+                  "x": "127.087413",
+                  "y": "37.503364",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 1,
+                  "stationID": 163072,
+                  "stationName": "삼전삼밭나루공원입구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000083",
+                  "arsID": "24-172",
+                  "x": "127.089754",
+                  "y": "37.506139",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 2,
+                  "stationID": 108783,
+                  "stationName": "영동일고레이크팰리스앞",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000060",
+                  "arsID": "24-149",
+                  "x": "127.09213",
+                  "y": "37.508896",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 3,
+                  "stationID": 108799,
+                  "stationName": "갤러리아팰리스",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000058",
+                  "arsID": "24-147",
+                  "x": "127.093017",
+                  "y": "37.511264",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 4,
+                  "stationID": 108908,
+                  "stationName": "잠실역.롯데월드",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000057",
+                  "arsID": "24-146",
+                  "x": "127.098172",
+                  "y": "37.512511",
+                  "isNonStop": "N"
+                },
+                {
+                  "index": 5,
+                  "stationID": 163084,
+                  "stationName": "잠실역1번.11번출구",
+                  "stationCityCode": 1000,
+                  "stationProviderCode": 4,
+                  "localStationID": "123000045",
+                  "arsID": "24-134",
+                  "x": "127.102927",
+                  "y": "37.514034",
+                  "isNonStop": "N"
+                }
+              ]
+            }
+          },
+          {
+            "trafficType": 3,
+            "distance": 135,
+            "sectionTime": 2
+          }
+        ]
+      }
+    ]
+  }
+}

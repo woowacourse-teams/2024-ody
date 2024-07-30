@@ -2,7 +2,7 @@ package com.woowacourse.ody.presentation.address
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.woowacourse.ody.domain.repository.GeoLocationRepository
+import com.woowacourse.ody.domain.repository.location.GeoLocationRepository
 
 class AddressSearchViewModelFactory(
     private val geoLocationRepository: GeoLocationRepository,

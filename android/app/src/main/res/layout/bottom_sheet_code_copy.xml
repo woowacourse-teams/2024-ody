@@ -6,7 +6,7 @@
 
         <variable
             name="copyInviteCodeListener"
-            type="com.woowacourse.ody.presentation.notificationlog.CopyInviteCodeListener" />
+            type="com.woowacourse.ody.presentation.room.CopyInviteCodeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -54,7 +54,7 @@ public interface MeetingControllerSwagger {
     )
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<NotiLogFindResponses> findAllMeetingLogs(String fcmToken, Long meetingId);
+    ResponseEntity<NotiLogFindResponses> findAllMeetingLogs(@Parameter(hidden = true) Member member, Long meetingId);
 
     @Operation(
             summary = "모임 개설",
@@ -70,8 +70,10 @@ public interface MeetingControllerSwagger {
     @ErrorCode400
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<MeetingSaveResponse> save(@Parameter(hidden = true) Member member,
-                                             MeetingSaveRequest meetingSaveRequest);
+    ResponseEntity<MeetingSaveResponse> save(
+            @Parameter(hidden = true) Member member,
+            MeetingSaveRequest meetingSaveRequest
+    );
 
     @Operation(
             summary = "초대코드 유효성 검사",
