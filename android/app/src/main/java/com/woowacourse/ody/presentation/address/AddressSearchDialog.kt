@@ -15,6 +15,7 @@ import androidx.webkit.WebViewAssetLoader
 import com.woowacourse.ody.data.remote.thirdparty.location.repository.KakaoGeoLocationRepository
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
 import com.woowacourse.ody.presentation.address.listener.AddressReceiveListener
+import com.woowacourse.ody.presentation.address.model.toGeoLocationUiModel
 import com.woowacourse.ody.presentation.address.web.AddressSearchInterface
 import com.woowacourse.ody.presentation.address.web.LocalContentWebViewClient
 

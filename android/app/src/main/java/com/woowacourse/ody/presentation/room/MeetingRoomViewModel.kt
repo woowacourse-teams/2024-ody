@@ -8,6 +8,8 @@ import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.room.model.MeetingUiModel
 import com.woowacourse.ody.presentation.room.model.NotificationLogUiModel
+import com.woowacourse.ody.presentation.room.model.toMeetingUiModel
+import com.woowacourse.ody.presentation.room.model.toNotificationUiModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
