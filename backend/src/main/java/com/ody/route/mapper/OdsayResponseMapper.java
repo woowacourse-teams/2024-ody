@@ -4,7 +4,6 @@ import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.route.dto.OdsayResponse;
 import java.util.Optional;
-import java.util.OptionalLong;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -19,36 +18,41 @@ public class OdsayResponseMapper {
     }
 
     public static long mapMinutes(OdsayResponse response) {
-        Optional<String> code = response.code();
-        OptionalLong minutes = response.minutes();
+        checkOdsayException(response);
 
-        if (code.isPresent()) {
-            checkOdsayCode(response);
-        }
-
-        if (isCloseLocation(code)) {
+        if (isCloseLocation(response)) {
             return ZERO_TIME;
         }
 
-        return minutes.orElseThrow(() -> {
+        return response.minutes().orElseThrow(() -> {
             log.error("OdsayResponse minutes is Empty: {}", response);
             return new OdyServerErrorException("서버 에러");
         });
     }
 
-    private static boolean isCloseLocation(Optional<String> code) {
+    private static boolean isCloseLocation(OdsayResponse response) {
+        Optional<String> code = response.code();
         return code.isPresent() && CLOSE_LOCATION_CODE.equals(code.get());
     }
 
-    private static void checkOdsayCode(OdsayResponse response) {
-        Optional<String> code = response.code();
-        Optional<String> message = response.message();
+    private static void checkOdsayException(OdsayResponse response) {
+        if (response == null) {
+            throw new OdyServerErrorException("response is null");
+        }
 
-        if (code.isEmpty() || ODSAY_SERVER_ERROR.equals(code.get())) {
+        if (isServerErrorCode(response)) {
             log.error("ODsay 500 에러: {}", response);
             throw new OdyServerErrorException("서버 에러");
         }
 
-        throw new OdyBadRequestException(message.orElse(EMPTY_MESSAGE));
+        throw new OdyBadRequestException(
+                response.message()
+                .orElse(EMPTY_MESSAGE)
+        );
+    }
+
+    private static boolean isServerErrorCode(OdsayResponse response) {
+        Optional<String> code = response.code();
+        return code.isPresent() && ODSAY_SERVER_ERROR.equals(code.get());
     }
 }

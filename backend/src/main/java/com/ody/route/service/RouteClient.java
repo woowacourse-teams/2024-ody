@@ -30,7 +30,7 @@ public class RouteClient {
                 .uri(makeURI(origin, target))
                 .retrieve()
                 .body(OdsayResponse.class);
-        return new RouteTime(OdsayResponseMapper.mapMinutes(response)); //TODO : NPE 가능성 체크
+        return new RouteTime(OdsayResponseMapper.mapMinutes(response));
     }
 
     private URI makeURI(Location origin, Location target) {
