@@ -12,7 +12,6 @@ import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.service.RouteService;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,7 @@ public class NotificationService {
         saveAndSendEntryNotification(meeting, mate);
         fcmSubscriber.subscribeTopic(meeting, deviceToken);
         saveAndSendDepartureNotification(meeting, mate);
-    };
+    }
 
     private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
         Notification entryNotification = new Notification(
@@ -56,16 +55,12 @@ public class NotificationService {
     }
 
     private void saveAndSendDepartureNotification(Meeting meeting, Mate mate) {
-        DepartureTime sendAt = routeService.calculateDepartureTime(
-                mate.getOrigin(),
-                meeting.getTarget(),
-                LocalDateTime.of(meeting.getDate(), meeting.getTime())
-        );
+        LocalDateTime sendAt = calculateSendAt(meeting, mate);
 
         Notification departureNotification = new Notification(
                 mate,
                 NotificationType.DEPARTURE_REMINDER,
-                sendAt.getValue(),
+                sendAt,
                 NotificationStatus.PENDING
         );
         Notification savedNotification = notificationRepository.save(departureNotification);
@@ -73,9 +68,21 @@ public class NotificationService {
         FcmSendRequest fcmSendRequest = new FcmSendRequest(
                 meeting.getId().toString(),
                 savedNotification.getId(),
-                LocalDateTime.now().plusSeconds(10) // TODO: savedNotification.getSendAt() 으로 변경
+                savedNotification.getSendAt()
         );
         publisher.publishEvent(fcmSendRequest);
+    }
+
+    private LocalDateTime calculateSendAt(Meeting meeting, Mate mate) {
+        DepartureTime sendAt = routeService.calculateDepartureTime(
+                mate.getOrigin(),
+                meeting.getTarget(),
+                LocalDateTime.of(meeting.getDate(), meeting.getTime())
+        );
+        if (sendAt.isBefore(LocalDateTime.now())) {
+            return LocalDateTime.now().withNano(0);
+        }
+        return sendAt.getValue().withNano(0);
     }
 
     public List<Notification> findAllMeetingLogs(Long meetingId) {

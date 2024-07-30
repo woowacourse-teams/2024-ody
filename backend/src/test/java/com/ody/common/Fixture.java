@@ -72,6 +72,6 @@ public class Fixture {
             NotificationStatus.DONE
     );
 
-    public Fixture() {
+    private Fixture() {
     }
 }
