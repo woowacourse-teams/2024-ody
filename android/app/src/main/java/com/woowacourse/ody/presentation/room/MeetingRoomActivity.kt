@@ -85,9 +85,6 @@ class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareLi
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
 
-        fun getIntent(
-            context: Context,
-            meeting: Meeting?,
-        ): Intent = Intent(context, MeetingRoomActivity::class.java)
+        fun getIntent(context: Context): Intent = Intent(context, MeetingRoomActivity::class.java)
     }
 }

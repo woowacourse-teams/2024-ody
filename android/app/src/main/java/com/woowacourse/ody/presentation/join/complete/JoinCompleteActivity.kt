@@ -35,7 +35,7 @@ class JoinCompleteActivity : AppCompatActivity() {
         }
 
         viewModel.navigateAction.observe(this) {
-            startActivity(MeetingRoomActivity.getIntent(this@JoinCompleteActivity, viewModel.meetingResponse.value))
+            startActivity(MeetingRoomActivity.getIntent(this@JoinCompleteActivity))
         }
     }
 
