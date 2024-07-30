@@ -58,9 +58,7 @@ class MeetingDateFragment : Fragment() {
                 return@setOnDateChangedListener
             }
 
-            viewModel.meetingYear.value = year
-            viewModel.meetingMonth.value = month + 1
-            viewModel.meetingDay.value = dayOfMonth
+            viewModel.meetingDate.value = selectedDate
         }
     }
 

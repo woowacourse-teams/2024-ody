@@ -9,6 +9,7 @@ import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -16,9 +17,7 @@ class MeetingCreationViewModel : ViewModel() {
     val meetingInfoType: MutableLiveData<MeetingInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
-    val meetingYear: MutableLiveData<Int> = MutableLiveData()
-    val meetingMonth: MutableLiveData<Int> = MutableLiveData()
-    val meetingDay: MutableLiveData<Int> = MutableLiveData()
+    val meetingDate: MutableLiveData<LocalDate> = MutableLiveData()
 
     val meetingHour: MutableLiveData<Int> = MutableLiveData()
     val meetingMinute: MutableLiveData<Int> = MutableLiveData()
@@ -84,12 +83,10 @@ class MeetingCreationViewModel : ViewModel() {
     }
 
     private fun isValidMeetingDateTime(): Boolean {
-        val year = meetingYear.value ?: return false
-        val month = meetingMonth.value ?: return false
-        val day = meetingDay.value ?: return false
+        val date = meetingDate.value ?: return false
         val hour = meetingHour.value ?: return false
         val minute = meetingMinute.value ?: return false
-        val dateTime = LocalDateTime.of(year, month, day, hour, minute)
+        val dateTime = LocalDateTime.of(date, LocalTime.of(hour, minute))
         return LocalDateTime.now().isBefore(dateTime)
     }
 
