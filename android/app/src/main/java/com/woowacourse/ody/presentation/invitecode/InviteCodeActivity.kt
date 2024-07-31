@@ -11,7 +11,6 @@ import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityInviteCodeBinding
 import com.woowacourse.ody.presentation.common.listener.BackListener
-import com.woowacourse.ody.presentation.common.observeEvent
 import com.woowacourse.ody.presentation.join.MeetingJoinActivity
 
 class InviteCodeActivity : AppCompatActivity(), BackListener {
@@ -39,15 +38,15 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeObserve() {
-        viewModel.isValidInviteCode.observeEvent(this) { isValid ->
+        viewModel.isValidInviteCode.observe(this) { isValid ->
             if (isValid) {
                 // 모임에 참여됨. 로그 화면으로 이동
-                return@observeEvent
+                return@observe
             }
             viewModel.emptyInviteCode()
             showSnackBar(R.string.invalid_invite_code)
         }
-        viewModel.navigateAction.observeEvent(this) {
+        viewModel.navigateAction.observe(this) {
             navigateToJoinView()
         }
     }

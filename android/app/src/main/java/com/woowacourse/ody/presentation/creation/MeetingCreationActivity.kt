@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import com.woowacourse.ody.databinding.ActivityMeetingCreationBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.common.listener.BackListener
-import com.woowacourse.ody.presentation.common.observeEvent
 import com.woowacourse.ody.presentation.creation.complete.MeetingCompletionActivity
 import com.woowacourse.ody.presentation.creation.date.MeetingDateFragment
 import com.woowacourse.ody.presentation.creation.destination.MeetingDestinationFragment
@@ -24,6 +23,7 @@ import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
 import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
+import java.time.LocalTime
 
 class MeetingCreationActivity : AppCompatActivity(), BackListener {
     private val binding: ActivityMeetingCreationBinding by lazy {
@@ -117,7 +117,7 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeObserve() {
-        viewModel.nextPageEvent.observeEvent(this) {
+        viewModel.nextPageEvent.observe(this) {
             if (binding.vpMeetingInfo.visibility == View.VISIBLE) {
                 handleMeetingInfoNextClick()
             } else {
@@ -142,18 +142,8 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
             val meetingInfo =
                 arrayListOf(
                     viewModel.meetingName.value.toString(),
-                    viewModel.meetingYear.value.toString() + "-" +
-                        if (viewModel.meetingMonth.value.toString().length == 1) {
-                            "0${viewModel.meetingMonth.value}"
-                        } else {
-                            "${viewModel.meetingMonth.value}"
-                        } + "-" + viewModel.meetingDay.value.toString(),
-                    viewModel.meetingHour.value.toString() + ":" +
-                        if (viewModel.meetingMinute.value.toString().length == 1) {
-                            "0${viewModel.meetingMinute.value}"
-                        } else {
-                            viewModel.meetingMinute.value.toString()
-                        },
+                    viewModel.meetingDate.value.toString(),
+                    LocalTime.of(viewModel.meetingHour.value ?: 1, viewModel.meetingMinute.value ?: 0).toString(),
                     viewModel.destinationGeoLocation.value!!.address,
                     viewModel.destinationGeoLocation.value!!.latitude.slice(0..8),
                     viewModel.destinationGeoLocation.value!!.longitude.slice(0..8),
