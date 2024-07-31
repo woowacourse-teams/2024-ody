@@ -1,7 +1,6 @@
 package com.woowacourse.ody.presentation.creation.date
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import com.woowacourse.ody.databinding.FragmentMeetingDateBinding
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
 import com.woowacourse.ody.presentation.creation.MeetingInfoType
 import java.time.LocalDate
-import java.time.Month
 
 class MeetingDateFragment : Fragment() {
     private var _binding: FragmentMeetingDateBinding? = null
