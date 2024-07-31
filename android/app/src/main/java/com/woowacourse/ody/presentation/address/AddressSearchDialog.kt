@@ -12,7 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.webkit.WebViewAssetLoader
-import com.woowacourse.ody.data.remote.thirdparty.location.repository.KakaoGeoLocationRepository
+import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
 import com.woowacourse.ody.presentation.address.listener.AddressReceiveListener
 import com.woowacourse.ody.presentation.address.model.toGeoLocationUiModel
@@ -22,9 +22,12 @@ import com.woowacourse.ody.presentation.address.web.LocalContentWebViewClient
 class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private var _binding: DialogAddressSearchBinding? = null
     private val binding get() = _binding!!
+    private val application: OdyApplication by lazy {
+        requireContext().applicationContext as OdyApplication
+    }
 
-    private val viewModel by viewModels<AddressSearchViewModel> {
-        AddressSearchViewModelFactory(KakaoGeoLocationRepository)
+    private val viewModel: AddressSearchViewModel by viewModels {
+        AddressSearchViewModelFactory(application.kakaoGeoLocationRepository)
     }
 
     override fun onCreateView(
