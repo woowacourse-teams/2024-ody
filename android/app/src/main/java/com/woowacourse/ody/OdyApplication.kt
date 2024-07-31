@@ -20,11 +20,6 @@ import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
-import com.woowacourse.ody.presentation.address.AddressSearchViewModelFactory
-import com.woowacourse.ody.presentation.invitecode.InviteCodeViewModelFactory
-import com.woowacourse.ody.presentation.join.complete.JoinCompleteViewModelFactory
-import com.woowacourse.ody.presentation.room.MeetingRoomViewModelFactory
-import com.woowacourse.ody.presentation.splash.SplashViewModelFactory
 import retrofit2.Retrofit
 import timber.log.Timber
 
@@ -41,48 +36,31 @@ class OdyApplication : Application() {
     private val kakaoLocationService: KakaoLocationService =
         kakaoRetrofit.create(KakaoLocationService::class.java)
 
-    private val joinRepository: JoinRepository by lazy { DefaultJoinRepository(joinService) }
-    private val meetingRepository: MeetingRepository by lazy {
+    val joinRepository: JoinRepository by lazy { DefaultJoinRepository(joinService) }
+    val meetingRepository: MeetingRepository by lazy {
         DefaultMeetingRepository(
             meetingService,
         )
     }
-    private val notificationLogRepository: NotificationLogRepository by lazy {
+    val notificationLogRepository: NotificationLogRepository by lazy {
         DefaultNotificationLogRepository(
             notificationService,
         )
     }
 
-    private val kakaoGeoLocationRepository: KakaoGeoLocationRepository by lazy {
+    val kakaoGeoLocationRepository: KakaoGeoLocationRepository by lazy {
         KakaoGeoLocationRepository(
             kakaoLocationService,
         )
     }
 
-    private val inviteCodeRepository: InviteCodeRepository by lazy {
+    val inviteCodeRepository: InviteCodeRepository by lazy {
         DefaultInviteCodeRepository(odyDatastore)
     }
 
     val fcmTokenRepository: FCMTokenRepository by lazy {
         DefaultFCMTokenRepository(odyDatastore)
     }
-
-    val meetingRoomViewModelFactory: MeetingRoomViewModelFactory =
-        MeetingRoomViewModelFactory(
-            notificationLogRepository,
-            meetingRepository,
-        )
-    val joinCompleteViewModelFactory: JoinCompleteViewModelFactory =
-        JoinCompleteViewModelFactory(
-            meetingRepository = meetingRepository,
-            joinRepository = joinRepository,
-            inviteCodeRepository = inviteCodeRepository,
-        )
-    val inviteCodeViewModelFactory: InviteCodeViewModelFactory =
-        InviteCodeViewModelFactory(meetingRepository)
-    val splashViewModelFactory: SplashViewModelFactory = SplashViewModelFactory(meetingRepository)
-    val addressSearchViewModelFactory: AddressSearchViewModelFactory =
-        AddressSearchViewModelFactory(kakaoGeoLocationRepository)
 
     override fun onCreate() {
         super.onCreate()

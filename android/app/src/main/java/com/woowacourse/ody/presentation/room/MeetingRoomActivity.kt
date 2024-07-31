@@ -23,7 +23,10 @@ class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareLi
     }
 
     private val viewModel: MeetingRoomViewModel by viewModels {
-        application.meetingRoomViewModelFactory
+        MeetingRoomViewModelFactory(
+            application.notificationLogRepository,
+            application.meetingRepository,
+        )
     }
 
     private val binding: ActivityMeetingRoomBinding by lazy {

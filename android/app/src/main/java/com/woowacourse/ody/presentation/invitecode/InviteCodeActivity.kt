@@ -22,7 +22,7 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
         ActivityInviteCodeBinding.inflate(layoutInflater)
     }
     private val viewModel: InviteCodeViewModel by viewModels<InviteCodeViewModel> {
-        application.inviteCodeViewModelFactory
+        InviteCodeViewModelFactory(application.meetingRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -16,7 +16,11 @@ class JoinCompleteActivity : AppCompatActivity() {
         applicationContext as OdyApplication
     }
     private val viewModel: JoinCompleteViewModel by viewModels<JoinCompleteViewModel> {
-        application.joinCompleteViewModelFactory
+        JoinCompleteViewModelFactory(
+            meetingRepository = application.meetingRepository,
+            joinRepository = application.joinRepository,
+            inviteCodeRepository = application.inviteCodeRepository,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

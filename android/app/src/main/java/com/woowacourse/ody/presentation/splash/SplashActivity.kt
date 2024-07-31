@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
         applicationContext as OdyApplication
     }
     private val viewModel: SplashViewModel by viewModels {
-        application.splashViewModelFactory
+        SplashViewModelFactory(application.meetingRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

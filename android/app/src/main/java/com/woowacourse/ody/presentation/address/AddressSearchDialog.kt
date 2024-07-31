@@ -27,7 +27,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     }
 
     private val viewModel: AddressSearchViewModel by viewModels {
-        application.addressSearchViewModelFactory
+        AddressSearchViewModelFactory(application.kakaoGeoLocationRepository)
     }
 
     override fun onCreateView(
