@@ -10,7 +10,7 @@ import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.util.InviteCodeGenerator;
-import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
