@@ -4,18 +4,18 @@ import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.route.dto.OdsayResponse;
 import java.util.Optional;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OdsayResponseMapper {
 
     private static final String CLOSE_LOCATION_CODE = "-98"; //출발지-도착지가 700m 이내일 때
     private static final String ODSAY_SERVER_ERROR = "500";
     private static final String EMPTY_MESSAGE = "";
     private static final long ZERO_TIME = 0L;
-
-    private OdsayResponseMapper() {
-    }
 
     public static long mapMinutes(OdsayResponse response) {
         checkOdsayException(response);
