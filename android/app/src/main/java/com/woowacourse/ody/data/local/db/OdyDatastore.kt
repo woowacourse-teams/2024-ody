@@ -18,9 +18,15 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
-    fun getInviteCode(): Flow<String> {
+    fun getInviteCode(): Flow<Result<String>> {
         return context.dataStore.data.map { preferences ->
-            preferences[INVITE_CODE] ?: ""
+            preferences[INVITE_CODE].let {
+                if (!it.isNullOrEmpty()) {
+                    Result.success(it)
+                } else {
+                    Result.failure(Exception())
+                }
+            }
         }
     }
 
@@ -30,9 +36,15 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
-    fun getToken(): Flow<String> {
+    fun getToken(): Flow<Result<String>> {
         return context.dataStore.data.map { preferences ->
-            preferences[TOKEN] ?: ""
+            preferences[INVITE_CODE].let {
+                if (!it.isNullOrEmpty()) {
+                    Result.success(it)
+                } else {
+                    Result.failure(Exception())
+                }
+            }
         }
     }
 

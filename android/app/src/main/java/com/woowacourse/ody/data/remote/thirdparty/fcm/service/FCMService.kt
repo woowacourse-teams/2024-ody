@@ -14,6 +14,8 @@ import com.woowacourse.ody.domain.model.NotificationType
 import kotlinx.coroutines.runBlocking
 
 class FCMService : FirebaseMessagingService() {
+    private val odyApplication = applicationContext as OdyApplication
+
     override fun onMessageReceived(message: RemoteMessage) {
         val title = message.getNotification()?.title
         val type =
@@ -77,10 +79,10 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        val retrofit = RetrofitClient.retrofit
+        val retrofit = RetrofitClient().retrofit
         val memberService = retrofit.create(MemberService::class.java)
         runBlocking {
-            (application as OdyApplication).odyDatastore.setToken(token)
+            odyApplication.fcmTokenRepository.postFCMToken(token)
             memberService.postMember()
         }
         setNotificationChannel()
