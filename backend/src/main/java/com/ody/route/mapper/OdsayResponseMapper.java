@@ -18,10 +18,16 @@ public class OdsayResponseMapper {
     private static final long ZERO_TIME = 0L;
 
     public static long mapMinutes(OdsayResponse response) {
-        checkOdsayException(response);
+        if (response == null) {
+            throw new OdyServerErrorException("response is null");
+        }
 
         if (isCloseLocation(response)) {
             return ZERO_TIME;
+        }
+
+        if(response.code().isPresent()) {
+            checkOdsayException(response);
         }
 
         return response.minutes().orElseThrow(() -> {
@@ -36,10 +42,6 @@ public class OdsayResponseMapper {
     }
 
     private static void checkOdsayException(OdsayResponse response) {
-        if (response == null) {
-            throw new OdyServerErrorException("response is null");
-        }
-
         if (isServerErrorCode(response)) {
             log.error("ODsay 500 에러: {}", response);
             throw new OdyServerErrorException("서버 에러");
