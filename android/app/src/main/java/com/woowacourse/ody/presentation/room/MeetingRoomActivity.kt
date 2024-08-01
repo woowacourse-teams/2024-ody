@@ -15,6 +15,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.presentation.room.adapter.NotificationLogsAdapter
+import com.woowacourse.ody.presentation.room.listener.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.room.listener.ShareListener
 
 class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareListener {
@@ -70,11 +71,11 @@ class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareLi
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
     }
 
-    override fun share() {
+    override fun onShare() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    override fun copyInviteCode() {
+    override fun onCopyInviteCode() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         val inviteCode = viewModel.meeting.value?.inviteCode
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
