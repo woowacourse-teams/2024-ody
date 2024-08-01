@@ -64,9 +64,9 @@ class MeetingCreationViewModel : ViewModel() {
     }
 
     fun initializeMeetingTime() {
-        if (meetingHour.value != null || meetingMinute.value != null) {
-            return
-        }
+        val isInitializedValue = meetingHour.value != null || meetingMinute.value != null
+        if (isInitializedValue) return
+
         val now = LocalTime.now()
         meetingHour.value = now.hour
         meetingMinute.value = now.minute
