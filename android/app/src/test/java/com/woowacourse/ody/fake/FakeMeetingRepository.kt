@@ -1,7 +1,5 @@
 package com.woowacourse.ody.fake
 
-import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
-import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingResponse
 import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
@@ -42,6 +40,4 @@ object FakeMeetingRepository : MeetingRepository {
                 "A,B,C",
             ),
         )
-
-
 }
