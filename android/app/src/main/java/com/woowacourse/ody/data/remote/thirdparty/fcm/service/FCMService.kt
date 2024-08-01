@@ -14,7 +14,7 @@ import com.woowacourse.ody.domain.model.NotificationType
 import kotlinx.coroutines.runBlocking
 
 class FCMService : FirebaseMessagingService() {
-    private val odyApplication = applicationContext as OdyApplication
+    private val odyApplication by lazy { applicationContext as OdyApplication }
 
     override fun onMessageReceived(message: RemoteMessage) {
         val title = message.getNotification()?.title
