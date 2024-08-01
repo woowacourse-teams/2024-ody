@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 import java.lang.annotation.Annotation;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,14 +84,15 @@ class FutureOrPresentDateTimeValidatorTest {
     }
 
     private static Stream<Arguments> dateTimeTestCases() {
-        LocalDate today = LocalDate.now();
-        LocalTime currentTime = LocalTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime beforeHour = LocalDateTime.now().minusHours(1L);
+        LocalDateTime afterHour = LocalDateTime.now().plusHours(1L);
 
         return Stream.of(
-                Arguments.of(today, currentTime, false),
-                Arguments.of(today, currentTime.plusHours(1), true),
-                Arguments.of(today, currentTime.minusHours(1), false),
-                Arguments.of(today.plusDays(1), currentTime, true)
+                Arguments.of(now.toLocalDate(), now.toLocalTime(), false),
+                Arguments.of(afterHour.toLocalDate(), afterHour.toLocalTime(), true),
+                Arguments.of(beforeHour.toLocalDate(), beforeHour.toLocalTime(), false),
+                Arguments.of(now.toLocalDate().plusDays(1L), now.toLocalTime(), true)
         );
     }
 }
