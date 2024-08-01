@@ -1,6 +1,5 @@
 package com.woowacourse.ody.presentation.common.binding
 
-import android.app.Application
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
