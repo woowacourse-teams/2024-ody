@@ -47,7 +47,6 @@ class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareLi
         initializeBinding()
         initializeObserve()
         initializePersistentBottomSheet()
-        viewModel.initialize()
     }
 
     private fun initializeBinding() {

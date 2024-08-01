@@ -17,6 +17,10 @@ class MeetingRoomViewModel(
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
+    init {
+        fetchMeeting()
+    }
+
     private val _meeting = MutableLiveData<MeetingUiModel>()
     val meeting: LiveData<MeetingUiModel> = _meeting
 
@@ -29,7 +33,7 @@ class MeetingRoomViewModel(
                 .onSuccess {
                     _notificationLogs.postValue(it.toNotificationUiModels())
                 }.onFailure {
-                    Timber.e(it.message.toString())
+                    Timber.e(it.message)
                 }
         }
 
@@ -40,11 +44,7 @@ class MeetingRoomViewModel(
                     _meeting.postValue(it.first().toMeetingUiModel())
                     fetchNotificationLogs(it.first().id)
                 }.onFailure {
-                    Timber.e(it.message.toString())
+                    Timber.e(it.message)
                 }
         }
-
-    fun initialize() {
-        fetchMeeting()
-    }
 }
