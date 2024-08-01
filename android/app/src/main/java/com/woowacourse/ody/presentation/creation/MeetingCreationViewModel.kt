@@ -126,7 +126,7 @@ class MeetingCreationViewModel : ViewModel() {
         isValidInfo.value = isValid
     }
 
-    fun checkMeetingDateValidity(meetingDate: LocalDate) {
+    fun updateMeetingDate(meetingDate: LocalDate) {
         val now = LocalDate.now()
         if (now.isAfter(meetingDate)) {
             _invalidMeetingDateEvent.setValue(Unit)

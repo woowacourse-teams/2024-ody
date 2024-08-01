@@ -51,7 +51,7 @@ class MeetingDateFragment : Fragment() {
 
         binding.dpDate.setOnDateChangedListener { _, year, month, dayOfMonth ->
             val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-            viewModel.checkMeetingDateValidity(selectedDate)
+            viewModel.updateMeetingDate(selectedDate)
         }
     }
 
