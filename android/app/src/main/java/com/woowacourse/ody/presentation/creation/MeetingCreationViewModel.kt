@@ -16,6 +16,7 @@ import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.creation.listener.MeetingCreationListener
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -26,7 +27,7 @@ class MeetingCreationViewModel(
     private val meetingRepository: MeetingRepository,
     private val joinRepository: JoinRepository,
     private val inviteCodeRepository: InviteCodeRepository,
-) : ViewModel() {
+) : ViewModel(), MeetingCreationListener {
     val meetingInfoType: MutableLiveData<MeetingInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
@@ -59,6 +60,9 @@ class MeetingCreationViewModel(
 
     private val _makeMeetingResponse: MutableLiveData<Meeting?> = MutableLiveData(null)
     val makeMeetingResponse: LiveData<Meeting?> get() = _makeMeetingResponse
+
+    private val _navigateAction: MutableSingleLiveData<MeetingCreationNavigateAction> = MutableSingleLiveData()
+    val navigateAction: SingleLiveData<MeetingCreationNavigateAction> get() = _navigateAction
 
     init {
         initializeIsValidInfo()
@@ -202,6 +206,22 @@ class MeetingCreationViewModel(
         if (meetingInfoType.value == MeetingInfoType.TIME) {
             _invalidMeetingTimeEvent.setValue(Unit)
         }
+    }
+
+    fun navigateToRoom() {
+        _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToRoom)
+    }
+
+    fun navigateToIntro() {
+        _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToIntro)
+    }
+
+    override fun onClickCreationMeeting() {
+        _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToCreationComplete)
+    }
+
+    override fun onClickMJoinMeeting() {
+        _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToJoinComplete)
     }
 
     companion object {
