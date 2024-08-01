@@ -11,6 +11,7 @@ import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingReques
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.toMeeting
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.MeetingJoinInfo
 import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
@@ -112,7 +113,7 @@ class MeetingCreationViewModel(
 
         viewModelScope.launch {
             joinRepository.postMates(
-                JoinRequest(
+                MeetingJoinInfo(
                     inviteCode,
                     nickname.value.toString(),
                     startingPointAddress,
