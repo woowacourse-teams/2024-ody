@@ -49,7 +49,7 @@ public class OdsayResponseMapper {
 
         throw new OdyBadRequestException(
                 response.message()
-                .orElse(EMPTY_MESSAGE)
+                     .orElse(EMPTY_MESSAGE)
         );
     }
 
