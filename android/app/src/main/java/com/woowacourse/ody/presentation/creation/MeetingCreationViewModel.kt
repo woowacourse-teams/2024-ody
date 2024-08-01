@@ -140,7 +140,7 @@ class MeetingCreationViewModel(
             }
         }
     }
-    
+
     private fun initializeIsValidInfo() {
         with(isValidInfo) {
             addSource(meetingInfoType) { checkInfoValidity() }
@@ -151,15 +151,6 @@ class MeetingCreationViewModel(
             addSource(meetingHour) { isValidInfo.value = true }
             addSource(meetingMinute) { isValidInfo.value = true }
         }
-    }
-
-    fun initializeMeetingTime() {
-        val isInitializedValue = meetingHour.value != null || meetingMinute.value != null
-        if (isInitializedValue) return
-
-        val now = LocalTime.now()
-        meetingHour.value = now.hour
-        meetingMinute.value = now.minute
     }
 
     fun clearMeetingName() {
