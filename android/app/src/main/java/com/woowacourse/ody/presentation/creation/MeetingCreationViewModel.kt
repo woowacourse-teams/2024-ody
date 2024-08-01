@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.model.MeetingJoinInfo
 import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
@@ -83,7 +83,7 @@ class MeetingCreationViewModel(
 
         viewModelScope.launch {
             meetingRepository.postMeeting(
-                MeetingRequest(
+                MeetingCreationInfo(
                     meetingName.value.toString(),
                     meetingDate.value.toString(),
                     LocalTime.of(meetingHour.value ?: 1, meetingMinute.value ?: 0).toString(),
