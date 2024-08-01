@@ -17,16 +17,19 @@ class MeetingCreationViewModel : ViewModel() {
     val meetingInfoType: MutableLiveData<MeetingInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
-    val meetingDate: MutableLiveData<LocalDate> = MutableLiveData()
+    val meetingName: MutableLiveData<String> = MutableLiveData()
+    val meetingNameLength: LiveData<Int> = meetingName.map { it.length }
+
+    val meetingDate: MutableLiveData<LocalDate> = MutableLiveData(LocalDate.now())
+
+    private val _invalidMeetingDateEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val invalidMeetingDateEvent: SingleLiveData<Unit> get() = _invalidMeetingDateEvent
 
     val meetingHour: MutableLiveData<Int> = MutableLiveData()
     val meetingMinute: MutableLiveData<Int> = MutableLiveData()
 
     private val _invalidMeetingTimeEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
     val invalidMeetingTimeEvent: SingleLiveData<Unit> get() = _invalidMeetingTimeEvent
-
-    val meetingName: MutableLiveData<String> = MutableLiveData()
-    val meetingNameLength: LiveData<Int> = meetingName.map { it.length }
 
     val destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
 
@@ -48,15 +51,6 @@ class MeetingCreationViewModel : ViewModel() {
         initializeIsValidInfo()
     }
 
-    fun initializeMeetingTime() {
-        if (meetingHour.value != null || meetingMinute.value != null) {
-            return
-        }
-        val now = LocalTime.now()
-        meetingHour.value = now.hour
-        meetingMinute.value = now.minute
-    }
-
     private fun initializeIsValidInfo() {
         with(isValidInfo) {
             addSource(meetingInfoType) { checkInfoValidity() }
@@ -69,12 +63,21 @@ class MeetingCreationViewModel : ViewModel() {
         }
     }
 
-    fun emptyNickname() {
-        nickname.value = ""
+    fun initializeMeetingTime() {
+        val isInitializedValue = meetingHour.value != null || meetingMinute.value != null
+        if (isInitializedValue) return
+
+        val now = LocalTime.now()
+        meetingHour.value = now.hour
+        meetingMinute.value = now.minute
     }
 
-    fun emptyMeetingName() {
+    fun clearMeetingName() {
         meetingName.value = ""
+    }
+
+    fun clearNickname() {
+        nickname.value = ""
     }
 
     private fun isValidMeetingName(): Boolean {
@@ -90,16 +93,16 @@ class MeetingCreationViewModel : ViewModel() {
         return LocalDateTime.now().isBefore(dateTime)
     }
 
-    private fun isValidNickName(): Boolean {
-        val nickName = nickname.value ?: return false
-        return nickName.isNotEmpty()
-    }
-
     private fun isValidDestination(): Boolean {
         val destinationGeoLocation = destinationGeoLocation.value ?: return false
         return AddressValidator.isValid(destinationGeoLocation.address).also {
             if (!it) _invalidDestinationEvent.setValue(Unit)
         }
+    }
+
+    private fun isValidNickName(): Boolean {
+        val nickName = nickname.value ?: return false
+        return nickName.isNotEmpty()
     }
 
     private fun isValidStartingPoint(): Boolean {
@@ -121,6 +124,15 @@ class MeetingCreationViewModel : ViewModel() {
                 MeetingInfoType.STARTING_POINT -> isValidStartingPoint()
             }
         isValidInfo.value = isValid
+    }
+
+    fun updateMeetingDate(meetingDate: LocalDate) {
+        val now = LocalDate.now()
+        if (now.isAfter(meetingDate)) {
+            _invalidMeetingDateEvent.setValue(Unit)
+            return
+        }
+        this.meetingDate.value = meetingDate
     }
 
     fun moveOnNextPage() {

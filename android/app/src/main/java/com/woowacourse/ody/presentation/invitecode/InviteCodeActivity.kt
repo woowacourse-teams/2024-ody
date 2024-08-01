@@ -38,12 +38,8 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
     }
 
     private fun initializeObserve() {
-        viewModel.isValidInviteCode.observe(this) { isValid ->
-            if (isValid) {
-                // 모임에 참여됨. 로그 화면으로 이동
-                return@observe
-            }
-            viewModel.emptyInviteCode()
+        viewModel.invalidInviteCodeEvent.observe(this) {
+            viewModel.clearInviteCode()
             showSnackBar(R.string.invalid_invite_code)
         }
         viewModel.navigateAction.observe(this) {
