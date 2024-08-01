@@ -98,7 +98,7 @@ class MeetingCreationViewModel(
                 ),
             ).onSuccess {
                 inviteCodeRepository.postInviteCode(it.inviteCode)
-                _makeMeetingResponse.value = it.toMeeting()
+                _makeMeetingResponse.value = it
             }.onFailure {
                 Timber.e(it.message)
             }
@@ -121,7 +121,7 @@ class MeetingCreationViewModel(
                 ),
             ).onSuccess {
                 inviteCodeRepository.postInviteCode(it.inviteCode)
-                _makeMeetingResponse.value = it.toMeeting()
+                _makeMeetingResponse.value = it
             }.onFailure {
                 Timber.e(it.message)
             }
