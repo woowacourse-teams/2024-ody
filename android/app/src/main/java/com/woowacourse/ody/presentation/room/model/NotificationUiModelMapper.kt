@@ -12,5 +12,4 @@ fun NotificationLog.toNotificationUiModel(): NotificationLogUiModel {
     )
 }
 
-fun List<NotificationLog>.toNotificationUiModels(): List<NotificationLogUiModel> =
-    this.map { it.toNotificationUiModel() }
+fun List<NotificationLog>.toNotificationUiModels(): List<NotificationLogUiModel> = this.map { it.toNotificationUiModel() }

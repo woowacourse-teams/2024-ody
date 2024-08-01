@@ -6,7 +6,8 @@ import com.woowacourse.ody.domain.model.NotificationLog
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 
 class DefaultNotificationLogRepository(private val notificationService: NotificationService) : NotificationLogRepository {
-    override suspend fun fetchNotificationLogs(meetingId: Long): Result<List<NotificationLog>> = runCatching {
-        notificationService.fetchNotificationLogs(meetingId).toNotificationList()
-    }
+    override suspend fun fetchNotificationLogs(meetingId: Long): Result<List<NotificationLog>> =
+        runCatching {
+            notificationService.fetchNotificationLogs(meetingId).toNotificationList()
+        }
 }
