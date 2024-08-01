@@ -39,7 +39,7 @@ class InviteCodeActivity : AppCompatActivity(), BackListener {
 
     private fun initializeObserve() {
         viewModel.invalidInviteCodeEvent.observe(this) {
-            viewModel.emptyInviteCode()
+            viewModel.clearInviteCode()
             showSnackBar(R.string.invalid_invite_code)
         }
         viewModel.navigateAction.observe(this) {

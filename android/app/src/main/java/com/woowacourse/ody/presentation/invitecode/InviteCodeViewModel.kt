@@ -22,7 +22,7 @@ class InviteCodeViewModel(
     private val _navigateAction: MutableSingleLiveData<InviteCodeNavigateAction> = MutableSingleLiveData()
     val navigateAction: SingleLiveData<InviteCodeNavigateAction> get() = _navigateAction
 
-    fun emptyInviteCode() {
+    fun clearInviteCode() {
         inviteCode.value = ""
     }
 

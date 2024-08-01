@@ -72,11 +72,11 @@ class MeetingCreationViewModel : ViewModel() {
         meetingMinute.value = now.minute
     }
 
-    fun emptyMeetingName() {
+    fun clearMeetingName() {
         meetingName.value = ""
     }
 
-    fun emptyNickname() {
+    fun clearNickname() {
         nickname.value = ""
     }
 
