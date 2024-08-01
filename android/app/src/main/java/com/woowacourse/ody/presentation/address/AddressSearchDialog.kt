@@ -45,7 +45,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeView()
-        initializeObservingData()
+        initializeObserve()
         showAddressSearchWebView()
     }
 
@@ -57,7 +57,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
         }
     }
 
-    private fun initializeObservingData() {
+    private fun initializeObserve() {
         viewModel.geoLocation.observe(viewLifecycleOwner) {
             val geoLocationUiModel = it.toGeoLocationUiModel()
             setFragmentResult(REQUEST_KEY, bundleOf(GEO_LOCATION_UI_MODEL_KEY to geoLocationUiModel))
