@@ -5,15 +5,29 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
+import com.woowacourse.ody.data.remote.core.entity.join.request.JoinRequest
+import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
+import com.woowacourse.ody.data.remote.core.entity.meeting.response.toMeeting
 import com.woowacourse.ody.domain.model.GeoLocation
+import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
+import com.woowacourse.ody.domain.repository.ody.JoinRepository
+import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class MeetingCreationViewModel : ViewModel() {
+class MeetingCreationViewModel(
+    private val meetingRepository: MeetingRepository,
+    private val joinRepository: JoinRepository,
+    private val inviteCodeRepository: InviteCodeRepository,
+) : ViewModel() {
     val meetingInfoType: MutableLiveData<MeetingInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
@@ -44,6 +58,9 @@ class MeetingCreationViewModel : ViewModel() {
     private val _nextPageEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
     val nextPageEvent: SingleLiveData<Unit> = _nextPageEvent
 
+    private val _makeMeetingResponse: MutableLiveData<Meeting?> = MutableLiveData(null)
+    val makeMeetingResponse: LiveData<Meeting?> get() = _makeMeetingResponse
+
     init {
         initializeIsValidInfo()
     }
@@ -55,6 +72,60 @@ class MeetingCreationViewModel : ViewModel() {
         val now = LocalTime.now()
         meetingHour.value = now.hour
         meetingMinute.value = now.minute
+    }
+
+    fun makeMeeting() {
+        val destinationAddress = destinationGeoLocation.value?.address ?: return
+        val destinationLatitude = destinationGeoLocation.value?.latitude ?: return
+        val destinationLongitude = destinationGeoLocation.value?.longitude ?: return
+        val startingPointAddress = startingPointGeoLocation.value?.address ?: return
+        val startingPointLatitude = startingPointGeoLocation.value?.latitude ?: return
+        val startingPointLongitude = startingPointGeoLocation.value?.longitude ?: return
+
+        viewModelScope.launch {
+            meetingRepository.postMeeting(
+                MeetingRequest(
+                    meetingName.value.toString(),
+                    meetingDate.value.toString(),
+                    LocalTime.of(meetingHour.value ?: 1, meetingMinute.value ?: 0).toString(),
+                    destinationAddress,
+                    destinationLatitude.slice(0..8),
+                    destinationLongitude.slice(0..8),
+                    nickname.value.toString(),
+                    startingPointAddress,
+                    startingPointLatitude.slice(0..8),
+                    startingPointLongitude.slice(0..8),
+                ),
+            ).onSuccess {
+                inviteCodeRepository.postInviteCode(it.inviteCode)
+                _makeMeetingResponse.value = it.toMeeting()
+            }.onFailure {
+                Timber.e(it.message)
+            }
+        }
+    }
+
+    fun joinMeeting(inviteCode: String) {
+        val startingPointAddress = startingPointGeoLocation.value?.address ?: return
+        val startingPointLatitude = startingPointGeoLocation.value?.latitude ?: return
+        val startingPointLongitude = startingPointGeoLocation.value?.longitude ?: return
+
+        viewModelScope.launch {
+            joinRepository.postMates(
+                JoinRequest(
+                    inviteCode,
+                    nickname.value.toString(),
+                    startingPointAddress,
+                    startingPointLatitude.slice(0..8) ?: return@launch,
+                    startingPointLongitude.slice(0..8) ?: return@launch,
+                ),
+            ).onSuccess {
+                inviteCodeRepository.postInviteCode(it.inviteCode)
+                _makeMeetingResponse.value = it.toMeeting()
+            }.onFailure {
+                Timber.e(it.message)
+            }
+        }
     }
 
     private fun initializeIsValidInfo() {
