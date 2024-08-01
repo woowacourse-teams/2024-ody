@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple"
+    android:background="@color/purple_800"
     android:gravity="center"
     tools:context=".presentation.splash.SplashActivity">
 
