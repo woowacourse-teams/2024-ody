@@ -44,8 +44,7 @@ class MeetingJoinActivity : AppCompatActivity(), NextListener, BackListener {
             if (result.resultCode != Activity.RESULT_OK) {
                 return@registerForActivityResult
             }
-
-            startActivity(MeetingRoomActivity.getIntent(this, viewModel.makeMeetingResponse.value))
+            viewModel.navigateJoinToRoom()
             finish()
         }
     private val onBackPressedCallback: OnBackPressedCallback =
@@ -81,13 +80,24 @@ class MeetingJoinActivity : AppCompatActivity(), NextListener, BackListener {
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
+        viewModel.joinNavigateAction.observe(this) {
+            when (it) {
+                MeetingJoinNavigateAction.JoinNavigateToRoom -> {
+                    startActivity(MeetingRoomActivity.getIntent(this, viewModel.makeMeetingResponse.value))
+                }
+                MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
+                    joinCompletionLauncher.launch(JoinCompleteActivity.getIntent(this))
+                }
+            }
+        }
     }
 
     override fun onNext() {
         if (binding.vpJoinInfo.currentItem == fragments.size - 1) {
             val inviteCode: String = getInviteCode() ?: return
             viewModel.joinMeeting(inviteCode)
-            joinCompletionLauncher.launch(JoinCompleteActivity.getIntent(this))
+            viewModel.onClickMJoinMeeting()
             return
         }
         binding.vpJoinInfo.currentItem += 1

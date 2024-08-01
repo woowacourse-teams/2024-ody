@@ -17,6 +17,8 @@ import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.creation.listener.MeetingCreationListener
+import com.woowacourse.ody.presentation.join.MeetingJoinNavigateAction
+import com.woowacourse.ody.presentation.join.listener.MeetingJoinListener
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -27,7 +29,7 @@ class MeetingCreationViewModel(
     private val meetingRepository: MeetingRepository,
     private val joinRepository: JoinRepository,
     private val inviteCodeRepository: InviteCodeRepository,
-) : ViewModel(), MeetingCreationListener {
+) : ViewModel(), MeetingCreationListener, MeetingJoinListener {
     val meetingInfoType: MutableLiveData<MeetingInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
@@ -63,6 +65,9 @@ class MeetingCreationViewModel(
 
     private val _navigateAction: MutableSingleLiveData<MeetingCreationNavigateAction> = MutableSingleLiveData()
     val navigateAction: SingleLiveData<MeetingCreationNavigateAction> get() = _navigateAction
+
+    private val _joinNavigateAction: MutableSingleLiveData<MeetingJoinNavigateAction> = MutableSingleLiveData()
+    val joinNavigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _joinNavigateAction
 
     init {
         initializeIsValidInfo()
@@ -222,6 +227,14 @@ class MeetingCreationViewModel(
 
     override fun onClickMJoinMeeting() {
         _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToJoinComplete)
+    }
+
+    fun navigateJoinToRoom() {
+        _joinNavigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom)
+    }
+
+    override fun onClickMeetingJoin() {
+        _joinNavigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
     }
 
     companion object {
