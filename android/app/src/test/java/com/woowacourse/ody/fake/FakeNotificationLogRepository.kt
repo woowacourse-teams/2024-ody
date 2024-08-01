@@ -100,6 +100,6 @@ object FakeNotificationLogRepository : NotificationLogRepository {
                 departureCLog,
                 departureCLog,
                 departureCLog,
-            )
+            ),
         )
 }
