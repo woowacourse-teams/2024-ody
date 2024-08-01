@@ -7,6 +7,3 @@ data class MeetingJoinInfo(
     val originLatitude: String,
     val originLongitude: String,
 )
-
-
-
