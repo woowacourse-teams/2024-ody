@@ -84,7 +84,7 @@ class MeetingJoinActivity : AppCompatActivity(), NextListener, BackListener {
         viewModel.joinNavigateAction.observe(this) {
             when (it) {
                 MeetingJoinNavigateAction.JoinNavigateToRoom -> {
-                    startActivity(MeetingRoomActivity.getIntent(this, viewModel.makeMeetingResponse.value))
+                    startActivity(MeetingRoomActivity.getIntent(this))
                 }
                 MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
                     joinCompletionLauncher.launch(JoinCompleteActivity.getIntent(this))

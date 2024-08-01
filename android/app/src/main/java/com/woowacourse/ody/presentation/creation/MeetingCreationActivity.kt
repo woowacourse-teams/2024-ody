@@ -148,7 +148,7 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
         viewModel.navigateAction.observe(this) {
             when (it) {
                 MeetingCreationNavigateAction.NavigateToRoom -> {
-                    startActivity(MeetingRoomActivity.getIntent(this, viewModel.makeMeetingResponse.value))
+                    startActivity(MeetingRoomActivity.getIntent(this))
                 }
                 MeetingCreationNavigateAction.NavigateToIntro -> {
                     startActivity(IntroActivity.getIntent(this))
