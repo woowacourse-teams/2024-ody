@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
         android:text="@string/destination_question_front"
-        android:textColor="@color/purple"
+        android:textColor="@color/purple_800"
         app:layout_constraintEnd_toStartOf="@id/tv_destination_back"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:text="@string/destination_question_information"
-        android:textColor="@color/purple"
+        android:textColor="@color/purple_800"
         app:layout_constraintStart_toStartOf="@id/et_destination"
         app:layout_constraintTop_toBottomOf="@id/et_destination" />
 

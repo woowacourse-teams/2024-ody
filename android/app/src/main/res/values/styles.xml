@@ -3,73 +3,73 @@
 
     <style name="pretendard_bold_28">
         <item name="android:textSize">28dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_bold</item>
     </style>
 
     <style name="pretendard_bold_24">
         <item name="android:textSize">24dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_bold</item>
     </style>
 
     <style name="pretendard_bold_20">
         <item name="android:textSize">20dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_bold</item>
     </style>
 
     <style name="pretendard_bold_16">
         <item name="android:textSize">16dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_bold</item>
     </style>
 
     <style name="pretendard_medium_20">
         <item name="android:textSize">20dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_medium</item>
     </style>
 
     <style name="pretendard_medium_18">
         <item name="android:textSize">18dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_medium</item>
     </style>
 
     <style name="pretendard_medium_16">
         <item name="android:textSize">16dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_medium</item>
     </style>
 
     <style name="pretendard_medium_14">
         <item name="android:textSize">14dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_medium</item>
     </style>
 
     <style name="pretendard_medium_12">
         <item name="android:textSize">12dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_medium</item>
     </style>
 
     <style name="pretendard_regular_16">
         <item name="android:textSize">16dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_regular</item>
     </style>
 
     <style name="pretendard_regular_14">
         <item name="android:textSize">14dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_regular</item>
     </style>
 
     <style name="pretendard_regular_12">
         <item name="android:textSize">12dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_regular</item>
     </style>
 
@@ -85,9 +85,9 @@
         <item name="android:layout_height">42dp</item>
         <item name="android:background">@drawable/rectangle_edit_text</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColorHint">@color/gray</item>
+        <item name="android:textColorHint">@color/gray_350</item>
         <item name="android:textSize">20dp</item>
-        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textColor">@color/gray_800</item>
         <item name="android:fontFamily">@font/pretendard_medium</item>
     </style>
 
@@ -103,9 +103,9 @@
     <style name="number_picker_style">
         <item name="android:textSize">28dp</item>
         <item name="android:fontFamily">@font/pretendard_bold</item>
-        <item name="android:textColor">@color/gray</item>
-        <item name="android:textColorPrimary">@color/dark_gray</item>
-        <item name="colorControlNormal">@color/light_purple</item>
+        <item name="android:textColor">@color/gray_350</item>
+        <item name="android:textColorPrimary">@color/gray_800</item>
+        <item name="colorControlNormal">@color/purple_300</item>
     </style>
 
 </resources>

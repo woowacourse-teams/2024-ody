@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="52dp"
             android:text="@string/meeting_date_question_front"
-            android:textColor="@color/purple"
+            android:textColor="@color/purple_800"
             app:layout_constraintEnd_toStartOf="@+id/tv_meet"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"

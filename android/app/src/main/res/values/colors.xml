@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="cream">#FFFFFFF6</color>
-    <color name="light_purple">#FFB8A7FF</color>
-    <color name="purple">#FF5C47AE</color>
+    <color name="purple_300">#FFB8A7FF</color>
+    <color name="purple_800">#FF5C47AE</color>
+
     <color name="red">#FFFF4C4C</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="dark_gray">#FF2F2F2F</color>
-    <color name="dark_gray_20">#332F2F2F</color>
-    <color name="gray">#FFD6D6D6</color>
 
-    <drawable name="drawable_purple">#FF5C47AE</drawable>
-    <drawable name="drawable_gray">#FFD6D6D6</drawable>
+    <color name="gray_800">#FF3A3A3C</color>
+    <color name="gray_800_20">#332F2F2F</color>
+    <color name="gray_350">#FFD6D6D6</color>
+
+    <drawable name="drawable_purple_800">#FF5C47AE</drawable>
+    <drawable name="drawable_gray_350">#FFD6D6D6</drawable>
 </resources>

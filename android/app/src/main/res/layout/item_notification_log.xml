@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="19dp"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_350"
             android:text="@{log.created}"
             app:layout_constraintStart_toStartOf="@id/tv_notification_log"
             app:layout_constraintTop_toBottomOf="@id/tv_notification_log"
