@@ -17,14 +17,12 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-@Disabled
 class MeetingControllerTest extends BaseControllerTest {
 
     @Autowired
@@ -123,6 +121,6 @@ class MeetingControllerTest extends BaseControllerTest {
                 .then()
                 .log()
                 .all()
-                .statusCode(404); //TODO : 404로 변경
+                .statusCode(404);
     }
 }

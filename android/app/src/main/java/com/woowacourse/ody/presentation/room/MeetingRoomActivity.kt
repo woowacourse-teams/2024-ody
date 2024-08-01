@@ -10,19 +10,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.remote.core.repository.DefaultMeetingRepository
-import com.woowacourse.ody.data.remote.core.repository.DefaultNotificationLogRepository
 import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
-import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.presentation.room.adapter.NotificationLogsAdapter
 import com.woowacourse.ody.presentation.room.listener.ShareListener
 
 class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareListener {
+    private val application: OdyApplication by lazy {
+        applicationContext as OdyApplication
+    }
+
     private val viewModel: MeetingRoomViewModel by viewModels {
         MeetingRoomViewModelFactory(
-            DefaultNotificationLogRepository,
-            DefaultMeetingRepository,
+            application.notificationLogRepository,
+            application.meetingRepository,
         )
     }
 
@@ -82,9 +84,6 @@ class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareLi
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
 
-        fun getIntent(
-            context: Context,
-            meeting: Meeting?,
-        ): Intent = Intent(context, MeetingRoomActivity::class.java)
+        fun getIntent(context: Context): Intent = Intent(context, MeetingRoomActivity::class.java)
     }
 }

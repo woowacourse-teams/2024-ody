@@ -11,8 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 
-object RetrofitClient {
-    private val BASE_URL = BuildConfig.BASE_URL
+class RetrofitClient {
     private val token: String by lazy {
         runBlocking {
             FirebaseMessaging.getInstance().token.await()
@@ -20,7 +19,9 @@ object RetrofitClient {
     }
     private val interceptor: Interceptor by lazy {
         Interceptor {
-            val newRequest = it.request().newBuilder().addHeader("Authorization", "Bearer device-token=$token").build()
+            val newRequest =
+                it.request().newBuilder().addHeader("Authorization", "Bearer device-token=$token")
+                    .build()
             it.proceed(newRequest)
         }
     }
@@ -43,5 +44,9 @@ object RetrofitClient {
             .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
+    }
+
+    companion object {
+        private val BASE_URL = BuildConfig.BASE_URL
     }
 }

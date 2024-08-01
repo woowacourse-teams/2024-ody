@@ -23,38 +23,31 @@
             android:name=".presentation.invitecode.InviteCodeActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".presentation.join.MeetingJoinActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.join.complete.JoinCompleteActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.creation.complete.MeetingCompletionActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.creation.MeetingCreationActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.room.MeetingRoomActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.splash.SplashActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,8 +57,7 @@
         <activity
             android:name=".presentation.intro.IntroActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".data.remote.thirdparty.fcm.service.FCMService"

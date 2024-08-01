@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingTimeBinding
-import com.woowacourse.ody.presentation.common.observeEvent
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
 import com.woowacourse.ody.presentation.creation.MeetingInfoType
 
@@ -45,7 +44,7 @@ class MeetingTimeFragment : Fragment() {
     }
 
     private fun initializeObserve() {
-        viewModel.invalidMeetingTimeEvent.observeEvent(viewLifecycleOwner) {
+        viewModel.invalidMeetingTimeEvent.observe(viewLifecycleOwner) {
             showSnackBar(R.string.invalid_meeting_time)
         }
     }

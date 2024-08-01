@@ -9,16 +9,17 @@ import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
 import com.woowacourse.ody.data.remote.core.entity.join.request.JoinRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
-import com.woowacourse.ody.data.remote.core.repository.DefaultJoinRepository
-import com.woowacourse.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 
 class JoinCompleteActivity : AppCompatActivity() {
+    private val application: OdyApplication by lazy {
+        applicationContext as OdyApplication
+    }
     private val viewModel: JoinCompleteViewModel by viewModels<JoinCompleteViewModel> {
         JoinCompleteViewModelFactory(
-            meetingRepository = DefaultMeetingRepository,
-            joinRepository = DefaultJoinRepository,
-            datastore = (application as OdyApplication).odyDatastore,
+            meetingRepository = application.meetingRepository,
+            joinRepository = application.joinRepository,
+            inviteCodeRepository = application.inviteCodeRepository,
         )
     }
 
@@ -34,7 +35,7 @@ class JoinCompleteActivity : AppCompatActivity() {
         }
 
         viewModel.navigateAction.observe(this) {
-            startActivity(MeetingRoomActivity.getIntent(this@JoinCompleteActivity, viewModel.meetingResponse.value))
+            startActivity(MeetingRoomActivity.getIntent(this@JoinCompleteActivity))
         }
     }
 

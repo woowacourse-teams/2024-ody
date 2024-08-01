@@ -118,7 +118,7 @@
             android:id="@+id/iv_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> vm.emptyMeetingName()}"
+            android:onClick="@{() -> vm.clearMeetingName()}"
             android:src="@drawable/ic_cancel"
             app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
             app:layout_constraintEnd_toEndOf="@id/et_meeting_name_form"

@@ -1,35 +1,17 @@
 package com.woowacourse.ody.presentation.common
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-
-open class Event<T>(value: T) {
-    var value = value
+class Event<out T>(private val content: T) {
+    var hasBeenHandled = false
         private set
-    private var isAlreadyHandled = false
 
-    fun isActive(): Boolean =
-        if (isAlreadyHandled) {
-            false
+    fun getContentIfNotHandled(): T? {
+        return if (hasBeenHandled) {
+            null
         } else {
-            isAlreadyHandled = true
-            true
-        }
-}
-
-fun <T> LiveData<Event<T>>.observeEvent(
-    owner: LifecycleOwner,
-    observer: Observer<T>,
-) = observe(owner) {
-    it?.let {
-        if (it.isActive()) {
-            observer.onChanged(it.value)
+            hasBeenHandled = true
+            content
         }
     }
+
+    fun peekContent(): T = content
 }
-
-fun MutableLiveData<Event<Unit>>.emit() = postValue(Event(Unit))
-
-fun <T> MutableLiveData<Event<T>>.emit(value: T) = postValue(Event(value))
