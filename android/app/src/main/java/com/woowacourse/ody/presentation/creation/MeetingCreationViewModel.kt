@@ -63,10 +63,12 @@ class MeetingCreationViewModel(
     private val _makeMeetingResponse: MutableLiveData<Meeting?> = MutableLiveData(null)
     val makeMeetingResponse: LiveData<Meeting?> get() = _makeMeetingResponse
 
-    private val _navigateAction: MutableSingleLiveData<MeetingCreationNavigateAction> = MutableSingleLiveData()
+    private val _navigateAction: MutableSingleLiveData<MeetingCreationNavigateAction> =
+        MutableSingleLiveData()
     val navigateAction: SingleLiveData<MeetingCreationNavigateAction> get() = _navigateAction
 
-    private val _joinNavigateAction: MutableSingleLiveData<MeetingJoinNavigateAction> = MutableSingleLiveData()
+    private val _joinNavigateAction: MutableSingleLiveData<MeetingJoinNavigateAction> =
+        MutableSingleLiveData()
     val joinNavigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _joinNavigateAction
 
     init {
