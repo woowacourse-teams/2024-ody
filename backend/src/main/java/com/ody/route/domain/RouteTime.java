@@ -7,5 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class RouteTime {
 
+    public static final RouteTime ZERO = new RouteTime(0L);
+
     private final long minutes;
 }
