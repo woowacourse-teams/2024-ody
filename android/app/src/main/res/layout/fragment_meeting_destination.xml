@@ -51,7 +51,7 @@
             android:hint="@string/address_question_hint"
             android:inputType="text"
             android:maxLines="1"
-            android:onClick="@{() -> addressSearchListener.search()}"
+            android:onClick="@{() -> addressSearchListener.onSearch()}"
             app:layout_constraintBottom_toTopOf="@id/tv_destination_information"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

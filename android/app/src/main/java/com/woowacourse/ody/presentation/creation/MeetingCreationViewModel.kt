@@ -5,15 +5,31 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.model.GeoLocation
+import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.MeetingCreationInfo
+import com.woowacourse.ody.domain.model.MeetingJoinInfo
+import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
+import com.woowacourse.ody.domain.repository.ody.JoinRepository
+import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.creation.listener.MeetingCreationListener
+import com.woowacourse.ody.presentation.join.MeetingJoinNavigateAction
+import com.woowacourse.ody.presentation.join.listener.MeetingJoinListener
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class MeetingCreationViewModel : ViewModel() {
+class MeetingCreationViewModel(
+    private val meetingRepository: MeetingRepository,
+    private val joinRepository: JoinRepository,
+    private val inviteCodeRepository: InviteCodeRepository,
+) : ViewModel(), MeetingCreationListener, MeetingJoinListener {
     val meetingInfoType: MutableLiveData<MeetingInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
@@ -47,8 +63,85 @@ class MeetingCreationViewModel : ViewModel() {
     private val _nextPageEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
     val nextPageEvent: SingleLiveData<Unit> = _nextPageEvent
 
+    private val _createMeetingResponse: MutableLiveData<Meeting?> = MutableLiveData(null)
+    val createMeetingResponse: LiveData<Meeting?> get() = _createMeetingResponse
+
+    private val _navigateAction: MutableSingleLiveData<MeetingCreationNavigateAction> =
+        MutableSingleLiveData()
+    val navigateAction: SingleLiveData<MeetingCreationNavigateAction> get() = _navigateAction
+
+    private val _joinNavigateAction: MutableSingleLiveData<MeetingJoinNavigateAction> =
+        MutableSingleLiveData()
+    val joinNavigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _joinNavigateAction
+
     init {
         initializeIsValidInfo()
+    }
+
+    fun initializeMeetingTime() {
+        if (meetingHour.value != null || meetingMinute.value != null) {
+            return
+        }
+        val now = LocalTime.now()
+        meetingHour.value = now.hour
+        meetingMinute.value = now.minute
+    }
+
+    fun createMeeting() {
+        val name = meetingName.value ?: return
+        val date = meetingDate.value ?: return
+        val destinationAddress = destinationGeoLocation.value?.address ?: return
+        val destinationLatitude = destinationGeoLocation.value?.latitude ?: return
+        val destinationLongitude = destinationGeoLocation.value?.longitude ?: return
+        val startingPointAddress = startingPointGeoLocation.value?.address ?: return
+        val startingPointLatitude = startingPointGeoLocation.value?.latitude ?: return
+        val startingPointLongitude = startingPointGeoLocation.value?.longitude ?: return
+
+        viewModelScope.launch {
+            meetingRepository.postMeeting(
+                MeetingCreationInfo(
+                    name,
+                    date.toString(),
+                    LocalTime.of(meetingHour.value ?: 1, meetingMinute.value ?: 0).toString(),
+                    destinationAddress,
+                    destinationLatitude,
+                    destinationLongitude,
+                    nickname.value.toString(),
+                    startingPointAddress,
+                    startingPointLatitude,
+                    startingPointLongitude,
+                ),
+            ).onSuccess {
+                inviteCodeRepository.postInviteCode(it.inviteCode)
+                _createMeetingResponse.value = it
+            }.onFailure {
+                Timber.e(it.message)
+            }
+        }
+    }
+
+    fun joinMeeting(inviteCode: String) {
+        val nickname = nickname.value ?: return
+        val startingPointAddress = startingPointGeoLocation.value?.address ?: return
+        val startingPointLatitude = startingPointGeoLocation.value?.latitude ?: return
+        val startingPointLongitude = startingPointGeoLocation.value?.longitude ?: return
+
+        viewModelScope.launch {
+            joinRepository.postMates(
+                MeetingJoinInfo(
+                    inviteCode,
+                    nickname,
+                    startingPointAddress,
+                    startingPointLatitude,
+                    startingPointLongitude,
+                ),
+            ).onSuccess {
+                inviteCodeRepository.postInviteCode(it.inviteCode)
+                _createMeetingResponse.value = it
+            }.onFailure {
+                Timber.e(it.message)
+            }
+        }
     }
 
     private fun initializeIsValidInfo() {
@@ -61,15 +154,6 @@ class MeetingCreationViewModel : ViewModel() {
             addSource(meetingHour) { isValidInfo.value = true }
             addSource(meetingMinute) { isValidInfo.value = true }
         }
-    }
-
-    fun initializeMeetingTime() {
-        val isInitializedValue = meetingHour.value != null || meetingMinute.value != null
-        if (isInitializedValue) return
-
-        val now = LocalTime.now()
-        meetingHour.value = now.hour
-        meetingMinute.value = now.minute
     }
 
     fun clearMeetingName() {
@@ -144,6 +228,30 @@ class MeetingCreationViewModel : ViewModel() {
         if (meetingInfoType.value == MeetingInfoType.TIME) {
             _invalidMeetingTimeEvent.setValue(Unit)
         }
+    }
+
+    fun navigateToRoom() {
+        _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToRoom)
+    }
+
+    fun navigateToIntro() {
+        _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToIntro)
+    }
+
+    override fun onClickCreationMeeting() {
+        _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToCreationComplete)
+    }
+
+    override fun onClickJoinMeeting() {
+        _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToJoinComplete)
+    }
+
+    fun navigateJoinToRoom() {
+        _joinNavigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom)
+    }
+
+    override fun onClickMeetingJoin() {
+        _joinNavigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
     }
 
     companion object {

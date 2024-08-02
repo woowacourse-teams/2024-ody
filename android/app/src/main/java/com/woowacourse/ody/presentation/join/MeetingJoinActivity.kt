@@ -1,29 +1,52 @@
 package com.woowacourse.ody.presentation.join
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.databinding.ActivityMeetingJoinBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.listener.NextListener
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
+import com.woowacourse.ody.presentation.creation.MeetingCreationViewModelFactory
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
 import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
+import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 
 class MeetingJoinActivity : AppCompatActivity(), NextListener, BackListener {
+    private val application: OdyApplication by lazy {
+        applicationContext as OdyApplication
+    }
     private val binding: ActivityMeetingJoinBinding by lazy {
         ActivityMeetingJoinBinding.inflate(layoutInflater)
     }
-    private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel>()
+    private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel> {
+        MeetingCreationViewModelFactory(
+            meetingRepository = application.meetingRepository,
+            joinRepository = application.joinRepository,
+            inviteCodeRepository = application.inviteCodeRepository,
+        )
+    }
     private val fragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinDepartureFragment())
     }
+    private val joinCompletionLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) {
+                return@registerForActivityResult
+            }
+            viewModel.navigateJoinToRoom()
+            finish()
+        }
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -57,21 +80,24 @@ class MeetingJoinActivity : AppCompatActivity(), NextListener, BackListener {
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
+        viewModel.joinNavigateAction.observe(this) {
+            when (it) {
+                MeetingJoinNavigateAction.JoinNavigateToRoom -> {
+                    startActivity(MeetingRoomActivity.getIntent(this))
+                }
+                MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
+                    joinCompletionLauncher.launch(JoinCompleteActivity.getIntent(this))
+                }
+            }
+        }
     }
 
     override fun onNext() {
         if (binding.vpJoinInfo.currentItem == fragments.size - 1) {
-            val startingPointGeoLocation = viewModel.startingPointGeoLocation.value ?: return
-
-            val joinInfo =
-                arrayListOf(
-                    getInviteCode() ?: return,
-                    viewModel.nickname.value.toString(),
-                    startingPointGeoLocation.address,
-                    startingPointGeoLocation.latitude.slice(0..8),
-                    startingPointGeoLocation.longitude.slice(0..8),
-                )
-            startActivity(JoinCompleteActivity.getJoinInfoIntent(this, joinInfo))
+            val inviteCode: String = getInviteCode() ?: return
+            viewModel.joinMeeting(inviteCode)
+            viewModel.onClickMeetingJoin()
             return
         }
         binding.vpJoinInfo.currentItem += 1

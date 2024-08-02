@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.databinding.ActivityMeetingCreationBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.common.listener.BackListener
@@ -23,13 +24,23 @@ import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
 import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
-import java.time.LocalTime
+import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 
 class MeetingCreationActivity : AppCompatActivity(), BackListener {
+    private val application: OdyApplication by lazy {
+        applicationContext as OdyApplication
+    }
     private val binding: ActivityMeetingCreationBinding by lazy {
         ActivityMeetingCreationBinding.inflate(layoutInflater)
     }
-    private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel>()
+    private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel> {
+        MeetingCreationViewModelFactory(
+            meetingRepository = application.meetingRepository,
+            joinRepository = application.joinRepository,
+            inviteCodeRepository = application.inviteCodeRepository,
+        )
+    }
+
     private val meetingInfoFragments: List<Fragment> by lazy {
         listOf(
             MeetingNameFragment(),
@@ -48,6 +59,14 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
             }
             binding.vpJoinInfo.visibility = View.VISIBLE
             binding.wdJoinInfo.visibility = View.VISIBLE
+        }
+    private val joinCompletionLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) {
+                return@registerForActivityResult
+            }
+            viewModel.navigateToRoom()
+            finish()
         }
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
@@ -84,7 +103,7 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
         if (binding.vpMeetingInfo.currentItem > 0) {
             binding.vpMeetingInfo.currentItem -= 1
         } else {
-            startActivity(IntroActivity.getIntent(this))
+            viewModel.navigateToIntro()
             finish()
         }
     }
@@ -125,11 +144,28 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
             }
         }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
+        viewModel.navigateAction.observe(this) {
+            when (it) {
+                MeetingCreationNavigateAction.NavigateToRoom -> {
+                    startActivity(MeetingRoomActivity.getIntent(this))
+                }
+                MeetingCreationNavigateAction.NavigateToIntro -> {
+                    startActivity(IntroActivity.getIntent(this))
+                }
+                MeetingCreationNavigateAction.NavigateToCreationComplete -> {
+                    meetingCompletionLauncher.launch(Intent(MeetingCompletionActivity.getIntent(this)))
+                }
+                MeetingCreationNavigateAction.NavigateToJoinComplete -> {
+                    joinCompletionLauncher.launch(JoinCompleteActivity.getIntent(this))
+                }
+            }
+        }
     }
 
     private fun handleMeetingInfoNextClick() {
         if (binding.vpMeetingInfo.currentItem == meetingInfoFragments.size - 1) {
-            meetingCompletionLauncher.launch(Intent(MeetingCompletionActivity.getIntent(this)))
+            viewModel.onClickCreationMeeting()
             binding.vpMeetingInfo.visibility = View.GONE
             binding.wdMeetingInfo.visibility = View.GONE
             return
@@ -139,22 +175,8 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
 
     private fun handleJoinInfoNextClick() {
         if (binding.vpJoinInfo.currentItem == joinInfoFragments.size - 1) {
-            val meetingInfo =
-                arrayListOf(
-                    viewModel.meetingName.value.toString(),
-                    viewModel.meetingDate.value.toString(),
-                    LocalTime.of(viewModel.meetingHour.value ?: 1, viewModel.meetingMinute.value ?: 0).toString(),
-                    viewModel.destinationGeoLocation.value!!.address,
-                    viewModel.destinationGeoLocation.value!!.latitude.slice(0..8),
-                    viewModel.destinationGeoLocation.value!!.longitude.slice(0..8),
-                    viewModel.nickname.value.toString(),
-                    viewModel.startingPointGeoLocation.value!!.address,
-                    viewModel.startingPointGeoLocation.value!!.latitude.slice(0..8),
-                    viewModel.startingPointGeoLocation.value!!.longitude.slice(0..8),
-                )
-
-            startActivity(JoinCompleteActivity.getMeetingInfoIntent(this, meetingInfo))
-            finish()
+            viewModel.createMeeting()
+            viewModel.onClickJoinMeeting()
             return
         }
         binding.vpJoinInfo.currentItem += 1

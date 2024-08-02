@@ -1,9 +1,8 @@
 package com.woowacourse.ody.fake
 
-import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
-import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingResponse
 import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import java.time.LocalDate
 import java.time.LocalTime
@@ -29,19 +28,16 @@ object FakeMeetingRepository : MeetingRepository {
 
     override suspend fun fetchMeeting(): Result<List<Meeting>> = Result.success(listOf(meetingA))
 
-    override suspend fun postMeeting(meetingRequest: MeetingRequest): Result<MeetingResponse> =
+    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<Meeting> =
         Result.success(
-            MeetingResponse(
+            Meeting(
                 0,
                 "meetingA",
                 "선릉 캠퍼스",
-                "2024, 1, 1, 10, 0, 0",
-                "A,B,C",
-                "A,B,C",
-                "A,B,C",
-                1,
+                LocalDate.of(2024, 1, 1),
+                LocalTime.of(10, 0),
                 listOf(),
-                "",
+                "A,B,C",
             ),
         )
 }
