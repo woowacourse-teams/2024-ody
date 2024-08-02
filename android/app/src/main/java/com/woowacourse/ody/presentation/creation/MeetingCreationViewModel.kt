@@ -63,8 +63,8 @@ class MeetingCreationViewModel(
     private val _nextPageEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
     val nextPageEvent: SingleLiveData<Unit> = _nextPageEvent
 
-    private val _makeMeetingResponse: MutableLiveData<Meeting?> = MutableLiveData(null)
-    val makeMeetingResponse: LiveData<Meeting?> get() = _makeMeetingResponse
+    private val _createMeetingResponse: MutableLiveData<Meeting?> = MutableLiveData(null)
+    val createMeetingResponse: LiveData<Meeting?> get() = _createMeetingResponse
 
     private val _navigateAction: MutableSingleLiveData<MeetingCreationNavigateAction> =
         MutableSingleLiveData()
@@ -87,7 +87,7 @@ class MeetingCreationViewModel(
         meetingMinute.value = now.minute
     }
 
-    fun makeMeeting() {
+    fun createMeeting() {
         val destinationAddress = destinationGeoLocation.value?.address ?: return
         val destinationLatitude = destinationGeoLocation.value?.latitude ?: return
         val destinationLongitude = destinationGeoLocation.value?.longitude ?: return
@@ -111,7 +111,7 @@ class MeetingCreationViewModel(
                 ),
             ).onSuccess {
                 inviteCodeRepository.postInviteCode(it.inviteCode)
-                _makeMeetingResponse.value = it
+                _createMeetingResponse.value = it
             }.onFailure {
                 Timber.e(it.message)
             }
@@ -134,7 +134,7 @@ class MeetingCreationViewModel(
                 ),
             ).onSuccess {
                 inviteCodeRepository.postInviteCode(it.inviteCode)
-                _makeMeetingResponse.value = it
+                _createMeetingResponse.value = it
             }.onFailure {
                 Timber.e(it.message)
             }
