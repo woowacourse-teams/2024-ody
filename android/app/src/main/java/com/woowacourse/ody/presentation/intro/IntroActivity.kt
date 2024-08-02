@@ -18,7 +18,7 @@ import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 
 class IntroActivity : AppCompatActivity() {
-    private val vm: IntroViewModel by viewModels()
+    private val viewModel: IntroViewModel by viewModels()
     private val binding: ActivityIntroBinding by lazy {
         ActivityIntroBinding.inflate(layoutInflater)
     }
@@ -39,12 +39,12 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun initializeBinding() {
-        binding.listener = vm
+        binding.listener = viewModel
         setContentView(binding.root)
     }
 
     private fun initializeObserve() {
-        vm.navigateAction.observe(this) { navigateAction ->
+        viewModel.navigateAction.observe(this) { navigateAction ->
             when (navigateAction) {
                 is IntroNavigateAction.NavigateToMeetingInfo ->
                     navigateToMeetingInfoActivity()
@@ -67,14 +67,15 @@ class IntroActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.POST_NOTIFICATIONS,
-            ) != PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                    showSnackBar(R.string.intro_notification_permission_guide)
-                } else {
-                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                }
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                showSnackBar(R.string.intro_notification_permission_guide)
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }
