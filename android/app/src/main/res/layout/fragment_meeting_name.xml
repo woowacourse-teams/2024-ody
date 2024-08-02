@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel" />
+            type="com.woowacourse.ody.presentation.creation.MeetingCreationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/meeting_name_question_middle"
-            android:textColor="@color/purple"
+            android:textColor="@color/purple_800"
             app:layout_constraintEnd_toStartOf="@id/tv_meeting_name_back"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/tv_meeting_name_front"
@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{String.valueOf(vm.meetingNameLength)}"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_350"
             app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
             app:layout_constraintEnd_toStartOf="@id/tv_meeting_name_length_separator"
             app:layout_constraintStart_toEndOf="@id/et_meeting_name"
@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/meeting_name_length_separator"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_350"
             app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
             app:layout_constraintEnd_toStartOf="@id/tv_meeting_name_max_length"
             app:layout_constraintStart_toEndOf="@id/tv_meeting_name_length"
@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:text="@{String.valueOf(vm.MEETING_NAME_MAX_LENGTH)}"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_350"
             app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
             app:layout_constraintEnd_toStartOf="@id/iv_cancel"
             app:layout_constraintStart_toEndOf="@id/tv_meeting_name_length_separator"
@@ -118,7 +118,7 @@
             android:id="@+id/iv_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> vm.emptyMeetingName()}"
+            android:onClick="@{() -> vm.clearMeetingName()}"
             android:src="@drawable/ic_cancel"
             app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
             app:layout_constraintEnd_toEndOf="@id/et_meeting_name_form"

@@ -1,0 +1,73 @@
+package com.woowacourse.ody.presentation.creation.time
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.google.android.material.snackbar.Snackbar
+import com.woowacourse.ody.R
+import com.woowacourse.ody.databinding.FragmentMeetingTimeBinding
+import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
+import com.woowacourse.ody.presentation.creation.MeetingInfoType
+
+class MeetingTimeFragment : Fragment() {
+    private var _binding: FragmentMeetingTimeBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding = FragmentMeetingTimeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+        initializeBinding()
+        initializeObserve()
+        initializeView()
+    }
+
+    private fun initializeBinding() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+    }
+
+    private fun initializeObserve() {
+        viewModel.invalidMeetingTimeEvent.observe(viewLifecycleOwner) {
+            showSnackBar(R.string.invalid_meeting_time)
+        }
+    }
+
+    private fun showSnackBar(
+        @StringRes messageId: Int,
+    ) = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
+        .apply { setAnchorView(activity?.findViewById(R.id.btn_next)) }
+        .show()
+
+    private fun initializeView() {
+        binding.npMeetingTimeHour.wrapSelectorWheel = true
+        binding.npMeetingTimeMinute.wrapSelectorWheel = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.initializeMeetingTime()
+        viewModel.meetingInfoType.value = MeetingInfoType.TIME
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

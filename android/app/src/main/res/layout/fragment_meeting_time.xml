@@ -6,7 +6,7 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.meetinginfo.MeetingInfoViewModel" />
+            type="com.woowacourse.ody.presentation.creation.MeetingCreationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="52dp"
             android:text="@string/meeting_time_question_front"
-            android:textColor="@color/purple"
+            android:textColor="@color/purple_800"
             app:layout_constraintEnd_toStartOf="@id/tv_meeting_time_back"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"

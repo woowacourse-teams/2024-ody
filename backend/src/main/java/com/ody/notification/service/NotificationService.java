@@ -46,9 +46,21 @@ public class NotificationService {
     }
 
     private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate) {
-        DepartureTime sendAt = calculateSendAt(meeting, mate);
-        Notification notification = Notification.createDepartureReminder(mate, sendAt.getValue());
+        LocalDateTime sendAt = calculateSendAt(meeting, mate);
+        Notification notification = Notification.createDepartureReminder(mate, sendAt);
         saveAndSendNotification(meeting, notification);
+    }
+  
+  private LocalDateTime calculateSendAt(Meeting meeting, Mate mate) {
+        DepartureTime sendAt = routeService.calculateDepartureTime(
+                mate.getOrigin(),
+                meeting.getTarget(),
+                LocalDateTime.of(meeting.getDate(), meeting.getTime())
+        );
+        if (sendAt.isBefore(LocalDateTime.now())) {
+            return LocalDateTime.now().withNano(0);
+        }
+        return sendAt.getValue().withNano(0);
     }
 
     private void saveAndSendNotification(Meeting meeting, Notification notification) {
@@ -61,15 +73,7 @@ public class NotificationService {
         Instant startTime = fcmSendRequest.notification().getSendAt().toInstant(KST_OFFSET);
         taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmSendRequest), startTime);
     }
-
-    private DepartureTime calculateSendAt(Meeting meeting, Mate mate) {
-        return routeService.calculateDepartureTime(
-                mate.getOrigin(),
-                meeting.getTarget(),
-                LocalDateTime.of(meeting.getDate(), meeting.getTime())
-        );
-    }
-
+  
     public List<Notification> findAllMeetingLogs(Long meetingId) {
         return notificationRepository.findAllMeetingLogs(meetingId);
     }

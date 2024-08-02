@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".presentation.completion.JoinCompleteActivity">
+    tools:context=".presentation.join.complete.JoinCompleteActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="34dp"
         android:gravity="center"
-        android:textColor="@color/purple"
+        android:textColor="@color/purple_800"
         tools:text="우테코 회식 모임" />
 
     <TextView

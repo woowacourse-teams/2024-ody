@@ -2,7 +2,7 @@ package com.woowacourse.ody.presentation.invitecode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.woowacourse.ody.domain.repository.MeetingRepository
+import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 
 class InviteCodeViewModelFactory(
     private val meetingRepository: MeetingRepository,

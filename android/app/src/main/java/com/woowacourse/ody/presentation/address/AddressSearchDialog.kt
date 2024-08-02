@@ -12,19 +12,22 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.webkit.WebViewAssetLoader
-import com.woowacourse.ody.data.remote.location.repository.KakaoGeoLocationRepository
+import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
 import com.woowacourse.ody.presentation.address.listener.AddressReceiveListener
-import com.woowacourse.ody.presentation.address.ui.toGeoLocationUiModel
+import com.woowacourse.ody.presentation.address.model.toGeoLocationUiModel
 import com.woowacourse.ody.presentation.address.web.AddressSearchInterface
 import com.woowacourse.ody.presentation.address.web.LocalContentWebViewClient
 
 class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private var _binding: DialogAddressSearchBinding? = null
     private val binding get() = _binding!!
+    private val application: OdyApplication by lazy {
+        requireContext().applicationContext as OdyApplication
+    }
 
-    private val viewModel by viewModels<AddressSearchViewModel> {
-        AddressSearchViewModelFactory(KakaoGeoLocationRepository)
+    private val viewModel: AddressSearchViewModel by viewModels {
+        AddressSearchViewModelFactory(application.kakaoGeoLocationRepository)
     }
 
     override fun onCreateView(
@@ -42,7 +45,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeView()
-        initializeObservingData()
+        initializeObserve()
         showAddressSearchWebView()
     }
 
@@ -54,7 +57,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
         }
     }
 
-    private fun initializeObservingData() {
+    private fun initializeObserve() {
         viewModel.geoLocation.observe(viewLifecycleOwner) {
             val geoLocationUiModel = it.toGeoLocationUiModel()
             setFragmentResult(REQUEST_KEY, bundleOf(GEO_LOCATION_UI_MODEL_KEY to geoLocationUiModel))

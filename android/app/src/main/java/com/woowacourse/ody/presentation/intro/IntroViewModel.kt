@@ -1,20 +1,19 @@
 package com.woowacourse.ody.presentation.intro
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.woowacourse.ody.util.Event
-import com.woowacourse.ody.util.emit
+import com.woowacourse.ody.presentation.common.MutableSingleLiveData
+import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.intro.listener.IntroListener
 
 class IntroViewModel : ViewModel(), IntroListener {
-    private val _navigateAction: MutableLiveData<Event<IntroNavigateAction>> = MutableLiveData(null)
-    val navigateAction: LiveData<Event<IntroNavigateAction>> get() = _navigateAction
+    private val _navigateAction: MutableSingleLiveData<IntroNavigateAction> = MutableSingleLiveData()
+    val navigateAction: SingleLiveData<IntroNavigateAction> get() = _navigateAction
 
     override fun onClickInputInviteCodeButton() {
-        _navigateAction.emit(IntroNavigateAction.NavigateToInviteCode)
+        _navigateAction.setValue(IntroNavigateAction.NavigateToInviteCode)
     }
 
     override fun onClickMeetingInfoButton() {
-        _navigateAction.emit(IntroNavigateAction.NavigateToMeetingInfo)
+        _navigateAction.setValue(IntroNavigateAction.NavigateToMeetingInfo)
     }
 }

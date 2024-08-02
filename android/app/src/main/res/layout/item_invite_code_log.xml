@@ -5,7 +5,7 @@
     <data>
         <variable
             name="listener"
-            type="com.woowacourse.ody.presentation.notificationlog.CopyInviteCodeListener" />
+            type="com.woowacourse.ody.presentation.room.CopyInviteCodeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
-            android:background="@color/gray"
+            android:background="@color/gray_350"
             app:layout_constraintTop_toBottomOf="@id/tv_invite_code_bottom" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

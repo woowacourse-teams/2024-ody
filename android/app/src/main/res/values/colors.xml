@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="cream">#FFFFFFF6</color>
-    <color name="light_purple">#FFB8A7FF</color>
-    <color name="purple">#FF5C47AE</color>
-    <color name="red">#FFFF4C4C</color>
+    <color name="purple_300">#FFB8A7FF</color>
+    <color name="purple_800">#FF5C47AE</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="dark_gray">#FF2F2F2F</color>
-    <color name="dark_gray_20">#332F2F2F</color>
-    <color name="gray">#FFD6D6D6</color>
 
-    <drawable name="drawable_purple">#FF5C47AE</drawable>
-    <drawable name="drawable_gray">#FFD6D6D6</drawable>
+    <color name="gray_100">#FFF9F9F8</color>
+    <color name="gray_200">#FFF2F2F6</color>
+    <color name="gray_300">#FFE4E4EA</color>
+    <color name="gray_350">#FFD6D6D6</color>
+    <color name="gray_400">#FFB1B1BB</color>
+    <color name="gray_500">#FF8E8E93</color>
+    <color name="gray_600">#FF636366</color>
+    <color name="gray_700">#FF48484A</color>
+    <color name="gray_800">#FF3A3A3C</color>
+    <color name="gray_800_20">#332F2F2F</color>
+    <color name="gray_900">#FF1C1C1E</color>
+
+    <drawable name="drawable_purple_800">#FF5C47AE</drawable>
+    <drawable name="drawable_gray_350">#FFD6D6D6</drawable>
+
+    <color name="blue">#FF5B89FF</color>
+    <color name="red">#FFFF5B5B</color>
+    <color name="green">#FF70BE69</color>
+    <color name="yellow">#FFF0C65B</color>
 </resources>

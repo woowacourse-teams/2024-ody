@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.ody.domain.repository.MeetingRepository
-import com.woowacourse.ody.util.Event
-import com.woowacourse.ody.util.emit
+import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.presentation.common.MutableSingleLiveData
+import com.woowacourse.ody.presentation.common.SingleLiveData
 import kotlinx.coroutines.launch
 
 class InviteCodeViewModel(
@@ -16,13 +16,13 @@ class InviteCodeViewModel(
     val inviteCode: MutableLiveData<String> = MutableLiveData()
     val hasInviteCode: LiveData<Boolean> = inviteCode.map { it.isNotEmpty() }
 
-    private val _isValidInviteCode: MutableLiveData<Event<Boolean>> = MutableLiveData()
-    val isValidInviteCode: LiveData<Event<Boolean>> get() = _isValidInviteCode
+    private val _invalidInviteCodeEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val invalidInviteCodeEvent: SingleLiveData<Unit> get() = _invalidInviteCodeEvent
 
-    private val _navigateAction: MutableLiveData<Event<InviteCodeNavigateAction>> = MutableLiveData()
-    val navigateAction: LiveData<Event<InviteCodeNavigateAction>> get() = _navigateAction
+    private val _navigateAction: MutableSingleLiveData<InviteCodeNavigateAction> = MutableSingleLiveData()
+    val navigateAction: SingleLiveData<InviteCodeNavigateAction> get() = _navigateAction
 
-    fun emptyInviteCode() {
+    fun clearInviteCode() {
         inviteCode.value = ""
     }
 
@@ -31,10 +31,9 @@ class InviteCodeViewModel(
             val inviteCode = inviteCode.value ?: return@launch
             meetingRepository.fetchInviteCodeValidity(inviteCode)
                 .onSuccess {
-                    _isValidInviteCode.emit(true)
-                    _navigateAction.emit(InviteCodeNavigateAction.CodeNavigateToJoin)
+                    _navigateAction.setValue(InviteCodeNavigateAction.CodeNavigateToJoin)
                 }.onFailure {
-                    _isValidInviteCode.emit(false)
+                    _invalidInviteCodeEvent.setValue(Unit)
                 }
         }
     }
