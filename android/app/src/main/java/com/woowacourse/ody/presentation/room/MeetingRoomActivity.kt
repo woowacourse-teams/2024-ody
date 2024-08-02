@@ -45,7 +45,7 @@ class MeetingRoomActivity :
         initializePersistentBottomSheet()
     }
 
-    private fun initializeBinding() {
+    override fun initializeBinding() {
         binding.vm = viewModel
         binding.rvNotificationLog.adapter = adapter
         binding.rvNotificationLog.layoutManager = LinearLayoutManager(this)

@@ -70,11 +70,11 @@ class MeetingCreationActivity : BindingActivity<ActivityMeetingCreationBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeDataBinding()
+        initializeBinding()
         initializeObserve()
     }
 
-    private fun initializeDataBinding() {
+    override fun initializeBinding() {
         binding.vm = viewModel
         binding.backListener = this
         initializeMeetingInfoViewPager()

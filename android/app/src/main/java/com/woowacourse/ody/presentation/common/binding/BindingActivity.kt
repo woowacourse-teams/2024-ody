@@ -20,9 +20,12 @@ abstract class BindingActivity<T : ViewDataBinding>(
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layoutRes)
         binding.lifecycleOwner = this
+        initializeBinding()
     }
 
-    fun showSnackBar(
+    protected abstract fun initializeBinding()
+
+    protected fun showSnackBar(
         @StringRes messageId: Int,
         action: Snackbar.() -> Unit = {},
     ) {

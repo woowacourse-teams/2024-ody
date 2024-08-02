@@ -33,7 +33,7 @@ class IntroActivity : BindingActivity<ActivityIntroBinding>(R.layout.activity_in
         requestNotificationPermission()
     }
 
-    private fun initializeBinding() {
+    override fun initializeBinding() {
         binding.listener = viewModel
     }
 

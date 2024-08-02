@@ -21,7 +21,7 @@ class InviteCodeActivity : BindingActivity<ActivityInviteCodeBinding>(R.layout.a
         initializeObserve()
     }
 
-    private fun initializeBinding() {
+    override fun initializeBinding() {
         binding.vm = viewModel
         binding.backListener = this
     }

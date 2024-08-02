@@ -50,11 +50,11 @@ class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeDataBinding()
+        initializeBinding()
         initializeObserve()
     }
 
-    private fun initializeDataBinding() {
+    override fun initializeBinding() {
         binding.vm = viewModel
         binding.nextListener = this
         binding.backListener = this
