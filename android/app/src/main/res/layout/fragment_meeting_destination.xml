@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="52dp"
             android:text="@string/meeting_destination_question_front"
-            android:textColor="@color/purple"
+            android:textColor="@color/purple_800"
             app:layout_constraintEnd_toStartOf="@id/tv_destination_back"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +51,7 @@
             android:hint="@string/address_question_hint"
             android:inputType="text"
             android:maxLines="1"
-            android:onClick="@{() -> addressSearchListener.search()}"
+            android:onClick="@{() -> addressSearchListener.onSearch()}"
             app:layout_constraintBottom_toTopOf="@id/tv_destination_information"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:text="@string/address_question_information"
-            android:textColor="@color/purple"
+            android:textColor="@color/purple_800"
             app:layout_constraintStart_toStartOf="@id/et_destination"
             app:layout_constraintTop_toBottomOf="@id/et_destination" />
 

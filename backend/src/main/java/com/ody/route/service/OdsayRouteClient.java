@@ -1,15 +1,14 @@
 package com.ody.route.service;
 
-import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Location;
 import com.ody.route.config.RouteProperties;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.dto.OdsayResponse;
+import com.ody.route.mapper.OdsayResponseMapper;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClient;
 
@@ -56,25 +55,7 @@ public class OdsayRouteClient implements RouteClient {
     }
 
     private RouteTime responseToRouteTime(OdsayResponse response) {
-        if (response.code().isPresent()) {
-            return extractRouteTimeOrThrow(response);
-        }
-        response.minutes().orElseThrow(() -> {
-            log.error("OdsayResponse minutes is Empty: {}", response);
-            return new OdyServerErrorException("서버 에러");
-        });
-        return new RouteTime(response.minutes().getAsLong());
-    }
-
-    private RouteTime extractRouteTimeOrThrow(OdsayResponse response) {
-        Optional<String> code = response.code();
-        if (code.isPresent() && code.get().equals("-98")) {
-            return RouteTime.ZERO;
-        }
-        if (code.isPresent() && code.get().equals("500")) {
-            log.error("ODsay 500 에러: {}", response);
-            throw new OdyServerErrorException("서버 에버");
-        }
-        throw new OdyBadRequestException(response.message().orElseGet(() -> ""));
+        long minutes = OdsayResponseMapper.mapMinutes(response);
+        return new RouteTime(minutes);
     }
 }

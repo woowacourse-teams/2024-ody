@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.ody.databinding.ItemInviteCodeLogBinding
 import com.woowacourse.ody.databinding.ItemNotificationLogBinding
-import com.woowacourse.ody.presentation.room.CopyInviteCodeListener
+import com.woowacourse.ody.presentation.room.listener.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.room.model.NotificationLogUiModel
 
 class NotificationLogsAdapter(

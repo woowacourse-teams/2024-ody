@@ -11,3 +11,5 @@ fun NotificationLog.toNotificationUiModel(): NotificationLogUiModel {
         createdAt.format(dateTimeFormatter),
     )
 }
+
+fun List<NotificationLog>.toNotificationUiModels(): List<NotificationLogUiModel> = this.map { it.toNotificationUiModel() }

@@ -20,6 +20,7 @@ import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
+import com.woowacourse.ody.presentation.notification.NotificationHelper
 import retrofit2.Retrofit
 import timber.log.Timber
 
@@ -35,6 +36,8 @@ class OdyApplication : Application() {
 
     private val kakaoLocationService: KakaoLocationService =
         kakaoRetrofit.create(KakaoLocationService::class.java)
+
+    val notificationHelper: NotificationHelper by lazy { NotificationHelper(this) }
 
     val joinRepository: JoinRepository by lazy { DefaultJoinRepository(joinService) }
     val meetingRepository: MeetingRepository by lazy {

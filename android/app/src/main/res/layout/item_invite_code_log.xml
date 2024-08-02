@@ -5,7 +5,7 @@
     <data>
         <variable
             name="listener"
-            type="com.woowacourse.ody.presentation.room.CopyInviteCodeListener" />
+            type="com.woowacourse.ody.presentation.room.listener.CopyInviteCodeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,7 +42,7 @@
             android:gravity="center"
             android:text="@string/item_invite_code_copy"
             android:textColor="@color/white"
-            android:onClick="@{() ->listener.copyInviteCode()}"
+            android:onClick="@{() ->listener.onCopyInviteCode()}"
             app:layout_constraintBottom_toBottomOf="@id/tv_invite_code_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_invite_code_top" />
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
-            android:background="@color/gray"
+            android:background="@color/gray_350"
             app:layout_constraintTop_toBottomOf="@id/tv_invite_code_bottom" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

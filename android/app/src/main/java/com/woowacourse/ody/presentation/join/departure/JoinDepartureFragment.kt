@@ -75,7 +75,7 @@ class JoinDepartureFragment : Fragment(), AddressSearchListener {
         return geoLocationUiModel?.toGeoLocation()
     }
 
-    override fun search() = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+    override fun onSearch() = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
     private fun showSnackBar(
         @StringRes messageId: Int,

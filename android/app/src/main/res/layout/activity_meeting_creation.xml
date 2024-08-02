@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            app:dotsColor="@color/gray"
+            app:dotsColor="@color/gray_350"
             app:dotsCornerRadius="50dp"
             app:dotsSize="10dp"
             app:dotsSpacing="7dp"
@@ -40,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_meeting_info"
-            app:selectedDotColor="@color/purple" />
+            app:selectedDotColor="@color/purple_800" />
 
         <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
             android:id="@+id/wd_join_info"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:visibility="gone"
-            app:dotsColor="@color/gray"
+            app:dotsColor="@color/gray_350"
             app:dotsCornerRadius="50dp"
             app:dotsSize="10dp"
             app:dotsSpacing="7dp"
@@ -56,7 +56,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_meeting_info"
-            app:selectedDotColor="@color/purple" />
+            app:selectedDotColor="@color/purple_800" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_meeting_info"

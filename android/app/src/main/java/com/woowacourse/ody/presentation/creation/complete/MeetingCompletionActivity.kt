@@ -15,13 +15,15 @@ class MeetingCompletionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_meeting_completion)
 
         lifecycleScope.launch {
-            delay(1500)
+            delay(FINISH_DELAY_MILLIS)
             setResult(RESULT_OK)
             finish()
         }
     }
 
     companion object {
+        private const val FINISH_DELAY_MILLIS = 1500L
+
         fun getIntent(context: Context): Intent = Intent(context, MeetingCompletionActivity::class.java)
     }
 }
