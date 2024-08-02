@@ -121,6 +121,7 @@ class MeetingCreationViewModel(
     }
 
     fun joinMeeting(inviteCode: String) {
+        val nickname = nickname.value ?: return
         val startingPointAddress = startingPointGeoLocation.value?.address ?: return
         val startingPointLatitude = startingPointGeoLocation.value?.latitude ?: return
         val startingPointLongitude = startingPointGeoLocation.value?.longitude ?: return
@@ -129,7 +130,7 @@ class MeetingCreationViewModel(
             joinRepository.postMates(
                 MeetingJoinInfo(
                     inviteCode,
-                    nickname.value.toString(),
+                    nickname,
                     startingPointAddress,
                     startingPointLatitude,
                     startingPointLongitude,
