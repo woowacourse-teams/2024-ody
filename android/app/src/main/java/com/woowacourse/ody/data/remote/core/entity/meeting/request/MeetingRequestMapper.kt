@@ -8,10 +8,12 @@ fun MeetingCreationInfo.toMeetingRequest(): MeetingRequest =
         date = date,
         time = time,
         targetAddress = targetAddress,
-        targetLatitude = targetLatitude,
-        targetLongitude = targetLongitude,
+        targetLatitude = compress(targetLatitude),
+        targetLongitude = compress(targetLongitude),
         nickname = nickname,
         originAddress = originAddress,
-        originLatitude = originLatitude,
-        originLongitude = originLongitude,
+        originLatitude = compress(originLatitude),
+        originLongitude = compress(originLongitude),
     )
+
+private fun compress(coordinate: String): String = coordinate.slice(0..8)

@@ -7,6 +7,8 @@ fun MeetingJoinInfo.toJoinRequest(): JoinRequest =
         inviteCode = inviteCode,
         nickname = nickname,
         originAddress = originAddress,
-        originLatitude = originLatitude,
-        originLongitude = originLongitude,
+        originLatitude = compress(originLatitude),
+        originLongitude = compress(originLongitude),
     )
+
+private fun compress(coordinate: String): String = coordinate.slice(0..8)

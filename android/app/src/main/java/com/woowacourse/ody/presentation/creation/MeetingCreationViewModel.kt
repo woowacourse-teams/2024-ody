@@ -104,12 +104,12 @@ class MeetingCreationViewModel(
                     date.toString(),
                     LocalTime.of(meetingHour.value ?: 1, meetingMinute.value ?: 0).toString(),
                     destinationAddress,
-                    destinationLatitude.slice(0..8),
-                    destinationLongitude.slice(0..8),
+                    destinationLatitude,
+                    destinationLongitude,
                     nickname.value.toString(),
                     startingPointAddress,
-                    startingPointLatitude.slice(0..8),
-                    startingPointLongitude.slice(0..8),
+                    startingPointLatitude,
+                    startingPointLongitude,
                 ),
             ).onSuccess {
                 inviteCodeRepository.postInviteCode(it.inviteCode)
@@ -131,8 +131,8 @@ class MeetingCreationViewModel(
                     inviteCode,
                     nickname.value.toString(),
                     startingPointAddress,
-                    startingPointLatitude.slice(0..8) ?: return@launch,
-                    startingPointLongitude.slice(0..8) ?: return@launch,
+                    startingPointLatitude,
+                    startingPointLongitude,
                 ),
             ).onSuccess {
                 inviteCodeRepository.postInviteCode(it.inviteCode)
