@@ -1,5 +1,7 @@
 package com.ody.meeting.controller;
 
+import com.ody.mate.dto.request.MateStatusRequest;
+import com.ody.mate.dto.response.MateStatusResponses;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
@@ -90,4 +92,34 @@ public interface MeetingControllerSwagger {
     @ErrorCode401
     @ErrorCode500
     ResponseEntity<Void> validateInviteCode(@Parameter(hidden = true) Member member, String inviteCode);
+
+    @Operation(
+            summary = "약속 참여자 eta 상태 목록 조회",
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateStatusRequest.class))),
+
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "약속 참여자 eta 상태 목록 조회 성공",
+                            content = @Content(schema = @Schema(implementation = MateStatusResponses.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "클라이언트 입력 또는 약속 시간 30분 이전 조회 시도 시",
+                            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "존재하지 않는 모임이거나 해당 모임 참여자가 아닌 경우",
+                            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+                    )
+            }
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<MateStatusResponses> findAllMateStatuses(
+            @Parameter(hidden = true) Member member,
+            Long meetingId,
+            MateStatusRequest mateStatusRequest
+    );
 }

@@ -1,7 +1,9 @@
 package com.ody.meeting.controller;
 
 import com.ody.common.annotation.AuthMember;
+import com.ody.mate.dto.request.MateStatusRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.mate.dto.response.MateStatusResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.service.MeetingService;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,5 +70,16 @@ public class MeetingController implements MeetingControllerSwagger {
         meetingService.validateInviteCode(inviteCode);
         return ResponseEntity.ok()
                 .build();
+    }
+
+    @Override
+    @PatchMapping("/v1/meetings/{meetingId}/mate-statuses")
+    public ResponseEntity<MateStatusResponses> findAllMateStatuses(
+            @AuthMember Member member,
+            @PathVariable Long meetingId,
+            @RequestBody MateStatusRequest mateStatusRequest
+    ) {
+        MateStatusResponses mateStatuses = meetingService.findAllMateStatuses(meetingId, mateStatusRequest);
+        return ResponseEntity.ok(mateStatuses);
     }
 }

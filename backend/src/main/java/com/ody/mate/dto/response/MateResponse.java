@@ -1,4 +1,4 @@
-package com.ody.meeting.dto.response;
+package com.ody.mate.dto.response;
 
 import com.ody.mate.domain.Mate;
 import java.util.List;
