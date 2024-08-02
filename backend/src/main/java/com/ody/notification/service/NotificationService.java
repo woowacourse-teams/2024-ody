@@ -9,11 +9,13 @@ import com.ody.notification.dto.request.FcmSendRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.service.RouteService;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class NotificationService {
 
-    private final ApplicationEventPublisher publisher;
+    private static final ZoneOffset KST_OFFSET = ZoneOffset.ofHours(9);
+
     private final NotificationRepository notificationRepository;
     private final FcmSubscriber fcmSubscriber;
     private final RouteService routeService;
+    private final FcmPushSender fcmPushSender;
+    private final TaskScheduler taskScheduler;
 
     @Transactional
     public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
@@ -48,9 +53,13 @@ public class NotificationService {
 
     private void saveAndSendNotification(Meeting meeting, Notification notification) {
         Notification savedNotification = notificationRepository.save(notification);
-
         FcmSendRequest fcmSendRequest = new FcmSendRequest(meeting, savedNotification);
-        publisher.publishEvent(fcmSendRequest);
+        scheduleNotification(fcmSendRequest);
+    }
+
+    private void scheduleNotification(FcmSendRequest fcmSendRequest) {
+        Instant startTime = fcmSendRequest.notification().getSendAt().toInstant(KST_OFFSET);
+        taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmSendRequest), startTime);
     }
 
     private DepartureTime calculateSendAt(Meeting meeting, Mate mate) {

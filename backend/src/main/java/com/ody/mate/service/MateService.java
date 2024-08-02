@@ -32,7 +32,7 @@ public class MateService {
         return findAllByMeetingId(meeting);
     }
 
-    public Mate save(MateSaveRequest mateSaveRequest, Meeting meeting, Member member) {
+    public Mate save(MateSaveRequest mateSaveRequest, Meeting meeting, Member member) { // TODO: private 접근 제어자로 변경, 테스트 코드 수정 필요
         if (mateRepository.existsByMeetingIdAndNicknameNickname(meeting.getId(), mateSaveRequest.nickname())) {
             throw new OdyBadRequestException("모임 내 같은 닉네임이 존재합니다.");
         }

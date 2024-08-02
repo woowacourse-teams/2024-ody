@@ -16,14 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FcmPushSender {
 
-    private final NotificationService notificationService;
-
     @Transactional
     public void sendPushNotification(FcmSendRequest fcmSendRequest) {
-        Notification notification = notificationService.findById(fcmSendRequest.notificationId());
+        Notification notification = fcmSendRequest.notification();
         Message message = Message.builder()
                 .putData("type", notification.getType().toString())
-                .putData("nickname", notification.getMate().getNickname().getNickname())
+                .putData("nickname", notification.getMate().getNickname())
                 .setTopic(fcmSendRequest.topic())
                 .build();
         try {
