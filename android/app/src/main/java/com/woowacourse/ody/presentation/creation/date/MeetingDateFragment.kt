@@ -2,9 +2,7 @@ package com.woowacourse.ody.presentation.creation.date
 
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.StringRes
 import androidx.fragment.app.activityViewModels
-import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingDateBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
