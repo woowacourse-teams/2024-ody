@@ -2,14 +2,9 @@ package com.woowacourse.ody.presentation.join.departure
 
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
-import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentJoinDepartureBinding
 import com.woowacourse.ody.domain.model.GeoLocation
@@ -17,23 +12,12 @@ import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.model.toGeoLocation
+import com.woowacourse.ody.presentation.common.binding.BindingFragment
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
 import com.woowacourse.ody.presentation.creation.MeetingInfoType
 
-class JoinDepartureFragment : Fragment(), AddressSearchListener {
-    private var _binding: FragmentJoinDepartureBinding? = null
-    private val binding get() = _binding!!
-
+class JoinDepartureFragment : BindingFragment<FragmentJoinDepartureBinding>(R.layout.fragment_join_departure), AddressSearchListener {
     private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentJoinDepartureBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(
         view: View,
@@ -47,7 +31,6 @@ class JoinDepartureFragment : Fragment(), AddressSearchListener {
 
     private fun initializeBinding() {
         binding.vm = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.addressSearchListener = this
     }
 
@@ -77,22 +60,9 @@ class JoinDepartureFragment : Fragment(), AddressSearchListener {
 
     override fun onSearch() = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
-    private fun showSnackBar(
-        @StringRes messageId: Int,
-    ) {
-        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
-            .apply { setAnchorView(activity?.findViewById(R.id.btn_next)) }
-            .show()
-    }
-
     override fun onResume() {
         super.onResume()
         viewModel.meetingInfoType.value = MeetingInfoType.STARTING_POINT
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {
