@@ -176,7 +176,7 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
     private fun handleJoinInfoNextClick() {
         if (binding.vpJoinInfo.currentItem == joinInfoFragments.size - 1) {
             viewModel.createMeeting()
-            viewModel.onClickMJoinMeeting()
+            viewModel.onClickJoinMeeting()
             return
         }
         binding.vpJoinInfo.currentItem += 1

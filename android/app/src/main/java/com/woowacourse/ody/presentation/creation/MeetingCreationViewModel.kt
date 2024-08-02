@@ -242,7 +242,7 @@ class MeetingCreationViewModel(
         _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToCreationComplete)
     }
 
-    override fun onClickMJoinMeeting() {
+    override fun onClickJoinMeeting() {
         _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToJoinComplete)
     }
 

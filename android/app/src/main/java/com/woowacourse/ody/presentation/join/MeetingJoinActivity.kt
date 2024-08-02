@@ -97,7 +97,7 @@ class MeetingJoinActivity : AppCompatActivity(), NextListener, BackListener {
         if (binding.vpJoinInfo.currentItem == fragments.size - 1) {
             val inviteCode: String = getInviteCode() ?: return
             viewModel.joinMeeting(inviteCode)
-            viewModel.onClickMJoinMeeting()
+            viewModel.onClickMeetingJoin()
             return
         }
         binding.vpJoinInfo.currentItem += 1
