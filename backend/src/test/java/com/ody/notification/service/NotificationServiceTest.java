@@ -59,7 +59,7 @@ class NotificationServiceTest extends BaseServiceTest {
         BDDMockito.given(routeService.calculateDepartureTime(any(), any(), any()))
                 .willReturn(pastDepartureTime);
 
-        notificationService.saveAndSendDepartureReminder(meeting, mate, member.getDeviceToken());
+        notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken());
 
         Optional<Notification> departureNotification = notificationRepository.findAll().stream()
                 .filter(notification -> isDepartureReminder(notification) && isNow(notification))

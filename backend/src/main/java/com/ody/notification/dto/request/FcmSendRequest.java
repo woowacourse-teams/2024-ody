@@ -1,11 +1,11 @@
 package com.ody.notification.dto.request;
 
-import java.time.LocalDateTime;
+import com.ody.meeting.domain.Meeting;
+import com.ody.notification.domain.Notification;
 
-public record FcmSendRequest(
-        String topic,
-        Long notificationId,
-        LocalDateTime sendAt
-) {
+public record FcmSendRequest(String topic, Notification notification) {
 
+    public FcmSendRequest(Meeting meeting, Notification notification) {
+        this(meeting.getId().toString(), notification);
+    }
 }

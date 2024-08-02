@@ -60,4 +60,8 @@ public class Mate {
     public Mate(Meeting meeting, Member member, Nickname nickname, Location origin) {
         this(null, meeting, member, nickname, origin);
     }
+
+    public String getNicknameValue() {
+        return nickname.getValue();
+    }
 }

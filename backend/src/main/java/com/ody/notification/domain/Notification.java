@@ -48,6 +48,14 @@ public class Notification extends BaseEntity {
         this(null, mate, type, sendAt, status);
     }
 
+    public static Notification createEntry(Mate mate) {
+        return new Notification(mate, NotificationType.ENTRY, LocalDateTime.now(), NotificationStatus.PENDING);
+    }
+
+    public static Notification createDepartureReminder(Mate mate, LocalDateTime sendAt) {
+        return new Notification(mate, NotificationType.DEPARTURE_REMINDER, sendAt, NotificationStatus.PENDING);
+    }
+
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
     }

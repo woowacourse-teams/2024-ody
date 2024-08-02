@@ -1,6 +1,7 @@
 package com.ody.meeting.dto.request;
 
 import com.ody.common.annotation.FutureOrPresentDateTime;
+import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -47,5 +48,9 @@ public record MeetingSaveRequest(
     public Meeting toMeeting(String inviteCode) {
         Location target = new Location(targetAddress, targetLatitude, targetLongitude);
         return new Meeting(name, date, time, target, inviteCode);
+    }
+
+    public MateSaveRequest toMateSaveRequest(String inviteCode) {
+        return new MateSaveRequest(inviteCode, nickname, originAddress, originLatitude, originLongitude);
     }
 }
