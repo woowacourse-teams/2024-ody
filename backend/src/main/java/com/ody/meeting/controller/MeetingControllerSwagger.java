@@ -105,7 +105,7 @@ public interface MeetingControllerSwagger {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "클라이언트 입력 또는 약속 시간 30분 이전 조회 시도 시",
+                            description = "클라이언트 입력 오류 또는 약속 시간 30분 이전 조회 시도 시",
                             content = @Content(schema = @Schema(implementation = ProblemDetail.class))
                     ),
                     @ApiResponse(
