@@ -61,7 +61,7 @@ public class Mate {
         this(null, meeting, member, nickname, origin);
     }
 
-    public String getNickname() {
-        return nickname.getNickname();
+    public String getNicknameValue() {
+        return nickname.getValue();
     }
 }

@@ -8,7 +8,7 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
 
     List<Mate> findAllByMeetingId(Long meetingId);
 
-    boolean existsByMeetingIdAndNicknameNickname(Long meetingId, String nickname);
+    boolean existsByMeetingIdAndNickname_Value(Long meetingId, String value);
 
     boolean existsByMeetingIdAndMemberId(Long memberId, Long meetingId);
 }
