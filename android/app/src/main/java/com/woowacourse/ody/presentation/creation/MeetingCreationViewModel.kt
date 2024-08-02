@@ -88,6 +88,8 @@ class MeetingCreationViewModel(
     }
 
     fun createMeeting() {
+        val name = meetingName.value ?: return
+        val date = meetingDate.value ?: return
         val destinationAddress = destinationGeoLocation.value?.address ?: return
         val destinationLatitude = destinationGeoLocation.value?.latitude ?: return
         val destinationLongitude = destinationGeoLocation.value?.longitude ?: return
@@ -98,8 +100,8 @@ class MeetingCreationViewModel(
         viewModelScope.launch {
             meetingRepository.postMeeting(
                 MeetingCreationInfo(
-                    meetingName.value.toString(),
-                    meetingDate.value.toString(),
+                    name,
+                    date.toString(),
                     LocalTime.of(meetingHour.value ?: 1, meetingMinute.value ?: 0).toString(),
                     destinationAddress,
                     destinationLatitude.slice(0..8),
