@@ -1,33 +1,19 @@
 package com.woowacourse.ody.presentation.creation.date
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingDateBinding
+import com.woowacourse.ody.presentation.common.binding.BindingFragment
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
 import com.woowacourse.ody.presentation.creation.MeetingInfoType
 import java.time.LocalDate
 
-class MeetingDateFragment : Fragment() {
-    private var _binding: FragmentMeetingDateBinding? = null
-    private val binding get() = _binding!!
-
+class MeetingDateFragment : BindingFragment<FragmentMeetingDateBinding>(R.layout.fragment_meeting_date) {
     private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentMeetingDateBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(
         view: View,
@@ -67,15 +53,4 @@ class MeetingDateFragment : Fragment() {
         super.onResume()
         viewModel.meetingInfoType.value = MeetingInfoType.DATE
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun showSnackBar(
-        @StringRes message: Int,
-    ) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
-        .apply { setAnchorView(activity?.findViewById(R.id.btn_next)) }
-        .show()
 }

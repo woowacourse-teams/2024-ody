@@ -12,12 +12,13 @@ import com.woowacourse.ody.OdyApplication
 abstract class BindingActivity<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
 ) : AppCompatActivity() {
-    protected val binding: T by lazy { DataBindingUtil.setContentView(this, layoutRes) }
+    protected lateinit var binding: T
     private var snackBar: Snackbar? = null
     val application by lazy { applicationContext as OdyApplication }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, layoutRes)
         binding.lifecycleOwner = this
     }
 

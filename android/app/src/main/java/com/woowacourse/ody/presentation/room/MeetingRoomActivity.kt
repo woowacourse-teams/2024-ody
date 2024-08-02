@@ -6,31 +6,27 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
+import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.room.adapter.NotificationLogsAdapter
 import com.woowacourse.ody.presentation.room.listener.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.room.listener.ShareListener
 
-class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareListener {
-    private val application: OdyApplication by lazy {
-        applicationContext as OdyApplication
-    }
-
+class MeetingRoomActivity :
+    BindingActivity<ActivityMeetingRoomBinding>(
+        R.layout.activity_meeting_room,
+    ),
+    CopyInviteCodeListener,
+    ShareListener {
     private val viewModel: MeetingRoomViewModel by viewModels {
         MeetingRoomViewModelFactory(
             application.notificationLogRepository,
             application.meetingRepository,
         )
-    }
-
-    private val binding: ActivityMeetingRoomBinding by lazy {
-        ActivityMeetingRoomBinding.inflate(layoutInflater)
     }
 
     private val adapter: NotificationLogsAdapter by lazy {
@@ -51,12 +47,10 @@ class MeetingRoomActivity : AppCompatActivity(), CopyInviteCodeListener, ShareLi
 
     private fun initializeBinding() {
         binding.vm = viewModel
-        binding.lifecycleOwner = this
         binding.rvNotificationLog.adapter = adapter
         binding.rvNotificationLog.layoutManager = LinearLayoutManager(this)
         binding.shareListener = this
         binding.copyInviteCodeListener = this
-        setContentView(binding.root)
     }
 
     private fun initializeObserve() {

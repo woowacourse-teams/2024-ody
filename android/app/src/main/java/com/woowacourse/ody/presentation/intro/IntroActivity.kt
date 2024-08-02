@@ -8,20 +8,15 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityIntroBinding
+import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 
-class IntroActivity : AppCompatActivity() {
+class IntroActivity : BindingActivity<ActivityIntroBinding>(R.layout.activity_intro) {
     private val viewModel: IntroViewModel by viewModels()
-    private val binding: ActivityIntroBinding by lazy {
-        ActivityIntroBinding.inflate(layoutInflater)
-    }
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission(),
@@ -40,7 +35,6 @@ class IntroActivity : AppCompatActivity() {
 
     private fun initializeBinding() {
         binding.listener = viewModel
-        setContentView(binding.root)
     }
 
     private fun initializeObserve() {
@@ -79,10 +73,6 @@ class IntroActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun showSnackBar(
-        @StringRes message: Int,
-    ) = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
 
     companion object {
         fun getIntent(context: Context): Intent = Intent(context, IntroActivity::class.java)

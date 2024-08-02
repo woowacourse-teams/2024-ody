@@ -8,11 +8,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.woowacourse.ody.OdyApplication
+import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingJoinBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
+import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.listener.NextListener
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
@@ -22,13 +22,7 @@ import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 
-class MeetingJoinActivity : AppCompatActivity(), NextListener, BackListener {
-    private val application: OdyApplication by lazy {
-        applicationContext as OdyApplication
-    }
-    private val binding: ActivityMeetingJoinBinding by lazy {
-        ActivityMeetingJoinBinding.inflate(layoutInflater)
-    }
+class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout.activity_meeting_join), NextListener, BackListener {
     private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel> {
         MeetingCreationViewModelFactory(
             meetingRepository = application.meetingRepository,
@@ -56,15 +50,12 @@ class MeetingJoinActivity : AppCompatActivity(), NextListener, BackListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-
         initializeDataBinding()
         initializeObserve()
     }
 
     private fun initializeDataBinding() {
         binding.vm = viewModel
-        binding.lifecycleOwner = this
         binding.nextListener = this
         binding.backListener = this
         initializeJoinInfoViewPager()
