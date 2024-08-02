@@ -11,7 +11,7 @@ public record MateStatusResponse(
         @Schema(description = "참여자 ETA에 따른 상태",  example = "LATE_WARNING")
         EtaStatus status,
 
-        @Schema(description = "도착지까지 남은 소요시간",  example = "32")
+        @Schema(description = "도착지까지 남은 소요시간(분)",  example = "32")
         long durationMinutes
 ) {
 
