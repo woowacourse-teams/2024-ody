@@ -26,7 +26,7 @@ public class OdsayResponseMapper {
             return ZERO_TIME;
         }
 
-        if(response.code().isPresent()) {
+        if (response.code().isPresent()) {
             checkOdsayException(response);
         }
 
@@ -49,7 +49,7 @@ public class OdsayResponseMapper {
 
         throw new OdyBadRequestException(
                 response.message()
-                     .orElse(EMPTY_MESSAGE)
+                        .orElse(EMPTY_MESSAGE)
         );
     }
 
