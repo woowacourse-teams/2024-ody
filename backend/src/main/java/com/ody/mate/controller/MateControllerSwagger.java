@@ -36,5 +36,5 @@ public interface MateControllerSwagger {
     @ErrorCode401
     @ErrorCode404(description = "유효하지 않은 초대코드")
     @ErrorCode500
-    ResponseEntity<MeetingSaveResponse> save(@Parameter(hidden = true) Member member, MateSaveRequest mateSaveRequest);
+    ResponseEntity<MeetingSaveResponse> saveV1(@Parameter(hidden = true) Member member, MateSaveRequest mateSaveRequest);
 }

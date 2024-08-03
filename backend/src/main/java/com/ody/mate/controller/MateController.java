@@ -18,9 +18,19 @@ public class MateController implements MateControllerSwagger {
 
     private final MeetingService meetingService;
 
+    @PostMapping("/mates")
+    public ResponseEntity<MeetingSaveResponse> save(
+            @AuthMember Member member,
+            @RequestBody MateSaveRequest mateSaveRequest
+    ) {
+        MeetingSaveResponse meetingSaveResponse = meetingService.findAndSendNotifications(mateSaveRequest, member);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(meetingSaveResponse);
+    }
+
     @Override
     @PostMapping("/v1/mates")
-    public ResponseEntity<MeetingSaveResponse> save(
+    public ResponseEntity<MeetingSaveResponse> saveV1(
             @AuthMember Member member,
             @RequestBody MateSaveRequest mateSaveRequest
     ) {
