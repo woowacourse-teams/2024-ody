@@ -131,5 +131,35 @@
         <include
             layout="@layout/bottom_sheet_code_copy"
             app:copyInviteCodeListener="@{copyInviteCodeListener}" />
+
+        <LinearLayout
+            android:id="@+id/ll_ody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/rectangle_purple_radius_15"
+            android:orientation="horizontal"
+            android:paddingStart="9dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="9dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_white_ody" />
+
+            <TextView
+                style="@style/pretendard_bold_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/meeting_room_ody"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
