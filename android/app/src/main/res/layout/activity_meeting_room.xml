@@ -31,7 +31,7 @@
 
             <include
                 android:id="@+id/tb_log"
-                layout="@layout/toolbar_log"
+                layout="@layout/toolbar_meeting_room"
                 shareListener="@{shareListener}"
                 title="@{vm.meeting.name}"
                 android:layout_width="match_parent"
