@@ -29,7 +29,7 @@ public class MeetingService {
     public MeetingSaveResponse saveAndSendNotifications(MeetingSaveRequest meetingSaveRequest, Member member) {
         Meeting meeting = save(meetingSaveRequest);
         MateSaveRequest mateSaveRequest = meetingSaveRequest.toMateSaveRequest(meeting.getInviteCode());
-        return mateService.saveAndSendNotifications(mateSaveRequest, meeting, member);
+        return mateService.saveAndSendNotifications(mateSaveRequest, member);
     }
 
     public Meeting save(MeetingSaveRequest meetingSaveRequest) {
@@ -40,8 +40,7 @@ public class MeetingService {
     }
 
     public MeetingSaveResponse findAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
-        Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
-        return mateService.saveAndSendNotifications(mateSaveRequest, meeting, member);
+        return mateService.saveAndSendNotifications(mateSaveRequest, member);
     }
 
     public void validateInviteCode(String inviteCode) {
@@ -52,7 +51,7 @@ public class MeetingService {
         }
     }
 
-    private Meeting findByInviteCode(String inviteCode) {
+    public Meeting findByInviteCode(String inviteCode) {
         Long meetingId = InviteCodeGenerator.decode(inviteCode);
         return findById(meetingId);
     }

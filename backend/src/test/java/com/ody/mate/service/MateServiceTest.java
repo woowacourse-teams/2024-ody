@@ -39,8 +39,7 @@ class MateServiceTest extends BaseServiceTest {
         Member member2 = memberRepository.save(Fixture.MEMBER2);
 
         Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
-        mateRepository.save(
-                new Mate(meeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION)); // TODO: 데이터 클린 작업 필요
+        mateRepository.save(new Mate(meeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION));
 
         MateSaveRequest mateSaveRequest = new MateSaveRequest(
                 meeting.getInviteCode(),
@@ -49,7 +48,7 @@ class MateServiceTest extends BaseServiceTest {
                 Fixture.ORIGIN_LOCATION.getLatitude(),
                 Fixture.ORIGIN_LOCATION.getLongitude()
         );
-        assertThatCode(() -> mateService.save(mateSaveRequest, meeting, member2))
+        assertThatCode(() -> mateService.saveAndSendNotifications(mateSaveRequest, member2))
                 .doesNotThrowAnyException();
     }
 
@@ -69,7 +68,7 @@ class MateServiceTest extends BaseServiceTest {
                 Fixture.ORIGIN_LOCATION.getLatitude(),
                 Fixture.ORIGIN_LOCATION.getLongitude()
         );
-        assertThatThrownBy(() -> mateService.save(mateSaveRequest, meeting, member2))
+        assertThatThrownBy(() -> mateService.saveAndSendNotifications(mateSaveRequest, member2))
                 .isInstanceOf(OdyBadRequestException.class);
     }
 }
