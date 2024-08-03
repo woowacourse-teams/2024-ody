@@ -5,10 +5,10 @@ import com.ody.mate.domain.EtaStatus;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
-import com.ody.mate.dto.request.MateStatusRequest;
+import com.ody.mate.dto.request.MateEtaRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
-import com.ody.mate.dto.response.MateStatusResponse;
-import com.ody.mate.dto.response.MateStatusResponses;
+import com.ody.mate.dto.response.MateEtaResponse;
+import com.ody.mate.dto.response.MateEtaResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.repository.MeetingRepository;
@@ -73,14 +73,14 @@ public class MeetingService {
                 .collect(Collectors.collectingAndThen(Collectors.toList(), MeetingSaveResponses::new));
     }
 
-    public MateStatusResponses findAllMateStatuses(Long meetingId, MateStatusRequest mateStatusRequest) {
-        List<MateStatusResponse> mateStatuses = List.of(
-                new MateStatusResponse("콜리", EtaStatus.LATE_WARNING, 83L),
-                new MateStatusResponse("올리브", EtaStatus.ARRIVAL_SOON, 10L),
-                new MateStatusResponse("해음", EtaStatus.ARRIVED, 0L),
-                new MateStatusResponse("카키공주", EtaStatus.MISSING, -1L)
+    public MateEtaResponses findAllMateEtas(Long meetingId, MateEtaRequest mateEtaRequest) {
+        List<MateEtaResponse> mateStatuses = List.of(
+                new MateEtaResponse("콜리", EtaStatus.LATE_WARNING, 83L),
+                new MateEtaResponse("올리브", EtaStatus.ARRIVAL_SOON, 10L),
+                new MateEtaResponse("해음", EtaStatus.ARRIVED, 0L),
+                new MateEtaResponse("카키공주", EtaStatus.MISSING, -1L)
         );
 
-        return new MateStatusResponses(mateStatuses);
+        return new MateEtaResponses(mateStatuses);
     }
 }

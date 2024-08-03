@@ -3,7 +3,7 @@ package com.ody.mate.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 
-public record MateStatusRequest(
+public record MateEtaRequest(
 
         @Schema(description = "위치추적 불가 여부", example = "false")
         boolean isMissing,

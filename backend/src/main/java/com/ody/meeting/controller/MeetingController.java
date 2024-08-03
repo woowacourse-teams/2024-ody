@@ -1,9 +1,9 @@
 package com.ody.meeting.controller;
 
 import com.ody.common.annotation.AuthMember;
-import com.ody.mate.dto.request.MateStatusRequest;
+import com.ody.mate.dto.request.MateEtaRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
-import com.ody.mate.dto.response.MateStatusResponses;
+import com.ody.mate.dto.response.MateEtaResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.service.MeetingService;
@@ -73,13 +73,13 @@ public class MeetingController implements MeetingControllerSwagger {
     }
 
     @Override
-    @PatchMapping("/v1/meetings/{meetingId}/mate-statuses")
-    public ResponseEntity<MateStatusResponses> findAllMateStatuses(
+    @PatchMapping("/v1/meetings/{meetingId}/mates/etas")
+    public ResponseEntity<MateEtaResponses> findAllMateEtas(
             @AuthMember Member member,
             @PathVariable Long meetingId,
-            @RequestBody MateStatusRequest mateStatusRequest
+            @RequestBody MateEtaRequest mateEtaRequest
     ) {
-        MateStatusResponses mateStatuses = meetingService.findAllMateStatuses(meetingId, mateStatusRequest);
+        MateEtaResponses mateStatuses = meetingService.findAllMateEtas(meetingId, mateEtaRequest);
         return ResponseEntity.ok(mateStatuses);
     }
 }

@@ -3,7 +3,7 @@ package com.ody.mate.dto.response;
 import com.ody.mate.domain.EtaStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record MateStatusResponse(
+public record MateEtaResponse(
 
         @Schema(description = "참여자 닉네임",  example = "콜리")
         String nickname,
