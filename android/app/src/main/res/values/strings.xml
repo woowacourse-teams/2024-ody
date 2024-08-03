@@ -90,6 +90,7 @@
     <string name="status_late">지각</string>
     <string name="status_late_warning">지각 위기</string>
     <string name="status_missing">행방불명</string>
+    <string name="dashboard_arrived">-</string>
     <string name="dashboard_arrival_remain_time">%d분 후 도착</string>
     <string name="dashboard_arrival_soon">10분 내 도착</string>
     <string name="dashboard_missing">오디</string>
