@@ -1,16 +1,13 @@
 package com.ody.meeting.dto.request;
 
 import com.ody.common.annotation.FutureOrPresentDateTime;
-import com.ody.mate.dto.request.MateSaveRequest;
-import com.ody.meeting.domain.Location;
-import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @FutureOrPresentDateTime(dateFieldName = "date", timeFieldName = "time")
-public record MeetingSaveV1Request(
+public record MeetingSaveRequestV1(
 
         @Schema(description = "모임 이름", example = "우테코 16조")
         @Size(min = 1, max = 15, message = "약속 이름은 1글자 이상, 16자 미만으로 입력 가능합니다.")

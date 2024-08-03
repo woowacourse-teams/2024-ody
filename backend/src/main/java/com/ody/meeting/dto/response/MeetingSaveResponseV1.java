@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record MeetingSaveV1Response(
+public record MeetingSaveResponseV1(
 
         @Schema(description = "모임 ID", example = "1")
         Long id,
