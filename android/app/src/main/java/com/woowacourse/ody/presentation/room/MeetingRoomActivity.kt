@@ -12,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
+import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.room.adapter.NotificationLogsAdapter
 import com.woowacourse.ody.presentation.room.listener.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.room.listener.ShareListener
@@ -21,7 +22,8 @@ class MeetingRoomActivity :
         R.layout.activity_meeting_room,
     ),
     CopyInviteCodeListener,
-    ShareListener {
+    ShareListener,
+    BackListener {
     private val viewModel: MeetingRoomViewModel by viewModels {
         MeetingRoomViewModelFactory(
             application.notificationLogRepository,
@@ -51,6 +53,7 @@ class MeetingRoomActivity :
         binding.rvNotificationLog.layoutManager = LinearLayoutManager(this)
         binding.shareListener = this
         binding.copyInviteCodeListener = this
+        binding.backListener = this
     }
 
     private fun initializeObserve() {
@@ -73,6 +76,10 @@ class MeetingRoomActivity :
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText(INVITE_CODE_LABEL, inviteCode)
         clipboard.setPrimaryClip(clip)
+    }
+
+    override fun onBack() {
+        finish()
     }
 
     companion object {

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:layout="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -18,6 +17,10 @@
             name="copyInviteCodeListener"
             type="com.woowacourse.ody.presentation.room.listener.CopyInviteCodeListener" />
 
+        <variable
+            name="backListener"
+            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -32,13 +35,13 @@
             <include
                 android:id="@+id/tb_log"
                 layout="@layout/toolbar_meeting_room"
-                shareListener="@{shareListener}"
-                title="@{vm.meeting.name}"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:elevation="8dp"
-                layout:layout_constraintBottom_toTopOf="@+id/layout_meeting_info"
-                layout:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="wrap_content"
+                app:backListener="@{backListener}"
+                app:layout_constraintBottom_toTopOf="@+id/layout_meeting_info"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shareListener="@{shareListener}"
+                app:title="@{vm.meeting.name}" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_meeting_info"
@@ -46,17 +49,17 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rectangle_cream_downside_shadow_radius_30"
                 android:elevation="8dp"
-                layout:layout_constraintBottom_toTopOf="@+id/rv_notification_log"
-                layout:layout_constraintTop_toBottomOf="@+id/tb_log">
+                app:layout_constraintBottom_toTopOf="@+id/rv_notification_log"
+                app:layout_constraintTop_toBottomOf="@+id/tb_log">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/ic_watch"
-                    layout:layout_constraintBottom_toBottomOf="@id/tv_meeting_date"
-                    layout:layout_constraintEnd_toStartOf="@id/tv_meeting_date"
-                    layout:layout_constraintTop_toTopOf="@id/tv_meeting_date" />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_meeting_date"
+                    app:layout_constraintEnd_toStartOf="@id/tv_meeting_date"
+                    app:layout_constraintTop_toTopOf="@id/tv_meeting_date" />
 
                 <TextView
                     android:id="@+id/tv_meeting_date"
@@ -66,8 +69,8 @@
                     android:layout_marginStart="56dp"
                     android:layout_marginTop="14dp"
                     android:text="@{vm.meeting.meetingTime}"
-                    layout:layout_constraintStart_toStartOf="parent"
-                    layout:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="2024년 7월 11일 03시 00분" />
 
                 <ImageView
@@ -75,9 +78,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/ic_location_on"
-                    layout:layout_constraintBottom_toBottomOf="@id/tv_meeting_position"
-                    layout:layout_constraintEnd_toStartOf="@id/tv_meeting_position"
-                    layout:layout_constraintTop_toTopOf="@id/tv_meeting_position" />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_meeting_position"
+                    app:layout_constraintEnd_toStartOf="@id/tv_meeting_position"
+                    app:layout_constraintTop_toTopOf="@id/tv_meeting_position" />
 
                 <TextView
                     android:id="@+id/tv_meeting_position"
@@ -86,8 +89,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@{vm.meeting.targetPosition}"
-                    layout:layout_constraintStart_toStartOf="@id/tv_meeting_date"
-                    layout:layout_constraintTop_toBottomOf="@id/tv_meeting_date"
+                    app:layout_constraintStart_toStartOf="@id/tv_meeting_date"
+                    app:layout_constraintTop_toBottomOf="@id/tv_meeting_date"
                     tools:text="선릉 캠퍼스" />
 
                 <ImageView
@@ -95,9 +98,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/ic_person"
-                    layout:layout_constraintBottom_toBottomOf="@id/tv_meeting_people"
-                    layout:layout_constraintEnd_toStartOf="@id/tv_meeting_people"
-                    layout:layout_constraintTop_toTopOf="@id/tv_meeting_people" />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_meeting_people"
+                    app:layout_constraintEnd_toStartOf="@id/tv_meeting_people"
+                    app:layout_constraintTop_toTopOf="@id/tv_meeting_people" />
 
                 <TextView
                     android:id="@+id/tv_meeting_people"
@@ -107,9 +110,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="14dp"
-                    layout:layout_constraintBottom_toBottomOf="parent"
-                    layout:layout_constraintStart_toStartOf="@id/tv_meeting_date"
-                    layout:layout_constraintTop_toBottomOf="@id/tv_meeting_position"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tv_meeting_date"
+                    app:layout_constraintTop_toBottomOf="@id/tv_meeting_position"
                     tools:text="3명 / 올리브, 해음, 차람" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -119,10 +122,10 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="18dp"
                 android:layout_marginEnd="18dp"
-                layout:layout_constraintBottom_toBottomOf="parent"
-                layout:layout_constraintEnd_toEndOf="parent"
-                layout:layout_constraintStart_toStartOf="parent"
-                layout:layout_constraintTop_toBottomOf="@+id/layout_meeting_info"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_meeting_info"
                 tools:itemCount="12"
                 tools:listitem="@layout/item_notification_log" />
 

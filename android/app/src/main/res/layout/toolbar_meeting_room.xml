@@ -12,6 +12,11 @@
         <variable
             name="shareListener"
             type="com.woowacourse.ody.presentation.room.listener.ShareListener" />
+
+        <variable
+            name="backListener"
+            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
+
     </data>
 
     <androidx.appcompat.widget.Toolbar
@@ -20,7 +25,19 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:onClick="@{() -> backListener.onBack()}"
+                android:src="@drawable/ic_arrow_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_title"
@@ -33,7 +50,7 @@
                 android:text="@{title}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_share"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_back"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="엄청나게긴모임이름엄청나게긴모임이름" />
 
