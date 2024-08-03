@@ -30,4 +30,3 @@ public record MeetingSaveRequestV1(
 ) {
 
 }
-
