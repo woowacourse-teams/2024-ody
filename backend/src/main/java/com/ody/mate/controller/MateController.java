@@ -19,7 +19,7 @@ public class MateController implements MateControllerSwagger {
     private final MeetingService meetingService;
 
     @Override
-    @PostMapping("/mates")
+    @PostMapping("/v1/mates")
     public ResponseEntity<MeetingSaveResponse> save(
             @AuthMember Member member,
             @RequestBody MateSaveRequest mateSaveRequest
