@@ -78,6 +78,7 @@ public interface MeetingControllerSwagger {
     );
 
     @Operation(
+            deprecated = true,
             summary = "약속 개설",
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveV1Request.class))),
             responses = {
