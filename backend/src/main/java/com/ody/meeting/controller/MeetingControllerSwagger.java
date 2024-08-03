@@ -1,6 +1,7 @@
 package com.ody.meeting.controller;
 
 import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
@@ -70,11 +71,26 @@ public interface MeetingControllerSwagger {
                             description = "모임 목록 조회 성공",
                             content = @Content(schema = @Schema(implementation = MeetingSaveResponses.class))
                     )
-            }
+            },
+            deprecated = true
     )
     @ErrorCode401
     @ErrorCode500
     ResponseEntity<MeetingSaveResponses> findMine(@Parameter(hidden = true) Member member);
+
+    @Operation(
+            summary = "내 약속 목록 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "내 약속 목록 조회 성공",
+                            content = @Content(schema = @Schema(implementation = MeetingFindByMemberResponses.class))
+                    )
+            }
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<MeetingFindByMemberResponses> findByMemberV1(@Parameter(hidden = true) Member member);
 
     @Operation(
             summary = "로그 목록 조회",
