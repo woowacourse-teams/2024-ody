@@ -2,14 +2,18 @@ package com.ody.meeting.controller;
 
 import com.ody.common.annotation.AuthMember;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.meeting.dto.request.MeetingSaveV1Request;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
+import com.ody.meeting.dto.response.MeetingSaveV1Response;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +42,27 @@ public class MeetingController implements MeetingControllerSwagger {
         MeetingSaveResponse meetingSaveResponse = meetingService.saveAndSendNotifications(meetingSaveRequest, member);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(meetingSaveResponse);
+    }
+
+    @Override
+    @PostMapping("/v1/meetings")
+    public ResponseEntity<MeetingSaveV1Response> saveV1(
+            @AuthMember Member member,
+            @Valid @RequestBody MeetingSaveV1Request meetingSaveV1Request
+    ) {
+        MeetingSaveV1Response meetingSaveV1Response = new MeetingSaveV1Response(
+                1L,
+                "우테코 16조",
+                LocalDate.parse("2024-07-15"),
+                LocalTime.parse("14:00"),
+                "서울 송파구 올림픽로 35다길 42",
+                "37.515298",
+                "127.103113",
+                "초대코드"
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(meetingSaveV1Response);
     }
 
     @Override

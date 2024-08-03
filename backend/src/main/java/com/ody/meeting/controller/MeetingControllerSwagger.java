@@ -1,8 +1,10 @@
 package com.ody.meeting.controller;
 
 import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.meeting.dto.request.MeetingSaveV1Request;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
+import com.ody.meeting.dto.response.MeetingSaveV1Response;
 import com.ody.member.domain.Member;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.swagger.annotation.ErrorCode400;
@@ -73,6 +75,25 @@ public interface MeetingControllerSwagger {
     ResponseEntity<MeetingSaveResponse> save(
             @Parameter(hidden = true) Member member,
             MeetingSaveRequest meetingSaveRequest
+    );
+
+    @Operation(
+            summary = "약속 개설",
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveV1Request.class))),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "약속 개설 성공",
+                            content = @Content(schema = @Schema(implementation = MeetingSaveV1Response.class))
+                    )
+            }
+    )
+    @ErrorCode400
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<MeetingSaveV1Response> saveV1(
+            @Parameter(hidden = true) Member member,
+            MeetingSaveV1Request meetingSaveV1Request
     );
 
     @Operation(
