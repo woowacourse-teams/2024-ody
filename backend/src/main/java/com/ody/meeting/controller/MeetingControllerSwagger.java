@@ -1,7 +1,7 @@
 package com.ody.meeting.controller;
 
-import com.ody.mate.dto.request.MateStatusRequest;
-import com.ody.mate.dto.response.MateStatusResponses;
+import com.ody.mate.dto.request.MateEtaRequest;
+import com.ody.mate.dto.response.MateEtaResponses;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
@@ -95,17 +95,17 @@ public interface MeetingControllerSwagger {
 
     @Operation(
             summary = "약속 참여자 eta 상태 목록 조회",
-            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateStatusRequest.class))),
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateEtaRequest.class))),
 
             responses = {
                     @ApiResponse(
                             responseCode = "200",
                             description = "약속 참여자 eta 상태 목록 조회 성공",
-                            content = @Content(schema = @Schema(implementation = MateStatusResponses.class))
+                            content = @Content(schema = @Schema(implementation = MateEtaResponses.class))
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "클라이언트 입력 오류 또는 약속 시간 30분 이전 조회 시도 시",
+                            description = "클라이언트 입력 오류 또는 약속 시간 30분 전보다 이른 시간에 조회 시도 시",
                             content = @Content(schema = @Schema(implementation = ProblemDetail.class))
                     ),
                     @ApiResponse(
@@ -117,9 +117,9 @@ public interface MeetingControllerSwagger {
     )
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<MateStatusResponses> findAllMateStatuses(
+    ResponseEntity<MateEtaResponses> findAllMateEtas(
             @Parameter(hidden = true) Member member,
             Long meetingId,
-            MateStatusRequest mateStatusRequest
+            MateEtaRequest mateEtaRequest
     );
 }
