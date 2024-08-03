@@ -9,11 +9,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.woowacourse.ody.OdyApplication
+import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingCreationBinding
 import com.woowacourse.ody.presentation.common.ViewPagerAdapter
+import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.creation.complete.MeetingCompletionActivity
 import com.woowacourse.ody.presentation.creation.date.MeetingDateFragment
@@ -26,13 +26,7 @@ import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 
-class MeetingCreationActivity : AppCompatActivity(), BackListener {
-    private val application: OdyApplication by lazy {
-        applicationContext as OdyApplication
-    }
-    private val binding: ActivityMeetingCreationBinding by lazy {
-        ActivityMeetingCreationBinding.inflate(layoutInflater)
-    }
+class MeetingCreationActivity : BindingActivity<ActivityMeetingCreationBinding>(R.layout.activity_meeting_creation), BackListener {
     private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel> {
         MeetingCreationViewModelFactory(
             meetingRepository = application.meetingRepository,
@@ -40,7 +34,6 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
             inviteCodeRepository = application.inviteCodeRepository,
         )
     }
-
     private val meetingInfoFragments: List<Fragment> by lazy {
         listOf(
             MeetingNameFragment(),
@@ -77,15 +70,12 @@ class MeetingCreationActivity : AppCompatActivity(), BackListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-
-        initializeDataBinding()
+        initializeBinding()
         initializeObserve()
     }
 
-    private fun initializeDataBinding() {
+    override fun initializeBinding() {
         binding.vm = viewModel
-        binding.lifecycleOwner = this
         binding.backListener = this
         initializeMeetingInfoViewPager()
         initializeVisitorOnBodingInfoViewPager()

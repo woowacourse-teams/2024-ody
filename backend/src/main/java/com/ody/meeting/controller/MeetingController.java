@@ -6,6 +6,7 @@ import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.mate.dto.response.MateEtaResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
+import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.Notification;
@@ -41,6 +42,16 @@ public class MeetingController implements MeetingControllerSwagger {
         MeetingSaveResponse meetingSaveResponse = meetingService.saveAndSendNotifications(meetingSaveRequest, member);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(meetingSaveResponse);
+    }
+
+    @Override
+    @GetMapping("/v1/meetings/{meetingId}")
+    public ResponseEntity<MeetingWithMatesResponse> findMeetingWithMates(
+            @AuthMember Member member,
+            @PathVariable Long meetingId
+    ) {
+        MeetingWithMatesResponse meetingWithMatesResponse = meetingService.findMeetingWithMates(member, meetingId);
+        return ResponseEntity.ok(meetingWithMatesResponse);
     }
 
     @Override
