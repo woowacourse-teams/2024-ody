@@ -1,6 +1,8 @@
 package com.ody.meeting.dto.request;
 
 import com.ody.common.annotation.FutureOrPresentDateTime;
+import com.ody.meeting.domain.Location;
+import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -29,4 +31,8 @@ public record MeetingSaveV1Request(
         String targetLongitude
 ) {
 
+    public Meeting toMeeting(String inviteCode) {
+        Location target = new Location(targetAddress, targetLatitude, targetLongitude);
+        return new Meeting(name, date, time, target, inviteCode);
+    }
 }

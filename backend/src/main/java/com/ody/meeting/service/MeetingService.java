@@ -5,8 +5,10 @@ import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.meeting.dto.request.MeetingSaveV1Request;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
+import com.ody.meeting.dto.response.MeetingSaveV1Response;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.util.InviteCodeGenerator;
@@ -30,6 +32,14 @@ public class MeetingService {
         Meeting meeting = save(meetingSaveRequest);
         MateSaveRequest mateSaveRequest = meetingSaveRequest.toMateSaveRequest(meeting.getInviteCode());
         return mateService.saveAndSendNotifications(mateSaveRequest, meeting, member);
+    }
+
+    @Transactional
+    public MeetingSaveV1Response saveV1(MeetingSaveV1Request meetingSaveV1Request) {
+        Meeting meeting = meetingRepository.save(meetingSaveV1Request.toMeeting(DEFAULT_INVITE_CODE));
+        String encodedInviteCode = InviteCodeGenerator.encode(meeting.getId());
+        meeting.updateInviteCode(encodedInviteCode);
+        return MeetingSaveV1Response.from(meeting);
     }
 
     public Meeting save(MeetingSaveRequest meetingSaveRequest) {

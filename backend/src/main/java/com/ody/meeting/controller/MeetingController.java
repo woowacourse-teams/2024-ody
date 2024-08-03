@@ -12,8 +12,6 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
 import jakarta.validation.Valid;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,17 +48,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @Valid @RequestBody MeetingSaveV1Request meetingSaveV1Request
     ) {
-        MeetingSaveV1Response meetingSaveV1Response = new MeetingSaveV1Response(
-                1L,
-                "우테코 16조",
-                LocalDate.parse("2024-07-15"),
-                LocalTime.parse("14:00"),
-                "서울 송파구 올림픽로 35다길 42",
-                "37.515298",
-                "127.103113",
-                "초대코드"
-        );
-
+        MeetingSaveV1Response meetingSaveV1Response = meetingService.saveV1(meetingSaveV1Request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(meetingSaveV1Response);
     }
