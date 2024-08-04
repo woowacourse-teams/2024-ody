@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">오디</string>
+
     <!-- activity_notification_log -->
     <string name="activity_notification_mates">%1$d명 / %2$s </string>"
 
@@ -18,12 +19,12 @@
     <string name="item_invite_code_bottom">친구에게 전달해 보세요!</string>"
     <string name="item_invite_code_copy">복사하기</string>"
 
-
     <!-- fragment_destination.xml -->
     <string name="destination_question_front">오디</string>
     <string name="destination_question_back">서 만나시나요?</string>
     <string name="destination_question_hint">주소를 찾아보세요</string>
     <string name="destination_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
+
     <!-- activity_intro.xml -->
     <string name="intro_hello">안녕하세요!</string>
     <string name="intro_guide_front">오디</string>
@@ -84,16 +85,16 @@
     <string name="code_copy_guide">초대 코드를 복사해\n친구에게 전달해 보세요!</string>
     <string name="code_copy_copy_code">초대 코드 복사하기</string>
 
-    <!-- item_dashboard.xml -->
-    <string name="status_arrived">도착</string>
-    <string name="status_arrival_soon">도착 예정</string>
-    <string name="status_late">지각</string>
-    <string name="status_late_warning">지각 위기</string>
-    <string name="status_missing">행방불명</string>
-    <string name="dashboard_arrived">-</string>
-    <string name="dashboard_arrival_remain_time">%d분 후 도착</string>
-    <string name="dashboard_arrival_soon">10분 내 도착</string>
-    <string name="dashboard_missing">오디</string>
+    <!-- item_eta_dashboard.xml -->
+    <string name="badge_arrived">도착</string>
+    <string name="badge_arrival_soon">도착 예정</string>
+    <string name="badge_late">지각</string>
+    <string name="badge_late_warning">지각 위기</string>
+    <string name="badge_missing">행방불명</string>
+    <string name="status_arrived">-</string>
+    <string name="status_arrival_remain_time">%d분 후 도착</string>
+    <string name="status_arrival_soon">10분 내 도착</string>
+    <string name="status_missing">오디</string>
     <string name="question_mark">\?</string>
     <string name="location_permission_self_guide">위치 권한을 켜서 오디인지 공유해 보세요.</string>
     <string name="location_permission_friend_guide">친구의 위치 권한이 꺼져있어요.</string>

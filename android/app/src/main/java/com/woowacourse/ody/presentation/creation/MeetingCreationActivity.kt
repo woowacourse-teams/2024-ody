@@ -24,7 +24,7 @@ import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
 import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.room.MeetingRoomActivity
+import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
 
 class MeetingCreationActivity : BindingActivity<ActivityMeetingCreationBinding>(R.layout.activity_meeting_creation), BackListener {
     private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel> {
@@ -138,7 +138,7 @@ class MeetingCreationActivity : BindingActivity<ActivityMeetingCreationBinding>(
         viewModel.navigateAction.observe(this) {
             when (it) {
                 MeetingCreationNavigateAction.NavigateToRoom -> {
-                    startActivity(MeetingRoomActivity.getIntent(this))
+                    startActivity(NotificationLogActivity.getIntent(this))
                 }
                 MeetingCreationNavigateAction.NavigateToIntro -> {
                     startActivity(IntroActivity.getIntent(this))

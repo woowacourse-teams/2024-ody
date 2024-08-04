@@ -39,7 +39,7 @@ class SplashViewModel(
                     if (it.isEmpty()) {
                         _navigateAction.setValue(SplashNavigateAction.NavigateToIntro)
                     } else {
-                        _navigateAction.setValue(SplashNavigateAction.NavigateToMeetingRoom)
+                        _navigateAction.setValue(SplashNavigateAction.NavigateToNotificationLog)
                     }
                 }
         }

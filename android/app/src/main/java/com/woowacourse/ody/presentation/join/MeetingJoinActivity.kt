@@ -20,7 +20,7 @@ import com.woowacourse.ody.presentation.creation.MeetingCreationViewModelFactory
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
 import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.room.MeetingRoomActivity
+import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
 
 class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout.activity_meeting_join), NextListener, BackListener {
     private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel> {
@@ -75,7 +75,7 @@ class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout
         viewModel.joinNavigateAction.observe(this) {
             when (it) {
                 MeetingJoinNavigateAction.JoinNavigateToRoom -> {
-                    startActivity(MeetingRoomActivity.getIntent(this))
+                    startActivity(NotificationLogActivity.getIntent(this))
                 }
                 MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
                     joinCompletionLauncher.launch(JoinCompleteActivity.getIntent(this))

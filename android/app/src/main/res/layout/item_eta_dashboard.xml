@@ -62,6 +62,7 @@
                 tools:text="13분 후 도착" />
 
             <TextView
+                android:id="@+id/tv_missing_tooltip"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="4dp"

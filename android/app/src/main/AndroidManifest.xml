@@ -41,7 +41,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.room.MeetingRoomActivity"
+            android:name=".presentation.room.log.NotificationLogActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
