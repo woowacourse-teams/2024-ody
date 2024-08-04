@@ -14,7 +14,7 @@ import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.model.toGeoLocation
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
-import com.woowacourse.ody.presentation.creation.MeetingInfoType
+import com.woowacourse.ody.presentation.creation.MeetingCreationInfoType
 
 class MeetingDestinationFragment :
     BindingFragment<FragmentMeetingDestinationBinding>(
@@ -69,7 +69,7 @@ class MeetingDestinationFragment :
 
     override fun onResume() {
         super.onResume()
-        viewModel.meetingInfoType.value = MeetingInfoType.DESTINATION
+        viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.DESTINATION
     }
 
     companion object {

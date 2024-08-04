@@ -7,7 +7,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingNameBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
-import com.woowacourse.ody.presentation.creation.MeetingInfoType
+import com.woowacourse.ody.presentation.creation.MeetingCreationInfoType
 
 class MeetingNameFragment : BindingFragment<FragmentMeetingNameBinding>(R.layout.fragment_meeting_name) {
     private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
@@ -26,6 +26,6 @@ class MeetingNameFragment : BindingFragment<FragmentMeetingNameBinding>(R.layout
 
     override fun onResume() {
         super.onResume()
-        viewModel.meetingInfoType.value = MeetingInfoType.NAME
+        viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.NAME
     }
 }

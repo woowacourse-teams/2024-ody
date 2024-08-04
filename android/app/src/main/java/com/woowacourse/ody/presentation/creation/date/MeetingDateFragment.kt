@@ -7,7 +7,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingDateBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
-import com.woowacourse.ody.presentation.creation.MeetingInfoType
+import com.woowacourse.ody.presentation.creation.MeetingCreationInfoType
 import java.time.LocalDate
 
 class MeetingDateFragment : BindingFragment<FragmentMeetingDateBinding>(R.layout.fragment_meeting_date) {
@@ -49,6 +49,6 @@ class MeetingDateFragment : BindingFragment<FragmentMeetingDateBinding>(R.layout
 
     override fun onResume() {
         super.onResume()
-        viewModel.meetingInfoType.value = MeetingInfoType.DATE
+        viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.DATE
     }
 }
