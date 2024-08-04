@@ -16,6 +16,7 @@ import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,5 +93,18 @@ class MateServiceTest extends BaseServiceTest {
                 .toList();
 
         assertThat(mateIds).containsOnly(mate1Id, mate2Id);
+    }
+
+    @DisplayName("약속에 참여하고 있는 회원이 아니면 예외가 발생한다.")
+    @Test
+    void findAllByMemberAndMeetingIdException() {
+        memberRepository.save(Fixture.MEMBER1);
+        Member member2 = memberRepository.save(Fixture.MEMBER2);
+
+        Long meetingId = meetingRepository.save(Fixture.ODY_MEETING1).getId();
+        mateRepository.save(Fixture.MATE1);
+
+        Assertions.assertThatThrownBy(() -> mateService.findAllByMemberAndMeetingId(member2, meetingId))
+                .isInstanceOf(OdyBadRequestException.class);
     }
 }
