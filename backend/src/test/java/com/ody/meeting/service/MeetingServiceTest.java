@@ -43,6 +43,4 @@ class MeetingServiceTest extends BaseServiceTest {
                 () -> assertThat(InviteCodeGenerator.decode(response.inviteCode())).isEqualTo(response.id())
         );
     }
-
-
 }
