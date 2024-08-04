@@ -1,5 +1,6 @@
 package com.ody.mate.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -14,6 +15,7 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,5 +73,24 @@ class MateServiceTest extends BaseServiceTest {
         );
         assertThatThrownBy(() -> mateService.save(mateSaveRequest, meeting, member2))
                 .isInstanceOf(OdyBadRequestException.class);
+    }
+
+    @DisplayName("회원이 참여하고 있는 특정 약속의 참여자 리스트를 조회한다.")
+    @Test
+    void findAllByMemberAndMeetingIdSuccess() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        memberRepository.save(Fixture.MEMBER2);
+
+        Long meetingId = meetingRepository.save(Fixture.ODY_MEETING1).getId();
+
+        Long mate1Id = mateRepository.save(Fixture.MATE1).getId();
+        Long mate2Id = mateRepository.save(Fixture.MATE2).getId();
+
+        List<Mate> mates = mateService.findAllByMemberAndMeetingId(member1, meetingId);
+        List<Long> mateIds = mates.stream()
+                .map(Mate::getId)
+                .toList();
+
+        assertThat(mateIds).containsOnly(mate1Id, mate2Id);
     }
 }
