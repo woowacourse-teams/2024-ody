@@ -29,12 +29,12 @@ import org.springframework.http.ResponseEntity;
 public interface MeetingControllerSwagger {
 
     @Operation(
-            summary = "모임 개설",
+            summary = "약속 개설",
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequest.class))),
             responses = {
                     @ApiResponse(
                             responseCode = "201",
-                            description = "모임 개설 성공",
+                            description = "약속 개설 성공",
                             content = @Content(schema = @Schema(implementation = MeetingSaveResponse.class))
                     )
             }
@@ -67,11 +67,11 @@ public interface MeetingControllerSwagger {
     ResponseEntity<MeetingWithMatesResponse> findMeetingWithMates(@Parameter(hidden = true) Member member, Long meetingId);
 
     @Operation(
-            summary = "참여중인 모임 목록 조회",
+            summary = "참여중인 약속 목록 조회",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "모임 목록 조회 성공",
+                            description = "약속 목록 조회 성공",
                             content = @Content(schema = @Schema(implementation = MeetingSaveResponses.class))
                     )
             }
@@ -90,7 +90,7 @@ public interface MeetingControllerSwagger {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "존재하지 않은 모임방이거나 모임방 일원이 아닌 경우",
+                            description = "존재하지 않은 약속방이거나 약속방 일원이 아닌 경우",
                             content = @Content(schema = @Schema(implementation = ProblemDetail.class))
                     )
             }
@@ -136,7 +136,6 @@ public interface MeetingControllerSwagger {
     );
 
     @Operation(
-            summary = "초대코드 유효성 검사",
             summary = "약속 참여자 eta 상태 목록 조회",
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateEtaRequest.class))),
             responses = {
