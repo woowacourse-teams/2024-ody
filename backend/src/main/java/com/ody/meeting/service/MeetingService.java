@@ -1,11 +1,15 @@
 package com.ody.meeting.service;
 
 import com.ody.common.exception.OdyNotFoundException;
+import com.ody.mate.domain.EtaStatus;
+import com.ody.mate.dto.request.MateEtaRequest;
 import com.ody.mate.dto.request.MateSaveRequest;
+import com.ody.mate.dto.response.MateEtaResponse;
+import com.ody.mate.dto.response.MateEtaResponses;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MateResponse;
+import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
@@ -89,5 +93,16 @@ public class MeetingService {
                 ),
                 "초대코드"
         );
+    }
+
+    public MateEtaResponses findAllMateEtas(Long meetingId, MateEtaRequest mateEtaRequest) {
+        List<MateEtaResponse> mateStatuses = List.of(
+                new MateEtaResponse("콜리", EtaStatus.LATE_WARNING, 83L),
+                new MateEtaResponse("올리브", EtaStatus.ARRIVAL_SOON, 10L),
+                new MateEtaResponse("해음", EtaStatus.ARRIVED, 0L),
+                new MateEtaResponse("카키공주", EtaStatus.MISSING, -1L)
+        );
+
+        return new MateEtaResponses(mateStatuses);
     }
 }
