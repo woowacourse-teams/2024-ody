@@ -64,7 +64,7 @@ class MeetingControllerTest extends BaseControllerTest {
                 .when()
                 .post("/meetings")
                 .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(201);
     }
 
     @DisplayName("모임 개설 성공 시, 201을 응답한다")
@@ -89,7 +89,7 @@ class MeetingControllerTest extends BaseControllerTest {
                 .when()
                 .post("/v1/meetings")
                 .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(201);
     }
 
     @DisplayName("특정 멤버의 참여 모임 목록 조회에 성공하면 200응답 반환한다")
