@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,10 +21,6 @@ import com.woowacourse.ody.presentation.creation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.creation.time.MeetingTimeFragment
 import com.woowacourse.ody.presentation.intro.IntroActivity
 import com.woowacourse.ody.presentation.join.MeetingJoinActivity
-import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
-import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
-import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 
 class MeetingCreationActivity :
     BindingActivity<ActivityMeetingCreationBinding>(R.layout.activity_meeting_creation),
@@ -124,7 +118,6 @@ class MeetingCreationActivity :
     }
 
     companion object {
-        fun getIntent(context: Context): Intent =
-            Intent(context, MeetingCreationActivity::class.java)
+        fun getIntent(context: Context): Intent = Intent(context, MeetingCreationActivity::class.java)
     }
 }

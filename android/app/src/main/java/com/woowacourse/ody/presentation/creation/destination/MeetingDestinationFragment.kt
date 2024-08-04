@@ -13,8 +13,8 @@ import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.model.toGeoLocation
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
-import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
 import com.woowacourse.ody.presentation.creation.MeetingCreationInfoType
+import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
 
 class MeetingDestinationFragment :
     BindingFragment<FragmentMeetingDestinationBinding>(

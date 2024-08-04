@@ -1,6 +1,5 @@
 package com.woowacourse.ody.presentation.join
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,14 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.model.GeoLocation
-import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingJoinInfo
 import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
-import com.woowacourse.ody.presentation.creation.MeetingCreationInfoType
 import com.woowacourse.ody.presentation.join.listener.MeetingJoinListener
 import kotlinx.coroutines.launch
 import timber.log.Timber

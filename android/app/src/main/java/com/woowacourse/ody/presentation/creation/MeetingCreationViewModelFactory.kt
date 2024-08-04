@@ -2,8 +2,6 @@ package com.woowacourse.ody.presentation.creation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
-import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 
 class MeetingCreationViewModelFactory(
