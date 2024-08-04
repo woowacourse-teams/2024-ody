@@ -30,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 public interface MeetingControllerSwagger {
 
     @Operation(
+            deprecated = true,
             summary = "약속 개설",
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequest.class))),
             responses = {
@@ -113,26 +114,6 @@ public interface MeetingControllerSwagger {
     ResponseEntity<Void> validateInviteCode(@Parameter(hidden = true) Member member, String inviteCode);
 
     @Operation(
-            summary = "약속 개설",
-            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequestV1.class))),
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "약속 개설 성공",
-                            content = @Content(schema = @Schema(implementation = MeetingSaveResponseV1.class))
-                    )
-            }
-    )
-    @ErrorCode400
-    @ErrorCode401
-    @ErrorCode500
-    ResponseEntity<MeetingSaveResponseV1> saveV1(
-            @Parameter(hidden = true) Member member,
-            MeetingSaveRequestV1 meetingSaveRequestV1
-    );
-
-    @Operation(
-            deprecated = true,
             summary = "약속 개설",
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequestV1.class))),
             responses = {
