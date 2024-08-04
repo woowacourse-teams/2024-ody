@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -49,7 +50,8 @@ class MeetingCreationActivity :
                 return@registerForActivityResult
             }
             val inviteCode = viewModel.inviteCode.value ?: return@registerForActivityResult
-            MeetingJoinActivity.getIntent(inviteCode, this)
+            startActivity(MeetingJoinActivity.getIntent(inviteCode, this))
+            finish()
         }
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {

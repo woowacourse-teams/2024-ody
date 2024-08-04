@@ -1,5 +1,6 @@
 package com.woowacourse.ody.presentation.creation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -170,6 +171,5 @@ class MeetingCreationViewModel(
         val MEETING_HOURS = (0..<24).toList()
         val MEETING_MINUTES = (0..<60).toList()
         const val MEETING_NAME_MAX_LENGTH = 15
-        const val NICK_NAME_MAX_LENGTH = 9
     }
 }

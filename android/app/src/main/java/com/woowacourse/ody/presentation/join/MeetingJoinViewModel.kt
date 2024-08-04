@@ -43,8 +43,8 @@ class MeetingJoinViewModel(
 
     private fun initializeIsValidInfo() {
         with(isValidInfo) {
-            addSource(nickname) { isValidNickName() }
-            addSource(startingPointGeoLocation) { isValidStartingPoint() }
+            addSource(nickname) { isValidInfo.value = isValidNickName() }
+            addSource(startingPointGeoLocation) { isValidInfo.value = isValidStartingPoint() }
         }
     }
 
