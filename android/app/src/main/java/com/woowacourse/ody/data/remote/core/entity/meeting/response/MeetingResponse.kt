@@ -19,10 +19,6 @@ data class MeetingResponse(
     val targetLatitude: String,
     @Json(name = "targetLongitude")
     val targetLongitude: String,
-    @Json(name = "mateCount")
-    val mateCount: Int,
-    @Json(name = "mates")
-    val mates: List<MateResponse>,
     @Json(name = "inviteCode")
     val inviteCode: String,
 )

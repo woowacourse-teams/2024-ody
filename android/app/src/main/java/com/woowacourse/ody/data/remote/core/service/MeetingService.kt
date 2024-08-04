@@ -17,7 +17,7 @@ interface MeetingService {
     @GET(MEETING_PATH)
     suspend fun getMeeting(): MeetingsResponse
 
-    @POST("meetings")
+    @POST("/v1/meetings")
     suspend fun postMeeting(
         @Body meetingRequest: MeetingRequest,
     ): MeetingResponse
