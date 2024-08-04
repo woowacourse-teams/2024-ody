@@ -1,5 +1,6 @@
 package com.ody.meeting.dto.response;
 
+import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,4 +32,16 @@ public record MeetingSaveResponseV1(
         String inviteCode
 ) {
 
+    public static MeetingSaveResponseV1 from(Meeting meeting) {
+        return new MeetingSaveResponseV1(
+                meeting.getId(),
+                meeting.getName(),
+                meeting.getDate(),
+                meeting.getTime().withNano(0),
+                meeting.getTarget().getAddress(),
+                meeting.getTarget().getLatitude(),
+                meeting.getTarget().getLongitude(),
+                meeting.getInviteCode()
+        );
+    }
 }

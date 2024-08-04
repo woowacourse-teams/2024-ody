@@ -55,21 +55,11 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @Valid @RequestBody MeetingSaveRequestV1 meetingSaveRequestV1
     ) {
-        MeetingSaveResponseV1 meetingSaveResponseV1 = new MeetingSaveResponseV1(
-                1L,
-                "우테코 16조",
-                LocalDate.parse("2024-07-15"),
-                LocalTime.parse("14:00"),
-                "서울 송파구 올림픽로 35다길 42",
-                "37.515298",
-                "127.103113",
-                "초대코드"
-        );
-
+        MeetingSaveResponseV1 meetingSaveResponseV1 = meetingService.saveV1(meetingSaveRequestV1);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(meetingSaveResponseV1);
     }
-
+  
     @GetMapping("/v1/meetings/{meetingId}")
     public ResponseEntity<MeetingWithMatesResponse> findMeetingWithMates(
             @AuthMember Member member,
