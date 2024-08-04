@@ -14,6 +14,9 @@
     <string name="item_notification_departure_reminder">-> %1$s (이)가 출발할 시간이에요!</string>"
     <string name="item_notification_departure">-> %1$s (이)가 출발했어요.</string>"
 
+    <!-- activity_meeting_room.xml -->
+    <string name="meeting_room_dashboard_button">오디?</string>"
+
     <!-- item_invite_code_log.xml -->
     <string name="item_invite_code_top">초대 코드를 복사해</string>
     <string name="item_invite_code_bottom">친구에게 전달해 보세요!</string>"
