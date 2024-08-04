@@ -33,8 +33,6 @@ class MeetingCreationActivity :
     private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel> {
         MeetingCreationViewModelFactory(
             meetingRepository = application.meetingRepository,
-            joinRepository = application.joinRepository,
-            inviteCodeRepository = application.inviteCodeRepository,
         )
     }
     private val fragments: List<Fragment> by lazy {
@@ -90,6 +88,9 @@ class MeetingCreationActivity :
     }
 
     private fun initializeObserve() {
+        viewModel.inviteCode.observe(this) {
+            viewModel.onClickCreationMeeting()
+        }
         viewModel.nextPageEvent.observe(this) {
             handleMeetingInfoNextClick()
         }
@@ -110,9 +111,7 @@ class MeetingCreationActivity :
 
     private fun handleMeetingInfoNextClick() {
         if (binding.vpMeetingInfo.currentItem == fragments.size - 1) {
-            viewModel.onClickCreationMeeting()
-            binding.vpMeetingInfo.visibility = View.GONE
-            binding.wdMeetingInfo.visibility = View.GONE
+            viewModel.createMeeting()
             return
         }
         binding.vpMeetingInfo.currentItem += 1

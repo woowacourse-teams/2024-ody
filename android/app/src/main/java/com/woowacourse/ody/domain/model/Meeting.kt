@@ -9,5 +9,6 @@ data class Meeting(
     val targetPosition: String,
     val meetingDate: LocalDate,
     val meetingTime: LocalTime,
+    val mates: List<Mate>,
     val inviteCode: String,
 )

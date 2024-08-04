@@ -1,7 +1,7 @@
 package com.woowacourse.ody.data.remote.core.service
 
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
-import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingResponse
+import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingCreationResponse
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingsResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -20,7 +20,7 @@ interface MeetingService {
     @POST("/v1/meetings")
     suspend fun postMeeting(
         @Body meetingRequest: MeetingRequest,
-    ): MeetingResponse
+    ): MeetingCreationResponse
 
     companion object {
         const val MEETING_PATH = "/meetings/me"

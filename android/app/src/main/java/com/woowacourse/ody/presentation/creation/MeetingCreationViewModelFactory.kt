@@ -8,16 +8,10 @@ import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 
 class MeetingCreationViewModelFactory(
     private val meetingRepository: MeetingRepository,
-    private val joinRepository: JoinRepository,
-    private val inviteCodeRepository: InviteCodeRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(MeetingCreationViewModel::class.java)) {
-            MeetingCreationViewModel(
-                meetingRepository,
-                joinRepository,
-                inviteCodeRepository,
-            ) as T
+            MeetingCreationViewModel(meetingRepository) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")
         }

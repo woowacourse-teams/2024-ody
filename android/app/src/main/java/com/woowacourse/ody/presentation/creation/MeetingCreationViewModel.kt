@@ -85,7 +85,7 @@ class MeetingCreationViewModel(
                     destinationLongitude,
                 ),
             ).onSuccess {
-                _inviteCode.value = it.inviteCode
+                _inviteCode.value = it
             }.onFailure {
                 Timber.e(it.message)
             }

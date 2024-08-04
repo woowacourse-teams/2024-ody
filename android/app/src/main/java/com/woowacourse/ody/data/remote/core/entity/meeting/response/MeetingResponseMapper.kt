@@ -1,5 +1,6 @@
 package com.woowacourse.ody.data.remote.core.entity.meeting.response
 
+import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.Meeting
 import java.time.LocalDate
 import java.time.LocalTime
@@ -12,6 +13,7 @@ fun MeetingResponse.toMeeting(): Meeting =
         targetPosition = targetAddress,
         meetingDate = date.parseToLocalDate(),
         meetingTime = time.parseToLocalTime(),
+        mates = mates.map { Mate(nickname = it.nickname) },
         inviteCode = inviteCode,
     )
 
