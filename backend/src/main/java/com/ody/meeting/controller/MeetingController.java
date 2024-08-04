@@ -3,13 +3,11 @@ package com.ody.meeting.controller;
 import com.ody.common.annotation.AuthMember;
 import com.ody.mate.dto.request.MateEtaRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
-import com.ody.meeting.dto.request.MeetingSaveV1Request;
+import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
-import com.ody.meeting.dto.response.MeetingSaveV1Response;
+import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.mate.dto.response.MateEtaResponses;
-import com.ody.meeting.dto.response.MeetingSaveResponse;
-import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
@@ -50,13 +48,13 @@ public class MeetingController implements MeetingControllerSwagger {
 
     @Override
     @PostMapping("/v1/meetings")
-    public ResponseEntity<MeetingSaveV1Response> saveV1(
+    public ResponseEntity<MeetingSaveResponseV1> saveV1(
             @AuthMember Member member,
-            @Valid @RequestBody MeetingSaveV1Request meetingSaveV1Request
+            @Valid @RequestBody MeetingSaveRequestV1 meetingSaveRequestV1
     ) {
-        MeetingSaveV1Response meetingSaveV1Response = meetingService.saveV1(meetingSaveV1Request);
+        MeetingSaveResponseV1 meetingSaveResponseV1 = meetingService.saveV1(meetingSaveRequestV1);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(meetingSaveV1Response);
+                .body(meetingSaveResponseV1);
     }
   
     @GetMapping("/v1/meetings/{meetingId}")

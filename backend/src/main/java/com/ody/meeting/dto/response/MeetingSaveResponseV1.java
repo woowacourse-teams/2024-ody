@@ -1,18 +1,16 @@
-package com.ody.meeting.dto.request;
+package com.ody.meeting.dto.response;
 
-import com.ody.common.annotation.FutureOrPresentDateTime;
-import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@FutureOrPresentDateTime(dateFieldName = "date", timeFieldName = "time")
-public record MeetingSaveV1Request(
+public record MeetingSaveResponseV1(
+
+        @Schema(description = "모임 ID", example = "1")
+        Long id,
 
         @Schema(description = "모임 이름", example = "우테코 16조")
-        @Size(min = 1, max = 15, message = "약속 이름은 1글자 이상, 16자 미만으로 입력 가능합니다.")
         String name,
 
         @Schema(description = "모임 날짜", type = "string", example = "2024-07-15")
@@ -28,11 +26,22 @@ public record MeetingSaveV1Request(
         String targetLatitude,
 
         @Schema(description = "도착지 경도", example = "127.103113")
-        String targetLongitude
+        String targetLongitude,
+
+        @Schema(description = "초대코드", example = "초대코드")
+        String inviteCode
 ) {
 
-    public Meeting toMeeting(String inviteCode) {
-        Location target = new Location(targetAddress, targetLatitude, targetLongitude);
-        return new Meeting(name, date, time, target, inviteCode);
+    public static MeetingSaveResponseV1 from(Meeting meeting) {
+        return new MeetingSaveResponseV1(
+                meeting.getId(),
+                meeting.getName(),
+                meeting.getDate(),
+                meeting.getTime().withNano(0),
+                meeting.getTarget().getAddress(),
+                meeting.getTarget().getLatitude(),
+                meeting.getTarget().getLongitude(),
+                meeting.getInviteCode()
+        );
     }
 }

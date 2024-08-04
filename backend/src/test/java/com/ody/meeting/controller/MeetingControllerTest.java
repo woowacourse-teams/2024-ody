@@ -8,7 +8,7 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
-import com.ody.meeting.dto.request.MeetingSaveV1Request;
+import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
@@ -73,7 +73,7 @@ class MeetingControllerTest extends BaseControllerTest {
         String deviceToken = "Bearer device-token=testToken";
         memberService.save(new DeviceToken(deviceToken));
 
-        MeetingSaveV1Request meetingRequest = new MeetingSaveV1Request(
+        MeetingSaveRequestV1 meetingRequest = new MeetingSaveRequestV1(
                 "우테코 16조",
                 LocalDate.now().plusDays(1),
                 LocalTime.now().plusHours(1),

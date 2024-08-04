@@ -10,10 +10,10 @@ import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateResponse;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
-import com.ody.meeting.dto.request.MeetingSaveV1Request;
+import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
-import com.ody.meeting.dto.response.MeetingSaveV1Response;
+import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
@@ -44,11 +44,11 @@ public class MeetingService {
     }
 
     @Transactional
-    public MeetingSaveV1Response saveV1(MeetingSaveV1Request meetingSaveV1Request) {
-        Meeting meeting = meetingRepository.save(meetingSaveV1Request.toMeeting(DEFAULT_INVITE_CODE));
+    public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
+        Meeting meeting = meetingRepository.save(meetingSaveRequestV1.toMeeting(DEFAULT_INVITE_CODE));
         String encodedInviteCode = InviteCodeGenerator.encode(meeting.getId());
         meeting.updateInviteCode(encodedInviteCode);
-        return MeetingSaveV1Response.from(meeting);
+        return MeetingSaveResponseV1.from(meeting);
     }
 
     public Meeting save(MeetingSaveRequest meetingSaveRequest) {

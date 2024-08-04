@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.dto.request.MeetingSaveV1Request;
-import com.ody.meeting.dto.response.MeetingSaveV1Response;
+import com.ody.meeting.dto.request.MeetingSaveRequestV1;
+import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.util.InviteCodeGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class MeetingServiceTest extends BaseServiceTest {
     @Test
     void saveV1Success() {
         Meeting testMeeting = Fixture.ODY_MEETING1;
-        MeetingSaveV1Request request = new MeetingSaveV1Request(
+        MeetingSaveRequestV1 request = new MeetingSaveRequestV1(
                 testMeeting.getName(),
                 testMeeting.getDate(),
                 testMeeting.getTime(),
@@ -31,7 +31,7 @@ class MeetingServiceTest extends BaseServiceTest {
                 testMeeting.getTarget().getLongitude()
         );
 
-        MeetingSaveV1Response response = meetingService.saveV1(request);
+        MeetingSaveResponseV1 response = meetingService.saveV1(request);
 
         assertAll(
                 () -> assertThat(response.name()).isEqualTo(request.name()),
