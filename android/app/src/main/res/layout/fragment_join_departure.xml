@@ -18,31 +18,31 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tv_starting_point_front"
+            android:id="@+id/tv_departure_front"
             style="@style/pretendard_bold_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="52dp"
-            android:text="@string/starting_point_question_front"
+            android:text="@string/departure_question_front"
             android:textColor="@color/purple_800"
-            app:layout_constraintEnd_toStartOf="@id/tv_starting_point_back"
+            app:layout_constraintEnd_toStartOf="@id/tv_departure_back"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_starting_point_back"
+            android:id="@+id/tv_departure_back"
             style="@style/pretendard_bold_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/starting_point_question_back"
+            android:text="@string/departure_question_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@id/tv_starting_point_front"
-            app:layout_constraintTop_toTopOf="@id/tv_starting_point_front" />
+            app:layout_constraintStart_toEndOf="@id/tv_departure_front"
+            app:layout_constraintTop_toTopOf="@id/tv_departure_front" />
 
         <EditText
-            android:id="@+id/et_starting_point"
+            android:id="@+id/et_departure"
             style="@style/edit_text_style"
             android:layout_marginHorizontal="42dp"
             android:layout_marginTop="32dp"
@@ -51,21 +51,21 @@
             android:inputType="text"
             android:maxLines="1"
             android:onClick="@{() -> addressSearchListener.onSearch()}"
-            app:layout_constraintBottom_toTopOf="@id/tv_starting_point_information"
+            app:layout_constraintBottom_toTopOf="@id/tv_departure_information"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_starting_point_front" />
+            app:layout_constraintTop_toBottomOf="@id/tv_departure_front" />
 
         <TextView
-            android:id="@+id/tv_starting_point_information"
+            android:id="@+id/tv_departure_information"
             style="@style/pretendard_regular_14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:text="@string/address_question_information"
             android:textColor="@color/purple_800"
-            app:layout_constraintStart_toStartOf="@id/et_starting_point"
-            app:layout_constraintTop_toBottomOf="@id/et_starting_point" />
+            app:layout_constraintStart_toStartOf="@id/et_departure"
+            app:layout_constraintTop_toBottomOf="@id/et_departure" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

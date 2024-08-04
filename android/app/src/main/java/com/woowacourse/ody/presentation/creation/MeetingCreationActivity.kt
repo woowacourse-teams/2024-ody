@@ -66,15 +66,6 @@ class MeetingCreationActivity :
         initializeMeetingInfoViewPager()
     }
 
-    private fun handleBackClick() {
-        if (binding.vpMeetingInfo.currentItem > 0) {
-            binding.vpMeetingInfo.currentItem -= 1
-        } else {
-            viewModel.navigateToIntro()
-            finish()
-        }
-    }
-
     private fun initializeMeetingInfoViewPager() {
         val meetingInfoViewPagerAdapter: ViewPagerAdapter =
             ViewPagerAdapter(this, fragments)
@@ -114,7 +105,12 @@ class MeetingCreationActivity :
     }
 
     override fun onBack() {
-        handleBackClick()
+        if (binding.vpMeetingInfo.currentItem > 0) {
+            binding.vpMeetingInfo.currentItem -= 1
+        } else {
+            viewModel.navigateToIntro()
+            finish()
+        }
     }
 
     companion object {

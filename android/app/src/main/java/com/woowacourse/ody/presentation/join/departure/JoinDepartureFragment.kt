@@ -35,7 +35,7 @@ class JoinDepartureFragment : BindingFragment<FragmentJoinDepartureBinding>(R.la
     }
 
     private fun initializeObserve() {
-        viewModel.invalidStartingPointEvent.observe(viewLifecycleOwner) {
+        viewModel.invalidDepartureEvent.observe(viewLifecycleOwner) {
             showSnackBar(R.string.invalid_address)
         }
     }
@@ -43,8 +43,8 @@ class JoinDepartureFragment : BindingFragment<FragmentJoinDepartureBinding>(R.la
     private fun initializeView() {
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
-            binding.etStartingPoint.setText(geoLocation.address)
-            viewModel.startingPointGeoLocation.value = geoLocation
+            binding.etDeparture.setText(geoLocation.address)
+            viewModel.departureGeoLocation.value = geoLocation
         }
     }
 

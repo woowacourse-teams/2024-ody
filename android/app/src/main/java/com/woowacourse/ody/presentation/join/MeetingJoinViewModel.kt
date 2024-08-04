@@ -28,10 +28,10 @@ class MeetingJoinViewModel(
     val nickname: MutableLiveData<String> = MutableLiveData()
     val nicknameLength: LiveData<Int> = nickname.map { it.length }
 
-    val startingPointGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
+    val departureGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
 
-    private val _invalidStartingPointEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val invalidStartingPointEvent: SingleLiveData<Unit> get() = _invalidStartingPointEvent
+    private val _invalidDepartureEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val invalidDepartureEvent: SingleLiveData<Unit> get() = _invalidDepartureEvent
 
     private val _navigateAction: MutableSingleLiveData<MeetingJoinNavigateAction> =
         MutableSingleLiveData()
@@ -45,7 +45,7 @@ class MeetingJoinViewModel(
         with(isValidInfo) {
             addSource(meetingJoinInfoType) { checkInfoValidity() }
             addSource(nickname) { checkInfoValidity() }
-            addSource(startingPointGeoLocation) { checkInfoValidity() }
+            addSource(departureGeoLocation) { checkInfoValidity() }
         }
     }
 
@@ -55,18 +55,18 @@ class MeetingJoinViewModel(
 
     fun joinMeeting() {
         val nickname = nickname.value ?: return
-        val startingPointAddress = startingPointGeoLocation.value?.address ?: return
-        val startingPointLatitude = startingPointGeoLocation.value?.latitude ?: return
-        val startingPointLongitude = startingPointGeoLocation.value?.longitude ?: return
+        val departureAddress = departureGeoLocation.value?.address ?: return
+        val departureLatitude = departureGeoLocation.value?.latitude ?: return
+        val departureLongitude = departureGeoLocation.value?.longitude ?: return
 
         viewModelScope.launch {
             joinRepository.postMates(
                 MeetingJoinInfo(
                     inviteCode,
                     nickname,
-                    startingPointAddress,
-                    startingPointLatitude,
-                    startingPointLongitude,
+                    departureAddress,
+                    departureLatitude,
+                    departureLongitude,
                 ),
             ).onSuccess {
                 inviteCodeRepository.postInviteCode(it.inviteCode)
@@ -81,7 +81,7 @@ class MeetingJoinViewModel(
         val isValid =
             when (meetingJoinInfoType) {
                 MeetingJoinInfoType.NICKNAME -> isValidNickName()
-                MeetingJoinInfoType.DEPARTURE -> isValidStartingPoint()
+                MeetingJoinInfoType.DEPARTURE -> isValidDeparturePoint()
             }
         isValidInfo.value = isValid
     }
@@ -91,10 +91,10 @@ class MeetingJoinViewModel(
         return nickName.isNotEmpty()
     }
 
-    private fun isValidStartingPoint(): Boolean {
-        val startingPointGeoLocation = startingPointGeoLocation.value ?: return false
-        return AddressValidator.isValid(startingPointGeoLocation.address).also {
-            if (!it) _invalidStartingPointEvent.setValue(Unit)
+    private fun isValidDeparturePoint(): Boolean {
+        val departureGeoLocation = departureGeoLocation.value ?: return false
+        return AddressValidator.isValid(departureGeoLocation.address).also {
+            if (!it) _invalidDepartureEvent.setValue(Unit)
         }
     }
 
