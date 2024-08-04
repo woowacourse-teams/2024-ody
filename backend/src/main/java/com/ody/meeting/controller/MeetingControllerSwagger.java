@@ -92,7 +92,7 @@ public interface MeetingControllerSwagger {
     )
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<MeetingFindByMemberResponses> findByMemberV1(@Parameter(hidden = true) Member member);
+    ResponseEntity<MeetingFindByMemberResponses> findAllByMember(@Parameter(hidden = true) Member member);
 
     @Operation(
             summary = "로그 목록 조회",

@@ -1,11 +1,14 @@
 package com.ody.meeting.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ody.mate.domain.Mate;
+import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public record MeetingFindByMemberResponse(
+
         @Schema(description = "약속 아이디", example = "1")
         Long id,
 
@@ -15,11 +18,12 @@ public record MeetingFindByMemberResponse(
         @Schema(description = "약속 인원 수", example = "2")
         int mateCount,
 
-        @Schema(description = "약속 날짜", example = "2024-09-10")
-        String date,
+        @Schema(description = "약속 날짜", type = "string", example = "2024-09-10")
+        LocalDate date,
 
-        @Schema(description = "약속 시간", example = "13:30")
-        String time,
+        @Schema(description = "약속 시간", type = "string", example = "13:30")
+        @JsonFormat(pattern = "HH:mm")
+        LocalTime time,
 
         @Schema(description = "도착지 주소", example = "서울 테헤란로 411")
         String targetAddress,
@@ -31,25 +35,16 @@ public record MeetingFindByMemberResponse(
         long durationMinutes
 ) {
 
-    public MeetingFindByMemberResponse(
-            Long id,
-            String name,
-            int mateCount,
-            LocalDate date,
-            LocalTime time,
-            String targetAddress,
-            String originAddress,
-            long durationMinutes
-    ) {
-        this(
-                id,
-                name,
+    public static MeetingFindByMemberResponse of(Meeting meeting, int mateCount, Mate mate) {
+        return new MeetingFindByMemberResponse(
+                meeting.getId(),
+                meeting.getName(),
                 mateCount,
-                date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                time.format(DateTimeFormatter.ofPattern("HH:mm")),
-                targetAddress,
-                originAddress,
-                durationMinutes
+                meeting.getDate(),
+                meeting.getTime(),
+                meeting.getTarget().getAddress(),
+                mate.getOrigin().getAddress(),
+                mate.getEstimatedMinutes()
         );
     }
 }

@@ -37,6 +37,21 @@ public class Fixture {
             "초대코드"
     );
 
+    public static Meeting ODY_MEETING3 = new Meeting(
+            "조조와 저녁 초밥",
+            LocalDate.now().plusDays(1),
+            LocalTime.parse("12:00"),
+            TARGET_LOCATION,
+            "초대코드"
+    );
+
+    public static Meeting ODY_MEETING4 = new Meeting(
+            "올리브와 저녁 마라탕",
+            LocalDate.now().plusDays(2),
+            LocalTime.parse("14:00"),
+            TARGET_LOCATION,
+            "초대코드"
+    );
 
     public static Member MEMBER1 = new Member(new DeviceToken("Bearer device-token=testToken1"));
     public static Member MEMBER2 = new Member(new DeviceToken("Bearer device-token=testToken2"));

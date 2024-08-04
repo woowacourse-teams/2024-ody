@@ -8,8 +8,10 @@ import com.ody.mate.dto.response.MateEtaResponse;
 import com.ody.mate.dto.response.MateEtaResponses;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.dto.response.MateResponse;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.meeting.dto.response.MateResponse;
+import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
+import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
@@ -18,6 +20,7 @@ import com.ody.member.domain.Member;
 import com.ody.util.InviteCodeGenerator;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -77,6 +80,26 @@ public class MeetingService {
                 .collect(Collectors.collectingAndThen(Collectors.toList(), MeetingSaveResponses::new));
     }
 
+    public MeetingFindByMemberResponses findAllByMember(Member member) {
+        return meetingRepository.findAllByMember(member)
+                .stream()
+                .map(meeting -> mateService.findByMeetingAndMember(meeting, member))
+                .sorted(Comparator.comparing(MeetingFindByMemberResponse::date)
+                        .thenComparing(MeetingFindByMemberResponse::time))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), MeetingFindByMemberResponses::new));
+    }
+
+    public MateEtaResponses findAllMateEtas(Long meetingId, MateEtaRequest mateEtaRequest) {
+        List<MateEtaResponse> mateStatuses = List.of(
+                new MateEtaResponse("콜리", EtaStatus.LATE_WARNING, 83L),
+                new MateEtaResponse("올리브", EtaStatus.ARRIVAL_SOON, 10L),
+                new MateEtaResponse("해음", EtaStatus.ARRIVED, 0L),
+                new MateEtaResponse("카키공주", EtaStatus.MISSING, -1L)
+        );
+
+        return new MateEtaResponses(mateStatuses);
+    }
+
     public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {
         return new MeetingWithMatesResponse(
                 1L,
@@ -93,16 +116,5 @@ public class MeetingService {
                 ),
                 "초대코드"
         );
-    }
-
-    public MateEtaResponses findAllMateEtas(Long meetingId, MateEtaRequest mateEtaRequest) {
-        List<MateEtaResponse> mateStatuses = List.of(
-                new MateEtaResponse("콜리", EtaStatus.LATE_WARNING, 83L),
-                new MateEtaResponse("올리브", EtaStatus.ARRIVAL_SOON, 10L),
-                new MateEtaResponse("해음", EtaStatus.ARRIVED, 0L),
-                new MateEtaResponse("카키공주", EtaStatus.MISSING, -1L)
-        );
-
-        return new MateEtaResponses(mateStatuses);
     }
 }

@@ -1,7 +1,6 @@
 package com.ody.meeting.controller;
 
 import com.ody.common.annotation.AuthMember;
-import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.mate.dto.request.MateEtaRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
@@ -15,8 +14,6 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
 import jakarta.validation.Valid;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,38 +57,15 @@ public class MeetingController implements MeetingControllerSwagger {
 
     @Override
     @GetMapping("/meetings/me")
-    public ResponseEntity<MeetingSaveResponses> findMine(@AuthMember Member member) {
+    public ResponseEntity<MeetingSaveResponses> findMine(@AuthMember Member member) { // TODO: deprecated
         MeetingSaveResponses meetingSaveResponses = meetingService.findAllMeetingsByMember(member);
         return ResponseEntity.ok(meetingSaveResponses);
     }
 
     @Override
     @GetMapping("/v1/meetings/me")
-    public ResponseEntity<MeetingFindByMemberResponses> findByMemberV1(@AuthMember Member member) {
-        MeetingFindByMemberResponse meetingSaveResponse1 = new MeetingFindByMemberResponse(
-                1L,
-                "조조와 저녁 초밥",
-                2,
-                LocalDate.of(2024, 9, 10),
-                LocalTime.of(13, 30),
-                "서울 테헤란로 411",
-                "사당로22나길 22",
-                30
-        );
-        MeetingFindByMemberResponse meetingSaveResponse2 = new MeetingFindByMemberResponse(
-                2L,
-                "올리브와 저녁 마라탕",
-                7,
-                LocalDate.of(2024, 9, 11),
-                LocalTime.of(13, 30),
-                "서울 테헤란로 411",
-                "사당로22나길 22",
-                30
-        );
-
-        MeetingFindByMemberResponses meetingFindByMemberResponses = new MeetingFindByMemberResponses(
-                List.of(meetingSaveResponse1, meetingSaveResponse2)
-        );
+    public ResponseEntity<MeetingFindByMemberResponses> findAllByMember(@AuthMember Member member) {
+        MeetingFindByMemberResponses meetingFindByMemberResponses = meetingService.findAllByMember(member);
         return ResponseEntity.ok(meetingFindByMemberResponses);
     }
 

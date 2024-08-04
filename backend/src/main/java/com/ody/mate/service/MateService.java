@@ -5,6 +5,7 @@ import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
+import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.member.domain.Member;
 import com.ody.notification.service.NotificationService;
@@ -45,5 +46,11 @@ public class MateService {
     public MeetingSaveResponse findAllByMeetingId(Meeting meeting) {
         List<Mate> mates = mateRepository.findAllByMeetingId(meeting.getId());
         return MeetingSaveResponse.of(meeting, mates);
+    }
+
+    public MeetingFindByMemberResponse findByMeetingAndMember(Meeting meeting, Member member) {
+        int mateCount = mateRepository.countByMeetingId(meeting.getId());
+        Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId());
+        return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
     }
 }
