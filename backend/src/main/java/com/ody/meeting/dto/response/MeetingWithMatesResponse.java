@@ -1,5 +1,6 @@
 package com.ody.meeting.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -17,9 +18,11 @@ public record MeetingWithMatesResponse(
         String name,
 
         @Schema(description = "약속 날짜", type = "string", example = "2024-07-15")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         LocalDate date,
 
         @Schema(description = "약속 시간", type = "string", example = "14:00")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
         LocalTime time,
 
         @Schema(description = "도착지 주소", example = "서울 송파구 올림픽로35다길 42")
@@ -33,7 +36,7 @@ public record MeetingWithMatesResponse(
 
         @Schema(description = "참여자 인원 수", example = "1")
         int mateCount,
-        
+
         @ArraySchema(schema = @Schema(implementation = MateResponse.class))
         List<MateResponse> mates,
 
