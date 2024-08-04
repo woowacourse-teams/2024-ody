@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="listener"
             type="com.woowacourse.ody.presentation.room.listener.CopyInviteCodeListener" />
@@ -10,8 +11,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="110dp"
-        >
+        android:layout_height="110dp">
 
         <TextView
             android:id="@+id/tv_invite_code_top"
@@ -38,11 +38,12 @@
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_marginEnd="25dp"
-            android:background="@drawable/rectangle_purple_radius_20"
+            android:background="@drawable/rectangle_radius_20"
+            android:backgroundTint="@color/purple_800"
             android:gravity="center"
+            android:onClick="@{() ->listener.onCopyInviteCode()}"
             android:text="@string/item_invite_code_copy"
             android:textColor="@color/white"
-            android:onClick="@{() ->listener.onCopyInviteCode()}"
             app:layout_constraintBottom_toBottomOf="@id/tv_invite_code_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_invite_code_top" />

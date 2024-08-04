@@ -82,13 +82,14 @@
             app:layout_constraintTop_toTopOf="@id/et_invite_code_form"
             app:visibility="@{vm.hasInviteCode}" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_confirm"
             style="@style/pretendard_bold_16"
             android:layout_width="150dp"
             android:layout_height="45dp"
             android:layout_marginTop="32dp"
-            android:background="@drawable/selector_confirm_button"
+            android:background="@drawable/rectangle_radius_20"
+            android:backgroundTint="@drawable/selector_button_color"
             android:enabled="@{vm.hasInviteCode}"
             android:onClick="@{() -> vm.checkInviteCode()}"
             android:text="@string/confirm_button"
