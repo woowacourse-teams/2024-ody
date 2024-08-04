@@ -1,6 +1,5 @@
 package com.woowacourse.ody.presentation.creation
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -107,6 +106,18 @@ class MeetingCreationViewModel(
         meetingName.value = ""
     }
 
+    private fun checkInfoValidity() {
+        val meetingCreationInfoType = meetingCreationInfoType.value ?: return
+        val isValid =
+            when (meetingCreationInfoType) {
+                MeetingCreationInfoType.NAME -> isValidMeetingName()
+                MeetingCreationInfoType.DATE -> true
+                MeetingCreationInfoType.TIME -> isValidMeetingDateTime()
+                MeetingCreationInfoType.DESTINATION -> isValidDestination()
+            }
+        isValidInfo.value = isValid
+    }
+
     private fun isValidMeetingName(): Boolean {
         val meetingName = meetingName.value ?: return false
         return meetingName.isNotEmpty()
@@ -125,18 +136,6 @@ class MeetingCreationViewModel(
         return AddressValidator.isValid(destinationGeoLocation.address).also {
             if (!it) _invalidDestinationEvent.setValue(Unit)
         }
-    }
-
-    private fun checkInfoValidity() {
-        val meetingInfoType = meetingCreationInfoType.value ?: return
-        val isValid =
-            when (meetingInfoType) {
-                MeetingCreationInfoType.NAME -> isValidMeetingName()
-                MeetingCreationInfoType.DATE -> true
-                MeetingCreationInfoType.TIME -> isValidMeetingDateTime()
-                MeetingCreationInfoType.DESTINATION -> isValidDestination()
-            }
-        isValidInfo.value = isValid
     }
 
     fun updateMeetingDate(meetingDate: LocalDate) {

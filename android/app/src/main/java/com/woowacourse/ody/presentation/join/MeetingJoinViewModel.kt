@@ -1,5 +1,6 @@
 package com.woowacourse.ody.presentation.join
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,6 +15,7 @@ import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.creation.MeetingCreationInfoType
 import com.woowacourse.ody.presentation.join.listener.MeetingJoinListener
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -23,6 +25,7 @@ class MeetingJoinViewModel(
     private val joinRepository: JoinRepository,
     private val inviteCodeRepository: InviteCodeRepository,
 ) : ViewModel(), MeetingJoinListener {
+    val meetingJoinInfoType: MutableLiveData<MeetingJoinInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
     val nickname: MutableLiveData<String> = MutableLiveData()
@@ -43,8 +46,9 @@ class MeetingJoinViewModel(
 
     private fun initializeIsValidInfo() {
         with(isValidInfo) {
-            addSource(nickname) { isValidInfo.value = isValidNickName() }
-            addSource(startingPointGeoLocation) { isValidInfo.value = isValidStartingPoint() }
+            addSource(meetingJoinInfoType) { checkInfoValidity() }
+            addSource(nickname) { checkInfoValidity() }
+            addSource(startingPointGeoLocation) { checkInfoValidity() }
         }
     }
 
@@ -73,6 +77,16 @@ class MeetingJoinViewModel(
                 Timber.e(it.message)
             }
         }
+    }
+
+    private fun checkInfoValidity() {
+        val meetingJoinInfoType = meetingJoinInfoType.value ?: return
+        val isValid =
+            when (meetingJoinInfoType) {
+                MeetingJoinInfoType.NICKNAME -> isValidNickName()
+                MeetingJoinInfoType.DEPARTURE -> isValidStartingPoint()
+            }
+        isValidInfo.value = isValid
     }
 
     private fun isValidNickName(): Boolean {

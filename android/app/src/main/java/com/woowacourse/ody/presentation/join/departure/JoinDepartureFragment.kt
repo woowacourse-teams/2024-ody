@@ -13,6 +13,7 @@ import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.model.toGeoLocation
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
+import com.woowacourse.ody.presentation.join.MeetingJoinInfoType
 import com.woowacourse.ody.presentation.join.MeetingJoinViewModel
 
 class JoinDepartureFragment : BindingFragment<FragmentJoinDepartureBinding>(R.layout.fragment_join_departure), AddressSearchListener {
@@ -58,6 +59,11 @@ class JoinDepartureFragment : BindingFragment<FragmentJoinDepartureBinding>(R.la
     }
 
     override fun onSearch() = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.meetingJoinInfoType.value = MeetingJoinInfoType.DEPARTURE
+    }
 
     companion object {
         private const val ADDRESS_SEARCH_DIALOG_TAG = "address_search_dialog"

@@ -6,6 +6,7 @@ import androidx.fragment.app.activityViewModels
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentJoinNicknameBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
+import com.woowacourse.ody.presentation.join.MeetingJoinInfoType
 import com.woowacourse.ody.presentation.join.MeetingJoinViewModel
 
 class JoinNickNameFragment : BindingFragment<FragmentJoinNicknameBinding>(R.layout.fragment_join_nickname) {
@@ -21,5 +22,10 @@ class JoinNickNameFragment : BindingFragment<FragmentJoinNicknameBinding>(R.layo
 
     private fun initializeBinding() {
         binding.vm = viewModel
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.meetingJoinInfoType.value = MeetingJoinInfoType.NICKNAME
     }
 }
