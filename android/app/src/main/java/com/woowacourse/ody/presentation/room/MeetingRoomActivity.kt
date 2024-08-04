@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
@@ -50,7 +49,6 @@ class MeetingRoomActivity :
     override fun initializeBinding() {
         binding.vm = viewModel
         binding.rvNotificationLog.adapter = adapter
-        binding.rvNotificationLog.layoutManager = LinearLayoutManager(this)
         binding.shareListener = this
         binding.copyInviteCodeListener = this
         binding.backListener = this
