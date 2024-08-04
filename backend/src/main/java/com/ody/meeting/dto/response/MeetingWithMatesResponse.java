@@ -1,7 +1,9 @@
 package com.ody.meeting.dto.response;
 
 import com.ody.mate.domain.Mate;
+import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -33,7 +35,7 @@ public record MeetingWithMatesResponse(
         @Schema(description = "참여자 인원 수", example = "1")
         int mateCount,
 
-        @Schema(description = "참여자 닉네임 목록", example = "[{\"nickname\": \"오디\"}]")
+        @ArraySchema(schema = @Schema(implementation = MateResponse.class))
         List<MateResponse> mates,
 
         @Schema(description = "초대코드", example = "초대코드")
