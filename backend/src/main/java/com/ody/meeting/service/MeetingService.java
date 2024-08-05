@@ -62,8 +62,8 @@ public class MeetingService {
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 모임입니다."));
     }
 
-    public MeetingSaveResponses findAllMeetingsByMember(Member member) {
-        return meetingRepository.findAllMeetingsByMember(member).stream()
+    public MeetingSaveResponses findAllMeetingsByMemberId(Member member) {
+        return meetingRepository.findAllMeetingsByMemberId(member.getId()).stream()
                 .map(mateService::findAllByMeetingId)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), MeetingSaveResponses::new));
     }

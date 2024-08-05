@@ -43,7 +43,7 @@ public class MeetingController implements MeetingControllerSwagger {
     @Override
     @GetMapping("/meetings/me")
     public ResponseEntity<MeetingSaveResponses> findMine(@AuthMember Member member) {
-        MeetingSaveResponses meetingSaveResponses = meetingService.findAllMeetingsByMember(member);
+        MeetingSaveResponses meetingSaveResponses = meetingService.findAllMeetingsByMemberId(member);
         return ResponseEntity.ok(meetingSaveResponses);
     }
 

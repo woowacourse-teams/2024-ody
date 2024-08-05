@@ -1,4 +1,4 @@
-package com.ody.mate.domain;
+package com.ody.eta.domain;
 
 import com.ody.common.exception.OdyServerErrorException;
 import java.time.LocalDateTime;
@@ -12,16 +12,16 @@ public enum EtaStatus {
     ;
 
     public static EtaStatus from(
-            long remainingDuration,
+            Eta mateEta,
             LocalDateTime meetingTime,
-            double meter,
             boolean isMissing
     ) {
+
         if (isMissing) {
             return MISSING;
         }
 
-        LocalDateTime eta = LocalDateTime.now().plusMinutes(remainingDuration);
+        LocalDateTime eta = LocalDateTime.now().plusMinutes(mateEta.getRemainingMinutes());
 
         if (eta.isAfter(meetingTime) && LocalDateTime.now().isBefore(meetingTime)) {
             return LATE_WARNING;
@@ -32,18 +32,15 @@ public enum EtaStatus {
             return LATE;
         }
 
-        if (meter <= 300
+        if (mateEta.isArrived()
                 && (LocalDateTime.now().isBefore(meetingTime) || LocalDateTime.now().isEqual(meetingTime))) {
             return ARRIVED;
         }
 
-        if ((meter > 300 && meter <= 700)
-                && (LocalDateTime.now().isBefore(meetingTime) || LocalDateTime.now()
-                .isEqual(meetingTime))) {
+        if ((eta.isBefore(meetingTime) || eta.isEqual(meetingTime))
+                && (LocalDateTime.now().isBefore(meetingTime) || LocalDateTime.now().isEqual(meetingTime))) {
             return ARRIVAL_SOON;
         }
-
-        // 충분히 도착가능함을 표현할 수 있는 상수가 있어야함 .. : 700미터 이상 + 약속 시간 내 도착 가능.
 
         throw new OdyServerErrorException("참여자의 ETA 상태를 판단할 수 없습니다");
     }

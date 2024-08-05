@@ -31,7 +31,17 @@ public class Eta extends BaseEntity {
 
     private long remainingMinutes;
 
+    private boolean isArrived;
+
     public Eta(Mate mate, Long remainingMinutes) {
-        this(null, mate, remainingMinutes);
+        this(null, mate, remainingMinutes, false);
+    }
+
+    public void updateRemainingMinutes(long remainingMinutes) {
+        this.remainingMinutes = remainingMinutes;
+    }
+
+    public void updateArrived() {
+        this.isArrived = true;
     }
 }
