@@ -22,12 +22,12 @@ import org.springframework.http.ResponseEntity;
 public interface MateControllerSwagger {
 
     @Operation(
-            summary = "모임 참여",
+            summary = "약속 참여",
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateSaveRequest.class))),
             responses = {
                     @ApiResponse(
                             responseCode = "201",
-                            description = "모임 참여 성공",
+                            description = "약속 참여 성공",
                             content = @Content(schema = @Schema(implementation = MeetingSaveResponse.class))
                     )
             }
