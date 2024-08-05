@@ -8,7 +8,7 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.request.FcmSendRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
-import com.ody.route.service.RouteService;
+import com.ody.route.domain.RouteTime;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -29,15 +29,19 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final FcmSubscriber fcmSubscriber;
-    private final RouteService routeService;
     private final FcmPushSender fcmPushSender;
     private final TaskScheduler taskScheduler;
 
     @Transactional
-    public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
+    public void saveAndSendNotifications(
+            Meeting meeting,
+            Mate mate,
+            DeviceToken deviceToken,
+            RouteTime routeTime
+    ) {
         saveAndSendEntryNotification(meeting, mate);
         fcmSubscriber.subscribeTopic(meeting, deviceToken);
-        saveAndSendDepartureReminderNotification(meeting, mate);
+        saveAndSendDepartureReminderNotification(meeting, mate, routeTime);
     }
 
     private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
@@ -45,22 +49,18 @@ public class NotificationService {
         saveAndSendNotification(meeting, notification);
     }
 
-    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate) {
-        LocalDateTime sendAt = calculateSendAt(meeting, mate);
+    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate, RouteTime routeTime) {
+        DepartureTime departureTime = new DepartureTime(routeTime, meeting);
+        LocalDateTime sendAt = calculateSendAt(departureTime);
         Notification notification = Notification.createDepartureReminder(mate, sendAt);
         saveAndSendNotification(meeting, notification);
     }
 
-    private LocalDateTime calculateSendAt(Meeting meeting, Mate mate) {
-        DepartureTime sendAt = routeService.calculateDepartureTime(
-                mate.getOrigin(),
-                meeting.getTarget(),
-                LocalDateTime.of(meeting.getDate(), meeting.getTime())
-        );
-        if (sendAt.isBefore(LocalDateTime.now())) {
+    private LocalDateTime calculateSendAt(DepartureTime departureTime) {
+        if (departureTime.isBefore(LocalDateTime.now())) {
             return LocalDateTime.now().withNano(0);
         }
-        return sendAt.getValue().withNano(0);
+        return departureTime.getValue().withNano(0);
     }
 
     private void saveAndSendNotification(Meeting meeting, Notification notification) {
