@@ -8,9 +8,15 @@ import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtasAdapte
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
 
 class EtaDashboardActivity : BindingActivity<ActivityEtaDashboardBinding>(R.layout.activity_eta_dashboard), MissingToolTipListener {
+    private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.rvDashboard.adapter = MateEtasAdapter(this)
+        initializeListAdapter()
+    }
+
+    private fun initializeListAdapter() {
+        binding.rvDashboard.adapter = adapter
     }
 
     override fun initializeBinding() {
