@@ -47,7 +47,7 @@ public class MateService {
         return MeetingSaveResponse.of(meeting, mates);
     }
 
-    public List<Mate> findAllByMemberAndMeetingId(Member member, Long meetingId) {
+    public List<Mate> findAllByMemberAndMeetingId(Member member, long meetingId) {
         if (!mateRepository.existsByMeetingIdAndMemberId(meetingId, member.getId())) {
             throw new OdyBadRequestException("존재하지 않는 모임이거나 약속 참여자가 아닙니다.");
         }
