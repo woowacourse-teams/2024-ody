@@ -41,7 +41,7 @@ class NotificationLogViewModel(
         viewModelScope.launch {
             meetingRepository.fetchMeeting()
                 .onSuccess {
-                    _meeting.postValue(it.first().toMeetingUiModel())
+//                    _meeting.postValue(it.first().toMeetingUiModel())
                     fetchNotificationLogs(it.first().id)
                 }.onFailure {
                     Timber.e(it.message)
