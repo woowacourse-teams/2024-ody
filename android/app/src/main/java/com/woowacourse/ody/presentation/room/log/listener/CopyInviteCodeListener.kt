@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.room.listener
+package com.woowacourse.ody.presentation.room.log.listener
 
 interface CopyInviteCodeListener {
     fun onCopyInviteCode()

@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.room.adapter
+package com.woowacourse.ody.presentation.room.log.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.ody.databinding.ItemInviteCodeLogBinding
 import com.woowacourse.ody.databinding.ItemNotificationLogBinding
-import com.woowacourse.ody.presentation.room.listener.CopyInviteCodeListener
-import com.woowacourse.ody.presentation.room.model.NotificationLogUiModel
+import com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener
+import com.woowacourse.ody.presentation.room.log.model.NotificationLogUiModel
 
 class NotificationLogsAdapter(
     private val copyInviteCodeListener: CopyInviteCodeListener,
