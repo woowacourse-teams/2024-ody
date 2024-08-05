@@ -1,0 +1,34 @@
+package com.woowacourse.ody.data.local.service
+
+import android.annotation.SuppressLint
+import android.content.Context
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
+import com.woowacourse.ody.OdyApplication
+
+class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerParameters) :
+    CoroutineWorker(context, workerParameters) {
+    @SuppressLint("RestrictedApi")
+    override suspend fun doWork(): Result {
+        val meetingRepository = (applicationContext as OdyApplication).meetingRepository
+        val inputData = workerParameters.inputData
+        val meetingId = inputData.getLong("meeting_id", -1L)
+
+        // todo: 다음 이슈에서 아래 있는 것들은 직접 받아오기
+        val isMissing = inputData.getBoolean("isMissing", false)
+        val latitude = inputData.getString("latitude") ?: return Result.failure()
+        val longitude = inputData.getString("longitude") ?: return Result.failure()
+
+        if (meetingId == -1L) {
+            return Result.failure()
+        }
+
+        val mateEtas = meetingRepository.patchMatesEta(meetingId, isMissing, latitude, longitude).getOrNull()
+        return if (mateEtas != null) {
+            Result.success(workDataOf("어쩌구" to mateEtas))
+        } else {
+            Result.failure()
+        }
+    }
+}
