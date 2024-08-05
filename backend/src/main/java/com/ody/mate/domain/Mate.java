@@ -57,8 +57,11 @@ public class Mate {
     @NotNull
     private Location origin;
 
-    public Mate(Meeting meeting, Member member, Nickname nickname, Location origin) {
-        this(null, meeting, member, nickname, origin);
+    @NotNull
+    private long estimatedMinutes;
+
+    public Mate(Meeting meeting, Member member, Nickname nickname, Location origin, long estimatedMinutes) {
+        this(null, meeting, member, nickname, origin, estimatedMinutes);
     }
 
     public String getNicknameValue() {

@@ -5,6 +5,7 @@ import com.ody.eta.service.EtaService;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.member.domain.Member;
@@ -32,22 +33,27 @@ public class MateService {
             Meeting meeting,
             Member member
     ) {
-        Mate mate = save(mateSaveRequest, meeting, member);
-        RouteTime routeTime = routeService.calculateRouteTime(mate.getOrigin(), meeting.getTarget());
+        Location origin = new Location(mateSaveRequest.originAddress(), mateSaveRequest.originLatitude(),
+                mateSaveRequest.originLongitude());
+
+        RouteTime routeTime = routeService.calculateRouteTime(origin, meeting.getTarget());
+
+        Mate mate = save(mateSaveRequest, meeting, member, routeTime);
         etaService.saveFirstEtaOfMate(mate, routeTime);
         notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken(), routeTime);
         return findAllByMeetingId(meeting);
     }
 
     public Mate save(MateSaveRequest mateSaveRequest, Meeting meeting,
-                     Member member) { // TODO: private 접근 제어자로 변경, 테스트 코드 수정 필요
+                     Member member, RouteTime routeTime) { // TODO: private 접근 제어자로 변경, 테스트 코드 수정 필요
+
         if (mateRepository.existsByMeetingIdAndNickname_Value(meeting.getId(), mateSaveRequest.nickname())) {
             throw new OdyBadRequestException("모임 내 같은 닉네임이 존재합니다.");
         }
         if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
             throw new OdyBadRequestException("모임에 이미 참여한 회원입니다.");
         }
-        return mateRepository.save(mateSaveRequest.toMate(meeting, member));
+        return mateRepository.save(mateSaveRequest.toMate(meeting, member, routeTime.getMinutes()));
     }
 
     public MeetingSaveResponse findAllByMeetingId(Meeting meeting) {
