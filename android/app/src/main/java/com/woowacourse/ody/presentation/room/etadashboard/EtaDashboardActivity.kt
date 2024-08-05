@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.room.eta
+package com.woowacourse.ody.presentation.room.etadashboard
 
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityEtaDashboardBinding

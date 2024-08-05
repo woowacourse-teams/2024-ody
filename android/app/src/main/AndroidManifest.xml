@@ -45,7 +45,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.room.eta.EtaDashboardActivity"
+            android:name=".presentation.room.etadashboard.EtaDashboardActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
