@@ -1,10 +1,12 @@
 package com.ody.meeting.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
+import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.dto.response.MateResponse;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
@@ -53,5 +55,14 @@ class MeetingServiceTest extends BaseServiceTest {
                         Fixture.MATE2.getNicknameValue()
                 )
         );
+    }
+
+    @DisplayName("약속 조회 시, 약속이 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void findMeetingWithMatesException() {
+        Member member = memberRepository.save(Fixture.MEMBER1);
+
+        assertThatThrownBy(() -> meetingService.findMeetingWithMates(member, 1L))
+                .isInstanceOf(OdyNotFoundException.class);
     }
 }
