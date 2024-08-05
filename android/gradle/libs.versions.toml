@@ -27,6 +27,7 @@ retrofit = "2.11.0"
 timber = "5.0.1"
 viewPager = "1.1.0"
 webkit = "1.11.0"
+workRuntimeKtx = "2.9.0"
 
 [libraries]
 # androidx
@@ -37,6 +38,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-view-pager = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewPager" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "lifecycle" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
