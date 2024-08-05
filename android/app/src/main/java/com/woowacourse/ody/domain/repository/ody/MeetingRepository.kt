@@ -8,5 +8,5 @@ interface MeetingRepository {
 
     suspend fun fetchMeeting(): Result<List<Meeting>>
 
-    suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<Meeting>
+    suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String>
 }

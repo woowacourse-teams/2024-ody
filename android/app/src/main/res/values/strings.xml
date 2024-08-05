@@ -68,9 +68,9 @@
     <string name="nickname_question_hint">올리브</string>
     <string name="nickname_length_separator">/</string>
 
-    <!-- fragment_join_starting_point.xml -->
-    <string name="starting_point_question_front">오디</string>
-    <string name="starting_point_question_back">서 출발하시나요?</string>
+    <!-- fragment_join_departure.xml -->
+    <string name="departure_question_front">오디</string>
+    <string name="departure_question_back">서 출발하시나요?</string>
 
     <!-- activity_join_completion.xml -->
     <string name="join_completion_second_explain">약속에 참여했어요!</string>

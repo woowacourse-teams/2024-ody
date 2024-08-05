@@ -10,10 +10,6 @@ fun MeetingCreationInfo.toMeetingRequest(): MeetingRequest =
         targetAddress = targetAddress,
         targetLatitude = compress(targetLatitude),
         targetLongitude = compress(targetLongitude),
-        nickname = nickname,
-        originAddress = originAddress,
-        originLatitude = compress(originLatitude),
-        originLongitude = compress(originLongitude),
     )
 
 private fun compress(coordinate: String): String = coordinate.slice(0..8)

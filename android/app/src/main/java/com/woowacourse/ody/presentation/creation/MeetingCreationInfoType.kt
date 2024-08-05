@@ -1,10 +1,8 @@
 package com.woowacourse.ody.presentation.creation
 
-enum class MeetingInfoType {
+enum class MeetingCreationInfoType {
     NAME,
     DATE,
     TIME,
     DESTINATION,
-    NICKNAME,
-    STARTING_POINT,
 }

@@ -1,11 +1,10 @@
-package com.woowacourse.ody.data.remote.core.entity.meeting.response
+package com.woowacourse.ody.data.remote.core.entity.join.response
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.woowacourse.ody.data.remote.core.entity.join.response.MateResponse
 
 @JsonClass(generateAdapter = true)
-data class MeetingResponse(
+data class JoinResponse(
     @Json(name = "id")
     val id: Long,
     @Json(name = "name")
