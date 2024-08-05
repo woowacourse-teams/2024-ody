@@ -1,5 +1,6 @@
 package com.ody.meeting.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ody.common.annotation.FutureOrPresentDateTime;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.meeting.domain.Location;
