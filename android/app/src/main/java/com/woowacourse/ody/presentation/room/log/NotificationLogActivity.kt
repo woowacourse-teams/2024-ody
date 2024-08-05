@@ -83,7 +83,6 @@ class NotificationLogActivity :
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
 
-        fun getIntent(context: Context): Intent =
-            Intent(context, NotificationLogActivity::class.java)
+        fun getIntent(context: Context): Intent = Intent(context, NotificationLogActivity::class.java)
     }
 }
