@@ -9,7 +9,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
-import com.woowacourse.ody.domain.model.MateEta
 
 class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters) {
@@ -38,9 +37,10 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
     }
 
     private fun List<MateEtaResponse>.convertMateEtasToJson(): String {
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
+        val moshi =
+            Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
         val type = Types.newParameterizedType(List::class.java, MateEtaResponse::class.java)
         val jsonAdapter = moshi.adapter<List<MateEtaResponse>>(type)
         return jsonAdapter.toJson(this)

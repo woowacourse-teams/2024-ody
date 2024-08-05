@@ -109,7 +109,10 @@ class MeetingJoinViewModel(
         _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
     }
 
-    private fun reserveEtaFetchingJobs(meetingId: Long, meetingDateTime: LocalDateTime) {
+    private fun reserveEtaFetchingJobs(
+        meetingId: Long,
+        meetingDateTime: LocalDateTime,
+    ) {
         val meetingTimeMilliSeconds = meetingDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()
 
         (-1..30).forEach { minute ->

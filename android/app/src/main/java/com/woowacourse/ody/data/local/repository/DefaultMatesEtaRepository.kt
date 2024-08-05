@@ -1,6 +1,5 @@
 package com.woowacourse.ody.data.local.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.work.Data
@@ -17,9 +16,12 @@ import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import java.util.concurrent.TimeUnit
 
 class DefaultMatesEtaRepository(
-    private val workManager: WorkManager
+    private val workManager: WorkManager,
 ) : MatesEtaRepository {
-    override fun reserveEtaFetchingJob(meetingId: Long, targetTimeMillisecond: Long) {
+    override fun reserveEtaFetchingJob(
+        meetingId: Long,
+        targetTimeMillisecond: Long,
+    ) {
         val currentTime = System.currentTimeMillis()
         val delay = targetTimeMillisecond - currentTime
 
@@ -27,15 +29,17 @@ class DefaultMatesEtaRepository(
             return
         }
 
-        val inputData = Data.Builder()
-            .putLong("meeting_id", 1)
-            .build()
+        val inputData =
+            Data.Builder()
+                .putLong("meeting_id", 1)
+                .build()
 
-        val workRequest = OneTimeWorkRequestBuilder<EtaDashBoardWorker>()
-            .setInputData(inputData)
-            .addTag("1")
-            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-            .build()
+        val workRequest =
+            OneTimeWorkRequestBuilder<EtaDashBoardWorker>()
+                .setInputData(inputData)
+                .addTag("1")
+                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                .build()
 
         workManager.enqueue(workRequest)
     }
@@ -51,9 +55,10 @@ class DefaultMatesEtaRepository(
     }
 
     private fun String.convertMateEtasToJson(): List<MateEta> {
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
+        val moshi =
+            Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
         val type = Types.newParameterizedType(List::class.java, MateEtaResponse::class.java)
         val jsonAdapter = moshi.adapter<List<MateEtaResponse>>(type)
         return jsonAdapter.fromJson(this)
