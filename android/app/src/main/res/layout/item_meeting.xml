@@ -60,8 +60,8 @@
 
             <include
                 layout="@layout/layout_navigate_to_meeting_room"
-                android:layout_width="86dp"
-                android:layout_height="37dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="22dp"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -155,8 +155,8 @@
 
             <include
                 layout="@layout/layout_navigate_to_meeting_room"
-                android:layout_width="86dp"
-                android:layout_height="37dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="22dp"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
