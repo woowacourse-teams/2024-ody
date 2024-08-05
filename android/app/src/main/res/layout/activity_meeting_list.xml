@@ -11,24 +11,22 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
         tools:context=".presentation.intro.IntroActivity">
 
-        <include layout="@layout/toolbar_intro"
+        <include
             android:id="@+id/tb_intro"
-            />
+            layout="@layout/toolbar_intro" />
 
         <androidx.recyclerview.widget.RecyclerView
-            app:layout_constraintTop_toBottomOf="@id/tb_intro"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:padding="16dp"
-            tools:listitem="@layout/item_meeting"
-            />
+            app:layout_constraintTop_toBottomOf="@id/tb_intro"
+            tools:listitem="@layout/item_meeting" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
