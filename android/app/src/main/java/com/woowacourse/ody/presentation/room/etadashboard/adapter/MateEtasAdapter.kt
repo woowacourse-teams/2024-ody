@@ -11,26 +11,33 @@ import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 class MateEtasAdapter(
     private val missingToolTipListener: MissingToolTipListener,
 ) : ListAdapter<MateEtaUiModel, MateEtaViewHolder>(diffUtil) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MateEtaViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): MateEtaViewHolder {
         val binding = ItemEtaDashboardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MateEtaViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: MateEtaViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: MateEtaViewHolder,
+        position: Int,
+    ) {
         holder.bind(getItem(position), missingToolTipListener)
     }
 
     companion object {
-        private val diffUtil = object : DiffUtil.ItemCallback<MateEtaUiModel>() {
-            override fun areItemsTheSame(
-                oldItem: MateEtaUiModel,
-                newItem: MateEtaUiModel,
-            ): Boolean = oldItem == newItem
+        private val diffUtil =
+            object : DiffUtil.ItemCallback<MateEtaUiModel>() {
+                override fun areItemsTheSame(
+                    oldItem: MateEtaUiModel,
+                    newItem: MateEtaUiModel,
+                ): Boolean = oldItem == newItem
 
-            override fun areContentsTheSame(
-                oldItem: MateEtaUiModel,
-                newItem: MateEtaUiModel,
-            ): Boolean = oldItem == newItem
-        }
+                override fun areContentsTheSame(
+                    oldItem: MateEtaUiModel,
+                    newItem: MateEtaUiModel,
+                ): Boolean = oldItem == newItem
+            }
     }
 }

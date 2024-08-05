@@ -14,10 +14,11 @@ fun TextView.setBadgeByEtaType(etaTypeUiModel: EtaTypeUiModel) {
 
 @BindingAdapter("etaStatus")
 fun TextView.setEtaStatusText(durationMinute: Int) {
-    text = when (durationMinute) {
-        0 -> context.getString(R.string.status_arrived)
-        -1 -> context.getString(R.string.status_missing)
-        in 1..10 -> context.getString(R.string.status_arrival_soon)
-        else -> context.getString(R.string.status_arrival_remain_time, durationMinute)
-    }
+    text =
+        when (durationMinute) {
+            0 -> context.getString(R.string.status_arrived)
+            -1 -> context.getString(R.string.status_missing)
+            in 1..10 -> context.getString(R.string.status_arrival_soon)
+            else -> context.getString(R.string.status_arrival_remain_time, durationMinute)
+        }
 }
