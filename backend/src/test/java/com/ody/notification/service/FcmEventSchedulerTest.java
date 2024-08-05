@@ -1,12 +1,15 @@
 package com.ody.notification.service;
 
+import static com.ody.common.Fixture.MEMBER1;
+import static com.ody.common.Fixture.ODY_MEETING;
+import static com.ody.common.Fixture.ORIGIN_LOCATION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 import com.ody.common.BaseServiceTest;
-import com.ody.common.Fixture;
 import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
@@ -41,9 +44,9 @@ class FcmEventSchedulerTest extends BaseServiceTest {
     @DisplayName("예약 알림이 2초 후에 전송된다")
     @Test
     void testScheduledNotificationIsSentAtCorrectTime() throws InterruptedException {
-        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
-        Member member = memberRepository.save(Fixture.MEMBER1);
-        Mate mate = mateRepository.save(Fixture.MATE1);
+        Meeting meeting = meetingRepository.save(ODY_MEETING);
+        Member member = memberRepository.save(MEMBER1);
+        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("제리"), ORIGIN_LOCATION, 10L));
 
         LocalDateTime sendAt = LocalDateTime.now().plusSeconds(2);
         Notification notification = notificationRepository.save(new Notification(

@@ -69,9 +69,9 @@ class MeetingControllerTest extends BaseControllerTest {
     @DisplayName("특정 멤버의 참여 모임 목록 조회에 성공하면 200응답 반환한다")
     @Test
     void findMine() {
-        meetingRepository.save(Fixture.ODY_MEETING1);
-        memberRepository.save(Fixture.MEMBER1);
-        mateRepository.save(Fixture.MATE1);
+        Member member = memberRepository.save(Fixture.MEMBER1);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        mateRepository.save(new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L));
 
         RestAssured.given()
                 .log()
@@ -93,7 +93,7 @@ class MeetingControllerTest extends BaseControllerTest {
         Member member = memberRepository.save(Fixture.MEMBER1);
         Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
         meetingRepository.save(meeting);
-        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin));
+        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin, 10L));
 
         RestAssured.given()
                 .log()

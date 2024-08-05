@@ -34,14 +34,14 @@ class MateRepositoryTest {
         Member member2 = memberRepository.save(Fixture.MEMBER2);
         Member member3 = memberRepository.save(Fixture.MEMBER3);
 
-        Meeting meeting1 = meetingRepository.save(Fixture.ODY_MEETING1);
-        Meeting meeting2 = meetingRepository.save(Fixture.ODY_MEETING2);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        Meeting sojuMeeting = meetingRepository.save(Fixture.SOJU_MEETING);
 
-        Mate mate1 = mateRepository.save(new Mate(meeting1, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION));
-        Mate mate2 = mateRepository.save(new Mate(meeting1, member2, new Nickname("조조"), Fixture.ORIGIN_LOCATION));
-        mateRepository.save(new Mate(meeting2, member3, new Nickname("카키"), Fixture.ORIGIN_LOCATION));
+        Mate mate1 = mateRepository.save(new Mate(odyMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L));
+        Mate mate2 = mateRepository.save(new Mate(odyMeeting, member2, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
+        mateRepository.save(new Mate(sojuMeeting, member3, new Nickname("카키"), Fixture.ORIGIN_LOCATION, 10L));
 
-        List<Mate> meeting1Mates = mateRepository.findAllByMeetingId(meeting1.getId());
+        List<Mate> meeting1Mates = mateRepository.findAllByMeetingId(odyMeeting.getId());
 
         assertThat(meeting1Mates).containsExactlyElementsOf(List.of(mate1, mate2));
     }

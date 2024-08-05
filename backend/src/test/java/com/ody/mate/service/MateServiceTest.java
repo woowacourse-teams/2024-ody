@@ -14,6 +14,7 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.route.domain.RouteTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,18 +39,17 @@ class MateServiceTest extends BaseServiceTest {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Member member2 = memberRepository.save(Fixture.MEMBER2);
 
-        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
-        mateRepository.save(
-                new Mate(meeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION)); // TODO: 데이터 클린 작업 필요
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        mateRepository.save(new Mate(odyMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L));
 
         MateSaveRequest mateSaveRequest = new MateSaveRequest(
-                meeting.getInviteCode(),
+                odyMeeting.getInviteCode(),
                 "카키",
                 Fixture.ORIGIN_LOCATION.getAddress(),
                 Fixture.ORIGIN_LOCATION.getLatitude(),
                 Fixture.ORIGIN_LOCATION.getLongitude()
         );
-        assertThatCode(() -> mateService.save(mateSaveRequest, meeting, member2))
+        assertThatCode(() -> mateService.save(mateSaveRequest, odyMeeting, member2, new RouteTime(10L)))
                 .doesNotThrowAnyException();
     }
 
@@ -59,17 +59,17 @@ class MateServiceTest extends BaseServiceTest {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Member member2 = memberRepository.save(Fixture.MEMBER2);
 
-        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
-        mateRepository.save(new Mate(meeting, member1, new Nickname("제리"), Fixture.ORIGIN_LOCATION));
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        mateRepository.save(new Mate(odyMeeting, member1, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
 
         MateSaveRequest mateSaveRequest = new MateSaveRequest(
-                meeting.getInviteCode(),
+                odyMeeting.getInviteCode(),
                 "제리",
                 Fixture.ORIGIN_LOCATION.getAddress(),
                 Fixture.ORIGIN_LOCATION.getLatitude(),
                 Fixture.ORIGIN_LOCATION.getLongitude()
         );
-        assertThatThrownBy(() -> mateService.save(mateSaveRequest, meeting, member2))
+        assertThatThrownBy(() -> mateService.save(mateSaveRequest, odyMeeting, member2, new RouteTime(10L)))
                 .isInstanceOf(OdyBadRequestException.class);
     }
 }

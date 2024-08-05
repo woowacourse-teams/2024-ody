@@ -1,7 +1,6 @@
 package com.ody.notification.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
@@ -15,14 +14,14 @@ import com.ody.member.repository.MemberRepository;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.repository.NotificationRepository;
-import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -50,16 +49,18 @@ class NotificationServiceTest extends BaseServiceTest {
     @Test
     void sendImmediatelyIfDepartureTimeIsPast() {
         Member member = memberRepository.save(Fixture.MEMBER1);
-        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
-        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION));
-
-        LocalDateTime today = LocalDateTime.now();
-        DepartureTime pastDepartureTime = new DepartureTime(new RouteTime(1), today.minusDays(1));
-
-        BDDMockito.given(routeService.calculateDepartureTime(any(), any(), any()))
-                .willReturn(pastDepartureTime);
-
-        notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken());
+        Meeting pastMeeting = new Meeting(
+                "오디",
+                LocalDate.now().minusDays(1),
+                LocalTime.parse("14:00"),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        );
+        Meeting savedPastMeeting = meetingRepository.save(pastMeeting);
+        Mate mate = mateRepository.save(
+                new Mate(savedPastMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
+        RouteTime routeTime = new RouteTime(1);
+        notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken(), routeTime);
 
         Optional<Notification> departureNotification = notificationRepository.findAll().stream()
                 .filter(notification -> isDepartureReminder(notification) && isNow(notification))
