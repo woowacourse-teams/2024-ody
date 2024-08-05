@@ -5,7 +5,11 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
+import com.woowacourse.ody.domain.model.MateEta
 
 class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters) {
@@ -26,9 +30,19 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
 
         val mateEtas = meetingRepository.patchMatesEta(meetingId, isMissing, latitude, longitude).getOrNull()
         return if (mateEtas != null) {
-            Result.success(workDataOf("어쩌구" to mateEtas))
+            val mateEtaResponses = mateEtas.map { MateEtaResponse(it.nickname, it.etaType, it.durationMinute) }
+            Result.success(workDataOf("어쩌구" to mateEtaResponses.convertMateEtasToJson()))
         } else {
             Result.failure()
         }
+    }
+
+    private fun List<MateEtaResponse>.convertMateEtasToJson(): String {
+        val moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+        val type = Types.newParameterizedType(List::class.java, MateEta::class.java)
+        val jsonAdapter = moshi.adapter<List<MateEtaResponse>>(type)
+        return jsonAdapter.toJson(this)
     }
 }

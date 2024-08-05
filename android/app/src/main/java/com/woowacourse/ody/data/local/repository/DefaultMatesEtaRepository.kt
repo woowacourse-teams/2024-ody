@@ -18,6 +18,7 @@ class DefaultMatesEtaRepository(
         }
 
         val workRequest = OneTimeWorkRequestBuilder<EtaDashBoardWorker>()
+            .addTag(meetingId.toString())
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .build()
 
