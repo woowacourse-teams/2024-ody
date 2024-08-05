@@ -5,13 +5,20 @@
 
     <data>
 
+        <variable
+            name="eta"
+            type="com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel" />
+
+        <variable
+            name="tooltipListener"
+            type="com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="6dp"
-        android:layout_marginVertical="21dp">
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="21dp">
 
         <TextView
             android:id="@+id/tv_nickname_dashboard"
@@ -21,6 +28,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:lines="1"
+            android:text="@{eta.nickname}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_badge_dashboard"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +43,7 @@
             android:background="@drawable/rectangle_radius_15"
             android:gravity="center"
             android:textColor="@color/white"
+            app:etaType="@{eta.etaTypeUiModel}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:lines="1"
+                app:etaStatus="@{eta.durationMinute}"
                 tools:text="13분 후 도착" />
 
             <TextView
@@ -69,9 +79,11 @@
                 android:background="@drawable/oval"
                 android:backgroundTint="@color/gray_400"
                 android:gravity="center"
+                android:onClick="@{() -> tooltipListener.onClickMissingToolTipListener()}"
                 android:text="@string/question_mark"
                 android:textColor="@color/white"
                 android:visibility="gone"
+                app:visibility="@{eta.missing}"
                 tools:visibility="visible" />
         </LinearLayout>
 

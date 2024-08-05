@@ -5,8 +5,8 @@ import androidx.annotation.StringRes
 import com.woowacourse.ody.R
 
 enum class EtaTypeUiModel(
-    @ColorRes private val colorId: Int,
-    @StringRes private val messageId: Int,
+    @ColorRes val colorId: Int,
+    @StringRes val messageId: Int,
 ) {
     LATE_WARNING(R.color.yellow, R.string.badge_late_warning),
     ARRIVAL_SOON(R.color.green, R.string.badge_arrival_soon),
