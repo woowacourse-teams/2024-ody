@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.room.model
+package com.woowacourse.ody.presentation.room.log.model
 
 data class MeetingUiModel(
     val name: String,

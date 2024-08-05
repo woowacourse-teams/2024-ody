@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.room
+package com.woowacourse.ody.presentation.room.log
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -7,23 +7,24 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.woowacourse.ody.R
-import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
+import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
-import com.woowacourse.ody.presentation.room.adapter.NotificationLogsAdapter
-import com.woowacourse.ody.presentation.room.listener.CopyInviteCodeListener
-import com.woowacourse.ody.presentation.room.listener.ShareListener
+import com.woowacourse.ody.presentation.common.listener.BackListener
+import com.woowacourse.ody.presentation.room.log.adapter.NotificationLogsAdapter
+import com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener
+import com.woowacourse.ody.presentation.room.log.listener.ShareListener
 
-class MeetingRoomActivity :
-    BindingActivity<ActivityMeetingRoomBinding>(
-        R.layout.activity_meeting_room,
+class NotificationLogActivity :
+    BindingActivity<ActivityNotificationLogBinding>(
+        R.layout.activity_notification_log,
     ),
     CopyInviteCodeListener,
-    ShareListener {
-    private val viewModel: MeetingRoomViewModel by viewModels {
-        MeetingRoomViewModelFactory(
+    ShareListener,
+    BackListener {
+    private val viewModel: NotificationLogViewModel by viewModels {
+        NotificationLogViewModelFactory(
             application.notificationLogRepository,
             application.meetingRepository,
         )
@@ -48,9 +49,9 @@ class MeetingRoomActivity :
     override fun initializeBinding() {
         binding.vm = viewModel
         binding.rvNotificationLog.adapter = adapter
-        binding.rvNotificationLog.layoutManager = LinearLayoutManager(this)
         binding.shareListener = this
         binding.copyInviteCodeListener = this
+        binding.backListener = this
     }
 
     private fun initializeObserve() {
@@ -75,9 +76,13 @@ class MeetingRoomActivity :
         clipboard.setPrimaryClip(clip)
     }
 
+    override fun onBack() {
+        finish()
+    }
+
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
 
-        fun getIntent(context: Context): Intent = Intent(context, MeetingRoomActivity::class.java)
+        fun getIntent(context: Context): Intent = Intent(context, NotificationLogActivity::class.java)
     }
 }

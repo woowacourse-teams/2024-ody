@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">오디</string>
+
     <!-- activity_notification_log -->
     <string name="activity_notification_mates">%1$d명 / %2$s </string>"
 
@@ -86,6 +87,20 @@
     <!-- bottom_sheet_code_copy.xml -->
     <string name="code_copy_guide">초대 코드를 복사해\n친구에게 전달해 보세요!</string>
     <string name="code_copy_copy_code">초대 코드 복사하기</string>
+
+    <!-- item_eta_dashboard.xml -->
+    <string name="badge_arrived">도착</string>
+    <string name="badge_arrival_soon">도착 예정</string>
+    <string name="badge_late">지각</string>
+    <string name="badge_late_warning">지각 위기</string>
+    <string name="badge_missing">행방불명</string>
+    <string name="status_arrived">-</string>
+    <string name="status_arrival_remain_time">%d분 후 도착</string>
+    <string name="status_arrival_soon">10분 내 도착</string>
+    <string name="status_missing">오디</string>
+    <string name="question_mark">\?</string>
+    <string name="location_permission_self_guide">위치 권한을 켜서 오디인지 공유해 보세요.</string>
+    <string name="location_permission_friend_guide">친구의 위치 권한이 꺼져있어요.</string>
 
     <!-- all -->
     <string name="next_button">다음</string>

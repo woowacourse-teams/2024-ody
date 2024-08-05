@@ -1,10 +1,10 @@
-package com.woowacourse.ody.presentation.room
+package com.woowacourse.ody.presentation.room.log
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.woowacourse.ody.R
 import com.woowacourse.ody.domain.model.NotificationType
-import com.woowacourse.ody.presentation.room.model.NotificationLogUiModel
+import com.woowacourse.ody.presentation.room.log.model.NotificationLogUiModel
 
 @BindingAdapter("setNotificationLogText")
 fun TextView.setNotificationLogText(log: NotificationLogUiModel) {
