@@ -8,6 +8,7 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
@@ -63,7 +64,32 @@ class MeetingControllerTest extends BaseControllerTest {
                 .when()
                 .post("/meetings")
                 .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(201);
+    }
+
+    @DisplayName("모임 개설 성공 시, 201을 응답한다")
+    @Test
+    void saveV1() {
+        String deviceToken = "Bearer device-token=testToken";
+        memberService.save(new DeviceToken(deviceToken));
+
+        MeetingSaveRequestV1 meetingRequest = new MeetingSaveRequestV1(
+                "우테코 16조",
+                LocalDate.now().plusDays(1),
+                LocalTime.now().plusHours(1),
+                "서울 송파구 올림픽로35다길 42",
+                "37.515298",
+                "127.103113"
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, deviceToken)
+                .body(meetingRequest)
+                .when()
+                .post("/v1/meetings")
+                .then()
+                .statusCode(201);
     }
 
     @DisplayName("특정 멤버의 참여 모임 목록 조회에 성공하면 200응답 반환한다")

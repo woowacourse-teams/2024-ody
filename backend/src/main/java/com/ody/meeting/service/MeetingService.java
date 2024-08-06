@@ -3,10 +3,9 @@ package com.ody.meeting.service;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.EtaStatus;
 import com.ody.mate.dto.request.MateEtaRequest;
-import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.response.MateEtaResponse;
 import com.ody.mate.dto.response.MateEtaResponses;
-import com.ody.mate.service.MateService;
+import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.response.MateResponse;
@@ -14,6 +13,8 @@ import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
+import com.ody.meeting.dto.request.MeetingSaveRequestV1;
+import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
@@ -22,7 +23,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,26 +34,14 @@ public class MeetingService {
 
     private static final String DEFAULT_INVITE_CODE = "초대코드";
 
-    private final MateService mateService;
     private final MeetingRepository meetingRepository;
 
     @Transactional
-    public MeetingSaveResponse saveAndSendNotifications(MeetingSaveRequest meetingSaveRequest, Member member) {
-        Meeting meeting = save(meetingSaveRequest);
-        MateSaveRequest mateSaveRequest = meetingSaveRequest.toMateSaveRequest(meeting.getInviteCode());
-        return mateService.saveAndSendNotifications(mateSaveRequest, meeting, member);
-    }
-
-    public Meeting save(MeetingSaveRequest meetingSaveRequest) {
-        Meeting meeting = meetingRepository.save(meetingSaveRequest.toMeeting(DEFAULT_INVITE_CODE));
+    public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
+        Meeting meeting = meetingRepository.save(meetingSaveRequestV1.toMeeting(DEFAULT_INVITE_CODE));
         String encodedInviteCode = InviteCodeGenerator.encode(meeting.getId());
         meeting.updateInviteCode(encodedInviteCode);
-        return meeting;
-    }
-
-    public MeetingSaveResponse findAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
-        Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
-        return mateService.saveAndSendNotifications(mateSaveRequest, meeting, member);
+        return MeetingSaveResponseV1.from(meeting);
     }
 
     public void validateInviteCode(String inviteCode) {
@@ -64,12 +52,12 @@ public class MeetingService {
         }
     }
 
-    private Meeting findByInviteCode(String inviteCode) {
+    public Meeting findByInviteCode(String inviteCode) {
         Long meetingId = InviteCodeGenerator.decode(inviteCode);
         return findById(meetingId);
     }
 
-    private Meeting findById(Long meetingId) {
+    public Meeting findById(Long meetingId) {
         return meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 모임입니다."));
     }
@@ -110,10 +98,7 @@ public class MeetingService {
                 "37.515298",
                 "127.103113",
                 2,
-                List.of(
-                        new MateResponse("오디"),
-                        new MateResponse("제리")
-                ),
+                List.of(new MateResponse("오디"), new MateResponse("제리")),
                 "초대코드"
         );
     }

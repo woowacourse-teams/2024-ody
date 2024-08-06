@@ -7,8 +7,4 @@ data class MeetingCreationInfo(
     val targetAddress: String,
     val targetLatitude: String,
     val targetLongitude: String,
-    val nickname: String,
-    val originAddress: String,
-    val originLatitude: String,
-    val originLongitude: String,
 )

@@ -10,6 +10,7 @@
     <color name="gray_300">#FFE4E4EA</color>
     <color name="gray_350">#FFD6D6D6</color>
     <color name="gray_400">#FFB1B1BB</color>
+    <color name="gray_400_70">#B3B1B1BB</color>
     <color name="gray_500">#FF8E8E93</color>
     <color name="gray_600">#FF636366</color>
     <color name="gray_700">#FF48484A</color>

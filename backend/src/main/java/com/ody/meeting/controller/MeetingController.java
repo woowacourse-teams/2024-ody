@@ -3,9 +3,12 @@ package com.ody.meeting.controller;
 import com.ody.common.annotation.AuthMember;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.mate.dto.request.MateEtaRequest;
-import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.mate.dto.response.MateEtaResponses;
+import com.ody.mate.dto.response.MateResponse;
+import com.ody.meeting.dto.request.MeetingSaveRequest;
+import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
+import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.service.MeetingService;
@@ -14,6 +17,8 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +45,33 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @Valid @RequestBody MeetingSaveRequest meetingSaveRequest
     ) {
-        MeetingSaveResponse meetingSaveResponse = meetingService.saveAndSendNotifications(meetingSaveRequest, member);
+        MeetingSaveResponse meetingSaveResponse = new MeetingSaveResponse(
+                1L,
+                "우테코 16조",
+                LocalDate.parse("2024-07-15"),
+                LocalTime.parse("14:00"),
+                "서울 송파구 올림픽로35다길 42",
+                "37.515298",
+                "127.103113",
+                1,
+                List.of(new MateResponse("오디")),
+                "초대코드"
+        );
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(meetingSaveResponse);
     }
 
     @Override
+    @PostMapping("/v1/meetings")
+    public ResponseEntity<MeetingSaveResponseV1> saveV1(
+            @AuthMember Member member,
+            @Valid @RequestBody MeetingSaveRequestV1 meetingSaveRequestV1
+    ) {
+        MeetingSaveResponseV1 meetingSaveResponseV1 = meetingService.saveV1(meetingSaveRequestV1);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(meetingSaveResponseV1);
+    }
+
     @GetMapping("/v1/meetings/{meetingId}")
     public ResponseEntity<MeetingWithMatesResponse> findMeetingWithMates(
             @AuthMember Member member,
@@ -58,8 +84,19 @@ public class MeetingController implements MeetingControllerSwagger {
     @Override
     @GetMapping("/meetings/me")
     public ResponseEntity<MeetingSaveResponses> findMine(@AuthMember Member member) { // TODO: deprecated
-        MeetingSaveResponses meetingSaveResponses = meetingService.findAllMeetingsByMember(member);
-        return ResponseEntity.ok(meetingSaveResponses);
+        MeetingSaveResponse meetingSaveResponse = new MeetingSaveResponse(
+                1L,
+                "우테코 16조",
+                LocalDate.parse("2024-07-15"),
+                LocalTime.parse("14:00"),
+                "서울 송파구 올림픽로35다길 42",
+                "37.515298",
+                "127.103113",
+                1,
+                List.of(new MateResponse("오디")),
+                "초대코드"
+        );
+        return ResponseEntity.ok(new MeetingSaveResponses(List.of(meetingSaveResponse)));
     }
 
     @Override
