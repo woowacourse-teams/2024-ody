@@ -10,12 +10,8 @@
             type="com.woowacourse.ody.presentation.meetinglist.model.MeetingUiModel" />
 
         <variable
-            name="listener"
-            type="com.woowacourse.ody.presentation.meetinglist.listener.MeetingItemListener" />
-
-        <variable
-            name="folded"
-            type="Boolean" />
+            name="vm"
+            type="com.woowacourse.ody.presentation.meetinglist.MeetingListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,28 +21,46 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/rectangle_white_radius_15"
         android:elevation="4dp"
-        android:visibility="visible">
+        android:animateLayoutChanges="true"
+        android:onClick="@{() -> vm.toggleFold(meeting.id)}"
+        >
 
         <TextView
             android:id="@+id/tv_meeting_title_expanded"
             style="@style/pretendard_bold_24"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
             android:layout_marginTop="22dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{meeting.title}"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_arrow"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="김수한무거북이모임" />
 
-        <ImageView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/iv_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="19dp"
             android:layout_marginEnd="21dp"
-            android:src="@drawable/ic_arrow_up"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_down"
+                app:setVisible="@{!meeting.folded}"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_up"
+                app:setVisible="@{meeting.folded}"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_meeting_date_time_expanded"
@@ -67,7 +81,7 @@
             android:textColor="@color/purple_800"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/tv_meeting_date_time_expanded"
-            app:setVisible="@{!folded}"
+            app:setVisible="@{!meeting.folded}"
             tools:text="서울 송파구 올림픽로 35다길" />
 
         <TextView
@@ -78,7 +92,7 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_meeting_departure"
             app:layout_constraintStart_toEndOf="@id/tv_meeting_departure"
             app:layout_constraintTop_toTopOf="@id/tv_meeting_departure"
-            app:setVisible="@{!folded}" />
+            app:setVisible="@{!meeting.folded}" />
 
         <TextView
             android:id="@+id/tv_meeting_arrival"
@@ -89,7 +103,7 @@
             android:textColor="@color/purple_800"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/tv_meeting_departure"
-            app:setVisible="@{!folded}"
+            app:setVisible="@{!meeting.folded}"
             tools:text="서울 강남구 테헤란로 411길" />
 
         <TextView
@@ -100,7 +114,7 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_meeting_arrival"
             app:layout_constraintStart_toEndOf="@id/tv_meeting_arrival"
             app:layout_constraintTop_toTopOf="@id/tv_meeting_arrival"
-            app:setVisible="@{!folded}" />
+            app:setVisible="@{!meeting.folded}" />
 
         <TextView
             style="@style/pretendard_bold_24"
@@ -119,6 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="22dp"
             android:layout_marginBottom="16dp"
+            android:onClick="@{() -> vm.navigateToMeetingRoom(meeting.id)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

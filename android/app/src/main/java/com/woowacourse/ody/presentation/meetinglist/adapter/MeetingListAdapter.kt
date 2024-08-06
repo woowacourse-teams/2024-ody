@@ -7,11 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.ody.databinding.ItemMeetingBinding
 import com.woowacourse.ody.presentation.meetinglist.MeetingListViewModel
-import com.woowacourse.ody.presentation.meetinglist.listener.MeetingItemListener
 import com.woowacourse.ody.presentation.meetinglist.model.MeetingUiModel
 
 class MeetingListAdapter(
-    private val meetingItemListener: MeetingItemListener,
     private val viewModel: MeetingListViewModel,
 ) : ListAdapter<MeetingUiModel, RecyclerView.ViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(
@@ -29,8 +27,7 @@ class MeetingListAdapter(
     ) {
         (holder as MeetingViewHolder).bind(
             currentList[position],
-            meetingItemListener,
-            viewModel.folded.value?.get(position) ?: false,
+            viewModel,
         )
     }
 
