@@ -7,17 +7,19 @@ import com.ody.mate.dto.request.MateEtaRequest;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.response.MateEtaResponse;
 import com.ody.mate.dto.response.MateEtaResponses;
+import com.ody.mate.dto.response.MateSaveResponse;
+import com.ody.mate.repository.MateRepository;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
-import com.ody.meeting.dto.response.MeetingSaveResponse;
-import com.ody.meeting.dto.response.MeetingSaveResponses;
+import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
+import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.util.InviteCodeGenerator;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +33,9 @@ public class MeetingService {
 
     private static final String DEFAULT_INVITE_CODE = "초대코드";
 
-    private final MateService mateService;
     private final MeetingRepository meetingRepository;
-
-    @Transactional
-    public MeetingSaveResponse saveAndSendNotifications(MeetingSaveRequest meetingSaveRequest, Member member) {
-        Meeting meeting = save(meetingSaveRequest);
-        MateSaveRequest mateSaveRequest = meetingSaveRequest.toMateSaveRequest(meeting.getInviteCode());
-        return mateService.saveAndSendNotifications(mateSaveRequest, meeting, member);
-    }
+    private final MateRepository mateRepository;
+    private final MateService mateService;
 
     @Transactional
     public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
@@ -47,18 +43,6 @@ public class MeetingService {
         String encodedInviteCode = InviteCodeGenerator.encode(meeting.getId());
         meeting.updateInviteCode(encodedInviteCode);
         return MeetingSaveResponseV1.from(meeting);
-    }
-
-    public Meeting save(MeetingSaveRequest meetingSaveRequest) {
-        Meeting meeting = meetingRepository.save(meetingSaveRequest.toMeeting(DEFAULT_INVITE_CODE));
-        String encodedInviteCode = InviteCodeGenerator.encode(meeting.getId());
-        meeting.updateInviteCode(encodedInviteCode);
-        return meeting;
-    }
-
-    public MeetingSaveResponse findAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
-        Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
-        return mateService.saveAndSendNotifications(mateSaveRequest, meeting, member);
     }
 
     public void validateInviteCode(String inviteCode) {
@@ -69,26 +53,29 @@ public class MeetingService {
         }
     }
 
-    private Meeting findByInviteCode(String inviteCode) {
+    public Meeting findByInviteCode(String inviteCode) {
         Long meetingId = InviteCodeGenerator.decode(inviteCode);
         return findById(meetingId);
     }
 
-    private Meeting findById(Long meetingId) {
+    public Meeting findById(Long meetingId) {
         return meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 모임입니다."));
     }
 
-    public MeetingSaveResponses findAllMeetingsByMember(Member member) {
-        return meetingRepository.findAllMeetingsByMember(member).stream()
-                .map(mateService::findAllByMeetingId)
-                .collect(Collectors.collectingAndThen(Collectors.toList(), MeetingSaveResponses::new));
+    public MeetingFindByMemberResponses findAllByMember(Member member) {
+        return meetingRepository.findAllByMember(member)
+                .stream()
+                .map(meeting -> makeMeetingFindByMemberResponse(member, meeting))
+                .sorted(Comparator.comparing(MeetingFindByMemberResponse::date)
+                        .thenComparing(MeetingFindByMemberResponse::time))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), MeetingFindByMemberResponses::new));
     }
 
-    public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {
-        Meeting meeting = findById(meetingId);
-        List<Mate> mates = mateService.findAllByMemberAndMeetingId(member, meetingId);
-        return MeetingWithMatesResponse.of(meeting, mates);
+    private MeetingFindByMemberResponse makeMeetingFindByMemberResponse(Member member, Meeting meeting) {
+        int mateCount = mateRepository.countByMeetingId(meeting.getId());
+        Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId());
+        return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
     }
 
     public MateEtaResponses findAllMateEtas(Long meetingId, MateEtaRequest mateEtaRequest) {
@@ -100,5 +87,16 @@ public class MeetingService {
         );
 
         return new MateEtaResponses(mateStatuses);
+    }
+
+    public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {
+        Meeting meeting = findById(meetingId);
+        List<Mate> mates = mateService.findAllByMemberAndMeetingId(member, meetingId);
+        return MeetingWithMatesResponse.of(meeting, mates);
+    }
+
+    public MateSaveResponse saveMateAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
+        Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
+        return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
     }
 }

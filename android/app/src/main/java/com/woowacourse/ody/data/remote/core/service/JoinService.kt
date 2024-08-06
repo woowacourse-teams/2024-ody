@@ -1,13 +1,13 @@
 package com.woowacourse.ody.data.remote.core.service
 
 import com.woowacourse.ody.data.remote.core.entity.join.request.JoinRequest
-import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingResponse
+import com.woowacourse.ody.data.remote.core.entity.join.response.JoinResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface JoinService {
-    @POST("mates")
+    @POST("/v1/mates")
     suspend fun postMates(
         @Body joinRequest: JoinRequest,
-    ): MeetingResponse
+    ): JoinResponse
 }

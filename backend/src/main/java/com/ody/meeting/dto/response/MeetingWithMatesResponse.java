@@ -2,6 +2,7 @@ package com.ody.meeting.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ody.mate.domain.Mate;
+import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;

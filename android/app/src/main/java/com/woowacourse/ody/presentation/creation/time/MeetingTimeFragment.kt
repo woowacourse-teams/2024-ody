@@ -6,8 +6,8 @@ import androidx.fragment.app.activityViewModels
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingTimeBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
+import com.woowacourse.ody.presentation.creation.MeetingCreationInfoType
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
-import com.woowacourse.ody.presentation.creation.MeetingInfoType
 
 class MeetingTimeFragment : BindingFragment<FragmentMeetingTimeBinding>(R.layout.fragment_meeting_time) {
     private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
@@ -40,6 +40,6 @@ class MeetingTimeFragment : BindingFragment<FragmentMeetingTimeBinding>(R.layout
     override fun onResume() {
         super.onResume()
         viewModel.initializeMeetingTime()
-        viewModel.meetingInfoType.value = MeetingInfoType.TIME
+        viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.TIME
     }
 }

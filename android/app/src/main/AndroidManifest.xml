@@ -20,6 +20,14 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.meetinglist.MeetingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".presentation.FloatingButtonActivity"
+            android:exported="true" />
+        <activity
             android:name=".presentation.invitecode.InviteCodeActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -41,7 +49,11 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.room.MeetingRoomActivity"
+            android:name=".presentation.room.log.NotificationLogActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.room.etadashboard.EtaDashboardActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
