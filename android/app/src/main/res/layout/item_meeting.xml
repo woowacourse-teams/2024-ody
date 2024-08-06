@@ -53,13 +53,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_down"
-                app:setVisible="@{!meeting.folded}"
+                app:setVisible="@{meeting.folded}"
                 />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_up"
-                app:setVisible="@{meeting.folded}"/>
+                app:setVisible="@{!meeting.folded}"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -67,7 +67,7 @@
             style="@style/pretendard_medium_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{meeting.datetime}"
+            showDateTime="@{meeting.datetime}"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/tv_meeting_title_expanded"
             tools:text="오늘 오후 1시 30분" />
