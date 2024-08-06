@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
 import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
@@ -43,7 +44,7 @@ class FcmEventSchedulerTest extends BaseServiceTest {
     void testScheduledNotificationIsSentAtCorrectTime() throws InterruptedException {
         Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
         Member member = memberRepository.save(Fixture.MEMBER1);
-        Mate mate = mateRepository.save(Fixture.MATE1);
+        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION));
 
         LocalDateTime sendAt = LocalDateTime.now().plusSeconds(2);
         Notification notification = notificationRepository.save(new Notification(

@@ -1,7 +1,10 @@
 package com.ody.meeting.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ody.mate.domain.Mate;
+import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,6 +22,7 @@ public record MeetingWithMatesResponse(
         LocalDate date,
 
         @Schema(description = "약속 시간", type = "string", example = "14:00")
+        @JsonFormat(pattern = "HH:mm")
         LocalTime time,
 
         @Schema(description = "도착지 주소", example = "서울 송파구 올림픽로35다길 42")
@@ -33,7 +37,7 @@ public record MeetingWithMatesResponse(
         @Schema(description = "참여자 인원 수", example = "1")
         int mateCount,
 
-        @Schema(description = "참여자 닉네임 목록", example = "[{\"nickname\": \"오디\"}]")
+        @ArraySchema(schema = @Schema(implementation = MateResponse.class))
         List<MateResponse> mates,
 
         @Schema(description = "초대코드", example = "초대코드")

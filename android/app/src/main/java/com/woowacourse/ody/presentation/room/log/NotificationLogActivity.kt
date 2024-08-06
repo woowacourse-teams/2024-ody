@@ -13,7 +13,6 @@ import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardActivity
-import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardActivity.Companion
 import com.woowacourse.ody.presentation.room.log.adapter.NotificationLogsAdapter
 import com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.room.log.listener.ShareListener

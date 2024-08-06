@@ -1,23 +1,24 @@
-package com.ody.meeting.dto.response;
+package com.ody.mate.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record MeetingSaveResponseV1(
+public record MateSaveResponse(
 
-        @Schema(description = "모임 ID", example = "1")
-        Long id,
+        @Schema(description = "약속 ID", example = "1")
+        Long meetingId,
 
-        @Schema(description = "모임 이름", example = "우테코 16조")
+        @Schema(description = "약속 이름", example = "우테코 16조")
         String name,
 
-        @Schema(description = "모임 날짜", type = "string", example = "2024-07-15")
+        @Schema(description = "약속 날짜", type = "string", example = "2024-07-15")
         LocalDate date,
 
-        @Schema(description = "모임 시간", type = "string", example = "14:00")
+        @Schema(description = "약속 시간", type = "string", example = "14:00")
         @JsonFormat(pattern = "HH:mm")
         LocalTime time,
 
@@ -34,12 +35,13 @@ public record MeetingSaveResponseV1(
         String inviteCode
 ) {
 
-    public static MeetingSaveResponseV1 from(Meeting meeting) {
-        return new MeetingSaveResponseV1(
+    public static MateSaveResponse from(Mate mate) {
+        Meeting meeting = mate.getMeeting();
+        return new MateSaveResponse(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
-                meeting.getTime().withNano(0),
+                meeting.getTime(),
                 meeting.getTarget().getAddress(),
                 meeting.getTarget().getLatitude(),
                 meeting.getTarget().getLongitude(),

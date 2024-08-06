@@ -109,4 +109,8 @@
         <item name="colorControlNormal">@color/purple_300</item>
     </style>
 
+    <style name="floating_button_style">
+        <item name="cornerSize">30dp</item>
+    </style>
+
 </resources>

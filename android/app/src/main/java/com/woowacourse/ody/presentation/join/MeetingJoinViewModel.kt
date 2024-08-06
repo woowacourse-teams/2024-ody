@@ -73,9 +73,8 @@ class MeetingJoinViewModel(
                     departureLongitude,
                 ),
             ).onSuccess {
-                meetingId = it.id
-                val meetingDateTime = LocalDateTime.of(it.meetingDate, it.meetingTime)
-                reserveEtaFetchingJobs(it.id, meetingDateTime)
+                meetingId = it.meetingId
+                reserveEtaFetchingJobs(it.meetingId, it.meetingDateTime)
             }.onFailure {
                 Timber.e(it.message)
             }

@@ -5,8 +5,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class JoinResponse(
-    @Json(name = "id")
-    val id: Long,
+    @Json(name = "meetingId")
+    val meetingId: Long,
     @Json(name = "name")
     val name: String,
     @Json(name = "date")
@@ -19,10 +19,6 @@ data class JoinResponse(
     val targetLatitude: String,
     @Json(name = "targetLongitude")
     val targetLongitude: String,
-    @Json(name = "mateCount")
-    val mateCount: Int,
-    @Json(name = "mates")
-    val mates: List<MateResponse>,
     @Json(name = "inviteCode")
     val inviteCode: String,
 )
