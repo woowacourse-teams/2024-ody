@@ -84,16 +84,15 @@ class IntroActivity : BindingActivity<ActivityIntroBinding>(R.layout.activity_in
         val permissionRequestCode = PERMISSIONS_REQUEST_CODE
 
         ActivityCompat.requestPermissions(this, permissions, permissionRequestCode)
-
-        permissionBackgroundLocation(this)
+        showBackgroundLocationPermissionDialog(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun permissionBackgroundLocation(context: Context) {
+    private fun showBackgroundLocationPermissionDialog(context: Context) {
         val builder = AlertDialog.Builder(context)
         val listener =
-            DialogInterface.OnClickListener { _, p1 ->
-                when (p1) {
+            DialogInterface.OnClickListener { _, which ->
+                when (which) {
                     DialogInterface.BUTTON_POSITIVE ->
                         ActivityCompat.requestPermissions(
                             this,
@@ -104,9 +103,9 @@ class IntroActivity : BindingActivity<ActivityIntroBinding>(R.layout.activity_in
                         )
                 }
             }
-        builder.setTitle("백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.")
-        builder.setPositiveButton("네", listener)
-        builder.setNegativeButton("아니오", null)
+        builder.setTitle(getString(R.string.request_background_permission_dialog_title))
+        builder.setPositiveButton(getString(R.string.request_background_permission_dialog_yes), listener)
+        builder.setNegativeButton(getString(R.string.request_background_permission_dialog_no), null)
         builder.show()
     }
 
@@ -117,41 +116,31 @@ class IntroActivity : BindingActivity<ActivityIntroBinding>(R.layout.activity_in
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
-            for (i in permissions.indices) {
-                when (permissions[i]) {
+            for (index in permissions.indices) {
+                when (permissions[index]) {
                     Manifest.permission.POST_NOTIFICATIONS -> {
-                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            showSnackBar(R.string.intro_notification_permission_guide)
-                        } else {
-                            showSnackBar(R.string.intro_notification_permission_required)
-                        }
+                        showPermissionGuide(grantResults, index)
                     }
 
-                    Manifest.permission.ACCESS_COARSE_LOCATION -> {
-                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            showSnackBar(R.string.intro_location_permission_guide)
-                        } else {
-                            showSnackBar(R.string.intro_location_permission_required)
-                        }
-                    }
-
-                    Manifest.permission.ACCESS_FINE_LOCATION -> {
-                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            showSnackBar(R.string.intro_location_permission_guide)
-                        } else {
-                            showSnackBar(R.string.intro_location_permission_required)
-                        }
-                    }
-
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION -> {
-                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            showSnackBar(R.string.intro_location_permission_guide)
-                        } else {
-                            showSnackBar(R.string.intro_location_permission_required)
-                        }
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                    -> {
+                        showPermissionGuide(grantResults, index)
                     }
                 }
             }
+        }
+    }
+
+    private fun showPermissionGuide(
+        grantResults: IntArray,
+        index: Int,
+    ) {
+        if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
+            showSnackBar(R.string.intro_notification_permission_guide)
+        } else {
+            showSnackBar(R.string.intro_notification_permission_required)
         }
     }
 
