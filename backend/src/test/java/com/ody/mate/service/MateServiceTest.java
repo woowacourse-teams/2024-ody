@@ -15,6 +15,7 @@ import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
+import com.ody.meeting.repository.MeetingRepository;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
@@ -38,6 +39,9 @@ class MateServiceTest extends BaseServiceTest {
 
     @Autowired
     private MateService mateService;
+
+    @Autowired
+    private MeetingRepository meetingRepository;
 
     @DisplayName("모임 내 닉네임이 중복되지 않으면 모임에 참여한다.")
     @Test
