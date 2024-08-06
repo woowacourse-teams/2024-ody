@@ -26,7 +26,6 @@ class HomeViewModel(
         viewModelScope.launch {
             meetingRepository.fetchMeetingCatalogs().onSuccess {
                 _meetingCatalogs.value = it.toMeetingCatalogUiModels()
-                Timber.d(it.toMeetingCatalogUiModels().toString())
             }.onFailure {
                 Timber.e(it)
             }

@@ -18,7 +18,6 @@ import com.woowacourse.ody.presentation.home.adapter.MeetingCatalogsAdapter
 import com.woowacourse.ody.presentation.home.listener.HomeListener
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
-import timber.log.Timber
 
 class HomeActivity :
     BindingActivity<ActivityHomeBinding>(
@@ -85,7 +84,6 @@ class HomeActivity :
     }
 
     override fun navigateToMeetingRoom(meetingId: Long) {
-        Timber.d(meetingId.toString())
         startActivity(NotificationLogActivity.getIntent(this, meetingId))
     }
 
