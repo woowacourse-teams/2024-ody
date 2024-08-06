@@ -1,5 +1,6 @@
 package com.woowacourse.ody.presentation.room.etadashboard
 
+import android.graphics.Point
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -31,13 +32,16 @@ fun TextView.setOnClickMissingTooltip(
     missingToolTipListener: MissingToolTipListener,
 ) {
     setOnClickListener {
-        val (x, y) = this.getPointOnScreen()
-        missingToolTipListener.onClickMissingToolTipListener(x, y, isUserSelf)
+        val point = this.getPointOnScreen()
+        missingToolTipListener.onClickMissingToolTipListener(point, isUserSelf)
     }
 }
 
-private fun View.getPointOnScreen(): Pair<Int, Int> {
+private fun View.getPointOnScreen(): Point {
     val location = IntArray(2)
     this.getLocationOnScreen(location)
-    return location[0] to location[1]
+    return Point().apply {
+        x = location[0]
+        y = location[1]
+    }
 }

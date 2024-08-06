@@ -1,5 +1,6 @@
 package com.woowacourse.ody.presentation.room.etadashboard
 
+import android.graphics.Point
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -33,18 +34,16 @@ class EtaDashboardActivity :
     }
 
     override fun onClickMissingToolTipListener(
-        x: Int,
-        y: Int,
+        point: Point,
         isUserSelf: Boolean,
     ) {
         val messageId = if (isUserSelf) R.string.location_permission_self_guide else R.string.location_permission_friend_guide
-        showPopupWindow(messageId, x, y)
+        showPopupWindow(messageId, point)
     }
 
     private fun showPopupWindow(
         @StringRes messageId: Int,
-        x: Int,
-        y: Int,
+        point: Point,
     ) {
         val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val parentViewGroup = findViewById<ViewGroup>(android.R.id.content)
@@ -64,8 +63,8 @@ class EtaDashboardActivity :
         val popupWidth = popupView.measuredWidth
         val popupHeight = popupView.measuredHeight
 
-        val adjustedX = x - popupWidth
-        val adjustedY = y - popupHeight
+        val adjustedX = point.x - popupWidth
+        val adjustedY = point.y - popupHeight
 
         popupWindow.showAtLocation(window.decorView, Gravity.NO_GRAVITY, adjustedX, adjustedY)
     }
