@@ -46,7 +46,7 @@ class NotificationLogActivity :
         initializeObserve()
         initializePersistentBottomSheet()
         binding.btnOdy.setOnClickListener {
-            EtaDashboardActivity.getIntent(this, getMeetingId())
+            startActivity(EtaDashboardActivity.getIntent(this, getMeetingId()))
         }
     }
 
