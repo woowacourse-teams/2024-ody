@@ -1,10 +1,7 @@
 package com.woowacourse.ody.presentation.home
 
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.woowacourse.ody.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -31,7 +28,7 @@ fun TextView.showDateTime(dateTime: LocalDateTime) {
             meetingDay <= today.plusDays(7) -> {
                 context.getString(
                     R.string.home_post_tomorrow,
-                    meetingDay.dayOfYear - today.dayOfYear,
+                    (meetingDay.dayOfYear - today.dayOfYear).toString(),
                 )
             }
 
@@ -48,13 +45,4 @@ fun TextView.showDateTime(dateTime: LocalDateTime) {
         DateTimeFormatter.ofPattern("a h시 mm분").withLocale(Locale.forLanguageTag("ko"))
             .format(meetingTime)
     this.text = "$dateString $timeString"
-}
-
-@BindingAdapter("floatingToggle")
-fun FloatingActionButton.floatingToggle(isExpanded: Boolean) {
-    if (isExpanded) {
-        this.visibility = GONE
-    } else {
-        this.visibility = VISIBLE
-    }
 }

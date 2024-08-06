@@ -92,6 +92,11 @@
     <string name="code_copy_guide">초대 코드를 복사해\n친구에게 전달해 보세요!</string>
     <string name="code_copy_copy_code">초대 코드 복사하기</string>
 
+    <!-- request_background_permission_dialog -->
+    <string name="request_background_permission_dialog_title">백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.</string>
+    <string name="request_background_permission_dialog_yes">네</string>
+    <string name="request_background_permission_dialog_no">아니오</string>
+
     <!-- item_eta_dashboard.xml -->
     <string name="badge_arrived">도착</string>
     <string name="badge_arrival_soon">도착 예정</string>
