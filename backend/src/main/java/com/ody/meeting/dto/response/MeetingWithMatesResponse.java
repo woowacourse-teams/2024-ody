@@ -18,11 +18,10 @@ public record MeetingWithMatesResponse(
         String name,
 
         @Schema(description = "약속 날짜", type = "string", example = "2024-07-15")
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         LocalDate date,
 
         @Schema(description = "약속 시간", type = "string", example = "14:00")
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
+        @JsonFormat(pattern = "HH:mm")
         LocalTime time,
 
         @Schema(description = "도착지 주소", example = "서울 송파구 올림픽로35다길 42")
