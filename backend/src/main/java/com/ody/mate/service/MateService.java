@@ -7,8 +7,6 @@ import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
-import com.ody.meeting.dto.response.MeetingSaveResponse;
-import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
 import com.ody.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class MateService {
 
     private final MateRepository mateRepository;
-    private final MeetingService meetingService;
     private final NotificationService notificationService;
 
     @Transactional
-    public MateSaveResponse saveAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
-        Meeting meeting = meetingService.findByInviteCode(mateSaveRequest.inviteCode());
+    public MateSaveResponse saveAndSendNotifications(MateSaveRequest mateSaveRequest, Member member, Meeting meeting) {
         if (mateRepository.existsByMeetingIdAndNickname_Value(meeting.getId(), mateSaveRequest.nickname())) {
             throw new OdyBadRequestException("모임 내 같은 닉네임이 존재합니다.");
         }

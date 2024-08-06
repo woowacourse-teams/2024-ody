@@ -10,6 +10,8 @@ import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Location;
+import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.service.MeetingService;
@@ -50,6 +52,18 @@ class MateServiceTest extends BaseServiceTest {
                 "127.103113"
         );
         MeetingSaveResponseV1 meetingSaveResponseV1 = meetingService.saveV1(meetingRequest);
+        Meeting meeting = new Meeting(
+                meetingSaveResponseV1.id(),
+                meetingSaveResponseV1.name(),
+                meetingSaveResponseV1.date(),
+                meetingSaveResponseV1.time(),
+                new Location(
+                        meetingSaveResponseV1.targetAddress(),
+                        meetingSaveResponseV1.targetLatitude(),
+                        meetingSaveResponseV1.targetLongitude()
+                ),
+                meetingSaveResponseV1.inviteCode()
+        );
 
         mateRepository.save(
                 new Mate(
@@ -67,7 +81,7 @@ class MateServiceTest extends BaseServiceTest {
                 Fixture.ORIGIN_LOCATION.getLatitude(),
                 Fixture.ORIGIN_LOCATION.getLongitude()
         );
-        assertThatCode(() -> mateService.saveAndSendNotifications(mateSaveRequest, member2))
+        assertThatCode(() -> mateService.saveAndSendNotifications(mateSaveRequest, member2, meeting))
                 .doesNotThrowAnyException();
     }
 
@@ -86,6 +100,18 @@ class MateServiceTest extends BaseServiceTest {
                 "127.103113"
         );
         MeetingSaveResponseV1 meetingSaveResponseV1 = meetingService.saveV1(meetingRequest);
+        Meeting meeting = new Meeting(
+                meetingSaveResponseV1.id(),
+                meetingSaveResponseV1.name(),
+                meetingSaveResponseV1.date(),
+                meetingSaveResponseV1.time(),
+                new Location(
+                        meetingSaveResponseV1.targetAddress(),
+                        meetingSaveResponseV1.targetLatitude(),
+                        meetingSaveResponseV1.targetLongitude()
+                ),
+                meetingSaveResponseV1.inviteCode()
+        );
 
         Mate mate = mateRepository.save(
                 new Mate(
@@ -103,7 +129,7 @@ class MateServiceTest extends BaseServiceTest {
                 Fixture.ORIGIN_LOCATION.getLatitude(),
                 Fixture.ORIGIN_LOCATION.getLongitude()
         );
-        assertThatThrownBy(() -> mateService.saveAndSendNotifications(mateSaveRequest, member2))
+        assertThatThrownBy(() -> mateService.saveAndSendNotifications(mateSaveRequest, member2, meeting))
                 .isInstanceOf(OdyBadRequestException.class);
     }
 }
