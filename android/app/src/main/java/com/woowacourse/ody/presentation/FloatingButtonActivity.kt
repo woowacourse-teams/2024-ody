@@ -5,6 +5,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingListBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
+import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import com.woowacourse.ody.presentation.join.MeetingJoinActivity
 
 class FloatingButtonActivity :
@@ -25,7 +26,7 @@ class FloatingButtonActivity :
     }
 
     override fun onJoinMeeting() {
-        startActivity(MeetingJoinActivity.getIntent("", this))
+        startActivity(InviteCodeActivity.getIntent(this))
     }
 
     override fun onCreationMeeting() {
