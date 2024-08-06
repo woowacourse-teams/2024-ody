@@ -28,6 +28,5 @@ object FakeMeetingRepository : MeetingRepository {
 
     override suspend fun fetchMeeting(): Result<List<Meeting>> = Result.success(listOf(meetingA))
 
-    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> =
-        Result.success("")
+    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> = Result.success("")
 }
