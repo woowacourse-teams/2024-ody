@@ -66,10 +66,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".presentation.intro.IntroActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
 
         <service
             android:name=".data.remote.thirdparty.fcm.service.FCMService"
