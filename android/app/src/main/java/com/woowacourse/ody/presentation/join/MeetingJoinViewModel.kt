@@ -39,6 +39,8 @@ class MeetingJoinViewModel(
         MutableSingleLiveData()
     val navigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _navigateAction
 
+    private var meetingId: Long? = null
+
     init {
         initializeIsValidInfo()
     }
@@ -71,6 +73,7 @@ class MeetingJoinViewModel(
                     departureLongitude,
                 ),
             ).onSuccess {
+                meetingId = it.id
                 val meetingDateTime = LocalDateTime.of(it.meetingDate, it.meetingTime)
                 reserveEtaFetchingJobs(it.id, meetingDateTime)
             }.onFailure {
@@ -102,7 +105,7 @@ class MeetingJoinViewModel(
     }
 
     fun navigateJoinToRoom() {
-        _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom)
+        _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(meetingId ?: return))
     }
 
     override fun onClickMeetingJoin() {

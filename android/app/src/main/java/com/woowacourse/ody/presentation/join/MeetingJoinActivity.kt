@@ -68,9 +68,10 @@ class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout
 
         viewModel.navigateAction.observe(this) {
             when (it) {
-                MeetingJoinNavigateAction.JoinNavigateToRoom -> {
-                    startActivity(NotificationLogActivity.getIntent(this))
+                is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
+                    startActivity(NotificationLogActivity.getIntent(this, it.meetingId))
                 }
+
                 MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
                     joinCompletionLauncher.launch(JoinCompleteActivity.getIntent(this))
                 }

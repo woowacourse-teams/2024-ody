@@ -29,11 +29,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun initializeObserve() {
         viewModel.navigateAction.observe(this) {
-            val intent =
-                when (it) {
-                    SplashNavigateAction.NavigateToIntro -> IntroActivity.getIntent(this@SplashActivity)
-                    SplashNavigateAction.NavigateToNotificationLog -> NotificationLogActivity.getIntent(this@SplashActivity)
-                }
+            val intent = IntroActivity.getIntent(this@SplashActivity)
             startActivity(intent)
             finish()
         }
