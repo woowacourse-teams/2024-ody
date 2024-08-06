@@ -28,7 +28,7 @@ fun TextView.showDateTime(dateTime: LocalDateTime) {
             meetingDay <= today.plusDays(7) -> {
                 context.getString(
                     R.string.intro_post_tomorrow,
-                    meetingDay.dayOfYear - today.dayOfYear,
+                    (meetingDay.dayOfYear - today.dayOfYear).toString(),
                 )
             }
 

@@ -34,6 +34,14 @@ abstract class BindingActivity<T : ViewDataBinding>(
         snackBar?.show()
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         snackBar = null

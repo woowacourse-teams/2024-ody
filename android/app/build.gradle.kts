@@ -96,4 +96,7 @@ dependencies {
 
     // dotsibdicator
     implementation(libs.dotsibdicator)
+
+    // play service
+    implementation(libs.play.services.location)
 }
