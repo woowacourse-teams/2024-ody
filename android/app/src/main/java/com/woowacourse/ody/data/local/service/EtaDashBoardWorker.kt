@@ -1,42 +1,94 @@
 package com.woowacourse.ody.data.local.service
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.google.android.gms.location.LocationServices
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
+import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resumeWithException
 
 class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters) {
     private val meetingRepository: MeetingRepository by lazy { (applicationContext as OdyApplication).meetingRepository }
-    private val meetingId: Long by lazy { workerParameters.inputData.getLong(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE) }
+    private val meetingId: Long by lazy {
+        workerParameters.inputData.getLong(
+            MEETING_ID_KEY,
+            MEETING_ID_DEFAULT_VALUE,
+        )
+    }
 
     override suspend fun doWork(): Result {
         if (meetingId == MEETING_ID_DEFAULT_VALUE) {
             return Result.failure()
         }
 
-        // todo: 다음 이슈에서 아래 있는 것들은 직접 받아오기
-        val isMissing = false
-        val latitude = "39.123345"
-        val longitude = "126.234524"
+        val mateEtas = getLocation()
 
-        val mateEtas = meetingRepository.patchMatesEta(meetingId, isMissing, latitude, longitude).getOrNull()
         return if (mateEtas != null) {
-            val mateEtaResponses = mateEtas.map { MateEtaResponse(it.nickname, it.etaType, it.durationMinute) }
+            val mateEtaResponses =
+                mateEtas.map { MateEtaResponse(it.nickname, it.etaType, it.durationMinute) }
             Result.success(workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses.convertMateEtasToJson()))
         } else {
             Result.failure()
         }
     }
+
+    private suspend fun getLocation(): List<MateEta>? {
+        val fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(applicationContext)
+
+        if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            meetingRepository.patchMatesEta(meetingId, true, "0.0", "0.0").getOrNull()
+            return null
+        }
+
+        val location =
+            suspendCancellableCoroutine { continuation ->
+                fusedLocationProviderClient.lastLocation
+                    .addOnSuccessListener { location ->
+                        continuation.resume(location) {
+                            Log.d("HELLO1", "getLocation: ${location.latitude} ${location.longitude}")
+                        }
+                    }.addOnFailureListener { exception ->
+                        continuation.resumeWithException(exception)
+                    }
+            }
+
+        return if (location != null) {
+            meetingRepository.patchMatesEta(meetingId, false, location.latitude.toString(), location.longitude.toString()).getOrNull()
+        } else {
+            meetingRepository.patchMatesEta(meetingId, false, "0.0", "0.0").getOrNull()
+        }
+    }
+
+    private fun compress(coordinate: String): String = coordinate.slice(0..8)
 
     private fun List<MateEtaResponse>.convertMateEtasToJson(): String {
         val moshi =
