@@ -10,6 +10,7 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
 import com.ody.meeting.repository.MeetingRepository;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import java.util.List;
@@ -34,7 +35,7 @@ class MeetingServiceTest extends BaseServiceTest {
     @DisplayName("내 약속 목록 조회 시 오름차순 정렬한다.")
     @Test
     void findAllByMember() {
-        Member member = memberRepository.save(Fixture.MEMBER1);
+        Member member = memberRepository.save(new Member(new DeviceToken("Bearer device-token=new-member-device-token")));
 
         Meeting meetingDayAfterTomorrowAt14 = meetingRepository.save(Fixture.ODY_MEETING4);
         Meeting meetingTomorrowAt12 = meetingRepository.save(Fixture.ODY_MEETING3);
