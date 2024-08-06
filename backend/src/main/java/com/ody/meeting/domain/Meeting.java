@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -45,5 +46,9 @@ public class Meeting {
 
     public void updateInviteCode(String inviteCode) {
         this.inviteCode = inviteCode;
+    }
+
+    public LocalDateTime getMeetingTime() {
+        return LocalDateTime.of(date, time).withSecond(0).withNano(0);
     }
 }

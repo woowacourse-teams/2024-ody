@@ -10,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,12 +43,28 @@ public class Eta extends BaseEntity {
         this.remainingMinutes = remainingMinutes;
     }
 
+    public boolean willBeLate(LocalDateTime meetingTime) {
+        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+        long countdownMinutes = countDownMinutes(now);
+        LocalDateTime eta = now.plusMinutes(countdownMinutes);
+        return eta.isAfter(meetingTime);
+    }
+
     public long countDownMinutes(LocalDateTime localDateTime) {
         long minutesDifference = Duration.between(getUpdatedAt(), localDateTime).toMinutes();
         return Math.max(remainingMinutes - minutesDifference, 0);
     }
 
+    public long differenceMinutesFromLastUpdated() {
+        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+        return Duration.between(getUpdatedAt(), now).toMinutes();
+    }
+
     public void updateArrived() {
         this.isArrived = true;
+    }
+
+    public boolean isModified() {
+        return !getCreatedAt().isEqual(getUpdatedAt());
     }
 }
