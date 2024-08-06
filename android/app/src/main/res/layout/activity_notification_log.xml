@@ -137,7 +137,7 @@
             app:copyInviteCodeListener="@{copyInviteCodeListener}" />
 
         <LinearLayout
-            android:id="@+id/ll_ody"
+            android:id="@+id/btn_ody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

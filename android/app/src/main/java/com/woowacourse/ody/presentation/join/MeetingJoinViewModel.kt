@@ -8,19 +8,21 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.MeetingJoinInfo
-import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
+import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.join.listener.MeetingJoinListener
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class MeetingJoinViewModel(
     private val inviteCode: String,
     private val joinRepository: JoinRepository,
-    private val inviteCodeRepository: InviteCodeRepository,
+    private val matesEtaRepository: MatesEtaRepository,
 ) : ViewModel(), MeetingJoinListener {
     val meetingJoinInfoType: MutableLiveData<MeetingJoinInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
@@ -69,7 +71,8 @@ class MeetingJoinViewModel(
                     departureLongitude,
                 ),
             ).onSuccess {
-                // todo
+                reserveEtaFetchingJobs(it.meetingId, it.meetingDateTime)
+                _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
             }.onFailure {
                 Timber.e(it.message)
             }
@@ -98,15 +101,27 @@ class MeetingJoinViewModel(
         }
     }
 
-    fun navigateJoinToRoom() {
-        _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom)
-    }
-
     override fun onClickMeetingJoin() {
         _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
     }
 
+    private fun reserveEtaFetchingJobs(
+        meetingId: Long,
+        meetingDateTime: LocalDateTime,
+    ) {
+        val meetingTimeMilliSeconds = meetingDateTime.toMilliSeconds(LOCAL_ZONE_ID)
+        RESERVE_OFFSET_MINUTE_RANGE.forEach { minute ->
+            val reserveMilliSeconds = meetingTimeMilliSeconds - (MILLI_SECOND_OF_MINUTE * minute)
+            matesEtaRepository.reserveEtaFetchingJob(meetingId, reserveMilliSeconds)
+        }
+    }
+
     companion object {
         const val NICK_NAME_MAX_LENGTH = 9
+        private const val LOCAL_ZONE_ID = "Asia/Seoul"
+        private val RESERVE_OFFSET_MINUTE_RANGE = (-1..30)
+        private const val MILLI_SECOND_OF_MINUTE = 60_000
     }
 }
+
+fun LocalDateTime.toMilliSeconds(zoneId: String): Long = atZone(ZoneId.of(zoneId)).toInstant().toEpochMilli()

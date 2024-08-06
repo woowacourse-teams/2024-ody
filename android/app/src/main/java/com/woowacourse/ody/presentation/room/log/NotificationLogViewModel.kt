@@ -8,7 +8,6 @@ import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.room.log.model.MeetingUiModel
 import com.woowacourse.ody.presentation.room.log.model.NotificationLogUiModel
-import com.woowacourse.ody.presentation.room.log.model.toMeetingUiModel
 import com.woowacourse.ody.presentation.room.log.model.toNotificationUiModels
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -41,7 +40,7 @@ class NotificationLogViewModel(
         viewModelScope.launch {
             meetingRepository.fetchMeeting()
                 .onSuccess {
-                    _meeting.postValue(it.first().toMeetingUiModel())
+//                    _meeting.postValue(it.first().toMeetingUiModel())
                     fetchNotificationLogs(it.first().id)
                 }.onFailure {
                     Timber.e(it.message)

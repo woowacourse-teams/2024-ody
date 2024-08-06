@@ -1,7 +1,7 @@
 package com.woowacourse.ody.presentation.join
 
 sealed interface MeetingJoinNavigateAction {
-    data object JoinNavigateToRoom : MeetingJoinNavigateAction
+    data class JoinNavigateToRoom(val meetingId: Long) : MeetingJoinNavigateAction
 
     data object JoinNavigateToJoinComplete : MeetingJoinNavigateAction
 }
