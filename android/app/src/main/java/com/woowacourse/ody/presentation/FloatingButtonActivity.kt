@@ -6,7 +6,6 @@ import com.woowacourse.ody.databinding.ActivityMeetingListBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
-import com.woowacourse.ody.presentation.join.MeetingJoinActivity
 
 class FloatingButtonActivity :
     BindingActivity<ActivityMeetingListBinding>(R.layout.activity_meeting_list),
@@ -16,12 +15,7 @@ class FloatingButtonActivity :
     }
 
     override fun onFab() {
-        if (binding.fabHomeNavigator.isSelected) {
-            binding.cvMenuView.visibility = View.GONE
-        } else {
-            binding.cvMenuView.visibility = View.VISIBLE
-        }
-
+        binding.cvMenuView.visibility = if (binding.fabHomeNavigator.isSelected) View.GONE else View.VISIBLE
         binding.fabHomeNavigator.isSelected = !binding.fabHomeNavigator.isSelected
     }
 
