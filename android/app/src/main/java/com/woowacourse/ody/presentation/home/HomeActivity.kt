@@ -35,6 +35,7 @@ class HomeActivity :
     private val adapter by lazy {
         MeetingCatalogsAdapter(
             viewModel,
+            this,
         )
     }
 

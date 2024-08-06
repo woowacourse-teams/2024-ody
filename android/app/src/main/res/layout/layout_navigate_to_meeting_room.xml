@@ -31,7 +31,7 @@
             android:paddingBottom="9dp"
             android:paddingEnd="12dp"
             android:onClick="@{onClickEnabled}"
-            android:clickable="@{enabled}"
+            android:clickable="true"
             >
 
             <ImageView
@@ -63,7 +63,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/rectangle_radius_15_stroke_1_gray_350"
             android:onClick="@{onClickDisabled}"
-            android:clickable="@{!enabled}"
+            android:clickable="true"
             android:visibility="gone">
 
             <ImageView

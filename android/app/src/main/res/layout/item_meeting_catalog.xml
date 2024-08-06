@@ -26,6 +26,7 @@
         android:animateLayoutChanges="true"
         android:background="@drawable/rectangle_white_radius_15"
         android:elevation="4dp"
+        android:clickable = "true"
         android:onClick="@{() -> vm.toggleFold(meeting.position)}">
 
         <TextView
@@ -143,12 +144,14 @@
 
 
         <include
+            android:clickable = "true"
             layout="@layout/layout_navigate_to_meeting_room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="22dp"
             android:layout_marginBottom="16dp"
-            android:onClick="@{() -> listener.navigateToMeetingRoom(meeting.id)}"
+            app:onClickEnabled = "@{() -> listener.navigateToMeetingRoom(meeting.id)}"
+            app:onClickDisabled = "@{() -> listener.guideItemDisabled()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
