@@ -13,12 +13,32 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         tools:context=".presentation.intro.IntroActivity">
 
         <include
             android:id="@+id/tb_intro"
             layout="@layout/toolbar_intro" />
+
+        <ImageView
+            android:id="@+id/iv_ody_character"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="117dp"
+            android:src="@drawable/img_ody_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_intro" />
+
+        <TextView
+            style="@style/pretendard_bold_28"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:gravity="center"
+            android:text="@string/intro_no_meeting_room_guide"
+            app:layout_constraintEnd_toEndOf="@id/iv_ody_character"
+            app:layout_constraintStart_toStartOf="@id/iv_ody_character"
+            app:layout_constraintTop_toBottomOf="@id/iv_ody_character" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
