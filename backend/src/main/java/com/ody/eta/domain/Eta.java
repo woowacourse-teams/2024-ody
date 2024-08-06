@@ -9,6 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +42,11 @@ public class Eta extends BaseEntity {
 
     public void updateRemainingMinutes(long remainingMinutes) {
         this.remainingMinutes = remainingMinutes;
+    }
+
+    public long countDownMinutes(LocalDateTime localDateTime) {
+        long minutesDifference = Duration.between(getUpdatedAt(), localDateTime).toMinutes();
+        return Math.max(remainingMinutes - minutesDifference, 0);
     }
 
     public void updateArrived() {

@@ -1,12 +1,16 @@
 package com.ody.eta.service;
 
 import static com.ody.common.Fixture.TARGET_LOCATION;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
 import com.ody.eta.domain.Eta;
+import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
+import com.ody.eta.dto.response.MateEtaResponse;
+import com.ody.eta.dto.response.MateEtaResponses;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
@@ -18,16 +22,19 @@ import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.auditing.AuditingHandler;
 import org.springframework.data.auditing.DateTimeProvider;
 
 class EtaServiceTest extends BaseServiceTest {
@@ -37,6 +44,9 @@ class EtaServiceTest extends BaseServiceTest {
 
     @MockBean
     private DateTimeProvider dateTimeProvider;
+
+    @SpyBean
+    private AuditingHandler auditingHandler;
 
     @Autowired
     private EtaRepository etaRepository;
@@ -53,78 +63,129 @@ class EtaServiceTest extends BaseServiceTest {
     @Autowired
     private EtaService etaService;
 
-    @DisplayName("오디세이를 호출한지 10분이 지났다면 새로운 소요시간을 오디세이로부터 응답받는다")
-    @Test
-    void callOdsayWhenDurationIsMoreThan10Minutes() {
-        Location origin = Fixture.ORIGIN_LOCATION;
-        Member member = memberRepository.save(Fixture.MEMBER1);
-        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
-        Mate mate = mateRepository.save(
-                new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
-        );
-        LocalDateTime updateTime = LocalDateTime.now().minusMinutes(11L);
-        BDDMockito.when(dateTimeProvider.getNow()).thenReturn(Optional.of(updateTime));
-        etaRepository.save(new Eta(mate, 30L));
-        MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
-
-        BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
-                .thenReturn(new RouteTime(10L));
-
-        etaService.findAllMateEtas(mateEtaRequest, odyMeeting.getId(), member);
-
-        BDDMockito.verify(routeservice, Mockito.times(1)).calculateRouteTime(any(), any());
+    @BeforeEach
+    void init() {
+        MockitoAnnotations.openMocks(this);
+        auditingHandler.setDateTimeProvider(dateTimeProvider);
     }
 
-    @DisplayName("오디세이를 호출한지 10분이 지나지 않았다면 오디세이를 호출하지 않는다.")
-    @Test
-    void callOdsayWhenDurationIsLessThan10Minutes() {
-        Location origin = Fixture.ORIGIN_LOCATION;
-        Member member = memberRepository.save(Fixture.MEMBER1);
-        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
-        Mate mate = mateRepository.save(
-                new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
-        );
-        LocalDateTime updateTime = LocalDateTime.now().minusMinutes(9L);
-        BDDMockito.when(dateTimeProvider.getNow()).thenReturn(Optional.of(updateTime));
-        etaRepository.save(new Eta(mate, 30L));
-        MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+    @DisplayName("오디세이 호출 여부 테스트")
+    @Nested
+    class OdsayCallTest {
 
-        BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
-                .thenReturn(new RouteTime(10L));
+        @DisplayName("오디세이를 호출한지 10분이 지났다면 새로운 소요시간을 오디세이로부터 응답받는다")
+        @Test
+        void callOdsayWhenDurationIsMoreThan10Minutes() {
+            Location origin = Fixture.ORIGIN_LOCATION;
+            Member member = memberRepository.save(Fixture.MEMBER1);
+            Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+            Mate mate = mateRepository.save(
+                    new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
+            );
+            LocalDateTime updateTime = LocalDateTime.now().minusMinutes(11L);
+            injectSpecificTime(updateTime);
+            etaRepository.save(new Eta(mate, 30L));
+            MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
-        etaService.findAllMateEtas(mateEtaRequest, odyMeeting.getId(), member);
+            BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
+                    .thenReturn(new RouteTime(10L));
 
-        BDDMockito.verify(routeservice, Mockito.times(0)).calculateRouteTime();
+            etaService.findAllMateEtas(mateEtaRequest, odyMeeting.getId(), member);
+
+            BDDMockito.verify(routeservice, Mockito.times(1)).calculateRouteTime(any(), any());
+        }
+
+        @DisplayName("오디세이를 호출한지 10분이 지나지 않았다면 오디세이를 호출하지 않는다.")
+        @Test
+        void callOdsayWhenDurationIsLessThan10Minutes() {
+            Location origin = Fixture.ORIGIN_LOCATION;
+            Member member = memberRepository.save(Fixture.MEMBER1);
+            Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+            Mate mate = mateRepository.save(
+                    new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
+            );
+            LocalDateTime updateTime = LocalDateTime.now().minusMinutes(9L);
+            injectSpecificTime(updateTime);
+            etaRepository.save(new Eta(mate, 30L));
+            MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+
+            etaService.findAllMateEtas(mateEtaRequest, odyMeeting.getId(), member);
+
+            BDDMockito.verify(routeservice, Mockito.never()).calculateRouteTime(any(), any());
+        }
+
+        @DisplayName("약속 시간 30분에 첫번째 오디세이 호출이 시작된다")
+        @Test
+        void callFistOdsayWhen30minutesAgo() {
+            Location origin = Fixture.ORIGIN_LOCATION;
+            Member member = memberRepository.save(Fixture.MEMBER1);
+            LocalDateTime thirtyMinutesLater = LocalDateTime.now().plusMinutes(30L);
+            Meeting meeting = new Meeting(
+                    "오디",
+                    thirtyMinutesLater.toLocalDate(),
+                    thirtyMinutesLater.toLocalTime(),
+                    TARGET_LOCATION,
+                    "초대코드"
+            );
+
+            Meeting thirtyMinutesLaterMeeting = meetingRepository.save(meeting);
+
+            Mate mate = mateRepository.save(
+                    new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
+            );
+
+            injectRealTime();
+            etaRepository.save(new Eta(mate, 30L));
+            MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+
+            BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
+                    .thenReturn(new RouteTime(10L));
+
+            etaService.findAllMateEtas(mateEtaRequest, thirtyMinutesLaterMeeting.getId(), member);
+
+            BDDMockito.verify(routeservice, Mockito.times(1)).calculateRouteTime(any(), any());
+        }
     }
 
-    @DisplayName("약속 시간 30분에 첫번째 오디세이 호출이 시작된다")
+    @DisplayName("현재 시간 <= 약속 시간 && 직선거리가 300m 이내 일 경우 도차 상태로 업데이트한다.")
     @Test
-    void callFistOdsayWhen30minutesAgo() {
+    void findAllMateEtas() {
         Location origin = Fixture.ORIGIN_LOCATION;
         Member member = memberRepository.save(Fixture.MEMBER1);
-        LocalDateTime thirtyMinutesLater = LocalDateTime.now().plusMinutes(30L);
+        LocalDateTime now = LocalDateTime.now();
         Meeting meeting = new Meeting(
                 "오디",
-                thirtyMinutesLater.toLocalDate(),
-                thirtyMinutesLater.toLocalTime(),
-                TARGET_LOCATION,
+                now.toLocalDate(),
+                now.toLocalTime(),
+                origin,
                 "초대코드"
         );
 
         Meeting thirtyMinutesLaterMeeting = meetingRepository.save(meeting);
 
         Mate mate = mateRepository.save(
-                new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
+                new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 0L)
         );
 
+        injectRealTime();
         etaRepository.save(new Eta(mate, 30L));
         MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
-        BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
-                .thenReturn(new RouteTime(10L));
+        MateEtaResponses etas = etaService.findAllMateEtas(mateEtaRequest, thirtyMinutesLaterMeeting.getId(), member);
 
-        etaService.findAllMateEtas(mateEtaRequest, thirtyMinutesLaterMeeting.getId(), member);
+        MateEtaResponse mateEtaResponse = etas.mateEtas().stream()
+                .filter(response -> response.nickname().equals(mate.getNicknameValue()))
+                .findAny()
+                .get();
 
-        BDDMockito.verify(routeservice, Mockito.times(1)).calculateRouteTime(any(), any());
+        assertThat(mateEtaResponse.status()).isEqualTo(EtaStatus.ARRIVED);
+    }
+
+    private void injectRealTime() {
+        BDDMockito.when(dateTimeProvider.getNow()).thenReturn(Optional.of(LocalDateTime.now()));
+    }
+
+    private void injectSpecificTime(LocalDateTime dateTime) {
+        BDDMockito.when(dateTimeProvider.getNow()).thenReturn(Optional.of(dateTime));
     }
 }

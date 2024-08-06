@@ -40,9 +40,11 @@ public class EtaService {
                 .orElseThrow(() -> new OdyNotFoundException("참여하고 있지 않는 약속방입니다"));
 
         Meeting meeting = mate.getMeeting();
+        LocalDateTime meetingTime = LocalDateTime.of(meeting.getDate(), meeting.getTime()).withSecond(0).withNano(0);
         Eta mateEta = findByMateId(mate.getId());
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime updatedAt = mateEta.getUpdatedAt().plusMinutes(10);
+        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+        LocalDateTime updateAt = mateEta.getUpdatedAt();
+        long duration = Duration.between(updateAt, now).toMinutes();
 
         double meter = DistanceCalculator.calculate(
                 Double.valueOf(mateEtaRequest.currentLatitude()),
@@ -50,16 +52,15 @@ public class EtaService {
                 Double.valueOf(meeting.getTarget().getLatitude()),
                 Double.valueOf(meeting.getTarget().getLongitude())
         );
-        if (meter <= 300) {
+
+        if (meter <= 300 && (now.isBefore(meetingTime) || now.isEqual(meetingTime))) {
             mateEta.updateArrived();
         }
 
         //약속시간으로부터 30분 전일 때는 조건 상관없이 오디세이 무조건 호출
-        LocalDateTime firstCallTime = LocalDateTime.of(meeting.getDate(), meeting.getTime()).minusMinutes(30L);
+        LocalDateTime firstCallTime = meetingTime.minusMinutes(30L);
 
-        if (((firstCallTime.isAfter(now) || firstCallTime.isEqual(now))
-                || (updatedAt.isAfter(now) || updatedAt.isEqual(now))
-                && !mateEta.isArrived())) {
+        if (((now.isAfter(firstCallTime) || now.isEqual(firstCallTime)) || duration >= 10L) && !mateEta.isArrived()) {
             RouteTime routeTime = routeService.calculateRouteTime(mate.getOrigin(), meeting.getTarget());
             mateEta.updateRemainingMinutes(routeTime.getMinutes());
         }
@@ -67,13 +68,14 @@ public class EtaService {
         List<Eta> etas = etaRepository.findAllByMeetingId(meetingId);
         List<MateEtaResponse> mateEtaResponses = new ArrayList<>();
         for (Eta eta : etas) {
-            long minutesDifference = Duration.between(eta.getUpdatedAt(), LocalDateTime.now()).toMinutes();
-            long countdownMinutes = Math.max(eta.getRemainingMinutes() - minutesDifference, 0);
+            long countdownMinutes = eta.countDownMinutes(now);
             mateEtaResponses.add(
                     new MateEtaResponse(
                             eta.getMate().getNicknameValue(),
-                            EtaStatus.from(countdownMinutes, eta,
-                                    LocalDateTime.of(meeting.getDate(), meeting.getTime()),
+                            EtaStatus.from(
+                                    countdownMinutes,
+                                    meetingTime,
+                                    eta.isArrived(),
                                     mateEtaRequest.isMissing()),
                             countdownMinutes
                     )

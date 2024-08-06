@@ -14,33 +14,31 @@ public enum EtaStatus {
 
     public static EtaStatus from(
             long countdownMinutes,
-            Eta mateEta,
             LocalDateTime meetingTime,
+            boolean isArrived,
             boolean isMissing
     ) {
 
         if (isMissing) {
             return MISSING;
         }
-
-        LocalDateTime eta = LocalDateTime.now().plusMinutes(countdownMinutes);
-
-        if (eta.isAfter(meetingTime) && LocalDateTime.now().isBefore(meetingTime)) {
-            return LATE_WARNING;
-        }
-
-        if (eta.isAfter(meetingTime)
-                && (LocalDateTime.now().isAfter(meetingTime) || LocalDateTime.now().isEqual(meetingTime))) {
-            return LATE;
-        }
-
-        if (mateEta.isArrived()
-                && (LocalDateTime.now().isBefore(meetingTime) || LocalDateTime.now().isEqual(meetingTime))) {
+        if (isArrived) {
             return ARRIVED;
         }
 
-        if ((eta.isBefore(meetingTime) || eta.isEqual(meetingTime))
-                && (LocalDateTime.now().isBefore(meetingTime) || LocalDateTime.now().isEqual(meetingTime))) {
+        LocalDateTime eta = LocalDateTime.now().withSecond(0).withNano(0).plusMinutes(countdownMinutes);
+        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+
+        if (eta.isAfter(meetingTime) && now.isBefore(meetingTime)) {
+            return LATE_WARNING;
+        }
+
+        if (eta.isAfter(meetingTime) && (now.isAfter(meetingTime) || now.isEqual(meetingTime))) {
+            return LATE;
+        }
+
+
+        if ((eta.isBefore(meetingTime) || eta.isEqual(meetingTime)) && (now.isBefore(meetingTime))) {
             return ARRIVAL_SOON;
         }
 
