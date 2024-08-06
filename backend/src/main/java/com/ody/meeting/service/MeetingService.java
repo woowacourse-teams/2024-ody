@@ -1,5 +1,7 @@
 package com.ody.meeting.service;
 
+import static com.google.common.graph.ElementOrder.sorted;
+
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.EtaStatus;
 import com.ody.mate.domain.Mate;
@@ -70,14 +72,16 @@ public class MeetingService {
     public MeetingFindByMemberResponses findAllByMember(Member member) {
         return meetingRepository.findAllByMember(member)
                 .stream()
-                .map(meeting -> {
-                    int mateCount = mateRepository.countByMeetingId(meeting.getId());
-                    Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId());
-                    return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
-                })
+                .map(meeting -> makeMeetingFindByMemberResponse(member, meeting))
                 .sorted(Comparator.comparing(MeetingFindByMemberResponse::date)
                         .thenComparing(MeetingFindByMemberResponse::time))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), MeetingFindByMemberResponses::new));
+    }
+
+    private MeetingFindByMemberResponse makeMeetingFindByMemberResponse(Member member, Meeting meeting) {
+        int mateCount = mateRepository.countByMeetingId(meeting.getId());
+        Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId());
+        return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
     }
 
     public MateEtaResponses findAllMateEtas(Long meetingId, MateEtaRequest mateEtaRequest) {
