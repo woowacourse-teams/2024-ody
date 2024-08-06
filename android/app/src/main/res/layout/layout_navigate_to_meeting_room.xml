@@ -4,24 +4,32 @@
     <data>
         <variable
             name="enabled"
-            type="java.lang.Boolean"/>
+            type="java.lang.Boolean" />
+
+        <variable
+            name="onClickEnabled"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="onClickDisabled"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/rectangle_radius_15"
             android:backgroundTint="@color/purple_800"
+            android:clickable="true"
+            android:onClick="@{onClickEnabled}"
             android:paddingStart="9dp"
             android:paddingTop="9dp"
-            android:paddingBottom="9dp"
             android:paddingEnd="12dp"
-            >
+            android:paddingBottom="9dp">
 
             <ImageView
                 android:id="@+id/iv_ody"
@@ -51,6 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/rectangle_radius_15_stroke_1_gray_350"
+            android:clickable="true"
+            android:onClick="@{onClickDisabled}"
             android:visibility="gone">
 
             <ImageView
@@ -70,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="12dp"
-                android:text="@string/intro_navigate_to_meeting_room"
+                android:text="@string/home_navigate_to_meeting_room"
                 android:textColor="@color/gray_350"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
