@@ -1,27 +1,27 @@
-package com.woowacourse.ody.presentation.meetinglist.adapter
+package com.woowacourse.ody.presentation.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.woowacourse.ody.databinding.ItemMeetingBinding
-import com.woowacourse.ody.presentation.meetinglist.MeetingsViewModel
-import com.woowacourse.ody.presentation.meetinglist.model.MeetingCatalogUiModel
+import com.woowacourse.ody.databinding.ItemMeetingCatalogBinding
+import com.woowacourse.ody.presentation.home.HomeViewModel
+import com.woowacourse.ody.presentation.home.model.MeetingCatalogUiModel
 
-class MeetingsAdapter(
-    private val viewModel: MeetingsViewModel,
-) : ListAdapter<MeetingCatalogUiModel, MeetingViewHolder>(DiffCallback()) {
+class MeetingCatalogsAdapter(
+    private val viewModel: HomeViewModel,
+) : ListAdapter<MeetingCatalogUiModel, MeetingCatalogViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): MeetingViewHolder {
+    ): MeetingCatalogViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemMeetingBinding.inflate(inflater, parent, false)
-        return MeetingViewHolder(binding)
+        val binding = ItemMeetingCatalogBinding.inflate(inflater, parent, false)
+        return MeetingCatalogViewHolder(binding)
     }
 
     override fun onBindViewHolder(
-        holder: MeetingViewHolder,
+        holder: MeetingCatalogViewHolder,
         position: Int,
     ) {
         holder.bind(

@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.meetinglist.model
+package com.woowacourse.ody.presentation.home.model
 
 import com.woowacourse.ody.domain.model.MeetingCatalog
 
@@ -12,4 +12,9 @@ fun MeetingCatalog.toMeetingCatalog(): MeetingCatalogUiModel =
         targetAddress = targetAddress,
     )
 
-fun List<MeetingCatalog>.toMeetingCatalogUiModels(): List<MeetingCatalogUiModel> = map { it.toMeetingCatalog() }
+fun List<MeetingCatalog>.toMeetingCatalogUiModels(): List<MeetingCatalogUiModel> =
+    mapIndexed { index, catalog ->
+        catalog.toMeetingCatalog().copy(
+            position = index,
+        )
+    }
