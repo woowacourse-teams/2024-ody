@@ -1,6 +1,7 @@
 package com.ody.eta.domain;
 
 import com.ody.common.exception.OdyServerErrorException;
+import com.ody.route.domain.RouteTime;
 import java.time.LocalDateTime;
 
 public enum EtaStatus {
@@ -12,6 +13,7 @@ public enum EtaStatus {
     ;
 
     public static EtaStatus from(
+            long countdownMinutes,
             Eta mateEta,
             LocalDateTime meetingTime,
             boolean isMissing
@@ -21,7 +23,7 @@ public enum EtaStatus {
             return MISSING;
         }
 
-        LocalDateTime eta = LocalDateTime.now().plusMinutes(mateEta.getRemainingMinutes());
+        LocalDateTime eta = LocalDateTime.now().plusMinutes(countdownMinutes);
 
         if (eta.isAfter(meetingTime) && LocalDateTime.now().isBefore(meetingTime)) {
             return LATE_WARNING;
