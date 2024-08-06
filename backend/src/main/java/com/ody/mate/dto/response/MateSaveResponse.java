@@ -1,18 +1,15 @@
-package com.ody.meeting.dto.response;
+package com.ody.mate.dto.response;
 
 import com.ody.mate.domain.Mate;
-import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
-public record MeetingWithMatesResponse(
+public record MateSaveResponse(
 
         @Schema(description = "약속 ID", example = "1")
-        Long id,
+        Long meetingId,
 
         @Schema(description = "약속 이름", example = "우테코 16조")
         String name,
@@ -32,27 +29,20 @@ public record MeetingWithMatesResponse(
         @Schema(description = "도착지 경도", example = "127.103113")
         String targetLongitude,
 
-        @Schema(description = "참여자 인원 수", example = "1")
-        int mateCount,
-
-        @ArraySchema(schema = @Schema(implementation = MateResponse.class))
-        List<MateResponse> mates,
-
         @Schema(description = "초대코드", example = "초대코드")
         String inviteCode
 ) {
 
-    public static MeetingWithMatesResponse of(Meeting meeting, List<Mate> mates) {
-        return new MeetingWithMatesResponse(
+    public static MateSaveResponse from(Mate mate) {
+        Meeting meeting = mate.getMeeting();
+        return new MateSaveResponse(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
-                meeting.getTime().withNano(0),
+                meeting.getTime(),
                 meeting.getTarget().getAddress(),
                 meeting.getTarget().getLatitude(),
                 meeting.getTarget().getLongitude(),
-                mates.size(),
-                MateResponse.from(mates),
                 meeting.getInviteCode()
         );
     }
