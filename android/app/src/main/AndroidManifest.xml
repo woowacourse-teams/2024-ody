@@ -23,13 +23,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.meetinglist.MeetingsActivity"
+            android:name=".presentation.home.HomeActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
 
-        <activity
-            android:name=".presentation.FloatingButtonActivity"
-            android:exported="true" />
         <activity
             android:name=".presentation.invitecode.InviteCodeActivity"
             android:exported="false"
@@ -69,10 +66,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".presentation.intro.IntroActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
 
         <service
             android:name=".data.remote.thirdparty.fcm.service.FCMService"
