@@ -43,7 +43,7 @@ class MeetingServiceTest extends BaseServiceTest {
 
         Meeting meetingDayAfterTomorrowAt14 = meetingRepository.save(Fixture.ODY_MEETING4);
         Meeting meetingTomorrowAt12 = meetingRepository.save(Fixture.ODY_MEETING3);
-        Meeting meetingTomorrowAt14 = meetingRepository.save(Fixture.ODY_MEETING1);
+        Meeting meetingTomorrowAt14 = meetingRepository.save(Fixture.ODY_MEETING5);
 
         mateRepository.save(new Mate(meetingDayAfterTomorrowAt14, member, new Nickname("제리1"), Fixture.ORIGIN_LOCATION));
         mateRepository.save(new Mate(meetingTomorrowAt12, member, new Nickname("제리2"), Fixture.ORIGIN_LOCATION));
