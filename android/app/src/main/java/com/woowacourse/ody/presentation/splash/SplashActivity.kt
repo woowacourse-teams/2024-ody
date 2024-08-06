@@ -6,24 +6,19 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
 import com.woowacourse.ody.presentation.home.HomeActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
-    private val application: OdyApplication by lazy {
-        applicationContext as OdyApplication
-    }
-    private val viewModel: SplashViewModel by viewModels {
-        SplashViewModelFactory(application.fcmTokenRepository, application.meetingRepository)
-    }
+    private val viewModel: SplashViewModel by viewModels<SplashViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         window.makeTransparentStatusBar()
         initializeObserve()
+        viewModel.navigateToHome()
     }
 
     private fun initializeObserve() {

@@ -8,8 +8,6 @@ import com.woowacourse.ody.domain.model.MeetingCreationInfo
 interface MeetingRepository {
     suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit>
 
-    suspend fun fetchMeeting(): Result<List<Meeting>>
-
     suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String>
 
     suspend fun patchMatesEta(
@@ -20,4 +18,6 @@ interface MeetingRepository {
     ): Result<List<MateEta>>
 
     suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>>
+
+    suspend fun fetchMeeting(meetingId: Long): Result<Meeting>
 }
