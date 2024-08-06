@@ -1,6 +1,5 @@
 package com.woowacourse.ody.fake
 
-import com.woowacourse.ody.domain.model.EtaType
 import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.model.Meeting
@@ -41,9 +40,12 @@ object FakeMeetingRepository : MeetingRepository {
                 meetingA,
                 meetingA,
                 meetingA,
-    override suspend fun fetchMeeting(): Result<List<Meeting>> = Result.success(listOf(meetingA))
+            ),
+        )
 
-    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> = Result.success("")
+    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun patchMatesEta(
         meetingId: Long,
@@ -51,24 +53,6 @@ object FakeMeetingRepository : MeetingRepository {
         currentLatitude: String,
         currentLongitude: String,
     ): Result<List<MateEta>> {
-        return Result.success(
-            listOf(
-                MateEta("mateA", EtaType.LATE, 1L),
-                MateEta("mateB", EtaType.LATE, 1L),
-                MateEta("mateC", EtaType.LATE, 1L),
-            ),
-        )
+        TODO("Not yet implemented")
     }
-
-    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> =
-        Result.success(
-            "fakeInviteCode",
-        )
-
-    override suspend fun patchMatesEta(
-        meetingId: Long,
-        isMissing: Boolean,
-        currentLatitude: String,
-        currentLongitude: String,
-    ): Result<List<MateEta>> = Result.success(listOf())
 }
