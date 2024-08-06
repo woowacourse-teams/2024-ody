@@ -99,7 +99,7 @@ public class MeetingService {
         );
     }
 
-    public MateSaveResponse some(MateSaveRequest mateSaveRequest, Member member) {
+    public MateSaveResponse saveMateAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
     }

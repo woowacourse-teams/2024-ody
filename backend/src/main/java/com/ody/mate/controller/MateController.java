@@ -53,8 +53,7 @@ public class MateController implements MateControllerSwagger {
             @AuthMember Member member,
             @RequestBody MateSaveRequest mateSaveRequest
     ) {
-        MateSaveResponse mateSaveResponse = meetingService.some(mateSaveRequest, member);
-//        MateSaveResponse mateSaveResponse = mateService.saveAndSendNotifications(mateSaveRequest, member);
+        MateSaveResponse mateSaveResponse = meetingService.saveMateAndSendNotifications(mateSaveRequest, member);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(mateSaveResponse);
     }
