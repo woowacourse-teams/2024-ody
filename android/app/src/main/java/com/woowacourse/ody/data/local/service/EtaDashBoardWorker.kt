@@ -85,13 +85,11 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
             }
 
         return if (location != null) {
-            meetingRepository.patchMatesEta(meetingId, false, compress(location.latitude.toString()), compress(location.longitude.toString())).getOrNull()
+            meetingRepository.patchMatesEta(meetingId, false, location.latitude.toString(), location.longitude.toString()).getOrNull()
         } else {
             meetingRepository.patchMatesEta(meetingId, false, "0.0", "0.0").getOrNull()
         }
     }
-
-    private fun compress(coordinate: String): String = coordinate.slice(0..8)
 
     private fun List<MateEtaResponse>.convertMateEtasToJson(): String {
         val moshi =
