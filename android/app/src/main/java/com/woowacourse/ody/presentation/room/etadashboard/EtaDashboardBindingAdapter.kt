@@ -7,7 +7,9 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.woowacourse.ody.R
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
+import com.woowacourse.ody.presentation.room.etadashboard.model.EtaDurationMinuteTypeUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.EtaTypeUiModel
+import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 
 @BindingAdapter("etaType")
 fun TextView.setBadgeByEtaType(etaTypeUiModel: EtaTypeUiModel) {
@@ -16,13 +18,16 @@ fun TextView.setBadgeByEtaType(etaTypeUiModel: EtaTypeUiModel) {
 }
 
 @BindingAdapter("etaStatus")
-fun TextView.setEtaStatusText(durationMinute: Int) {
+fun TextView.setEtaStatusText(mateEtaUiModel: MateEtaUiModel) {
     text =
-        when (durationMinute) {
-            0 -> context.getString(R.string.status_arrived)
-            -1 -> context.getString(R.string.status_missing)
-            in 1..10 -> context.getString(R.string.status_arrival_soon)
-            else -> context.getString(R.string.status_arrival_remain_time, durationMinute)
+        when (mateEtaUiModel.getEtaDurationMinuteTypeUiModel()) {
+            EtaDurationMinuteTypeUiModel.ARRIVED -> context.getString(R.string.status_arrived)
+            EtaDurationMinuteTypeUiModel.MISSING -> context.getString(R.string.status_missing)
+            EtaDurationMinuteTypeUiModel.ARRIVAL_SOON -> context.getString(R.string.status_arrival_soon)
+            EtaDurationMinuteTypeUiModel.ARRIVAL_REMAIN_TIME -> context.getString(
+                R.string.status_arrival_remain_time,
+                mateEtaUiModel.durationMinute,
+            )
         }
 }
 

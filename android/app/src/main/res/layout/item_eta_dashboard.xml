@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:lines="1"
-                app:etaStatus="@{eta.durationMinute}"
+                app:etaStatus="@{eta}"
                 tools:text="13분 후 도착" />
 
             <TextView
