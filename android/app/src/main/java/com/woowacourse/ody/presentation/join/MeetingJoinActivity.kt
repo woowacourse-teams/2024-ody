@@ -1,12 +1,9 @@
 package com.woowacourse.ody.presentation.join
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.R
@@ -22,19 +19,11 @@ import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
 
 class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout.activity_meeting_join), NextListener, BackListener {
     private val viewModel: MeetingJoinViewModel by viewModels<MeetingJoinViewModel> {
-        MeetingJoinViewModelFactory(getInviteCode(), application.joinRepository, application.inviteCodeRepository)
+        MeetingJoinViewModelFactory(getInviteCode(), application.joinRepository, application.matesEtaRepository)
     }
     private val fragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinDepartureFragment())
     }
-    private val joinCompletionLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode != Activity.RESULT_OK) {
-                return@registerForActivityResult
-            }
-            viewModel.navigateJoinToRoom()
-            finish()
-        }
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -68,11 +57,13 @@ class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout
 
         viewModel.navigateAction.observe(this) {
             when (it) {
-                MeetingJoinNavigateAction.JoinNavigateToRoom -> {
-                    startActivity(NotificationLogActivity.getIntent(this))
+                is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
+                    startActivity(NotificationLogActivity.getIntent(this, it.meetingId))
+                    finish()
                 }
+
                 MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
-                    joinCompletionLauncher.launch(JoinCompleteActivity.getIntent(this))
+                    startActivity(JoinCompleteActivity.getIntent(this))
                 }
             }
         }

@@ -57,17 +57,16 @@ public interface MeetingControllerSwagger {
                             responseCode = "200",
                             description = "약속 단건 조회 성공",
                             content = @Content(schema = @Schema(implementation = MeetingWithMatesResponse.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우",
-                            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
                     )
             }
     )
     @ErrorCode401
+    @ErrorCode404(description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우")
     @ErrorCode500
-    ResponseEntity<MeetingWithMatesResponse> findMeetingWithMates(@Parameter(hidden = true) Member member, Long meetingId);
+    ResponseEntity<MeetingWithMatesResponse> findMeetingWithMates(
+            @Parameter(hidden = true) Member member,
+            Long meetingId
+    );
 
     @Operation(
             summary = "참여중인 약속 목록 조회",

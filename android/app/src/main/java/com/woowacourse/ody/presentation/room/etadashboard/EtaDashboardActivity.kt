@@ -1,5 +1,7 @@
 package com.woowacourse.ody.presentation.room.etadashboard
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Point
 import android.os.Bundle
 import android.view.Gravity
@@ -7,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityEtaDashboardBinding
@@ -18,11 +21,18 @@ import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTi
 class EtaDashboardActivity :
     BindingActivity<ActivityEtaDashboardBinding>(R.layout.activity_eta_dashboard),
     MissingToolTipListener {
+    private val viewModel: EtaDashboardViewModel by viewModels<EtaDashboardViewModel> {
+        EtaDashboardViewModelFactory(
+            meetingId = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE),
+            matesEtaRepository = application.matesEtaRepository,
+        )
+    }
     private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeListAdapter()
+        initializeObserve()
     }
 
     private fun initializeListAdapter() {
@@ -30,7 +40,12 @@ class EtaDashboardActivity :
     }
 
     override fun initializeBinding() {
-        // TODO
+    }
+
+    private fun initializeObserve() {
+        viewModel.matesEta.observe(this) {
+            // todo
+        }
     }
 
     override fun onClickMissingToolTipListener(
@@ -67,5 +82,19 @@ class EtaDashboardActivity :
         val adjustedY = point.y - popupHeight
 
         popupWindow.showAtLocation(window.decorView, Gravity.NO_GRAVITY, adjustedX, adjustedY)
+    }
+
+    companion object {
+        private const val MEETING_ID_KEY = "meeting_id"
+        private const val MEETING_ID_DEFAULT_VALUE = -1L
+
+        fun getIntent(
+            context: Context,
+            meetingId: Long,
+        ): Intent {
+            return Intent(context, EtaDashboardActivity::class.java).apply {
+                putExtra(MEETING_ID_KEY, meetingId)
+            }
+        }
     }
 }

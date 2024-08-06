@@ -36,7 +36,12 @@
     <string name="intro_create_meeting">약속 만들기</string>
     <string name="intro_meeting_departure_postfix">에서</string>
     <string name="intro_meeting_arrival_postfix">까지</string>
+    <string name="intro_meeting_eta_form">%1$s분 걸려요</string>
     <string name="intro_navigate_to_meeting_room">오디?</string>"
+    <string name="intro_today">오늘</string>"
+    <string name="intro_tomorrow">내일</string>"
+    <string name="intro_post_tomorrow">%1$s일 후</string>"
+
     <string name="intro_no_meeting_room_guide">아직 약속이 없어요.\n약속을 만들어 주세요!</string>"
     <string name="intro_notification_permission_required">알림 권한을 거절하실 경우 푸시 알람을 받으실 수 없어요</string>
     <string name="intro_notification_permission_guide">알림 권한은 앱 설정에서 확인할 수 있어요</string>

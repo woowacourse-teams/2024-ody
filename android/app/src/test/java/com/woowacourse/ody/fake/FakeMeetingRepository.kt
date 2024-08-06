@@ -28,6 +28,19 @@ object FakeMeetingRepository : MeetingRepository {
 
     override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> = Result.success(Unit)
 
+    override suspend fun fetchMeeting(): Result<List<Meeting>> =
+        Result.success(
+            listOf(
+                meetingA,
+                meetingA,
+                meetingA,
+                meetingA,
+                meetingA,
+                meetingA,
+                meetingA,
+                meetingA,
+                meetingA,
+                meetingA,
     override suspend fun fetchMeeting(): Result<List<Meeting>> = Result.success(listOf(meetingA))
 
     override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> = Result.success("")
@@ -46,4 +59,16 @@ object FakeMeetingRepository : MeetingRepository {
             ),
         )
     }
+
+    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> =
+        Result.success(
+            "fakeInviteCode",
+        )
+
+    override suspend fun patchMatesEta(
+        meetingId: Long,
+        isMissing: Boolean,
+        currentLatitude: String,
+        currentLongitude: String,
+    ): Result<List<MateEta>> = Result.success(listOf())
 }

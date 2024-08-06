@@ -1,5 +1,6 @@
 package com.ody.mate.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -14,11 +15,13 @@ import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
+import com.ody.meeting.repository.MeetingRepository;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,9 @@ class MateServiceTest extends BaseServiceTest {
 
     @Autowired
     private MateService mateService;
+
+    @Autowired
+    private MeetingRepository meetingRepository;
 
     @DisplayName("모임 내 닉네임이 중복되지 않으면 모임에 참여한다.")
     @Test
@@ -130,6 +136,38 @@ class MateServiceTest extends BaseServiceTest {
                 Fixture.ORIGIN_LOCATION.getLongitude()
         );
         assertThatThrownBy(() -> mateService.saveAndSendNotifications(mateSaveRequest, member2, meeting))
+                .isInstanceOf(OdyBadRequestException.class);
+    }
+
+    @DisplayName("회원이 참여하고 있는 특정 약속의 참여자 리스트를 조회한다.")
+    @Test
+    void findAllByMemberAndMeetingIdSuccess() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Member member2 = memberRepository.save(Fixture.MEMBER2);
+
+        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
+
+        Mate mate1 = mateRepository.save(new Mate(meeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION));
+        Mate mate2 = mateRepository.save(new Mate(meeting, member2, new Nickname("제리"), Fixture.ORIGIN_LOCATION));
+
+        List<Mate> mates = mateService.findAllByMemberAndMeetingId(member1, meeting.getId());
+        List<Long> mateIds = mates.stream()
+                .map(Mate::getId)
+                .toList();
+
+        assertThat(mateIds).containsOnly(mate1.getId(), mate2.getId());
+    }
+
+    @DisplayName("약속에 참여하고 있는 회원이 아니면 예외가 발생한다.")
+    @Test
+    void findAllByMemberAndMeetingIdException() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Member member2 = memberRepository.save(Fixture.MEMBER2);
+
+        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
+        mateRepository.save(new Mate(meeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION));
+
+        assertThatThrownBy(() -> mateService.findAllByMemberAndMeetingId(member2, meeting.getId()))
                 .isInstanceOf(OdyBadRequestException.class);
     }
 }

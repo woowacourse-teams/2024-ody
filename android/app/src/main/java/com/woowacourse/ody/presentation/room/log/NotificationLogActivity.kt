@@ -12,6 +12,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
+import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardActivity
 import com.woowacourse.ody.presentation.room.log.adapter.NotificationLogsAdapter
 import com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.room.log.listener.ShareListener
@@ -44,6 +45,9 @@ class NotificationLogActivity :
         initializeBinding()
         initializeObserve()
         initializePersistentBottomSheet()
+        binding.btnOdy.setOnClickListener {
+            startActivity(EtaDashboardActivity.getIntent(this, getMeetingId()))
+        }
     }
 
     override fun initializeBinding() {
@@ -80,9 +84,20 @@ class NotificationLogActivity :
         finish()
     }
 
+    private fun getMeetingId(): Long = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
+
     companion object {
+        private const val MEETING_ID_KEY = "meeting_id"
+        private const val MEETING_ID_DEFAULT_VALUE = -1L
         private const val INVITE_CODE_LABEL = "inviteCode"
 
-        fun getIntent(context: Context): Intent = Intent(context, NotificationLogActivity::class.java)
+        fun getIntent(
+            context: Context,
+            meetingId: Long,
+        ): Intent {
+            return Intent(context, NotificationLogActivity::class.java).apply {
+                putExtra(MEETING_ID_KEY, meetingId)
+            }
+        }
     }
 }

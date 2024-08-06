@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
 import com.woowacourse.ody.presentation.intro.IntroActivity
-import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -29,11 +28,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun initializeObserve() {
         viewModel.navigateAction.observe(this) {
-            val intent =
-                when (it) {
-                    SplashNavigateAction.NavigateToIntro -> IntroActivity.getIntent(this@SplashActivity)
-                    SplashNavigateAction.NavigateToNotificationLog -> NotificationLogActivity.getIntent(this@SplashActivity)
-                }
+            val intent = IntroActivity.getIntent(this@SplashActivity)
             startActivity(intent)
             finish()
         }
