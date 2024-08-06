@@ -2,12 +2,14 @@ package com.ody.meeting.service;
 
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.EtaStatus;
+import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateEtaRequest;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.response.MateEtaResponse;
 import com.ody.mate.dto.response.MateEtaResponses;
 import com.ody.mate.dto.response.MateResponse;
 import com.ody.mate.dto.response.MateSaveResponse;
+import com.ody.mate.repository.MateRepository;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
@@ -35,6 +37,7 @@ public class MeetingService {
     private static final String DEFAULT_INVITE_CODE = "초대코드";
 
     private final MeetingRepository meetingRepository;
+    private final MateRepository mateRepository;
 
     private final MateService mateService;
 
@@ -67,7 +70,11 @@ public class MeetingService {
     public MeetingFindByMemberResponses findAllByMember(Member member) {
         return meetingRepository.findAllByMember(member)
                 .stream()
-                .map(meeting -> mateService.findByMeetingAndMember(meeting, member))
+                .map(meeting -> {
+                    int mateCount = mateRepository.countByMeetingId(meeting.getId());
+                    Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId());
+                    return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
+                })
                 .sorted(Comparator.comparing(MeetingFindByMemberResponse::date)
                         .thenComparing(MeetingFindByMemberResponse::time))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), MeetingFindByMemberResponses::new));

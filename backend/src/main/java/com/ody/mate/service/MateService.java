@@ -6,7 +6,6 @@ import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
 import com.ody.member.domain.Member;
 import com.ody.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +31,5 @@ public class MateService {
         Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member));
         notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken());
         return MateSaveResponse.from(mate);
-    }
-
-    public MeetingFindByMemberResponse findByMeetingAndMember(Meeting meeting, Member member) {
-        int mateCount = mateRepository.countByMeetingId(meeting.getId());
-        Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId());
-        return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
     }
 }
