@@ -79,9 +79,9 @@ class MeetingListViewModel : ViewModel() {
         newList[position] =
             newList[position].copy(isFolded = !newList[position].isFolded)
         _meetingList.value = newList
-        Timber.d("$position")
     }
 
     fun navigateToMeetingRoom(position: Int) {
+        Timber.d("$position")
     }
 }
