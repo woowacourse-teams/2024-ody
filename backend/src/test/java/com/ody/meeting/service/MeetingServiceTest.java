@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
 import com.ody.common.exception.OdyNotFoundException;
+import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
@@ -66,24 +68,24 @@ class MeetingServiceTest extends BaseServiceTest {
     @Test
     void findMeetingWithMatesSuccess() {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
-        memberRepository.save(Fixture.MEMBER2);
+        Member member2 = memberRepository.save(Fixture.MEMBER2);
 
-        Long meetingId = meetingRepository.save(Fixture.ODY_MEETING1).getId();
+        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
 
-        mateRepository.save(Fixture.MATE1);
-        mateRepository.save(Fixture.MATE2);
+        Mate mate1 = new Mate(meeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION);
+        Mate mate2 = new Mate(meeting, member2, new Nickname("제리"), Fixture.ORIGIN_LOCATION);
 
-        MeetingWithMatesResponse meetingWithMatesResponses = meetingService.findMeetingWithMates(member1, meetingId);
-        List<String> mateNicknames = meetingWithMatesResponses.mates().stream()
+        mateRepository.save(mate1);
+        mateRepository.save(mate2);
+
+        MeetingWithMatesResponse response = meetingService.findMeetingWithMates(member1, meeting.getId());
+        List<String> mateNicknames = response.mates().stream()
                 .map(MateResponse::nickname)
                 .toList();
 
         assertAll(
-                () -> assertThat(meetingWithMatesResponses.id()).isEqualTo(meetingId),
-                () -> assertThat(mateNicknames).containsOnly(
-                        Fixture.MATE1.getNicknameValue(),
-                        Fixture.MATE2.getNicknameValue()
-                )
+                () -> assertThat(response.id()).isEqualTo(meeting.getId()),
+                () -> assertThat(mateNicknames).containsOnly(mate1.getNicknameValue(), mate2.getNicknameValue())
         );
     }
 
