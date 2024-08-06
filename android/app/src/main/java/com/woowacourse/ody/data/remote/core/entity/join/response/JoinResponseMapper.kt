@@ -1,20 +1,15 @@
 package com.woowacourse.ody.data.remote.core.entity.join.response
 
-import com.woowacourse.ody.domain.model.Mate
-import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.ReserveInfo
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-fun JoinResponse.toMeeting(): Meeting {
-    return Meeting(
-        id = id,
-        name = name,
-        targetPosition = targetAddress,
-        meetingDate = date.parseToLocalDate(),
-        meetingTime = time.parseToLocalTime(),
-        mates = mates.map { it.toMate() },
-        inviteCode = inviteCode,
+fun JoinResponse.toReserveInfo(): ReserveInfo {
+    return ReserveInfo(
+        meetingId,
+        LocalDateTime.of(date.parseToLocalDate(), time.parseToLocalTime()),
     )
 }
 
@@ -27,5 +22,3 @@ private fun String.parseToLocalTime(): LocalTime {
     val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
     return LocalTime.parse(this, formatter)
 }
-
-private fun MateResponse.toMate(): Mate = Mate(nickname = nickname)
