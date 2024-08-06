@@ -1,6 +1,5 @@
 package com.ody.eta.domain;
 
-import com.ody.common.domain.BaseEntity;
 import com.ody.mate.domain.Mate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Eta extends BaseEntity {
+public class Eta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,12 +34,21 @@ public class Eta extends BaseEntity {
 
     private boolean isArrived;
 
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
     public Eta(Mate mate, Long remainingMinutes) {
-        this(null, mate, remainingMinutes, false);
+        this(null, mate, remainingMinutes, false, LocalDateTime.now().withSecond(0).withNano(0),
+                LocalDateTime.now().withSecond(0).withNano(0));
     }
 
-    public void updateRemainingMinutes(long remainingMinutes) {
-        this.remainingMinutes = remainingMinutes;
+    public Eta(Mate mate, long remainingMinutes, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this(null, mate, remainingMinutes, false, createdAt, updatedAt);
+    }
+
+    public boolean isModified() {
+        return !createdAt.isEqual(updatedAt);
     }
 
     public boolean willBeLate(LocalDateTime meetingTime) {
@@ -51,20 +59,21 @@ public class Eta extends BaseEntity {
     }
 
     public long countDownMinutes(LocalDateTime localDateTime) {
-        long minutesDifference = Duration.between(getUpdatedAt(), localDateTime).toMinutes();
+        long minutesDifference = Duration.between(updatedAt, localDateTime).toMinutes();
         return Math.max(remainingMinutes - minutesDifference, 0);
     }
 
     public long differenceMinutesFromLastUpdated() {
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
-        return Duration.between(getUpdatedAt(), now).toMinutes();
+        return Duration.between(updatedAt, now).toMinutes();
+    }
+
+    public void updateRemainingMinutes(long remainingMinutes) {
+        this.remainingMinutes = remainingMinutes;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void updateArrived() {
         this.isArrived = true;
-    }
-
-    public boolean isModified() {
-        return !getCreatedAt().isEqual(getUpdatedAt());
     }
 }

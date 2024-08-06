@@ -23,30 +23,18 @@ import com.ody.member.repository.MemberRepository;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import java.time.LocalDateTime;
-import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.data.auditing.AuditingHandler;
-import org.springframework.data.auditing.DateTimeProvider;
 
 class EtaServiceTest extends BaseServiceTest {
 
     @MockBean
     private RouteService routeservice;
-
-    @MockBean
-    private DateTimeProvider dateTimeProvider;
-
-    @SpyBean
-    private AuditingHandler auditingHandler;
 
     @Autowired
     private EtaRepository etaRepository;
@@ -63,12 +51,6 @@ class EtaServiceTest extends BaseServiceTest {
     @Autowired
     private EtaService etaService;
 
-    @BeforeEach
-    void init() {
-        MockitoAnnotations.openMocks(this);
-        auditingHandler.setDateTimeProvider(dateTimeProvider);
-    }
-
     @DisplayName("오디세이 호출 여부 테스트")
     @Nested
     class OdsayCallTest {
@@ -83,8 +65,7 @@ class EtaServiceTest extends BaseServiceTest {
                     new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
             );
             LocalDateTime updateTime = LocalDateTime.now().minusMinutes(11L);
-            injectSpecificTime(updateTime);
-            etaRepository.save(new Eta(mate, 30L));
+            etaRepository.save(new Eta(mate, 30L, LocalDateTime.now(), updateTime));
             MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
             BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
@@ -105,8 +86,7 @@ class EtaServiceTest extends BaseServiceTest {
                     new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
             );
             LocalDateTime updateTime = LocalDateTime.now().minusMinutes(9L);
-            injectSpecificTime(updateTime);
-            etaRepository.save(new Eta(mate, 30L));
+            etaRepository.save(new Eta(mate, 30L, LocalDateTime.now(), updateTime));
             MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
             etaService.findAllMateEtas(mateEtaRequest, odyMeeting.getId(), member);
@@ -127,14 +107,11 @@ class EtaServiceTest extends BaseServiceTest {
                     TARGET_LOCATION,
                     "초대코드"
             );
-
             Meeting thirtyMinutesLaterMeeting = meetingRepository.save(meeting);
 
             Mate mate = mateRepository.save(
                     new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
             );
-
-            injectRealTime();
             etaRepository.save(new Eta(mate, 30L));
             MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
@@ -160,32 +137,20 @@ class EtaServiceTest extends BaseServiceTest {
                 origin,
                 "초대코드"
         );
-
         Meeting thirtyMinutesLaterMeeting = meetingRepository.save(meeting);
 
         Mate mate = mateRepository.save(
                 new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 0L)
         );
-
-        injectRealTime();
         etaRepository.save(new Eta(mate, 30L));
         MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
         MateEtaResponses etas = etaService.findAllMateEtas(mateEtaRequest, thirtyMinutesLaterMeeting.getId(), member);
-
         MateEtaResponse mateEtaResponse = etas.mateEtas().stream()
                 .filter(response -> response.nickname().equals(mate.getNicknameValue()))
                 .findAny()
                 .get();
 
         assertThat(mateEtaResponse.status()).isEqualTo(EtaStatus.ARRIVED);
-    }
-
-    private void injectRealTime() {
-        BDDMockito.when(dateTimeProvider.getNow()).thenReturn(Optional.of(LocalDateTime.now()));
-    }
-
-    private void injectSpecificTime(LocalDateTime dateTime) {
-        BDDMockito.when(dateTimeProvider.getNow()).thenReturn(Optional.of(dateTime));
     }
 }
