@@ -5,7 +5,7 @@ import androidx.activity.viewModels
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingListBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
-import com.woowacourse.ody.presentation.meetinglist.adapter.MeetingsListAdapter
+import com.woowacourse.ody.presentation.meetinglist.adapter.MeetingsAdapter
 
 class MeetingsActivity :
     BindingActivity<ActivityMeetingListBinding>(
@@ -13,7 +13,7 @@ class MeetingsActivity :
     ) {
     private val viewModel by viewModels<MeetingsViewModel>()
     private val adapter by lazy {
-        MeetingsListAdapter(
+        MeetingsAdapter(
             viewModel,
         )
     }

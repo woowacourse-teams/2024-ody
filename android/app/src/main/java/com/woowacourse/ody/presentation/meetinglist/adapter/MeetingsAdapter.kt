@@ -8,7 +8,7 @@ import com.woowacourse.ody.databinding.ItemMeetingBinding
 import com.woowacourse.ody.presentation.meetinglist.MeetingsViewModel
 import com.woowacourse.ody.presentation.meetinglist.model.MeetingUiModel
 
-class MeetingsListAdapter(
+class MeetingsAdapter(
     private val viewModel: MeetingsViewModel,
 ) : ListAdapter<MeetingUiModel, MeetingViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(
