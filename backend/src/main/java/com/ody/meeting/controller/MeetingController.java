@@ -1,6 +1,7 @@
 package com.ody.meeting.controller;
 
 import com.ody.common.annotation.AuthMember;
+import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.mate.dto.request.MateEtaRequest;
 import com.ody.mate.dto.response.MateEtaResponses;
 import com.ody.mate.dto.response.MateResponse;
@@ -82,7 +83,7 @@ public class MeetingController implements MeetingControllerSwagger {
 
     @Override
     @GetMapping("/meetings/me")
-    public ResponseEntity<MeetingSaveResponses> findMine(@AuthMember Member member) {
+    public ResponseEntity<MeetingSaveResponses> findMine(@AuthMember Member member) { // TODO: deprecated
         MeetingSaveResponse meetingSaveResponse = new MeetingSaveResponse(
                 1L,
                 "우테코 16조",
@@ -96,6 +97,13 @@ public class MeetingController implements MeetingControllerSwagger {
                 "초대코드"
         );
         return ResponseEntity.ok(new MeetingSaveResponses(List.of(meetingSaveResponse)));
+    }
+
+    @Override
+    @GetMapping("/v1/meetings/me")
+    public ResponseEntity<MeetingFindByMemberResponses> findAllByMember(@AuthMember Member member) {
+        MeetingFindByMemberResponses meetingFindByMemberResponses = meetingService.findAllByMember(member);
+        return ResponseEntity.ok(meetingFindByMemberResponses);
     }
 
     @Override

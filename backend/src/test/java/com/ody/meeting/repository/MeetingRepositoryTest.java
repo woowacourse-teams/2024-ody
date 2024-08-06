@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.ody.common.Fixture;
 import com.ody.common.config.JpaAuditingConfig;
 import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
@@ -30,28 +31,25 @@ class MeetingRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @DisplayName("특정 멤버의 모임 목록을 반환한다")
+    @DisplayName("특정 멤버의 약속 목록을 반환한다.")
     @Test
-    void findAllMeetingsByMember() {
-        //MEMBER1 참여 모임 : ODY_MEETING1, ODY_MEETING2
-        //MEMBER2 참여 모임 : ODY_MEETING1
+    void findAllByMember() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Member member2 = memberRepository.save(Fixture.MEMBER2);
         Meeting meeting1 = meetingRepository.save(Fixture.ODY_MEETING1);
         Meeting meeting2 = meetingRepository.save(Fixture.ODY_MEETING2);
 
-        Member member1 = memberRepository.save(Fixture.MEMBER1);
-        Member member2 = memberRepository.save(Fixture.MEMBER2);
-        Member member3 = memberRepository.save(Fixture.MEMBER3);
+        mateRepository.save(new Mate(meeting1, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION));
+        mateRepository.save(new Mate(meeting2, member1, new Nickname("카키 같은 조조"), Fixture.ORIGIN_LOCATION));
 
-        Mate mate1 = mateRepository.save(Fixture.MATE1);
-        Mate mate2 = mateRepository.save(Fixture.MATE2);
-        Mate mate3 = mateRepository.save(Fixture.MATE3);
+        mateRepository.save(new Mate(meeting1, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION));
 
-        List<Meeting> memberOneMeetings = meetingRepository.findAllMeetingsByMember(member1);
-        List<Meeting> memberTwoMeetings = meetingRepository.findAllMeetingsByMember(member2);
+        List<Meeting> member1Meetings = meetingRepository.findAllByMember(member1);
+        List<Meeting> member2Meetings = meetingRepository.findAllByMember(member2);
 
         assertAll(
-                () -> assertThat(memberOneMeetings.size()).isEqualTo(2),
-                () -> assertThat(memberTwoMeetings.size()).isEqualTo(1)
+                () -> assertThat(member1Meetings).hasSize(2),
+                () -> assertThat(member2Meetings).hasSize(1)
         );
     }
 }
