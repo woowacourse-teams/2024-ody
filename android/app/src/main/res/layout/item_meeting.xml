@@ -5,114 +5,79 @@
 
     <data>
 
+        <variable
+            name="meeting"
+            type="com.woowacourse.ody.presentation.meetinglist.model.MeetingUiModel" />
+
+        <variable
+            name="vm"
+            type="com.woowacourse.ody.presentation.meetinglist.MeetingsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_meeting_expanded"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:animateLayoutChanges="true"
         android:background="@drawable/rectangle_white_radius_15"
-        android:clipToPadding="false"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:onClick="@{() -> vm.toggleFold(meeting.id)}">
+
+        <TextView
+            android:id="@+id/tv_meeting_title_expanded"
+            style="@style/pretendard_bold_24"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="22dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{meeting.title}"
+            app:layout_constraintEnd_toStartOf="@id/iv_arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="김수한무거북이모임" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_meeting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/tv_meeting_title"
-                style="@style/pretendard_bold_24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="22dp"
-                android:layout_marginTop="22dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="김수한무거북이모임" />
+            android:id="@+id/iv_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="21dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="19dp"
-                android:layout_marginEnd="21dp"
                 android:src="@drawable/ic_arrow_down"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:visibility="@{meeting.folded}" />
 
-            <TextView
-                android:id="@+id/tv_meeting_date_time"
-                style="@style/pretendard_medium_16"
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/tv_meeting_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_meeting_title"
-                tools:text="오늘 오후 1시 30분" />
-
-            <TextView
-                style="@style/pretendard_bold_24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/tv_meeting_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_meeting_date_time"
-                tools:text="15분 걸려요" />
-
-            <include
-                layout="@layout/layout_navigate_to_meeting_room"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="22dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
+                android:src="@drawable/ic_arrow_up"
+                app:visibility="@{!meeting.folded}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_meeting_expanded"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/rectangle_white_radius_15"
-            android:visibility="visible">
-
-            <TextView
-                android:id="@+id/tv_meeting_title_expanded"
-                style="@style/pretendard_bold_24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="22dp"
-                android:layout_marginTop="22dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="김수한무거북이모임" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="19dp"
-                android:layout_marginEnd="21dp"
-                android:src="@drawable/ic_arrow_up"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_meeting_date_time_expanded"
-                style="@style/pretendard_medium_16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
-                app:layout_constraintTop_toBottomOf="@id/tv_meeting_title_expanded"
-                tools:text="오늘 오후 1시 30분" />
+            android:id="@+id/layout_departure_arrival"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
+            app:layout_constraintTop_toBottomOf="@id/tv_meeting_date_time"
+            app:visibility="@{!meeting.folded}">
 
             <TextView
                 android:id="@+id/tv_meeting_departure"
                 style="@style/pretendard_regular_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{meeting.departure}"
                 android:textColor="@color/purple_800"
-                app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
-                app:layout_constraintTop_toBottomOf="@id/tv_meeting_date_time_expanded"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="서울 송파구 올림픽로 35다길" />
 
             <TextView
@@ -129,8 +94,9 @@
                 style="@style/pretendard_regular_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{meeting.arrival}"
                 android:textColor="@color/purple_800"
-                app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_meeting_departure"
                 tools:text="서울 강남구 테헤란로 411길" />
 
@@ -142,27 +108,39 @@
                 app:layout_constraintBottom_toBottomOf="@id/tv_meeting_arrival"
                 app:layout_constraintStart_toEndOf="@id/tv_meeting_arrival"
                 app:layout_constraintTop_toTopOf="@id/tv_meeting_arrival" />
-
-            <TextView
-                style="@style/pretendard_bold_24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="22dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
-                app:layout_constraintTop_toBottomOf="@id/tv_meeting_arrival"
-                tools:text="15분 걸려요" />
-
-            <include
-                layout="@layout/layout_navigate_to_meeting_room"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="22dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_meeting_date_time"
+            style="@style/pretendard_medium_16"
+            showDateTime="@{meeting.datetime}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
+            app:layout_constraintTop_toBottomOf="@id/tv_meeting_title_expanded"
+            tools:text="오늘 오후 1시 30분" />
+
+
+        <TextView
+            style="@style/pretendard_bold_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="22dp"
+            android:text="@{@string/intro_meeting_eta_form(meeting.eta)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
+            app:layout_constraintTop_toBottomOf="@id/layout_departure_arrival"
+            tools:text="15분 걸려요" />
+
+        <include
+            layout="@layout/layout_navigate_to_meeting_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="22dp"
+            android:layout_marginBottom="16dp"
+            android:onClick="@{() -> vm.navigateToMeetingRoom(meeting.id)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
