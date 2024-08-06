@@ -8,10 +8,6 @@
         <variable
             name="eta"
             type="com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel" />
-
-        <variable
-            name="tooltipListener"
-            type="com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -79,7 +75,6 @@
                 android:background="@drawable/oval"
                 android:backgroundTint="@color/gray_400"
                 android:gravity="center"
-                android:onClick="@{() -> tooltipListener.onClickMissingToolTipListener()}"
                 android:text="@string/question_mark"
                 android:textColor="@color/white"
                 android:visibility="gone"

@@ -5,4 +5,5 @@ data class MateEtaUiModel(
     val etaTypeUiModel: EtaTypeUiModel,
     val durationMinute: Int,
     val isMissing: Boolean,
+    val isUserSelf: Boolean,
 )
