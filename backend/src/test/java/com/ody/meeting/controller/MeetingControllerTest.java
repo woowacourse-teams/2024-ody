@@ -2,6 +2,9 @@ package com.ody.meeting.controller;
 
 import com.ody.common.BaseControllerTest;
 import com.ody.common.Fixture;
+import com.ody.eta.domain.Eta;
+import com.ody.eta.dto.request.MateEtaRequest;
+import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
@@ -36,6 +39,9 @@ class MeetingControllerTest extends BaseControllerTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private EtaRepository etaRepository;
 
     @DisplayName("Authorization 헤더로 device token과 모임 개설 정보를 받아 저장하면 201을 응답한다")
     @Test
@@ -122,5 +128,33 @@ class MeetingControllerTest extends BaseControllerTest {
                 .log()
                 .all()
                 .statusCode(404);
+    }
+
+    @DisplayName("참여자들의 위치 현황 목록 성공하면 200응답 반환한다")
+    @Test
+    void findAllMateEtas() {
+        Location origin = Fixture.ORIGIN_LOCATION;
+        Location target = Fixture.TARGET_LOCATION;
+        Member member = memberRepository.save(Fixture.MEMBER1);
+        Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
+        meetingRepository.save(meeting);
+        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin, 10L));
+        etaRepository.save(new Eta(mate, 10L));
+
+        MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+
+        RestAssured.given()
+                .log()
+                .all()
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                .body(mateEtaRequest)
+                .contentType(ContentType.JSON)
+                .when()
+                .patch("/v1/meetings/1/mates/etas")
+                .then()
+                .log()
+                .all()
+                .statusCode(200);
     }
 }

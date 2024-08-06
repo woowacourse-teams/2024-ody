@@ -1,6 +1,9 @@
 package com.ody.meeting.service;
 
 import com.ody.common.exception.OdyNotFoundException;
+import com.ody.eta.dto.request.MateEtaRequest;
+import com.ody.eta.dto.response.MateEtaResponses;
+import com.ody.eta.service.EtaService;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
@@ -24,6 +27,7 @@ public class MeetingService {
 
     private final MateService mateService;
     private final MeetingRepository meetingRepository;
+    private final EtaService etaService;
 
     @Transactional
     public MeetingSaveResponse saveAndSendNotifications(MeetingSaveRequest meetingSaveRequest, Member member) {
@@ -66,5 +70,9 @@ public class MeetingService {
         return meetingRepository.findAllMeetingsByMemberId(member.getId()).stream()
                 .map(mateService::findAllByMeetingId)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), MeetingSaveResponses::new));
+    }
+
+    public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
+        return etaService.findAllMateEtas(mateEtaRequest, meetingId, member);
     }
 }
