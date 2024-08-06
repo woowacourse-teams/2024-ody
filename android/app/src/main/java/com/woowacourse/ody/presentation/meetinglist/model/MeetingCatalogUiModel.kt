@@ -2,12 +2,12 @@ package com.woowacourse.ody.presentation.meetinglist.model
 
 import java.time.LocalDateTime
 
-data class MeetingUiModel(
+data class MeetingCatalogUiModel(
     val id: Int,
-    val title: String,
+    val name: String,
     val datetime: LocalDateTime,
-    val departure: String,
-    val arrival: String,
-    val eta: String,
+    val originAddress: String,
+    val targetAddress: String,
+    val durationMinutes: String,
     val isFolded: Boolean = true,
 )

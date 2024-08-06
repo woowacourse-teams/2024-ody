@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.woowacourse.ody.databinding.ItemMeetingBinding
 import com.woowacourse.ody.presentation.meetinglist.MeetingsViewModel
-import com.woowacourse.ody.presentation.meetinglist.model.MeetingUiModel
+import com.woowacourse.ody.presentation.meetinglist.model.MeetingCatalogUiModel
 
 class MeetingsAdapter(
     private val viewModel: MeetingsViewModel,
-) : ListAdapter<MeetingUiModel, MeetingViewHolder>(DiffCallback()) {
+) : ListAdapter<MeetingCatalogUiModel, MeetingViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -32,15 +32,15 @@ class MeetingsAdapter(
 
     override fun getItemCount(): Int = currentList.size
 
-    class DiffCallback : DiffUtil.ItemCallback<MeetingUiModel>() {
+    class DiffCallback : DiffUtil.ItemCallback<MeetingCatalogUiModel>() {
         override fun areItemsTheSame(
-            oldItem: MeetingUiModel,
-            newItem: MeetingUiModel,
+            oldItem: MeetingCatalogUiModel,
+            newItem: MeetingCatalogUiModel,
         ): Boolean = oldItem == newItem
 
         override fun areContentsTheSame(
-            oldItem: MeetingUiModel,
-            newItem: MeetingUiModel,
+            oldItem: MeetingCatalogUiModel,
+            newItem: MeetingCatalogUiModel,
         ): Boolean = oldItem == newItem
     }
 }

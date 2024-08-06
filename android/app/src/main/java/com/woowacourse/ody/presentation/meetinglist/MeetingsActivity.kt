@@ -11,7 +11,11 @@ class MeetingsActivity :
     BindingActivity<ActivityMeetingListBinding>(
         R.layout.activity_meeting_list,
     ) {
-    private val viewModel by viewModels<MeetingsViewModel>()
+    private val viewModel by viewModels<MeetingsViewModel> {
+        MeetingsViewModelFactory(
+            application.meetingRepository,
+        )
+    }
     private val adapter by lazy {
         MeetingsAdapter(
             viewModel,
@@ -29,7 +33,7 @@ class MeetingsActivity :
     }
 
     private fun initializeObserve() {
-        viewModel.meetings.observe(this) {
+        viewModel.meetingCatalogs.observe(this) {
             adapter.submitList(it)
         }
     }

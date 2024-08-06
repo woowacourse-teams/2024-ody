@@ -7,7 +7,7 @@
 
         <variable
             name="meeting"
-            type="com.woowacourse.ody.presentation.meetinglist.model.MeetingUiModel" />
+            type="com.woowacourse.ody.presentation.meetinglist.model.MeetingCatalogUiModel" />
 
         <variable
             name="vm"
@@ -33,7 +33,7 @@
             android:layout_marginTop="22dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{meeting.title}"
+            android:text="@{meeting.name}"
             app:layout_constraintEnd_toStartOf="@id/iv_arrow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -74,7 +74,7 @@
                 style="@style/pretendard_regular_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{meeting.departure}"
+                android:text="@{meeting.originAddress}"
                 android:textColor="@color/purple_800"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -94,7 +94,7 @@
                 style="@style/pretendard_regular_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{meeting.arrival}"
+                android:text="@{meeting.targetAddress}"
                 android:textColor="@color/purple_800"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_meeting_departure"
@@ -126,7 +126,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="22dp"
-            android:text="@{@string/intro_meeting_eta_form(meeting.eta)}"
+            android:text="@{@string/intro_meeting_eta_form(meeting.durationMinutes)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/layout_departure_arrival"
