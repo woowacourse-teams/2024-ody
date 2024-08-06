@@ -62,7 +62,7 @@ class EtaServiceTest extends BaseServiceTest {
             Member member = memberRepository.save(Fixture.MEMBER1);
             Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
             Mate mate = mateRepository.save(
-                    new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
+                    new Mate(odyMeeting, member, new Nickname("은별"), origin, 10L)
             );
             LocalDateTime updateTime = LocalDateTime.now().minusMinutes(11L);
             etaRepository.save(new Eta(mate, 30L, LocalDateTime.now(), updateTime));
@@ -83,7 +83,7 @@ class EtaServiceTest extends BaseServiceTest {
             Member member = memberRepository.save(Fixture.MEMBER1);
             Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
             Mate mate = mateRepository.save(
-                    new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
+                    new Mate(odyMeeting, member, new Nickname("은별"), origin, 10L)
             );
             LocalDateTime updateTime = LocalDateTime.now().minusMinutes(9L);
             etaRepository.save(new Eta(mate, 30L, LocalDateTime.now(), updateTime));
@@ -110,7 +110,7 @@ class EtaServiceTest extends BaseServiceTest {
             Meeting thirtyMinutesLaterMeeting = meetingRepository.save(meeting);
 
             Mate mate = mateRepository.save(
-                    new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
+                    new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), origin, 10L)
             );
             etaRepository.save(new Eta(mate, 30L));
             MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
@@ -140,7 +140,7 @@ class EtaServiceTest extends BaseServiceTest {
         Meeting thirtyMinutesLaterMeeting = meetingRepository.save(meeting);
 
         Mate mate = mateRepository.save(
-                new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 0L)
+                new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), origin, 0L)
         );
         etaRepository.save(new Eta(mate, 30L));
         MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
