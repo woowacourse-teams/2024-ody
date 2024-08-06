@@ -8,4 +8,6 @@ interface HomeListener {
     fun onCreateMeeting()
 
     fun navigateToMeetingRoom(meetingId: Long)
+
+    fun guideItemDisabled()
 }

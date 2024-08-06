@@ -72,7 +72,6 @@ class HomeActivity :
     }
 
     override fun onFab() {
-        Timber.d(binding.fabHomeNavigator.isSelected.toString())
         binding.cvMenuView.visibility = if (binding.fabHomeNavigator.isSelected) View.GONE else View.VISIBLE
         binding.fabHomeNavigator.isSelected = !binding.fabHomeNavigator.isSelected
     }
@@ -86,7 +85,12 @@ class HomeActivity :
     }
 
     override fun navigateToMeetingRoom(meetingId: Long) {
+        Timber.d(meetingId.toString())
         startActivity(NotificationLogActivity.getIntent(this, meetingId))
+    }
+
+    override fun guideItemDisabled() {
+        showSnackBar(R.string.intro_notification_permission_required)
     }
 
     private fun requestNotificationPermission() {

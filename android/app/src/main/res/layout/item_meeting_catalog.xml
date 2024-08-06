@@ -88,7 +88,7 @@
                 style="@style/pretendard_regular_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/intro_meeting_departure_postfix"
+                android:text="@string/home_meeting_departure_postfix"
                 app:layout_constraintBottom_toBottomOf="@id/tv_meeting_departure"
                 app:layout_constraintStart_toEndOf="@id/tv_meeting_departure"
                 app:layout_constraintTop_toTopOf="@id/tv_meeting_departure" />
@@ -108,7 +108,7 @@
                 style="@style/pretendard_regular_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/intro_meeting_arrival_postfix"
+                android:text="@string/home_meeting_arrival_postfix"
                 app:layout_constraintBottom_toBottomOf="@id/tv_meeting_arrival"
                 app:layout_constraintStart_toEndOf="@id/tv_meeting_arrival"
                 app:layout_constraintTop_toTopOf="@id/tv_meeting_arrival" />
@@ -130,11 +130,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="22dp"
-            android:text="@{@string/intro_meeting_eta_form(meeting.durationMinutes)}"
+            android:text="@{@string/home_meeting_eta_form(meeting.durationMinutes)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/layout_departure_arrival"
             tools:text="15분 걸려요" />
+
 
         <include
             layout="@layout/layout_navigate_to_meeting_room"

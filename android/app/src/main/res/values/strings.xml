@@ -28,19 +28,14 @@
     <string name="destination_question_hint">주소를 찾아보세요</string>
     <string name="destination_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
 
-    <!-- activity_intro.xml -->
-    <string name="intro_hello">안녕하세요!</string>
-    <string name="intro_guide_front">오디</string>
-    <string name="intro_guide_back">가 약속을 지켜드릴게요</string>
-    <string name="intro_join_meeting">약속 참여하기</string>
-    <string name="intro_create_meeting">약속 만들기</string>
-    <string name="intro_meeting_departure_postfix">에서</string>
-    <string name="intro_meeting_arrival_postfix">까지</string>
-    <string name="intro_meeting_eta_form">%1$s분 걸려요</string>
-    <string name="intro_navigate_to_meeting_room">오디?</string>"
-    <string name="intro_today">오늘</string>"
-    <string name="intro_tomorrow">내일</string>"
-    <string name="intro_post_tomorrow">%1$s일 후</string>"
+    <!-- activity_home.xml -->
+    <string name="home_meeting_departure_postfix">에서</string>
+    <string name="home_meeting_arrival_postfix">까지</string>
+    <string name="home_meeting_eta_form">%1$s분 걸려요</string>
+    <string name="home_navigate_to_meeting_room">오디?</string>"
+    <string name="home_today">오늘</string>"
+    <string name="home_tomorrow">내일</string>"
+    <string name="home_post_tomorrow">%1$s일 후</string>"
 
     <string name="intro_no_meeting_room_guide">아직 약속이 없어요.\n약속을 만들어 주세요!</string>"
     <string name="intro_notification_permission_required">알림 권한을 거절하실 경우 푸시 알람을 받으실 수 없어요</string>
