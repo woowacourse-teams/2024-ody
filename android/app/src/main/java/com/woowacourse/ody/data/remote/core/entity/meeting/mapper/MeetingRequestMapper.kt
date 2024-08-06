@@ -1,5 +1,6 @@
-package com.woowacourse.ody.data.remote.core.entity.meeting.request
+package com.woowacourse.ody.data.remote.core.entity.meeting.mapper
 
+import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 
 fun MeetingCreationInfo.toMeetingRequest(): MeetingRequest =

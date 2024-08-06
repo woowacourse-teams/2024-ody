@@ -1,5 +1,6 @@
-package com.woowacourse.ody.data.remote.core.entity.meeting.response
+package com.woowacourse.ody.data.remote.core.entity.meeting.mapper
 
+import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingResponse
 import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.Meeting
 import java.time.LocalDate
