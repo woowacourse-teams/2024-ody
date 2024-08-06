@@ -8,6 +8,7 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
 import com.ody.notification.service.NotificationService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,5 +32,12 @@ public class MateService {
         Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member));
         notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken());
         return MateSaveResponse.from(mate);
+    }
+
+    public List<Mate> findAllByMemberAndMeetingId(Member member, long meetingId) {
+        if (!mateRepository.existsByMeetingIdAndMemberId(meetingId, member.getId())) {
+            throw new OdyBadRequestException("존재하지 않는 모임이거나 약속 참여자가 아닙니다.");
+        }
+        return mateRepository.findAllByMeetingId(meetingId);
     }
 }
