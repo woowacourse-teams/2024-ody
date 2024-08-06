@@ -4,5 +4,5 @@ enum class EtaDurationMinuteTypeUiModel {
     ARRIVED,
     MISSING,
     ARRIVAL_SOON,
-    ARRIVAL_REMAIN_TIME
+    ARRIVAL_REMAIN_TIME,
 }

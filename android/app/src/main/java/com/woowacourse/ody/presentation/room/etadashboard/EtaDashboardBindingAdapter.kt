@@ -24,10 +24,11 @@ fun TextView.setEtaStatusText(mateEtaUiModel: MateEtaUiModel) {
             EtaDurationMinuteTypeUiModel.ARRIVED -> context.getString(R.string.status_arrived)
             EtaDurationMinuteTypeUiModel.MISSING -> context.getString(R.string.status_missing)
             EtaDurationMinuteTypeUiModel.ARRIVAL_SOON -> context.getString(R.string.status_arrival_soon)
-            EtaDurationMinuteTypeUiModel.ARRIVAL_REMAIN_TIME -> context.getString(
-                R.string.status_arrival_remain_time,
-                mateEtaUiModel.durationMinute,
-            )
+            EtaDurationMinuteTypeUiModel.ARRIVAL_REMAIN_TIME ->
+                context.getString(
+                    R.string.status_arrival_remain_time,
+                    mateEtaUiModel.durationMinute,
+                )
         }
 }
 

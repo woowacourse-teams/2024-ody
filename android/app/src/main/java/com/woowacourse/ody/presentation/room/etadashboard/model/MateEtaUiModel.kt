@@ -8,7 +8,7 @@ data class MateEtaUiModel(
     val isUserSelf: Boolean,
 ) {
     fun getEtaDurationMinuteTypeUiModel(): EtaDurationMinuteTypeUiModel {
-        return when(durationMinute) {
+        return when (durationMinute) {
             ARRIVED_VALUE -> EtaDurationMinuteTypeUiModel.ARRIVED
             MISSING_VALUE -> EtaDurationMinuteTypeUiModel.MISSING
             in ARRIVAL_SOON_VALUE_RANGE -> EtaDurationMinuteTypeUiModel.ARRIVAL_SOON
