@@ -22,7 +22,7 @@
         <activity
             android:name=".presentation.meetinglist.MeetingsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".presentation.invitecode.InviteCodeActivity"
