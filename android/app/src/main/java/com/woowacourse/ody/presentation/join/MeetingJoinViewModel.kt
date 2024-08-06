@@ -69,7 +69,7 @@ class MeetingJoinViewModel(
                     departureLongitude,
                 ),
             ).onSuccess {
-                inviteCodeRepository.postInviteCode(it.inviteCode)
+                // todo
             }.onFailure {
                 Timber.e(it.message)
             }
