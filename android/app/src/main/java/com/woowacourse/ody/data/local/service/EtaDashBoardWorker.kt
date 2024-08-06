@@ -17,10 +17,10 @@ import java.util.concurrent.TimeUnit
 class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters) {
     private val meetingRepository: MeetingRepository by lazy { (applicationContext as OdyApplication).meetingRepository }
-    private val meetingId: Long by lazy { workerParameters.inputData.getLong("meeting_id", -1L) }
+    private val meetingId: Long by lazy { workerParameters.inputData.getLong(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE) }
 
     override suspend fun doWork(): Result {
-        if (meetingId == -1L) {
+        if (meetingId == MEETING_ID_DEFAULT_VALUE) {
             return Result.failure()
         }
 
@@ -50,6 +50,7 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
 
     companion object {
         private const val MEETING_ID_KEY = "meeting_id"
+        private const val MEETING_ID_DEFAULT_VALUE = -1L
         const val MATE_ETA_RESPONSE_KEY = "mate_eta_response"
 
         fun getWorkRequest(

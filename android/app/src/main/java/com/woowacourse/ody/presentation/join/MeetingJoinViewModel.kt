@@ -113,15 +113,19 @@ class MeetingJoinViewModel(
         meetingId: Long,
         meetingDateTime: LocalDateTime,
     ) {
-        val meetingTimeMilliSeconds = meetingDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()
-
-        (-1..30).forEach { minute ->
-            val reserveMilliSeconds = meetingTimeMilliSeconds - (60000 * minute)
+        val meetingTimeMilliSeconds = meetingDateTime.toMilliSeconds(LOCAL_ZONE_ID)
+        RESERVE_OFFSET_MINUTE_RANGE.forEach { minute ->
+            val reserveMilliSeconds = meetingTimeMilliSeconds - (MILLI_SECOND_OF_MINUTE * minute)
             matesEtaRepository.reserveEtaFetchingJob(meetingId, reserveMilliSeconds)
         }
     }
 
     companion object {
         const val NICK_NAME_MAX_LENGTH = 9
+        private const val LOCAL_ZONE_ID = "Asia/Seoul"
+        private val RESERVE_OFFSET_MINUTE_RANGE = (-1..30)
+        private const val MILLI_SECOND_OF_MINUTE = 60_000
     }
 }
+
+fun LocalDateTime.toMilliSeconds(zoneId: String): Long = atZone(ZoneId.of(zoneId)).toInstant().toEpochMilli()

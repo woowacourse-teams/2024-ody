@@ -2,7 +2,6 @@ package com.woowacourse.ody.data.local.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.squareup.moshi.Moshi
@@ -32,20 +31,14 @@ class DefaultMatesEtaRepository(
     }
 
     override fun fetchMatesEta(meetingId: Long): LiveData<List<MateEta>> {
-        return workManager.getWorkInfosByTagLiveData(meetingId.toString()).map { workInfos ->
-            val workInfoResults =
-                workInfos
-                    .filter { it.state == WorkInfo.State.SUCCEEDED }
-                    .mapNotNull { it.outputData.getString(MATE_ETA_RESPONSE_KEY) }
+        val tag = meetingId.toString()
+        val liveData = workManager.getWorkInfosByTagLiveData(tag)
+        return liveData.map { it.toMateEtas() }
+    }
 
-            if (workInfoResults.isEmpty()) {
-                listOf()
-            } else {
-                workInfoResults
-                    .last()
-                    .convertMateEtasToJson()
-            }
-        }
+    private fun List<WorkInfo>.toMateEtas(): List<MateEta> {
+        val recentWorkInfo = findLast { it.state == WorkInfo.State.SUCCEEDED } ?: return emptyList()
+        return recentWorkInfo.outputData.getString(MATE_ETA_RESPONSE_KEY)?.convertMateEtasToJson() ?: emptyList()
     }
 
     private fun String.convertMateEtasToJson(): List<MateEta> {
@@ -55,7 +48,6 @@ class DefaultMatesEtaRepository(
                 .build()
         val type = Types.newParameterizedType(List::class.java, MateEtaResponse::class.java)
         val jsonAdapter = moshi.adapter<List<MateEtaResponse>>(type)
-        return jsonAdapter.fromJson(this)
-            ?.map { MateEta(it.nickname, it.etaType, it.durationMinute) } ?: listOf()
+        return jsonAdapter.fromJson(this)?.map { MateEta(it.nickname, it.etaType, it.durationMinute) } ?: listOf()
     }
 }
