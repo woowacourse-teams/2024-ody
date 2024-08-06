@@ -13,8 +13,6 @@ import com.woowacourse.ody.databinding.LayoutMissingTooltipBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
-import com.woowacourse.ody.presentation.room.etadashboard.model.EtaTypeUiModel
-import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 
 class EtaDashboardActivity :
     BindingActivity<ActivityEtaDashboardBinding>(R.layout.activity_eta_dashboard),
@@ -34,7 +32,11 @@ class EtaDashboardActivity :
         // TODO
     }
 
-    override fun onClickMissingToolTipListener(x: Int, y: Int, isUserSelf: Boolean) {
+    override fun onClickMissingToolTipListener(
+        x: Int,
+        y: Int,
+        isUserSelf: Boolean,
+    ) {
         val messageId = if (isUserSelf) R.string.location_permission_self_guide else R.string.location_permission_friend_guide
         showPopupWindow(messageId, x, y)
     }
