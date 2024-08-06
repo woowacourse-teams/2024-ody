@@ -77,6 +77,9 @@ dependencies {
     // junit
     testImplementation(libs.junit)
 
+    // assertj
+    testImplementation(libs.assertj)
+
     // material
     implementation(libs.material)
 
