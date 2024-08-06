@@ -19,6 +19,7 @@ import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resumeWithException
 
@@ -74,7 +75,9 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
                 fusedLocationProviderClient.lastLocation
                     .addOnSuccessListener { location ->
                         continuation.resume(location) {
-                            Log.d("HELLO1", "getLocation: ${location.latitude} ${location.longitude}")
+                            if (location.latitude == 0.0 && location.longitude == 0.0) {
+                                return@resume
+                            }
                         }
                     }.addOnFailureListener { exception ->
                         continuation.resumeWithException(exception)
@@ -82,7 +85,7 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
             }
 
         return if (location != null) {
-            meetingRepository.patchMatesEta(meetingId, false, location.latitude.toString(), location.longitude.toString()).getOrNull()
+            meetingRepository.patchMatesEta(meetingId, false, compress(location.latitude.toString()), compress(location.longitude.toString())).getOrNull()
         } else {
             meetingRepository.patchMatesEta(meetingId, false, "0.0", "0.0").getOrNull()
         }
