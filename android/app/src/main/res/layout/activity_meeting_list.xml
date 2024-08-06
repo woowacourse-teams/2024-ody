@@ -45,7 +45,6 @@
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:padding="16dp"
-            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/tb_intro"
             tools:listitem="@layout/item_meeting" />
 
