@@ -2,7 +2,7 @@ package com.woowacourse.ody.data.remote.core.repository
 
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMateEtas
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeeting
-import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingCatalog
+import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingCatalogs
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MatesEtaRequest
 import com.woowacourse.ody.data.remote.core.service.MeetingService
@@ -40,6 +40,6 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
 
     override suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>> =
         runCatching {
-            service.fetchMeetingCatalogs().meetingCatalogs.map { it.toMeetingCatalog() }
+            service.fetchMeetingCatalogs().toMeetingCatalogs()
         }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.presentation.home.listener.ToggleFoldListener
 import com.woowacourse.ody.presentation.home.model.MeetingCatalogUiModel
 import com.woowacourse.ody.presentation.home.model.toMeetingCatalogUiModels
 import kotlinx.coroutines.launch
@@ -13,7 +14,7 @@ import timber.log.Timber
 
 class HomeViewModel(
     private val meetingRepository: MeetingRepository,
-) : ViewModel() {
+) : ViewModel(), ToggleFoldListener {
     private val _meetingCatalogs = MutableLiveData<List<MeetingCatalogUiModel>>()
     val meetingCatalogs: LiveData<List<MeetingCatalogUiModel>> = _meetingCatalogs
 
@@ -31,7 +32,7 @@ class HomeViewModel(
             }
         }
 
-    fun toggleFold(position: Int) {
+    override fun toggleFold(position: Int) {
         val currentList = _meetingCatalogs.value ?: emptyList()
         val newList = currentList.toMutableList()
         newList[position] =

@@ -10,11 +10,11 @@
             type="com.woowacourse.ody.presentation.home.model.MeetingCatalogUiModel" />
 
         <variable
-            name="vm"
-            type="com.woowacourse.ody.presentation.home.HomeViewModel" />
+            name="toggleListener"
+            type="com.woowacourse.ody.presentation.home.listener.ToggleFoldListener" />
 
         <variable
-            name="listener"
+            name="homeListener"
             type="com.woowacourse.ody.presentation.home.listener.HomeListener" />
     </data>
 
@@ -25,9 +25,9 @@
         android:layout_marginBottom="16dp"
         android:animateLayoutChanges="true"
         android:background="@drawable/rectangle_white_radius_15"
+        android:clickable="true"
         android:elevation="4dp"
-        android:clickable = "true"
-        android:onClick="@{() -> vm.toggleFold(meeting.position)}">
+        android:onClick="@{() -> toggleListener.toggleFold(meeting.position)}">
 
         <TextView
             android:id="@+id/tv_meeting_title_expanded"
@@ -144,16 +144,16 @@
 
 
         <include
-            android:clickable = "true"
             layout="@layout/layout_navigate_to_meeting_room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="22dp"
             android:layout_marginBottom="16dp"
-            app:onClickEnabled = "@{() -> listener.navigateToMeetingRoom(meeting.id)}"
-            app:onClickDisabled = "@{() -> listener.guideItemDisabled()}"
+            android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:onClickDisabled="@{() -> homeListener.guideItemDisabled()}"
+            app:onClickEnabled="@{() -> homeListener.navigateToMeetingRoom(meeting.id)}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
