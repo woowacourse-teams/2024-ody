@@ -4,12 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.woowacourse.ody.presentation.meetinglist.model.MeetingUiModel
-import timber.log.Timber
 import java.time.LocalDateTime
 
-class MeetingListViewModel : ViewModel() {
-    private val _meetingList = MutableLiveData<List<MeetingUiModel>>()
-    val meetingList: LiveData<List<MeetingUiModel>> = _meetingList
+class MeetingsViewModel : ViewModel() {
+    private val _meetings = MutableLiveData<List<MeetingUiModel>>()
+    val meetings: LiveData<List<MeetingUiModel>> = _meetings
 
     private val fakeMeetingUiModel =
         MeetingUiModel(
@@ -20,7 +19,7 @@ class MeetingListViewModel : ViewModel() {
             arrival = "서울 강남구 테헤란로 411길",
             eta = "30",
         )
-    private val fakeMeetingList =
+    private val fakeMeetings =
         listOf(
             fakeMeetingUiModel,
             fakeMeetingUiModel.copy(
@@ -70,18 +69,17 @@ class MeetingListViewModel : ViewModel() {
         )
 
     init {
-        _meetingList.value = fakeMeetingList
+        _meetings.value = fakeMeetings
     }
 
     fun toggleFold(position: Int) {
-        val currentList = _meetingList.value ?: emptyList()
+        val currentList = _meetings.value ?: emptyList()
         val newList = currentList.toMutableList()
         newList[position] =
             newList[position].copy(isFolded = !newList[position].isFolded)
-        _meetingList.value = newList
+        _meetings.value = newList
     }
 
     fun navigateToMeetingRoom(position: Int) {
-        Timber.d("$position")
     }
 }

@@ -1,22 +1,11 @@
 package com.woowacourse.ody.presentation.meetinglist
 
-import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.woowacourse.ody.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-
-@BindingAdapter("setVisible")
-fun View.setVisible(isVisible: Boolean) {
-    visibility =
-        if (isVisible) {
-            TextView.VISIBLE
-        } else {
-            TextView.GONE
-        }
-}
 
 @BindingAdapter("showDateTime")
 fun TextView.showDateTime(dateTime: LocalDateTime) {
@@ -29,33 +18,31 @@ fun TextView.showDateTime(dateTime: LocalDateTime) {
     val dateString =
         when {
             isToday -> {
-                this.context.getString(R.string.intro_today)
+                context.getString(R.string.intro_today)
             }
 
             isTomorrow -> {
-                this.context.getString(R.string.intro_tomorrow)
+                context.getString(R.string.intro_tomorrow)
             }
 
-            (
-                meetingDay >= today.plusDays(2) &&
-                    meetingDay <= today.plusDays(7)
-            ) -> {
-                this.context.getString(
+            meetingDay <= today.plusDays(7) -> {
+                context.getString(
                     R.string.intro_post_tomorrow,
                     meetingDay.dayOfYear - today.dayOfYear,
                 )
             }
 
             else -> {
-                DateTimeFormatter.ofPattern("yyyy년 M월 d일").withLocale(Locale.forLanguageTag("ko")).format(dateTime)
+                DateTimeFormatter.ofPattern("yyyy년 M월 d일").format(dateTime)
             }
         }
     val meetingTime = dateTime.toLocalTime()
+    if (!(isToday || isTomorrow)) {
+        this.text = dateString
+        return
+    }
     val timeString =
-        if (isToday || isTomorrow) {
-            DateTimeFormatter.ofPattern("a h시 mm분").withLocale(Locale.forLanguageTag("ko")).format(meetingTime)
-        } else {
-            ""
-        }
+        DateTimeFormatter.ofPattern("a h시 mm분").withLocale(Locale.forLanguageTag("ko"))
+            .format(meetingTime)
     this.text = "$dateString $timeString"
 }

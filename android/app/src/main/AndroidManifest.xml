@@ -20,16 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.meetinglist.MeetingListActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".presentation.meetinglist.MeetingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".presentation.invitecode.InviteCodeActivity"
@@ -63,7 +56,12 @@
         <activity
             android:name=".presentation.splash.SplashActivity"
             android:exported="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".presentation.intro.IntroActivity"
             android:exported="false"

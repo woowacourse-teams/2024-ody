@@ -4,28 +4,27 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.woowacourse.ody.databinding.ItemMeetingBinding
-import com.woowacourse.ody.presentation.meetinglist.MeetingListViewModel
+import com.woowacourse.ody.presentation.meetinglist.MeetingsViewModel
 import com.woowacourse.ody.presentation.meetinglist.model.MeetingUiModel
 
-class MeetingListAdapter(
-    private val viewModel: MeetingListViewModel,
-) : ListAdapter<MeetingUiModel, RecyclerView.ViewHolder>(DiffCallback()) {
+class MeetingsListAdapter(
+    private val viewModel: MeetingsViewModel,
+) : ListAdapter<MeetingUiModel, MeetingViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
+    ): MeetingViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemMeetingBinding.inflate(inflater, parent, false)
         return MeetingViewHolder(binding)
     }
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: MeetingViewHolder,
         position: Int,
     ) {
-        (holder as MeetingViewHolder).bind(
+        holder.bind(
             currentList[position],
             viewModel,
         )
