@@ -150,6 +150,7 @@
             android:layout_marginEnd="22dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
+            app:enabled="@{meeting.isEnabled}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:onClickDisabled="@{() -> homeListener.guideItemDisabled()}"

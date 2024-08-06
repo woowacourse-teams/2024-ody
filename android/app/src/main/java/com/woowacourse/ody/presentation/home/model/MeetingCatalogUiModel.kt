@@ -11,4 +11,5 @@ data class MeetingCatalogUiModel(
     val targetAddress: String,
     val durationMinutes: String,
     val isFolded: Boolean = true,
+    val isEnabled: Boolean = true,
 )
