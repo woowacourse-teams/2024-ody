@@ -6,6 +6,7 @@ import com.ody.mate.dto.response.MateResponse;
 import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
+import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MateController implements MateControllerSwagger {
 
     private final MateService mateService;
+    private final MeetingService meetingService;
 
     @PostMapping("/mates")
     public ResponseEntity<MeetingSaveResponse> save(
@@ -51,7 +53,7 @@ public class MateController implements MateControllerSwagger {
             @AuthMember Member member,
             @RequestBody MateSaveRequest mateSaveRequest
     ) {
-        MateSaveResponse mateSaveResponse = mateService.saveAndSendNotifications(mateSaveRequest, member);
+        MateSaveResponse mateSaveResponse = meetingService.saveMateAndSendNotifications(mateSaveRequest, member);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(mateSaveResponse);
     }
