@@ -19,6 +19,6 @@ private fun String.parseToLocalDate(): LocalDate {
 }
 
 private fun String.parseToLocalTime(): LocalTime {
-    val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
     return LocalTime.parse(this, formatter)
 }
