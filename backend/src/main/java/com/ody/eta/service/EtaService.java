@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -34,7 +35,7 @@ public class EtaService {
         return etaRepository.save(new Eta(mate, routeTime.getMinutes()));
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
         Mate requestMate = findByMeetingIdAndMemberId(meetingId, member.getId());
         Meeting meeting = requestMate.getMeeting();
@@ -43,12 +44,11 @@ public class EtaService {
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
 
         if (determineArrived(mateEtaRequest, meeting, now)) {
-            mateEta.updateArrived();
+            updateArrived(mateEta);
         }
 
         if (!mateEta.isArrived() && isOdysayCallTime(mateEta)) {
-            RouteTime routeTime = routeService.calculateRouteTime(requestMate.getOrigin(), meeting.getTarget());
-            mateEta.updateRemainingMinutes(routeTime.getMinutes());
+            updateRemainingMinutes(mateEta, requestMate, meeting);
         }
 
         List<MateEtaResponse> mateEtaResponses = etaRepository.findAllByMeetingId(meetingId).stream()
@@ -56,6 +56,18 @@ public class EtaService {
                 .toList();
         return new MateEtaResponses(requestMate.getNicknameValue(), mateEtaResponses);
     }
+
+    @Transactional
+    public void updateArrived(Eta mateEta) {
+        mateEta.updateArrived();
+    }
+
+    @Transactional
+    public void updateRemainingMinutes(Eta mateEta, Mate requestMate, Meeting meeting) {
+        RouteTime routeTime = routeService.calculateRouteTime(requestMate.getOrigin(), meeting.getTarget());
+        mateEta.updateRemainingMinutes(routeTime.getMinutes());
+    }
+
 
     private boolean isOdysayCallTime(Eta mateEta) {
         return !mateEta.isModified() || mateEta.differenceMinutesFromLastUpdated() >= ODSAY_CALL_CYCLE_MINUTES;
