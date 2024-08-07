@@ -1,15 +1,15 @@
-package com.woowacourse.ody.presentation.home
+package com.woowacourse.ody.presentation.meetings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 
-class HomeViewModelFactory(
+class MeetingsViewModelFactory(
     private val meetingRepository: MeetingRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            HomeViewModel(meetingRepository) as T
+        return if (modelClass.isAssignableFrom(MeetingsViewModel::class.java)) {
+            MeetingsViewModel(meetingRepository) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")
         }

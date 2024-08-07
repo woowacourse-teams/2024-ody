@@ -7,7 +7,7 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.woowacourse.ody.R
-import com.woowacourse.ody.presentation.home.HomeActivity
+import com.woowacourse.ody.presentation.meetings.MeetingsActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -18,12 +18,12 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         window.makeTransparentStatusBar()
         initializeObserve()
-        viewModel.navigateToHome()
+        viewModel.navigateToMeetings()
     }
 
     private fun initializeObserve() {
         viewModel.navigateAction.observe(this) {
-            val intent = HomeActivity.getIntent(this@SplashActivity)
+            val intent = MeetingsActivity.getIntent(this@SplashActivity)
             startActivity(intent)
             finish()
         }

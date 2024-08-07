@@ -7,15 +7,15 @@
 
         <variable
             name="meeting"
-            type="com.woowacourse.ody.presentation.home.model.MeetingCatalogUiModel" />
+            type="com.woowacourse.ody.presentation.meetings.model.MeetingUiModel" />
 
         <variable
             name="toggleListener"
-            type="com.woowacourse.ody.presentation.home.listener.ToggleFoldListener" />
+            type="com.woowacourse.ody.presentation.meetings.listener.ToggleFoldListener" />
 
         <variable
-            name="homeListener"
-            type="com.woowacourse.ody.presentation.home.listener.HomeListener" />
+            name="meetingsListener"
+            type="com.woowacourse.ody.presentation.meetings.listener.MeetingsListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -94,7 +94,7 @@
                 style="@style/pretendard_regular_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/home_meeting_departure_postfix"
+                android:text="@string/meetings_departure_postfix"
                 app:layout_constraintBottom_toBottomOf="@id/tv_meeting_departure"
                 app:layout_constraintStart_toEndOf="@id/tv_meeting_departure"
                 app:layout_constraintTop_toTopOf="@id/tv_meeting_departure" />
@@ -114,7 +114,7 @@
                 style="@style/pretendard_regular_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/home_meeting_arrival_postfix"
+                android:text="@string/meetings_arrival_postfix"
                 app:layout_constraintBottom_toBottomOf="@id/tv_meeting_arrival"
                 app:layout_constraintStart_toEndOf="@id/tv_meeting_arrival"
                 app:layout_constraintTop_toTopOf="@id/tv_meeting_arrival" />
@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="22dp"
-            android:text="@{@string/home_meeting_eta_form(meeting.durationMinutes)}"
+            android:text="@{@string/meetings_eta_form(meeting.durationMinutes)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/layout_departure_arrival"
@@ -153,8 +153,8 @@
             app:enabled="@{meeting.isEnabled}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:onClickDisabled="@{() -> homeListener.guideItemDisabled()}"
-            app:onClickEnabled="@{() -> homeListener.navigateToMeetingRoom(meeting.id)}" />
+            app:onClickDisabled="@{() -> meetingsListener.guideItemDisabled()}"
+            app:onClickEnabled="@{() -> meetingsListener.navigateToMeetingRoom(meeting.id)}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

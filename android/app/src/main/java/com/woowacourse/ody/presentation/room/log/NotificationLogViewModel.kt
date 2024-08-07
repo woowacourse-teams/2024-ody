@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
-import com.woowacourse.ody.presentation.room.log.model.MeetingUiModel
+import com.woowacourse.ody.presentation.room.log.model.MeetingDetailUiModel
 import com.woowacourse.ody.presentation.room.log.model.NotificationLogUiModel
 import com.woowacourse.ody.presentation.room.log.model.toMeetingUiModel
 import com.woowacourse.ody.presentation.room.log.model.toNotificationUiModels
@@ -19,8 +19,8 @@ class NotificationLogViewModel(
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
-    private val _meeting = MutableLiveData<MeetingUiModel>()
-    val meeting: LiveData<MeetingUiModel> = _meeting
+    private val _meeting = MutableLiveData<MeetingDetailUiModel>()
+    val meeting: LiveData<MeetingDetailUiModel> = _meeting
 
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
     val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs

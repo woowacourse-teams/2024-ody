@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.home
+package com.woowacourse.ody.presentation.meetings
 
 import android.Manifest
 import android.app.AlertDialog
@@ -14,26 +14,26 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.woowacourse.ody.R
-import com.woowacourse.ody.databinding.ActivityHomeBinding
+import com.woowacourse.ody.databinding.ActivityMeetingsBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
-import com.woowacourse.ody.presentation.home.adapter.MeetingCatalogsAdapter
-import com.woowacourse.ody.presentation.home.listener.HomeListener
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
+import com.woowacourse.ody.presentation.meetings.adapter.MeetingsAdapter
+import com.woowacourse.ody.presentation.meetings.listener.MeetingsListener
 import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
 
-class HomeActivity :
-    BindingActivity<ActivityHomeBinding>(
-        R.layout.activity_home,
+class MeetingsActivity :
+    BindingActivity<ActivityMeetingsBinding>(
+        R.layout.activity_meetings,
     ),
-    HomeListener {
-    private val viewModel by viewModels<HomeViewModel> {
-        HomeViewModelFactory(
+    MeetingsListener {
+    private val viewModel by viewModels<MeetingsViewModel> {
+        MeetingsViewModelFactory(
             application.meetingRepository,
         )
     }
     private val adapter by lazy {
-        MeetingCatalogsAdapter(
+        MeetingsAdapter(
             viewModel,
             this,
         )
@@ -67,8 +67,8 @@ class HomeActivity :
     }
 
     override fun onFab() {
-        binding.cvMenuView.visibility = if (binding.fabHomeNavigator.isSelected) View.GONE else View.VISIBLE
-        binding.fabHomeNavigator.isSelected = !binding.fabHomeNavigator.isSelected
+        binding.cvMenuView.visibility = if (binding.fabMeetingsNavigator.isSelected) View.GONE else View.VISIBLE
+        binding.fabMeetingsNavigator.isSelected = !binding.fabMeetingsNavigator.isSelected
     }
 
     override fun onJoinMeeting() {
@@ -84,7 +84,7 @@ class HomeActivity :
     }
 
     override fun guideItemDisabled() {
-        showSnackBar(R.string.home_entrance_unavailable_guide)
+        showSnackBar(R.string.meetings_entrance_unavailable_guide)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -172,9 +172,9 @@ class HomeActivity :
         index: Int,
     ) {
         if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-            showSnackBar(R.string.home_notification_permission_guide)
+            showSnackBar(R.string.meetings_notification_permission_guide)
         } else {
-            showSnackBar(R.string.home_notification_permission_required)
+            showSnackBar(R.string.meetings_notification_permission_required)
         }
     }
 
@@ -182,6 +182,6 @@ class HomeActivity :
         private const val PERMISSIONS_REQUEST_CODE = 1
         private const val PERMISSION_REQUEST_CODE = 2
 
-        fun getIntent(context: Context): Intent = Intent(context, HomeActivity::class.java)
+        fun getIntent(context: Context): Intent = Intent(context, MeetingsActivity::class.java)
     }
 }

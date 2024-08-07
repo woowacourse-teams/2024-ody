@@ -6,10 +6,10 @@
     <data>
         <variable
             name="listener"
-            type="com.woowacourse.ody.presentation.home.listener.HomeListener" />
+            type="com.woowacourse.ody.presentation.meetings.listener.MeetingsListener" />
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.home.HomeViewModel" />
+            type="com.woowacourse.ody.presentation.meetings.MeetingsViewModel" />
         <variable
             name="isCatalogsEmpty"
             type="Boolean" />
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        tools:context=".presentation.home.HomeActivity">
+        tools:context=".presentation.meetings.MeetingsActivity">
 
         <include
             android:id="@+id/tb_intro"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
                 android:gravity="center"
-                android:text="@string/home_no_meeting_room_guide"
+                android:text="@string/meetings_no_meeting_room_guide"
                 app:layout_constraintEnd_toEndOf="@id/iv_ody_character"
                 app:layout_constraintStart_toStartOf="@id/iv_ody_character"
                 app:layout_constraintTop_toBottomOf="@id/iv_ody_character" />
@@ -76,8 +76,8 @@
             android:background="@drawable/rectangle_radius_15"
             android:backgroundTint="@color/purple_300"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/fab_home_navigator"
-            app:layout_constraintEnd_toEndOf="@id/fab_home_navigator">
+            app:layout_constraintBottom_toTopOf="@id/fab_meetings_navigator"
+            app:layout_constraintEnd_toEndOf="@id/fab_meetings_navigator">
 
             <TextView
                 android:id="@+id/tv_create_meeting"
@@ -111,7 +111,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_home_navigator"
+            android:id="@+id/fab_meetings_navigator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
