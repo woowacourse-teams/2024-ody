@@ -20,7 +20,6 @@ import com.woowacourse.ody.presentation.creation.destination.MeetingDestinationF
 import com.woowacourse.ody.presentation.creation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.creation.time.MeetingTimeFragment
 import com.woowacourse.ody.presentation.join.MeetingJoinActivity
-import com.woowacourse.ody.presentation.meetings.MeetingsActivity
 
 class MeetingCreationActivity :
     BindingActivity<ActivityMeetingCreationBinding>(R.layout.activity_meeting_creation),
@@ -114,7 +113,6 @@ class MeetingCreationActivity :
     }
 
     companion object {
-        fun getIntent(context: Context): Intent =
-            Intent(context, MeetingCreationActivity::class.java)
+        fun getIntent(context: Context): Intent = Intent(context, MeetingCreationActivity::class.java)
     }
 }
