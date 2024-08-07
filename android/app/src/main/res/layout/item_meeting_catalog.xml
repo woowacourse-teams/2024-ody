@@ -61,7 +61,6 @@
                 android:src="@drawable/ic_arrow_down"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="gone"
                 app:visibility="@{meeting.folded}" />
 
             <ImageView
