@@ -44,6 +44,10 @@ public class EtaService {
         Eta mateEta = findByMateId(requestMate.getId());
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
 
+        if (mateEtaRequest.isMissing()) {
+            updateRemainingMissingMinutes(mateEta);
+        }
+
         if (determineArrived(mateEtaRequest, meeting, now)) {
             updateArrived(mateEta);
         }
@@ -58,6 +62,10 @@ public class EtaService {
         return new MateEtaResponses(requestMate.getNicknameValue(), mateEtaResponses);
     }
 
+    private static void updateRemainingMissingMinutes(Eta mateEta) {
+        mateEta.updateRemainingMinutes(-1L);
+    }
+
     @Transactional
     public void updateArrived(Eta mateEta) {
         mateEta.updateArrived();
@@ -68,7 +76,7 @@ public class EtaService {
         if (mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null) {
             return;
         }
-        Location currentLocation = new Location("", mateEtaRequest.currentLatitude(), mateEtaRequest.currentLongitude());
+        Location currentLocation = new Location("서울", mateEtaRequest.currentLatitude(), mateEtaRequest.currentLongitude());
         RouteTime routeTime = routeService.calculateRouteTime(currentLocation, meeting.getTarget());
         mateEta.updateRemainingMinutes(routeTime.getMinutes());
     }
