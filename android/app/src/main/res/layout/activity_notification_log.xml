@@ -147,7 +147,7 @@
             android:backgroundTint="@color/purple_800"
             android:orientation="horizontal"
             android:padding="10dp"
-            app:visibility="@{vm.meeting.canSeeEta}">
+            app:visibility="@{vm.meeting.etaAccessible}">
 
             <ImageView
                 android:layout_width="wrap_content"
