@@ -41,12 +41,13 @@ object FakeMeetingRepository : MeetingRepository {
         return Result.success(
             MateEtaInfo(
                 userNickname = "mateA",
-                mateEtas = listOf(
-                    MateEta("mateA", EtaType.LATE, 1L),
-                    MateEta("mateB", EtaType.LATE, 1L),
-                    MateEta("mateC", EtaType.LATE, 1L),
-                ),
-            )
+                mateEtas =
+                    listOf(
+                        MateEta("mateA", EtaType.LATE, 1L),
+                        MateEta("mateB", EtaType.LATE, 1L),
+                        MateEta("mateC", EtaType.LATE, 1L),
+                    ),
+            ),
         )
     }
 
