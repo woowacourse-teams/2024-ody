@@ -1,12 +1,12 @@
 package com.ody.meeting.controller;
 
 import com.ody.common.annotation.AuthMember;
-import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
-import com.ody.mate.dto.request.MateEtaRequest;
-import com.ody.mate.dto.response.MateEtaResponses;
+import com.ody.eta.dto.request.MateEtaRequest;
+import com.ody.eta.dto.response.MateEtaResponses;
 import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
+import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
@@ -62,6 +62,24 @@ public class MeetingController implements MeetingControllerSwagger {
     }
 
     @Override
+    @GetMapping("/meetings/me")
+    public ResponseEntity<MeetingSaveResponses> findMine(@AuthMember Member member) {
+        MeetingSaveResponse meetingSaveResponse = new MeetingSaveResponse(
+                1L,
+                "우테코 16조",
+                LocalDate.parse("2024-07-15"),
+                LocalTime.parse("14:00"),
+                "서울 송파구 올림픽로35다길 42",
+                "37.515298",
+                "127.103113",
+                1,
+                List.of(new MateResponse("오디")),
+                "초대코드"
+        );
+        return ResponseEntity.ok(new MeetingSaveResponses(List.of(meetingSaveResponse)));
+    }
+
+    @Override
     @PostMapping("/v1/meetings")
     public ResponseEntity<MeetingSaveResponseV1> saveV1(
             @AuthMember Member member,
@@ -79,24 +97,6 @@ public class MeetingController implements MeetingControllerSwagger {
     ) {
         MeetingWithMatesResponse meetingWithMatesResponse = meetingService.findMeetingWithMates(member, meetingId);
         return ResponseEntity.ok(meetingWithMatesResponse);
-    }
-
-    @Override
-    @GetMapping("/meetings/me")
-    public ResponseEntity<MeetingSaveResponses> findMine(@AuthMember Member member) { // TODO: deprecated
-        MeetingSaveResponse meetingSaveResponse = new MeetingSaveResponse(
-                1L,
-                "우테코 16조",
-                LocalDate.parse("2024-07-15"),
-                LocalTime.parse("14:00"),
-                "서울 송파구 올림픽로35다길 42",
-                "37.515298",
-                "127.103113",
-                1,
-                List.of(new MateResponse("오디")),
-                "초대코드"
-        );
-        return ResponseEntity.ok(new MeetingSaveResponses(List.of(meetingSaveResponse)));
     }
 
     @Override
@@ -135,7 +135,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @PathVariable Long meetingId,
             @RequestBody MateEtaRequest mateEtaRequest
     ) {
-        MateEtaResponses mateStatuses = meetingService.findAllMateEtas(meetingId, mateEtaRequest);
+        MateEtaResponses mateStatuses = meetingService.findAllMateEtas(mateEtaRequest, meetingId, member);
         return ResponseEntity.ok(mateStatuses);
     }
 }

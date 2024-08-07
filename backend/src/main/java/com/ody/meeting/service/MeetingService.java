@@ -1,12 +1,11 @@
 package com.ody.meeting.service;
 
 import com.ody.common.exception.OdyNotFoundException;
-import com.ody.mate.domain.EtaStatus;
+import com.ody.eta.service.EtaService;
 import com.ody.mate.domain.Mate;
-import com.ody.mate.dto.request.MateEtaRequest;
+import com.ody.eta.dto.request.MateEtaRequest;
+import com.ody.eta.dto.response.MateEtaResponses;
 import com.ody.mate.dto.request.MateSaveRequest;
-import com.ody.mate.dto.response.MateEtaResponse;
-import com.ody.mate.dto.response.MateEtaResponses;
 import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.repository.MateRepository;
 import com.ody.mate.service.MateService;
@@ -33,9 +32,10 @@ public class MeetingService {
 
     private static final String DEFAULT_INVITE_CODE = "초대코드";
 
-    private final MeetingRepository meetingRepository;
-    private final MateRepository mateRepository;
     private final MateService mateService;
+    private final MeetingRepository meetingRepository;
+    private final EtaService etaService;
+    private final MateRepository mateRepository;
 
     @Transactional
     public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
@@ -64,7 +64,7 @@ public class MeetingService {
     }
 
     public MeetingFindByMemberResponses findAllByMember(Member member) {
-        return meetingRepository.findAllByMember(member)
+        return meetingRepository.findAllByMemberId(member.getId())
                 .stream()
                 .map(meeting -> makeMeetingFindByMemberResponse(member, meeting))
                 .sorted(Comparator.comparing(MeetingFindByMemberResponse::date)
@@ -74,19 +74,13 @@ public class MeetingService {
 
     private MeetingFindByMemberResponse makeMeetingFindByMemberResponse(Member member, Meeting meeting) {
         int mateCount = mateRepository.countByMeetingId(meeting.getId());
-        Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId());
+        Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId())
+                .orElseThrow(() -> new OdyNotFoundException("참여하고 있지 않는 약속방입니다"));
         return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
     }
 
-    public MateEtaResponses findAllMateEtas(Long meetingId, MateEtaRequest mateEtaRequest) {
-        List<MateEtaResponse> mateStatuses = List.of(
-                new MateEtaResponse("콜리", EtaStatus.LATE_WARNING, 83L),
-                new MateEtaResponse("올리브", EtaStatus.ARRIVAL_SOON, 10L),
-                new MateEtaResponse("해음", EtaStatus.ARRIVED, 0L),
-                new MateEtaResponse("카키공주", EtaStatus.MISSING, -1L)
-        );
-
-        return new MateEtaResponses(mateStatuses);
+    public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
+        return etaService.findAllMateEtas(mateEtaRequest, meetingId, member);
     }
 
     public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {

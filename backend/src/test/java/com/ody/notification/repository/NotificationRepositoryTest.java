@@ -47,13 +47,10 @@ class NotificationRepositoryTest {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Member member2 = memberRepository.save(Fixture.MEMBER2);
 
-        Location origin = Fixture.ORIGIN_LOCATION;
-        Location target = Fixture.TARGET_LOCATION;
-        Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
-        meetingRepository.save(meeting);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
 
-        Mate mate1 = mateRepository.save(new Mate(meeting, member1, new Nickname("은별"), origin));
-        Mate mate2 = mateRepository.save(new Mate(meeting, member2, new Nickname("콜리"), origin));
+        Mate mate1 = mateRepository.save(new Mate(odyMeeting, member1, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L));
+        Mate mate2 = mateRepository.save(new Mate(odyMeeting, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L));
 
         Notification notification1 = new Notification(
                 mate1,
@@ -70,7 +67,7 @@ class NotificationRepositoryTest {
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogs(meeting.getId());
+        List<Notification> notifications = notificationRepository.findAllMeetingLogs(odyMeeting.getId());
 
         assertThat(notifications.size()).isEqualTo(2);
     }
@@ -81,13 +78,10 @@ class NotificationRepositoryTest {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Member member2 = memberRepository.save(Fixture.MEMBER2);
 
-        Location origin = Fixture.ORIGIN_LOCATION;
-        Location target = Fixture.TARGET_LOCATION;
-        Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
-        meetingRepository.save(meeting);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
 
-        Mate mate1 = mateRepository.save(new Mate(meeting, member1, new Nickname("은별"), origin));
-        Mate mate2 = mateRepository.save(new Mate(meeting, member2, new Nickname("콜리"), origin));
+        Mate mate1 = mateRepository.save(new Mate(odyMeeting, member1, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L));
+        Mate mate2 = mateRepository.save(new Mate(odyMeeting, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L));
 
         Notification pastNotification = new Notification(
                 mate1,
@@ -104,7 +98,7 @@ class NotificationRepositoryTest {
         notificationRepository.save(pastNotification);
         notificationRepository.save(futureNotification);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogs(meeting.getId());
+        List<Notification> notifications = notificationRepository.findAllMeetingLogs(odyMeeting.getId());
 
         assertThat(notifications.size()).isOne();
     }

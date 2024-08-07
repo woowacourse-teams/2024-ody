@@ -17,9 +17,7 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         return runCatching { service.getInviteCodeValidity(inviteCode) }
     }
 
-    override suspend fun fetchMeeting(): Result<List<Meeting>> {
-        return runCatching { service.getMeeting().meetings.map { it.toMeeting() } }
-    }
+    override suspend fun fetchMeeting(meetingId: Long): Result<Meeting> = runCatching { service.fetchMeeting(meetingId).toMeeting() }
 
     override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> =
         runCatching { service.postMeeting(meetingCreationInfo.toMeetingRequest()).inviteCode }
@@ -33,7 +31,7 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         return runCatching {
             service.patchMatesEta(
                 meetingId,
-                MatesEtaRequest(isMissing, currentLatitude, currentLongitude),
+                MatesEtaRequest(isMissing, compress(currentLatitude), compress(currentLongitude)),
             ).toMateEtaInfo()
         }
     }
@@ -42,4 +40,10 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         runCatching {
             service.fetchMeetingCatalogs().toMeetingCatalogs()
         }
+
+    private fun compress(coordinate: String): String = coordinate.slice(COORDINATE_RANGE)
+
+    companion object {
+        private val COORDINATE_RANGE = (0..8)
+    }
 }

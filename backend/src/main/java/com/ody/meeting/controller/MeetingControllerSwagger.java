@@ -1,10 +1,10 @@
 package com.ody.meeting.controller;
 
-import com.ody.mate.dto.request.MateEtaRequest;
-import com.ody.mate.dto.response.MateEtaResponses;
+import com.ody.eta.dto.request.MateEtaRequest;
+import com.ody.eta.dto.response.MateEtaResponses;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
-import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
+import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
@@ -31,44 +31,6 @@ import org.springframework.http.ResponseEntity;
 public interface MeetingControllerSwagger {
 
     @Operation(
-            deprecated = true,
-            summary = "약속 개설",
-            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequest.class))),
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "약속 개설 성공",
-                            content = @Content(schema = @Schema(implementation = MeetingSaveResponse.class))
-                    )
-            }
-    )
-    @ErrorCode400
-    @ErrorCode401
-    @ErrorCode500
-    ResponseEntity<MeetingSaveResponse> save(
-            @Parameter(hidden = true) Member member,
-            MeetingSaveRequest meetingSaveRequest
-    );
-
-    @Operation(
-            summary = "약속 단건 조회",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "약속 단건 조회 성공",
-                            content = @Content(schema = @Schema(implementation = MeetingWithMatesResponse.class))
-                    )
-            }
-    )
-    @ErrorCode401
-    @ErrorCode404(description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우")
-    @ErrorCode500
-    ResponseEntity<MeetingWithMatesResponse> findMeetingWithMates(
-            @Parameter(hidden = true) Member member,
-            Long meetingId
-    );
-
-    @Operation(
             summary = "참여중인 약속 목록 조회",
             responses = {
                     @ApiResponse(
@@ -82,20 +44,6 @@ public interface MeetingControllerSwagger {
     @ErrorCode401
     @ErrorCode500
     ResponseEntity<MeetingSaveResponses> findMine(@Parameter(hidden = true) Member member);
-
-    @Operation(
-            summary = "내 약속 목록 조회",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "내 약속 목록 조회 성공",
-                            content = @Content(schema = @Schema(implementation = MeetingFindByMemberResponses.class))
-                    )
-            }
-    )
-    @ErrorCode401
-    @ErrorCode500
-    ResponseEntity<MeetingFindByMemberResponses> findAllByMember(@Parameter(hidden = true) Member member);
 
     @Operation(
             summary = "로그 목록 조회",
@@ -117,6 +65,38 @@ public interface MeetingControllerSwagger {
     ResponseEntity<NotiLogFindResponses> findAllMeetingLogs(@Parameter(hidden = true) Member member, Long meetingId);
 
     @Operation(
+            summary = "약속 단건 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "약속 단건 조회 성공",
+                            content = @Content(schema = @Schema(implementation = MeetingWithMatesResponse.class))
+                    )
+            }
+    )
+    @ErrorCode401
+    @ErrorCode404(description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우")
+    @ErrorCode500
+    ResponseEntity<MeetingWithMatesResponse> findMeetingWithMates(
+            @Parameter(hidden = true) Member member,
+            Long meetingId
+    );
+
+    @Operation(
+            summary = "내 약속 목록 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "내 약속 목록 조회 성공",
+                            content = @Content(schema = @Schema(implementation = MeetingFindByMemberResponses.class))
+                    )
+            }
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<MeetingFindByMemberResponses> findAllByMember(@Parameter(hidden = true) Member member);
+
+    @Operation(
             summary = "초대코드 유효성 검사",
             responses = {
                     @ApiResponse(responseCode = "200", description = "유효한 초대 코드"),
@@ -127,6 +107,25 @@ public interface MeetingControllerSwagger {
     @ErrorCode404(description = "유효하지 않은 초대코드")
     @ErrorCode500
     ResponseEntity<Void> validateInviteCode(@Parameter(hidden = true) Member member, String inviteCode);
+
+    @Operation(
+            summary = "모임 개설",
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequest.class))),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "모임 개설 성공",
+                            content = @Content(schema = @Schema(implementation = MeetingSaveResponse.class))
+                    )
+            }
+    )
+    @ErrorCode400
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<MeetingSaveResponse> save(
+            @Parameter(hidden = true) Member member,
+            MeetingSaveRequest meetingSaveRequest
+    );
 
     @Operation(
             summary = "약속 개설",
@@ -163,6 +162,7 @@ public interface MeetingControllerSwagger {
                     )
             }
     )
+    @ErrorCode400
     @ErrorCode401
     @ErrorCode404(description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우")
     @ErrorCode500

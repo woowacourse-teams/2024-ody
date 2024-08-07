@@ -31,21 +31,22 @@ class MeetingRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
+
     @DisplayName("특정 멤버의 약속 목록을 반환한다.")
     @Test
-    void findAllByMember() {
+    void findAllByMemberId() {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Member member2 = memberRepository.save(Fixture.MEMBER2);
-        Meeting meeting1 = meetingRepository.save(Fixture.ODY_MEETING1);
-        Meeting meeting2 = meetingRepository.save(Fixture.ODY_MEETING2);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        Meeting sojuMeeting = meetingRepository.save(Fixture.SOJU_MEETING);
 
-        mateRepository.save(new Mate(meeting1, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION));
-        mateRepository.save(new Mate(meeting2, member1, new Nickname("카키 같은 조조"), Fixture.ORIGIN_LOCATION));
+        mateRepository.save(new Mate(odyMeeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
+        mateRepository.save(new Mate(sojuMeeting, member1, new Nickname("카키 같은 조조"), Fixture.ORIGIN_LOCATION, 10L));
 
-        mateRepository.save(new Mate(meeting1, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION));
+        mateRepository.save(new Mate(odyMeeting, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L));
 
-        List<Meeting> member1Meetings = meetingRepository.findAllByMember(member1);
-        List<Meeting> member2Meetings = meetingRepository.findAllByMember(member2);
+        List<Meeting> member1Meetings = meetingRepository.findAllByMemberId(member1.getId());
+        List<Meeting> member2Meetings = meetingRepository.findAllByMemberId(member2.getId());
 
         assertAll(
                 () -> assertThat(member1Meetings).hasSize(2),

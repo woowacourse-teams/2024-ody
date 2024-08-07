@@ -25,8 +25,8 @@ public record MateSaveRequest(
         String originLongitude
 ) {
 
-    public Mate toMate(Meeting meeting, Member member) {
+    public Mate toMate(Meeting meeting, Member member, long estimatedMinutes) {
         Location origin = new Location(originAddress, originLatitude, originLongitude);
-        return new Mate(meeting, member, new Nickname(nickname), origin);
+        return new Mate(meeting, member, new Nickname(nickname), origin, estimatedMinutes);
     }
 }

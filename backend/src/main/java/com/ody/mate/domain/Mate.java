@@ -60,8 +60,8 @@ public class Mate {
     @NotNull
     private long estimatedMinutes;
 
-    public Mate(Meeting meeting, Member member, Nickname nickname, Location origin) {
-        this(null, meeting, member, nickname, origin, 30); // TODO: 실제 소요시간 저장
+    public Mate(Meeting meeting, Member member, Nickname nickname, Location origin, long estimatedMinutes) {
+        this(null, meeting, member, nickname, origin, estimatedMinutes);
     }
 
     public String getNicknameValue() {

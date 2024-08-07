@@ -13,8 +13,7 @@ public class RouteService {
 
     private final RouteClient routeClient;
 
-    public DepartureTime calculateDepartureTime(Location origin, Location target, LocalDateTime meetingTime) {
-        RouteTime routeTime = routeClient.calculateRouteTime(origin, target);
-        return new DepartureTime(routeTime, meetingTime);
+    public RouteTime calculateRouteTime(Location origin, Location target) {
+        return routeClient.calculateRouteTime(origin, target);
     }
 }

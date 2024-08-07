@@ -1,5 +1,6 @@
 package com.ody.common;
 
+import com.ody.common.config.JpaAuditingConfig;
 import com.ody.notification.config.FcmConfig;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.FcmSubscriber;
@@ -11,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-@Import(TestRouteConfig.class)
+@Import({JpaAuditingConfig.class, TestRouteConfig.class})
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 public abstract class BaseServiceTest {

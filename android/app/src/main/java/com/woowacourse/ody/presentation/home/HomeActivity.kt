@@ -84,7 +84,7 @@ class HomeActivity :
     }
 
     override fun guideItemDisabled() {
-        showSnackBar(R.string.intro_notification_permission_required)
+        showSnackBar(R.string.home_entrance_unavailable_guide)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -172,9 +172,9 @@ class HomeActivity :
         index: Int,
     ) {
         if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-            showSnackBar(R.string.intro_notification_permission_guide)
+            showSnackBar(R.string.home_notification_permission_guide)
         } else {
-            showSnackBar(R.string.intro_notification_permission_required)
+            showSnackBar(R.string.home_notification_permission_required)
         }
     }
 

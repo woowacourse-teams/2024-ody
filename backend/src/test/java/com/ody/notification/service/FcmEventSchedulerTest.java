@@ -42,9 +42,9 @@ class FcmEventSchedulerTest extends BaseServiceTest {
     @DisplayName("예약 알림이 2초 후에 전송된다")
     @Test
     void testScheduledNotificationIsSentAtCorrectTime() throws InterruptedException {
-        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
+        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
         Member member = memberRepository.save(Fixture.MEMBER1);
-        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION));
+        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
 
         LocalDateTime sendAt = LocalDateTime.now().plusSeconds(2);
         Notification notification = notificationRepository.save(new Notification(
