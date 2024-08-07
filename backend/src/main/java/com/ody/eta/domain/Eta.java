@@ -67,10 +67,14 @@ public class Eta {
     public long countDownMinutes(LocalDateTime localDateTime) {
         long minutesDifference = Duration.between(updatedAt, localDateTime).toMinutes();
         long remainingMinutes = Math.max(this.remainingMinutes - minutesDifference, 0);
-        if (remainingMinutes == 0L && !isArrived) {
+        if (isArrivalSoon(remainingMinutes)) {
             return 1L;
         }
         return remainingMinutes;
+    }
+
+    private boolean isArrivalSoon(long remainingMinutes) {
+        return remainingMinutes == 0L && !isArrived;
     }
 
     public long differenceMinutesFromLastUpdated() {
