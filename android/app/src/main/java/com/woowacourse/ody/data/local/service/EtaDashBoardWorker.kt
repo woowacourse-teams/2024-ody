@@ -48,8 +48,7 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
             Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
-        val type = Types.newParameterizedType(MateEtaInfoResponse::class.java)
-        val jsonAdapter = moshi.adapter<MateEtaInfoResponse>(type)
+        val jsonAdapter = moshi.adapter(MateEtaInfoResponse::class.java)
         return jsonAdapter.toJson(this)
     }
 

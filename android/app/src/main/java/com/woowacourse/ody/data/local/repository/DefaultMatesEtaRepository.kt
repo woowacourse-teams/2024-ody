@@ -46,8 +46,7 @@ class DefaultMatesEtaRepository(
             Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
-        val type = Types.newParameterizedType(MateEtaInfoResponse::class.java)
-        val jsonAdapter = moshi.adapter<MateEtaInfoResponse>(type)
+        val jsonAdapter = moshi.adapter(MateEtaInfoResponse::class.java)
         val convertResult = jsonAdapter.fromJson(this) ?: return null
         return MateEtaInfo(convertResult.userNickname, convertResult.mateEtas)
     }
