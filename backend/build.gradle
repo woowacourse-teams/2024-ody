@@ -62,3 +62,7 @@ tasks.named('test') {
 	useJUnitPlatform()
 	finalizedBy jacocoTestReport
 }
+
+configurations.all {
+	exclude group: 'commons-logging', module: 'commons-logging'
+}
