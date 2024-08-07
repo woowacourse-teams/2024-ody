@@ -76,7 +76,7 @@ class MeetingServiceTest extends BaseServiceTest {
     @DisplayName("내 약속 목록 조회 시 약속 시간이 현재 시간으로부터 24시간 이내인 약속부터 미래의 약속까지만 조회된다.")
     @Test
     void findAllByMemberFilterTime() {
-        Member member = memberRepository.save(new Member(new DeviceToken("Bearer device-token=member-dt")));
+        Member member = memberRepository.save(Fixture.MEMBER1);
 
         Meeting meeting24Hours1MinuteAgo = meetingRepository.save(Fixture.MEETING_24_HOURS_1_MINUTE_AGO);
         Meeting meeting24HoursAgo = meetingRepository.save(Fixture.MEETING_24_HOURS_AGO);
@@ -98,7 +98,7 @@ class MeetingServiceTest extends BaseServiceTest {
                 .map(MeetingFindByMemberResponse::id)
                 .toList();
 
-        assertThat(meetingIds).containsExactly(meeting23Hours59MinutesAgo.getId());
+        assertThat(meetingIds).containsExactly(meeting24HoursAgo.getId(), meeting23Hours59MinutesAgo.getId());
     }
 
     @DisplayName("약속 저장 및 초대 코드 갱신에 성공한다")
