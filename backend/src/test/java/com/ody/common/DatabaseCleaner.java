@@ -18,6 +18,7 @@ public class DatabaseCleaner {
     @Transactional
     public void cleanUp() {
         cleanNotification();
+        cleanEta();
         cleanMate();
         cleanMeeting();
         cleanMember();
@@ -33,6 +34,18 @@ public class DatabaseCleaner {
         entityManager.flush();
         entityManager.clear();
     }
+
+    private void cleanEta() {
+        entityManager.createQuery("DELETE FROM Eta")
+                .executeUpdate();
+
+        entityManager.createNativeQuery("ALTER TABLE eta ALTER COLUMN id RESTART WITH 1")
+                .executeUpdate();
+
+        entityManager.flush();
+        entityManager.clear();
+    }
+
 
     private void cleanMate() {
         entityManager.createQuery("DELETE FROM Mate")

@@ -51,9 +51,14 @@ class MeetingServiceTest extends BaseServiceTest {
         Meeting meetingTomorrowAt14 = meetingRepository.save(Fixture.ODY_MEETING5);
 
         mateRepository.save(
-                new Mate(meetingDayAfterTomorrowAt14, member, new Nickname("제리1"), Fixture.ORIGIN_LOCATION));
-        mateRepository.save(new Mate(meetingTomorrowAt12, member, new Nickname("제리2"), Fixture.ORIGIN_LOCATION));
-        mateRepository.save(new Mate(meetingTomorrowAt14, member, new Nickname("제리3"), Fixture.ORIGIN_LOCATION));
+                new Mate(meetingDayAfterTomorrowAt14, member, new Nickname("제리1"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+        mateRepository.save(
+                new Mate(meetingTomorrowAt12, member, new Nickname("제리2"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+        mateRepository.save(
+                new Mate(meetingTomorrowAt14, member, new Nickname("제리3"), Fixture.ORIGIN_LOCATION, 10L)
+        );
 
         List<MeetingFindByMemberResponse> meetings = meetingService.findAllByMember(member).meetings();
 
@@ -71,14 +76,14 @@ class MeetingServiceTest extends BaseServiceTest {
     @DisplayName("약속 저장 및 초대 코드 갱신에 성공한다")
     @Test
     void saveV1Success() {
-        Meeting testMeeting = Fixture.ODY_MEETING1;
+        Meeting odyMeeting = Fixture.ODY_MEETING;
         MeetingSaveRequestV1 request = new MeetingSaveRequestV1(
-                testMeeting.getName(),
-                testMeeting.getDate(),
-                testMeeting.getTime(),
-                testMeeting.getTarget().getAddress(),
-                testMeeting.getTarget().getLatitude(),
-                testMeeting.getTarget().getLongitude()
+                odyMeeting.getName(),
+                odyMeeting.getDate(),
+                odyMeeting.getTime(),
+                odyMeeting.getTarget().getAddress(),
+                odyMeeting.getTarget().getLatitude(),
+                odyMeeting.getTarget().getLongitude()
         );
 
         MeetingSaveResponseV1 response = meetingService.saveV1(request);
@@ -100,10 +105,10 @@ class MeetingServiceTest extends BaseServiceTest {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Member member2 = memberRepository.save(Fixture.MEMBER2);
 
-        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING1);
+        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
 
-        Mate mate1 = new Mate(meeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION);
-        Mate mate2 = new Mate(meeting, member2, new Nickname("제리"), Fixture.ORIGIN_LOCATION);
+        Mate mate1 = new Mate(meeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L);
+        Mate mate2 = new Mate(meeting, member2, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L);
 
         mateRepository.save(mate1);
         mateRepository.save(mate2);

@@ -4,7 +4,6 @@ import com.ody.common.annotation.AuthMember;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.response.MateResponse;
 import com.ody.mate.dto.response.MateSaveResponse;
-import com.ody.mate.service.MateService;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MateController implements MateControllerSwagger {
 
-    private final MateService mateService;
     private final MeetingService meetingService;
 
     @PostMapping("/mates")
