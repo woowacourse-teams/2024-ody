@@ -37,7 +37,6 @@ class EtaDashboardActivity :
 
     private fun initializeMateEtaList() {
         binding.rvDashboard.adapter = adapter
-        binding.rvDashboard.itemAnimator = null
     }
 
     override fun initializeBinding() {
