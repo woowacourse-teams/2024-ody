@@ -42,6 +42,10 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         runCatching {
             service.fetchMeetingCatalogs().toMeetingCatalogs()
         }
-        
-    private fun compress(coordinate: String): String = coordinate.slice(0..8)
+
+    private fun compress(coordinate: String): String = coordinate.slice(COORDINATE_RANGE)
+
+    companion object {
+        private val COORDINATE_RANGE = (0..8)
+    }
 }
