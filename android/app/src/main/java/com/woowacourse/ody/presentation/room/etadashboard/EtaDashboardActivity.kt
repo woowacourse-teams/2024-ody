@@ -43,12 +43,12 @@ class EtaDashboardActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeListAdapter()
+        initializeMateEtaList()
         initializeObserve()
         initializePersistentBottomSheet()
     }
 
-    private fun initializeListAdapter() {
+    private fun initializeMateEtaList() {
         binding.rvDashboard.adapter = adapter
     }
 
