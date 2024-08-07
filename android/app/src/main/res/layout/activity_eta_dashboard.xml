@@ -5,37 +5,62 @@
 
     <data>
 
+        <variable
+            name="title"
+            type="java.lang.String" />
+
+        <variable
+            name="shareListener"
+            type="com.woowacourse.ody.presentation.room.log.listener.ShareListener" />
+
+        <variable
+            name="copyInviteCodeListener"
+            type="com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener" />
+
+        <variable
+            name="backListener"
+            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/tb_dashboard"
-            layout="@layout/toolbar_meeting_room"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/rv_dashboard"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_dashboard"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:paddingVertical="11dp"
-            app:itemAnimator="@{null}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tb_dashboard"
-            tools:listitem="@layout/item_eta_dashboard" />
+            <include
+                android:id="@+id/tb_dashboard"
+                layout="@layout/toolbar_meeting_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:backListener="@{backListener}"
+                app:layout_constraintBottom_toTopOf="@+id/rv_dashboard"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shareListener="@{shareListener}"
+                app:title="@{title}" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_dashboard"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:clipToPadding="false"
+                android:paddingVertical="11dp"
+                app:itemAnimator="@{null}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tb_dashboard"
+                tools:listitem="@layout/item_eta_dashboard" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             layout="@layout/bottom_sheet_code_copy"
-            android:visibility="gone" />
+            app:copyInviteCodeListener="@{copyInviteCodeListener}" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>
