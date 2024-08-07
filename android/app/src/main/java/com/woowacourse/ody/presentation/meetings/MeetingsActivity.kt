@@ -67,8 +67,8 @@ class MeetingsActivity :
     }
 
     override fun onFab() {
-        binding.cvMenuView.visibility = if (binding.fabHomeNavigator.isSelected) View.GONE else View.VISIBLE
-        binding.fabHomeNavigator.isSelected = !binding.fabHomeNavigator.isSelected
+        binding.cvMenuView.visibility = if (binding.fabMeetingsNavigator.isSelected) View.GONE else View.VISIBLE
+        binding.fabMeetingsNavigator.isSelected = !binding.fabMeetingsNavigator.isSelected
     }
 
     override fun onJoinMeeting() {
@@ -84,7 +84,7 @@ class MeetingsActivity :
     }
 
     override fun guideItemDisabled() {
-        showSnackBar(R.string.home_entrance_unavailable_guide)
+        showSnackBar(R.string.meetings_entrance_unavailable_guide)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -172,9 +172,9 @@ class MeetingsActivity :
         index: Int,
     ) {
         if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-            showSnackBar(R.string.home_notification_permission_guide)
+            showSnackBar(R.string.meetings_notification_permission_guide)
         } else {
-            showSnackBar(R.string.home_notification_permission_required)
+            showSnackBar(R.string.meetings_notification_permission_required)
         }
     }
 

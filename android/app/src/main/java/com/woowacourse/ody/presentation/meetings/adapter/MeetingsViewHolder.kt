@@ -15,6 +15,6 @@ class MeetingsViewHolder(private val binding: ItemMeetingCatalogBinding) :
     ) {
         binding.meeting = item
         binding.toggleListener = toggleFoldListener
-        binding.homeListener = meetingsListener
+        binding.meetingsListener = meetingsListener
     }
 }

@@ -18,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         window.makeTransparentStatusBar()
         initializeObserve()
-        viewModel.navigateToHome()
+        viewModel.navigateToMeetings()
     }
 
     private fun initializeObserve() {

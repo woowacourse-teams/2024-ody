@@ -18,16 +18,16 @@ fun TextView.showDateTime(dateTime: LocalDateTime) {
     val dateString =
         when {
             isToday -> {
-                context.getString(R.string.home_today)
+                context.getString(R.string.meetings_today)
             }
 
             isTomorrow -> {
-                context.getString(R.string.home_tomorrow)
+                context.getString(R.string.meetings_tomorrow)
             }
 
             meetingDay <= today.plusDays(7) -> {
                 context.getString(
-                    R.string.home_post_tomorrow,
+                    R.string.meetings_post_tomorrow,
                     (meetingDay.dayOfYear - today.dayOfYear).toString(),
                 )
             }

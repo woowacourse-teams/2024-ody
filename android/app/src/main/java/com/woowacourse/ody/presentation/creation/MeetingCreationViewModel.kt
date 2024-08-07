@@ -159,7 +159,7 @@ class MeetingCreationViewModel(
     }
 
     fun navigateToIntro() {
-        _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToHome)
+        _navigateAction.setValue(MeetingCreationNavigateAction.navigateToMeetings)
     }
 
     override fun onClickCreationMeeting() {
