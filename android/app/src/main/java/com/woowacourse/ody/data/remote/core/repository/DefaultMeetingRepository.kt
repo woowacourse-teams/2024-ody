@@ -31,7 +31,7 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         return runCatching {
             service.patchMatesEta(
                 meetingId,
-                MatesEtaRequest(isMissing, currentLatitude, currentLongitude),
+                MatesEtaRequest(isMissing, compress(currentLatitude), compress(currentLongitude)),
             ).toMateEtas()
         }
     }
@@ -40,4 +40,10 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         runCatching {
             service.fetchMeetingCatalogs().toMeetingCatalogs()
         }
+
+    private fun compress(coordinate: String): String = coordinate.slice(COORDINATE_RANGE)
+
+    companion object {
+        private val COORDINATE_RANGE = (0..8)
+    }
 }
