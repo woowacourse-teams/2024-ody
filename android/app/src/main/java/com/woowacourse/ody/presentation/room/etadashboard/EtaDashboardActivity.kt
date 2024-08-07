@@ -31,12 +31,13 @@ class EtaDashboardActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeListAdapter()
+        initializeMateEtaList()
         initializeObserve()
     }
 
-    private fun initializeListAdapter() {
+    private fun initializeMateEtaList() {
         binding.rvDashboard.adapter = adapter
+        binding.rvDashboard.itemAnimator = null
     }
 
     override fun initializeBinding() {
