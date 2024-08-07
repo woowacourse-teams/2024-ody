@@ -73,10 +73,12 @@ class MeetingsActivity :
 
     override fun onJoinMeeting() {
         startActivity(InviteCodeActivity.getIntent(this))
+        closeNavigateMenu()
     }
 
     override fun onCreateMeeting() {
         startActivity(MeetingCreationActivity.getIntent(this))
+        closeNavigateMenu()
     }
 
     override fun navigateToMeetingRoom(meetingId: Long) {
@@ -85,6 +87,11 @@ class MeetingsActivity :
 
     override fun guideItemDisabled() {
         showSnackBar(R.string.meetings_entrance_unavailable_guide)
+    }
+
+    private fun closeNavigateMenu() {
+        binding.cvMenuView.visibility = View.GONE
+        binding.fabMeetingsNavigator.isSelected = false
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
