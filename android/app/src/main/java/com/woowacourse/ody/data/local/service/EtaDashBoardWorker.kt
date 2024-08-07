@@ -20,6 +20,7 @@ import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resumeWithException
 
@@ -38,15 +39,10 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
             return Result.failure()
         }
 
-        val mateEtas = getLocation()
-
-        return if (mateEtas != null) {
-            val mateEtaResponses =
-                mateEtas.map { MateEtaResponse(it.nickname, it.etaType, it.durationMinute) }
-            Result.success(workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses.convertMateEtasToJson()))
-        } else {
-            Result.failure()
-        }
+        val mateEtas = getLocation() ?: return Result.failure()
+        val mateEtaResponses =
+            mateEtas.map { MateEtaResponse(it.nickname, it.etaType, it.durationMinute) }
+        return Result.success(workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses.convertMateEtasToJson()))
     }
 
     @SuppressLint("MissingPermission")
@@ -64,25 +60,23 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
                 fusedLocationProviderClient.lastLocation
                     .addOnSuccessListener { location ->
                         continuation.resume(location) {
-                            if (location.latitude == 0.0 && location.longitude == 0.0) {
-                                return@resume
-                            }
+                            Timber.d("${location.latitude} ${location.longitude}")
                         }
                     }.addOnFailureListener { exception ->
                         continuation.resumeWithException(exception)
                     }
             }
 
-        return if (location != null) {
-            meetingRepository.patchMatesEta(
-                meetingId,
-                false,
-                location.latitude.toString(),
-                location.longitude.toString(),
-            ).getOrNull()
-        } else {
-            meetingRepository.patchMatesEta(meetingId, false, "0.0", "0.0").getOrNull()
+        if (location.latitude == 0.0 && location.longitude == 0.0) {
+            return meetingRepository.patchMatesEta(meetingId, true, "0.0", "0.0").getOrNull()
         }
+
+        return meetingRepository.patchMatesEta(
+            meetingId,
+            false,
+            location.latitude.toString(),
+            location.longitude.toString(),
+        ).getOrNull()
     }
 
     private fun List<MateEtaResponse>.convertMateEtasToJson(): String {
