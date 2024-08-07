@@ -49,7 +49,7 @@ public class EtaService {
         }
 
         if (!mateEta.isArrived() && isOdysayCallTime(mateEta)) {
-            updateRemainingMinutes(mateEta, requestMate, meeting);
+            updateRemainingMinutes(mateEta, mateEtaRequest, meeting);
         }
 
         List<MateEtaResponse> mateEtaResponses = etaRepository.findAllByMeetingId(meetingId).stream()
@@ -65,6 +65,9 @@ public class EtaService {
 
     @Transactional
     public void updateRemainingMinutes(Eta mateEta, MateEtaRequest mateEtaRequest, Meeting meeting) {
+        if (mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null) {
+            return;
+        }
         Location currentLocation = new Location("", mateEtaRequest.currentLatitude(), mateEtaRequest.currentLongitude());
         RouteTime routeTime = routeService.calculateRouteTime(currentLocation, meeting.getTarget());
         mateEta.updateRemainingMinutes(routeTime.getMinutes());
