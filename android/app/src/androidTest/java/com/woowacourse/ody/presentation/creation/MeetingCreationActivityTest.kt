@@ -1,9 +1,9 @@
-package com.woowacourse.ody.presentation.creation.name
+package com.woowacourse.ody.presentation.creation
 
-import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.Visibility
@@ -12,18 +12,17 @@ import androidx.test.espresso.matcher.ViewMatchers.isNotEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.woowacourse.ody.R
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class MeetingNameFragmentTest {
-    @Before
-    fun setUp() {
-        launchFragmentInContainer<MeetingNameFragment>()
-    }
+class MeetingCreationActivityTest {
+    @get:Rule
+    val activityRule = ActivityScenarioRule(MeetingCreationActivity::class.java)
 
     @Test
     fun `아무것도_입력하지_않으면_다음_버튼이_비활성화_된다`() {
@@ -47,11 +46,11 @@ class MeetingNameFragmentTest {
 
         // when
         meetingNameEditText
-            .perform(typeText("안녕하세요안녕하세요안녕하세요안녕"))
+            .perform(replaceText("안녕하세요안녕하세요안녕하세요안녕"))
 
         // then
         meetingNameEditText
-            .check(matches(withText("하세요안녕하세요안녕하세요안녕")))
+            .check(matches(withText("안녕하세요안녕하세요안녕하세요")))
     }
 
     @Test
