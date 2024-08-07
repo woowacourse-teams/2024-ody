@@ -36,7 +36,7 @@ public class EtaService {
         return etaRepository.save(new Eta(mate, routeTime.getMinutes()));
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
         Mate requestMate = findByMeetingIdAndMemberId(meetingId, member.getId());
         Meeting meeting = requestMate.getMeeting();
@@ -45,40 +45,28 @@ public class EtaService {
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
 
         if (mateEtaRequest.isMissing()) {
-            updateRemainingMissingMinutes(mateEta);
+            mateEta.updateRemainingMinutes(-1L);
         }
 
         if (determineArrived(mateEtaRequest, meeting, now)) {
-            updateArrived(mateEta);
+            mateEta.updateArrived();
         }
 
-        if (!mateEta.isArrived() && isOdysayCallTime(mateEta)) {
-            updateRemainingMinutes(mateEta, mateEtaRequest, meeting);
+        if ((!mateEta.isArrived() && isOdysayCallTime(mateEta)) &&
+                !(mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null)) {
+            Location currentLocation = new Location(
+                    "서울",
+                    mateEtaRequest.currentLatitude(),
+                    mateEtaRequest.currentLongitude()
+            );
+            RouteTime routeTime = routeService.calculateRouteTime(currentLocation, meeting.getTarget());
+            mateEta.updateRemainingMinutes(routeTime.getMinutes());
         }
 
         List<MateEtaResponse> mateEtaResponses = etaRepository.findAllByMeetingId(meetingId).stream()
                 .map(eta -> MateEtaResponse.of(eta, mateEtaRequest.isMissing(), meetingTime, now))
                 .toList();
         return new MateEtaResponses(requestMate.getNicknameValue(), mateEtaResponses);
-    }
-
-    private static void updateRemainingMissingMinutes(Eta mateEta) {
-        mateEta.updateRemainingMinutes(-1L);
-    }
-
-    @Transactional
-    public void updateArrived(Eta mateEta) {
-        mateEta.updateArrived();
-    }
-
-    @Transactional
-    public void updateRemainingMinutes(Eta mateEta, MateEtaRequest mateEtaRequest, Meeting meeting) {
-        if (mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null) {
-            return;
-        }
-        Location currentLocation = new Location("서울", mateEtaRequest.currentLatitude(), mateEtaRequest.currentLongitude());
-        RouteTime routeTime = routeService.calculateRouteTime(currentLocation, meeting.getTarget());
-        mateEta.updateRemainingMinutes(routeTime.getMinutes());
     }
 
     private boolean isOdysayCallTime(Eta mateEta) {

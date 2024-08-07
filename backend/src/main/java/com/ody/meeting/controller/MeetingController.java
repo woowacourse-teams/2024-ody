@@ -3,6 +3,7 @@ package com.ody.meeting.controller;
 import com.ody.common.annotation.AuthMember;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.dto.response.MateEtaResponses;
+import com.ody.eta.service.EtaService;
 import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MeetingController implements MeetingControllerSwagger {
 
     private final MeetingService meetingService;
+    private final EtaService etaService;
     private final NotificationService notificationService;
 
     @Override
@@ -135,7 +137,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @PathVariable Long meetingId,
             @RequestBody MateEtaRequest mateEtaRequest
     ) {
-        MateEtaResponses mateStatuses = meetingService.findAllMateEtas(mateEtaRequest, meetingId, member);
+        MateEtaResponses mateStatuses = etaService.findAllMateEtas(mateEtaRequest, meetingId, member);
         return ResponseEntity.ok(mateStatuses);
     }
 }
