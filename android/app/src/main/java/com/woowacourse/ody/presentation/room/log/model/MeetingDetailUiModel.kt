@@ -6,4 +6,5 @@ data class MeetingDetailUiModel(
     val meetingTime: String,
     val mates: List<String>,
     val inviteCode: String,
+    val canSeeEta: Boolean,
 )
