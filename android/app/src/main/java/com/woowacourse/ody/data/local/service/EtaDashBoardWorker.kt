@@ -51,7 +51,7 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
             LocationServices.getFusedLocationProviderClient(applicationContext)
 
         if (checkLocationPermissions()) {
-            meetingRepository.patchMatesEta(meetingId, true, "0.0", "0.0").getOrNull()
+            updateMatesEta(true, "0.0", "0.0")
             return null
         }
 
@@ -68,15 +68,19 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
             }
 
         if (location.latitude == 0.0 && location.longitude == 0.0) {
-            return meetingRepository.patchMatesEta(meetingId, true, "0.0", "0.0").getOrNull()
+            return updateMatesEta(true, "0.0", "0.0")
         }
 
-        return meetingRepository.patchMatesEta(
-            meetingId,
-            false,
-            location.latitude.toString(),
-            location.longitude.toString(),
-        ).getOrNull()
+        return updateMatesEta(false, location.latitude.toString(), location.longitude.toString())
+    }
+
+    private suspend fun updateMatesEta(
+        isMissing: Boolean,
+        latitude: String,
+        longitude: String,
+    ): List<MateEta>? {
+        return meetingRepository.patchMatesEta(meetingId, isMissing, latitude, longitude)
+            .getOrNull()
     }
 
     private fun List<MateEtaResponse>.convertMateEtasToJson(): String {
