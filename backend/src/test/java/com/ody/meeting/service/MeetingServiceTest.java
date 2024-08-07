@@ -22,6 +22,7 @@ import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import com.ody.util.InviteCodeGenerator;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -80,24 +81,26 @@ class MeetingServiceTest extends BaseServiceTest {
     void findAllByMemberFilterTime() {
         Member member = memberRepository.save(Fixture.MEMBER1);
 
+        LocalDateTime now = LocalDateTime.now();
+
         Meeting meeting24Hours1MinuteAgo = meetingRepository.save(new Meeting(
                 "약속",
-                LocalDate.now().minusDays(1),
-                LocalTime.now().minusMinutes(1),
+                now.toLocalDate().minusDays(1),
+                now.toLocalTime().minusMinutes(1),
                 Fixture.TARGET_LOCATION,
                 "초대코드"
         ));
         Meeting meeting24HoursAgo = meetingRepository.save(new Meeting(
                 "약속",
-                LocalDate.now().minusDays(1),
-                LocalTime.now(),
+                now.toLocalDate().minusDays(1),
+                now.toLocalTime(),
                 Fixture.TARGET_LOCATION,
                 "초대코드"
         ));
         Meeting meeting23Hours59MinutesAgo = meetingRepository.save(new Meeting(
                 "약속",
-                LocalDate.now().minusDays(1),
-                LocalTime.now().plusMinutes(1),
+                now.toLocalDate().minusDays(1),
+                now.toLocalTime().plusMinutes(1),
                 Fixture.TARGET_LOCATION,
                 "초대코드"
         ));
