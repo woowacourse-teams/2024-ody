@@ -1,6 +1,6 @@
 package com.woowacourse.ody.presentation.room.log.model
 
-data class MeetingUiModel(
+data class MeetingDetailUiModel(
     val name: String,
     val targetPosition: String,
     val meetingTime: String,

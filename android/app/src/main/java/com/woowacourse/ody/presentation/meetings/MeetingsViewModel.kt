@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.home
+package com.woowacourse.ody.presentation.meetings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,17 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
-import com.woowacourse.ody.presentation.home.listener.ToggleFoldListener
-import com.woowacourse.ody.presentation.home.model.MeetingCatalogUiModel
-import com.woowacourse.ody.presentation.home.model.toMeetingCatalogUiModels
+import com.woowacourse.ody.presentation.meetings.listener.ToggleFoldListener
+import com.woowacourse.ody.presentation.meetings.model.MeetingUiModel
+import com.woowacourse.ody.presentation.meetings.model.toMeetingCatalogUiModels
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class HomeViewModel(
+class MeetingsViewModel(
     private val meetingRepository: MeetingRepository,
 ) : ViewModel(), ToggleFoldListener {
-    private val _meetingCatalogs = MutableLiveData<List<MeetingCatalogUiModel>>()
-    val meetingCatalogs: LiveData<List<MeetingCatalogUiModel>> = _meetingCatalogs
+    private val _meetingCatalogs = MutableLiveData<List<MeetingUiModel>>()
+    val meetingCatalogs: LiveData<List<MeetingUiModel>> = _meetingCatalogs
 
     val isMeetingCatalogsEmpty: LiveData<Boolean> =
         _meetingCatalogs.map {

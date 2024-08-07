@@ -7,15 +7,15 @@
 
         <variable
             name="meeting"
-            type="com.woowacourse.ody.presentation.home.model.MeetingCatalogUiModel" />
+            type="com.woowacourse.ody.presentation.meetings.model.MeetingUiModel" />
 
         <variable
             name="toggleListener"
-            type="com.woowacourse.ody.presentation.home.listener.ToggleFoldListener" />
+            type="com.woowacourse.ody.presentation.meetings.listener.ToggleFoldListener" />
 
         <variable
             name="homeListener"
-            type="com.woowacourse.ody.presentation.home.listener.HomeListener" />
+            type="com.woowacourse.ody.presentation.meetings.listener.MeetingsListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

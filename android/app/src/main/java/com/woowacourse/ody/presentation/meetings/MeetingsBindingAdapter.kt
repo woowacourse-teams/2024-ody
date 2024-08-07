@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.home
+package com.woowacourse.ody.presentation.meetings
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter

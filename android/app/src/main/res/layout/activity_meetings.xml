@@ -6,10 +6,10 @@
     <data>
         <variable
             name="listener"
-            type="com.woowacourse.ody.presentation.home.listener.HomeListener" />
+            type="com.woowacourse.ody.presentation.meetings.listener.MeetingsListener" />
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.home.HomeViewModel" />
+            type="com.woowacourse.ody.presentation.meetings.MeetingsViewModel" />
         <variable
             name="isCatalogsEmpty"
             type="Boolean" />
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        tools:context=".presentation.home.HomeActivity">
+        tools:context=".presentation.meetings.MeetingsActivity">
 
         <include
             android:id="@+id/tb_intro"

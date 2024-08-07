@@ -6,15 +6,14 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-fun Meeting.toMeetingUiModel(): MeetingUiModel {
-    return MeetingUiModel(
+fun Meeting.toMeetingUiModel(): MeetingDetailUiModel =
+    MeetingDetailUiModel(
         name,
         targetPosition,
         toMeetingDateTime(meetingDate, meetingTime),
         mates.map { it.nickname },
         inviteCode,
     )
-}
 
 private fun toMeetingDateTime(
     meetingDate: LocalDate,
