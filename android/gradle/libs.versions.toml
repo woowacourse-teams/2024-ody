@@ -1,6 +1,7 @@
 [versions]
 activity = "1.9.0"
 agp = "8.5.0"
+androidJunitJupiter = "1.10.0.0"
 appcompat = "1.7.0"
 assertj = "3.23.1"
 constraintlayout = "2.1.4"
@@ -15,7 +16,7 @@ firebaseMessaging = "24.0.0"
 firebaseMessagingKtx = "24.0.0"
 fragmentTesting = "1.8.2"
 googleServices = "4.4.2"
-junit = "5.4.2"
+junitJupiter = "5.10.2"
 junitVersion = "1.2.1"
 kotlin = "1.9.0"
 ksp = "1.9.0-1.0.13"
@@ -51,7 +52,7 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 
 # junit
-junit = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 
 # assertj
 assertj = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
@@ -93,3 +94,4 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-junit-jupiter = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunitJupiter" }

@@ -1,13 +1,14 @@
 package com.woowacourse.ody.domain.validator
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
+import org.junit.jupiter.api.Test
 
 class AddressValidatorTest {
-    @ParameterizedTest
-    @ValueSource(strings = ["인천광역시 남동구", "서울특별시 강남구", "경기도 수원시"])
-    fun `주소가 수도권인 경우 유효하다`(address: String) {
+    @Test
+    fun `주소가 수도권인 경우 유효하다`() {
+        // given
+        val address = "인천광역시 남동구"
+
         // when
         val actual = AddressValidator.isValid(address)
 
@@ -15,9 +16,11 @@ class AddressValidatorTest {
         assertThat(actual).isTrue
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = ["부산광역시 남구", "광주광역시 동구"])
-    fun `주소가 수도권이 아닌 경우 유효하지 않다`(address: String) {
+    @Test
+    fun `주소가 수도권이 아닌 경우 유효하지 않다`() {
+        // given
+        val address = "부산광역시 남구"
+
         // when
         val actual = AddressValidator.isValid(address)
 

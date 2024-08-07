@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.googleServices)
+    alias(libs.plugins.android.junit.jupiter)
     id("kotlin-kapt")
     id("kotlin-parcelize")
 }
@@ -76,7 +77,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
 
     // junit
-    testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
 
     // assertj
     testImplementation(libs.assertj)
