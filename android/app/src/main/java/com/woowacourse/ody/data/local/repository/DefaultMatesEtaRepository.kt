@@ -36,7 +36,7 @@ class DefaultMatesEtaRepository(
     }
 
     private fun List<WorkInfo>.toMateEtas(): MateEtaInfo? {
-        val recentWorkInfo = findLast { it.state == WorkInfo.State.SUCCEEDED }
+        val recentWorkInfo = filter { it.state == WorkInfo.State.SUCCEEDED }.maxByOrNull { it.initialDelayMillis }
         return recentWorkInfo?.outputData?.getString(MATE_ETA_RESPONSE_KEY)?.convertMateEtasToJson()
     }
 
