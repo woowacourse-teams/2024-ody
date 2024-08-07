@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="enabled"
             type="java.lang.Boolean" />
@@ -27,11 +27,11 @@
             android:backgroundTint="@color/purple_800"
             android:clickable="true"
             android:onClick="@{onClickEnabled}"
-            app:visibility="@{enabled}"
             android:paddingStart="9dp"
             android:paddingTop="9dp"
             android:paddingEnd="12dp"
-            android:paddingBottom="9dp">
+            android:paddingBottom="9dp"
+            app:visibility="@{enabled}">
 
             <ImageView
                 android:id="@+id/iv_ody"
@@ -63,11 +63,11 @@
             android:background="@drawable/rectangle_radius_15_stroke_1_gray_350"
             android:clickable="true"
             android:onClick="@{onClickDisabled}"
-            app:visibility="@{!enabled}"
             android:paddingStart="9dp"
             android:paddingTop="9dp"
             android:paddingEnd="12dp"
-            android:paddingBottom="9dp">
+            android:paddingBottom="9dp"
+            app:visibility="@{!enabled}">
 
             <ImageView
                 android:id="@+id/iv_ody_disabled"
