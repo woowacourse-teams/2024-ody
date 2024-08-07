@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.home.listener
+package com.woowacourse.ody.presentation.meetings.listener
 
 interface ToggleFoldListener {
     fun toggleFold(position: Int)

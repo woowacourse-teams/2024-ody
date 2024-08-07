@@ -19,8 +19,8 @@ import com.woowacourse.ody.presentation.creation.date.MeetingDateFragment
 import com.woowacourse.ody.presentation.creation.destination.MeetingDestinationFragment
 import com.woowacourse.ody.presentation.creation.name.MeetingNameFragment
 import com.woowacourse.ody.presentation.creation.time.MeetingTimeFragment
-import com.woowacourse.ody.presentation.home.HomeActivity
 import com.woowacourse.ody.presentation.join.MeetingJoinActivity
+import com.woowacourse.ody.presentation.meetings.MeetingsActivity
 
 class MeetingCreationActivity :
     BindingActivity<ActivityMeetingCreationBinding>(R.layout.activity_meeting_creation),
@@ -85,8 +85,8 @@ class MeetingCreationActivity :
 
         viewModel.navigateAction.observe(this) {
             when (it) {
-                MeetingCreationNavigateAction.NavigateToHome -> {
-                    startActivity(HomeActivity.getIntent(this))
+                MeetingCreationNavigateAction.NavigateToMeetings -> {
+                    startActivity(MeetingsActivity.getIntent(this))
                 }
 
                 MeetingCreationNavigateAction.NavigateToCreationComplete -> {

@@ -1,6 +1,6 @@
-package com.woowacourse.ody.presentation.home.listener
+package com.woowacourse.ody.presentation.meetings.listener
 
-interface HomeListener {
+interface MeetingsListener {
     fun onFab()
 
     fun onJoinMeeting()

@@ -11,10 +11,10 @@ class SplashViewModel : ViewModel() {
     private val _navigateAction: MutableSingleLiveData<SplashNavigateAction> = MutableSingleLiveData()
     val navigateAction: SingleLiveData<SplashNavigateAction> get() = _navigateAction
 
-    fun navigateToHome() {
+    fun navigateToMeetings() {
         viewModelScope.launch {
             delay(1500)
-            _navigateAction.setValue(SplashNavigateAction.NavigateToIntro)
+            _navigateAction.setValue(SplashNavigateAction.NavigateToMeetings)
         }
     }
 }

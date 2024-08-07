@@ -1,8 +1,8 @@
-package com.woowacourse.ody.presentation.home.model
+package com.woowacourse.ody.presentation.meetings.model
 
 import java.time.LocalDateTime
 
-data class MeetingCatalogUiModel(
+data class MeetingUiModel(
     val id: Long,
     val position: Int = 0,
     val name: String,
