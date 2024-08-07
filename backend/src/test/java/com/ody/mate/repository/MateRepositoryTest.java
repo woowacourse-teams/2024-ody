@@ -45,4 +45,40 @@ class MateRepositoryTest {
 
         assertThat(meeting1Mates).containsExactlyElementsOf(List.of(mate1, mate2));
     }
+
+    @DisplayName("약속 아이디로 약속 인원 수를 찾는다.")
+    @Test
+    void countByMeetingId() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Member member2 = memberRepository.save(Fixture.MEMBER2);
+        Member member3 = memberRepository.save(Fixture.MEMBER3);
+        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
+
+        mateRepository.save(new Mate(meeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L));
+        mateRepository.save(new Mate(meeting, member2, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
+        mateRepository.save(new Mate(meeting, member3, new Nickname("카키"), Fixture.ORIGIN_LOCATION, 10L));
+
+        int mateCount = mateRepository.countByMeetingId(meeting.getId());
+
+        assertThat(mateCount).isEqualTo(3);
+    }
+
+    @DisplayName("약속 아이디와 멤버 아이디로 메이트를 찾는다.")
+    @Test
+    void findByMeetingIdAndMemberId() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Member member2 = memberRepository.save(Fixture.MEMBER2);
+        Member member3 = memberRepository.save(Fixture.MEMBER3);
+        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
+
+        Mate expectedMate = mateRepository.save(
+                new Mate(meeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+        mateRepository.save(new Mate(meeting, member2, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
+        mateRepository.save(new Mate(meeting, member3, new Nickname("카키"), Fixture.ORIGIN_LOCATION, 10L));
+
+        Mate actualMate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member1.getId()).get();
+
+        assertThat(actualMate.getId()).isEqualTo(expectedMate.getId());
+    }
 }

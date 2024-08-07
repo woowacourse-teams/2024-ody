@@ -9,10 +9,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record MateSaveRequest(
 
-        @Schema(description = "초대코드", example = "초대코드")
+        @Schema(description = "초대코드", example = "inviteCodeinviteCode")
         String inviteCode,
 
-        @Schema(description = "참여자 닉네임", example = "제리")
+        @Schema(description = "참여자 닉네임", example = "오디")
         String nickname,
 
         @Schema(description = "출발지 주소", example = "서울 강남구 테헤란로 411")

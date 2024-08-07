@@ -39,8 +39,14 @@ public class Eta {
     private LocalDateTime updatedAt;
 
     public Eta(Mate mate, Long remainingMinutes) {
-        this(null, mate, remainingMinutes, false, LocalDateTime.now().withSecond(0).withNano(0),
-                LocalDateTime.now().withSecond(0).withNano(0));
+        this(
+                null,
+                mate,
+                remainingMinutes,
+                false,
+                LocalDateTime.now().withSecond(0).withNano(0),
+                LocalDateTime.now().withSecond(0).withNano(0)
+        );
     }
 
     public Eta(Mate mate, long remainingMinutes, LocalDateTime createdAt, LocalDateTime updatedAt) {

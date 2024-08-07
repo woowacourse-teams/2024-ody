@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class EtaService {
+
     private static final long ODSAY_CALL_CYCLE_MINUTES = 10L;
     private static final int ARRIVED_THRESHOLD_METER = 300;
 
@@ -37,7 +38,7 @@ public class EtaService {
     public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
         Mate requestMate = findByMeetingIdAndMemberId(meetingId, member.getId());
         Meeting meeting = requestMate.getMeeting();
-        LocalDateTime meetingTime = meeting.getMeetingTime();
+        LocalDateTime meetingTime = meeting.getMeetingTime().withSecond(0).withNano(0);
         Eta mateEta = findByMateId(requestMate.getId());
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
 
@@ -61,7 +62,7 @@ public class EtaService {
     }
 
     private boolean determineArrived(MateEtaRequest mateEtaRequest, Meeting meeting, LocalDateTime now) {
-        LocalDateTime meetingTime = meeting.getMeetingTime();
+        LocalDateTime meetingTime = meeting.getMeetingTime().withSecond(0).withNano(0);
         double distance = DistanceCalculator.calculate(
                 Double.valueOf(mateEtaRequest.currentLatitude()),
                 Double.valueOf(mateEtaRequest.currentLongitude()),

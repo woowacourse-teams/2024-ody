@@ -22,4 +22,6 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
     boolean existsByMeetingIdAndNickname_Value(Long meetingId, String value);
 
     boolean existsByMeetingIdAndMemberId(Long memberId, Long meetingId);
+
+    int countByMeetingId(Long id);
 }

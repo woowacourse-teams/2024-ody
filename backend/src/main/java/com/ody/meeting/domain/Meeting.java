@@ -41,7 +41,7 @@ public class Meeting {
     private String inviteCode;
 
     public Meeting(String name, LocalDate date, LocalTime time, Location target, String inviteCode) {
-        this(null, name, date, time, target, inviteCode);
+        this(null, name, date, time.withNano(0), target, inviteCode);
     }
 
     public void updateInviteCode(String inviteCode) {
