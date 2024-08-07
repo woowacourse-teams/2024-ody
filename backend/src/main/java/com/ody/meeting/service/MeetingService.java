@@ -62,6 +62,7 @@ public class MeetingService {
     public MeetingFindByMemberResponses findAllByMember(Member member) {
         return meetingRepository.findAllByMemberId(member.getId())
                 .stream()
+                .filter(Meeting::isWithinPast24HoursOrLater)
                 .map(meeting -> makeMeetingFindByMemberResponse(member, meeting))
                 .sorted(Comparator.comparing(MeetingFindByMemberResponse::date)
                         .thenComparing(MeetingFindByMemberResponse::time))

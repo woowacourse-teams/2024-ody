@@ -61,6 +61,30 @@ public class Fixture {
             "초대코드"
     );
 
+    public static Meeting MEETING_24_HOURS_AGO = new Meeting(
+            "약속",
+            LocalDate.now().minusDays(1),
+            LocalTime.now(),
+            TARGET_LOCATION,
+            "초대코드"
+    );
+
+    public static Meeting MEETING_24_HOURS_1_MINUTE_AGO = new Meeting(
+            "약속",
+            LocalDate.now().minusDays(1),
+            LocalTime.now().minusMinutes(1),
+            TARGET_LOCATION,
+            "초대코드"
+    );
+
+    public static final Meeting MEETING_23_HOURS_59_MINUTES_AGO = new Meeting(
+            "약속",
+            LocalDate.now().minusDays(1),
+            LocalTime.now().plusMinutes(1),
+            TARGET_LOCATION,
+            "초대코드"
+    );
+
     public static Member MEMBER1 = new Member(new DeviceToken("Bearer device-token=testToken1"));
     public static Member MEMBER2 = new Member(new DeviceToken("Bearer device-token=testToken2"));
     public static Member MEMBER3 = new Member(new DeviceToken("Bearer device-token=testToken3"));
