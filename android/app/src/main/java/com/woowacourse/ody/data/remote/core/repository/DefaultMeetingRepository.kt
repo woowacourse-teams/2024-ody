@@ -2,11 +2,13 @@ package com.woowacourse.ody.data.remote.core.repository
 
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMateEtas
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeeting
+import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingCatalogs
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MatesEtaRequest
 import com.woowacourse.ody.data.remote.core.service.MeetingService
 import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 
@@ -36,5 +38,10 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         }
     }
 
+    override suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>> =
+        runCatching {
+            service.fetchMeetingCatalogs().toMeetingCatalogs()
+        }
+        
     private fun compress(coordinate: String): String = coordinate.slice(0..8)
 }

@@ -2,6 +2,7 @@ package com.woowacourse.ody.domain.repository.ody
 
 import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 
 interface MeetingRepository {
@@ -17,4 +18,6 @@ interface MeetingRepository {
         currentLatitude: String,
         currentLongitude: String,
     ): Result<List<MateEta>>
+
+    suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>>
 }
