@@ -86,7 +86,7 @@ class MeetingCreationActivity :
         viewModel.navigateAction.observe(this) {
             when (it) {
                 MeetingCreationNavigateAction.NavigateToMeetings -> {
-                    startActivity(MeetingsActivity.getIntent(this))
+                    finish()
                 }
 
                 MeetingCreationNavigateAction.NavigateToCreationComplete -> {
@@ -114,6 +114,7 @@ class MeetingCreationActivity :
     }
 
     companion object {
-        fun getIntent(context: Context): Intent = Intent(context, MeetingCreationActivity::class.java)
+        fun getIntent(context: Context): Intent =
+            Intent(context, MeetingCreationActivity::class.java)
     }
 }
