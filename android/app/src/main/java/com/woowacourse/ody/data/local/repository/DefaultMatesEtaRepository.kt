@@ -5,7 +5,6 @@ import androidx.lifecycle.map
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.data.local.service.EtaDashBoardWorker
 import com.woowacourse.ody.data.local.service.EtaDashBoardWorker.Companion.MATE_ETA_RESPONSE_KEY

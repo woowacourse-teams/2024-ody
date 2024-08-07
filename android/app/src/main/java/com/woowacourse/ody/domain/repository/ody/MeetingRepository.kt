@@ -1,6 +1,5 @@
 package com.woowacourse.ody.domain.repository.ody
 
-import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingCatalog

@@ -8,7 +8,6 @@ import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.domain.model.MateEtaInfo

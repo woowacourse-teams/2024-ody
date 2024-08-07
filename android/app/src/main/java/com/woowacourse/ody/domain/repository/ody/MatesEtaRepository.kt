@@ -1,7 +1,6 @@
 package com.woowacourse.ody.domain.repository.ody
 
 import androidx.lifecycle.LiveData
-import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.model.MateEtaInfo
 
 interface MatesEtaRepository {
