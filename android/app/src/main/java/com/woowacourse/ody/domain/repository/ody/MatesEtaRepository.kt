@@ -1,7 +1,7 @@
 package com.woowacourse.ody.domain.repository.ody
 
 import androidx.lifecycle.LiveData
-import com.woowacourse.ody.domain.model.MateEta
+import com.woowacourse.ody.domain.model.MateEtaInfo
 
 interface MatesEtaRepository {
     fun reserveEtaFetchingJob(
@@ -9,5 +9,5 @@ interface MatesEtaRepository {
         targetTimeMillisecond: Long,
     )
 
-    fun fetchMatesEta(meetingId: Long): LiveData<List<MateEta>>
+    fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?>
 }

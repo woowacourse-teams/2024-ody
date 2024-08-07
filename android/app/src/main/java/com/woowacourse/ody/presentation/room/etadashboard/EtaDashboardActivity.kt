@@ -43,8 +43,8 @@ class EtaDashboardActivity :
     }
 
     private fun initializeObserve() {
-        viewModel.matesEta.observe(this) {
-            // todo
+        viewModel.mateEtaUiModels.observe(this) {
+            adapter.submitList(it)
         }
     }
 

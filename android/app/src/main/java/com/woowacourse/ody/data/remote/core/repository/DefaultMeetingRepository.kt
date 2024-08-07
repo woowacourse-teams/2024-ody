@@ -1,12 +1,12 @@
 package com.woowacourse.ody.data.remote.core.repository
 
-import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMateEtas
+import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMateEtaInfo
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeeting
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingCatalogs
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MatesEtaRequest
 import com.woowacourse.ody.data.remote.core.service.MeetingService
-import com.woowacourse.ody.domain.model.MateEta
+import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
@@ -27,12 +27,12 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         isMissing: Boolean,
         currentLatitude: String,
         currentLongitude: String,
-    ): Result<List<MateEta>> {
+    ): Result<MateEtaInfo> {
         return runCatching {
             service.patchMatesEta(
                 meetingId,
                 MatesEtaRequest(isMissing, compress(currentLatitude), compress(currentLongitude)),
-            ).toMateEtas()
+            ).toMateEtaInfo()
         }
     }
 

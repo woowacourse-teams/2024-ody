@@ -4,9 +4,14 @@ import com.woowacourse.ody.data.remote.core.entity.meeting.response.MateEtaRespo
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MatesEtaResponse
 import com.woowacourse.ody.domain.model.EtaType
 import com.woowacourse.ody.domain.model.MateEta
+import com.woowacourse.ody.domain.model.MateEtaInfo
 
-fun MatesEtaResponse.toMateEtas(): List<MateEta> {
-    return this.mateEtaResponses.map { it.toMateEta() }
+fun MatesEtaResponse.toMateEtaInfo(): MateEtaInfo {
+    return MateEtaInfo(userNickname = ownerNickname, mateEtas = mateEtaResponses.toMateEtas())
+}
+
+fun List<MateEtaResponse>.toMateEtas(): List<MateEta> {
+    return map { it.toMateEta() }
 }
 
 private fun MateEtaResponse.toMateEta(): MateEta {

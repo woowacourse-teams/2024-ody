@@ -14,10 +14,9 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.google.android.gms.location.LocationServices
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
-import com.woowacourse.ody.domain.model.MateEta
+import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
@@ -27,26 +26,20 @@ import kotlin.coroutines.resumeWithException
 class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters) {
     private val meetingRepository: MeetingRepository by lazy { (applicationContext as OdyApplication).meetingRepository }
-    private val meetingId: Long by lazy {
-        workerParameters.inputData.getLong(
-            MEETING_ID_KEY,
-            MEETING_ID_DEFAULT_VALUE,
-        )
-    }
+    private val meetingId: Long by lazy { workerParameters.inputData.getLong(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE) }
 
     override suspend fun doWork(): Result {
         if (meetingId == MEETING_ID_DEFAULT_VALUE) {
             return Result.failure()
         }
 
-        val mateEtas = getLocation() ?: return Result.failure()
-        val mateEtaResponses =
-            mateEtas.map { MateEtaResponse(it.nickname, it.etaType, it.durationMinute) }
+        val mateEtaInfo = getLocation() ?: return Result.failure()
+        val mateEtaResponses = mateEtaInfo.toMateEtaInfoResponse()
         return Result.success(workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses.convertMateEtasToJson()))
     }
 
     @SuppressLint("MissingPermission")
-    private suspend fun getLocation(): List<MateEta>? {
+    private suspend fun getLocation(): MateEtaInfo? {
         val fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(applicationContext)
 
@@ -77,18 +70,21 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
         isMissing: Boolean,
         latitude: String,
         longitude: String,
-    ): List<MateEta>? {
+    ): MateEtaInfo? {
         return meetingRepository.patchMatesEta(meetingId, isMissing, latitude, longitude)
             .getOrNull()
     }
 
-    private fun List<MateEtaResponse>.convertMateEtasToJson(): String {
+    private fun MateEtaInfo.toMateEtaInfoResponse(): MateEtaInfoResponse {
+        return MateEtaInfoResponse(userNickname, mateEtas)
+    }
+
+    private fun MateEtaInfoResponse.convertMateEtasToJson(): String {
         val moshi =
             Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
-        val type = Types.newParameterizedType(List::class.java, MateEtaResponse::class.java)
-        val jsonAdapter = moshi.adapter<List<MateEtaResponse>>(type)
+        val jsonAdapter = moshi.adapter(MateEtaInfoResponse::class.java)
         return jsonAdapter.toJson(this)
     }
 
