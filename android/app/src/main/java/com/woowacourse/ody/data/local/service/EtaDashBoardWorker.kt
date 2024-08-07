@@ -51,8 +51,7 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
             LocationServices.getFusedLocationProviderClient(applicationContext)
 
         if (checkLocationPermissions()) {
-            updateMatesEta(true, "0.0", "0.0")
-            return null
+            return updateMatesEta(true, "0.0", "0.0")
         }
 
         val location =
