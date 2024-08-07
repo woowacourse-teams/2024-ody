@@ -3,7 +3,6 @@ package com.woowacourse.ody.data.local.service
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
@@ -19,7 +18,6 @@ import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resumeWithException
 
