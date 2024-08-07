@@ -46,3 +46,7 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+configurations.all {
+	exclude group: 'commons-logging', module: 'commons-logging'
+}
