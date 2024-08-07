@@ -46,7 +46,14 @@ class NotificationLogActivity :
         initializeObserve()
         initializePersistentBottomSheet()
         binding.btnOdy.setOnClickListener {
-            startActivity(EtaDashboardActivity.getIntent(this, getMeetingId()))
+            val intent =
+                EtaDashboardActivity.getIntent(
+                    this,
+                    getMeetingId(),
+                    viewModel.meeting.value?.inviteCode ?: return@setOnClickListener,
+                    viewModel.meeting.value?.name ?: return@setOnClickListener,
+                )
+            startActivity(intent)
         }
     }
 
