@@ -3,6 +3,7 @@ package com.woowacourse.ody.fake
 import com.woowacourse.ody.domain.model.EtaType
 import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.MateEta
+import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
@@ -36,13 +37,16 @@ object FakeMeetingRepository : MeetingRepository {
         isMissing: Boolean,
         currentLatitude: String,
         currentLongitude: String,
-    ): Result<List<MateEta>> {
+    ): Result<MateEtaInfo> {
         return Result.success(
-            listOf(
-                MateEta("mateA", EtaType.LATE, 1L),
-                MateEta("mateB", EtaType.LATE, 1L),
-                MateEta("mateC", EtaType.LATE, 1L),
-            ),
+            MateEtaInfo(
+                userNickname = "mateA",
+                mateEtas = listOf(
+                    MateEta("mateA", EtaType.LATE, 1L),
+                    MateEta("mateB", EtaType.LATE, 1L),
+                    MateEta("mateC", EtaType.LATE, 1L),
+                ),
+            )
         )
     }
 
