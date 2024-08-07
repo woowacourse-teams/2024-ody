@@ -38,7 +38,8 @@
                 app:backListener="@{backListener}"
                 app:layout_constraintBottom_toTopOf="@+id/rv_dashboard"
                 app:layout_constraintTop_toTopOf="parent"
-                app:shareListener="@{shareListener}" />
+                app:shareListener="@{shareListener}"
+                app:title="@{title}" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_dashboard"
