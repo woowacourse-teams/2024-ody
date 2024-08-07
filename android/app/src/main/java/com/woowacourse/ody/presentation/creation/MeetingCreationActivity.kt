@@ -85,7 +85,7 @@ class MeetingCreationActivity :
 
         viewModel.navigateAction.observe(this) {
             when (it) {
-                MeetingCreationNavigateAction.navigateToMeetings -> {
+                MeetingCreationNavigateAction.NavigateToMeetings -> {
                     startActivity(MeetingsActivity.getIntent(this))
                 }
 
