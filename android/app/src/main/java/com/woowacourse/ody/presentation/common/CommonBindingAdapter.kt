@@ -8,7 +8,7 @@ object CommonBindingAdapter {
     @BindingAdapter("visibility")
     @JvmStatic
     fun View.setVisibility(isVisible: Boolean?) {
-        visibility = if (isVisible == true) View.GONE else View.VISIBLE
+        visibility = if (isVisible == true) View.VISIBLE else View.GONE
     }
 
     @BindingAdapter("enabledSwipe")
