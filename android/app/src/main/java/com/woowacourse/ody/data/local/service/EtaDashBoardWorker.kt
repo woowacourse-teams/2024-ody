@@ -1,8 +1,11 @@
 package com.woowacourse.ody.data.local.service
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
@@ -47,43 +50,36 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
         }
     }
 
+    @SuppressLint("MissingPermission")
     private suspend fun getLocation(): List<MateEta>? {
         val fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(applicationContext)
 
-        if (ActivityCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (checkLocationPermissions()) {
             meetingRepository.patchMatesEta(meetingId, true, "0.0", "0.0").getOrNull()
             return null
         }
 
-        val location =
-            suspendCancellableCoroutine { continuation ->
-                fusedLocationProviderClient.lastLocation
-                    .addOnSuccessListener { location ->
-                        continuation.resume(location) {
-                            if (location.latitude == 0.0 && location.longitude == 0.0) {
-                                return@resume
-                            }
+        val location = suspendCancellableCoroutine { continuation ->
+            fusedLocationProviderClient.lastLocation
+                .addOnSuccessListener { location ->
+                    continuation.resume(location) {
+                        if (location.latitude == 0.0 && location.longitude == 0.0) {
+                            return@resume
                         }
-                    }.addOnFailureListener { exception ->
-                        continuation.resumeWithException(exception)
                     }
-            }
+                }.addOnFailureListener { exception ->
+                    continuation.resumeWithException(exception)
+                }
+        }
 
         return if (location != null) {
-            meetingRepository.patchMatesEta(meetingId, false, location.latitude.toString(), location.longitude.toString()).getOrNull()
+            meetingRepository.patchMatesEta(
+                meetingId,
+                false,
+                location.latitude.toString(),
+                location.longitude.toString()
+            ).getOrNull()
         } else {
             meetingRepository.patchMatesEta(meetingId, false, "0.0", "0.0").getOrNull()
         }
@@ -97,6 +93,32 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
         val type = Types.newParameterizedType(List::class.java, MateEtaResponse::class.java)
         val jsonAdapter = moshi.adapter<List<MateEtaResponse>>(type)
         return jsonAdapter.toJson(this)
+    }
+
+    private fun checkLocationPermissions(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                    ) != PackageManager.PERMISSION_GRANTED
+        } else {
+            return ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                    ) != PackageManager.PERMISSION_GRANTED
+        }
     }
 
     companion object {
