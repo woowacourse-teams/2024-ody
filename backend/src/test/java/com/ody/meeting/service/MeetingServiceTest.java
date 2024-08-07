@@ -75,7 +75,7 @@ class MeetingServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("내 약속 목록 조회 시 약속 시간이 현재 시간으로부터 24시간 이내인 약속부터 미래의 약속까지만 조회된다.")
+    @DisplayName("내 약속 목록 조회 시 약속 시간이 현재 시간으로부터 24시간 포함 이내인 약속부터 미래의 약속까지만 조회된다.")
     @Test
     void findAllByMemberFilterTime() {
         Member member = memberRepository.save(Fixture.MEMBER1);
