@@ -3,7 +3,7 @@ package com.woowacourse.ody.presentation.invitecode
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
@@ -46,7 +46,7 @@ class InviteCodeActivityTest {
 
         // when
         inviteCodeEditText
-            .perform(typeText("123abc"))
+            .perform(replaceText("123abc"))
 
         // then
         confirmButton
@@ -61,7 +61,7 @@ class InviteCodeActivityTest {
 
         // when
         inviteCodeEditText
-            .perform(typeText("123abc"))
+            .perform(replaceText("123abc"))
 
         // then
         cancelButton
@@ -74,7 +74,7 @@ class InviteCodeActivityTest {
         val inviteCodeEditText = onView(withId(R.id.et_invite_code))
         val cancelButton = onView(withId(R.id.iv_cancel))
         inviteCodeEditText
-            .perform(typeText("123abc"))
+            .perform(replaceText("123abc"))
 
         // when
         cancelButton

@@ -4,7 +4,6 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
@@ -61,7 +60,7 @@ class MeetingCreationActivityTest {
 
         // when
         meetingNameEditText
-            .perform(typeText("123abc"))
+            .perform(replaceText("123abc"))
 
         // then
         nextButton
@@ -76,7 +75,7 @@ class MeetingCreationActivityTest {
 
         // when
         meetingNameEditText
-            .perform(typeText("123abc"))
+            .perform(replaceText("123abc"))
 
         // then
         cancelButton
@@ -89,7 +88,7 @@ class MeetingCreationActivityTest {
         val meetingNameEditText = onView(withId(R.id.et_meeting_name))
         val cancelButton = onView(withId(R.id.iv_cancel))
         meetingNameEditText
-            .perform(typeText("123abc"))
+            .perform(replaceText("123abc"))
 
         // when
         cancelButton
