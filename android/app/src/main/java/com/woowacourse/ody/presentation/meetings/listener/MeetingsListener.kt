@@ -7,7 +7,5 @@ interface MeetingsListener {
 
     fun onCreateMeeting()
 
-    fun navigateToMeetingRoom(meetingId: Long)
-
     fun guideItemDisabled()
 }

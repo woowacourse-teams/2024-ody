@@ -20,6 +20,7 @@ import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import com.woowacourse.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsListener
+import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardActivity
 import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
 
 class MeetingsActivity :
@@ -54,6 +55,7 @@ class MeetingsActivity :
 
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
+        binding.rvMeetingList.itemAnimator = null
         binding.listener = this
     }
 
@@ -63,6 +65,12 @@ class MeetingsActivity :
         }
         viewModel.isMeetingCatalogsEmpty.observe(this) {
             binding.isCatalogsEmpty = it
+        }
+        viewModel.navigateAction.observe(this) {
+            when (it) {
+                is MeetingsNavigateAction.NavigateToEta -> navigateToEta(it.meetingId, it.inviteCode, it.title)
+                is MeetingsNavigateAction.NavigateToMeetingRoom -> navigateToMeetingRoom(it.meetingId)
+            }
         }
     }
 
@@ -81,8 +89,16 @@ class MeetingsActivity :
         closeNavigateMenu()
     }
 
-    override fun navigateToMeetingRoom(meetingId: Long) {
+    fun navigateToMeetingRoom(meetingId: Long) {
         startActivity(NotificationLogActivity.getIntent(this, meetingId))
+    }
+
+    fun navigateToEta(
+        meetingId: Long,
+        inviteCode: String,
+        title: String,
+    ) {
+        startActivity(EtaDashboardActivity.getIntent(this, meetingId, inviteCode, title))
     }
 
     override fun guideItemDisabled() {
