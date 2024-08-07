@@ -21,6 +21,8 @@ import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import com.ody.util.InviteCodeGenerator;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,9 +80,27 @@ class MeetingServiceTest extends BaseServiceTest {
     void findAllByMemberFilterTime() {
         Member member = memberRepository.save(Fixture.MEMBER1);
 
-        Meeting meeting24Hours1MinuteAgo = meetingRepository.save(Fixture.MEETING_24_HOURS_1_MINUTE_AGO);
-        Meeting meeting24HoursAgo = meetingRepository.save(Fixture.MEETING_24_HOURS_AGO);
-        Meeting meeting23Hours59MinutesAgo = meetingRepository.save(Fixture.MEETING_23_HOURS_59_MINUTES_AGO);
+        Meeting meeting24Hours1MinuteAgo = meetingRepository.save(new Meeting(
+                "약속",
+                LocalDate.now().minusDays(1),
+                LocalTime.now().minusMinutes(1),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        ));
+        Meeting meeting24HoursAgo = meetingRepository.save(new Meeting(
+                "약속",
+                LocalDate.now().minusDays(1),
+                LocalTime.now(),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        ));
+        Meeting meeting23Hours59MinutesAgo = meetingRepository.save(new Meeting(
+                "약속",
+                LocalDate.now().minusDays(1),
+                LocalTime.now().plusMinutes(1),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        ));
 
         mateRepository.save(
                 new Mate(meeting24HoursAgo, member, new Nickname("제리1"), Fixture.ORIGIN_LOCATION, 10L)
