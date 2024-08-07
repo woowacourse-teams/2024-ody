@@ -33,6 +33,7 @@ class InviteCodeActivity : BindingActivity<ActivityInviteCodeBinding>(R.layout.a
         }
         viewModel.navigateAction.observe(this) {
             navigateToJoinView()
+            finish()
         }
     }
 
