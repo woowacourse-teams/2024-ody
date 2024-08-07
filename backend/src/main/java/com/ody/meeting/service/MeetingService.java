@@ -1,10 +1,7 @@
 package com.ody.meeting.service;
 
 import com.ody.common.exception.OdyNotFoundException;
-import com.ody.eta.service.EtaService;
 import com.ody.mate.domain.Mate;
-import com.ody.eta.dto.request.MateEtaRequest;
-import com.ody.eta.dto.response.MateEtaResponses;
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.repository.MateRepository;
@@ -34,7 +31,6 @@ public class MeetingService {
 
     private final MateService mateService;
     private final MeetingRepository meetingRepository;
-    private final EtaService etaService;
     private final MateRepository mateRepository;
 
     @Transactional
@@ -77,10 +73,6 @@ public class MeetingService {
         Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId())
                 .orElseThrow(() -> new OdyNotFoundException("참여하고 있지 않는 약속방입니다"));
         return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
-    }
-
-    public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
-        return etaService.findAllMateEtas(mateEtaRequest, meetingId, member);
     }
 
     public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {

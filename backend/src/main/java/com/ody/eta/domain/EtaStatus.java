@@ -12,7 +12,7 @@ public enum EtaStatus {
     ;
 
     public static EtaStatus from(Eta mateEta, LocalDateTime meetingTime, LocalDateTime now, boolean isMissing) {
-        if (isMissing) {
+        if (isMissing || mateEta.getRemainingMinutes() == -1L) {
             return MISSING;
         }
         if (mateEta.isArrived()) {

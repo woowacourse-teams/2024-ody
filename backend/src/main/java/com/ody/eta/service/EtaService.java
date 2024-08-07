@@ -8,6 +8,7 @@ import com.ody.eta.dto.response.MateEtaResponses;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
 import com.ody.route.domain.RouteTime;
@@ -35,7 +36,7 @@ public class EtaService {
         return etaRepository.save(new Eta(mate, routeTime.getMinutes()));
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
         Mate requestMate = findByMeetingIdAndMemberId(meetingId, member.getId());
         Meeting meeting = requestMate.getMeeting();
@@ -43,12 +44,23 @@ public class EtaService {
         Eta mateEta = findByMateId(requestMate.getId());
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
 
-        if (determineArrived(mateEtaRequest, meeting, now)) {
-            updateArrived(mateEta);
+        if (mateEtaRequest.isMissing()) {
+            mateEta.updateRemainingMinutes(-1L);
         }
 
-        if (!mateEta.isArrived() && isOdysayCallTime(mateEta)) {
-            updateRemainingMinutes(mateEta, requestMate, meeting);
+        if (determineArrived(mateEtaRequest, meeting, now)) {
+            mateEta.updateArrived();
+        }
+
+        if ((!mateEta.isArrived() && isOdysayCallTime(mateEta)) &&
+                !(mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null)) {
+            Location currentLocation = new Location(
+                    "서울",
+                    mateEtaRequest.currentLatitude(),
+                    mateEtaRequest.currentLongitude()
+            );
+            RouteTime routeTime = routeService.calculateRouteTime(currentLocation, meeting.getTarget());
+            mateEta.updateRemainingMinutes(routeTime.getMinutes());
         }
 
         List<MateEtaResponse> mateEtaResponses = etaRepository.findAllByMeetingId(meetingId).stream()
@@ -57,24 +69,15 @@ public class EtaService {
         return new MateEtaResponses(requestMate.getNicknameValue(), mateEtaResponses);
     }
 
-    @Transactional
-    public void updateArrived(Eta mateEta) {
-        mateEta.updateArrived();
-    }
-
-    @Transactional
-    public void updateRemainingMinutes(Eta mateEta, Mate requestMate, Meeting meeting) {
-        RouteTime routeTime = routeService.calculateRouteTime(requestMate.getOrigin(), meeting.getTarget());
-        mateEta.updateRemainingMinutes(routeTime.getMinutes());
-    }
-
-
     private boolean isOdysayCallTime(Eta mateEta) {
         return !mateEta.isModified() || mateEta.differenceMinutesFromLastUpdated() >= ODSAY_CALL_CYCLE_MINUTES;
     }
 
     private boolean determineArrived(MateEtaRequest mateEtaRequest, Meeting meeting, LocalDateTime now) {
         LocalDateTime meetingTime = meeting.getMeetingTime().withSecond(0).withNano(0);
+        if (mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null) {
+            return false;
+        }
         double distance = DistanceCalculator.calculate(
                 Double.valueOf(mateEtaRequest.currentLatitude()),
                 Double.valueOf(mateEtaRequest.currentLongitude()),
