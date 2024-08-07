@@ -23,10 +23,12 @@ lifecycleViewmodel = "2.8.3"
 loggingInterceptor = "4.12.0"
 material = "1.12.0"
 moshi = "1.15.1"
+playServicesLocation = "21.3.0"
 retrofit = "2.11.0"
 timber = "5.0.1"
 viewPager = "1.1.0"
 webkit = "1.11.0"
+workRuntimeKtx = "2.9.0"
 
 [libraries]
 # androidx
@@ -37,11 +39,13 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-view-pager = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewPager" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "lifecycle" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodel" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 
 # junit
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -70,10 +74,12 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 
 # dotsindicator
 dotsibdicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotsindicator" }
-androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 
 # loggig
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+
+# play service
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

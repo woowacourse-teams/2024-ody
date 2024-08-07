@@ -37,7 +37,9 @@ public class OdsayRouteClient implements RouteClient {
                 .uri(makeURI(origin, target))
                 .retrieve()
                 .body(OdsayResponse.class);
-        return Objects.requireNonNullElseGet(response, () -> {throw new OdyServerErrorException("서버 에러");});
+        return Objects.requireNonNullElseGet(response, () -> {
+            throw new OdyServerErrorException("서버 에러");
+        });
     }
 
     private URI makeURI(Location origin, Location target) {

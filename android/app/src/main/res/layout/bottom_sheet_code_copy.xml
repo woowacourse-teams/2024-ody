@@ -6,7 +6,7 @@
 
         <variable
             name="copyInviteCodeListener"
-            type="com.woowacourse.ody.presentation.room.listener.CopyInviteCodeListener" />
+            type="com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="34dp"
-            android:background="@drawable/rectangle_purple_radius_20"
+            android:background="@drawable/rectangle_radius_20"
             android:onClick="@{() -> copyInviteCodeListener.onCopyInviteCode()}"
             android:text="@string/code_copy_copy_code"
             android:textColor="@color/white"

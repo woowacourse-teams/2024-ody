@@ -1,8 +1,10 @@
 package com.woowacourse.ody
 
 import android.app.Application
+import androidx.work.WorkManager
 import com.woowacourse.ody.BuildConfig.DEBUG
 import com.woowacourse.ody.data.local.db.OdyDatastore
+import com.woowacourse.ody.data.local.repository.DefaultMatesEtaRepository
 import com.woowacourse.ody.data.remote.core.RetrofitClient
 import com.woowacourse.ody.data.remote.core.repository.DefaultFCMTokenRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultInviteCodeRepository
@@ -18,6 +20,7 @@ import com.woowacourse.ody.data.remote.thirdparty.location.service.KakaoLocation
 import com.woowacourse.ody.domain.repository.ody.FCMTokenRepository
 import com.woowacourse.ody.domain.repository.ody.InviteCodeRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
+import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.notification.NotificationHelper
@@ -38,6 +41,8 @@ class OdyApplication : Application() {
         kakaoRetrofit.create(KakaoLocationService::class.java)
 
     val notificationHelper: NotificationHelper by lazy { NotificationHelper(this) }
+
+    private val workerManager: WorkManager by lazy { WorkManager.getInstance(this) }
 
     val joinRepository: JoinRepository by lazy { DefaultJoinRepository(joinService) }
     val meetingRepository: MeetingRepository by lazy {
@@ -63,6 +68,10 @@ class OdyApplication : Application() {
 
     val fcmTokenRepository: FCMTokenRepository by lazy {
         DefaultFCMTokenRepository(odyDatastore)
+    }
+
+    val matesEtaRepository: MatesEtaRepository by lazy {
+        DefaultMatesEtaRepository(workerManager)
     }
 
     override fun onCreate() {

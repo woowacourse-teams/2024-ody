@@ -50,7 +50,7 @@
         app:layout_constraintStart_toStartOf="@id/et_destination"
         app:layout_constraintTop_toBottomOf="@id/et_destination" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_next_destination"
         style="@style/bottom_button_style"
         android:text="@string/next_button"

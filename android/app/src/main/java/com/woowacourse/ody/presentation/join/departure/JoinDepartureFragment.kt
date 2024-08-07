@@ -13,11 +13,11 @@ import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
 import com.woowacourse.ody.presentation.address.model.toGeoLocation
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
-import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
-import com.woowacourse.ody.presentation.creation.MeetingInfoType
+import com.woowacourse.ody.presentation.join.MeetingJoinInfoType
+import com.woowacourse.ody.presentation.join.MeetingJoinViewModel
 
 class JoinDepartureFragment : BindingFragment<FragmentJoinDepartureBinding>(R.layout.fragment_join_departure), AddressSearchListener {
-    private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
+    private val viewModel: MeetingJoinViewModel by activityViewModels<MeetingJoinViewModel>()
 
     override fun onViewCreated(
         view: View,
@@ -35,7 +35,7 @@ class JoinDepartureFragment : BindingFragment<FragmentJoinDepartureBinding>(R.la
     }
 
     private fun initializeObserve() {
-        viewModel.invalidStartingPointEvent.observe(viewLifecycleOwner) {
+        viewModel.invalidDepartureEvent.observe(viewLifecycleOwner) {
             showSnackBar(R.string.invalid_address)
         }
     }
@@ -43,8 +43,8 @@ class JoinDepartureFragment : BindingFragment<FragmentJoinDepartureBinding>(R.la
     private fun initializeView() {
         setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
             val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
-            binding.etStartingPoint.setText(geoLocation.address)
-            viewModel.startingPointGeoLocation.value = geoLocation
+            binding.etDeparture.setText(geoLocation.address)
+            viewModel.departureGeoLocation.value = geoLocation
         }
     }
 
@@ -62,7 +62,7 @@ class JoinDepartureFragment : BindingFragment<FragmentJoinDepartureBinding>(R.la
 
     override fun onResume() {
         super.onResume()
-        viewModel.meetingInfoType.value = MeetingInfoType.STARTING_POINT
+        viewModel.meetingJoinInfoType.value = MeetingJoinInfoType.DEPARTURE
     }
 
     companion object {

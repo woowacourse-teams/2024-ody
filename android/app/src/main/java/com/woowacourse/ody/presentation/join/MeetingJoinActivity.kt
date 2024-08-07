@@ -1,12 +1,9 @@
 package com.woowacourse.ody.presentation.join
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.woowacourse.ody.R
@@ -15,32 +12,18 @@ import com.woowacourse.ody.presentation.common.ViewPagerAdapter
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.listener.NextListener
-import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
-import com.woowacourse.ody.presentation.creation.MeetingCreationViewModelFactory
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
 import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.room.MeetingRoomActivity
+import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
 
 class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout.activity_meeting_join), NextListener, BackListener {
-    private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel> {
-        MeetingCreationViewModelFactory(
-            meetingRepository = application.meetingRepository,
-            joinRepository = application.joinRepository,
-            inviteCodeRepository = application.inviteCodeRepository,
-        )
+    private val viewModel: MeetingJoinViewModel by viewModels<MeetingJoinViewModel> {
+        MeetingJoinViewModelFactory(getInviteCode(), application.joinRepository, application.matesEtaRepository)
     }
     private val fragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinDepartureFragment())
     }
-    private val joinCompletionLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode != Activity.RESULT_OK) {
-                return@registerForActivityResult
-            }
-            viewModel.navigateJoinToRoom()
-            finish()
-        }
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -72,13 +55,15 @@ class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
-        viewModel.joinNavigateAction.observe(this) {
+        viewModel.navigateAction.observe(this) {
             when (it) {
-                MeetingJoinNavigateAction.JoinNavigateToRoom -> {
-                    startActivity(MeetingRoomActivity.getIntent(this))
+                is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
+                    startActivity(NotificationLogActivity.getIntent(this, it.meetingId))
+                    finish()
                 }
+
                 MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
-                    joinCompletionLauncher.launch(JoinCompleteActivity.getIntent(this))
+                    startActivity(JoinCompleteActivity.getIntent(this))
                 }
             }
         }
@@ -86,8 +71,7 @@ class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout
 
     override fun onNext() {
         if (binding.vpJoinInfo.currentItem == fragments.size - 1) {
-            val inviteCode: String = getInviteCode() ?: return
-            viewModel.joinMeeting(inviteCode)
+            viewModel.joinMeeting()
             viewModel.onClickMeetingJoin()
             return
         }
@@ -102,7 +86,7 @@ class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout
         finish()
     }
 
-    private fun getInviteCode(): String? = intent.getStringExtra(INVITE_CODE_KEY)
+    private fun getInviteCode(): String = intent.getStringExtra(INVITE_CODE_KEY) ?: ""
 
     companion object {
         private const val INVITE_CODE_KEY = "invite_code_key"

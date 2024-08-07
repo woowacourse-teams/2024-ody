@@ -6,6 +6,9 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:name=".OdyApplication"
@@ -19,6 +22,11 @@
         android:theme="@style/Theme.Ody"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.home.HomeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".presentation.invitecode.InviteCodeActivity"
             android:exported="false"
@@ -41,7 +49,11 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.room.MeetingRoomActivity"
+            android:name=".presentation.room.log.NotificationLogActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.room.etadashboard.EtaDashboardActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
@@ -54,10 +66,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".presentation.intro.IntroActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
 
         <service
             android:name=".data.remote.thirdparty.fcm.service.FCMService"
