@@ -5,7 +5,7 @@ import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingReques
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MatesEtaResponse
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingCatalogsResponse
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingCreationResponse
-import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingsResponse
+import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
@@ -17,9 +17,6 @@ interface MeetingService {
     suspend fun getInviteCodeValidity(
         @Path(value = "inviteCode") inviteCode: String,
     )
-
-    @GET(MEETING_PATH)
-    suspend fun getMeeting(): MeetingsResponse
 
     @POST("/v1/meetings")
     suspend fun postMeeting(
@@ -35,7 +32,8 @@ interface MeetingService {
     @GET("/v1/meetings/me")
     suspend fun fetchMeetingCatalogs(): MeetingCatalogsResponse
 
-    companion object {
-        const val MEETING_PATH = "/meetings/me"
-    }
+    @GET("/v1/meetings/{meetingId}")
+    suspend fun fetchMeeting(
+        @Path(value = "meetingId") meetingId: Long,
+    ): MeetingResponse
 }
