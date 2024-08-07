@@ -5,6 +5,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class MatesEtaResponse(
+    @Json(name = "ownerNickname")
+    val ownerNickname: String,
     @Json(name = "mateEtas")
     val mateEtaResponses: List<MateEtaResponse>,
 )

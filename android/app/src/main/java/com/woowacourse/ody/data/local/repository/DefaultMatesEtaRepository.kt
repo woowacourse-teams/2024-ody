@@ -9,8 +9,8 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.data.local.service.EtaDashBoardWorker
 import com.woowacourse.ody.data.local.service.EtaDashBoardWorker.Companion.MATE_ETA_RESPONSE_KEY
-import com.woowacourse.ody.data.local.service.MateEtaResponse
-import com.woowacourse.ody.domain.model.MateEta
+import com.woowacourse.ody.data.local.service.MateEtaInfoResponse
+import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 
 class DefaultMatesEtaRepository(
@@ -30,24 +30,25 @@ class DefaultMatesEtaRepository(
         workManager.enqueue(workRequest)
     }
 
-    override fun fetchMatesEta(meetingId: Long): LiveData<List<MateEta>> {
+    override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> {
         val tag = meetingId.toString()
         val liveData = workManager.getWorkInfosByTagLiveData(tag)
         return liveData.map { it.toMateEtas() }
     }
 
-    private fun List<WorkInfo>.toMateEtas(): List<MateEta> {
-        val recentWorkInfo = findLast { it.state == WorkInfo.State.SUCCEEDED } ?: return emptyList()
-        return recentWorkInfo.outputData.getString(MATE_ETA_RESPONSE_KEY)?.convertMateEtasToJson() ?: emptyList()
+    private fun List<WorkInfo>.toMateEtas(): MateEtaInfo? {
+        val recentWorkInfo = findLast { it.state == WorkInfo.State.SUCCEEDED }
+        return recentWorkInfo?.outputData?.getString(MATE_ETA_RESPONSE_KEY)?.convertMateEtasToJson()
     }
 
-    private fun String.convertMateEtasToJson(): List<MateEta> {
+    private fun String.convertMateEtasToJson(): MateEtaInfo? {
         val moshi =
             Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
-        val type = Types.newParameterizedType(List::class.java, MateEtaResponse::class.java)
-        val jsonAdapter = moshi.adapter<List<MateEtaResponse>>(type)
-        return jsonAdapter.fromJson(this)?.map { MateEta(it.nickname, it.etaType, it.durationMinute) } ?: listOf()
+        val type = Types.newParameterizedType(MateEtaInfoResponse::class.java)
+        val jsonAdapter = moshi.adapter<MateEtaInfoResponse>(type)
+        val convertResult = jsonAdapter.fromJson(this) ?: return null
+        return MateEtaInfo(convertResult.userNickname, convertResult.mateEtas)
     }
 }

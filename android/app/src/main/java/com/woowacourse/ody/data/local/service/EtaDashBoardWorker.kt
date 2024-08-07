@@ -11,6 +11,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
+import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import java.util.concurrent.TimeUnit
 
@@ -31,20 +32,24 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
 
         val mateEtas = meetingRepository.patchMatesEta(meetingId, isMissing, latitude, longitude).getOrNull()
         return if (mateEtas != null) {
-            val mateEtaResponses = mateEtas.map { MateEtaResponse(it.nickname, it.etaType, it.durationMinute) }
+            val mateEtaResponses = mateEtas.toMateEtaInfoResponse()
             Result.success(workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses.convertMateEtasToJson()))
         } else {
             Result.failure()
         }
     }
 
-    private fun List<MateEtaResponse>.convertMateEtasToJson(): String {
+    private fun MateEtaInfo.toMateEtaInfoResponse(): MateEtaInfoResponse {
+        return MateEtaInfoResponse(userNickname, mateEtas)
+    }
+
+    private fun MateEtaInfoResponse.convertMateEtasToJson(): String {
         val moshi =
             Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
-        val type = Types.newParameterizedType(List::class.java, MateEtaResponse::class.java)
-        val jsonAdapter = moshi.adapter<List<MateEtaResponse>>(type)
+        val type = Types.newParameterizedType(MateEtaInfoResponse::class.java)
+        val jsonAdapter = moshi.adapter<MateEtaInfoResponse>(type)
         return jsonAdapter.toJson(this)
     }
 
