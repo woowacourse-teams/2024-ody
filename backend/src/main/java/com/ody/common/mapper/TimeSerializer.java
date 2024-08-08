@@ -12,6 +12,7 @@ import org.springframework.boot.jackson.JsonComponent;
 
 @JsonComponent
 public class TimeSerializer extends JsonSerializer<LocalTime> {
+
     private static final DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder()
             .appendPattern("HH:mm")
             .toFormatter()
