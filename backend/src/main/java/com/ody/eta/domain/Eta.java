@@ -37,6 +37,7 @@ public class Eta {
 
     private boolean isArrived;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -93,5 +94,16 @@ public class Eta {
     public void updateArrived() {
         this.isArrived = true;
         this.remainingMinutes = 0L;
+    }
+
+    @PrePersist
+    public void onPrePersist() {
+        this.createdAt = LocalDateTime.now().withSecond(0).withNano(0);
+        this.updatedAt = this.createdAt;
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        this.updatedAt = LocalDateTime.now().withSecond(0).withNano(0);
     }
 }
