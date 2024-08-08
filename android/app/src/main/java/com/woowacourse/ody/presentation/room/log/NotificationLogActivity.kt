@@ -24,6 +24,7 @@ class NotificationLogActivity :
     BackListener {
     private val viewModel: NotificationLogViewModel by viewModels {
         NotificationLogViewModelFactory(
+            application.firebaseAnalytics,
             application.notificationLogRepository,
             application.meetingRepository,
         )
