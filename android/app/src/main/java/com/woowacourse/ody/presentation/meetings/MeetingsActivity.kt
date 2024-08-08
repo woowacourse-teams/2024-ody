@@ -30,7 +30,7 @@ class MeetingsActivity :
     MeetingsListener {
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
-            application.analyticsHelper,
+            application.firebaseAnalytics,
             application.meetingRepository,
         )
     }

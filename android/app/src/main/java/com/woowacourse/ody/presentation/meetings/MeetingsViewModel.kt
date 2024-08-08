@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
-import com.woowacourse.ody.presentation.analytics.AnalyticsHelper
-import com.woowacourse.ody.presentation.analytics.logEvent
+import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsItemListener
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class MeetingsViewModel(
-    private val analyticsHelper: AnalyticsHelper,
+    private val firebaseAnalytics: FirebaseAnalytics,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel(), MeetingsItemListener {
     private val _meetingCatalogs = MutableLiveData<List<MeetingUiModel>>()
@@ -36,7 +36,8 @@ class MeetingsViewModel(
             meetingRepository.fetchMeetingCatalogs().onSuccess {
                 _meetingCatalogs.value = it.toMeetingCatalogUiModels()
             }.onFailure {
-                analyticsHelper.logEvent("fetch_meeting_catalogs_fail", it.message.toString())
+                firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
+                Timber.e(it)
             }
         }
 
@@ -51,6 +52,7 @@ class MeetingsViewModel(
                     ),
                 )
             }.onFailure {
+                firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
                 Timber.e(it)
             }
         }
@@ -65,5 +67,9 @@ class MeetingsViewModel(
         newList[position] =
             newList[position].copy(isFolded = !newList[position].isFolded)
         _meetingCatalogs.value = newList
+    }
+
+    companion object {
+        private const val TAG = "MeetingsViewModel"
     }
 }

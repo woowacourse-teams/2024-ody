@@ -2,6 +2,7 @@ package com.woowacourse.ody
 
 import android.app.Application
 import androidx.work.WorkManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.BuildConfig.DEBUG
 import com.woowacourse.ody.data.local.db.OdyDatastore
 import com.woowacourse.ody.data.local.repository.DefaultMatesEtaRepository
@@ -23,8 +24,6 @@ import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
-import com.woowacourse.ody.presentation.analytics.AnalyticsHelper
-import com.woowacourse.ody.presentation.analytics.FirebaseAnalyticsHelper
 import com.woowacourse.ody.presentation.notification.NotificationHelper
 import retrofit2.Retrofit
 import timber.log.Timber
@@ -44,7 +43,7 @@ class OdyApplication : Application() {
 
     val notificationHelper: NotificationHelper by lazy { NotificationHelper(this) }
 
-    val analyticsHelper: AnalyticsHelper by lazy { FirebaseAnalyticsHelper(this) }
+    val firebaseAnalytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
 
     private val workerManager: WorkManager by lazy { WorkManager.getInstance(this) }
 
