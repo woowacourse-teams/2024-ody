@@ -30,7 +30,7 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
     private val meetingId: Long by lazy {
         workerParameters.inputData.getLong(
             MEETING_ID_KEY,
-            MEETING_ID_DEFAULT_VALUE
+            MEETING_ID_DEFAULT_VALUE,
         )
     }
 
@@ -76,7 +76,7 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
         val locationManager =
             applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
     private suspend fun updateMatesEta(
@@ -107,23 +107,23 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
                 applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION,
             ) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(
-                        applicationContext,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                    ) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(
-                        applicationContext,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                    ) != PackageManager.PERMISSION_GRANTED
+                ActivityCompat.checkSelfPermission(
+                    applicationContext,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    applicationContext,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                ) != PackageManager.PERMISSION_GRANTED
         } else {
             return ActivityCompat.checkSelfPermission(
                 applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION,
             ) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(
-                        applicationContext,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                    ) != PackageManager.PERMISSION_GRANTED
+                ActivityCompat.checkSelfPermission(
+                    applicationContext,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                ) != PackageManager.PERMISSION_GRANTED
         }
     }
 
