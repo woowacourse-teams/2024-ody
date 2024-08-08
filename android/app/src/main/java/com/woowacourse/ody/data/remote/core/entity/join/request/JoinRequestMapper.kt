@@ -14,9 +14,6 @@ fun MeetingJoinInfo.toJoinRequest(): JoinRequest =
     )
 
 private fun compress(coordinate: String): String {
-    return if (coordinate.length >= 9) {
-        coordinate.slice(COORDINATE_RANGE)
-    } else {
-        coordinate
-    }
+    val endIndex = minOf(9, coordinate.length)
+    return coordinate.substring(0, endIndex)
 }
