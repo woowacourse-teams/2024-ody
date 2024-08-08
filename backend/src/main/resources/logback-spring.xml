@@ -15,9 +15,9 @@
     </appender>
 
     <appender name="ODY_DEV_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./ody-dev-logs/ody-dev-info.log</file>
+        <file>/ody-dev-logs/ody-dev-info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>./ody-dev-logs/ody-dev-info.%i.log.zip</fileNamePattern>
+            <fileNamePattern>/ody-dev-logs/ody-dev-info.%i.log.zip</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>2</maxIndex>
         </rollingPolicy>
@@ -37,9 +37,9 @@
     </appender>
 
     <appender name="ODY_DEV_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./ody-dev-logs/ody-dev-warn.log</file>
+        <file>/ody-dev-logs/ody-dev-warn.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>./ody-dev-logs/ody-dev-warn.%i.log.zip</fileNamePattern>
+            <fileNamePattern>/ody-dev-logs/ody-dev-warn.%i.log.zip</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>2</maxIndex>
         </rollingPolicy>
@@ -59,9 +59,9 @@
     </appender>
 
     <appender name="ODY_DEV_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./ody-dev-logs/ody-dev-error.log</file>
+        <file>/ody-dev-logs/ody-dev-error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>./ody-dev-logs/ody-dev-error.%i.log.zip</fileNamePattern>
+            <fileNamePattern>/ody-dev-logs/ody-dev-error.%i.log.zip</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>2</maxIndex>
         </rollingPolicy>
