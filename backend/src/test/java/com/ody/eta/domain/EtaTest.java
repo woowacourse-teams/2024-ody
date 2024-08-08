@@ -19,7 +19,8 @@ class EtaTest {
         Meeting odyMeeting = Fixture.ODY_MEETING;
         Member member1 = Fixture.MEMBER1;
         Mate mate = new Mate(odyMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
-        Eta eta = new Eta(mate, 1L);
+        LocalDateTime now = LocalDateTime.now().minusMinutes(1).withSecond(0).withNano(0);
+        Eta eta = new Eta(mate, 1L, now, now);
 
         eta.updateRemainingMinutes(5L);
 
