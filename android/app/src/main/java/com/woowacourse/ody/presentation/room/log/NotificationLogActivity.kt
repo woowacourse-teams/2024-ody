@@ -18,9 +18,7 @@ import com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.room.log.listener.ShareListener
 
 class NotificationLogActivity :
-    BindingActivity<ActivityNotificationLogBinding>(
-        R.layout.activity_notification_log,
-    ),
+    BindingActivity<ActivityNotificationLogBinding>(R.layout.activity_notification_log),
     CopyInviteCodeListener,
     ShareListener,
     BackListener {
@@ -30,13 +28,11 @@ class NotificationLogActivity :
             application.meetingRepository,
         )
     }
-
     private val adapter: NotificationLogsAdapter by lazy {
         NotificationLogsAdapter(
             this,
         )
     }
-
     private val bottomSheetLayout by lazy { findViewById<ConstraintLayout>(R.id.cl_bottom_sheet) }
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
