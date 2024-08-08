@@ -25,9 +25,9 @@
         android:layout_marginBottom="16dp"
         android:animateLayoutChanges="true"
         android:background="@drawable/rectangle_white_radius_15"
-        android:onClick="@{() -> meetingsItemListener.navigateToMeetingRoom(meeting.id)}"
         android:clickable="true"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:onClick="@{() -> meetingsItemListener.navigateToMeetingRoom(meeting.id)}">
 
         <TextView
             android:id="@+id/tv_meeting_title_expanded"
@@ -49,15 +49,14 @@
             android:id="@+id/iv_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
-            android:layout_marginEnd="21dp"
+            android:onClick="@{() -> meetingsItemListener.toggleFold(meeting.position)}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{() -> meetingsItemListener.toggleFold(meeting.position)}">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="20dp"
                 android:src="@drawable/ic_arrow_down"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -66,6 +65,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="20dp"
                 android:src="@drawable/ic_arrow_up"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -78,9 +78,9 @@
             android:id="@+id/tv_meeting_date_time"
             style="@style/pretendard_medium_16"
             showDateTime="@{meeting.datetime}"
-            android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/tv_meeting_title_expanded"
             tools:text="오늘 오후 1시 30분" />
@@ -91,9 +91,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_meeting_eta"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/tv_meeting_date_time"
-            app:layout_constraintBottom_toTopOf="@id/tv_meeting_eta"
             app:visibility="@{!meeting.folded}">
 
             <TextView
@@ -121,8 +121,8 @@
                 style="@style/pretendard_regular_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{meeting.targetAddress}"
                 android:layout_marginTop="4dp"
+                android:text="@{meeting.targetAddress}"
                 android:textColor="@color/purple_800"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_meeting_departure"
@@ -139,8 +139,8 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            style="@style/pretendard_bold_24"
             android:id="@+id/tv_meeting_eta"
+            style="@style/pretendard_bold_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
