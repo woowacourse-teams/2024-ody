@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.woowacourse.ody.databinding.ItemMeetingCatalogBinding
+import com.woowacourse.ody.presentation.meetings.listener.MeetingsItemListener
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsListener
-import com.woowacourse.ody.presentation.meetings.listener.ToggleFoldListener
 import com.woowacourse.ody.presentation.meetings.model.MeetingUiModel
 
 class MeetingsAdapter(
-    private val toggleFoldListener: ToggleFoldListener,
+    private val meetingsItemListener: MeetingsItemListener,
     private val meetingsListener: MeetingsListener,
 ) : ListAdapter<MeetingUiModel, MeetingsViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(
@@ -28,7 +28,7 @@ class MeetingsAdapter(
     ) {
         holder.bind(
             currentList[position],
-            toggleFoldListener,
+            meetingsItemListener,
             meetingsListener,
         )
     }
