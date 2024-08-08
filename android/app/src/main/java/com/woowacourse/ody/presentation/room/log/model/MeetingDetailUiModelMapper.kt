@@ -6,15 +6,18 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-fun Meeting.toMeetingUiModel(): MeetingDetailUiModel =
-    MeetingDetailUiModel(
+fun Meeting.toMeetingUiModel(): MeetingDetailUiModel {
+    val meetingDateTime = LocalDateTime.of(meetingDate, meetingTime)
+
+    return MeetingDetailUiModel(
         name,
         targetPosition,
         toMeetingDateTime(meetingDate, meetingTime),
         mates.map { it.nickname },
         inviteCode,
-        meetingDate == LocalDate.now() && meetingTime.minusMinutes(30) <= LocalTime.now(),
+        meetingDateTime.minusMinutes(30) <= LocalDateTime.now(),
     )
+}
 
 private fun toMeetingDateTime(
     meetingDate: LocalDate,
