@@ -1,6 +1,9 @@
 name: backend-cd-dev
 
 on:
+  push:
+    branches:
+      - feature/227
   pull_request:
     branches:
       - develop
