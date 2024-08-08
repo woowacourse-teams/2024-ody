@@ -51,4 +51,10 @@ public class Meeting {
     public LocalDateTime getMeetingTime() {
         return LocalDateTime.of(date, time).withSecond(0).withNano(0);
     }
+
+    public boolean isWithinPast24HoursOrLater() {
+        LocalDateTime dateTime = LocalDateTime.of(date, time);
+        LocalDateTime standard = LocalDateTime.now().minusHours(24).withSecond(0);
+        return standard.isBefore(dateTime);
+    }
 }
