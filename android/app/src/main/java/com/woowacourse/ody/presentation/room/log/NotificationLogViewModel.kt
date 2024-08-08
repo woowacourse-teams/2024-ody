@@ -19,7 +19,7 @@ class NotificationLogViewModel(
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
-    private val _meeting = MutableLiveData<MeetingDetailUiModel>()
+    private val _meeting = MutableLiveData(MeetingDetailUiModel())
     val meeting: LiveData<MeetingDetailUiModel> = _meeting
 
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
