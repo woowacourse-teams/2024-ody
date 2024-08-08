@@ -55,7 +55,6 @@ class MeetingsActivity :
 
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
-        binding.rvMeetingList.itemAnimator = null
         binding.listener = this
     }
 
@@ -69,7 +68,7 @@ class MeetingsActivity :
         viewModel.navigateAction.observe(this) {
             when (it) {
                 is MeetingsNavigateAction.NavigateToEta -> navigateToEta(it.meetingId, it.inviteCode, it.title)
-                is MeetingsNavigateAction.NavigateToMeetingRoom -> navigateToMeetingRoom(it.meetingId)
+                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToMeetingRoom(it.meetingId)
             }
         }
     }

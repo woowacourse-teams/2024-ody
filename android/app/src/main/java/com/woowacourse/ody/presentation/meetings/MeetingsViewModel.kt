@@ -37,7 +37,7 @@ class MeetingsViewModel(
             }
         }
 
-    override fun navigateToEta(meetingId: Long) =
+    override fun navigateToEta(meetingId: Long) {
         viewModelScope.launch {
             meetingRepository.fetchMeeting(meetingId).onSuccess {
                 _navigateAction.postValue(
@@ -51,8 +51,10 @@ class MeetingsViewModel(
                 Timber.e(it)
             }
         }
+    }
 
-    override fun navigateToMeetingRoom(meetingId: Long) = _navigateAction.postValue(MeetingsNavigateAction.NavigateToMeetingRoom(meetingId))
+    override fun navigateToMeetingRoom(meetingId: Long) =
+        _navigateAction.postValue(MeetingsNavigateAction.NavigateToNotificationLog(meetingId))
 
     override fun toggleFold(position: Int) {
         val currentList = _meetingCatalogs.value ?: emptyList()
