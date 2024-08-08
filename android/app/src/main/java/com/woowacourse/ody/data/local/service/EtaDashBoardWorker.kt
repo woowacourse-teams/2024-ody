@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.work.CoroutineWorker
@@ -26,7 +27,12 @@ import kotlin.coroutines.resumeWithException
 class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters) {
     private val meetingRepository: MeetingRepository by lazy { (applicationContext as OdyApplication).meetingRepository }
-    private val meetingId: Long by lazy { workerParameters.inputData.getLong(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE) }
+    private val meetingId: Long by lazy {
+        workerParameters.inputData.getLong(
+            MEETING_ID_KEY,
+            MEETING_ID_DEFAULT_VALUE
+        )
+    }
 
     override suspend fun doWork(): Result {
         if (meetingId == MEETING_ID_DEFAULT_VALUE) {
@@ -43,7 +49,7 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
         val fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(applicationContext)
 
-        if (checkLocationPermissions()) {
+        if (checkLocationPermissions() || !isLocationEnabled()) {
             return updateMatesEta(true, "0.0", "0.0")
         }
 
@@ -64,6 +70,13 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
         }
 
         return updateMatesEta(false, location.latitude.toString(), location.longitude.toString())
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager =
+            applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
     private suspend fun updateMatesEta(
@@ -94,23 +107,23 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
                 applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION,
             ) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                ) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                ) != PackageManager.PERMISSION_GRANTED
+                    ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                    ) != PackageManager.PERMISSION_GRANTED
         } else {
             return ActivityCompat.checkSelfPermission(
                 applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION,
             ) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                ) != PackageManager.PERMISSION_GRANTED
+                    ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                    ) != PackageManager.PERMISSION_GRANTED
         }
     }
 
