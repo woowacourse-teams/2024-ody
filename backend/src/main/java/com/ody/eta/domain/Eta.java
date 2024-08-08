@@ -1,12 +1,15 @@
 package com.ody.eta.domain;
 
 import com.ody.mate.domain.Mate;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -39,14 +42,7 @@ public class Eta {
     private LocalDateTime updatedAt;
 
     public Eta(Mate mate, Long remainingMinutes) {
-        this(
-                null,
-                mate,
-                remainingMinutes,
-                false,
-                LocalDateTime.now().withSecond(0).withNano(0),
-                LocalDateTime.now().withSecond(0).withNano(0)
-        );
+        this(null, mate, remainingMinutes, false, LocalDateTime.now(), LocalDateTime.now());
     }
 
     public Eta(Mate mate, long remainingMinutes, LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -66,15 +62,22 @@ public class Eta {
 
     public long countDownMinutes(LocalDateTime localDateTime) {
         long minutesDifference = Duration.between(updatedAt, localDateTime).toMinutes();
-        long remainingMinutes = Math.max(this.remainingMinutes - minutesDifference, 0);
-        if (isArrivalSoon(remainingMinutes)) {
+        long countDownMinutes = Math.max(remainingMinutes - minutesDifference, 0);
+        if (isMissing()) {
+            return -1L;
+        }
+        if (isArrivalSoon(countDownMinutes)) {
             return 1L;
         }
-        return remainingMinutes;
+        return countDownMinutes;
     }
 
-    private boolean isArrivalSoon(long remainingMinutes) {
-        return remainingMinutes == 0L && !isArrived;
+    private boolean isMissing() {
+        return remainingMinutes == -1L;
+    }
+
+    private boolean isArrivalSoon(long countDownMinutes) {
+        return countDownMinutes == 0L && !isArrived;
     }
 
     public long differenceMinutesFromLastUpdated() {
@@ -83,7 +86,7 @@ public class Eta {
     }
 
     public void updateRemainingMinutes(long remainingMinutes) {
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now().withSecond(0).withNano(0);
         this.remainingMinutes = remainingMinutes;
     }
 
