@@ -13,6 +13,7 @@ fun Meeting.toMeetingUiModel(): MeetingDetailUiModel =
         toMeetingDateTime(meetingDate, meetingTime),
         mates.map { it.nickname },
         inviteCode,
+        meetingDate == LocalDate.now() && meetingTime.minusMinutes(30) <= LocalTime.now(),
     )
 
 private fun toMeetingDateTime(
