@@ -8,8 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -43,7 +41,14 @@ public class Eta {
     private LocalDateTime updatedAt;
 
     public Eta(Mate mate, Long remainingMinutes) {
-        this(null, mate, remainingMinutes, false, LocalDateTime.now(), LocalDateTime.now());
+        this(
+                null,
+                mate,
+                remainingMinutes,
+                false,
+                LocalDateTime.now().withSecond(0).withNano(0),
+                LocalDateTime.now().withSecond(0).withNano(0)
+        );
     }
 
     public Eta(Mate mate, long remainingMinutes, LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -94,16 +99,5 @@ public class Eta {
     public void updateArrived() {
         this.isArrived = true;
         this.remainingMinutes = 0L;
-    }
-
-    @PrePersist
-    public void onPrePersist() {
-        this.createdAt = LocalDateTime.now().withSecond(0).withNano(0);
-        this.updatedAt = this.createdAt;
-    }
-
-    @PreUpdate
-    public void onPreUpdate() {
-        this.updatedAt = LocalDateTime.now().withSecond(0).withNano(0);
     }
 }
