@@ -19,7 +19,7 @@ public record MateEtaResponse(
     public static MateEtaResponse of(Eta eta, boolean isMissing, LocalDateTime meetingTime, LocalDateTime now) {
         return new MateEtaResponse(
                 eta.getMate().getNicknameValue(),
-                EtaStatus.from(eta, meetingTime, now, isMissing),
+                EtaStatus.from(eta.getMate().getNicknameValue(), eta, meetingTime, now, isMissing),
                 eta.countDownMinutes(now)
         );
     }

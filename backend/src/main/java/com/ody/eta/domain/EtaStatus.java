@@ -11,8 +11,8 @@ public enum EtaStatus {
     MISSING,
     ;
 
-    public static EtaStatus from(Eta mateEta, LocalDateTime meetingTime, LocalDateTime now, boolean isMissing) {
-        if (isMissing || mateEta.getRemainingMinutes() == -1L) {
+    public static EtaStatus from(String ownerNickname, Eta mateEta, LocalDateTime meetingTime, LocalDateTime now, boolean isMissing) {
+        if (ownerNickname.equals(mateEta.getMate().getNicknameValue()) && (isMissing || mateEta.getRemainingMinutes() == -1L)) {
             return MISSING;
         }
         if (mateEta.isArrived()) {
