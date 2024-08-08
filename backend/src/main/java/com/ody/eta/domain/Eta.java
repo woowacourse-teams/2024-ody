@@ -1,6 +1,7 @@
 package com.ody.eta.domain;
 
 import com.ody.mate.domain.Mate;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,6 +35,7 @@ public class Eta {
 
     private boolean isArrived;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -66,15 +68,22 @@ public class Eta {
 
     public long countDownMinutes(LocalDateTime localDateTime) {
         long minutesDifference = Duration.between(updatedAt, localDateTime).toMinutes();
-        long remainingMinutes = Math.max(this.remainingMinutes - minutesDifference, 0);
-        if (isArrivalSoon(remainingMinutes)) {
+        long countDownMinutes = Math.max(remainingMinutes - minutesDifference, 0);
+        if (isMissing()) {
+            return -1L;
+        }
+        if (isArrivalSoon(countDownMinutes)) {
             return 1L;
         }
-        return remainingMinutes;
+        return countDownMinutes;
     }
 
-    private boolean isArrivalSoon(long remainingMinutes) {
-        return remainingMinutes == 0L && !isArrived;
+    private boolean isMissing() {
+        return remainingMinutes == -1L;
+    }
+
+    private boolean isArrivalSoon(long countDownMinutes) {
+        return countDownMinutes == 0L && !isArrived;
     }
 
     public long differenceMinutesFromLastUpdated() {
@@ -83,7 +92,7 @@ public class Eta {
     }
 
     public void updateRemainingMinutes(long remainingMinutes) {
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now().withSecond(0).withNano(0);
         this.remainingMinutes = remainingMinutes;
     }
 
