@@ -18,7 +18,8 @@ import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
 
 class MeetingJoinActivity :
-    BindingActivity<ActivityMeetingJoinBinding>(R.layout.activity_meeting_join), NextListener,
+    BindingActivity<ActivityMeetingJoinBinding>(R.layout.activity_meeting_join),
+    NextListener,
     BackListener {
     private val viewModel: MeetingJoinViewModel by viewModels<MeetingJoinViewModel> {
         MeetingJoinViewModelFactory(
