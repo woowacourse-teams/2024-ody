@@ -21,6 +21,9 @@ import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import com.ody.util.InviteCodeGenerator;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -71,6 +74,54 @@ class MeetingServiceTest extends BaseServiceTest {
                 meetingTomorrowAt14.getId(),
                 meetingDayAfterTomorrowAt14.getId()
         );
+    }
+
+    @DisplayName("내 약속 목록 조회 시 약속 시간이 현재 시간으로부터 24시간 포함 이내인 약속부터 미래의 약속까지만 조회된다.")
+    @Test
+    void findAllByMemberFilterTime() {
+        Member member = memberRepository.save(Fixture.MEMBER1);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        Meeting meeting24Hours1MinuteAgo = meetingRepository.save(new Meeting(
+                "약속",
+                now.toLocalDate().minusDays(1),
+                now.toLocalTime().minusMinutes(1),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        ));
+        Meeting meeting24HoursAgo = meetingRepository.save(new Meeting(
+                "약속",
+                now.toLocalDate().minusDays(1),
+                now.toLocalTime(),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        ));
+        Meeting meeting23Hours59MinutesAgo = meetingRepository.save(new Meeting(
+                "약속",
+                now.toLocalDate().minusDays(1),
+                now.toLocalTime().plusMinutes(1),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        ));
+
+        mateRepository.save(
+                new Mate(meeting24HoursAgo, member, new Nickname("제리1"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+        mateRepository.save(
+                new Mate(meeting24Hours1MinuteAgo, member, new Nickname("제리2"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+        mateRepository.save(
+                new Mate(meeting23Hours59MinutesAgo, member, new Nickname("제리3"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+
+        List<MeetingFindByMemberResponse> meetings = meetingService.findAllByMember(member).meetings();
+
+        List<Long> meetingIds = meetings.stream()
+                .map(MeetingFindByMemberResponse::id)
+                .toList();
+
+        assertThat(meetingIds).containsExactly(meeting24HoursAgo.getId(), meeting23Hours59MinutesAgo.getId());
     }
 
     @DisplayName("약속 저장 및 초대 코드 갱신에 성공한다")
