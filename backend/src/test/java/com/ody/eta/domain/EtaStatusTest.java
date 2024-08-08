@@ -34,7 +34,7 @@ class EtaStatusTest {
         Eta eta = new Eta(mate, 5L);
         boolean isMissing = true;
 
-        assertThat(EtaStatus.from(eta, meetingTime, now, isMissing))
+        assertThat(EtaStatus.from(mate.getNicknameValue(), eta, meetingTime, now, isMissing))
                 .isEqualTo(EtaStatus.MISSING);
     }
 
@@ -45,7 +45,7 @@ class EtaStatusTest {
         LocalDateTime tenMinutesLater = meetingTime.plusMinutes(1L);
         boolean isMissing = false;
 
-        assertThat(EtaStatus.from(eta, tenMinutesLater, now, isMissing))
+        assertThat(EtaStatus.from(mate.getNicknameValue(), eta, tenMinutesLater, now, isMissing))
                 .isEqualTo(EtaStatus.LATE_WARNING);
     }
 
@@ -55,7 +55,7 @@ class EtaStatusTest {
         Eta eta = new Eta(mate, 10L);
         boolean isMissing = false;
 
-        assertThat(EtaStatus.from(eta, meetingTime, now, isMissing))
+        assertThat(EtaStatus.from(mate.getNicknameValue(), eta, meetingTime, now, isMissing))
                 .isEqualTo(EtaStatus.LATE);
     }
 
@@ -67,7 +67,7 @@ class EtaStatusTest {
 
         eta.updateArrived();
 
-        assertThat(EtaStatus.from(eta, meetingTime, now, isMissing))
+        assertThat(EtaStatus.from(mate.getNicknameValue(), eta, meetingTime, now, isMissing))
                 .isEqualTo(EtaStatus.ARRIVED);
     }
 
@@ -78,7 +78,7 @@ class EtaStatusTest {
         Eta eta = new Eta(mate, 0L);
         boolean isMissing = false;
 
-        assertThat(EtaStatus.from(eta, oneMinutesLater, now, isMissing))
+        assertThat(EtaStatus.from(mate.getNicknameValue(), eta, oneMinutesLater, now, isMissing))
                 .isEqualTo(EtaStatus.ARRIVAL_SOON);
     }
 }
