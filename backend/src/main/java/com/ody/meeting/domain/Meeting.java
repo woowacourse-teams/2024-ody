@@ -55,6 +55,6 @@ public class Meeting {
     public boolean isWithinPast24HoursOrLater() {
         LocalDateTime dateTime = LocalDateTime.of(date, time);
         LocalDateTime standard = LocalDateTime.now().minusHours(24).withSecond(0);
-        return dateTime.isEqual(standard) || dateTime.isAfter(standard);
+        return standard.isBefore(dateTime);
     }
 }
