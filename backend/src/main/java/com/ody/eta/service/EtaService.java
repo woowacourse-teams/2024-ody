@@ -64,7 +64,7 @@ public class EtaService {
         }
 
         List<MateEtaResponse> mateEtaResponses = etaRepository.findAllByMeetingId(meetingId).stream()
-                .map(eta -> MateEtaResponse.of(eta, mateEtaRequest.isMissing(), meetingTime, now))
+                .map(eta -> MateEtaResponse.of(requestMate.getNicknameValue(), eta, mateEtaRequest.isMissing(), meetingTime, now))
                 .toList();
         return new MateEtaResponses(requestMate.getNicknameValue(), mateEtaResponses);
     }
