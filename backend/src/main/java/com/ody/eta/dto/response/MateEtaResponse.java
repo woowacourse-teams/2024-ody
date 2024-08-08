@@ -16,10 +16,10 @@ public record MateEtaResponse(
         @Schema(description = "도착지까지 남은 소요시간(분)", example = "32")
         long durationMinutes
 ) {
-    public static MateEtaResponse of(Eta eta, boolean isMissing, LocalDateTime meetingTime, LocalDateTime now) {
+    public static MateEtaResponse of(String ownerNickname, Eta eta, boolean isMissing, LocalDateTime meetingTime, LocalDateTime now) {
         return new MateEtaResponse(
                 eta.getMate().getNicknameValue(),
-                EtaStatus.from(eta.getMate().getNicknameValue(), eta, meetingTime, now, isMissing),
+                EtaStatus.from(ownerNickname, eta, meetingTime, now, isMissing),
                 eta.countDownMinutes(now)
         );
     }
