@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.presentation.analytics.AnalyticsHelper
+import com.woowacourse.ody.presentation.analytics.logEvent
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsItemListener
@@ -15,6 +17,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class MeetingsViewModel(
+    private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel(), MeetingsItemListener {
     private val _meetingCatalogs = MutableLiveData<List<MeetingUiModel>>()
@@ -33,7 +36,7 @@ class MeetingsViewModel(
             meetingRepository.fetchMeetingCatalogs().onSuccess {
                 _meetingCatalogs.value = it.toMeetingCatalogUiModels()
             }.onFailure {
-                Timber.e(it)
+                analyticsHelper.logEvent("fetch_meeting_catalogs_fail", it.message.toString())
             }
         }
 

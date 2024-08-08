@@ -30,6 +30,7 @@ class MeetingsActivity :
     MeetingsListener {
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
+            application.analyticsHelper,
             application.meetingRepository,
         )
     }
@@ -67,14 +68,21 @@ class MeetingsActivity :
         }
         viewModel.navigateAction.observe(this) {
             when (it) {
-                is MeetingsNavigateAction.NavigateToEta -> navigateToEta(it.meetingId, it.inviteCode, it.title)
+                is MeetingsNavigateAction.NavigateToEta ->
+                    navigateToEta(
+                        it.meetingId,
+                        it.inviteCode,
+                        it.title,
+                    )
+
                 is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToMeetingRoom(it.meetingId)
             }
         }
     }
 
     override fun onFab() {
-        binding.cvMenuView.visibility = if (binding.fabMeetingsNavigator.isSelected) View.GONE else View.VISIBLE
+        binding.cvMenuView.visibility =
+            if (binding.fabMeetingsNavigator.isSelected) View.GONE else View.VISIBLE
         binding.fabMeetingsNavigator.isSelected = !binding.fabMeetingsNavigator.isSelected
     }
 
@@ -160,7 +168,10 @@ class MeetingsActivity :
                 }
             }
         builder.setTitle(getString(R.string.request_background_permission_dialog_title))
-        builder.setPositiveButton(getString(R.string.request_background_permission_dialog_yes), listener)
+        builder.setPositiveButton(
+            getString(R.string.request_background_permission_dialog_yes),
+            listener,
+        )
         builder.setNegativeButton(getString(R.string.request_background_permission_dialog_no), null)
         builder.show()
     }

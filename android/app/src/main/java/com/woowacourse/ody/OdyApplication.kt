@@ -23,6 +23,8 @@ import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
+import com.woowacourse.ody.presentation.analytics.AnalyticsHelper
+import com.woowacourse.ody.presentation.analytics.FirebaseAnalyticsHelper
 import com.woowacourse.ody.presentation.notification.NotificationHelper
 import retrofit2.Retrofit
 import timber.log.Timber
@@ -41,6 +43,8 @@ class OdyApplication : Application() {
         kakaoRetrofit.create(KakaoLocationService::class.java)
 
     val notificationHelper: NotificationHelper by lazy { NotificationHelper(this) }
+
+    val analyticsHelper: AnalyticsHelper by lazy { FirebaseAnalyticsHelper(this) }
 
     private val workerManager: WorkManager by lazy { WorkManager.getInstance(this) }
 
