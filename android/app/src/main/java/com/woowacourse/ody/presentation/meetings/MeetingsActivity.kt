@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
+import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
@@ -39,6 +40,9 @@ class MeetingsActivity :
             viewModel,
             this,
         )
+    }
+    private val firebaseAnalytics by lazy {
+        application.firebaseAnalytics
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -105,6 +109,10 @@ class MeetingsActivity :
         inviteCode: String,
         title: String,
     ) {
+        firebaseAnalytics.logButtonClicked(
+            eventName = "eta_button_from_meetings",
+            location = TAG,
+        )
         startActivity(EtaDashboardActivity.getIntent(this, meetingId, inviteCode, title))
     }
 
@@ -212,6 +220,7 @@ class MeetingsActivity :
     }
 
     companion object {
+        private const val TAG = "MeetingsActivity"
         private const val PERMISSIONS_REQUEST_CODE = 1
         private const val PERMISSION_REQUEST_CODE = 2
 

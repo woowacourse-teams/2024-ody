@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityNotificationLogBinding
+import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardActivity
@@ -36,6 +37,9 @@ class NotificationLogActivity :
     }
     private val bottomSheetLayout by lazy { findViewById<ConstraintLayout>(R.id.cl_bottom_sheet) }
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private val firebaseAnalytics by lazy {
+        application.firebaseAnalytics
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,15 +47,23 @@ class NotificationLogActivity :
         initializeObserve()
         initializePersistentBottomSheet()
         binding.btnOdy.setOnClickListener {
-            val intent =
-                EtaDashboardActivity.getIntent(
-                    this,
-                    getMeetingId(),
-                    viewModel.meeting.value?.inviteCode ?: return@setOnClickListener,
-                    viewModel.meeting.value?.name ?: return@setOnClickListener,
-                )
-            startActivity(intent)
+            navigateToEta()
         }
+    }
+
+    private fun navigateToEta() {
+        firebaseAnalytics.logButtonClicked(
+            eventName = "eta_button_from_notification_log",
+            location = TAG,
+        )
+        val intent =
+            EtaDashboardActivity.getIntent(
+                this,
+                getMeetingId(),
+                viewModel.meeting.value?.inviteCode ?: return,
+                viewModel.meeting.value?.name ?: return,
+            )
+        startActivity(intent)
     }
 
     override fun initializeBinding() {
@@ -91,6 +103,7 @@ class NotificationLogActivity :
     private fun getMeetingId(): Long = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
 
     companion object {
+        private const val TAG = "NotificationLogActivity"
         private const val MEETING_ID_KEY = "meeting_id"
         private const val MEETING_ID_DEFAULT_VALUE = -1L
         private const val INVITE_CODE_LABEL = "inviteCode"

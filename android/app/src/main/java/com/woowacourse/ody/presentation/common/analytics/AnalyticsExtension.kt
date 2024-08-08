@@ -14,3 +14,16 @@ fun FirebaseAnalytics.logNetworkErrorEvent(
         )
     this.logEvent("network_error", bundle)
 }
+
+fun FirebaseAnalytics.logButtonClicked(
+    eventName: String,
+    location: String?,
+) {
+    val bundle =
+        bundleOf(
+            FirebaseAnalytics.Param.CONTENT_TYPE to "button",
+            FirebaseAnalytics.Param.METHOD to "click",
+            FirebaseAnalytics.Param.LOCATION to location,
+        )
+    this.logEvent(eventName, bundle)
+}

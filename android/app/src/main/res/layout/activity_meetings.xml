@@ -22,6 +22,7 @@
         <variable
             name="isFloatingButtonExpanded"
             type="Boolean" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
