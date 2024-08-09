@@ -6,7 +6,7 @@ import java.util.List;
 
 public record MateEtaResponses(
 
-        @Schema(description = "기기 주인 닉네임",  example = "콜리")
+        @Schema(description = "기기 주인 닉네임", example = "콜리")
         String ownerNickname,
 
         @ArraySchema(schema = @Schema(implementation = MateEtaResponse.class))

@@ -12,6 +12,8 @@ import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
+import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
+import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
@@ -21,12 +23,15 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 class MeetingControllerTest extends BaseControllerTest {
+
+    private static String LOCALTIME_FORMAT = "HH:mm";
 
     @Autowired
     private MemberService memberService;
@@ -94,7 +99,11 @@ class MeetingControllerTest extends BaseControllerTest {
                 .when()
                 .post("/v1/meetings")
                 .then()
-                .statusCode(201);
+                .statusCode(201)
+                .extract()
+                .as(MeetingSaveResponseV1.class)
+                .time().toString()
+                .matches(LOCALTIME_FORMAT);
     }
 
     @DisplayName("특정 멤버의 참여 모임 목록 조회에 성공하면 200응답 반환한다")
@@ -104,16 +113,16 @@ class MeetingControllerTest extends BaseControllerTest {
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
         mateRepository.save(new Mate(odyMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
 
-        RestAssured.given()
-                .log()
-                .all()
+        RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer device-token=" + Fixture.MEMBER1_TOKEN)
                 .when()
-                .get("/meetings/me")
-                .then()
-                .log()
-                .all()
-                .statusCode(200);
+                .get("/v1/meetings/me")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(MeetingFindByMemberResponses.class)
+                .meetings()
+                .forEach(response -> Pattern.matches(response.time().toString(), LOCALTIME_FORMAT));
     }
 
     @DisplayName("로그 목록 조회에 성공하면 200응답 반환한다")
