@@ -12,7 +12,8 @@ class EtaDashboardViewModel(
     meetingId: Long,
     matesEtaRepository: MatesEtaRepository,
 ) : ViewModel() {
-    private val matesEta: LiveData<MateEtaInfo?> = matesEtaRepository.fetchMatesEta(meetingId = meetingId)
+    private val matesEta: LiveData<MateEtaInfo?> =
+        matesEtaRepository.fetchMatesEta(meetingId = meetingId)
     val mateEtaUiModels: LiveData<List<MateEtaUiModel>?> =
         matesEta.map {
             val mateEtaInfo = it ?: return@map null

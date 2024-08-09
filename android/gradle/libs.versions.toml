@@ -6,6 +6,7 @@ appcompat = "1.7.0"
 assertj = "3.23.1"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
+coroutinesTest = "1.9.0-RC"
 datastorePreferences = "1.1.1"
 datastoreCoreAndroid = "1.1.1"
 dotsindicator = "5.0"
@@ -89,6 +90,9 @@ logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", ver
 
 # play service
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+
+# coroutines
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
