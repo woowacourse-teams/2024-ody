@@ -10,7 +10,7 @@ on:
     branches:
       - develop
     paths:
-      - backend/**
+#      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
@@ -54,3 +54,14 @@ jobs:
         if: always()
         with:
           report_paths: ${{ github.workspace }}/backend/build/test-results/**/*.xml
+
+      - name: Report test Coverage to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          title: 📝 Test Coverage Report
+          paths: ${{ github.workspace }}/backend/build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 10
+          min-coverage-changed-files: 10
+          update-comment: true
