@@ -6,12 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.creation.listener.MeetingCreationListener
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -20,6 +22,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 
 class MeetingCreationViewModel(
+    private val firebaseAnalytics: FirebaseAnalytics,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel(), MeetingCreationListener {
     val meetingCreationInfoType: MutableLiveData<MeetingCreationInfoType> = MutableLiveData()
@@ -87,6 +90,7 @@ class MeetingCreationViewModel(
             ).onSuccess {
                 _inviteCode.value = it
             }.onFailure {
+                firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
                 Timber.e(it.message)
             }
         }
@@ -167,6 +171,8 @@ class MeetingCreationViewModel(
     }
 
     companion object {
+        private const val TAG = "MeetingCreationViewModel"
+
         val MEETING_HOURS = (0..<24).toList()
         val MEETING_MINUTES = (0..<60).toList()
         const val MEETING_NAME_MAX_LENGTH = 15

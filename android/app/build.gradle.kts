@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.android.junit.jupiter)
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("com.google.firebase.crashlytics")
 }
 
 val properties = Properties()
@@ -73,6 +74,7 @@ dependencies {
     // firebase
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.messaging.ktx)
     implementation(platform(libs.firebase.bom))
 

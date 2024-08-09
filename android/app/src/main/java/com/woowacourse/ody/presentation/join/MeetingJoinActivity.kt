@@ -17,9 +17,17 @@ import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
 
-class MeetingJoinActivity : BindingActivity<ActivityMeetingJoinBinding>(R.layout.activity_meeting_join), NextListener, BackListener {
+class MeetingJoinActivity :
+    BindingActivity<ActivityMeetingJoinBinding>(R.layout.activity_meeting_join),
+    NextListener,
+    BackListener {
     private val viewModel: MeetingJoinViewModel by viewModels<MeetingJoinViewModel> {
-        MeetingJoinViewModelFactory(getInviteCode(), application.joinRepository, application.matesEtaRepository)
+        MeetingJoinViewModelFactory(
+            application.firebaseAnalytics,
+            getInviteCode(),
+            application.joinRepository,
+            application.matesEtaRepository,
+        )
     }
     private val fragments: List<Fragment> by lazy {
         listOf(JoinNickNameFragment(), JoinDepartureFragment())

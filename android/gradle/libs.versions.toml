@@ -11,6 +11,7 @@ datastoreCoreAndroid = "1.1.1"
 dotsindicator = "5.0"
 espressoCore = "3.6.1"
 firebaseBom = "33.1.2"
+firebaseCrashlytics = "2.9.9"
 fragmentKtx = "1.8.1"
 firebaseMessaging = "24.0.0"
 firebaseMessagingKtx = "24.0.0"
@@ -63,6 +64,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 # firebase
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 
@@ -95,3 +97,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-junit-jupiter = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunitJupiter" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }

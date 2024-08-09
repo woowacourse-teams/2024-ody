@@ -10,7 +10,8 @@ import com.woowacourse.ody.presentation.creation.MeetingCreationInfoType
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
 import java.time.LocalDate
 
-class MeetingDateFragment : BindingFragment<FragmentMeetingDateBinding>(R.layout.fragment_meeting_date) {
+class MeetingDateFragment :
+    BindingFragment<FragmentMeetingDateBinding>(R.layout.fragment_meeting_date) {
     private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
 
     override fun onViewCreated(
@@ -43,7 +44,11 @@ class MeetingDateFragment : BindingFragment<FragmentMeetingDateBinding>(R.layout
         viewModel.invalidMeetingDateEvent.observe(viewLifecycleOwner) {
             showSnackBar(R.string.meeting_date_date_guide)
             val meetingDate = viewModel.meetingDate.value ?: return@observe
-            binding.dpDate.updateDate(meetingDate.year, meetingDate.monthValue - 1, meetingDate.dayOfMonth)
+            binding.dpDate.updateDate(
+                meetingDate.year,
+                meetingDate.monthValue - 1,
+                meetingDate.dayOfMonth,
+            )
         }
     }
 

@@ -84,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="@string/meetings_navigate_to_meeting_room"
+                android:text="@string/meetings_navigate_to_eta"
                 android:textColor="@color/gray_350"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
