@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter
 
 fun Meeting.toMeetingUiModel(): MeetingDetailUiModel {
     val meetingDateTime = LocalDateTime.of(meetingDate, meetingTime)
+
     return MeetingDetailUiModel(
         name,
         targetPosition,
