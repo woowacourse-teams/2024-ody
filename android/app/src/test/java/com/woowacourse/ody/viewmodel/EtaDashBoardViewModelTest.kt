@@ -27,12 +27,12 @@ class EtaDashBoardViewModelTest {
         repository.fetchMatesEta(1L)
     }
 
-
     @Test
     fun `친구들과 나의 위치 현황을 볼 수 있다`() {
-        val etaType = viewModel.mateEtaUiModels.getOrAwaitValue()?.map {
-            it.getEtaDurationMinuteTypeUiModel()
-        }
+        val etaType =
+            viewModel.mateEtaUiModels.getOrAwaitValue()?.map {
+                it.getEtaDurationMinuteTypeUiModel()
+            }
 
         assertThat(etaType).isEqualTo(
             listOf(
@@ -40,7 +40,7 @@ class EtaDashBoardViewModelTest {
                 EtaDurationMinuteTypeUiModel.ARRIVAL_SOON,
                 EtaDurationMinuteTypeUiModel.ARRIVED,
                 EtaDurationMinuteTypeUiModel.MISSING,
-            )
+            ),
         )
     }
 
@@ -57,8 +57,7 @@ class EtaDashBoardViewModelTest {
                 10,
                 0,
                 -1,
-            )
+            ),
         )
     }
 }
-

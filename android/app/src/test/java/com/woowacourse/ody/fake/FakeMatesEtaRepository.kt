@@ -15,15 +15,17 @@ object FakeMatesEtaRepository : MatesEtaRepository {
 
     override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> {
         val liveData = MutableLiveData<MateEtaInfo?>()
-        val mateEtaInfo = MateEtaInfo(
-            userNickname = "해음",
-            mateEtas = listOf(
-                MateEta("콜리", EtaType.LATE_WARNING, 83),
-                MateEta("올리브", EtaType.ARRIVAL_SOON, 10),
-                MateEta("카키", EtaType.ARRIVED, 0),
-                MateEta("해음", EtaType.MISSING, -1),
+        val mateEtaInfo =
+            MateEtaInfo(
+                userNickname = "해음",
+                mateEtas =
+                    listOf(
+                        MateEta("콜리", EtaType.LATE_WARNING, 83),
+                        MateEta("올리브", EtaType.ARRIVAL_SOON, 10),
+                        MateEta("카키", EtaType.ARRIVED, 0),
+                        MateEta("해음", EtaType.MISSING, -1),
+                    ),
             )
-        )
         liveData.value = mateEtaInfo
         return liveData
     }
