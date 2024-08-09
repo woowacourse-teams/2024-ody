@@ -29,11 +29,13 @@ class EtaDashBoardViewModelTest {
 
     @Test
     fun `친구들과 나의 위치 현황을 볼 수 있다`() {
+        // when
         val etaType =
             viewModel.mateEtaUiModels.getOrAwaitValue()?.map {
                 it.getEtaDurationMinuteTypeUiModel()
             }
 
+        // then
         assertThat(etaType).isEqualTo(
             listOf(
                 EtaDurationMinuteTypeUiModel.ARRIVAL_REMAIN_TIME,
@@ -46,11 +48,13 @@ class EtaDashBoardViewModelTest {
 
     @Test
     fun `친구들과 나의 남은 시간을 볼 수 있다`() {
+        // when
         val durationMinute =
             viewModel.mateEtaUiModels.getOrAwaitValue()?.map {
                 it.durationMinute
             }
 
+        // then
         assertThat(durationMinute).isEqualTo(
             listOf(
                 83,
