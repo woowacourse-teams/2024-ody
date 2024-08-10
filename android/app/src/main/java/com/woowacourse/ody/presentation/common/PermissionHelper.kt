@@ -3,15 +3,47 @@ package com.woowacourse.ody.presentation.common
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.woowacourse.ody.presentation.meetings.MeetingsActivity
 
-class PermissionHelper(private val context: Context) {
+data class PermissionRequest(
+    private val requestCode: Int,
+) {
+    private var _state: PermissionState = PermissionState.Denied
+    val state get() = _state
+
+    fun permit(grantResults: IntArray): PermissionRequest  {
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            _state = PermissionState.Granted
+        } else {
+            _state = PermissionState.Denied
+        }
+        return this
+    }
+}
+
+fun PermissionRequest.onGranted(func: () -> Unit): PermissionRequest {
+    if (this.state is PermissionState.Granted) func()
+    return this
+}
+
+fun PermissionRequest.onDenied(func: () -> Unit): PermissionRequest {
+    if (this.state is PermissionState.Denied) func()
+    return this
+}
+
+sealed class PermissionState() {
+    data object Granted : PermissionState()
+
+    data object Denied : PermissionState()
+}
+
+class PermissionHelper(
+    private val context: Context,
+) {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun requestNotificationPermission(activity: Activity) {
         ActivityCompat.requestPermissions(
@@ -21,7 +53,7 @@ class PermissionHelper(private val context: Context) {
         )
     }
 
-    fun coarseAndFineLocationPermission(activity: Activity) {
+    fun requestCoarseAndFineLocationPermission(activity: Activity) {
         ActivityCompat.requestPermissions(
             activity,
             arrayOf(
@@ -68,7 +100,7 @@ class PermissionHelper(private val context: Context) {
         }
     }
 
-    fun hasNotificationPermission(): Boolean {
+    private fun hasNotificationPermission(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ContextCompat.checkSelfPermission(
                 context,
@@ -79,11 +111,33 @@ class PermissionHelper(private val context: Context) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    fun requestPermissions(activity: Activity) {
+        if (hasNotificationPermission() &&
+            hasFineLocationPermission() &&
+            hasCoarseLocationPermission() &&
+            hasBackgroundLocationPermission()
+        ) {
+            return
+        }
+
+        requestNotificationPermission(activity)
+    }
+
+    private fun hasLocationPermissions(): Boolean =
+        hasFineLocationPermission() &&
+            hasCoarseLocationPermission() &&
+            hasBackgroundLocationPermission()
+
+    fun onRequest() {
+    }
+
+    /*
+     */
+
     companion object {
         const val NOTIFICATION_REQUEST_CODE = 1001
         const val COARSE_AND_FINE_LOCATION_REQUEST_CODE = 1002
         const val BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE = 1003
-
-        fun getIntent(context: Context): Intent = Intent(context, MeetingsActivity::class.java)
     }
 }

@@ -95,12 +95,6 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
         return jsonAdapter.toJson(this)
     }
 
-    private fun hasLocationPermissions(): Boolean {
-        return permissionHelper.hasFineLocationPermission() &&
-            permissionHelper.hasCoarseLocationPermission() &&
-            permissionHelper.hasBackgroundLocationPermission()
-    }
-
     companion object {
         private const val TAG = "EtaDashboardWorker"
         private const val MEETING_ID_KEY = "meeting_id"

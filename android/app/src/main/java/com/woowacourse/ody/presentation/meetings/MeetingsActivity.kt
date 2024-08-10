@@ -13,8 +13,11 @@ import androidx.annotation.RequiresApi
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
 import com.woowacourse.ody.presentation.common.PermissionHelper
+import com.woowacourse.ody.presentation.common.PermissionRequest
 import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
+import com.woowacourse.ody.presentation.common.onDenied
+import com.woowacourse.ody.presentation.common.onGranted
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import com.woowacourse.ody.presentation.meetings.adapter.MeetingsAdapter
@@ -122,15 +125,7 @@ class MeetingsActivity :
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestPermissions() {
-        if (permissionHelper.hasNotificationPermission() &&
-            permissionHelper.hasFineLocationPermission() &&
-            permissionHelper.hasCoarseLocationPermission() &&
-            permissionHelper.hasBackgroundLocationPermission()
-        ) {
-            return
-        }
-
-        permissionHelper.requestNotificationPermission(this)
+        permissionHelper.requestPermissions(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -140,35 +135,39 @@ class MeetingsActivity :
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.isEmpty()) return
+        PermissionRequest(requestCode)
+            .permit(grantResults)
+            .onGranted { }
+            .onDenied { }
+        when (requestCode) {
+            PermissionHelper.NOTIFICATION_REQUEST_CODE -> {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    showSnackBar(R.string.meetings_notification_permission_required)
+                } else {
+                    permissionHelper.requestCoarseAndFineLocationPermission(this)
+                }
+            }
 
-        if (requestCode == PermissionHelper.NOTIFICATION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() &&
-                grantResults[0] != PackageManager.PERMISSION_GRANTED
-            ) {
-                showSnackBar(R.string.meetings_notification_permission_required)
-            } else {
-                permissionHelper.coarseAndFineLocationPermission(this)
+            PermissionHelper.COARSE_AND_FINE_LOCATION_REQUEST_CODE -> {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    showSnackBar(R.string.meetings_location_permission_required)
+                } else {
+                    showBackgroundLocationPermissionDialog()
+                }
             }
-        } else if (requestCode == PermissionHelper.COARSE_AND_FINE_LOCATION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED
-            ) {
-                showBackgroundLocationPermissionDialog(this)
-            } else {
-                showSnackBar(R.string.meetings_location_permission_required)
-            }
-        } else if (requestCode == PermissionHelper.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() &&
-                grantResults[0] != PackageManager.PERMISSION_GRANTED
-            ) {
-                showSnackBar(R.string.meetings_location_permission_required)
+
+            PermissionHelper.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    showSnackBar(R.string.meetings_location_permission_required)
+                }
             }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun showBackgroundLocationPermissionDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
+    private fun showBackgroundLocationPermissionDialog() {
+        val builder = AlertDialog.Builder(this)
         val listener =
             DialogInterface.OnClickListener { _, which ->
                 when (which) {
