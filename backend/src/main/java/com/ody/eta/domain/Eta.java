@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
-import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
