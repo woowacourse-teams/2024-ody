@@ -8,14 +8,35 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.woowacourse.ody.R
 
-data class PermissionRequest(
-    private val requestCode: Int,
+enum class PermissionRequestType(val requestCode: Int, val deniedMessageId: Int) {
+    NOTIFICATION(
+        PermissionHelper.NOTIFICATION_REQUEST_CODE,
+        R.string.meetings_notification_permission_required,
+    ),
+    LOCATION(
+        PermissionHelper.COARSE_AND_FINE_LOCATION_REQUEST_CODE,
+        R.string.meetings_location_permission_required,
+    ),
+    BACKGROUND_LOCATION(
+        PermissionHelper.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE,
+        R.string.meetings_location_permission_required,
+    ),
+    ;
+
+    companion object {
+        fun of(requestCode: Int) = entries.find { it.requestCode == requestCode }
+    }
+}
+
+class PermissionRequest(
+    val permissionRequestType: PermissionRequestType,
 ) {
     private var _state: PermissionState = PermissionState.Denied
     val state get() = _state
 
-    fun permit(grantResults: IntArray): PermissionRequest  {
+    fun permit(grantResults: IntArray): PermissionRequest {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             _state = PermissionState.Granted
         } else {
@@ -25,13 +46,13 @@ data class PermissionRequest(
     }
 }
 
-fun PermissionRequest.onGranted(func: () -> Unit): PermissionRequest {
-    if (this.state is PermissionState.Granted) func()
+fun PermissionRequest.onGranted(func: (PermissionRequest) -> Unit): PermissionRequest {
+    if (this.state is PermissionState.Granted) func(this)
     return this
 }
 
-fun PermissionRequest.onDenied(func: () -> Unit): PermissionRequest {
-    if (this.state is PermissionState.Denied) func()
+fun PermissionRequest.onDenied(func: (PermissionRequest) -> Unit): PermissionRequest {
+    if (this.state is PermissionState.Denied) func(this)
     return this
 }
 

@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -14,6 +13,7 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
 import com.woowacourse.ody.presentation.common.PermissionHelper
 import com.woowacourse.ody.presentation.common.PermissionRequest
+import com.woowacourse.ody.presentation.common.PermissionRequestType
 import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.common.onDenied
@@ -136,33 +136,26 @@ class MeetingsActivity :
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isEmpty()) return
-        PermissionRequest(requestCode)
+        PermissionRequest(PermissionRequestType.of(requestCode) ?: return)
             .permit(grantResults)
-            .onGranted { }
-            .onDenied { }
-        when (requestCode) {
-            PermissionHelper.NOTIFICATION_REQUEST_CODE -> {
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    showSnackBar(R.string.meetings_notification_permission_required)
-                } else {
-                    permissionHelper.requestCoarseAndFineLocationPermission(this)
-                }
-            }
+            .onGranted {
+                when (it.permissionRequestType) {
+                    PermissionRequestType.NOTIFICATION -> {
+                        permissionHelper.requestCoarseAndFineLocationPermission(this)
+                    }
 
-            PermissionHelper.COARSE_AND_FINE_LOCATION_REQUEST_CODE -> {
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    showSnackBar(R.string.meetings_location_permission_required)
-                } else {
-                    showBackgroundLocationPermissionDialog()
-                }
-            }
+                    PermissionRequestType.LOCATION -> {
+                        showBackgroundLocationPermissionDialog()
+                    }
 
-            PermissionHelper.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE -> {
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    showSnackBar(R.string.meetings_location_permission_required)
+                    PermissionRequestType.BACKGROUND_LOCATION -> {
+                        // do nothing
+                    }
                 }
             }
-        }
+            .onDenied {
+                showSnackBar(it.permissionRequestType.deniedMessageId)
+            }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
