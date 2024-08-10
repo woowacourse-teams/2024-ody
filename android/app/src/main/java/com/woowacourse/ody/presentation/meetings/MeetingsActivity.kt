@@ -130,18 +130,19 @@ class MeetingsActivity :
             permissionHelper.hasFineLocationPermission() &&
             permissionHelper.hasCoarseLocationPermission() &&
             permissionHelper.hasBackgroundLocationPermission()
-        ) return
+        ) {
+            return
+        }
 
         val permissions =
             arrayOf(
-                Manifest.permission.POST_NOTIFICATIONS,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.POST_NOTIFICATIONS,
             )
-        val permissionRequestCode = PERMISSIONS_REQUEST_CODE
 
+        val permissionRequestCode = PERMISSIONS_REQUEST_CODE
         ActivityCompat.requestPermissions(this, permissions, permissionRequestCode)
-        showBackgroundLocationPermissionDialog(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -156,7 +157,7 @@ class MeetingsActivity :
                             arrayOf(
                                 Manifest.permission.ACCESS_BACKGROUND_LOCATION,
                             ),
-                            PERMISSION_REQUEST_CODE,
+                            BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE,
                         )
                 }
             }
@@ -169,6 +170,7 @@ class MeetingsActivity :
         builder.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -176,38 +178,24 @@ class MeetingsActivity :
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
-            for (index in permissions.indices) {
-                when (permissions[index]) {
-                    Manifest.permission.POST_NOTIFICATIONS -> {
-                        showPermissionGuide(grantResults, index)
-                    }
-
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                    -> {
-                        showPermissionGuide(grantResults, index)
-                    }
-                }
+            if (grantResults.isNotEmpty() &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
+                showBackgroundLocationPermissionDialog(this)
             }
-        }
-    }
-
-    private fun showPermissionGuide(
-        grantResults: IntArray,
-        index: Int,
-    ) {
-        if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-            showSnackBar(R.string.meetings_notification_permission_guide)
-        } else {
-            showSnackBar(R.string.meetings_notification_permission_required)
+        } else if (requestCode == BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() &&
+                grantResults[0] != PackageManager.PERMISSION_GRANTED
+            ) {
+                showSnackBar(R.string.meetings_location_permission_guide)
+            }
         }
     }
 
     companion object {
         private const val TAG = "MeetingsActivity"
         private const val PERMISSIONS_REQUEST_CODE = 1
-        private const val PERMISSION_REQUEST_CODE = 2
+        private const val BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE = 2
 
         fun getIntent(context: Context): Intent = Intent(context, MeetingsActivity::class.java)
     }
