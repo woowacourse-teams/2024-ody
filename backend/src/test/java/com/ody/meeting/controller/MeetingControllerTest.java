@@ -122,7 +122,9 @@ class MeetingControllerTest extends BaseControllerTest {
                 .extract()
                 .as(MeetingFindByMemberResponses.class)
                 .meetings()
-                .forEach(response -> Pattern.matches(response.time().toString(), LOCALTIME_FORMAT));
+                .stream()
+                .map(response -> response.time().toString())
+                .allMatch(time -> Pattern.matches(time, LOCALTIME_FORMAT));
     }
 
     @DisplayName("로그 목록 조회에 성공하면 200응답 반환한다")
