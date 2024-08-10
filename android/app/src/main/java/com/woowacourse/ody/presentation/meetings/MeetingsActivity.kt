@@ -12,12 +12,10 @@ import androidx.annotation.RequiresApi
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
 import com.woowacourse.ody.presentation.common.PermissionHelper
-import com.woowacourse.ody.presentation.common.PermissionRequest
 import com.woowacourse.ody.presentation.common.PermissionRequestType
+import com.woowacourse.ody.presentation.common.PermissionResult
 import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
-import com.woowacourse.ody.presentation.common.onDenied
-import com.woowacourse.ody.presentation.common.onGranted
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import com.woowacourse.ody.presentation.meetings.adapter.MeetingsAdapter
@@ -136,27 +134,31 @@ class MeetingsActivity :
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isEmpty()) return
-        PermissionRequest(PermissionRequestType.of(requestCode) ?: return)
-            .permit(grantResults)
-            .onGranted {
-                when (it.permissionRequestType) {
-                    PermissionRequestType.NOTIFICATION -> {
-                        permissionHelper.requestCoarseAndFineLocationPermission(this)
-                    }
-
-                    PermissionRequestType.LOCATION -> {
-                        showBackgroundLocationPermissionDialog()
-                    }
-
-                    PermissionRequestType.BACKGROUND_LOCATION -> {
-                        // do nothing
-                    }
-                }
-            }
-            .onDenied {
-                showSnackBar(it.permissionRequestType.deniedMessageId)
-            }
+        PermissionResult(
+            requestCode,
+            grantResults,
+        ).onGranted {
+            afterPermissionGranted(it.permissionRequestType)
+        }.onDenied {
+            it.permissionRequestType?.let { type -> showSnackBar(type.deniedMessageId) }
+        }
     }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun afterPermissionGranted(permissionRequestType: PermissionRequestType?) =
+        when (permissionRequestType) {
+            PermissionRequestType.NOTIFICATION -> {
+                permissionHelper.requestCoarseAndFineLocationPermission(this)
+            }
+
+            PermissionRequestType.LOCATION -> {
+                showBackgroundLocationPermissionDialog()
+            }
+
+            else -> {
+                // do nothing
+            }
+        }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun showBackgroundLocationPermissionDialog() {

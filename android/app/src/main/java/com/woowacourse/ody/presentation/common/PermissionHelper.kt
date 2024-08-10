@@ -30,36 +30,32 @@ enum class PermissionRequestType(val requestCode: Int, val deniedMessageId: Int)
     }
 }
 
-class PermissionRequest(
-    val permissionRequestType: PermissionRequestType,
-) {
-    private var _state: PermissionState = PermissionState.Denied
-    val state get() = _state
+enum class PermissionState {
+    Granted,
+    Denied,
+}
 
-    fun permit(grantResults: IntArray): PermissionRequest {
+class PermissionResult(
+    requestCode: Int,
+    grantResults: IntArray,
+) {
+    val permissionRequestType: PermissionRequestType? = PermissionRequestType.of(requestCode)
+    val state =
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            _state = PermissionState.Granted
+            PermissionState.Granted
         } else {
-            _state = PermissionState.Denied
+            PermissionState.Denied
         }
+
+    fun onGranted(func: (PermissionResult) -> Unit): PermissionResult {
+        if (this.state == PermissionState.Granted) func(this)
         return this
     }
-}
 
-fun PermissionRequest.onGranted(func: (PermissionRequest) -> Unit): PermissionRequest {
-    if (this.state is PermissionState.Granted) func(this)
-    return this
-}
-
-fun PermissionRequest.onDenied(func: (PermissionRequest) -> Unit): PermissionRequest {
-    if (this.state is PermissionState.Denied) func(this)
-    return this
-}
-
-sealed class PermissionState() {
-    data object Granted : PermissionState()
-
-    data object Denied : PermissionState()
+    fun onDenied(func: (PermissionResult) -> Unit): PermissionResult {
+        if (this.state == PermissionState.Denied) func(this)
+        return this
+    }
 }
 
 class PermissionHelper(
