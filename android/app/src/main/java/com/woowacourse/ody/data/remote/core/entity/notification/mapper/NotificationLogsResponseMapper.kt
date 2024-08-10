@@ -1,5 +1,6 @@
-package com.woowacourse.ody.data.remote.core.entity.notification.response
+package com.woowacourse.ody.data.remote.core.entity.notification.mapper
 
+import com.woowacourse.ody.data.remote.core.entity.notification.response.NotificationLogsResponse
 import com.woowacourse.ody.domain.model.NotificationLog
 import com.woowacourse.ody.domain.model.NotificationType
 import java.time.LocalDateTime

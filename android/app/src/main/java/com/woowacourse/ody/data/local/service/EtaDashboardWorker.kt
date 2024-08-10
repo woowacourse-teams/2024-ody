@@ -18,7 +18,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
-import com.woowacourse.ody.data.remote.core.entity.eta.MatesEtaInfoResponse
+import com.woowacourse.ody.data.local.entity.eta.MatesEtaInfoResponse
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent

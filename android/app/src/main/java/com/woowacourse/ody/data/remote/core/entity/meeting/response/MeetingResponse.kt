@@ -2,7 +2,6 @@ package com.woowacourse.ody.data.remote.core.entity.meeting.response
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.woowacourse.ody.data.remote.core.entity.join.response.MateResponse
 
 @JsonClass(generateAdapter = true)
 data class MeetingResponse(

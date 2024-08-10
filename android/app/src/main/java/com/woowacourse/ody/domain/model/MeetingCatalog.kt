@@ -3,11 +3,11 @@ package com.woowacourse.ody.domain.model
 import java.time.LocalDateTime
 
 data class MeetingCatalog(
-    val durationMinutes: Int,
     val id: Long,
-    val mateCount: Int,
     val name: String,
-    val originAddress: String,
-    val targetAddress: String,
+    val mateCount: Int,
     val datetime: LocalDateTime,
+    val targetAddress: String,
+    val originAddress: String,
+    val durationMinutes: Long,
 )

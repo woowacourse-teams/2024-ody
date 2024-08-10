@@ -1,4 +1,4 @@
-package com.woowacourse.ody.data.remote.core.entity.eta
+package com.woowacourse.ody.data.local.entity.eta
 
 import com.squareup.moshi.JsonClass
 import com.woowacourse.ody.domain.model.MateEta

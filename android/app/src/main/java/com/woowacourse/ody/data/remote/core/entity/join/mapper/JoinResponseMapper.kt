@@ -1,5 +1,6 @@
-package com.woowacourse.ody.data.remote.core.entity.join.response
+package com.woowacourse.ody.data.remote.core.entity.join.mapper
 
+import com.woowacourse.ody.data.remote.core.entity.join.response.JoinResponse
 import com.woowacourse.ody.domain.model.ReserveInfo
 import java.time.LocalDate
 import java.time.LocalDateTime

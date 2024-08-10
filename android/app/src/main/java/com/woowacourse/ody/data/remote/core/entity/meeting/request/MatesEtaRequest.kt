@@ -5,7 +5,10 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class MatesEtaRequest(
-    @Json(name = "isMissing") val isMissing: Boolean,
-    @Json(name = "currentLatitude") val currentLatitude: String,
-    @Json(name = "currentLongitude") val currentLongitude: String,
+    @Json(name = "isMissing")
+    val isMissing: Boolean,
+    @Json(name = "currentLatitude")
+    val currentLatitude: String,
+    @Json(name = "currentLongitude")
+    val currentLongitude: String,
 )

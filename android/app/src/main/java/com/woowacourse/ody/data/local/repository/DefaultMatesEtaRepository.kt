@@ -6,9 +6,9 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.woowacourse.ody.data.local.entity.eta.MatesEtaInfoResponse
 import com.woowacourse.ody.data.local.service.EtaDashboardWorker
 import com.woowacourse.ody.data.local.service.EtaDashboardWorker.Companion.MATE_ETA_RESPONSE_KEY
-import com.woowacourse.ody.data.remote.core.entity.eta.MatesEtaInfoResponse
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 
