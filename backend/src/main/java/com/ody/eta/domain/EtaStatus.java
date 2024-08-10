@@ -1,32 +1,29 @@
 package com.ody.eta.domain;
 
 import com.ody.common.exception.OdyServerErrorException;
-import java.time.LocalDateTime;
+import com.ody.meeting.domain.Meeting;
+import java.util.Arrays;
+import java.util.function.BiPredicate;
 
 public enum EtaStatus {
-    ARRIVED,
-    ARRIVAL_SOON,
-    LATE_WARNING,
-    LATE,
-    MISSING,
+
+    MISSING((eta, meeting) -> eta.isMissing()),
+    ARRIVED((eta, meeting) -> eta.isArrived()),
+    ARRIVAL_SOON((eta, meeting) -> eta.isArrivalSoon(meeting) && !meeting.isEnd()),
+    LATE_WARNING((eta, meeting) -> !eta.isArrivalSoon(meeting) && !meeting.isEnd()),
+    LATE((eta, meeting) -> !eta.isArrivalSoon(meeting) && meeting.isEnd()),
     ;
 
-    public static EtaStatus from(String ownerNickname, Eta mateEta, LocalDateTime meetingTime, LocalDateTime now, boolean isMissing) {
-        if (ownerNickname.equals(mateEta.getMate().getNicknameValue()) && isMissing || mateEta.getRemainingMinutes() == -1L) {
-            return MISSING;
-        }
-        if (mateEta.isArrived()) {
-            return ARRIVED;
-        }
-        if (!mateEta.willBeLate(meetingTime) && (now.isBefore(meetingTime))) {
-            return ARRIVAL_SOON;
-        }
-        if (mateEta.willBeLate(meetingTime)) {
-            if (now.isBefore(meetingTime)) {
-                return LATE_WARNING;
-            }
-            return LATE;
-        }
-        throw new OdyServerErrorException("참여자의 ETA 상태를 판단할 수 없습니다");
+    private final BiPredicate<Eta, Meeting> condition;
+
+    EtaStatus(BiPredicate<Eta, Meeting> condition) {
+        this.condition = condition;
+    }
+
+    public static EtaStatus of(Eta mateEta, Meeting meeting) {
+        return Arrays.stream(values())
+                .filter(status -> status.condition.test(mateEta, meeting))
+                .findFirst()
+                .orElseThrow(() -> new OdyServerErrorException("참여자의 ETA 상태를 판단할 수 없습니다"));
     }
 }

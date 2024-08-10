@@ -2,8 +2,8 @@ package com.ody.eta.dto.response;
 
 import com.ody.eta.domain.Eta;
 import com.ody.eta.domain.EtaStatus;
+import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 
 public record MateEtaResponse(
 
@@ -16,11 +16,23 @@ public record MateEtaResponse(
         @Schema(description = "도착지까지 남은 소요시간(분)", example = "32")
         long durationMinutes
 ) {
-    public static MateEtaResponse of(String ownerNickname, Eta eta, boolean isMissing, LocalDateTime meetingTime, LocalDateTime now) {
+
+    public static MateEtaResponse of(Eta eta, Meeting meeting) {
         return new MateEtaResponse(
                 eta.getMate().getNicknameValue(),
-                EtaStatus.from(ownerNickname, eta, meetingTime, now, isMissing),
-                eta.countDownMinutes(now)
+                EtaStatus.of(eta, meeting),
+                mapMinutes(eta, meeting)
         );
+    }
+
+    // 안드측과 협의해서 추후에 View 로직에서 처리 가능한 부분으로 사라질 메서드임 (DTO에 로직이 있는거 걱정 ㄴㄴ)
+    private static long mapMinutes(Eta eta, Meeting meeting) {
+        if (eta.isMissing()) {
+            return -1L;
+        }
+        if (eta.isArrivalSoon(meeting)) {
+            return 1L;
+        }
+        return eta.countDownMinutes();
     }
 }
