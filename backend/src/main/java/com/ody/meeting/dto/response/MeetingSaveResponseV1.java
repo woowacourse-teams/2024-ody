@@ -2,6 +2,7 @@ package com.ody.meeting.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ody.meeting.domain.Meeting;
+import com.ody.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -39,7 +40,7 @@ public record MeetingSaveResponseV1(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
-                meeting.getTime().withNano(0),
+                TimeUtil.trim(meeting.getTime()),
                 meeting.getTarget().getAddress(),
                 meeting.getTarget().getLatitude(),
                 meeting.getTarget().getLongitude(),

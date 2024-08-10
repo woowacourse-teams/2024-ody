@@ -1,6 +1,7 @@
 package com.ody.notification.dto.response;
 
 import com.ody.notification.domain.Notification;
+import com.ody.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 
@@ -20,7 +21,7 @@ public record NotiLogFindResponse(
         this(
                 notification.getType().toString(),
                 notification.getMate().getNicknameValue(),
-                notification.getSendAt().withNano(0)
+                TimeUtil.trim(notification.getSendAt())
         );
     }
 }

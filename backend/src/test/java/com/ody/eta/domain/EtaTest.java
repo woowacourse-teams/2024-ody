@@ -7,6 +7,7 @@ import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
+import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ class EtaTest {
         Meeting odyMeeting = Fixture.ODY_MEETING;
         Member member1 = Fixture.MEMBER1;
         Mate mate = new Mate(odyMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
-        LocalDateTime now = LocalDateTime.now().minusMinutes(1).withSecond(0).withNano(0);
+        LocalDateTime now = TimeUtil.now().minusMinutes(1);
         Eta eta = new Eta(mate, 1L, now, now);
 
         eta.updateRemainingMinutes(5L);
