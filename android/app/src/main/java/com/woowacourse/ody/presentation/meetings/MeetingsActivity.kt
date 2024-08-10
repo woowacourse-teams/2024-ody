@@ -12,9 +12,9 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
+import com.woowacourse.ody.presentation.common.PermissionHelper
 import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
@@ -41,9 +41,8 @@ class MeetingsActivity :
             this,
         )
     }
-    private val firebaseAnalytics by lazy {
-        application.firebaseAnalytics
-    }
+    private val firebaseAnalytics by lazy { application.firebaseAnalytics }
+    private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,11 +99,20 @@ class MeetingsActivity :
         closeNavigateMenu()
     }
 
-    fun navigateToMeetingRoom(meetingId: Long) {
+    override fun guideItemDisabled() {
+        showSnackBar(R.string.meetings_entrance_unavailable_guide)
+    }
+
+    private fun closeNavigateMenu() {
+        binding.cvMenuView.visibility = View.GONE
+        binding.fabMeetingsNavigator.isSelected = false
+    }
+
+    private fun navigateToMeetingRoom(meetingId: Long) {
         startActivity(NotificationLogActivity.getIntent(this, meetingId))
     }
 
-    fun navigateToEta(
+    private fun navigateToEta(
         meetingId: Long,
         inviteCode: String,
         title: String,
@@ -116,33 +124,12 @@ class MeetingsActivity :
         startActivity(EtaDashboardActivity.getIntent(this, meetingId, inviteCode, title))
     }
 
-    override fun guideItemDisabled() {
-        showSnackBar(R.string.meetings_entrance_unavailable_guide)
-    }
-
-    private fun closeNavigateMenu() {
-        binding.cvMenuView.visibility = View.GONE
-        binding.fabMeetingsNavigator.isSelected = false
-    }
-
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestPermissions() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS,
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED
+        if (permissionHelper.hasNotificationPermission() &&
+            permissionHelper.hasFineLocationPermission() &&
+            permissionHelper.hasCoarseLocationPermission() &&
+            permissionHelper.hasBackgroundLocationPermission()
         ) {
             return
         }
