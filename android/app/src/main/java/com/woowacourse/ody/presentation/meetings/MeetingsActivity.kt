@@ -148,7 +148,7 @@ class MeetingsActivity :
                 checkPermissionAndProceed(
                     grantResults[0],
                     R.string.meetings_notification_permission_required,
-                ) { permissionHelper.coarseAndFineLocationPermission(this) }
+                ) { permissionHelper.requestCoarseAndFineLocationPermission(this) }
             }
 
             PermissionHelper.COARSE_AND_FINE_LOCATION_REQUEST_CODE ->

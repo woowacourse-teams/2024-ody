@@ -19,7 +19,7 @@ class PermissionHelper(private val context: Context) {
         )
     }
 
-    fun coarseAndFineLocationPermission(activity: Activity) {
+    fun requestCoarseAndFineLocationPermission(activity: Activity) {
         ActivityCompat.requestPermissions(
             activity,
             arrayOf(
