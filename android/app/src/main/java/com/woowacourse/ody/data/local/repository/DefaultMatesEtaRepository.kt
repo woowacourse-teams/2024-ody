@@ -8,7 +8,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.data.local.service.EtaDashboardWorker
 import com.woowacourse.ody.data.local.service.EtaDashboardWorker.Companion.MATE_ETA_RESPONSE_KEY
-import com.woowacourse.ody.data.local.service.MateEtaInfoResponse
+import com.woowacourse.ody.data.remote.core.entity.eta.MatesEtaInfoResponse
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 
@@ -45,7 +45,7 @@ class DefaultMatesEtaRepository(
             Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
-        val jsonAdapter = moshi.adapter(MateEtaInfoResponse::class.java)
+        val jsonAdapter = moshi.adapter(MatesEtaInfoResponse::class.java)
         val convertResult = jsonAdapter.fromJson(this) ?: return null
         return MateEtaInfo(convertResult.userNickname, convertResult.mateEtas)
     }

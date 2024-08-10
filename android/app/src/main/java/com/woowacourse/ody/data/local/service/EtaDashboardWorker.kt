@@ -18,6 +18,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
+import com.woowacourse.ody.data.remote.core.entity.eta.MatesEtaInfoResponse
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
@@ -87,16 +88,16 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
             .getOrNull()
     }
 
-    private fun MateEtaInfo.toMateEtaInfoResponse(): MateEtaInfoResponse {
-        return MateEtaInfoResponse(userNickname, mateEtas)
+    private fun MateEtaInfo.toMateEtaInfoResponse(): MatesEtaInfoResponse {
+        return MatesEtaInfoResponse(userNickname, mateEtas)
     }
 
-    private fun MateEtaInfoResponse.convertMateEtasToJson(): String {
+    private fun MatesEtaInfoResponse.convertMateEtasToJson(): String {
         val moshi =
             Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
-        val jsonAdapter = moshi.adapter(MateEtaInfoResponse::class.java)
+        val jsonAdapter = moshi.adapter(MatesEtaInfoResponse::class.java)
         return jsonAdapter.toJson(this)
     }
 
