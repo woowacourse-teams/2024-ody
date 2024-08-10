@@ -141,28 +141,39 @@ class MeetingsActivity :
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == PermissionHelper.NOTIFICATION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() &&
-                grantResults[0] != PackageManager.PERMISSION_GRANTED
-            ) {
-                showSnackBar(R.string.meetings_notification_permission_required)
-            } else {
-                permissionHelper.coarseAndFineLocationPermission(this)
+        if (grantResults.isEmpty()) return
+
+        when (requestCode) {
+            PermissionHelper.NOTIFICATION_REQUEST_CODE -> {
+                checkPermissionAndProceed(
+                    grantResults[0],
+                    R.string.meetings_notification_permission_required,
+                ) { permissionHelper.coarseAndFineLocationPermission(this) }
             }
-        } else if (requestCode == PermissionHelper.COARSE_AND_FINE_LOCATION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED
-            ) {
-                showBackgroundLocationPermissionDialog(this)
-            } else {
-                showSnackBar(R.string.meetings_location_permission_required)
-            }
-        } else if (requestCode == PermissionHelper.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() &&
-                grantResults[0] != PackageManager.PERMISSION_GRANTED
-            ) {
-                showSnackBar(R.string.meetings_location_permission_required)
-            }
+
+            PermissionHelper.COARSE_AND_FINE_LOCATION_REQUEST_CODE ->
+                checkPermissionAndProceed(
+                    grantResults[0],
+                    R.string.meetings_location_permission_required,
+                ) { showBackgroundLocationPermissionDialog(this) }
+
+            PermissionHelper.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE ->
+                checkPermissionAndProceed(
+                    grantResults[0],
+                    R.string.meetings_location_permission_required,
+                )
+        }
+    }
+
+    private fun checkPermissionAndProceed(
+        grantResult: Int,
+        requiredMessage: Int,
+        onSuccess: () -> Unit = {},
+    ) {
+        if (grantResult != PackageManager.PERMISSION_GRANTED) {
+            showSnackBar(requiredMessage)
+        } else {
+            onSuccess()
         }
     }
 

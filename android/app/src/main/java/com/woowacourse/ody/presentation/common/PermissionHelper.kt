@@ -3,13 +3,11 @@ package com.woowacourse.ody.presentation.common
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.woowacourse.ody.presentation.meetings.MeetingsActivity
 
 class PermissionHelper(private val context: Context) {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -83,7 +81,5 @@ class PermissionHelper(private val context: Context) {
         const val NOTIFICATION_REQUEST_CODE = 1001
         const val COARSE_AND_FINE_LOCATION_REQUEST_CODE = 1002
         const val BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE = 1003
-
-        fun getIntent(context: Context): Intent = Intent(context, MeetingsActivity::class.java)
     }
 }
