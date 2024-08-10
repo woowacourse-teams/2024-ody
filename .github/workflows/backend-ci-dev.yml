@@ -1,16 +1,11 @@
 name: backend-ci-dev
 
 on:
-  push:
-    branches:
-      - develop
-    paths:
-      - backend/**
   pull_request:
     branches:
       - develop
     paths:
-#      - backend/**
+      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
@@ -62,6 +57,6 @@ jobs:
           title: 📝 Test Coverage Report
           paths: ${{ github.workspace }}/backend/build/reports/jacoco/test/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 10
-          min-coverage-changed-files: 10
+          min-coverage-overall: 80
+          min-coverage-changed-files: 80
           update-comment: true
