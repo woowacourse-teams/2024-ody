@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -54,8 +55,8 @@ public class Meeting {
     }
 
     public boolean isWithinPast24HoursOrLater() {
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
+        LocalDateTime meetingTime = LocalDateTime.of(date, time);
         LocalDateTime standard = TimeUtil.now().minusHours(24);
-        return standard.isBefore(dateTime);
+        return meetingTime.isAfter(standard) || meetingTime.isEqual(standard);
     }
 }
