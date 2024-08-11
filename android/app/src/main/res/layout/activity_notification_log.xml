@@ -97,22 +97,32 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/ic_person"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_meeting_people"
-                    app:layout_constraintEnd_toStartOf="@id/tv_meeting_people"
-                    app:layout_constraintTop_toTopOf="@id/tv_meeting_people" />
+                    app:layout_constraintBottom_toBottomOf="@id/hsv_meeting_people"
+                    app:layout_constraintEnd_toStartOf="@id/hsv_meeting_people"
+                    app:layout_constraintTop_toTopOf="@id/hsv_meeting_people" />
 
-                <TextView
-                    android:id="@+id/tv_meeting_people"
-                    style="@style/pretendard_regular_16"
-                    setMatesText="@{vm.meeting.mates}"
-                    android:layout_width="wrap_content"
+                <HorizontalScrollView
+                    android:id="@+id/hsv_meeting_people"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="30dp"
                     android:layout_marginBottom="14dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_meeting_date"
-                    app:layout_constraintTop_toBottomOf="@id/tv_meeting_position"
-                    tools:text="3명 / 올리브, 해음, 차람" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_meeting_position">
+
+                    <TextView
+                        android:id="@+id/tv_meeting_people"
+                        style="@style/pretendard_regular_16"
+                        setMatesText="@{vm.meeting.mates}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="3명 / 올리브, 해음, 차람" />
+
+                </HorizontalScrollView>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -120,8 +130,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"
                 android:layout_marginTop="115dp"
+                android:layout_marginEnd="18dp"
                 app:itemAnimator="@{null}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
