@@ -40,9 +40,9 @@ public class EtaService {
     public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
         Mate requestMate = findByMeetingIdAndMemberId(meetingId, member.getId());
         Meeting meeting = requestMate.getMeeting();
-        LocalDateTime meetingTime = TimeUtil.trim(meeting.getMeetingTime());
+        LocalDateTime meetingTime = TimeUtil.trimSecondsAndNanos(meeting.getMeetingTime());
         Eta mateEta = findByMateId(requestMate.getId());
-        LocalDateTime now = TimeUtil.now();
+        LocalDateTime now = TimeUtil.nowWithTrim();
 
         if (mateEtaRequest.isMissing()) {
             mateEta.updateRemainingMinutes(-1L);
@@ -74,7 +74,7 @@ public class EtaService {
     }
 
     private boolean determineArrived(MateEtaRequest mateEtaRequest, Meeting meeting, LocalDateTime now) {
-        LocalDateTime meetingTime = TimeUtil.trim(meeting.getMeetingTime());
+        LocalDateTime meetingTime = TimeUtil.trimSecondsAndNanos(meeting.getMeetingTime());
         if (mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null) {
             return false;
         }

@@ -80,7 +80,7 @@ class MeetingServiceTest extends BaseServiceTest {
     void findAllByMemberFilterTime() {
         Member member = memberRepository.save(Fixture.MEMBER1);
 
-        LocalDateTime now = TimeUtil.now();
+        LocalDateTime now = TimeUtil.nowWithTrim();
         LocalDateTime now24Hours1MinutesAgo = now.minusHours(24).minusMinutes(1);
         LocalDateTime now24HoursAgo = now.minusHours(24);
         LocalDateTime now23Hours59MinutesAgo = now.minusHours(24).plusMinutes(1);

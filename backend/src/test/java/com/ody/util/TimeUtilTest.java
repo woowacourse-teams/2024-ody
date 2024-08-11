@@ -12,10 +12,10 @@ class TimeUtilTest {
 
     @DisplayName("초/나노초가 제거된 현재시간을 반환한다")
     @Test
-    void now() {
+    void nowWithTrim() {
         LocalDateTime rawTime = LocalDateTime.now();
         LocalDateTime expectedTime = rawTime.withSecond(0).withNano(0);
-        LocalDateTime actualTime = TimeUtil.now();
+        LocalDateTime actualTime = TimeUtil.nowWithTrim();
 
         assertAll(
                 () -> assertThat(rawTime.isEqual(actualTime)).isFalse(),
@@ -28,7 +28,7 @@ class TimeUtilTest {
     void trimLocalTime() {
         LocalTime rawTime = LocalTime.now();
         LocalTime expectedTime = rawTime.withSecond(0).withNano(0);
-        LocalTime actualTime = TimeUtil.trim(rawTime);
+        LocalTime actualTime = TimeUtil.trimSecondsAndNanos(rawTime);
 
         assertAll(
                 () -> assertThat(rawTime.compareTo(actualTime)).isNotZero(),
@@ -42,7 +42,7 @@ class TimeUtilTest {
     void trimLocalDateTime() {
         LocalDateTime rawTime = LocalDateTime.now();
         LocalDateTime expectedTime = rawTime.withSecond(0).withNano(0);
-        LocalDateTime actualTime = TimeUtil.trim(rawTime);
+        LocalDateTime actualTime = TimeUtil.trimSecondsAndNanos(rawTime);
 
         assertAll(
                 () -> assertThat(rawTime.isEqual(actualTime)).isFalse(),

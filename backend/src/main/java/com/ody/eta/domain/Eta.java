@@ -47,8 +47,8 @@ public class Eta {
                 mate,
                 remainingMinutes,
                 false,
-                TimeUtil.now(),
-                TimeUtil.now()
+                TimeUtil.nowWithTrim(),
+                TimeUtil.nowWithTrim()
         );
     }
 
@@ -61,7 +61,7 @@ public class Eta {
     }
 
     public boolean willBeLate(LocalDateTime meetingTime) {
-        LocalDateTime now = TimeUtil.now();
+        LocalDateTime now = TimeUtil.nowWithTrim();
         long countdownMinutes = countDownMinutes(now);
         LocalDateTime eta = now.plusMinutes(countdownMinutes);
         return eta.isAfter(meetingTime);
@@ -88,11 +88,11 @@ public class Eta {
     }
 
     public long differenceMinutesFromLastUpdated() {
-        return Duration.between(updatedAt, TimeUtil.now()).toMinutes();
+        return Duration.between(updatedAt, TimeUtil.nowWithTrim()).toMinutes();
     }
 
     public void updateRemainingMinutes(long remainingMinutes) {
-        this.updatedAt = TimeUtil.now();
+        this.updatedAt = TimeUtil.nowWithTrim();
         this.remainingMinutes = remainingMinutes;
     }
 

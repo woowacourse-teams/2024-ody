@@ -50,7 +50,7 @@ public record MeetingSaveResponse(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
-                TimeUtil.trim(meeting.getTime()),
+                TimeUtil.trimSecondsAndNanos(meeting.getTime()),
                 meeting.getTarget().getAddress(),
                 meeting.getTarget().getLatitude(),
                 meeting.getTarget().getLongitude(),

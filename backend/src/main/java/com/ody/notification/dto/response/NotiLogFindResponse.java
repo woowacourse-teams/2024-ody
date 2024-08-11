@@ -21,7 +21,7 @@ public record NotiLogFindResponse(
         this(
                 notification.getType().toString(),
                 notification.getMate().getNicknameValue(),
-                TimeUtil.trim(notification.getSendAt())
+                TimeUtil.trimSecondsAndNanos(notification.getSendAt())
         );
     }
 }

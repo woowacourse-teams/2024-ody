@@ -59,9 +59,9 @@ public class NotificationService {
 
     private LocalDateTime calculateSendAt(DepartureTime departureTime) {
         if (departureTime.isBefore(LocalDateTime.now())) {
-            return TimeUtil.now();
+            return TimeUtil.nowWithTrim();
         }
-        return TimeUtil.trim(departureTime.getValue());
+        return TimeUtil.trimSecondsAndNanos(departureTime.getValue());
     }
 
     private void saveAndSendNotification(Meeting meeting, Notification notification) {

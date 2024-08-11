@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -43,7 +42,7 @@ public class Meeting {
     private String inviteCode;
 
     public Meeting(String name, LocalDate date, LocalTime time, Location target, String inviteCode) {
-        this(null, name, date, TimeUtil.trim(time), target, inviteCode);
+        this(null, name, date, TimeUtil.trimSecondsAndNanos(time), target, inviteCode);
     }
 
     public void updateInviteCode(String inviteCode) {
@@ -51,12 +50,12 @@ public class Meeting {
     }
 
     public LocalDateTime getMeetingTime() {
-        return TimeUtil.trim(LocalDateTime.of(date, time));
+        return TimeUtil.trimSecondsAndNanos(LocalDateTime.of(date, time));
     }
 
     public boolean isWithinPast24HoursOrLater() {
         LocalDateTime meetingTime = LocalDateTime.of(date, time);
-        LocalDateTime standard = TimeUtil.now().minusHours(24);
+        LocalDateTime standard = TimeUtil.nowWithTrim().minusHours(24);
         return meetingTime.isAfter(standard) || meetingTime.isEqual(standard);
     }
 }

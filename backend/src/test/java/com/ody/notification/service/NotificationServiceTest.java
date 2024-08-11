@@ -74,7 +74,7 @@ class NotificationServiceTest extends BaseServiceTest {
     }
 
     private boolean isNow(Notification notification) {
-        return TimeUtil.trim(notification.getSendAt())
-                .isEqual(TimeUtil.now());
+        return TimeUtil.trimSecondsAndNanos(notification.getSendAt())
+                .isEqual(TimeUtil.nowWithTrim());
     }
 }
