@@ -2,6 +2,7 @@ package com.ody.mate.controller;
 
 import com.ody.common.BaseControllerTest;
 import com.ody.mate.dto.request.MateSaveRequest;
+import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.service.MeetingService;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 class MateControllerTest extends BaseControllerTest {
+
+    private static final String LOCALTIME_FORMAT = "HH:mm";
 
     @Autowired
     private MeetingService meetingService;
@@ -53,10 +56,14 @@ class MateControllerTest extends BaseControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, deviceToken)
                 .body(mateSaveRequest)
                 .when()
-                .post("/mates")
+                .post("/v1/mates")
                 .then()
                 .statusCode(201)
-                .contentType(ContentType.JSON);
+                .contentType(ContentType.JSON)
+                .extract()
+                .as(MateSaveResponse.class)
+                .time().toString()
+                .matches(LOCALTIME_FORMAT);
     }
 }
 
