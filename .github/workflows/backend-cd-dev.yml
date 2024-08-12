@@ -3,7 +3,7 @@ name: backend-cd-dev
 on:
   push:
     branches:
-      - feature/227
+      - feature/227-1
   pull_request:
     branches:
       - develop
