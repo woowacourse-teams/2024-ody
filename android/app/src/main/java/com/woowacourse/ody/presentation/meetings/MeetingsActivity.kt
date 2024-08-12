@@ -71,8 +71,8 @@ class MeetingsActivity :
         }
         viewModel.navigateAction.observe(this) {
             when (it) {
-                is MeetingsNavigateAction.NavigateToEta -> navigateToEta(it.meetingId)
-                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToMeetingRoom(it.meetingId)
+                is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
+                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
             }
         }
     }
@@ -93,7 +93,7 @@ class MeetingsActivity :
         closeNavigateMenu()
     }
 
-    private fun navigateToMeetingRoom(meetingId: Long) {
+    private fun navigateToNotificationLog(meetingId: Long) {
         val intent = MeetingRoomActivity.getIntent(
             this,
             meetingId,
@@ -102,7 +102,7 @@ class MeetingsActivity :
         startActivity(intent)
     }
 
-    private fun navigateToEta(meetingId: Long) {
+    private fun navigateToEtaDashboard(meetingId: Long) {
         firebaseAnalytics.logButtonClicked(
             eventName = "eta_button_from_meetings",
             location = TAG,

@@ -122,7 +122,7 @@
             android:layout_marginBottom="18dp"
             android:background="@drawable/rectangle_radius_15"
             android:backgroundTint="@color/purple_800"
-            android:onClick="@{() -> vm.navigateToEta()}"
+            android:onClick="@{() -> vm.navigateToEtaDashboard()}"
             android:orientation="horizontal"
             android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"

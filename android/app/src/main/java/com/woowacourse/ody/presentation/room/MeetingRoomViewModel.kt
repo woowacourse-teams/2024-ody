@@ -45,8 +45,8 @@ class MeetingRoomViewModel(
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
     val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs
 
-    private val _navigateToEtaEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
-    val navigateToEtaEvent: SingleLiveData<Unit> get() = _navigateToEtaEvent
+    private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
+    val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
 
     init {
         fetchMeeting(meetingId)
@@ -74,12 +74,12 @@ class MeetingRoomViewModel(
                 }
         }
 
-    fun navigateToEta() {
+    fun navigateToEtaDashboard() {
         firebaseAnalytics.logButtonClicked(
             eventName = "eta_button_from_notification_log",
             location = TAG,
         )
-        _navigateToEtaEvent.setValue(Unit)
+        _navigateToEtaDashboardEvent.setValue(Unit)
     }
 
     companion object {

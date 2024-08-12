@@ -60,7 +60,7 @@ class MeetingRoomActivity :
     }
 
     private fun initializeObserve() {
-        viewModel.navigateToEtaEvent.observe(this) {
+        viewModel.navigateToEtaDashboardEvent.observe(this) {
             addFragment(EtaDashboardFragment())
         }
     }
