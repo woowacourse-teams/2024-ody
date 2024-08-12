@@ -76,12 +76,13 @@ class MeetingJoinActivity :
         }
     }
 
-    private fun navigateToNotificationRoom(meetingId:Long) {
-        val intent = MeetingRoomActivity.getIntent(
-            this,
-            meetingId,
-            MeetingRoomActivity.NAVIGATE_TO_NOTIFICATION_LOG,
-        )
+    private fun navigateToNotificationRoom(meetingId: Long) {
+        val intent =
+            MeetingRoomActivity.getIntent(
+                this,
+                meetingId,
+                MeetingRoomActivity.NAVIGATE_TO_NOTIFICATION_LOG,
+            )
         startActivity(intent)
         finish()
     }

@@ -26,7 +26,10 @@ class EtaDashboardFragment :
     private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this) }
     private val parentActivity: Activity by lazy { requireActivity() }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         initializeMateEtaList()
         initializeObserve()

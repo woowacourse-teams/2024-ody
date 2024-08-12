@@ -94,11 +94,12 @@ class MeetingsActivity :
     }
 
     private fun navigateToNotificationLog(meetingId: Long) {
-        val intent = MeetingRoomActivity.getIntent(
-            this,
-            meetingId,
-            MeetingRoomActivity.NAVIGATE_TO_NOTIFICATION_LOG,
-        )
+        val intent =
+            MeetingRoomActivity.getIntent(
+                this,
+                meetingId,
+                MeetingRoomActivity.NAVIGATE_TO_NOTIFICATION_LOG,
+            )
         startActivity(intent)
     }
 
@@ -107,11 +108,12 @@ class MeetingsActivity :
             eventName = "eta_button_from_meetings",
             location = TAG,
         )
-        val intent = MeetingRoomActivity.getIntent(
-            this,
-            meetingId,
-            MeetingRoomActivity.NAVIGATE_TO_ETA_DASHBOARD,
-        )
+        val intent =
+            MeetingRoomActivity.getIntent(
+                this,
+                meetingId,
+                MeetingRoomActivity.NAVIGATE_TO_ETA_DASHBOARD,
+            )
         startActivity(intent)
     }
 
