@@ -33,11 +33,11 @@ interface MeetingService {
     @GET("/v1/meetings/me")
     suspend fun fetchMeetingCatalogs(): MeetingCatalogsResponse
 
+    @GET("/v1/meetings/me")
+    suspend fun fetchMeetingCatalogs2(): ApiResult<MeetingCatalogsResponse>
+
     @GET("/v1/meetings/{meetingId}")
     suspend fun fetchMeeting(
         @Path(value = "meetingId") meetingId: Long,
     ): MeetingResponse
-
-    @GET("/v1/meetings/me")
-    suspend fun fetchMeetingCatalogs2(): ApiResult<MeetingCatalogsResponse>
 }

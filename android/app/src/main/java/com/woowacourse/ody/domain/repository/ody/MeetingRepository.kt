@@ -1,5 +1,6 @@
 package com.woowacourse.ody.domain.repository.ody
 
+import com.woowacourse.ody.data.ApiResult.ApiResult
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingCatalog
@@ -18,6 +19,8 @@ interface MeetingRepository {
     ): Result<MateEtaInfo>
 
     suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>>
+
+    suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>>
 
     suspend fun fetchMeeting(meetingId: Long): Result<Meeting>
 }

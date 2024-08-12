@@ -6,6 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.woowacourse.ody.data.ApiResult.onFailure
+import com.woowacourse.ody.data.ApiResult.onNetworkError
+import com.woowacourse.ody.data.ApiResult.onSuccess
+import com.woowacourse.ody.data.ApiResult.onUnexpected
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
@@ -38,6 +42,29 @@ class MeetingsViewModel(
             }.onFailure {
                 firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
                 Timber.e(it)
+            }
+        }
+
+    fun fetchMeetingCatalogs2() =
+        viewModelScope.launch {
+            meetingRepository.fetchMeetingCatalogs2().onSuccess {
+                _meetingCatalogs.value = it.toMeetingCatalogUiModels()
+            }.onFailure { code, error ->
+                // connected but server error
+                error?.let { Timber.e(it) }
+                when (code) {
+                    401 -> Timber.e("회원이 없답니다~~ 다시 설치해야돼~~")
+                    500 -> Timber.e("서버 에러야~")
+                }
+            }.onNetworkError { exception ->
+                // not connected, network error
+                when (exception) {
+                    is java.net.UnknownHostException -> Timber.e("UnknownHostException")
+                    else -> Timber.e(exception)
+                }
+            }.onUnexpected { t ->
+                // any other errors
+                Timber.e(t)
             }
         }
 
