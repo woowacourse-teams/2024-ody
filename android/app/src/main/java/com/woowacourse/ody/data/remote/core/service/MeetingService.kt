@@ -1,5 +1,6 @@
 package com.woowacourse.ody.data.remote.core.service
 
+import com.woowacourse.ody.data.ApiResult.ApiResult
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MatesEtaRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MatesEtaResponse
@@ -36,4 +37,7 @@ interface MeetingService {
     suspend fun fetchMeeting(
         @Path(value = "meetingId") meetingId: Long,
     ): MeetingResponse
+
+    @GET("/v1/meetings/me")
+    suspend fun fetchMeetingCatalogs2(): ApiResult<MeetingCatalogsResponse>
 }
