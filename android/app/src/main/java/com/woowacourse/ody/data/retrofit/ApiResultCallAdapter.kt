@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class ApiResultCallAdapter<R : Any>(val responseType: Type) : CallAdapter<R, Call<ApiResult<R>>> {
+class ApiResultCallAdapter<R : Any>(private val responseType: Type) : CallAdapter<R, Call<ApiResult<R>>> {
     override fun responseType(): Type {
         return responseType
     }
