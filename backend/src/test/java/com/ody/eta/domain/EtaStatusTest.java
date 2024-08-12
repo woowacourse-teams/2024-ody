@@ -20,7 +20,8 @@ class EtaStatusTest {
         Meeting odyMeeting = Fixture.ODY_MEETING;
         Member member1 = Fixture.MEMBER1;
         Mate mate = new Mate(odyMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
-        Eta eta = new Eta(mate, -1L);
+        Eta eta = new Eta(mate, 10L);
+        eta.updateMissingBy(true);
 
         assertThat(EtaStatus.of(eta, mate.getMeeting()))
                 .isEqualTo(EtaStatus.MISSING);

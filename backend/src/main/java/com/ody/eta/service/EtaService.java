@@ -39,15 +39,12 @@ public class EtaService {
         Mate requestMate = findByMeetingIdAndMemberId(meetingId, member.getId());
         Meeting meeting = requestMate.getMeeting();
         Eta mateEta = findByMateId(requestMate.getId());
+        mateEta.updateMissingBy(mateEta.isMissing());
 
-        if (mateEtaRequest.isMissing()) {
-            mateEta.updateRemainingMinutes(-1L);
-        }
-
-        if (determineArrived(mateEtaRequest, meeting) && !isNullCoordinates(mateEtaRequest)) {
+        if (determineArrived(mateEtaRequest, meeting) && !mateEta.isMissing()) {
             mateEta.updateArrived();
         }
-        if ((!mateEta.isArrived() && isRouteClientCallTime(mateEta)) && !isNullCoordinates(mateEtaRequest)) {
+        if ((!mateEta.isArrived() && isRouteClientCallTime(mateEta)) && !mateEta.isMissing()) {
             Location currentLocation = new Location(mateEtaRequest.currentLatitude(), mateEtaRequest.currentLongitude());
             RouteTime routeTime = routeService.calculateRouteTime(currentLocation, meeting.getTarget());
             mateEta.updateRemainingMinutes(routeTime.getMinutes());
@@ -59,10 +56,6 @@ public class EtaService {
                         Collectors.toList(),
                         mateEtaResponses -> new MateEtaResponses(requestMate.getNicknameValue(), mateEtaResponses))
                 );
-    }
-
-    private boolean isNullCoordinates(MateEtaRequest mateEtaRequest) {
-        return mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null;
     }
 
     private boolean isRouteClientCallTime(Eta mateEta) {

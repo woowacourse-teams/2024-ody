@@ -37,6 +37,8 @@ public class Eta {
 
     private boolean isArrived;
 
+    private boolean isMissing;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
@@ -48,13 +50,14 @@ public class Eta {
                 mate,
                 remainingMinutes,
                 false,
+                false,
                 TimeUtil.nowWithTrim(),
                 TimeUtil.nowWithTrim()
         );
     }
 
     public Eta(Mate mate, long remainingMinutes, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this(null, mate, remainingMinutes, false, createdAt, updatedAt);
+        this(null, mate, remainingMinutes, false, false, createdAt, updatedAt);
     }
 
     public boolean isModified() {
@@ -65,10 +68,6 @@ public class Eta {
         LocalDateTime now = TimeUtil.nowWithTrim();
         long minutesDifference = Duration.between(updatedAt, now).toMinutes();
         return Math.max(remainingMinutes - minutesDifference, 0);
-    }
-
-    public boolean isMissing() {
-        return remainingMinutes == -1L;
     }
 
     public boolean isArrivalSoon(Meeting meeting) {
@@ -90,5 +89,9 @@ public class Eta {
     public void updateArrived() {
         this.isArrived = true;
         this.remainingMinutes = 0L;
+    }
+
+    public void updateMissingBy(boolean isMissing) {
+        this.isMissing = isMissing;
     }
 }
