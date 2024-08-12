@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 @Component
@@ -17,9 +18,9 @@ public class CustomFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        CachedRequestBodyHttpServletWrapper requestWrapper = new CachedRequestBodyHttpServletWrapper(httpRequest);
-
+        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(
+                (HttpServletRequest) servletRequest
+        );
         ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(
                 (HttpServletResponse) servletResponse
         );
