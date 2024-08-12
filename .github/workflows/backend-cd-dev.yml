@@ -3,13 +3,9 @@ name: backend-cd-dev
 on:
   push:
     branches:
-      - feature/227-1
-  pull_request:
-    branches:
       - develop
     paths:
       - backend/**
-    types: closed
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
@@ -27,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-#          ref: develop
+          ref: develop
           submodules: true
           token: ${{ secrets.GIT_TOKEN }}
 
