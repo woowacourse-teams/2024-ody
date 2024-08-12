@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.room.etadashboard
+package com.woowacourse.ody.presentation.room
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -7,7 +7,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
-import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 
 class MeetingRoomViewModelFactory(
     private val firebaseAnalytics: FirebaseAnalytics,

@@ -7,14 +7,14 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.room.log.NotificationLogViewModel" />
+            type="com.woowacourse.ody.presentation.room.MeetingRoomViewModel" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.room.log.NotificationLogActivity">
+        tools:context=".presentation.room.log.NotificationLogFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_meeting_info"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rectangle_cream_downside_shadow_radius_30"
             android:elevation="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/tb_log">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -122,6 +122,7 @@
             android:layout_marginBottom="18dp"
             android:background="@drawable/rectangle_radius_15"
             android:backgroundTint="@color/purple_800"
+            android:onClick="@{() -> vm.navigateToEta()}"
             android:orientation="horizontal"
             android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"

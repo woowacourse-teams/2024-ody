@@ -12,7 +12,6 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
-import com.woowacourse.ody.presentation.room.etadashboard.MeetingRoomViewModelFactory
 import com.woowacourse.ody.presentation.room.log.NotificationLogFragment
 import com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.room.log.listener.ShareListener
@@ -37,6 +36,7 @@ class MeetingRoomActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeBinding()
+        initializeObserve()
         initializePersistentBottomSheet()
     }
 
@@ -45,6 +45,12 @@ class MeetingRoomActivity :
         binding.shareListener = this
         binding.copyInviteCodeListener = this
         binding.backListener = this
+    }
+
+    private fun initializeObserve() {
+        viewModel.navigateToEtaEvent.observe(this) {
+            // todo: eta 화면을 스택에 추가
+        }
     }
 
     private fun initializePersistentBottomSheet() {

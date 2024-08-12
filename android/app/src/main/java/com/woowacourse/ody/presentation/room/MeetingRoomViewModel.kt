@@ -10,6 +10,9 @@ import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
+import com.woowacourse.ody.presentation.common.MutableSingleLiveData
+import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
@@ -42,6 +45,9 @@ class MeetingRoomViewModel(
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
     val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs
 
+    private val _navigateToEtaEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
+    val navigateToEtaEvent: SingleLiveData<Unit> get() = _navigateToEtaEvent
+
     init {
         fetchMeeting(meetingId)
     }
@@ -67,6 +73,14 @@ class MeetingRoomViewModel(
                     Timber.e(it.message)
                 }
         }
+
+    fun navigateToEta() {
+        firebaseAnalytics.logButtonClicked(
+            eventName = "eta_button_from_notification_log",
+            location = TAG,
+        )
+        _navigateToEtaEvent.setValue(Unit)
+    }
 
     companion object {
         private const val TAG = "MeetingRoomViewModel"
