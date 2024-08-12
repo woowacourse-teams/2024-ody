@@ -45,11 +45,7 @@ class MeetingsViewModel(
         viewModelScope.launch {
             meetingRepository.fetchMeeting(meetingId).onSuccess {
                 _navigateAction.postValue(
-                    MeetingsNavigateAction.NavigateToEta(
-                        meetingId = it.id,
-                        inviteCode = it.inviteCode,
-                        title = it.name,
-                    ),
+                    MeetingsNavigateAction.NavigateToEta(meetingId = it.id),
                 )
             }.onFailure {
                 firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)

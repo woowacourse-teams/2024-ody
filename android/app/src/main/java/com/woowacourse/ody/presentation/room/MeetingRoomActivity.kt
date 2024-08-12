@@ -7,11 +7,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
+import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardFragment
 import com.woowacourse.ody.presentation.room.log.NotificationLogFragment
 import com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener
 import com.woowacourse.ody.presentation.room.log.listener.ShareListener
@@ -32,12 +35,21 @@ class MeetingRoomActivity :
     }
     private val bottomSheetLayout by lazy { findViewById<ConstraintLayout>(R.id.cl_bottom_sheet) }
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private val fragments: Map<String, Fragment> by lazy {
+        mapOf(
+            NAVIGATE_TO_ETA_DASHBOARD to EtaDashboardFragment(),
+            NAVIGATE_TO_NOTIFICATION_LOG to NotificationLogFragment(),
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeBinding()
         initializeObserve()
         initializePersistentBottomSheet()
+        if (savedInstanceState == null) {
+            initializeFragment()
+        }
     }
 
     override fun initializeBinding() {
@@ -49,12 +61,29 @@ class MeetingRoomActivity :
 
     private fun initializeObserve() {
         viewModel.navigateToEtaEvent.observe(this) {
-            // todo: eta 화면을 스택에 추가
+            addFragment(EtaDashboardFragment())
         }
     }
 
     private fun initializePersistentBottomSheet() {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+    }
+
+    private fun initializeFragment() {
+        val fragment = fragments[getNavigateView()] ?: return
+        supportFragmentManager.commit {
+            replace(R.id.fcv_meeting_room, fragment)
+            setReorderingAllowed(true)
+            addToBackStack(null)
+        }
+    }
+
+    private fun addFragment(fragment: Fragment) {
+        supportFragmentManager.commit {
+            add(R.id.fcv_meeting_room, fragment)
+            setReorderingAllowed(true)
+            addToBackStack(null)
+        }
     }
 
     override fun onCopyInviteCode() {
@@ -75,17 +104,25 @@ class MeetingRoomActivity :
 
     private fun getMeetingId(): Long = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
 
+    private fun getNavigateView(): String = intent.getStringExtra(NAVIGATE_VIEW_KEY) ?: NAVIGATE_TO_NOTIFICATION_LOG
+
     companion object {
         private const val INVITE_CODE_LABEL = "inviteCode"
         private const val MEETING_ID_KEY = "meeting_id"
         private const val MEETING_ID_DEFAULT_VALUE = -1L
 
+        private const val NAVIGATE_VIEW_KEY = "navigate_view"
+        const val NAVIGATE_TO_ETA_DASHBOARD = "eta_dashboard"
+        const val NAVIGATE_TO_NOTIFICATION_LOG = "notification_log"
+
         fun getIntent(
             context: Context,
             meetingId: Long,
+            navigateView: String,
         ): Intent {
             return Intent(context, NotificationLogFragment::class.java).apply {
                 putExtra(MEETING_ID_KEY, meetingId)
+                putExtra(NAVIGATE_VIEW_KEY, navigateView)
             }
         }
     }
