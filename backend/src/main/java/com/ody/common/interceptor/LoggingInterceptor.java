@@ -19,7 +19,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
         CachedResponseBodyHttpServletWrapper responseWrapper = getResponseWrapper(response);
 
         if (responseWrapper.getStatus() >= 500) {
-            log.error("[Request] {} {}, Query: {}, Headers: {}, Body: {} \n[Response] {}",
+            log.error("[Request] {} {}, Query: {}, Headers: {}, Body: {} [Response] {}",
                     requestWrapper.getMethod(),
                     requestWrapper.getRequestURI(),
                     requestWrapper.getQueryString(),
@@ -27,7 +27,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
                     requestWrapper.getBody(),
                     responseWrapper.getStatus());
         } else if (responseWrapper.getStatus() >= 400) {
-            log.warn("[Request] {} {}, Query: {}, Headers: {}, Body: {} \n[Response] {}",
+            log.warn("[Request] {} {}, Query: {}, Headers: {}, Body: {} [Response] {}",
                     requestWrapper.getMethod(),
                     requestWrapper.getRequestURI(),
                     requestWrapper.getQueryString(),
@@ -35,13 +35,15 @@ public class LoggingInterceptor implements HandlerInterceptor {
                     requestWrapper.getBody(),
                     responseWrapper.getStatus());
         } else {
-            log.info("[Request] {} {}, Query: {}, Headers: {}, Body: {} \n[Response] {}",
+            log.info("[Request] {} {}, Query: {}, Headers: {}, Body: {} [Response] {}, Body: {}",
                     requestWrapper.getMethod(),
                     requestWrapper.getRequestURI(),
                     requestWrapper.getQueryString(),
                     requestWrapper.getHeader(HttpHeaders.AUTHORIZATION),
                     requestWrapper.getBody(),
-                    responseWrapper.getStatus());
+                    responseWrapper.getStatus(),
+                    responseWrapper.getOutput()
+            );
         }
     }
 
