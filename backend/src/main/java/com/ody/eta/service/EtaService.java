@@ -39,13 +39,16 @@ public class EtaService {
         Mate requestMate = findByMeetingIdAndMemberId(meetingId, member.getId());
         Meeting meeting = requestMate.getMeeting();
         Eta mateEta = findByMateId(requestMate.getId());
-        mateEta.updateMissingBy(mateEta.isMissing());
+        mateEta.updateMissingBy(mateEtaRequest.isMissing());
 
         if (determineArrived(mateEtaRequest, meeting) && !mateEta.isMissing()) {
             mateEta.updateArrived();
         }
         if ((!mateEta.isArrived() && isRouteClientCallTime(mateEta)) && !mateEta.isMissing()) {
-            Location currentLocation = new Location(mateEtaRequest.currentLatitude(), mateEtaRequest.currentLongitude());
+            Location currentLocation = new Location(
+                    mateEtaRequest.currentLatitude(),
+                    mateEtaRequest.currentLongitude()
+            );
             RouteTime routeTime = routeService.calculateRouteTime(currentLocation, meeting.getTarget());
             mateEta.updateRemainingMinutes(routeTime.getMinutes());
         }

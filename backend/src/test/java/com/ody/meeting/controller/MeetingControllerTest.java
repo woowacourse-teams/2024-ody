@@ -1,9 +1,14 @@
 package com.ody.meeting.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ody.common.BaseControllerTest;
 import com.ody.common.Fixture;
 import com.ody.eta.domain.Eta;
+import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
+import com.ody.eta.dto.response.MateEtaResponse;
+import com.ody.eta.dto.response.MateEtaResponses;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
@@ -22,6 +27,7 @@ import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -155,31 +161,117 @@ class MeetingControllerTest extends BaseControllerTest {
                 .statusCode(404);
     }
 
-    @DisplayName("참여자들의 위치 현황 목록 성공하면 200응답 반환한다")
-    @Test
-    void findAllMateEtas() {
-        Location origin = Fixture.ORIGIN_LOCATION;
-        Location target = Fixture.TARGET_LOCATION;
-        Member member = memberRepository.save(Fixture.MEMBER1);
-        Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
-        meetingRepository.save(meeting);
-        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin, 10L));
-        etaRepository.save(new Eta(mate, 10L));
+    @DisplayName("Eta API 테스트")
+    @Nested
+    class EtaTest {
 
-        MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+        @DisplayName("참여자들의 위치 현황 목록 성공하면 200응답 반환한다")
+        @Test
+        void findAllMateEtas() {
+            Location origin = Fixture.ORIGIN_LOCATION;
+            Location target = Fixture.TARGET_LOCATION;
+            Member member = memberRepository.save(Fixture.MEMBER1);
+            Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
+            meetingRepository.save(meeting);
+            Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin, 10L));
+            etaRepository.save(new Eta(mate, 10L));
 
-        RestAssured.given()
-                .log()
-                .all()
-                .header(HttpHeaders.AUTHORIZATION,
-                        "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
-                .body(mateEtaRequest)
-                .contentType(ContentType.JSON)
-                .when()
-                .patch("/v1/meetings/1/mates/etas")
-                .then()
-                .log()
-                .all()
-                .statusCode(200);
+            MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+
+            RestAssured.given()
+                    .log()
+                    .all()
+                    .header(HttpHeaders.AUTHORIZATION,
+                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                    .body(mateEtaRequest)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .patch("/v1/meetings/1/mates/etas")
+                    .then()
+                    .log()
+                    .all()
+                    .statusCode(200);
+        }
+
+        @DisplayName("위치 권한을 껐을 때는 MISSING, 다시 켰을 때는 정상 상태와 소요시간을 반환한다")
+        @Test
+        void returnMissing_When_isMissing_returnEtaStatus_When_isNotMissing() {
+            Location origin = Fixture.ORIGIN_LOCATION;
+            Member member = memberRepository.save(Fixture.MEMBER1);
+            Meeting meeting = Fixture.ODY_MEETING;
+            meetingRepository.save(meeting);
+            Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin, 10L));
+            etaRepository.save(new Eta(mate, 10L));
+
+            MateEtaRequest mateEtaMissingRequest = new MateEtaRequest(true, origin.getLatitude(),
+                    origin.getLongitude());
+            MateEtaResponse mateEtaMissingResponse = RestAssured.given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION,
+                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                    .body(mateEtaMissingRequest)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .patch("/v1/meetings/1/mates/etas")
+                    .then().log().all()
+                    .statusCode(200)
+                    .extract()
+                    .as(MateEtaResponses.class)
+                    .mateEtas().get(0);
+
+            assertThat(mateEtaMissingResponse.status()).isEqualTo(EtaStatus.MISSING);
+
+            MateEtaRequest mateEtaNotMissingRequest = new MateEtaRequest(false, origin.getLatitude(),
+                    origin.getLongitude());
+            MateEtaResponse mateEtaNotMissingResponse = RestAssured.given()
+                    .log()
+                    .all()
+                    .header(HttpHeaders.AUTHORIZATION,
+                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                    .body(mateEtaNotMissingRequest)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .patch("/v1/meetings/1/mates/etas")
+                    .then().log().all()
+                    .statusCode(200)
+                    .extract()
+                    .as(MateEtaResponses.class)
+                    .mateEtas().get(0);
+
+            assertThat(mateEtaNotMissingResponse.status()).isNotEqualTo(EtaStatus.MISSING);
+        }
+
+        @DisplayName("MISSING 상태인 참여자만 MISSING 상태를 반환한다.")
+        @Test
+        void returnMissing_When_isMissing_Mate() {
+            Location origin = Fixture.ORIGIN_LOCATION;
+            Meeting meeting = Fixture.ODY_MEETING;
+            meetingRepository.save(meeting);
+
+            Member member1 = memberRepository.save(Fixture.MEMBER1);
+            Mate jojo = mateRepository.save(new Mate(meeting, member1, new Nickname("은별"), origin, 10L));
+            etaRepository.save(new Eta(jojo, 10L));
+
+            Member member2 = memberRepository.save(Fixture.MEMBER2);
+            Mate coli = mateRepository.save(new Mate(meeting, member2, new Nickname("콜리"), origin, 10L));
+            etaRepository.save(new Eta(coli, 10L));
+
+            MateEtaRequest mateEtaMissingRequest = new MateEtaRequest(true, origin.getLatitude(),
+                    origin.getLongitude());
+            MateEtaResponses mateEtaResponses = RestAssured.given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION,
+                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                    .body(mateEtaMissingRequest)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .patch("/v1/meetings/1/mates/etas")
+                    .then().log().all()
+                    .statusCode(200)
+                    .extract()
+                    .as(MateEtaResponses.class);
+
+            assertThat(mateEtaResponses.mateEtas().get(0).status()).isEqualTo(EtaStatus.MISSING);
+            assertThat(mateEtaResponses.mateEtas().get(1).status()).isNotEqualTo(EtaStatus.MISSING);
+        }
     }
 }
+
