@@ -1,15 +1,18 @@
-package com.woowacourse.ody.presentation.room.log
+package com.woowacourse.ody.presentation.room.etadashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
+import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 
-class NotificationLogViewModelFactory(
+class MeetingRoomViewModelFactory(
     private val firebaseAnalytics: FirebaseAnalytics,
+    private val meetingId: Long,
+    private val matesEtaRepository: MatesEtaRepository,
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModelProvider.Factory {
@@ -17,10 +20,11 @@ class NotificationLogViewModelFactory(
         modelClass: Class<T>,
         extras: CreationExtras,
     ): T {
-        return if (modelClass.isAssignableFrom(NotificationLogViewModel::class.java)) {
-            NotificationLogViewModel(
+        return if (modelClass.isAssignableFrom(MeetingRoomViewModel::class.java)) {
+            MeetingRoomViewModel(
                 firebaseAnalytics,
-                extras.createSavedStateHandle(),
+                meetingId,
+                matesEtaRepository,
                 notificationLogRepository,
                 meetingRepository,
             ) as T
