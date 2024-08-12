@@ -1,7 +1,7 @@
 package com.woowacourse.ody.data.remote.core.repository
 
-import com.woowacourse.ody.data.ApiResult.ApiResult
-import com.woowacourse.ody.data.ApiResult.map
+import com.woowacourse.ody.data.apiresult.ApiResult
+import com.woowacourse.ody.data.apiresult.map
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMateEtaInfo
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeeting
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingCatalogs

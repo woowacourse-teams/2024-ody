@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.woowacourse.ody.data.ApiResult.onFailure
-import com.woowacourse.ody.data.ApiResult.onNetworkError
-import com.woowacourse.ody.data.ApiResult.onSuccess
-import com.woowacourse.ody.data.ApiResult.onUnexpected
+import com.woowacourse.ody.data.apiresult.onFailure
+import com.woowacourse.ody.data.apiresult.onNetworkError
+import com.woowacourse.ody.data.apiresult.onSuccess
+import com.woowacourse.ody.data.apiresult.onUnexpected
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData

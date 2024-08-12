@@ -1,4 +1,4 @@
-package com.woowacourse.ody.data.ApiResult
+package com.woowacourse.ody.data.apiresult
 
 import java.io.IOException
 

@@ -1,6 +1,6 @@
 package com.woowacourse.ody.data.remote.core.service
 
-import com.woowacourse.ody.data.ApiResult.ApiResult
+import com.woowacourse.ody.data.apiresult.ApiResult
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MatesEtaRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MatesEtaResponse

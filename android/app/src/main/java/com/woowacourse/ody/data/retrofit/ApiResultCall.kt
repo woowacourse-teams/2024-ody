@@ -1,6 +1,6 @@
 package com.woowacourse.ody.data.retrofit
 
-import com.woowacourse.ody.data.ApiResult.ApiResult
+import com.woowacourse.ody.data.apiresult.ApiResult
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
