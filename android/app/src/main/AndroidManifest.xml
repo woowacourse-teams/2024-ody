@@ -25,7 +25,7 @@
         <activity
             android:name=".presentation.meetings.MeetingsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".presentation.invitecode.InviteCodeActivity"
@@ -49,11 +49,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.room.log.NotificationLogActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.room.etadashboard.EtaDashboardActivity"
+            android:name=".presentation.room.MeetingRoomActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

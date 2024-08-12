@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.room.log.NotificationLogViewModel" />
+            type="com.woowacourse.ody.presentation.room.MeetingRoomViewModel" />
 
         <variable
             name="shareListener"
