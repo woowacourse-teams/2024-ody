@@ -15,16 +15,25 @@ public class LoggingInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
-        CachedRequestBodyHttpServletWrapper requestWrapper = getWrapper(request);
+        CachedRequestBodyHttpServletWrapper requestWrapper = getRequestWrapper(request);
+        CachedResponseBodyHttpServletWrapper responseWrapper = getResponseWrapper(response);
 
-        if (response.getStatus() >= 500) {
-            log.error("{} {}, Query: {}, Headers: {}, ({})", request.getMethod(), request.getRequestURI(),
-                    request.getQueryString(), request.getHeader(
-                            HttpHeaders.AUTHORIZATION), response.getStatus());
-        } else if (response.getStatus() >= 400) {
-            log.warn("{} {}, Query: {}, Headers: {}, ({})", request.getMethod(), request.getRequestURI(),
-                    request.getQueryString(), request.getHeader(
-                            HttpHeaders.AUTHORIZATION), response.getStatus());
+        if (responseWrapper.getStatus() >= 500) {
+            log.error("[Request] {} {}, Query: {}, Headers: {}, Body: {} \n[Response] {}",
+                    requestWrapper.getMethod(),
+                    requestWrapper.getRequestURI(),
+                    requestWrapper.getQueryString(),
+                    requestWrapper.getHeader(HttpHeaders.AUTHORIZATION),
+                    requestWrapper.getBody(),
+                    responseWrapper.getStatus());
+        } else if (responseWrapper.getStatus() >= 400) {
+            log.warn("[Request] {} {}, Query: {}, Headers: {}, Body: {} \n[Response] {}",
+                    requestWrapper.getMethod(),
+                    requestWrapper.getRequestURI(),
+                    requestWrapper.getQueryString(),
+                    requestWrapper.getHeader(HttpHeaders.AUTHORIZATION),
+                    requestWrapper.getBody(),
+                    responseWrapper.getStatus());
         } else {
             log.info("[Request] {} {}, Query: {}, Headers: {}, Body: {} \n[Response] {}",
                     requestWrapper.getMethod(),
@@ -32,14 +41,21 @@ public class LoggingInterceptor implements HandlerInterceptor {
                     requestWrapper.getQueryString(),
                     requestWrapper.getHeader(HttpHeaders.AUTHORIZATION),
                     requestWrapper.getBody(),
-                    response.getStatus());
+                    responseWrapper.getStatus());
         }
     }
 
-    private CachedRequestBodyHttpServletWrapper getWrapper(HttpServletRequest request) throws IOException {
+    private CachedRequestBodyHttpServletWrapper getRequestWrapper(HttpServletRequest request) throws IOException {
         if (request instanceof CachedRequestBodyHttpServletWrapper) {
             return (CachedRequestBodyHttpServletWrapper) request;
         }
         return new CachedRequestBodyHttpServletWrapper(request);
+    }
+
+    private CachedResponseBodyHttpServletWrapper getResponseWrapper(HttpServletResponse response) {
+        if (response instanceof CachedRequestBodyHttpServletWrapper) {
+            return (CachedResponseBodyHttpServletWrapper) response;
+        }
+        return new CachedResponseBodyHttpServletWrapper(response);
     }
 }
