@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 @Slf4j
 @Component
@@ -16,7 +17,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
         CachedRequestBodyHttpServletWrapper requestWrapper = getRequestWrapper(request);
-        CachedResponseBodyHttpServletWrapper responseWrapper = getResponseWrapper(response);
+        ContentCachingResponseWrapper responseWrapper = (ContentCachingResponseWrapper) response;
 
         if (responseWrapper.getStatus() >= 500) {
             log.error("[Request] {} {}, Query: {}, Headers: {}, Body: {} [Response] {}",
@@ -42,7 +43,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
                     requestWrapper.getHeader(HttpHeaders.AUTHORIZATION),
                     requestWrapper.getBody(),
                     responseWrapper.getStatus(),
-                    responseWrapper.getOutput()
+                    new String(responseWrapper.getContentAsByteArray())
             );
         }
     }
@@ -52,12 +53,5 @@ public class LoggingInterceptor implements HandlerInterceptor {
             return (CachedRequestBodyHttpServletWrapper) request;
         }
         return new CachedRequestBodyHttpServletWrapper(request);
-    }
-
-    private CachedResponseBodyHttpServletWrapper getResponseWrapper(HttpServletResponse response) {
-        if (response instanceof CachedRequestBodyHttpServletWrapper) {
-            return (CachedResponseBodyHttpServletWrapper) response;
-        }
-        return new CachedResponseBodyHttpServletWrapper(response);
     }
 }

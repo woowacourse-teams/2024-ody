@@ -6,8 +6,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 @Component
 public class CustomFilter implements Filter {
@@ -16,7 +18,12 @@ public class CustomFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        CachedRequestBodyHttpServletWrapper wrapper = new CachedRequestBodyHttpServletWrapper(httpRequest);
-        filterChain.doFilter(wrapper, servletResponse);
+        CachedRequestBodyHttpServletWrapper requestWrapper = new CachedRequestBodyHttpServletWrapper(httpRequest);
+
+        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(
+                (HttpServletResponse) servletResponse
+        );
+        filterChain.doFilter(requestWrapper, responseWrapper);
+        responseWrapper.copyBodyToResponse();
     }
 }
