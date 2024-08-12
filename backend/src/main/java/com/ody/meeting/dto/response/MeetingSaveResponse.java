@@ -3,6 +3,7 @@ package com.ody.meeting.dto.response;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
+import com.ody.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
@@ -47,7 +48,7 @@ public record MeetingSaveResponse(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
-                meeting.getTime().withNano(0),
+                TimeUtil.trimSecondsAndNanos(meeting.getTime()),
                 meeting.getTarget().getAddress(),
                 meeting.getTarget().getLatitude(),
                 meeting.getTarget().getLongitude(),

@@ -14,6 +14,7 @@ import com.ody.member.domain.Member;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.DistanceCalculator;
+import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +40,9 @@ public class EtaService {
     public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
         Mate requestMate = findByMeetingIdAndMemberId(meetingId, member.getId());
         Meeting meeting = requestMate.getMeeting();
-        LocalDateTime meetingTime = meeting.getMeetingTime().withSecond(0).withNano(0);
+        LocalDateTime meetingTime = TimeUtil.trimSecondsAndNanos(meeting.getMeetingTime());
         Eta mateEta = findByMateId(requestMate.getId());
-        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+        LocalDateTime now = TimeUtil.nowWithTrim();
 
         if (mateEtaRequest.isMissing()) {
             mateEta.updateRemainingMinutes(-1L);
@@ -73,7 +74,7 @@ public class EtaService {
     }
 
     private boolean determineArrived(MateEtaRequest mateEtaRequest, Meeting meeting, LocalDateTime now) {
-        LocalDateTime meetingTime = meeting.getMeetingTime().withSecond(0).withNano(0);
+        LocalDateTime meetingTime = TimeUtil.trimSecondsAndNanos(meeting.getMeetingTime());
         if (mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null) {
             return false;
         }

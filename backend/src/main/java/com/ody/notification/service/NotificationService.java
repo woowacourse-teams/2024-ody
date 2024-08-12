@@ -9,6 +9,7 @@ import com.ody.notification.dto.request.FcmSendRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
+import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -58,9 +59,9 @@ public class NotificationService {
 
     private LocalDateTime calculateSendAt(DepartureTime departureTime) {
         if (departureTime.isBefore(LocalDateTime.now())) {
-            return LocalDateTime.now().withNano(0);
+            return TimeUtil.nowWithTrim();
         }
-        return departureTime.getValue().withNano(0);
+        return TimeUtil.trimSecondsAndNanos(departureTime.getValue());
     }
 
     private void saveAndSendNotification(Meeting meeting, Notification notification) {
