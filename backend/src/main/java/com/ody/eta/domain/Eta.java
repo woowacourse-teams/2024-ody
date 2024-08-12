@@ -77,8 +77,7 @@ public class Eta {
     }
 
     public long differenceMinutesFromLastUpdated() {
-        LocalDateTime now = TimeUtil.nowWithTrim();
-        return Duration.between(updatedAt, now).toMinutes();
+        return Duration.between(updatedAt, TimeUtil.nowWithTrim()).toMinutes();
     }
 
     public void updateRemainingMinutes(long remainingMinutes) {

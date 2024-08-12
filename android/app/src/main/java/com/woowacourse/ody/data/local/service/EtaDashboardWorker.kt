@@ -14,18 +14,22 @@ import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
+import com.woowacourse.ody.data.local.entity.eta.MatesEtaInfoResponse
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resumeWithException
 
-class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerParameters) :
+class EtaDashboardWorker(context: Context, private val workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters) {
+    private val firebaseAnalytics: FirebaseAnalytics by lazy { (applicationContext as OdyApplication).firebaseAnalytics }
     private val meetingRepository: MeetingRepository by lazy { (applicationContext as OdyApplication).meetingRepository }
     private val meetingId: Long by lazy { workerParameters.inputData.getLong(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE) }
 
@@ -80,19 +84,20 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
         longitude: String,
     ): MateEtaInfo? {
         return meetingRepository.patchMatesEta(meetingId, isMissing, latitude, longitude)
+            .onFailure { firebaseAnalytics.logNetworkErrorEvent(TAG, it.message) }
             .getOrNull()
     }
 
-    private fun MateEtaInfo.toMateEtaInfoResponse(): MateEtaInfoResponse {
-        return MateEtaInfoResponse(userNickname, mateEtas)
+    private fun MateEtaInfo.toMateEtaInfoResponse(): MatesEtaInfoResponse {
+        return MatesEtaInfoResponse(userNickname, mateEtas)
     }
 
-    private fun MateEtaInfoResponse.convertMateEtasToJson(): String {
+    private fun MatesEtaInfoResponse.convertMateEtasToJson(): String {
         val moshi =
             Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
-        val jsonAdapter = moshi.adapter(MateEtaInfoResponse::class.java)
+        val jsonAdapter = moshi.adapter(MatesEtaInfoResponse::class.java)
         return jsonAdapter.toJson(this)
     }
 
@@ -123,6 +128,7 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
     }
 
     companion object {
+        private const val TAG = "EtaDashboardWorker"
         private const val MEETING_ID_KEY = "meeting_id"
         private const val MEETING_ID_DEFAULT_VALUE = -1L
         const val MATE_ETA_RESPONSE_KEY = "mate_eta_response"
@@ -136,7 +142,7 @@ class EtaDashBoardWorker(context: Context, private val workerParameters: WorkerP
                     .putLong(MEETING_ID_KEY, meetingId)
                     .build()
 
-            return OneTimeWorkRequestBuilder<EtaDashBoardWorker>()
+            return OneTimeWorkRequestBuilder<EtaDashboardWorker>()
                 .setInputData(inputData)
                 .addTag(meetingId.toString())
                 .setInitialDelay(delay, TimeUnit.MILLISECONDS)

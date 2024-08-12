@@ -1,6 +1,5 @@
 package com.ody.meeting.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,7 +21,6 @@ public record MeetingFindByMemberResponse(
         LocalDate date,
 
         @Schema(description = "약속 시간", type = "string", example = "13:30")
-        @JsonFormat(pattern = "HH:mm")
         LocalTime time,
 
         @Schema(description = "도착지 주소", example = "서울 테헤란로 411")

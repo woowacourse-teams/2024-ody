@@ -32,7 +32,7 @@
     <string name="meetings_departure_postfix">에서</string>
     <string name="meetings_arrival_postfix">까지</string>
     <string name="meetings_eta_form">%1$s분 걸려요</string>
-    <string name="meetings_navigate_to_meeting_room">오디?</string>"
+    <string name="meetings_navigate_to_eta">오디?</string>"
     <string name="meetings_today">오늘</string>"
     <string name="meetings_tomorrow">내일</string>"
     <string name="meetings_post_tomorrow">%1$s일 후</string>"

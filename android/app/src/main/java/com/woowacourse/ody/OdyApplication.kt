@@ -2,6 +2,7 @@ package com.woowacourse.ody
 
 import android.app.Application
 import androidx.work.WorkManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.BuildConfig.DEBUG
 import com.woowacourse.ody.data.local.db.OdyDatastore
 import com.woowacourse.ody.data.local.repository.DefaultMatesEtaRepository
@@ -41,6 +42,8 @@ class OdyApplication : Application() {
         kakaoRetrofit.create(KakaoLocationService::class.java)
 
     val notificationHelper: NotificationHelper by lazy { NotificationHelper(this) }
+
+    val firebaseAnalytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
 
     private val workerManager: WorkManager by lazy { WorkManager.getInstance(this) }
 

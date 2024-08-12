@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
+import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.room.log.model.MeetingDetailUiModel
 import com.woowacourse.ody.presentation.room.log.model.NotificationLogUiModel
 import com.woowacourse.ody.presentation.room.log.model.toMeetingUiModel
@@ -15,11 +17,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class NotificationLogViewModel(
+    private val firebaseAnalytics: FirebaseAnalytics,
     savedStateHandle: SavedStateHandle,
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
-    private val _meeting = MutableLiveData<MeetingDetailUiModel>()
+    private val _meeting = MutableLiveData(MeetingDetailUiModel())
     val meeting: LiveData<MeetingDetailUiModel> = _meeting
 
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
@@ -37,6 +40,7 @@ class NotificationLogViewModel(
                 .onSuccess {
                     _notificationLogs.postValue(it.toNotificationUiModels())
                 }.onFailure {
+                    firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
                     Timber.e(it.message)
                 }
         }
@@ -53,6 +57,7 @@ class NotificationLogViewModel(
         }
 
     companion object {
-        private val PUT_EXTRA_MEETING_ID = "meeting_id"
+        private const val TAG = "NotificationLogViewModel"
+        private const val PUT_EXTRA_MEETING_ID = "meeting_id"
     }
 }

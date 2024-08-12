@@ -9,10 +9,11 @@ import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
 
 class EtaDashboardViewModel(
-    private val meetingId: Long,
-    private val matesEtaRepository: MatesEtaRepository,
+    meetingId: Long,
+    matesEtaRepository: MatesEtaRepository,
 ) : ViewModel() {
-    private val matesEta: LiveData<MateEtaInfo?> = matesEtaRepository.fetchMatesEta(meetingId = meetingId)
+    private val matesEta: LiveData<MateEtaInfo?> =
+        matesEtaRepository.fetchMatesEta(meetingId = meetingId)
     val mateEtaUiModels: LiveData<List<MateEtaUiModel>?> =
         matesEta.map {
             val mateEtaInfo = it ?: return@map null

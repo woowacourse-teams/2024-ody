@@ -1,7 +1,7 @@
 package com.ody.meeting.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ody.meeting.domain.Meeting;
+import com.ody.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,7 +18,6 @@ public record MeetingSaveResponseV1(
         LocalDate date,
 
         @Schema(description = "모임 시간", type = "string", example = "14:00")
-        @JsonFormat(pattern = "HH:mm")
         LocalTime time,
 
         @Schema(description = "도착지 주소", example = "서울 송파구 올림픽로35다길 42")
@@ -39,7 +38,7 @@ public record MeetingSaveResponseV1(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
-                meeting.getTime().withNano(0),
+                TimeUtil.trimSecondsAndNanos(meeting.getTime()),
                 meeting.getTarget().getAddress(),
                 meeting.getTarget().getLatitude(),
                 meeting.getTarget().getLongitude(),

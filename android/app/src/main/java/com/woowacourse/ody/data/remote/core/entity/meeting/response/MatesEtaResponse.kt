@@ -8,5 +8,5 @@ data class MatesEtaResponse(
     @Json(name = "ownerNickname")
     val ownerNickname: String,
     @Json(name = "mateEtas")
-    val mateEtaResponses: List<MateEtaResponse>,
+    val matesEtaResponses: List<MateEtaResponse>,
 )

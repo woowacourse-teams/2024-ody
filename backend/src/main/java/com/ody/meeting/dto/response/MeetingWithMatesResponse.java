@@ -1,9 +1,9 @@
 package com.ody.meeting.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
+import com.ody.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
@@ -22,7 +22,6 @@ public record MeetingWithMatesResponse(
         LocalDate date,
 
         @Schema(description = "약속 시간", type = "string", example = "14:00")
-        @JsonFormat(pattern = "HH:mm")
         LocalTime time,
 
         @Schema(description = "도착지 주소", example = "서울 송파구 올림픽로35다길 42")
@@ -49,7 +48,7 @@ public record MeetingWithMatesResponse(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
-                meeting.getTime().withNano(0),
+                TimeUtil.trimSecondsAndNanos(meeting.getTime()),
                 meeting.getTarget().getAddress(),
                 meeting.getTarget().getLatitude(),
                 meeting.getTarget().getLongitude(),
