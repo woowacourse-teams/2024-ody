@@ -23,8 +23,8 @@ public class Fixture {
 
     public static Meeting ODY_MEETING = new Meeting(
             "오디",
-            LocalDate.now().plusDays(1),
-            LocalTime.parse("14:00"),
+            LocalDate.now(),
+            LocalTime.now(),
             TARGET_LOCATION,
             "초대코드"
     );

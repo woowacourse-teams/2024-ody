@@ -23,6 +23,7 @@ import com.ody.member.repository.MemberRepository;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -112,11 +113,11 @@ class EtaServiceTest extends BaseServiceTest {
             Mate mate = mateRepository.save(
                     new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), origin, 10L)
             );
-            etaRepository.save(new Eta(mate, 30L));
+            etaRepository.save(new Eta(mate, 31L));
             MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
             BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
-                    .thenReturn(new RouteTime(10L));
+                    .thenReturn(new RouteTime(31L));
 
             etaService.findAllMateEtas(mateEtaRequest, thirtyMinutesLaterMeeting.getId(), member);
 
@@ -137,15 +138,15 @@ class EtaServiceTest extends BaseServiceTest {
                 origin,
                 "초대코드"
         );
-        Meeting thirtyMinutesLaterMeeting = meetingRepository.save(meeting);
+        Meeting nowMeeting = meetingRepository.save(meeting);
 
         Mate mate = mateRepository.save(
-                new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), origin, 0L)
+                new Mate(nowMeeting, member, new Nickname("은별"), origin, 0L)
         );
         etaRepository.save(new Eta(mate, 30L));
         MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
-        MateEtaResponses etas = etaService.findAllMateEtas(mateEtaRequest, thirtyMinutesLaterMeeting.getId(), member);
+        MateEtaResponses etas = etaService.findAllMateEtas(mateEtaRequest, nowMeeting.getId(), member);
         MateEtaResponse mateEtaResponse = etas.mateEtas().stream()
                 .filter(response -> response.nickname().equals(mate.getNicknameValue()))
                 .findAny()

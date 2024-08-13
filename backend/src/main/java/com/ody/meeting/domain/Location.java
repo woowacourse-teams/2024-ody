@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Location {
 
-    private static final List<String> SUPPORT_REGION = List.of("서울", "경기", "인천");
+    private static final String DEFAULT_ADDRESS = "기본 주소";
+    private static final List<String> SUPPORT_REGION = List.of("서울", "경기", "인천", DEFAULT_ADDRESS);
     private static final int MAX_DECIMAL_PLACES = 6;
     private static final BigDecimal MIN_LATITUDE = new BigDecimal("-90.0");
     private static final BigDecimal MAX_LATITUDE = new BigDecimal("90.0");
@@ -37,6 +38,10 @@ public class Location {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Location(String latitude, String longitude) {
+        this(DEFAULT_ADDRESS, latitude, longitude);
     }
 
     private void validateSupportRegion(String address) {

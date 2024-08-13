@@ -14,9 +14,7 @@ import com.ody.member.domain.Member;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.DistanceCalculator;
-import com.ody.util.TimeUtil;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class EtaService {
 
-    private static final long ODSAY_CALL_CYCLE_MINUTES = 10L;
+    private static final long ROUTE_CLIENT_CALL_CYCLE_MINUTES = 10L;
     private static final int ARRIVED_THRESHOLD_METER = 300;
 
     private final RouteService routeService;
@@ -40,22 +38,14 @@ public class EtaService {
     public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
         Mate requestMate = findByMeetingIdAndMemberId(meetingId, member.getId());
         Meeting meeting = requestMate.getMeeting();
-        LocalDateTime meetingTime = TimeUtil.trimSecondsAndNanos(meeting.getMeetingTime());
         Eta mateEta = findByMateId(requestMate.getId());
-        LocalDateTime now = TimeUtil.nowWithTrim();
+        mateEta.updateMissingBy(mateEtaRequest.isMissing());
 
-        if (mateEtaRequest.isMissing()) {
-            mateEta.updateRemainingMinutes(-1L);
-        }
-
-        if (determineArrived(mateEtaRequest, meeting, now)) {
+        if (!mateEta.isMissing() && determineArrived(mateEtaRequest, meeting)) {
             mateEta.updateArrived();
         }
-
-        if ((!mateEta.isArrived() && isOdysayCallTime(mateEta)) &&
-                !(mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null)) {
+        if (!mateEta.isMissing() && (!mateEta.isArrived() && isRouteClientCallTime(mateEta))) {
             Location currentLocation = new Location(
-                    "서울",
                     mateEtaRequest.currentLatitude(),
                     mateEtaRequest.currentLongitude()
             );
@@ -63,28 +53,23 @@ public class EtaService {
             mateEta.updateRemainingMinutes(routeTime.getMinutes());
         }
 
-        List<MateEtaResponse> mateEtaResponses = etaRepository.findAllByMeetingId(meetingId).stream()
-                .map(eta -> MateEtaResponse.of(requestMate.getNicknameValue(), eta, mateEtaRequest.isMissing(), meetingTime, now))
-                .toList();
-        return new MateEtaResponses(requestMate.getNicknameValue(), mateEtaResponses);
+        return etaRepository.findAllByMeetingId(meetingId).stream()
+                .map(eta -> MateEtaResponse.of(eta, meeting))
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        mateEtaResponses -> new MateEtaResponses(requestMate.getNicknameValue(), mateEtaResponses))
+                );
     }
 
-    private boolean isOdysayCallTime(Eta mateEta) {
-        return !mateEta.isModified() || mateEta.differenceMinutesFromLastUpdated() >= ODSAY_CALL_CYCLE_MINUTES;
+    private boolean isRouteClientCallTime(Eta mateEta) {
+        return !mateEta.isModified() || mateEta.differenceMinutesFromLastUpdated() >= ROUTE_CLIENT_CALL_CYCLE_MINUTES;
     }
 
-    private boolean determineArrived(MateEtaRequest mateEtaRequest, Meeting meeting, LocalDateTime now) {
-        LocalDateTime meetingTime = TimeUtil.trimSecondsAndNanos(meeting.getMeetingTime());
-        if (mateEtaRequest.currentLatitude() == null || mateEtaRequest.currentLongitude() == null) {
-            return false;
-        }
+    private boolean determineArrived(MateEtaRequest mateEtaRequest, Meeting meeting) {
         double distance = DistanceCalculator.calculate(
-                Double.valueOf(mateEtaRequest.currentLatitude()),
-                Double.valueOf(mateEtaRequest.currentLongitude()),
-                Double.valueOf(meeting.getTarget().getLatitude()),
-                Double.valueOf(meeting.getTarget().getLongitude())
+                new Location(mateEtaRequest.currentLatitude(), mateEtaRequest.currentLongitude()), meeting.getTarget()
         );
-        return distance <= ARRIVED_THRESHOLD_METER && (now.isBefore(meetingTime) || now.isEqual(meetingTime));
+        return distance <= ARRIVED_THRESHOLD_METER && !meeting.isEnd();
     }
 
     private Mate findByMeetingIdAndMemberId(Long meetingId, Long memberId) {
