@@ -12,7 +12,7 @@ class ApiResultCall<T>(private val call: Call<T>) : Call<ApiResult<T>> {
     override fun clone(): Call<ApiResult<T>> = ApiResultCall(call.clone())
 
     override fun execute(): Response<ApiResult<T>> {
-        throw UnsupportedOperationException("ApiResultCall doesn't support execute")
+        throw UnsupportedOperationException("ApiResultCall은 execute를 지원하지 않습니다.")
     }
 
     override fun enqueue(callback: Callback<ApiResult<T>>) {
