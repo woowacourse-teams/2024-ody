@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
+import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.room.log.model.MeetingDetailUiModel
 import com.woowacourse.ody.presentation.room.log.model.NotificationLogUiModel
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class NotificationLogViewModel(
-    private val firebaseAnalytics: FirebaseAnalytics,
+    private val analyticsHelper: AnalyticsHelper,
     savedStateHandle: SavedStateHandle,
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
@@ -40,7 +40,7 @@ class NotificationLogViewModel(
                 .onSuccess {
                     _notificationLogs.postValue(it.toNotificationUiModels())
                 }.onFailure {
-                    firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
+                    analyticsHelper.logNetworkErrorEvent(TAG, it.message)
                     Timber.e(it.message)
                 }
         }

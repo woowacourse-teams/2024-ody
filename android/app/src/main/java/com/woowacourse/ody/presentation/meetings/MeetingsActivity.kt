@@ -25,7 +25,7 @@ class MeetingsActivity :
     MeetingsListener {
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
-            application.firebaseAnalytics,
+            analyticsHelper,
             application.meetingRepository,
         )
     }
@@ -35,7 +35,6 @@ class MeetingsActivity :
             this,
         )
     }
-    private val firebaseAnalytics by lazy { application.firebaseAnalytics }
     private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,7 +109,7 @@ class MeetingsActivity :
         inviteCode: String,
         title: String,
     ) {
-        firebaseAnalytics.logButtonClicked(
+        analyticsHelper.logButtonClicked(
             eventName = "eta_button_from_meetings",
             location = TAG,
         )

@@ -3,7 +3,7 @@ package com.woowacourse.ody.presentation.common.analytics
 import androidx.core.os.bundleOf
 import com.google.firebase.analytics.FirebaseAnalytics
 
-fun FirebaseAnalytics.logNetworkErrorEvent(
+fun AnalyticsHelper.logNetworkErrorEvent(
     name: String?,
     message: String?,
 ) {
@@ -15,7 +15,7 @@ fun FirebaseAnalytics.logNetworkErrorEvent(
     this.logEvent("network_error", bundle)
 }
 
-fun FirebaseAnalytics.logButtonClicked(
+fun AnalyticsHelper.logButtonClicked(
     eventName: String,
     location: String?,
 ) {

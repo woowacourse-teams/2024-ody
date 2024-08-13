@@ -15,6 +15,7 @@ abstract class BindingActivity<T : ViewDataBinding>(
     protected lateinit var binding: T
     private var snackBar: Snackbar? = null
     val application by lazy { applicationContext as OdyApplication }
+    val analyticsHelper by lazy { application.analyticsHelper }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

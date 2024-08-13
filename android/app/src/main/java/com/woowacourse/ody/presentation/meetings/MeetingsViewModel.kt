@@ -9,6 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsItemListener
 import com.woowacourse.ody.presentation.meetings.model.MeetingUiModel
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class MeetingsViewModel(
-    private val firebaseAnalytics: FirebaseAnalytics,
+    private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel(), MeetingsItemListener {
     private val _meetingCatalogs = MutableLiveData<List<MeetingUiModel>>()
@@ -36,7 +37,7 @@ class MeetingsViewModel(
             meetingRepository.fetchMeetingCatalogs().onSuccess {
                 _meetingCatalogs.value = it.toMeetingCatalogUiModels()
             }.onFailure {
-                firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
+                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
                 Timber.e(it)
             }
         }
@@ -52,7 +53,7 @@ class MeetingsViewModel(
                     ),
                 )
             }.onFailure {
-                firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
+                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
                 Timber.e(it)
             }
         }

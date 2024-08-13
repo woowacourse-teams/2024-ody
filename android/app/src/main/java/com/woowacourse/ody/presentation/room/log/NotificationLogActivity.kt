@@ -25,7 +25,7 @@ class NotificationLogActivity :
     BackListener {
     private val viewModel: NotificationLogViewModel by viewModels {
         NotificationLogViewModelFactory(
-            application.firebaseAnalytics,
+            analyticsHelper,
             application.notificationLogRepository,
             application.meetingRepository,
         )
@@ -37,9 +37,6 @@ class NotificationLogActivity :
     }
     private val bottomSheetLayout by lazy { findViewById<ConstraintLayout>(R.id.cl_bottom_sheet) }
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private val firebaseAnalytics by lazy {
-        application.firebaseAnalytics
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +49,7 @@ class NotificationLogActivity :
     }
 
     private fun navigateToEta() {
-        firebaseAnalytics.logButtonClicked(
+        analyticsHelper.logButtonClicked(
             eventName = "eta_button_from_notification_log",
             location = TAG,
         )

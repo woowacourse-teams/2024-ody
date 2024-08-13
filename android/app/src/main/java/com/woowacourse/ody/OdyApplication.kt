@@ -39,7 +39,7 @@ class OdyApplication : Application() {
     private val kakaoLocationService: KakaoLocationService = kakaoRetrofit.create(KakaoLocationService::class.java)
 
     private val workerManager: WorkManager by lazy { WorkManager.getInstance(this) }
-    val firebaseAnalyticsHelper: AnalyticsHelper by lazy { FirebaseAnalyticsHelper(this) }
+    val analyticsHelper: AnalyticsHelper by lazy { FirebaseAnalyticsHelper(this) }
     val notificationHelper: NotificationHelper by lazy { NotificationHelper(this) }
     val permissionHelper: PermissionHelper by lazy { PermissionHelper(this) }
 

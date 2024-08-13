@@ -6,13 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.creation.listener.MeetingCreationListener
 import kotlinx.coroutines.launch
@@ -22,7 +22,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 
 class MeetingCreationViewModel(
-    private val firebaseAnalytics: FirebaseAnalytics,
+    private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel(), MeetingCreationListener {
     val meetingCreationInfoType: MutableLiveData<MeetingCreationInfoType> = MutableLiveData()
@@ -90,7 +90,7 @@ class MeetingCreationViewModel(
             ).onSuccess {
                 _inviteCode.value = it
             }.onFailure {
-                firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
+                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
                 Timber.e(it.message)
             }
         }
