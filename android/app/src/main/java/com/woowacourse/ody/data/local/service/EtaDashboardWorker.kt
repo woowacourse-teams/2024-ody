@@ -10,7 +10,6 @@ import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.google.android.gms.location.LocationServices
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
@@ -18,6 +17,7 @@ import com.woowacourse.ody.data.local.entity.eta.MatesEtaInfoResponse
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.PermissionHelper
+import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
@@ -26,7 +26,7 @@ import kotlin.coroutines.resumeWithException
 
 class EtaDashboardWorker(context: Context, private val workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters) {
-    private val firebaseAnalytics: FirebaseAnalytics by lazy { (applicationContext as OdyApplication).firebaseAnalytics }
+    private val analyticsHelper: AnalyticsHelper by lazy { (applicationContext as OdyApplication).analyticsHelper }
     private val meetingRepository: MeetingRepository by lazy { (applicationContext as OdyApplication).meetingRepository }
     private val permissionHelper: PermissionHelper by lazy { (applicationContext as OdyApplication).permissionHelper }
     private val meetingId: Long by lazy {
@@ -81,7 +81,7 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
         longitude: String,
     ): MateEtaInfo? {
         return meetingRepository.patchMatesEta(meetingId, isMissing, latitude, longitude)
-            .onFailure { firebaseAnalytics.logNetworkErrorEvent(TAG, it.message) }
+            .onFailure { analyticsHelper.logNetworkErrorEvent(TAG, it.message) }
             .getOrNull()
     }
 

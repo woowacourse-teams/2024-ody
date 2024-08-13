@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -22,13 +23,13 @@ abstract class BindingFragment<T : ViewDataBinding>(
         get() = requireNotNull(_binding)
     private var snackBar: Snackbar? = null
     val application by lazy { requireContext().applicationContext as OdyApplication }
-    val firebaseAnalytics by lazy { application.firebaseAnalytics }
+    val analyticsHelper by lazy { application.analyticsHelper }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+        analyticsHelper.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
 
     override fun onCreateView(
@@ -54,6 +55,6 @@ abstract class BindingFragment<T : ViewDataBinding>(
         super.onDestroyView()
         _binding = null
         snackBar = null
-        firebaseAnalytics.logEvent(javaClass.simpleName + " destroyed", null)
+        analyticsHelper.logEvent(javaClass.simpleName + " destroyed", bundleOf())
     }
 }

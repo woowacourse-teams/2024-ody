@@ -23,7 +23,7 @@ class MeetingJoinActivity :
     BackListener {
     private val viewModel: MeetingJoinViewModel by viewModels<MeetingJoinViewModel> {
         MeetingJoinViewModelFactory(
-            application.firebaseAnalytics,
+            application.analyticsHelper,
             getInviteCode(),
             application.joinRepository,
             application.matesEtaRepository,

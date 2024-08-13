@@ -2,7 +2,6 @@ package com.woowacourse.ody
 
 import android.app.Application
 import androidx.work.WorkManager
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.BuildConfig.DEBUG
 import com.woowacourse.ody.data.local.db.OdyDatastore
 import com.woowacourse.ody.data.local.repository.DefaultMatesEtaRepository
@@ -23,6 +22,8 @@ import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.common.PermissionHelper
+import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
+import com.woowacourse.ody.presentation.common.analytics.FirebaseAnalyticsHelper
 import com.woowacourse.ody.presentation.notification.NotificationHelper
 import retrofit2.Retrofit
 import timber.log.Timber
@@ -34,13 +35,11 @@ class OdyApplication : Application() {
 
     private val joinService: JoinService = retrofit.create(JoinService::class.java)
     private val meetingService: MeetingService = retrofit.create(MeetingService::class.java)
-    private val notificationService: NotificationService =
-        retrofit.create(NotificationService::class.java)
-    private val kakaoLocationService: KakaoLocationService =
-        kakaoRetrofit.create(KakaoLocationService::class.java)
+    private val notificationService: NotificationService = retrofit.create(NotificationService::class.java)
+    private val kakaoLocationService: KakaoLocationService = kakaoRetrofit.create(KakaoLocationService::class.java)
 
     private val workerManager: WorkManager by lazy { WorkManager.getInstance(this) }
-    val firebaseAnalytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
+    val analyticsHelper: AnalyticsHelper by lazy { FirebaseAnalyticsHelper(this) }
     val notificationHelper: NotificationHelper by lazy { NotificationHelper(this) }
     val permissionHelper: PermissionHelper by lazy { PermissionHelper(this) }
 

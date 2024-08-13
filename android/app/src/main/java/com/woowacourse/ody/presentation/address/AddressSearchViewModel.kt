@@ -4,15 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.repository.location.GeoLocationRepository
+import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class AddressSearchViewModel(
-    private val firebaseAnalytics: FirebaseAnalytics,
+    private val analyticsHelper: AnalyticsHelper,
     private val locationRepository: GeoLocationRepository,
 ) : ViewModel() {
     private val _geoLocation: MutableLiveData<GeoLocation> = MutableLiveData<GeoLocation>()
@@ -24,7 +24,7 @@ class AddressSearchViewModel(
                 .onSuccess {
                     _geoLocation.value = it
                 }.onFailure {
-                    firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
+                    analyticsHelper.logNetworkErrorEvent(TAG, it.message)
                     Timber.e(it.message)
                 }
         }
