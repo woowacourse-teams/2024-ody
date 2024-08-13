@@ -10,7 +10,6 @@ import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.google.android.gms.location.LocationServices
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
@@ -27,7 +26,7 @@ import kotlin.coroutines.resumeWithException
 
 class EtaDashboardWorker(context: Context, private val workerParameters: WorkerParameters) :
     CoroutineWorker(context, workerParameters) {
-    private val analyticsHelper: AnalyticsHelper by lazy { (applicationContext as OdyApplication).firebaseAnalyticsHelper }
+    private val analyticsHelper: AnalyticsHelper by lazy { (applicationContext as OdyApplication).analyticsHelper }
     private val meetingRepository: MeetingRepository by lazy { (applicationContext as OdyApplication).meetingRepository }
     private val permissionHelper: PermissionHelper by lazy { (applicationContext as OdyApplication).permissionHelper }
     private val meetingId: Long by lazy {

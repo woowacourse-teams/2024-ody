@@ -2,7 +2,6 @@ package com.woowacourse.ody.presentation.address
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.repository.location.GeoLocationRepository
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 

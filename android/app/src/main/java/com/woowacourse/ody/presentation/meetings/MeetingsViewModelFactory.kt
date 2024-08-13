@@ -2,7 +2,6 @@ package com.woowacourse.ody.presentation.meetings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 
