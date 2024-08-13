@@ -11,7 +11,6 @@ import com.woowacourse.ody.util.CoroutinesTestExtension
 import com.woowacourse.ody.util.InstantTaskExecutorExtension
 import com.woowacourse.ody.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,76 +31,91 @@ class MeetingJoinViewModelTest {
             joinRepository = FakeJoinRepository(meetingId = meetingId),
             matesEtaRepository = FakeMatesEtaRepository,
         )
-        viewModel.nickname.value = "올리브"
-        viewModel.departureGeoLocation.value = GeoLocation("인천광역시 남동구", "10.0", "10.0")
-        viewModel.isValidInfo.value = true
-        println(viewModel.isValidInfo.getOrAwaitValue())
     }
 
     @Test
     fun `약속 참여에 성공하면 약속 방 화면으로 이동한다`() {
         // given
-        viewModel.joinMeeting()
+        setUpInitializeInfo()
 
         // when
-        val actual: MeetingJoinNavigateAction? = viewModel.navigateAction.getValue()
+        viewModel.joinMeeting()
 
         // then
+        val actual = viewModel.navigateAction.getValue()
         assertThat(actual).isNotNull
         assertThat(actual).isEqualTo(MeetingJoinNavigateAction.JoinNavigateToRoom(meetingId))
     }
 
     @Test
-    fun `닉네임이 1~9자 사이라면 유효하다`() {
-        // given
-        viewModel.meetingJoinInfoType.value = MeetingJoinInfoType.NICKNAME
-        viewModel.nickname.value = "올리브"
-
+    fun `입력하지 않은 값이 있는 경우 약속 참여할 수 없다`() {
         // when
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        viewModel.joinMeeting()
 
         // then
+        val actual = viewModel.navigateAction.getValue()
+        assertThat(actual).isNull()
+    }
+
+    @Test
+    fun `닉네임이 1~9자 사이라면 유효하다`() {
+        // given
+        setUpInitializeInfo()
+        viewModel.meetingJoinInfoType.value = MeetingJoinInfoType.NICKNAME
+
+        // when
+        viewModel.nickname.value = "올리브"
+
+        // then
+        val actual = viewModel.isValidInfo.getOrAwaitValue()
         assertThat(actual).isTrue
     }
 
     @Test
     fun `닉네임이 1~9자 사이가 아니라면 유효하지 않다`() {
         // given
+        setUpInitializeInfo()
         viewModel.meetingJoinInfoType.value = MeetingJoinInfoType.NICKNAME
-        viewModel.nickname.value = "올리브올리브올리브올리브올리브"
-
-        println(viewModel.isValidInfo.getOrAwaitValue())
 
         // when
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        viewModel.nickname.value = "올리브올리브올리브올리브올리브"
 
         // then
+        val actual = viewModel.isValidInfo.getOrAwaitValue()
         assertThat(actual).isFalse
     }
 
     @Test
     fun `출발지 주소가 수도권이라면 유효하다`() {
         // given
+        setUpInitializeInfo()
         viewModel.meetingJoinInfoType.value = MeetingJoinInfoType.DEPARTURE
-        viewModel.departureGeoLocation.value = GeoLocation(address = "인천광역시 남동구", "0.0", "0.0")
 
         // when
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        viewModel.departureGeoLocation.value = GeoLocation(address = "인천광역시 남동구", "0.0", "0.0")
 
         // then
+        val actual = viewModel.isValidInfo.getOrAwaitValue()
         assertThat(actual).isTrue
     }
 
     @Test
     fun `출발지 주소가 수도권이 아니라면 유효하지 않다`() {
         // given
+        setUpInitializeInfo()
         viewModel.meetingJoinInfoType.value = MeetingJoinInfoType.DEPARTURE
-        viewModel.departureGeoLocation.value = GeoLocation(address = "부산광역시 동구", "0.0", "0.0")
 
         // when
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        viewModel.departureGeoLocation.value = GeoLocation(address = "부산광역시 동구", "0.0", "0.0")
 
         // then
+        val actual = viewModel.isValidInfo.getOrAwaitValue()
         assertThat(actual).isFalse
+    }
+
+    private fun setUpInitializeInfo() {
+        viewModel.nickname.value = "올리브"
+        viewModel.departureGeoLocation.value = GeoLocation("인천광역시 남동구", "10.0", "10.0")
+        viewModel.isValidInfo.value = true
     }
 }
