@@ -58,10 +58,7 @@ class MeetingsViewModel(
                 }
             }.onNetworkError { exception ->
                 // not connected, network error
-                when (exception) {
-                    is java.net.UnknownHostException -> Timber.e("UnknownHostException")
-                    else -> Timber.e(exception)
-                }
+                Timber.e(exception)
             }.onUnexpected { t ->
                 // any other errors
                 Timber.e(t)
