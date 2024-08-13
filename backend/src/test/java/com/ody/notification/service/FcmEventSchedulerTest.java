@@ -53,7 +53,7 @@ class FcmEventSchedulerTest extends BaseServiceTest {
                 sendAt,
                 NotificationStatus.PENDING
         ));
-        FcmSendRequest fcmSendRequest = new FcmSendRequest(meeting.getId().toString(), notification);
+        FcmSendRequest fcmSendRequest = new FcmSendRequest(meeting, notification);
 
         // 비동기 작업을 동기화 시키기 위한 클래스
         // 파라미터 인자에 비동기 작업의 개수를 입력해준다.

@@ -41,7 +41,7 @@ public class NotificationService {
             RouteTime routeTime
     ) {
         saveAndSendEntryNotification(meeting, mate);
-        fcmSubscriber.subscribeTopic(meeting, deviceToken);
+        fcmSubscriber.subscribeTopic(meeting.buildFcmTopic(), deviceToken);
         saveAndSendDepartureReminderNotification(meeting, mate, routeTime);
     }
 

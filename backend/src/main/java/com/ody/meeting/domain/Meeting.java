@@ -1,5 +1,7 @@
 package com.ody.meeting.domain;
 
+import com.ody.common.domain.BaseEntity;
+import com.ody.notification.domain.FcmTopic;
 import com.ody.util.TimeUtil;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -19,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class Meeting {
+public class Meeting extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,5 +63,9 @@ public class Meeting {
 
     public LocalDateTime getMeetingTime() {
         return TimeUtil.trimSecondsAndNanos(LocalDateTime.of(date, time));
+    }
+
+    public FcmTopic buildFcmTopic() {
+        return new FcmTopic(this);
     }
 }
