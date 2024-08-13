@@ -22,10 +22,11 @@ class ApiResultCall<T : Any>(private val call: Call<T>) : Call<ApiResult<T>> {
                     call: Call<T>,
                     response: Response<T>,
                 ) {
+                    val body: T = response.body() ?: Unit as T
                     if (response.isSuccessful) {
                         callback.onResponse(
                             this@ApiResultCall,
-                            Response.success(ApiResult.Success(response.body()!!)),
+                            Response.success(ApiResult.Success(body)),
                         )
                     } else {
                         callback.onResponse(
