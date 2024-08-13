@@ -11,7 +11,7 @@ class FakeJoinRepository(private val meetingId: Long) : JoinRepository {
             ReserveInfo(
                 meetingId = meetingId,
                 meetingDateTime = LocalDateTime.of(2024, 7, 28, 18, 0),
-            )
+            ),
         )
     }
 }

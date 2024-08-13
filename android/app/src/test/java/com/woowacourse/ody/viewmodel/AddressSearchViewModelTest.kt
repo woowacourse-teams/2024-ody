@@ -20,10 +20,11 @@ class AddressSearchViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = AddressSearchViewModel(
-            analyticsHelper = FakeAnalyticsHelper,
-            locationRepository = FakeGeoLocationRepository
-        )
+        viewModel =
+            AddressSearchViewModel(
+                analyticsHelper = FakeAnalyticsHelper,
+                locationRepository = FakeGeoLocationRepository,
+            )
     }
 
     @Test

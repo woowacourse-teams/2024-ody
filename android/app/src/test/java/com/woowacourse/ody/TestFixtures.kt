@@ -1,3 +1,3 @@
 package com.woowacourse.ody
 
-const val inviteCode: String = "abc123"
+val inviteCode: String = "abc123"

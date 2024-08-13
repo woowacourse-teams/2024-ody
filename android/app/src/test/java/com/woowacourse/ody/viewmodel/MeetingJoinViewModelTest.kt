@@ -25,12 +25,13 @@ class MeetingJoinViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = MeetingJoinViewModel(
-            analyticsHelper = FakeAnalyticsHelper,
-            inviteCode = "abc123",
-            joinRepository = FakeJoinRepository(meetingId = meetingId),
-            matesEtaRepository = FakeMatesEtaRepository,
-        )
+        viewModel =
+            MeetingJoinViewModel(
+                analyticsHelper = FakeAnalyticsHelper,
+                inviteCode = "abc123",
+                joinRepository = FakeJoinRepository(meetingId = meetingId),
+                matesEtaRepository = FakeMatesEtaRepository,
+            )
     }
 
     @Test
