@@ -85,8 +85,6 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
             .getOrNull()
     }
 
-    private fun MateEtaInfo.toMateEtaInfoResponse(): MateEtaInfoResponse = MateEtaInfoResponse(userNickname, mateEtas)
-
     private fun MateEtaInfo.toMateEtaInfoResponse(): MatesEtaInfoResponse {
         return MatesEtaInfoResponse(userNickname, mateEtas)
     }
