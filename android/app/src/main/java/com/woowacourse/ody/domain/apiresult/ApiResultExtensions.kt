@@ -7,9 +7,9 @@ fun <T> ApiResult<T>.onSuccess(func: (T) -> Unit): ApiResult<T> {
     return this
 }
 
-fun <T> ApiResult<T>.onFailure(func: (code: Int, error: String?) -> Unit): ApiResult<T> {
+fun <T> ApiResult<T>.onFailure(func: (code: Int, errorMessage: String?) -> Unit): ApiResult<T> {
     if (this is ApiResult.Failure) {
-        func(this.code, this.error)
+        func(this.code, this.errorMessage)
     }
     return this
 }
@@ -31,7 +31,7 @@ fun <T> ApiResult<T>.onUnexpected(func: (t: Throwable) -> Unit): ApiResult<T> {
 suspend fun <T, R> ApiResult<T>.map(func: suspend (T) -> R): ApiResult<R> {
     return when (this) {
         is ApiResult.Success -> ApiResult.Success(func(this.data))
-        is ApiResult.Failure -> ApiResult.Failure(this.code, this.error)
+        is ApiResult.Failure -> ApiResult.Failure(this.code, this.errorMessage)
         is ApiResult.NetworkError -> ApiResult.NetworkError(this.exception)
         is ApiResult.Unexpected -> ApiResult.Unexpected(this.t)
     }
