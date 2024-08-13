@@ -27,11 +27,11 @@ public class SupportRegionValidator implements ConstraintValidator<SupportRegion
     public boolean isValid(Object object, ConstraintValidatorContext constraintValidatorContext) {
         try {
             Class<?> objectClass = object.getClass();
-            Method dateGetter = objectClass.getMethod(latitudeFieldName);
-            Method timeGetter = objectClass.getMethod(longitudeFieldName);
+            Method latitudeGetter = objectClass.getMethod(latitudeFieldName);
+            Method longitudeGetter = objectClass.getMethod(longitudeFieldName);
 
-            String latitude = (String) dateGetter.invoke(object);
-            String longitude = (String) timeGetter.invoke(object);
+            String latitude = (String) latitudeGetter.invoke(object);
+            String longitude = (String) longitudeGetter.invoke(object);
 
             return isInLatitudeRange(latitude) && isInLongitudeRange(longitude);
         } catch (Exception exception) {
