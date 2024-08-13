@@ -5,11 +5,9 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
 import com.woowacourse.ody.presentation.common.PermissionHelper
@@ -40,7 +38,6 @@ class MeetingsActivity :
     private val firebaseAnalytics by lazy { application.firebaseAnalytics }
     private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeObserve()
@@ -120,7 +117,6 @@ class MeetingsActivity :
         startActivity(EtaDashboardActivity.getIntent(this, meetingId, inviteCode, title))
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestPermissions() {
         if (permissionHelper.hasNotificationPermission() &&
             permissionHelper.hasFineLocationPermission() &&
@@ -130,10 +126,9 @@ class MeetingsActivity :
             return
         }
 
-        permissionHelper.requestNotificationPermission(this)
+        permissionHelper.requestCoarseAndFineLocationPermission(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -148,36 +143,34 @@ class MeetingsActivity :
                 checkPermissionAndProceed(
                     grantResults[0],
                     R.string.meetings_notification_permission_required,
-                ) { permissionHelper.requestCoarseAndFineLocationPermission(this) }
+                )
             }
 
             PermissionHelper.COARSE_AND_FINE_LOCATION_REQUEST_CODE ->
                 checkPermissionAndProceed(
                     grantResults[0],
                     R.string.meetings_location_permission_required,
-                ) { showBackgroundLocationPermissionDialog(this) }
+                ) { permissionHelper.requestBackgroundLocationPermission(this) }
 
             PermissionHelper.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE ->
                 checkPermissionAndProceed(
                     grantResults[0],
                     R.string.meetings_location_permission_required,
-                )
+                ) { permissionHelper.requestNotificationPermission(this) }
         }
     }
 
     private fun checkPermissionAndProceed(
         grantResult: Int,
         requiredMessage: Int,
-        onSuccess: () -> Unit = {},
+        requestNextPermission: () -> Unit = {},
     ) {
         if (grantResult != PackageManager.PERMISSION_GRANTED) {
             showSnackBar(requiredMessage)
-        } else {
-            onSuccess()
         }
+        requestNextPermission()
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun showBackgroundLocationPermissionDialog(context: Context) {
         val builder = AlertDialog.Builder(context)
         val listener =

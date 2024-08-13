@@ -5,18 +5,18 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 class PermissionHelper(private val context: Context) {
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun requestNotificationPermission(activity: Activity) {
-        ActivityCompat.requestPermissions(
-            activity,
-            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-            NOTIFICATION_REQUEST_CODE,
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                NOTIFICATION_REQUEST_CODE,
+            )
+        }
     }
 
     fun requestCoarseAndFineLocationPermission(activity: Activity) {
@@ -30,15 +30,16 @@ class PermissionHelper(private val context: Context) {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun requestBackgroundLocationPermission(activity: Activity) {
-        ActivityCompat.requestPermissions(
-            activity,
-            arrayOf(
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-            ),
-            BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE,
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                ),
+                BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE,
+            )
+        }
     }
 
     fun hasCoarseLocationPermission(): Boolean {
