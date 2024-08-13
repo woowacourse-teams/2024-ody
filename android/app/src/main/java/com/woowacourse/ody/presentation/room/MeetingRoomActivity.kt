@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -41,6 +42,12 @@ class MeetingRoomActivity :
             NAVIGATE_TO_NOTIFICATION_LOG to NotificationLogFragment(),
         )
     }
+    private val onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBack()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +67,8 @@ class MeetingRoomActivity :
     }
 
     private fun initializeObserve() {
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
         viewModel.navigateToEtaDashboardEvent.observe(this) {
             addFragment(EtaDashboardFragment())
         }
@@ -99,7 +108,12 @@ class MeetingRoomActivity :
     }
 
     override fun onBack() {
-        finish()
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        if (supportFragmentManager.fragments.size == 1) {
+            finish()
+            return
+        }
+        supportFragmentManager.popBackStack()
     }
 
     private fun getMeetingId(): Long = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
@@ -120,7 +134,7 @@ class MeetingRoomActivity :
             meetingId: Long,
             navigateView: String,
         ): Intent {
-            return Intent(context, NotificationLogFragment::class.java).apply {
+            return Intent(context, MeetingRoomActivity::class.java).apply {
                 putExtra(MEETING_ID_KEY, meetingId)
                 putExtra(NAVIGATE_VIEW_KEY, navigateView)
             }
