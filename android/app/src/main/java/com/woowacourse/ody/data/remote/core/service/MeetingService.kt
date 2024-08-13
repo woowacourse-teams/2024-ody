@@ -6,6 +6,7 @@ import com.woowacourse.ody.data.remote.core.entity.meeting.response.MatesEtaResp
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingCatalogsResponse
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingCreationResponse
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingResponse
+import com.woowacourse.ody.domain.apiresult.ApiResult
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
@@ -31,6 +32,9 @@ interface MeetingService {
 
     @GET("/v1/meetings/me")
     suspend fun fetchMeetingCatalogs(): MeetingCatalogsResponse
+
+    @GET("/v1/meetings/me")
+    suspend fun fetchMeetingCatalogs2(): ApiResult<MeetingCatalogsResponse>
 
     @GET("/v1/meetings/{meetingId}")
     suspend fun fetchMeeting(

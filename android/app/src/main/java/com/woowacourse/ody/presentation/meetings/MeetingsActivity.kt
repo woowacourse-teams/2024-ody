@@ -47,7 +47,7 @@ class MeetingsActivity :
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchMeetingCatalogs()
+        viewModel.fetchMeetingCatalogs2()
     }
 
     override fun initializeBinding() {
