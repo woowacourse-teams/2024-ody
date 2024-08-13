@@ -26,7 +26,7 @@ class MeetingCreationActivity :
     BackListener {
     private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel> {
         MeetingCreationViewModelFactory(
-            firebaseAnalytics = application.firebaseAnalytics,
+            analyticsHelper = analyticsHelper,
             meetingRepository = application.meetingRepository,
         )
     }

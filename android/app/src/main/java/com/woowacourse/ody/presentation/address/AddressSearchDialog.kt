@@ -28,7 +28,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
 
     private val viewModel: AddressSearchViewModel by viewModels {
         AddressSearchViewModelFactory(
-            application.firebaseAnalytics,
+            application.analyticsHelper,
             application.kakaoGeoLocationRepository,
         )
     }
