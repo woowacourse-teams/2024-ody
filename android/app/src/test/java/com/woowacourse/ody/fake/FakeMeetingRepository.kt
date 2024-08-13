@@ -9,6 +9,7 @@ import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.inviteCode
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -26,12 +27,16 @@ object FakeMeetingRepository : MeetingRepository {
             LocalDate.of(2024, 1, 1),
             LocalTime.of(10, 0),
             mates,
-            "abcd1234",
+            inviteCode,
         )
 
-    override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> = Result.success(Unit)
+    override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> {
+        return Result.success(Unit)
+    }
 
-    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> = Result.success("")
+    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> {
+        return Result.success(inviteCode)
+    }
 
     override suspend fun patchMatesEta(
         meetingId: Long,
