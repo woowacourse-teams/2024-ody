@@ -189,18 +189,14 @@ class MeetingControllerTest extends BaseControllerTest {
 
             MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
-            RestAssured.given()
-                    .log()
-                    .all()
+            RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION,
                             "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
                     .body(mateEtaRequest)
                     .contentType(ContentType.JSON)
                     .when()
                     .patch("/v1/meetings/1/mates/etas")
-                    .then()
-                    .log()
-                    .all()
+                    .then().log().all()
                     .statusCode(200);
         }
 
