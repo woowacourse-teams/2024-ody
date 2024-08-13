@@ -1,12 +1,8 @@
 package com.woowacourse.ody.data.local.service
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.os.Build
-import androidx.core.app.ActivityCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
@@ -21,6 +17,7 @@ import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.data.local.entity.eta.MatesEtaInfoResponse
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.presentation.common.PermissionHelper
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
@@ -31,12 +28,16 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
     CoroutineWorker(context, workerParameters) {
     private val firebaseAnalytics: FirebaseAnalytics by lazy { (applicationContext as OdyApplication).firebaseAnalytics }
     private val meetingRepository: MeetingRepository by lazy { (applicationContext as OdyApplication).meetingRepository }
-    private val meetingId: Long by lazy { workerParameters.inputData.getLong(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE) }
+    private val permissionHelper: PermissionHelper by lazy { (applicationContext as OdyApplication).permissionHelper }
+    private val meetingId: Long by lazy {
+        workerParameters.inputData.getLong(
+            MEETING_ID_KEY,
+            MEETING_ID_DEFAULT_VALUE,
+        )
+    }
 
     override suspend fun doWork(): Result {
-        if (meetingId == MEETING_ID_DEFAULT_VALUE) {
-            return Result.failure()
-        }
+        if (meetingId == MEETING_ID_DEFAULT_VALUE) return Result.failure()
 
         val mateEtaInfo = getLocation() ?: return Result.failure()
         val mateEtaResponses = mateEtaInfo.toMateEtaInfoResponse()
@@ -48,7 +49,7 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
         val fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(applicationContext)
 
-        if (checkLocationPermissions() || !isLocationEnabled()) {
+        if (hasLocationPermissions().not() || !isLocationEnabled()) {
             return updateMatesEta(true, "0.0", "0.0")
         }
 
@@ -63,10 +64,6 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
                         continuation.resumeWithException(exception)
                     }
             }
-
-        if (location.latitude == 0.0 && location.longitude == 0.0) {
-            return updateMatesEta(true, "0.0", "0.0")
-        }
 
         return updateMatesEta(false, location.latitude.toString(), location.longitude.toString())
     }
@@ -101,30 +98,10 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
         return jsonAdapter.toJson(this)
     }
 
-    private fun checkLocationPermissions(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return ActivityCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                ) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                ) != PackageManager.PERMISSION_GRANTED
-        } else {
-            return ActivityCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                ) != PackageManager.PERMISSION_GRANTED
-        }
+    private fun hasLocationPermissions(): Boolean {
+        return permissionHelper.hasFineLocationPermission() &&
+            permissionHelper.hasCoarseLocationPermission() &&
+            permissionHelper.hasBackgroundLocationPermission()
     }
 
     companion object {
