@@ -15,9 +15,6 @@ import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.DistanceCalculator;
 import java.util.stream.Collectors;
-import com.ody.util.TimeUtil;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,10 +41,10 @@ public class EtaService {
         Eta mateEta = findByMateId(requestMate.getId());
         mateEta.updateMissingBy(mateEtaRequest.isMissing());
 
-        if (determineArrived(mateEtaRequest, meeting) && !mateEta.isMissing()) {
+        if (!mateEta.isMissing() && determineArrived(mateEtaRequest, meeting)) {
             mateEta.updateArrived();
         }
-        if ((!mateEta.isArrived() && isRouteClientCallTime(mateEta)) && !mateEta.isMissing()) {
+        if (!mateEta.isMissing() && (!mateEta.isArrived() && isRouteClientCallTime(mateEta))) {
             Location currentLocation = new Location(
                     mateEtaRequest.currentLatitude(),
                     mateEtaRequest.currentLongitude()
