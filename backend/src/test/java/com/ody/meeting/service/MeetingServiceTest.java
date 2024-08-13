@@ -21,9 +21,8 @@ import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import com.ody.util.InviteCodeGenerator;
-import java.time.LocalDate;
+import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -81,26 +80,29 @@ class MeetingServiceTest extends BaseServiceTest {
     void findAllByMemberFilterTime() {
         Member member = memberRepository.save(Fixture.MEMBER1);
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = TimeUtil.nowWithTrim();
+        LocalDateTime now24Hours1MinutesAgo = now.minusHours(24).minusMinutes(1);
+        LocalDateTime now24HoursAgo = now.minusHours(24);
+        LocalDateTime now23Hours59MinutesAgo = now.minusHours(24).plusMinutes(1);
 
         Meeting meeting24Hours1MinuteAgo = meetingRepository.save(new Meeting(
                 "약속",
-                now.toLocalDate().minusDays(1),
-                now.toLocalTime().minusMinutes(1),
+                now24Hours1MinutesAgo.toLocalDate(),
+                now24Hours1MinutesAgo.toLocalTime(),
                 Fixture.TARGET_LOCATION,
                 "초대코드"
         ));
         Meeting meeting24HoursAgo = meetingRepository.save(new Meeting(
                 "약속",
-                now.toLocalDate().minusDays(1),
-                now.toLocalTime(),
+                now24HoursAgo.toLocalDate(),
+                now24HoursAgo.toLocalTime(),
                 Fixture.TARGET_LOCATION,
                 "초대코드"
         ));
         Meeting meeting23Hours59MinutesAgo = meetingRepository.save(new Meeting(
                 "약속",
-                now.toLocalDate().minusDays(1),
-                now.toLocalTime().plusMinutes(1),
+                now23Hours59MinutesAgo.toLocalDate(),
+                now23Hours59MinutesAgo.toLocalTime(),
                 Fixture.TARGET_LOCATION,
                 "초대코드"
         ));

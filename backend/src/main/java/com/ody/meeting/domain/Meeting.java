@@ -1,5 +1,6 @@
 package com.ody.meeting.domain;
 
+import com.ody.util.TimeUtil;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,7 +42,7 @@ public class Meeting {
     private String inviteCode;
 
     public Meeting(String name, LocalDate date, LocalTime time, Location target, String inviteCode) {
-        this(null, name, date, time.withNano(0), target, inviteCode);
+        this(null, name, date, TimeUtil.trimSecondsAndNanos(time), target, inviteCode);
     }
 
     public void updateInviteCode(String inviteCode) {
@@ -49,12 +50,12 @@ public class Meeting {
     }
 
     public LocalDateTime getMeetingTime() {
-        return LocalDateTime.of(date, time).withSecond(0).withNano(0);
+        return TimeUtil.trimSecondsAndNanos(LocalDateTime.of(date, time));
     }
 
     public boolean isWithinPast24HoursOrLater() {
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
-        LocalDateTime standard = LocalDateTime.now().minusHours(24).withSecond(0);
-        return standard.isBefore(dateTime);
+        LocalDateTime meetingTime = LocalDateTime.of(date, time);
+        LocalDateTime standard = TimeUtil.nowWithTrim().minusHours(24);
+        return meetingTime.isAfter(standard) || meetingTime.isEqual(standard);
     }
 }

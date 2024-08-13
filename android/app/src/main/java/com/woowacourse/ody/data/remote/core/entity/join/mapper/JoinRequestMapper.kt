@@ -1,8 +1,7 @@
-package com.woowacourse.ody.data.remote.core.entity.join.request
+package com.woowacourse.ody.data.remote.core.entity.join.mapper
 
+import com.woowacourse.ody.data.remote.core.entity.join.request.JoinRequest
 import com.woowacourse.ody.domain.model.MeetingJoinInfo
-
-private val COORDINATE_RANGE = (0..8)
 
 fun MeetingJoinInfo.toJoinRequest(): JoinRequest =
     JoinRequest(

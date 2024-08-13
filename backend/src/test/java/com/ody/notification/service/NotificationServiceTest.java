@@ -16,8 +16,8 @@ import com.ody.notification.domain.NotificationType;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
+import com.ody.util.TimeUtil;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -74,7 +74,7 @@ class NotificationServiceTest extends BaseServiceTest {
     }
 
     private boolean isNow(Notification notification) {
-        return notification.getSendAt().withNano(0)
-                .isEqual(LocalDateTime.now().withNano(0));
+        return TimeUtil.trimSecondsAndNanos(notification.getSendAt())
+                .isEqual(TimeUtil.nowWithTrim());
     }
 }

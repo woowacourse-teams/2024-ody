@@ -1,6 +1,7 @@
 package com.ody.eta.domain;
 
 import com.ody.mate.domain.Mate;
+import com.ody.util.TimeUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -46,8 +47,8 @@ public class Eta {
                 mate,
                 remainingMinutes,
                 false,
-                LocalDateTime.now().withSecond(0).withNano(0),
-                LocalDateTime.now().withSecond(0).withNano(0)
+                TimeUtil.nowWithTrim(),
+                TimeUtil.nowWithTrim()
         );
     }
 
@@ -60,7 +61,7 @@ public class Eta {
     }
 
     public boolean willBeLate(LocalDateTime meetingTime) {
-        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+        LocalDateTime now = TimeUtil.nowWithTrim();
         long countdownMinutes = countDownMinutes(now);
         LocalDateTime eta = now.plusMinutes(countdownMinutes);
         return eta.isAfter(meetingTime);
@@ -87,12 +88,11 @@ public class Eta {
     }
 
     public long differenceMinutesFromLastUpdated() {
-        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
-        return Duration.between(updatedAt, now).toMinutes();
+        return Duration.between(updatedAt, TimeUtil.nowWithTrim()).toMinutes();
     }
 
     public void updateRemainingMinutes(long remainingMinutes) {
-        this.updatedAt = LocalDateTime.now().withSecond(0).withNano(0);
+        this.updatedAt = TimeUtil.nowWithTrim();
         this.remainingMinutes = remainingMinutes;
     }
 
