@@ -1,6 +1,6 @@
 package com.woowacourse.ody.data.retrofit
 
-import com.woowacourse.ody.data.apiresult.ApiResult
+import com.woowacourse.ody.domain.apiresult.ApiResult
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Retrofit

@@ -1,4 +1,4 @@
-package com.woowacourse.ody.data.apiresult
+package com.woowacourse.ody.domain.apiresult
 
 fun <T> ApiResult<T>.onSuccess(func: (T) -> Unit): ApiResult<T> {
     if (this is ApiResult.Success) {

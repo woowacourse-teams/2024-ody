@@ -1,13 +1,13 @@
 package com.woowacourse.ody.data.remote.core.repository
 
-import com.woowacourse.ody.data.apiresult.ApiResult
-import com.woowacourse.ody.data.apiresult.map
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMateEtaInfo
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeeting
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingCatalogs
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MatesEtaRequest
 import com.woowacourse.ody.data.remote.core.service.MeetingService
+import com.woowacourse.ody.domain.apiresult.ApiResult
+import com.woowacourse.ody.domain.apiresult.map
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingCatalog

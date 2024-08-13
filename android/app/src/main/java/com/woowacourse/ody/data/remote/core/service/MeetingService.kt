@@ -1,12 +1,12 @@
 package com.woowacourse.ody.data.remote.core.service
 
-import com.woowacourse.ody.data.apiresult.ApiResult
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MatesEtaRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MatesEtaResponse
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingCatalogsResponse
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingCreationResponse
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingResponse
+import com.woowacourse.ody.domain.apiresult.ApiResult
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH

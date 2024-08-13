@@ -1,6 +1,6 @@
 package com.woowacourse.ody.fake
 
-import com.woowacourse.ody.data.apiresult.ApiResult
+import com.woowacourse.ody.domain.apiresult.ApiResult
 import com.woowacourse.ody.domain.model.EtaType
 import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.MateEta
