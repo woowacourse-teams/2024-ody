@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class ApiResultCallAdapter<R : Any>(private val responseType: Type) : CallAdapter<R, Call<ApiResult<R>>> {
+class ApiResultCallAdapter<R>(private val responseType: Type) : CallAdapter<R, Call<ApiResult<R>>> {
     override fun responseType(): Type {
         return responseType
     }
@@ -26,7 +26,7 @@ class ApiResultCallAdapter<R : Any>(private val responseType: Type) : CallAdapte
                 return null
             }
             check(returnType is ParameterizedType) {
-                "return type must be parameterized as Call<ApiResult<Foo>> or Call<ApiResult<out Foo>>"
+                "리턴 타입은 Call<ApiResult<Foo>> 또는 Call<ApiResult<out Foo>>로 매개변수화 되어야 합니다."
             }
             val responseType = getParameterUpperBound(0, returnType)
 
@@ -35,7 +35,7 @@ class ApiResultCallAdapter<R : Any>(private val responseType: Type) : CallAdapte
             }
 
             check(responseType is ParameterizedType) {
-                "return type must be parameterized as ApiResult<Foo> or ApiResult<out Foo>"
+                "리턴 타입은 ApiResult<Foo> 또는 ApiResult<out Foo>로 매개변수화되어야 합니다."
             }
 
             val successBodyType = getParameterUpperBound(0, responseType)

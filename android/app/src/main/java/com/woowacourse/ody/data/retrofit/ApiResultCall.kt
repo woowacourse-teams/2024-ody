@@ -8,7 +8,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class ApiResultCall<T : Any>(private val call: Call<T>) : Call<ApiResult<T>> {
+class ApiResultCall<T>(private val call: Call<T>) : Call<ApiResult<T>> {
     override fun clone(): Call<ApiResult<T>> = ApiResultCall(call.clone())
 
     override fun execute(): Response<ApiResult<T>> {
