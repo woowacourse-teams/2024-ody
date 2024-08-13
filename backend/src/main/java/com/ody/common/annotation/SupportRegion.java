@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Documented
 @Constraint(validatedBy = SupportRegionValidator.class)
-@Target({ElementType.TYPE})
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SupportRegion {
 
