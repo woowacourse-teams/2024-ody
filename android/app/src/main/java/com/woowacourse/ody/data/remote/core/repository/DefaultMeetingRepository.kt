@@ -6,6 +6,8 @@ import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingCatal
 import com.woowacourse.ody.data.remote.core.entity.meeting.mapper.toMeetingRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MatesEtaRequest
 import com.woowacourse.ody.data.remote.core.service.MeetingService
+import com.woowacourse.ody.domain.apiresult.ApiResult
+import com.woowacourse.ody.domain.apiresult.map
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingCatalog
@@ -37,9 +39,10 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
     }
 
     override suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>> =
-        runCatching {
-            service.fetchMeetingCatalogs().toMeetingCatalogs()
-        }
+        runCatching { service.fetchMeetingCatalogs().toMeetingCatalogs() }
+
+    override suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>> =
+        service.fetchMeetingCatalogs2().map { it.toMeetingCatalogs() }
 
     private fun compress(coordinate: String): String {
         val endIndex = minOf(9, coordinate.length)

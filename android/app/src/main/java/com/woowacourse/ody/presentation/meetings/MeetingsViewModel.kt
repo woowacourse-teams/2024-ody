@@ -5,6 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.ody.domain.apiresult.onFailure
+import com.woowacourse.ody.domain.apiresult.onNetworkError
+import com.woowacourse.ody.domain.apiresult.onSuccess
+import com.woowacourse.ody.domain.apiresult.onUnexpected
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
@@ -26,19 +30,21 @@ class MeetingsViewModel(
     private val _navigateAction = MutableSingleLiveData<MeetingsNavigateAction>()
     val navigateAction: SingleLiveData<MeetingsNavigateAction> = _navigateAction
 
-    val isMeetingCatalogsEmpty: LiveData<Boolean> =
-        _meetingCatalogs.map {
-            it.isEmpty()
-        }
+    val isMeetingCatalogsEmpty: LiveData<Boolean> = _meetingCatalogs.map { it.isEmpty() }
 
     fun fetchMeetingCatalogs() =
         viewModelScope.launch {
-            meetingRepository.fetchMeetingCatalogs().onSuccess {
-                _meetingCatalogs.value = it.toMeetingCatalogUiModels()
-            }.onFailure {
-                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
-                Timber.e(it)
-            }
+            meetingRepository.fetchMeetingCatalogs2()
+                .onSuccess {
+                    _meetingCatalogs.value = it.toMeetingCatalogUiModels()
+                }.onFailure { code, errorMessage ->
+                    analyticsHelper.logNetworkErrorEvent(TAG, errorMessage)
+                    Timber.e("code: $code, message: $errorMessage")
+                }.onNetworkError { exception ->
+                    Timber.e(exception)
+                }.onUnexpected { t ->
+                    Timber.e(t)
+                }
         }
 
     override fun navigateToEta(meetingId: Long) {
