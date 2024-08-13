@@ -1,5 +1,6 @@
 package com.woowacourse.ody.fake
 
+import com.woowacourse.ody.data.apiresult.ApiResult
 import com.woowacourse.ody.domain.model.EtaType
 import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.MateEta
@@ -52,6 +53,8 @@ object FakeMeetingRepository : MeetingRepository {
     }
 
     override suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>> = Result.success(listOf())
+
+    override suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>> = ApiResult.Success(listOf())
 
     override suspend fun fetchMeeting(meetingId: Long): Result<Meeting> = Result.success(meetingA)
 }
