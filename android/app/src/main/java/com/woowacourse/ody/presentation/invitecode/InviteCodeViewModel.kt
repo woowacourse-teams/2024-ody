@@ -5,15 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import kotlinx.coroutines.launch
 
 class InviteCodeViewModel(
-    private val firebaseAnalytics: FirebaseAnalytics,
+    private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
     val inviteCode: MutableLiveData<String> = MutableLiveData()
@@ -36,7 +36,7 @@ class InviteCodeViewModel(
                 .onSuccess {
                     _navigateAction.setValue(InviteCodeNavigateAction.CodeNavigateToJoin)
                 }.onFailure {
-                    firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
+                    analyticsHelper.logNetworkErrorEvent(TAG, it.message)
                     _invalidInviteCodeEvent.setValue(Unit)
                 }
         }

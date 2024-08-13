@@ -27,7 +27,7 @@ class MeetingRoomActivity :
     BackListener {
     private val viewModel: MeetingRoomViewModel by viewModels<MeetingRoomViewModel> {
         MeetingRoomViewModelFactory(
-            application.firebaseAnalytics,
+            analyticsHelper,
             getMeetingId(),
             application.matesEtaRepository,
             application.notificationLogRepository,

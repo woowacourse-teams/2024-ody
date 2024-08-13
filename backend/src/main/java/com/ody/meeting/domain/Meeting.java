@@ -49,13 +49,17 @@ public class Meeting {
         this.inviteCode = inviteCode;
     }
 
-    public LocalDateTime getMeetingTime() {
-        return TimeUtil.trimSecondsAndNanos(LocalDateTime.of(date, time));
-    }
-
     public boolean isWithinPast24HoursOrLater() {
-        LocalDateTime meetingTime = LocalDateTime.of(date, time);
+        LocalDateTime meetingTime = TimeUtil.trimSecondsAndNanos(LocalDateTime.of(date, time));
         LocalDateTime standard = TimeUtil.nowWithTrim().minusHours(24);
         return meetingTime.isAfter(standard) || meetingTime.isEqual(standard);
+    }
+
+    public boolean isEnd() {
+        return TimeUtil.nowWithTrim().isAfter(getMeetingTime());
+    }
+
+    public LocalDateTime getMeetingTime() {
+        return TimeUtil.trimSecondsAndNanos(LocalDateTime.of(date, time));
     }
 }

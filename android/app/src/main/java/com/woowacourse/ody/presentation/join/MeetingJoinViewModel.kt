@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.MeetingJoinInfo
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
@@ -14,6 +13,7 @@ import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.join.listener.MeetingJoinListener
 import kotlinx.coroutines.launch
@@ -22,7 +22,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 class MeetingJoinViewModel(
-    private val firebaseAnalytics: FirebaseAnalytics,
+    private val analyticsHelper: AnalyticsHelper,
     private val inviteCode: String,
     private val joinRepository: JoinRepository,
     private val matesEtaRepository: MatesEtaRepository,
@@ -77,7 +77,7 @@ class MeetingJoinViewModel(
                 reserveEtaFetchingJobs(it.meetingId, it.meetingDateTime)
                 _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
             }.onFailure {
-                firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
+                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
                 Timber.e(it.message)
             }
         }

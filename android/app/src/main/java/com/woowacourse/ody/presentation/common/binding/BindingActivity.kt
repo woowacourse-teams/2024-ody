@@ -15,6 +15,7 @@ abstract class BindingActivity<T : ViewDataBinding>(
     protected lateinit var binding: T
     private var snackBar: Snackbar? = null
     val application by lazy { applicationContext as OdyApplication }
+    val analyticsHelper by lazy { application.analyticsHelper }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,14 +33,6 @@ abstract class BindingActivity<T : ViewDataBinding>(
         snackBar?.dismiss()
         snackBar = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).apply { action() }
         snackBar?.show()
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray,
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onDestroy() {

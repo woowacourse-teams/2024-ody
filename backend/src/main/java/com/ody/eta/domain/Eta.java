@@ -1,6 +1,7 @@
 package com.ody.eta.domain;
 
 import com.ody.mate.domain.Mate;
+import com.ody.meeting.domain.Meeting;
 import com.ody.util.TimeUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +37,8 @@ public class Eta {
 
     private boolean isArrived;
 
+    private boolean isMissing;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
@@ -47,44 +50,30 @@ public class Eta {
                 mate,
                 remainingMinutes,
                 false,
+                false,
                 TimeUtil.nowWithTrim(),
                 TimeUtil.nowWithTrim()
         );
     }
 
     public Eta(Mate mate, long remainingMinutes, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this(null, mate, remainingMinutes, false, createdAt, updatedAt);
+        this(null, mate, remainingMinutes, false, false, createdAt, updatedAt);
     }
 
     public boolean isModified() {
         return !createdAt.isEqual(updatedAt);
     }
 
-    public boolean willBeLate(LocalDateTime meetingTime) {
+    public long countDownMinutes() {
         LocalDateTime now = TimeUtil.nowWithTrim();
-        long countdownMinutes = countDownMinutes(now);
-        LocalDateTime eta = now.plusMinutes(countdownMinutes);
-        return eta.isAfter(meetingTime);
+        long minutesDifference = Duration.between(updatedAt, now).toMinutes();
+        return Math.max(remainingMinutes - minutesDifference, 0);
     }
 
-    public long countDownMinutes(LocalDateTime localDateTime) {
-        long minutesDifference = Duration.between(updatedAt, localDateTime).toMinutes();
-        long countDownMinutes = Math.max(remainingMinutes - minutesDifference, 0);
-        if (isMissing()) {
-            return -1L;
-        }
-        if (isArrivalSoon(countDownMinutes)) {
-            return 1L;
-        }
-        return countDownMinutes;
-    }
-
-    private boolean isMissing() {
-        return remainingMinutes == -1L;
-    }
-
-    private boolean isArrivalSoon(long countDownMinutes) {
-        return countDownMinutes == 0L && !isArrived;
+    public boolean isArrivalSoon(Meeting meeting) {
+        LocalDateTime now = TimeUtil.nowWithTrim();
+        LocalDateTime eta = now.plusMinutes(countDownMinutes());
+        return (eta.isBefore(meeting.getMeetingTime()) || eta.isEqual(meeting.getMeetingTime())) && !isArrived;
     }
 
     public long differenceMinutesFromLastUpdated() {
@@ -99,5 +88,9 @@ public class Eta {
     public void updateArrived() {
         this.isArrived = true;
         this.remainingMinutes = 0L;
+    }
+
+    public void updateMissingBy(boolean isMissing) {
+        this.isMissing = isMissing;
     }
 }

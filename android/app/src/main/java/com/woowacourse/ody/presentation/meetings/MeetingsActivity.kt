@@ -1,20 +1,16 @@
 package com.woowacourse.ody.presentation.meetings
 
-import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
+import com.woowacourse.ody.presentation.common.PermissionHelper
 import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
@@ -30,7 +26,7 @@ class MeetingsActivity :
     MeetingsListener {
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
-            application.firebaseAnalytics,
+            analyticsHelper,
             application.meetingRepository,
         )
     }
@@ -40,11 +36,8 @@ class MeetingsActivity :
             this,
         )
     }
-    private val firebaseAnalytics by lazy {
-        application.firebaseAnalytics
-    }
+    private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeObserve()
@@ -104,7 +97,7 @@ class MeetingsActivity :
     }
 
     private fun navigateToEtaDashboard(meetingId: Long) {
-        firebaseAnalytics.logButtonClicked(
+        analyticsHelper.logButtonClicked(
             eventName = "eta_button_from_meetings",
             location = TAG,
         )
@@ -126,54 +119,67 @@ class MeetingsActivity :
         binding.fabMeetingsNavigator.isSelected = false
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestPermissions() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS,
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-            ) == PackageManager.PERMISSION_GRANTED
+        if (permissionHelper.hasNotificationPermission() &&
+            permissionHelper.hasFineLocationPermission() &&
+            permissionHelper.hasCoarseLocationPermission() &&
+            permissionHelper.hasBackgroundLocationPermission()
         ) {
             return
         }
 
-        val permissions =
-            arrayOf(
-                Manifest.permission.POST_NOTIFICATIONS,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            )
-        val permissionRequestCode = PERMISSIONS_REQUEST_CODE
-
-        ActivityCompat.requestPermissions(this, permissions, permissionRequestCode)
-        showBackgroundLocationPermissionDialog(this)
+        permissionHelper.requestCoarseAndFineLocationPermission(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (grantResults.isEmpty()) return
+
+        when (requestCode) {
+            PermissionHelper.NOTIFICATION_REQUEST_CODE -> {
+                checkPermissionAndProceed(
+                    grantResults[0],
+                    R.string.meetings_notification_permission_required,
+                )
+            }
+
+            PermissionHelper.COARSE_AND_FINE_LOCATION_REQUEST_CODE ->
+                checkPermissionAndProceed(
+                    grantResults[0],
+                    R.string.meetings_location_permission_required,
+                ) { permissionHelper.requestBackgroundLocationPermission(this) }
+
+            PermissionHelper.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE ->
+                checkPermissionAndProceed(
+                    grantResults[0],
+                    R.string.meetings_location_permission_required,
+                ) { permissionHelper.requestNotificationPermission(this) }
+        }
+    }
+
+    private fun checkPermissionAndProceed(
+        grantResult: Int,
+        requiredMessage: Int,
+        requestNextPermission: () -> Unit = {},
+    ) {
+        if (grantResult != PackageManager.PERMISSION_GRANTED) {
+            showSnackBar(requiredMessage)
+        }
+        requestNextPermission()
+    }
+
     private fun showBackgroundLocationPermissionDialog(context: Context) {
         val builder = AlertDialog.Builder(context)
         val listener =
             DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE ->
-                        ActivityCompat.requestPermissions(
-                            this,
-                            arrayOf(
-                                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                            ),
-                            PERMISSION_REQUEST_CODE,
-                        )
+                        permissionHelper.requestBackgroundLocationPermission(this)
                 }
             }
         builder.setTitle(getString(R.string.request_background_permission_dialog_title))
@@ -185,45 +191,8 @@ class MeetingsActivity :
         builder.show()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray,
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSIONS_REQUEST_CODE) {
-            for (index in permissions.indices) {
-                when (permissions[index]) {
-                    Manifest.permission.POST_NOTIFICATIONS -> {
-                        showPermissionGuide(grantResults, index)
-                    }
-
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                    -> {
-                        showPermissionGuide(grantResults, index)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun showPermissionGuide(
-        grantResults: IntArray,
-        index: Int,
-    ) {
-        if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-            showSnackBar(R.string.meetings_notification_permission_guide)
-        } else {
-            showSnackBar(R.string.meetings_notification_permission_required)
-        }
-    }
-
     companion object {
         private const val TAG = "MeetingsActivity"
-        private const val PERMISSIONS_REQUEST_CODE = 1
-        private const val PERMISSION_REQUEST_CODE = 2
 
         fun getIntent(context: Context): Intent = Intent(context, MeetingsActivity::class.java)
     }

@@ -2,6 +2,7 @@ package com.woowacourse.ody.data.remote.core
 
 import com.google.firebase.messaging.FirebaseMessaging
 import com.woowacourse.ody.BuildConfig
+import com.woowacourse.ody.data.retrofit.ApiResultCallAdapter
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import okhttp3.Interceptor
@@ -42,6 +43,7 @@ class RetrofitClient {
         Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
+            .addCallAdapterFactory(ApiResultCallAdapter.Factory())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
     }

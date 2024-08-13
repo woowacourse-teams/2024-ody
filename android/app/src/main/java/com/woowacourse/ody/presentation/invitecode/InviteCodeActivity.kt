@@ -13,7 +13,7 @@ import com.woowacourse.ody.presentation.join.MeetingJoinActivity
 class InviteCodeActivity : BindingActivity<ActivityInviteCodeBinding>(R.layout.activity_invite_code), BackListener {
     private val viewModel: InviteCodeViewModel by viewModels<InviteCodeViewModel> {
         InviteCodeViewModelFactory(
-            application.firebaseAnalytics,
+            application.analyticsHelper,
             application.meetingRepository,
         )
     }

@@ -5,13 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
+import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class MeetingRoomViewModel(
-    private val firebaseAnalytics: FirebaseAnalytics,
+    private val analyticsHelper: AnalyticsHelper,
     meetingId: Long,
     matesEtaRepository: MatesEtaRepository,
     private val notificationLogRepository: NotificationLogRepository,
@@ -58,7 +58,7 @@ class MeetingRoomViewModel(
                 .onSuccess {
                     _notificationLogs.postValue(it.toNotificationUiModels())
                 }.onFailure {
-                    firebaseAnalytics.logNetworkErrorEvent(TAG, it.message)
+                    analyticsHelper.logNetworkErrorEvent(TAG, it.message)
                     Timber.e(it.message)
                 }
         }
@@ -75,7 +75,7 @@ class MeetingRoomViewModel(
         }
 
     fun navigateToEtaDashboard() {
-        firebaseAnalytics.logButtonClicked(
+        analyticsHelper.logButtonClicked(
             eventName = "eta_button_from_notification_log",
             location = TAG,
         )

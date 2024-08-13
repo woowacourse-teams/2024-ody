@@ -8,7 +8,9 @@ import com.ody.mate.domain.Nickname;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
 import com.ody.util.TimeUtil;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -45,22 +47,26 @@ class EtaTest {
         Meeting odyMeeting = Fixture.ODY_MEETING;
         Member member1 = Fixture.MEMBER1;
         Mate mate = new Mate(odyMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
-        LocalDateTime meetingTime = LocalDateTime.now();
         Eta eta = new Eta(mate, 1L);
 
-        assertThat(eta.willBeLate(meetingTime)).isTrue();
+        assertThat(eta.isArrivalSoon(odyMeeting)).isFalse();
     }
 
     @DisplayName("지각할 예정이 아니라면 false를 반환한다.")
     @Test
     void wontLate() {
-        Meeting odyMeeting = Fixture.ODY_MEETING;
+        Meeting twoMinutesLaterMeeting = new Meeting(
+                "오디",
+                LocalDate.now(),
+                LocalTime.now().plusMinutes(2L),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        );
         Member member1 = Fixture.MEMBER1;
-        Mate mate = new Mate(odyMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
-        LocalDateTime meetingTime = LocalDateTime.now().plusMinutes(2L);
+        Mate mate = new Mate(twoMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
         Eta eta = new Eta(mate, 1L);
 
-        assertThat(eta.willBeLate(meetingTime)).isFalse();
+        assertThat(eta.isArrivalSoon(twoMinutesLaterMeeting)).isTrue();
     }
 
     @DisplayName("남은 시간을 카운트 다운 한다.")
@@ -69,9 +75,9 @@ class EtaTest {
         Meeting odyMeeting = Fixture.ODY_MEETING;
         Member member1 = Fixture.MEMBER1;
         Mate mate = new Mate(odyMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
-        LocalDateTime now = LocalDateTime.now();
-        Eta eta = new Eta(1L, mate, 10L, false, now, now.minusMinutes(3L));
+        LocalDateTime now = TimeUtil.nowWithTrim();
+        Eta eta = new Eta(1L, mate, 10L, false, false, now, now.minusMinutes(3L));
 
-        assertThat(eta.countDownMinutes(now)).isEqualTo(eta.getRemainingMinutes() - 3L);
+        assertThat(eta.countDownMinutes()).isEqualTo(eta.getRemainingMinutes() - 3L);
     }
 }
