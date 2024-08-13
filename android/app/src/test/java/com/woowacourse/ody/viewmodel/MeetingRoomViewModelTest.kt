@@ -1,8 +1,11 @@
 package com.woowacourse.ody.viewmodel
 
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
+import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeMatesEtaRepository
-import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardViewModel
+import com.woowacourse.ody.fake.FakeMeetingRepository
+import com.woowacourse.ody.fake.FakeNotificationLogRepository
+import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.EtaDurationMinuteTypeUiModel
 import com.woowacourse.ody.util.CoroutinesTestExtension
 import com.woowacourse.ody.util.InstantTaskExecutorExtension
@@ -16,15 +19,22 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
 @ExtendWith(InstantTaskExecutorExtension::class)
-class EtaDashBoardViewModelTest {
-    private lateinit var viewModel: EtaDashboardViewModel
-    private lateinit var repository: MatesEtaRepository
+class MeetingRoomViewModelTest {
+    private lateinit var viewModel: MeetingRoomViewModel
+    private lateinit var matesEtaRepository: MatesEtaRepository
 
     @BeforeEach
     fun setUp() {
-        repository = FakeMatesEtaRepository
-        viewModel = EtaDashboardViewModel(1L, repository)
-        repository.fetchMatesEta(1L)
+        matesEtaRepository = FakeMatesEtaRepository
+        viewModel =
+            MeetingRoomViewModel(
+                analyticsHelper = FakeAnalyticsHelper,
+                meetingId = 1L,
+                matesEtaRepository = FakeMatesEtaRepository,
+                notificationLogRepository = FakeNotificationLogRepository,
+                meetingRepository = FakeMeetingRepository,
+            )
+        matesEtaRepository.fetchMatesEta(1L)
     }
 
     @Test
