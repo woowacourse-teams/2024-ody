@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - feature/370
-    paths:
-      - backend/**
+#    paths:
+#      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
