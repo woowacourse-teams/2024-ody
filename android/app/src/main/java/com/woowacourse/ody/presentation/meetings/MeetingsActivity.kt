@@ -17,11 +17,12 @@ import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import com.woowacourse.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsListener
-import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardActivity
-import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
+import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 
 class MeetingsActivity :
-    BindingActivity<ActivityMeetingsBinding>(R.layout.activity_meetings),
+    BindingActivity<ActivityMeetingsBinding>(
+        R.layout.activity_meetings,
+    ),
     MeetingsListener {
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
@@ -63,14 +64,8 @@ class MeetingsActivity :
         }
         viewModel.navigateAction.observe(this) {
             when (it) {
-                is MeetingsNavigateAction.NavigateToEta ->
-                    navigateToEta(
-                        it.meetingId,
-                        it.inviteCode,
-                        it.title,
-                    )
-
-                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToMeetingRoom(it.meetingId)
+                is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
+                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
             }
         }
     }
@@ -91,6 +86,30 @@ class MeetingsActivity :
         closeNavigateMenu()
     }
 
+    private fun navigateToNotificationLog(meetingId: Long) {
+        val intent =
+            MeetingRoomActivity.getIntent(
+                this,
+                meetingId,
+                MeetingRoomActivity.NAVIGATE_TO_NOTIFICATION_LOG,
+            )
+        startActivity(intent)
+    }
+
+    private fun navigateToEtaDashboard(meetingId: Long) {
+        analyticsHelper.logButtonClicked(
+            eventName = "eta_button_from_meetings",
+            location = TAG,
+        )
+        val intent =
+            MeetingRoomActivity.getIntent(
+                this,
+                meetingId,
+                MeetingRoomActivity.NAVIGATE_TO_ETA_DASHBOARD,
+            )
+        startActivity(intent)
+    }
+
     override fun guideItemDisabled() {
         showSnackBar(R.string.meetings_entrance_unavailable_guide)
     }
@@ -98,22 +117,6 @@ class MeetingsActivity :
     private fun closeNavigateMenu() {
         binding.cvMenuView.visibility = View.GONE
         binding.fabMeetingsNavigator.isSelected = false
-    }
-
-    private fun navigateToMeetingRoom(meetingId: Long) {
-        startActivity(NotificationLogActivity.getIntent(this, meetingId))
-    }
-
-    private fun navigateToEta(
-        meetingId: Long,
-        inviteCode: String,
-        title: String,
-    ) {
-        analyticsHelper.logButtonClicked(
-            eventName = "eta_button_from_meetings",
-            location = TAG,
-        )
-        startActivity(EtaDashboardActivity.getIntent(this, meetingId, inviteCode, title))
     }
 
     private fun requestPermissions() {

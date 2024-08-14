@@ -57,11 +57,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.room.log.NotificationLogActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.room.etadashboard.EtaDashboardActivity"
+            android:name=".presentation.room.MeetingRoomActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
