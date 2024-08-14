@@ -8,6 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface MateRepository extends JpaRepository<Mate, Long> {
 
+    @Query("""
+                select mate
+                from Mate mate
+                join fetch mate.meeting
+                join fetch mate.member
+                where mate.id = :id
+            """)
+    Optional<Mate> findFetchedMateById(Long id);
+
     List<Mate> findAllByMeetingId(Long meetingId);
 
     @Query("""
