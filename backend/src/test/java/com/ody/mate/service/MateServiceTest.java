@@ -3,10 +3,14 @@ package com.ody.mate.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
 import com.ody.common.exception.OdyBadRequestException;
+import com.ody.eta.domain.Eta;
+import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.mate.dto.request.MateSaveRequest;
@@ -15,9 +19,12 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.util.TimeUtil;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class MateServiceTest extends BaseServiceTest {
@@ -30,6 +37,9 @@ class MateServiceTest extends BaseServiceTest {
 
     @Autowired
     private MateRepository mateRepository;
+
+    @Autowired
+    private EtaRepository etaRepository;
 
     @Autowired
     private MateService mateService;
@@ -103,6 +113,71 @@ class MateServiceTest extends BaseServiceTest {
         mateRepository.save(new Mate(meeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
 
         assertThatThrownBy(() -> mateService.findAllByMemberAndMeetingId(member2, meeting.getId()))
+                .isInstanceOf(OdyBadRequestException.class);
+    }
+
+    @DisplayName("Eta상태가 지각 위기인 mate를 콕 찌를 수 있다")
+    @Test
+    void nudgeSuccessWhenLateWarning() {
+        LocalDateTime now = TimeUtil.nowWithTrim();
+        Meeting meeting = new Meeting(
+                "오디",
+                now.toLocalDate(),
+                now.toLocalTime().plusMinutes(1L),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        );
+        Meeting oneMinutesLaterMeeting = meetingRepository.save(meeting);
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Mate mate = new Mate(oneMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
+        mate = mateRepository.save(mate);
+        Eta eta = etaRepository.save(new Eta(mate, 2L));
+
+        mateService.nudge(mate.getId());
+
+        Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any());
+    }
+
+    @DisplayName("Eta상태가 지각인 mate를 콕 찌를 수 있다")
+    @Test
+    void nudgeSuccessWhenLate() {
+        LocalDateTime now = TimeUtil.nowWithTrim();
+        Meeting meeting = new Meeting(
+                "오디",
+                now.toLocalDate(),
+                now.toLocalTime(),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        );
+        Meeting oneMinutesLaterMeeting = meetingRepository.save(meeting);
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Mate mate = new Mate(oneMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
+        mate = mateRepository.save(mate);
+        Eta eta = etaRepository.save(new Eta(mate, 2L));
+
+        mateService.nudge(mate.getId());
+
+        Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any());
+    }
+
+    @DisplayName("Eta상태가 지각 위기가 아닌 mate를 찌르면 예외가 발생한다")
+    @Test
+    void nudgeFail() {
+        LocalDateTime now = TimeUtil.nowWithTrim();
+        Meeting meeting = new Meeting(
+                "오디",
+                now.toLocalDate(),
+                now.toLocalTime().plusMinutes(3L),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        );
+        Meeting threeMinutesLaterMeeting = meetingRepository.save(meeting);
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Mate mate = new Mate(threeMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
+        Mate savedMate = mateRepository.save(mate);
+        Eta eta = etaRepository.save(new Eta(mate, 2L));
+
+        assertThatThrownBy(()-> mateService.nudge(savedMate.getId()))
                 .isInstanceOf(OdyBadRequestException.class);
     }
 }

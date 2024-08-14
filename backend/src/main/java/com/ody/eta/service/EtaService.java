@@ -2,6 +2,7 @@ package com.ody.eta.service;
 
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.domain.Eta;
+import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.dto.response.MateEtaResponse;
 import com.ody.eta.dto.response.MateEtaResponses;
@@ -59,6 +60,12 @@ public class EtaService {
                         Collectors.toList(),
                         mateEtaResponses -> new MateEtaResponses(requestMate.getNicknameValue(), mateEtaResponses))
                 );
+    }
+
+    public EtaStatus findEtaStatus(Mate mate) {
+        Meeting meeting = mate.getMeeting();
+        Eta mateEta = findByMateId(mate.getId());
+        return EtaStatus.of(mateEta, meeting);
     }
 
     private boolean isRouteClientCallTime(Eta mateEta) {

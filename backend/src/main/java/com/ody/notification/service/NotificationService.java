@@ -1,11 +1,11 @@
 package com.ody.notification.service;
 
-import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.request.FcmSendRequest;
+import com.ody.notification.dto.request.NudgeRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
@@ -79,8 +79,12 @@ public class NotificationService {
         return notificationRepository.findAllMeetingLogs(meetingId);
     }
 
-    public Notification findById(Long notificationId) {
-        return notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 알림입니다."));
+    @Transactional
+    public void sendNudgeMessage(Mate mate) {
+        Notification notification = Notification.createNudge(mate);
+        Notification nudgeNotification = notificationRepository.save(notification);
+        NudgeRequest nudgeRequest = new NudgeRequest(mate, nudgeNotification);
+        fcmPushSender.sendNudgeMessage(nudgeRequest);
+        nudgeNotification.updateStatusToDone();
     }
 }

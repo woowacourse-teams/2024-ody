@@ -125,7 +125,7 @@ class EtaServiceTest extends BaseServiceTest {
         }
     }
 
-    @DisplayName("현재 시간 <= 약속 시간 && 직선거리가 300m 이내 일 경우 도차 상태로 업데이트한다.")
+    @DisplayName("현재 시간 <= 약속 시간 && 직선거리가 300m 이내 일 경우 도착 상태로 업데이트한다.")
     @Test
     void findAllMateEtas() {
         Location origin = Fixture.ORIGIN_LOCATION;

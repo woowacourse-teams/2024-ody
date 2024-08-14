@@ -5,7 +5,10 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.message.NudgeMessage;
+import com.ody.notification.domain.message.PushMessage;
 import com.ody.notification.dto.request.FcmSendRequest;
+import com.ody.notification.dto.request.NudgeRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,11 +22,18 @@ public class FcmPushSender {
     @Transactional
     public void sendPushNotification(FcmSendRequest fcmSendRequest) {
         Notification notification = fcmSendRequest.notification();
-        Message message = Message.builder()
-                .putData("type", notification.getType().toString())
-                .putData("nickname", notification.getMate().getNicknameValue())
-                .setTopic(fcmSendRequest.topic())
-                .build();
+        PushMessage pushMessage = new PushMessage(fcmSendRequest.topic(), notification);
+        sendMessage(pushMessage.getMessage(), notification);
+    }
+
+    @Transactional
+    public void sendNudgeMessage(NudgeRequest nudgeRequest) {
+        Notification notification = nudgeRequest.notification();
+        NudgeMessage nudgeMessage = new NudgeMessage(nudgeRequest.deviceToken(), notification);
+        sendMessage(nudgeMessage.getMessage(), notification);
+    }
+
+    private void sendMessage(Message message, Notification notification) {
         try {
             FirebaseMessaging.getInstance().send(message);
             notification.updateStatusToDone();
