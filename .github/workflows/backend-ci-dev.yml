@@ -7,10 +7,6 @@ on:
     paths:
       - backend/**
 
-env:
-  DOCKERHUB_REPOSITORY: ody-official
-  DOCKER_CONTAINER_NAME: ody-backend
-
 jobs:
   build-and-push:
 
