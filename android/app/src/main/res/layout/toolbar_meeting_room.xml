@@ -41,7 +41,7 @@
 
             <TextView
                 android:id="@+id/tv_title"
-                style="@style/pretendard_bold_28"
+                style="@style/pretendard_bold_24"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="14dp"
                 android:onClick="@{() -> shareListener.onShare()}"
-                android:src="@drawable/ic_share"
+                android:src="@drawable/ic_upload"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_title"
