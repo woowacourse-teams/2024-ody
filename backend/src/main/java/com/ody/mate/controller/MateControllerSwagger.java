@@ -56,4 +56,13 @@ public interface MateControllerSwagger {
     @ErrorCode404(description = "유효하지 않은 초대코드")
     @ErrorCode500
     ResponseEntity<MateSaveResponse> saveV1(@Parameter(hidden = true) Member member, MateSaveRequest mateSaveRequest);
+
+    @Operation(
+            summary = "참여자 콕 찌르기",
+            responses = {@ApiResponse(responseCode = "200", description = "콕 찌르기 성공")}
+    )
+    @ErrorCode400
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<Void> nudgeMate(@Parameter(name = "참여자 Id", required = true) Long mateId);
 }
