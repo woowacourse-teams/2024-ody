@@ -3,9 +3,9 @@ name: backend-cd-prod
 on:
   push:
     branches:
-      - feature/370
-#    paths:
-#      - backend/**
+      - main
+    paths:
+      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-#          ref: develop
+          ref: main
           submodules: true
           token: ${{ secrets.GIT_TOKEN }}
 
