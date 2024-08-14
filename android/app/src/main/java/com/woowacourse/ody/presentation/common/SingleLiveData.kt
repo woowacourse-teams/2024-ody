@@ -2,6 +2,7 @@ package com.woowacourse.ody.presentation.common
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 
 abstract class SingleLiveData<T> {
     private val liveData = MutableLiveData<Event<T>>()
@@ -34,5 +35,13 @@ abstract class SingleLiveData<T> {
         onResult: (T) -> Unit,
     ) {
         liveData.observe(owner) { onResult(it.peekContent()) }
+    }
+
+    fun removeObserver(observer: Observer<Event<T>>) {
+        liveData.removeObserver(observer)
+    }
+
+    fun observeForever(observer: Observer<Event<T>>) {
+        liveData.observeForever(observer)
     }
 }
