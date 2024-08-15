@@ -15,7 +15,7 @@ import com.woowacourse.ody.presentation.common.listener.NextListener
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
 import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
 import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
-import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
+import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 
 class MeetingJoinActivity :
     BindingActivity<ActivityMeetingJoinBinding>(R.layout.activity_meeting_join),
@@ -66,8 +66,7 @@ class MeetingJoinActivity :
         viewModel.navigateAction.observe(this) {
             when (it) {
                 is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
-                    startActivity(NotificationLogActivity.getIntent(this, it.meetingId))
-                    finish()
+                    navigateToNotificationRoom(it.meetingId)
                 }
 
                 MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
@@ -75,6 +74,17 @@ class MeetingJoinActivity :
                 }
             }
         }
+    }
+
+    private fun navigateToNotificationRoom(meetingId: Long) {
+        val intent =
+            MeetingRoomActivity.getIntent(
+                this,
+                meetingId,
+                MeetingRoomActivity.NAVIGATE_TO_NOTIFICATION_LOG,
+            )
+        startActivity(intent)
+        finish()
     }
 
     override fun onNext() {

@@ -7,6 +7,5 @@ object FakeAnalyticsHelper : AnalyticsHelper {
     override fun logEvent(
         eventName: String,
         bundle: Bundle,
-    ) {
-    }
+    ) = Unit
 }

@@ -51,6 +51,9 @@ android {
         dataBinding = true
         viewBinding = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {

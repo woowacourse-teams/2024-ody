@@ -1,5 +1,6 @@
 package com.ody.mate.dto.request;
 
+import com.ody.common.annotation.SupportRegion;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.meeting.domain.Location;
@@ -7,6 +8,7 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@SupportRegion(latitudeFieldName = "originLatitude", longitudeFieldName = "originLongitude")
 public record MateSaveRequest(
 
         @Schema(description = "초대코드", example = "inviteCodeinviteCode")

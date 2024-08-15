@@ -20,6 +20,8 @@ spring:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
+  profiles:
+    active: dev
 
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
@@ -34,3 +36,25 @@ springdoc:
 
 odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+log:
+  file:
+    path: ./ody-dev-logs
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+log:
+  file:
+    path: /ody-dev-logs
