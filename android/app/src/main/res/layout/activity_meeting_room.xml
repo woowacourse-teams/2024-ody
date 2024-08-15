@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="title"
-            type="java.lang.String" />
+            name="vm"
+            type="com.woowacourse.ody.presentation.room.MeetingRoomViewModel" />
 
         <variable
             name="shareListener"
@@ -20,6 +20,7 @@
         <variable
             name="backListener"
             type="com.woowacourse.ody.presentation.common.listener.BackListener" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -28,32 +29,28 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            tools:context=".presentation.room."
             android:layout_height="match_parent">
 
             <include
-                android:id="@+id/tb_dashboard"
+                android:id="@+id/tb_log"
                 layout="@layout/toolbar_meeting_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:backListener="@{backListener}"
-                app:layout_constraintBottom_toTopOf="@+id/rv_dashboard"
+                app:layout_constraintBottom_toTopOf="@id/fcv_meeting_room"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shareListener="@{shareListener}"
-                app:title="@{title}" />
+                app:title="@{vm.meeting.name}" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_dashboard"
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fcv_meeting_room"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:clipToPadding="false"
-                android:paddingVertical="11dp"
-                app:itemAnimator="@{null}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tb_dashboard"
-                tools:listitem="@layout/item_eta_dashboard" />
+                app:layout_constraintTop_toBottomOf="@id/tb_log" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -62,5 +59,4 @@
             app:copyInviteCodeListener="@{copyInviteCodeListener}" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 </layout>

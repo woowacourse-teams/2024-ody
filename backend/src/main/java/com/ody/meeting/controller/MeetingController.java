@@ -135,7 +135,7 @@ public class MeetingController implements MeetingControllerSwagger {
     public ResponseEntity<MateEtaResponses> findAllMateEtas(
             @AuthMember Member member,
             @PathVariable Long meetingId,
-            @RequestBody MateEtaRequest mateEtaRequest
+            @Valid @RequestBody MateEtaRequest mateEtaRequest
     ) {
         MateEtaResponses mateStatuses = etaService.findAllMateEtas(mateEtaRequest, meetingId, member);
         return ResponseEntity.ok(mateStatuses);

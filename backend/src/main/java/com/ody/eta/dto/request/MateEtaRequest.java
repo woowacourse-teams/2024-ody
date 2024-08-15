@@ -1,9 +1,11 @@
 package com.ody.eta.dto.request;
 
+import com.ody.common.annotation.SupportRegion;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
+@SupportRegion(latitudeFieldName = "currentLatitude", longitudeFieldName = "currentLongitude")
 public record MateEtaRequest(
 
         @Schema(description = "위치추적 불가 여부", example = "false")
