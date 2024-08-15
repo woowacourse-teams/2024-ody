@@ -31,11 +31,13 @@ object FakeMeetingRepository : MeetingRepository {
         return Result.success(mateEtaInfo)
     }
 
-    override suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>> =
-        Result.success(emptyList(),)
+    override suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>> {
+        return Result.success(emptyList())
+    }
 
-    override suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>> =
-        ApiResult.Success(emptyList())
+    override suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>> {
+        return ApiResult.Success(emptyList())
+    }
 
     override suspend fun fetchMeeting(meetingId: Long): Result<Meeting> = Result.success(meeting)
 }
