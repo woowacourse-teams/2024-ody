@@ -10,26 +10,11 @@ import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.inviteCode
+import com.woowacourse.ody.meeting
 import java.time.LocalDate
 import java.time.LocalTime
 
 object FakeMeetingRepository : MeetingRepository {
-    private val mateA: Mate = Mate("A")
-    private val mateB: Mate = Mate("B")
-    private val mateC: Mate = Mate("C")
-    private val mates: List<Mate> = listOf(mateA, mateB, mateC)
-
-    private val meetingA: Meeting =
-        Meeting(
-            0,
-            "meetingA",
-            "선릉 캠퍼스",
-            LocalDate.of(2024, 1, 1),
-            LocalTime.of(10, 0),
-            mates,
-            inviteCode,
-        )
-
     override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> =
         if (inviteCode.length <= 8) {
             Result.success(Unit)
@@ -70,5 +55,5 @@ object FakeMeetingRepository : MeetingRepository {
             emptyList(),
         )
 
-    override suspend fun fetchMeeting(meetingId: Long): Result<Meeting> = Result.success(meetingA)
+    override suspend fun fetchMeeting(meetingId: Long): Result<Meeting> = Result.success(meeting)
 }
