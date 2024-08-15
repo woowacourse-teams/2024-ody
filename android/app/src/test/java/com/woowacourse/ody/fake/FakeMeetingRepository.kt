@@ -29,7 +29,12 @@ object FakeMeetingRepository : MeetingRepository {
             "abcd1234",
         )
 
-    override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> = Result.success(Unit)
+    override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> =
+        if (inviteCode.length <= 8) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception())
+        }
 
     override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> = Result.success("")
 
