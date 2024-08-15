@@ -5,8 +5,13 @@ import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeMatesEtaRepository
 import com.woowacourse.ody.fake.FakeMeetingRepository
 import com.woowacourse.ody.fake.FakeNotificationLogRepository
+import com.woowacourse.ody.meeting
+import com.woowacourse.ody.meetingId
+import com.woowacourse.ody.notificationLogs
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.EtaDurationMinuteTypeUiModel
+import com.woowacourse.ody.presentation.room.log.model.toMeetingUiModel
+import com.woowacourse.ody.presentation.room.log.model.toNotificationUiModels
 import com.woowacourse.ody.util.CoroutinesTestExtension
 import com.woowacourse.ody.util.InstantTaskExecutorExtension
 import com.woowacourse.ody.util.getOrAwaitValue
@@ -29,7 +34,7 @@ class MeetingRoomViewModelTest {
         viewModel =
             MeetingRoomViewModel(
                 analyticsHelper = FakeAnalyticsHelper,
-                meetingId = 1L,
+                meetingId = meetingId,
                 matesEtaRepository = FakeMatesEtaRepository,
                 notificationLogRepository = FakeNotificationLogRepository,
                 meetingRepository = FakeMeetingRepository,
@@ -73,5 +78,15 @@ class MeetingRoomViewModelTest {
                 -1,
             ),
         )
+    }
+
+    @Test
+    fun `약속 id에 맞는 약속을 조회하고 해당하는 로그 목록을 가져온다`() {
+        // then
+        val meetingUiModel = viewModel.meeting.getOrAwaitValue()
+        assertThat(meetingUiModel).isEqualTo(meeting.toMeetingUiModel())
+
+        val notificationLogUiModel = viewModel.notificationLogs.getOrAwaitValue()
+        assertThat(notificationLogUiModel).isEqualTo(notificationLogs.toNotificationUiModels())
     }
 }
