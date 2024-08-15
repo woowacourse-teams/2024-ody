@@ -5,11 +5,13 @@ import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeMatesEtaRepository
 import com.woowacourse.ody.fake.FakeMeetingRepository
 import com.woowacourse.ody.fake.FakeNotificationLogRepository
+import com.woowacourse.ody.mateEtaDurationMinutes
+import com.woowacourse.ody.mateEtaInfo
 import com.woowacourse.ody.meeting
 import com.woowacourse.ody.meetingId
 import com.woowacourse.ody.notificationLogs
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
-import com.woowacourse.ody.presentation.room.etadashboard.model.EtaDurationMinuteTypeUiModel
+import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
 import com.woowacourse.ody.presentation.room.log.model.toMeetingUiModel
 import com.woowacourse.ody.presentation.room.log.model.toNotificationUiModels
 import com.woowacourse.ody.util.CoroutinesTestExtension
@@ -35,30 +37,21 @@ class MeetingRoomViewModelTest {
             MeetingRoomViewModel(
                 analyticsHelper = FakeAnalyticsHelper,
                 meetingId = meetingId,
-                matesEtaRepository = FakeMatesEtaRepository,
+                matesEtaRepository = matesEtaRepository,
                 notificationLogRepository = FakeNotificationLogRepository,
                 meetingRepository = FakeMeetingRepository,
             )
-        matesEtaRepository.fetchMatesEta(1L)
     }
 
     @Test
     fun `친구들과 나의 위치 현황을 볼 수 있다`() {
         // when
-        val etaType =
-            viewModel.mateEtaUiModels.getOrAwaitValue()?.map {
-                it.getEtaDurationMinuteTypeUiModel()
-            }
+        val actual = viewModel.mateEtaUiModels.getOrAwaitValue()
 
         // then
-        assertThat(etaType).isEqualTo(
-            listOf(
-                EtaDurationMinuteTypeUiModel.ARRIVAL_REMAIN_TIME,
-                EtaDurationMinuteTypeUiModel.ARRIVAL_SOON,
-                EtaDurationMinuteTypeUiModel.ARRIVED,
-                EtaDurationMinuteTypeUiModel.MISSING,
-            ),
-        )
+        val expected = mateEtaInfo.toMateEtaUiModels()
+        assertThat(actual).isNotNull
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -70,14 +63,7 @@ class MeetingRoomViewModelTest {
             }
 
         // then
-        assertThat(durationMinute).isEqualTo(
-            listOf(
-                83,
-                10,
-                0,
-                -1,
-            ),
-        )
+        assertThat(durationMinute).isEqualTo(mateEtaDurationMinutes)
     }
 
     @Test

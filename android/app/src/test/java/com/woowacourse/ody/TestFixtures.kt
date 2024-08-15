@@ -1,6 +1,9 @@
 package com.woowacourse.ody
 
+import com.woowacourse.ody.domain.model.EtaType
 import com.woowacourse.ody.domain.model.Mate
+import com.woowacourse.ody.domain.model.MateEta
+import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.NotificationLog
 import com.woowacourse.ody.domain.model.NotificationType
@@ -70,4 +73,18 @@ val notificationLogs: List<NotificationLog> =
             "C",
             LocalDateTime.of(2024, 7, 7, 14, 38),
         ),
+    )
+
+private val userNickname = "해음"
+private val nicknames = listOf("콜리", "올리브", "카키", "해음")
+private val mateEtaTypes =
+    listOf(EtaType.LATE_WARNING, EtaType.ARRIVAL_SOON, EtaType.ARRIVED, EtaType.MISSING)
+val mateEtaDurationMinutes = listOf(83, 10, 0, -1)
+
+val mateEtaInfo =
+    MateEtaInfo(
+        userNickname = userNickname,
+        nicknames.mapIndexed { idx, nickname ->
+            MateEta(nickname, mateEtaTypes[idx], mateEtaDurationMinutes[idx])
+        },
     )
