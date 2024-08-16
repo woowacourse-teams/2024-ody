@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class NudgeMessage {
+
     private final Message message;
 
     public NudgeMessage(DeviceToken deviceToken, Notification notification) {

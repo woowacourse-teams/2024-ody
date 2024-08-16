@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class PushMessage {
+
     private final Message message;
 
     public PushMessage(String topic, Notification notification){
