@@ -1,5 +1,6 @@
 package com.ody.meeting.domain;
 
+import com.ody.common.domain.BaseEntity;
 import com.ody.util.TimeUtil;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -16,10 +17,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
-public class Meeting {
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Meeting extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
