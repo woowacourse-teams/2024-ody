@@ -30,4 +30,3 @@ fun ImageView.setCircleImageUrl(imageUrl: String) {
         .circleCrop()
         .into(this)
 }
-
