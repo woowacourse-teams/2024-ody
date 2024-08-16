@@ -55,8 +55,8 @@ class MeetingsActivity :
         splashScreen.setOnExitAnimationListener { splashScreenView ->
             val hasToken = true
 
-            val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 2f, 1f)
-            val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 2f, 1f)
+            val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 1.3f, 1f)
+            val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 1.3f, 1f)
 
             ObjectAnimator.ofPropertyValuesHolder(splashScreenView.iconView, scaleX, scaleY).run {
                 interpolator = AnticipateInterpolator()
