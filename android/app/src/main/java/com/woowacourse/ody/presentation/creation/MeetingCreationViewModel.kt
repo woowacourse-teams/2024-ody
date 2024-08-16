@@ -61,6 +61,16 @@ class MeetingCreationViewModel(
         initializeIsValidInfo()
     }
 
+    private fun initializeIsValidInfo() {
+        with(isValidInfo) {
+            addSource(meetingCreationInfoType) { checkInfoValidity() }
+            addSource(meetingName) { checkInfoValidity() }
+            addSource(destinationGeoLocation) { checkInfoValidity() }
+            addSource(meetingHour) { isValidInfo.value = true }
+            addSource(meetingMinute) { isValidInfo.value = true }
+        }
+    }
+
     fun initializeMeetingTime() {
         if (meetingHour.value != null || meetingMinute.value != null) {
             return
@@ -96,16 +106,6 @@ class MeetingCreationViewModel(
         }
     }
 
-    private fun initializeIsValidInfo() {
-        with(isValidInfo) {
-            addSource(meetingCreationInfoType) { checkInfoValidity() }
-            addSource(meetingName) { checkInfoValidity() }
-            addSource(destinationGeoLocation) { checkInfoValidity() }
-            addSource(meetingHour) { isValidInfo.value = true }
-            addSource(meetingMinute) { isValidInfo.value = true }
-        }
-    }
-
     fun clearMeetingName() {
         meetingName.value = ""
     }
@@ -124,7 +124,7 @@ class MeetingCreationViewModel(
 
     private fun isValidMeetingName(): Boolean {
         val meetingName = meetingName.value ?: return false
-        return meetingName.isNotEmpty()
+        return (meetingName.isNotEmpty() && meetingName.length <= MEETING_NAME_MAX_LENGTH)
     }
 
     private fun isValidMeetingDateTime(): Boolean {

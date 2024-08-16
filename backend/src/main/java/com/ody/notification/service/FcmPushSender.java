@@ -22,7 +22,7 @@ public class FcmPushSender {
         Message message = Message.builder()
                 .putData("type", notification.getType().toString())
                 .putData("nickname", notification.getMate().getNicknameValue())
-                .setTopic(fcmSendRequest.topic())
+                .setTopic(fcmSendRequest.fcmTopic().getValue())
                 .build();
         try {
             FirebaseMessaging.getInstance().send(message);

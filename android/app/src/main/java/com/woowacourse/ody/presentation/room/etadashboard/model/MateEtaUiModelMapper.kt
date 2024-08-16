@@ -2,9 +2,10 @@ package com.woowacourse.ody.presentation.room.etadashboard.model
 
 import com.woowacourse.ody.domain.model.EtaType
 import com.woowacourse.ody.domain.model.MateEta
+import com.woowacourse.ody.domain.model.MateEtaInfo
 
-fun List<MateEta>.toMateEtaUiModels(userNickname: String): List<MateEtaUiModel> {
-    return this.map { it.toMateEtaUiModel(userNickname) }
+fun MateEtaInfo.toMateEtaUiModels(): List<MateEtaUiModel> {
+    return mateEtas.map { it.toMateEtaUiModel(userNickname) }
 }
 
 private fun MateEta.toMateEtaUiModel(userNickname: String): MateEtaUiModel {
