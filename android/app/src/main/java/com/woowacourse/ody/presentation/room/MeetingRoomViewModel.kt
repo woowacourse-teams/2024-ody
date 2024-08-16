@@ -16,8 +16,10 @@ import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
+import com.woowacourse.ody.presentation.room.log.model.MateUiModel
 import com.woowacourse.ody.presentation.room.log.model.MeetingDetailUiModel
 import com.woowacourse.ody.presentation.room.log.model.NotificationLogUiModel
+import com.woowacourse.ody.presentation.room.log.model.toMateUiModels
 import com.woowacourse.ody.presentation.room.log.model.toMeetingUiModel
 import com.woowacourse.ody.presentation.room.log.model.toNotificationUiModels
 import kotlinx.coroutines.launch
@@ -38,8 +40,11 @@ class MeetingRoomViewModel(
             mateEtaInfo.toMateEtaUiModels()
         }
 
-    private val _meeting = MutableLiveData(MeetingDetailUiModel())
+    private val _meeting: MutableLiveData<MeetingDetailUiModel> = MutableLiveData(MeetingDetailUiModel())
     val meeting: LiveData<MeetingDetailUiModel> = _meeting
+
+    private val _mates: MutableLiveData<List<MateUiModel>> = MutableLiveData()
+    val mates: LiveData<List<MateUiModel>> = _mates
 
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
     val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs
@@ -55,7 +60,7 @@ class MeetingRoomViewModel(
         viewModelScope.launch {
             notificationLogRepository.fetchNotificationLogs(meetingId)
                 .onSuccess {
-                    _notificationLogs.postValue(it.toNotificationUiModels())
+                    _notificationLogs.value = it.toNotificationUiModels()
                 }.onFailure {
                     analyticsHelper.logNetworkErrorEvent(TAG, it.message)
                     Timber.e(it.message)
@@ -66,7 +71,8 @@ class MeetingRoomViewModel(
         viewModelScope.launch {
             meetingRepository.fetchMeeting(meetingId)
                 .onSuccess {
-                    _meeting.postValue(it.toMeetingUiModel())
+                    _meeting.value = it.toMeetingUiModel()
+                    _mates.value = it.toMateUiModels()
                     fetchNotificationLogs(meetingId)
                 }.onFailure {
                     Timber.e(it.message)

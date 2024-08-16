@@ -18,9 +18,3 @@ fun TextView.setTextNotificationType(notificationType: NotificationType) {
         }
     text = context.getString(stringRes)
 }
-
-@BindingAdapter("mateCount")
-fun TextView.setMateCountText(meeting: Meeting) {
-    val mateCount = meeting.mates.size
-    text = context.getString(R.string.notification_log_mate_count, mateCount)
-}
