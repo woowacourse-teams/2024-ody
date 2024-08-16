@@ -1,9 +1,9 @@
-name: backend-cd-dev
+name: backend-cd-prod
 
 on:
   push:
     branches:
-      - develop
+      - main
     paths:
       - backend/**
 
@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: main
           submodules: true
           token: ${{ secrets.GIT_TOKEN }}
 
@@ -61,12 +61,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Docker Image Build And Push
-        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev -f Dockerfile . --push
+        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod -f Dockerfile . --push
 
   pull-and-deploy:
 
     needs: build-and-push
-    runs-on: dev
+    runs-on: prod
 
     steps:
       - name: Login to Docker Hub
@@ -78,13 +78,13 @@ jobs:
       - name: Clean Up Legacy Image And Pull
         run: |
           docker image prune -a -f
-          docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev
+          docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
 
       - name: Set up Container And Run Docker Image
-        run: |
+        run: | 
           docker stop $DOCKER_CONTAINER_NAME || true
-          docker rm $DOCKER_CONTAINER_NAME || true
-          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-dev-logs:/ody-dev-logs -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev
+          docker rm $DOCKER_CONTAINER_NAME || true     
+          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
 
       - name: Check Docker Process
         run: docker ps
