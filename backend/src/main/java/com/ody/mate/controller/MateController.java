@@ -61,7 +61,7 @@ public class MateController implements MateControllerSwagger {
     }
 
     @Override
-    @GetMapping("/v2/mates/nudge/{mateId}")
+    @GetMapping("/mates/nudge/{mateId}")
     public ResponseEntity<Void> nudgeMate(@PathVariable(value = "mateId") Long mateId) {
         mateService.nudge(mateId);
         return ResponseEntity.ok().build();
