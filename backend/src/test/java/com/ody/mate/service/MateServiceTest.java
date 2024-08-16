@@ -160,7 +160,7 @@ class MateServiceTest extends BaseServiceTest {
         Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any());
     }
 
-    @DisplayName("Eta상태가 지각 위기가 아닌 mate를 찌르면 예외가 발생한다")
+    @DisplayName("Eta상태가 지각이나 지각 위기가 아닌 mate를 찌르면 예외가 발생한다")
     @Test
     void nudgeFail() {
         LocalDateTime now = TimeUtil.nowWithTrim();
