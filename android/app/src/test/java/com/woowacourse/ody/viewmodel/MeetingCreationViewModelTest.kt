@@ -112,7 +112,20 @@ class MeetingCreationViewModelTest {
     }
 
     @Test
-    fun `약속 날짜가 오늘과 같거나 이후인 경우 선택할 수 있다`() {
+    fun `약속 날짜가 오늘과 같은 경우 선택할 수 있다`() {
+        // given
+        val meetingDate = LocalDate.now()
+
+        // when
+        viewModel.updateMeetingDate(meetingDate)
+
+        // then
+        val actual = viewModel.meetingDate.getOrAwaitValue()
+        assertThat(actual).isEqualTo(LocalDate.now())
+    }
+
+    @Test
+    fun `약속 날짜가 오늘보다 이후인 경우 선택할 수 있다`() {
         // given
         val meetingDate = LocalDate.of(2030, 7, 28)
 
