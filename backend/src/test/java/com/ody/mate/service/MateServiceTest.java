@@ -119,19 +119,12 @@ class MateServiceTest extends BaseServiceTest {
     @DisplayName("Eta상태가 지각 위기인 mate를 콕 찌를 수 있다")
     @Test
     void nudgeSuccessWhenLateWarning() {
-        LocalDateTime now = TimeUtil.nowWithTrim();
-        Meeting meeting = new Meeting(
-                "오디",
-                now.toLocalDate(),
-                now.toLocalTime().plusMinutes(1L),
-                Fixture.TARGET_LOCATION,
-                "초대코드"
-        );
-        Meeting oneMinutesLaterMeeting = meetingRepository.save(meeting);
+        long remainingTime = 1L;
+        Meeting oneMinutesLaterMeeting = makeSavedMeetingByTime(TimeUtil.nowWithTrim().plusMinutes(remainingTime));
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Mate mate = new Mate(oneMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
         mate = mateRepository.save(mate);
-        Eta eta = etaRepository.save(new Eta(mate, 2L));
+        Eta lateWarningEta = etaRepository.save(new Eta(mate, remainingTime + 1L));
 
         mateService.nudge(mate.getId());
 
@@ -141,19 +134,11 @@ class MateServiceTest extends BaseServiceTest {
     @DisplayName("Eta상태가 지각인 mate를 콕 찌를 수 있다")
     @Test
     void nudgeSuccessWhenLate() {
-        LocalDateTime now = TimeUtil.nowWithTrim();
-        Meeting meeting = new Meeting(
-                "오디",
-                now.toLocalDate(),
-                now.toLocalTime(),
-                Fixture.TARGET_LOCATION,
-                "초대코드"
-        );
-        Meeting oneMinutesLaterMeeting = meetingRepository.save(meeting);
+        Meeting nowMeeting = makeSavedMeetingByTime(TimeUtil.nowWithTrim());
         Member member1 = memberRepository.save(Fixture.MEMBER1);
-        Mate mate = new Mate(oneMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
+        Mate mate = new Mate(nowMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
         mate = mateRepository.save(mate);
-        Eta eta = etaRepository.save(new Eta(mate, 2L));
+        Eta lateEta = etaRepository.save(new Eta(mate, 2L));
 
         mateService.nudge(mate.getId());
 
@@ -163,21 +148,26 @@ class MateServiceTest extends BaseServiceTest {
     @DisplayName("Eta상태가 지각이나 지각 위기가 아닌 mate를 찌르면 예외가 발생한다")
     @Test
     void nudgeFail() {
-        LocalDateTime now = TimeUtil.nowWithTrim();
-        Meeting meeting = new Meeting(
-                "오디",
-                now.toLocalDate(),
-                now.toLocalTime().plusMinutes(3L),
-                Fixture.TARGET_LOCATION,
-                "초대코드"
-        );
-        Meeting threeMinutesLaterMeeting = meetingRepository.save(meeting);
+
+        long remainingTime = 3L;
+        Meeting threeMinutesLaterMeeting = makeSavedMeetingByTime(TimeUtil.nowWithTrim().plusMinutes(remainingTime));
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Mate mate = new Mate(threeMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
         Mate savedMate = mateRepository.save(mate);
-        Eta eta = etaRepository.save(new Eta(mate, 2L));
+        Eta arrivalSoonEta = etaRepository.save(new Eta(mate, remainingTime - 1L));
 
-        assertThatThrownBy(()-> mateService.nudge(savedMate.getId()))
+        assertThatThrownBy(() -> mateService.nudge(savedMate.getId()))
                 .isInstanceOf(OdyBadRequestException.class);
+    }
+
+    private Meeting makeSavedMeetingByTime(LocalDateTime time) {
+        Meeting meeting = new Meeting(
+                "오디",
+                time.toLocalDate(),
+                time.toLocalTime(),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        );
+        return meetingRepository.save(meeting);
     }
 }
