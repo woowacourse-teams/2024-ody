@@ -24,7 +24,7 @@
             android:scaleType="centerCrop"
             app:imgRes="@{log.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/iv_profile"
+            app:layout_constraintEnd_toStartOf="@id/tv_nickname"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
