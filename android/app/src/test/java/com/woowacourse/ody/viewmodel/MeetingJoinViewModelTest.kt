@@ -4,6 +4,7 @@ import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeJoinRepository
 import com.woowacourse.ody.fake.FakeMatesEtaRepository
+import com.woowacourse.ody.meetingId
 import com.woowacourse.ody.presentation.join.MeetingJoinInfoType
 import com.woowacourse.ody.presentation.join.MeetingJoinNavigateAction
 import com.woowacourse.ody.presentation.join.MeetingJoinViewModel
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantTaskExecutorExtension::class)
 class MeetingJoinViewModelTest {
     private lateinit var viewModel: MeetingJoinViewModel
-    private val meetingId: Long = 0L
 
     @BeforeEach
     fun setUp() {

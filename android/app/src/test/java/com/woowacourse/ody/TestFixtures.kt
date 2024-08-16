@@ -11,7 +11,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-val inviteCode: String = "abc123"
+val inviteCode: String = "MDAxMQzv"
 
 val meetingId: Long = 0L
 
