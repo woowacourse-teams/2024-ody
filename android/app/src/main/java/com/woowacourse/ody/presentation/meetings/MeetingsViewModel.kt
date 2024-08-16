@@ -47,18 +47,8 @@ class MeetingsViewModel(
                 }
         }
 
-    override fun navigateToEtaDashboard(meetingId: Long) {
-        viewModelScope.launch {
-            meetingRepository.fetchMeeting(meetingId).onSuccess {
-                _navigateAction.postValue(
-                    MeetingsNavigateAction.NavigateToEtaDashboard(meetingId = it.id),
-                )
-            }.onFailure {
-                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
-                Timber.e(it)
-            }
-        }
-    }
+    override fun navigateToEtaDashboard(meetingId: Long) =
+        _navigateAction.postValue(MeetingsNavigateAction.NavigateToEtaDashboard(meetingId))
 
     override fun navigateToNotificationLog(meetingId: Long) =
         _navigateAction.postValue(MeetingsNavigateAction.NavigateToNotificationLog(meetingId))
