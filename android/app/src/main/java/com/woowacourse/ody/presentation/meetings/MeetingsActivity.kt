@@ -1,8 +1,6 @@
 package com.woowacourse.ody.presentation.meetings
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -171,24 +169,6 @@ class MeetingsActivity :
             showSnackBar(requiredMessage)
         }
         requestNextPermission()
-    }
-
-    private fun showBackgroundLocationPermissionDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
-        val listener =
-            DialogInterface.OnClickListener { _, which ->
-                when (which) {
-                    DialogInterface.BUTTON_POSITIVE ->
-                        permissionHelper.requestBackgroundLocationPermission(this)
-                }
-            }
-        builder.setTitle(getString(R.string.request_background_permission_dialog_title))
-        builder.setPositiveButton(
-            getString(R.string.request_background_permission_dialog_yes),
-            listener,
-        )
-        builder.setNegativeButton(getString(R.string.request_background_permission_dialog_no), null)
-        builder.show()
     }
 
     companion object {

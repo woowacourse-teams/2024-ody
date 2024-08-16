@@ -30,13 +30,12 @@ class MeetingRoomViewModel(
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
-    private val matesEta: LiveData<MateEtaInfo?> =
-        matesEtaRepository.fetchMatesEta(meetingId = meetingId)
+    private val matesEta: LiveData<MateEtaInfo?> = matesEtaRepository.fetchMatesEta(meetingId = meetingId)
 
     val mateEtaUiModels: LiveData<List<MateEtaUiModel>?> =
         matesEta.map {
             val mateEtaInfo = it ?: return@map null
-            mateEtaInfo.mateEtas.toMateEtaUiModels(mateEtaInfo.userNickname)
+            mateEtaInfo.toMateEtaUiModels()
         }
 
     private val _meeting = MutableLiveData(MeetingDetailUiModel())

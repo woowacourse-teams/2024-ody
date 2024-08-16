@@ -95,7 +95,7 @@ class MeetingJoinViewModel(
 
     private fun isValidNickName(): Boolean {
         val nickName = nickname.value ?: return false
-        return nickName.isNotEmpty()
+        return nickName.isNotEmpty() && nickName.length <= NICK_NAME_MAX_LENGTH
     }
 
     private fun isValidDeparturePoint(): Boolean {
