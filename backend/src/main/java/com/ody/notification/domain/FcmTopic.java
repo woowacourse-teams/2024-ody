@@ -8,12 +8,12 @@ public class FcmTopic {
 
     private String value;
 
-    public FcmTopic(String rawValue) {
-        this.value = rawValue.replace(":", "-");
-    }
-
     public FcmTopic(Meeting meeting) {
         this(build(meeting));
+    }
+    
+    public FcmTopic(String rawValue) {
+        this.value = rawValue.replace(":", "-");
     }
 
     private static String build(Meeting meeting) {
