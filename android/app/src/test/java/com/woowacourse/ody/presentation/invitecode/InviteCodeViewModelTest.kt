@@ -1,9 +1,7 @@
-package com.woowacourse.ody.viewmodel
+package com.woowacourse.ody.presentation.invitecode
 
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeMeetingRepository
-import com.woowacourse.ody.presentation.invitecode.InviteCodeNavigateAction
-import com.woowacourse.ody.presentation.invitecode.InviteCodeViewModel
 import com.woowacourse.ody.util.CoroutinesTestExtension
 import com.woowacourse.ody.util.InstantTaskExecutorExtension
 import com.woowacourse.ody.util.getOrAwaitValue

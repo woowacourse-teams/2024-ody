@@ -1,8 +1,7 @@
-package com.woowacourse.ody.viewmodel
+package com.woowacourse.ody.presentation.address
 
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeGeoLocationRepository
-import com.woowacourse.ody.presentation.address.AddressSearchViewModel
 import com.woowacourse.ody.util.CoroutinesTestExtension
 import com.woowacourse.ody.util.InstantTaskExecutorExtension
 import com.woowacourse.ody.util.getOrAwaitValue

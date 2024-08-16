@@ -1,4 +1,4 @@
-package com.woowacourse.ody.viewmodel
+package com.woowacourse.ody.presentation.room
 
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
@@ -10,7 +10,6 @@ import com.woowacourse.ody.mateEtaInfo
 import com.woowacourse.ody.meeting
 import com.woowacourse.ody.meetingId
 import com.woowacourse.ody.notificationLogs
-import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
 import com.woowacourse.ody.presentation.room.log.model.toMeetingUiModel
 import com.woowacourse.ody.presentation.room.log.model.toNotificationUiModels
