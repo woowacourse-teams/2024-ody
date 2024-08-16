@@ -81,7 +81,7 @@ class NotificationServiceTest extends BaseServiceTest {
                 .isEqual(TimeUtil.nowWithTrim());
     }
 
-    @DisplayName("콕 찌르기 메시지가 발송된다")
+    @DisplayName("재촉하기 메시지가 발송된다")
     @Test
     void sendSendNudgeMessageMessage() {
         Member member = memberRepository.save(Fixture.MEMBER1);

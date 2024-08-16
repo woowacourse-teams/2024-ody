@@ -58,8 +58,8 @@ public interface MateControllerSwagger {
     ResponseEntity<MateSaveResponse> saveV1(@Parameter(hidden = true) Member member, MateSaveRequest mateSaveRequest);
 
     @Operation(
-            summary = "참여자 콕 찌르기",
-            responses = {@ApiResponse(responseCode = "200", description = "콕 찌르기 성공")}
+            summary = "참여자 재촉하기",
+            responses = {@ApiResponse(responseCode = "200", description = "재촉하기 성공")}
     )
     @ErrorCode400(description = "유효하지 않은 mateId")
     @ErrorCode401
