@@ -15,13 +15,17 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentEtaDashboardBinding
 import com.woowacourse.ody.databinding.LayoutMissingTooltipBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
+import com.woowacourse.ody.presentation.common.listener.BackListener
+import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
+import com.woowacourse.ody.presentation.room.log.listener.ShareListener
 
 class EtaDashboardFragment :
     BindingFragment<FragmentEtaDashboardBinding>(R.layout.fragment_eta_dashboard),
-    MissingToolTipListener {
+    MissingToolTipListener,
+    ShareListener {
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
     private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this) }
     private val parentActivity: Activity by lazy { requireActivity() }
@@ -32,11 +36,18 @@ class EtaDashboardFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeMateEtaList()
+        initializeBinding()
         initializeObserve()
     }
 
     private fun initializeMateEtaList() {
-        binding.rvDashboard.adapter = adapter
+        binding.rvEtaDashboard.adapter = adapter
+    }
+
+    private fun initializeBinding() {
+        binding.vm = viewModel
+        binding.shareListener = this
+        binding.backListener = requireActivity() as MeetingRoomActivity
     }
 
     private fun initializeObserve() {
@@ -85,5 +96,9 @@ class EtaDashboardFragment :
             adjustedX,
             adjustedY,
         )
+    }
+
+    override fun onShare() {
+        // TODO 추후 카카오 공유하기 기능 연결
     }
 }

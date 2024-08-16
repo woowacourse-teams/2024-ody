@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -17,13 +16,9 @@ import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardFragment
 import com.woowacourse.ody.presentation.room.log.NotificationLogFragment
-import com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener
-import com.woowacourse.ody.presentation.room.log.listener.ShareListener
 
 class MeetingRoomActivity :
     BindingActivity<ActivityMeetingRoomBinding>(R.layout.activity_meeting_room),
-    CopyInviteCodeListener,
-    ShareListener,
     BackListener {
     private val viewModel: MeetingRoomViewModel by viewModels<MeetingRoomViewModel> {
         MeetingRoomViewModelFactory(
@@ -34,8 +29,6 @@ class MeetingRoomActivity :
             application.meetingRepository,
         )
     }
-    private val bottomSheetLayout by lazy { findViewById<ConstraintLayout>(R.id.cl_bottom_sheet) }
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val fragments: Map<String, Fragment> by lazy {
         mapOf(
             NAVIGATE_TO_ETA_DASHBOARD to EtaDashboardFragment(),
@@ -53,18 +46,12 @@ class MeetingRoomActivity :
         super.onCreate(savedInstanceState)
         initializeBinding()
         initializeObserve()
-        initializePersistentBottomSheet()
         if (savedInstanceState == null) {
             initializeFragment()
         }
     }
 
-    override fun initializeBinding() {
-        binding.vm = viewModel
-        binding.shareListener = this
-        binding.copyInviteCodeListener = this
-        binding.backListener = this
-    }
+    override fun initializeBinding() = Unit
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
@@ -72,10 +59,6 @@ class MeetingRoomActivity :
         viewModel.navigateToEtaDashboardEvent.observe(this) {
             addFragment(EtaDashboardFragment())
         }
-    }
-
-    private fun initializePersistentBottomSheet() {
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
     }
 
     private fun initializeFragment() {
@@ -95,20 +78,7 @@ class MeetingRoomActivity :
         }
     }
 
-    override fun onCopyInviteCode() {
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        val inviteCode = viewModel.meeting.value?.inviteCode
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText(INVITE_CODE_LABEL, inviteCode)
-        clipboard.setPrimaryClip(clip)
-    }
-
-    override fun onShare() {
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-    }
-
     override fun onBack() {
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         if (supportFragmentManager.fragments.size == 1) {
             finish()
             return
@@ -118,10 +88,10 @@ class MeetingRoomActivity :
 
     private fun getMeetingId(): Long = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
 
-    private fun getNavigateView(): String = intent.getStringExtra(NAVIGATE_VIEW_KEY) ?: NAVIGATE_TO_NOTIFICATION_LOG
+    private fun getNavigateView(): String =
+        intent.getStringExtra(NAVIGATE_VIEW_KEY) ?: NAVIGATE_TO_NOTIFICATION_LOG
 
     companion object {
-        private const val INVITE_CODE_LABEL = "inviteCode"
         private const val MEETING_ID_KEY = "meeting_id"
         private const val MEETING_ID_DEFAULT_VALUE = -1L
 
