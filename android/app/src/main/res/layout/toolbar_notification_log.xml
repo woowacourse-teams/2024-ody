@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="title"
-            type="java.lang.String" />
+            name="meeting"
+            type="com.woowacourse.ody.domain.model.Meeting" />
 
         <variable
             name="backListener"
@@ -45,7 +45,7 @@
                 android:layout_marginHorizontal="14dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{title}"
+                android:text="@{meeting.name}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/tv_mate_count"
                 app:layout_constraintStart_toEndOf="@id/iv_back"
@@ -62,6 +62,7 @@
                 app:layout_constraintEnd_toStartOf="@id/iv_menu"
                 app:layout_constraintStart_toEndOf="@id/tv_title"
                 app:layout_constraintTop_toTopOf="parent"
+                app:mateCount="@{meeting}"
                 tools:text="3명" />
 
             <ImageView

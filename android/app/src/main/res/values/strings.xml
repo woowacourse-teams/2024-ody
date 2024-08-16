@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">오디</string>
 
-    <!-- activity_notification_log -->
-    <string name="activity_notification_mates">%1$d명 / %2$s </string>"
+    <!-- fragment_notification_log -->
+    <string name="notification_log_mate_count">%d명</string>"
 
     <!-- fcm_notification -->
     <string name="fcm_notification_entry">%1$s (이)가 들어왔어요.</string>"
@@ -41,7 +41,6 @@
     <string name="meetings_notification_permission_guide">알림 권한은 앱 설정에서 확인할 수 있어요</string>
     <string name="meetings_location_permission_required">위치 권한을 거절하면 내 위치를 친구에게 공유할 수 없어요</string>
     <string name="meetings_entrance_unavailable_guide">아직 친구들의 위치를 확인할 수 없어요</string>
-
 
     <!-- fragment_meeting_destination.xml -->
     <string name="meeting_destination_question_front">오디</string>
@@ -86,13 +85,6 @@
     <string name="invite_code_input_back">를 입력해 주세요!</string>
     <string name="invite_code_input_hint">초대 코드</string>
     <string name="invalid_invite_code">초대 코드가 뭔가 이상한데요? 🤔</string>
-
-    <!-- activity_logs.xml -->
-    <string name="logs_copy_code_guide">초대 코드가 복사되었습니다.</string>
-
-    <!-- bottom_sheet_code_copy.xml -->
-    <string name="code_copy_guide">초대 코드를 복사해\n친구에게 전달해 보세요!</string>
-    <string name="code_copy_copy_code">초대 코드 복사하기</string>
 
     <!-- request_background_permission_dialog -->
     <string name="request_background_permission_dialog_title">백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.</string>
