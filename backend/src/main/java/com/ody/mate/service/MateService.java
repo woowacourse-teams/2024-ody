@@ -57,13 +57,18 @@ public class MateService {
 
     @Transactional
     public void nudge(Long mateId) {
-        Mate mate = mateRepository.findFetchedMateById(mateId)
-                .orElseThrow(() -> new OdyBadRequestException("존재하지 않은 약속 참여자입니다."));
+        Mate mate = findFetchedMate(mateId);
         if (canNudge(mate)) {
             notificationService.sendNudgeMessage(mate);
             return;
         }
         throw new OdyBadRequestException("요청한 참여자의 상태가 지각이나 지각위기가 아닙니다");
+    }
+
+    private Mate findFetchedMate(Long mateId) {
+        Mate mate = mateRepository.findFetchedMateById(mateId)
+                .orElseThrow(() -> new OdyBadRequestException("존재하지 않은 약속 참여자입니다."));
+        return mate;
     }
 
     private boolean canNudge(Mate mate) {
