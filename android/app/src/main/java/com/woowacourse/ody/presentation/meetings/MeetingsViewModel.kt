@@ -47,11 +47,13 @@ class MeetingsViewModel(
                 }
         }
 
-    override fun navigateToEtaDashboard(meetingId: Long) =
+    override fun navigateToEtaDashboard(meetingId: Long) {
         _navigateAction.postValue(MeetingsNavigateAction.NavigateToEtaDashboard(meetingId))
+    }
 
-    override fun navigateToNotificationLog(meetingId: Long) =
+    override fun navigateToNotificationLog(meetingId: Long) {
         _navigateAction.postValue(MeetingsNavigateAction.NavigateToNotificationLog(meetingId))
+    }
 
     override fun toggleFold(position: Int) {
         val currentList = _meetingCatalogs.value ?: emptyList()
