@@ -17,9 +17,8 @@ public class FcmTopic {
     }
 
     private static String build(Meeting meeting) {
-        return new StringBuilder(meeting.getId().toString())
-                .append("_")
-                .append(meeting.getCreatedAt())
-                .toString();
+        return meeting.getId().toString()
+                + "_"
+                + meeting.getCreatedAt();
     }
 }
