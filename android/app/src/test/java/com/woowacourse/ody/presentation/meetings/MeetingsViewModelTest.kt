@@ -1,10 +1,8 @@
-package com.woowacourse.ody.viewmodel
+package com.woowacourse.ody.presentation.meetings
 
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeMeetingRepository
 import com.woowacourse.ody.meetingCatalogs
-import com.woowacourse.ody.presentation.meetings.MeetingsNavigateAction
-import com.woowacourse.ody.presentation.meetings.MeetingsViewModel
 import com.woowacourse.ody.presentation.meetings.model.toMeetingCatalogUiModel
 import com.woowacourse.ody.util.CoroutinesTestExtension
 import com.woowacourse.ody.util.InstantTaskExecutorExtension
