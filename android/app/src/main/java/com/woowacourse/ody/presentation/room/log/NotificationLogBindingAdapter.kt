@@ -7,30 +7,16 @@ import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.NotificationType
 import com.woowacourse.ody.presentation.room.log.model.NotificationLogUiModel
 
-@BindingAdapter("setNotificationLogText")
-fun TextView.setNotificationLogText(log: NotificationLogUiModel) {
-    this.text =
-        when (log.type) {
-            NotificationType.ENTRY ->
-                this.context.getString(
-                    R.string.item_notification_entry,
-                    log.nickname,
-                )
-
-            NotificationType.DEPARTURE_REMINDER ->
-                this.context.getString(
-                    R.string.item_notification_departure_reminder,
-                    log.nickname,
-                )
-
-            NotificationType.DEPARTURE ->
-                this.context.getString(
-                    R.string.item_notification_departure,
-                    log.nickname,
-                )
-
-            NotificationType.DEFAULT -> ""
+@BindingAdapter("notificationType")
+fun TextView.setTextNotificationType(notificationType: NotificationType) {
+    val stringRes =
+        when (notificationType) {
+            NotificationType.ENTRY -> R.string.item_notification_entry
+            NotificationType.DEPARTURE_REMINDER -> R.string.item_notification_departure_reminder
+            NotificationType.DEPARTURE -> R.string.item_notification_departure
+            NotificationType.DEFAULT -> R.string.item_notification_default
         }
+    text = context.getString(stringRes)
 }
 
 @BindingAdapter("mateCount")
