@@ -1,7 +1,6 @@
 package com.ody.meeting.domain;
 
 import com.ody.common.domain.BaseEntity;
-import com.ody.notification.domain.FcmTopic;
 import com.ody.util.TimeUtil;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -63,9 +62,5 @@ public class Meeting extends BaseEntity {
 
     public LocalDateTime getMeetingTime() {
         return TimeUtil.trimSecondsAndNanos(LocalDateTime.of(date, time));
-    }
-
-    public FcmTopic buildFcmTopic() {
-        return new FcmTopic(this);
     }
 }

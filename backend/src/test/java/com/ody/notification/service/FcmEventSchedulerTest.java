@@ -13,6 +13,7 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
@@ -53,7 +54,7 @@ class FcmEventSchedulerTest extends BaseServiceTest {
                 sendAt,
                 NotificationStatus.PENDING
         ));
-        FcmSendRequest fcmSendRequest = new FcmSendRequest(meeting, notification);
+        FcmSendRequest fcmSendRequest = new FcmSendRequest(new FcmTopic(meeting), notification);
 
         // 비동기 작업을 동기화 시키기 위한 클래스
         // 파라미터 인자에 비동기 작업의 개수를 입력해준다.

@@ -4,6 +4,7 @@ import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
+import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.request.FcmSendRequest;
 import com.ody.notification.repository.NotificationRepository;
@@ -41,7 +42,7 @@ public class NotificationService {
             RouteTime routeTime
     ) {
         saveAndSendEntryNotification(meeting, mate);
-        fcmSubscriber.subscribeTopic(meeting.buildFcmTopic(), deviceToken);
+        fcmSubscriber.subscribeTopic(new FcmTopic(meeting), deviceToken);
         saveAndSendDepartureReminderNotification(meeting, mate, routeTime);
     }
 
@@ -66,7 +67,7 @@ public class NotificationService {
 
     private void saveAndSendNotification(Meeting meeting, Notification notification) {
         Notification savedNotification = notificationRepository.save(notification);
-        FcmSendRequest fcmSendRequest = new FcmSendRequest(meeting, savedNotification);
+        FcmSendRequest fcmSendRequest = new FcmSendRequest(new FcmTopic(meeting), savedNotification);
         scheduleNotification(fcmSendRequest);
     }
 
