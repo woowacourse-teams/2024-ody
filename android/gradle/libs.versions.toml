@@ -23,6 +23,7 @@ junitVersion = "1.2.1"
 kotlin = "1.9.0"
 ksp = "1.9.0-1.0.13"
 ktlint = "12.1.1"
+kakaoSdk = "2.20.3"
 lifecycle = "2.2.0"
 lifecycleViewmodel = "2.8.4"
 loggingInterceptor = "4.12.0"
@@ -94,6 +95,9 @@ play-services-location = { module = "com.google.android.gms:play-services-locati
 
 # coroutines
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+
+# kakao sdk
+kakao-sdk-v2-user = {module = "com.kakao.sdk:v2-user", version.ref = "kakaoSdk"}
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

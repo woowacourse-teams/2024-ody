@@ -112,4 +112,7 @@ dependencies {
 
     // coroutines
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // kakao sdk
+    implementation(libs.kakao.sdk.v2.user)
 }
