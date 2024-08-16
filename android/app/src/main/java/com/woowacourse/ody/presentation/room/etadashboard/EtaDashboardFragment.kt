@@ -49,7 +49,8 @@ class EtaDashboardFragment :
         point: Point,
         isUserSelf: Boolean,
     ) {
-        val messageId = if (isUserSelf) R.string.location_permission_self_guide else R.string.location_permission_friend_guide
+        val messageId =
+            if (isUserSelf) R.string.location_permission_self_guide else R.string.location_permission_friend_guide
         showPopupWindow(messageId, point)
     }
 
@@ -78,6 +79,11 @@ class EtaDashboardFragment :
         val adjustedX = point.x - popupWidth
         val adjustedY = point.y - popupHeight
 
-        popupWindow.showAtLocation(parentActivity.window.decorView, Gravity.NO_GRAVITY, adjustedX, adjustedY)
+        popupWindow.showAtLocation(
+            parentActivity.window.decorView,
+            Gravity.NO_GRAVITY,
+            adjustedX,
+            adjustedY,
+        )
     }
 }

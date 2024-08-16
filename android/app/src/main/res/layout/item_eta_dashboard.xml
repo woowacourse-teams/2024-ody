@@ -38,6 +38,7 @@
         <TextView
             android:id="@+id/tv_badge_dashboard"
             style="@style/pretendard_medium_16"
+            etaBadgeAnimation="@{eta.etaTypeUiModel}"
             android:layout_width="80dp"
             android:layout_height="32dp"
             android:background="@drawable/rectangle_radius_15"
