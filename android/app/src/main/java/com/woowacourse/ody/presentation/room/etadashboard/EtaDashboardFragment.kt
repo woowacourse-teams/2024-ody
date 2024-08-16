@@ -15,7 +15,6 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentEtaDashboardBinding
 import com.woowacourse.ody.databinding.LayoutMissingTooltipBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
-import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtasAdapter

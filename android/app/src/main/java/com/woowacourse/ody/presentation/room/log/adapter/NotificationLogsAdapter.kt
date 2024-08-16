@@ -4,11 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.woowacourse.ody.databinding.ItemEtaDashboardBinding
-import com.woowacourse.ody.databinding.ItemInviteCodeLogBinding
 import com.woowacourse.ody.databinding.ItemNotificationLogBinding
-import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtaViewHolder
 import com.woowacourse.ody.presentation.room.log.model.NotificationLogUiModel
 
 class NotificationLogsAdapter :

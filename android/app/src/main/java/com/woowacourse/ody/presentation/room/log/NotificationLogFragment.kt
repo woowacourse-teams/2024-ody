@@ -5,9 +5,7 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentNotificationLogBinding
-import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
-import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MenuListener

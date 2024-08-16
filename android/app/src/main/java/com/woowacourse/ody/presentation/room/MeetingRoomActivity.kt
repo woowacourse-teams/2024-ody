@@ -1,7 +1,5 @@
 package com.woowacourse.ody.presentation.room
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,7 +7,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
@@ -88,8 +85,7 @@ class MeetingRoomActivity :
 
     private fun getMeetingId(): Long = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
 
-    private fun getNavigateView(): String =
-        intent.getStringExtra(NAVIGATE_VIEW_KEY) ?: NAVIGATE_TO_NOTIFICATION_LOG
+    private fun getNavigateView(): String = intent.getStringExtra(NAVIGATE_VIEW_KEY) ?: NAVIGATE_TO_NOTIFICATION_LOG
 
     companion object {
         private const val MEETING_ID_KEY = "meeting_id"
