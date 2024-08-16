@@ -48,20 +48,12 @@ class MeetingsViewModel(
         }
 
     override fun navigateToEtaDashboard(meetingId: Long) {
-        viewModelScope.launch {
-            meetingRepository.fetchMeeting(meetingId).onSuccess {
-                _navigateAction.postValue(
-                    MeetingsNavigateAction.NavigateToEtaDashboard(meetingId = it.id),
-                )
-            }.onFailure {
-                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
-                Timber.e(it)
-            }
-        }
+        _navigateAction.postValue(MeetingsNavigateAction.NavigateToEtaDashboard(meetingId))
     }
 
-    override fun navigateToNotificationLog(meetingId: Long) =
+    override fun navigateToNotificationLog(meetingId: Long) {
         _navigateAction.postValue(MeetingsNavigateAction.NavigateToNotificationLog(meetingId))
+    }
 
     override fun toggleFold(position: Int) {
         val currentList = _meetingCatalogs.value ?: emptyList()

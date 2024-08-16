@@ -5,6 +5,7 @@ import com.woowacourse.ody.domain.model.Mate
 import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.model.Meeting
+import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.NotificationLog
 import com.woowacourse.ody.domain.model.NotificationType
 import java.time.LocalDate
@@ -24,6 +25,24 @@ val meeting: Meeting =
         LocalTime.of(10, 0),
         listOf(Mate("A"), Mate("B"), Mate("C")),
         inviteCode,
+    )
+
+val meetings: List<Meeting> = listOf(meeting)
+
+val meetingCatalog =
+    MeetingCatalog(
+        meetingId,
+        "meetingA",
+        1,
+        LocalDateTime.of(2024, 1, 1, 10, 0),
+        "서울 강남구 테헤란로 411",
+        "서울 송파구 올림픽로35다길 42",
+        16,
+    )
+
+val meetingCatalogs: List<MeetingCatalog> =
+    listOf(
+        meetingCatalog,
     )
 
 val notificationLogs: List<NotificationLog> =
