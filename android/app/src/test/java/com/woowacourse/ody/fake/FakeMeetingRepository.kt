@@ -9,6 +9,7 @@ import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.inviteCode
 import com.woowacourse.ody.mateEtaInfo
 import com.woowacourse.ody.meeting
+import com.woowacourse.ody.meetingCatalogs
 
 object FakeMeetingRepository : MeetingRepository {
     override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> =
@@ -32,11 +33,11 @@ object FakeMeetingRepository : MeetingRepository {
     }
 
     override suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>> {
-        return Result.success(emptyList())
+        return Result.success(meetingCatalogs)
     }
 
     override suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>> {
-        return ApiResult.Success(emptyList())
+        return ApiResult.Success(meetingCatalogs)
     }
 
     override suspend fun fetchMeeting(meetingId: Long): Result<Meeting> = Result.success(meeting)
