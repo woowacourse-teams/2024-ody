@@ -22,3 +22,12 @@ fun ImageView.setImageUrl(imageUrl: String) {
         .load(imageUrl)
         .into(this)
 }
+
+@BindingAdapter("circleImageUrl")
+fun ImageView.setCircleImageUrl(imageUrl: String) {
+    Glide.with(context)
+        .load(imageUrl)
+        .circleCrop()
+        .into(this)
+}
+

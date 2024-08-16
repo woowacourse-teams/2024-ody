@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="meeting"
-            type="com.woowacourse.ody.domain.model.Meeting" />
+            name="title"
+            type="java.lang.String" />
+
+        <variable
+            name="mateCount"
+            type="java.lang.Integer" />
 
         <variable
             name="backListener"
@@ -45,7 +49,7 @@
                 android:layout_marginHorizontal="14dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{meeting.name}"
+                android:text="@{title}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/tv_mate_count"
                 app:layout_constraintStart_toEndOf="@id/iv_back"
@@ -57,12 +61,12 @@
                 style="@style/pretendard_bold_20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{@string/notification_log_mate_count(mateCount)}"
                 android:textColor="@color/gray_500"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_menu"
                 app:layout_constraintStart_toEndOf="@id/tv_title"
                 app:layout_constraintTop_toTopOf="parent"
-                app:mateCount="@{meeting}"
                 tools:text="3명" />
 
             <ImageView
