@@ -76,11 +76,11 @@ class MeetingRoomActivity :
     }
 
     override fun onBack() {
-        if (supportFragmentManager.fragments.size == 1) {
+        if (supportFragmentManager.backStackEntryCount == 1) {
             finish()
-            return
+        } else {
+            supportFragmentManager.popBackStack()
         }
-        supportFragmentManager.popBackStack()
     }
 
     private fun getMeetingId(): Long = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
