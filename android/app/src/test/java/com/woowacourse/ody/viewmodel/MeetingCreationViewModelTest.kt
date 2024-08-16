@@ -56,7 +56,6 @@ class MeetingCreationViewModelTest {
         viewModel.createMeeting()
 
         // then
-        assertThat(viewModel.inviteCode.isInitialized).isTrue
         val actual = viewModel.inviteCode.getOrAwaitValue()
         assertThat(actual).isEqualTo(inviteCode)
     }
