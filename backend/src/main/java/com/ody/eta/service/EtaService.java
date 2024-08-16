@@ -63,9 +63,8 @@ public class EtaService {
     }
 
     public EtaStatus findEtaStatus(Mate mate) {
-        Meeting meeting = mate.getMeeting();
         Eta mateEta = findByMateId(mate.getId());
-        return EtaStatus.of(mateEta, meeting);
+        return EtaStatus.of(mateEta, mate.getMeeting());
     }
 
     private boolean isRouteClientCallTime(Eta mateEta) {
