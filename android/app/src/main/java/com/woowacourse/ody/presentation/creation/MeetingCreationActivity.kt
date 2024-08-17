@@ -98,7 +98,7 @@ class MeetingCreationActivity :
             showRetrySnackBar { viewModel.retryLastAction() }
         }
         viewModel.errorEvent.observe(this) {
-            showToast(R.string.error_guide)
+            showSnackBar(R.string.error_guide)
         }
     }
 

@@ -1,7 +1,6 @@
 package com.woowacourse.ody.presentation.common.binding
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -43,12 +42,6 @@ abstract class BindingActivity<T : ViewDataBinding>(
             Snackbar.make(binding.root, R.string.network_error_guide, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.retry_button) { action() }
         snackBar?.show()
-    }
-
-    protected fun showToast(
-        @StringRes messageId: Int,
-    ) {
-        Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
@@ -73,7 +72,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
             showRetrySnackBar()
         }
         viewModel.errorEvent.observe(viewLifecycleOwner) {
-            showErrorToast()
+            showErrorSnackBar()
         }
     }
 
@@ -84,7 +83,7 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
             }.show()
     }
 
-    private fun showErrorToast() = Toast.makeText(requireContext(), R.string.error_guide, Toast.LENGTH_SHORT).show()
+    private fun showErrorSnackBar() = Snackbar.make(binding.root, R.string.error_guide, Snackbar.LENGTH_SHORT).show()
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun showAddressSearchWebView() {
