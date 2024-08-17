@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.ody.domain.apiresult.onFailure
+import com.woowacourse.ody.domain.apiresult.onNetworkError
+import com.woowacourse.ody.domain.apiresult.onSuccess
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
@@ -57,6 +60,14 @@ class MeetingCreationViewModel(
     private val _inviteCode: MutableLiveData<String> = MutableLiveData()
     val inviteCode: LiveData<String> get() = _inviteCode
 
+    private val _networkErrorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val networkErrorEvent: SingleLiveData<Unit> get() = _networkErrorEvent
+
+    private val _errorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val errorEvent: SingleLiveData<Unit> get() = _errorEvent
+
+    private var lastFailedAction: (() -> Unit)? = null
+
     init {
         initializeIsValidInfo()
     }
@@ -99,9 +110,12 @@ class MeetingCreationViewModel(
                 ),
             ).onSuccess {
                 _inviteCode.value = it
-            }.onFailure {
-                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
-                Timber.e(it.message)
+            }.onFailure { code, errorMessage ->
+                _errorEvent.setValue(Unit)
+                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                Timber.e("$code $errorMessage")
+            }.onNetworkError {
+                _networkErrorEvent.setValue(Unit)
             }
         }
     }
@@ -168,6 +182,10 @@ class MeetingCreationViewModel(
 
     override fun onClickCreationMeeting() {
         _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToCreationComplete)
+    }
+
+    fun retryLastAction() {
+        lastFailedAction?.invoke()
     }
 
     companion object {

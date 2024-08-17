@@ -22,7 +22,7 @@ interface MeetingService {
     @POST("/v1/meetings")
     suspend fun postMeeting(
         @Body meetingRequest: MeetingRequest,
-    ): MeetingCreationResponse
+    ): ApiResult<MeetingCreationResponse>
 
     @PATCH("/v1/meetings/{meetingId}/mates/etas")
     suspend fun patchMatesEta(

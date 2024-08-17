@@ -9,7 +9,7 @@ import com.woowacourse.ody.domain.model.MeetingCreationInfo
 interface MeetingRepository {
     suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit>
 
-    suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String>
+    suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String>
 
     suspend fun patchMatesEta(
         meetingId: Long,
