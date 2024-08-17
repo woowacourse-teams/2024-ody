@@ -1,5 +1,6 @@
 package com.ody.meeting.repository;
 
+import static com.ody.common.Fixture.TARGET_LOCATION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -11,6 +12,7 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,5 +54,43 @@ class MeetingRepositoryTest {
                 () -> assertThat(member1Meetings).hasSize(2),
                 () -> assertThat(member2Meetings).hasSize(1)
         );
+    }
+
+    @DisplayName("약속 날짜가 오늘 이전인 약속방들의 overdue 상태를 true로 변경한다")
+    @Test
+    void updateAllByOverdueMeetings() {
+        LocalDateTime oneHoursLater = LocalDateTime.now().plusHours(1L);
+        Meeting oneHoursLaterMeeting = new Meeting(
+                "우테코 등교",
+                oneHoursLater.toLocalDate(),
+                oneHoursLater.toLocalTime(),
+                TARGET_LOCATION,
+                "초대코드"
+        );
+        meetingRepository.save(oneHoursLaterMeeting);
+
+        LocalDateTime oneDayBefore = LocalDateTime.now().minusDays(1L);
+        Meeting oneDayBeforeMeeting = new Meeting(
+                "기상시간",
+                oneDayBefore.toLocalDate(),
+                oneDayBefore.toLocalTime(),
+                TARGET_LOCATION,
+                "초대코드"
+        );
+        meetingRepository.save(oneDayBeforeMeeting);
+
+        LocalDateTime twoDayBefore = LocalDateTime.now().minusDays(2L);
+        Meeting twoDayBeforeMeeting = new Meeting(
+                "클라이밍",
+                twoDayBefore.toLocalDate(),
+                twoDayBefore.toLocalTime(),
+                TARGET_LOCATION,
+                "초대코드"
+        );
+        meetingRepository.save(twoDayBeforeMeeting);
+
+        meetingRepository.updateAllByOverdueMeetings();
+
+        assertThat(meetingRepository.findAll()).extracting(Meeting::isOverdue).containsExactly(false, true, true);
     }
 }

@@ -19,9 +19,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -85,5 +88,12 @@ public class MeetingService {
     public MateSaveResponse saveMateAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
+    }
+
+    @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
+    @Transactional
+    public void scheduleOverdueMeetings() {
+        meetingRepository.updateAllByOverdueMeetings();
+        log.info("약속 시간이 지난 약속들 overdue = true로 update 쿼리 실행");
     }
 }
