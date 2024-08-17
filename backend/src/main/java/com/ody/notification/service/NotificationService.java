@@ -3,7 +3,6 @@ package com.ody.notification.service;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
@@ -25,6 +24,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
 @Service
@@ -38,7 +38,6 @@ public class NotificationService {
     private final FcmSubscriber fcmSubscriber;
     private final FcmPushSender fcmPushSender;
     private final TaskScheduler taskScheduler;
-    private final MeetingRepository meetingRepository;
 
     @Transactional
     public void saveAndSendNotifications(
@@ -102,5 +101,16 @@ public class NotificationService {
     public Notification findById(Long notificationId) {
         return notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 알림입니다."));
+    }
+
+    @TransactionalEventListener
+    public void unSubscribeTopic(List<Meeting> meetings) {
+        for (Meeting meeting : meetings) {
+            notificationRepository.findAllMeetingIdAndType(meeting.getId(), NotificationType.DEPARTURE_REMINDER)
+                    .forEach(notification -> fcmSubscriber.unSubscribeTopic(
+                            notification.getFcmTopic(),
+                            notification.getMate().getMember().getDeviceToken())
+                    );
+        }
     }
 }

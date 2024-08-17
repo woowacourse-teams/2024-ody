@@ -20,4 +20,13 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findAllMeetingLogs(Long meetingId);
 
     List<Notification> findAllByTypeAndStatus(NotificationType type, NotificationStatus status);
+
+    @Query("""
+            select noti
+            from Notification noti
+            join fetch Mate mate on noti.mate.id = mate.id and mate.meeting.id = :meetingId
+            join fetch Member member on mate.member.id = member.id
+            where noti.type = :type
+            """)
+    List<Notification> findAllMeetingIdAndType(Long meetingId, NotificationType type);
 }

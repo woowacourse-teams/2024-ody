@@ -153,4 +153,45 @@ class NotificationRepositoryTest {
                 () -> assertThat(entryAndDoneNotifications).hasSize(1)
         );
     }
+
+    @DisplayName("약속 ID와 알림 타입으로 알림 리스트를 조회한다")
+    @Test
+    void findAllMeetingIdAndType() {
+        Member member = memberRepository.save(Fixture.MEMBER1);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        Meeting sojuMeeting = meetingRepository.save(Fixture.SOJU_MEETING);
+        Mate jojo = mateRepository.save(
+                new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+        Mate kaki = mateRepository.save(
+                new Mate(sojuMeeting, member, new Nickname("카키"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+
+        Notification notification1 = new Notification(
+                jojo,
+                NotificationType.DEPARTURE_REMINDER,
+                LocalDateTime.now(),
+                NotificationStatus.DONE,
+                new FcmTopic(odyMeeting)
+        );
+        Notification notification2 = new Notification(
+                kaki,
+                NotificationType.DEPARTURE_REMINDER,
+                LocalDateTime.now(),
+                NotificationStatus.DONE,
+                new FcmTopic(sojuMeeting)
+        );
+        notificationRepository.save(notification1);
+        notificationRepository.save(notification2);
+
+        List<Notification> notifications = notificationRepository.findAllMeetingIdAndType(
+                odyMeeting.getId(),
+                NotificationType.DEPARTURE_REMINDER
+        );
+
+        assertAll(
+                () -> assertThat(notifications).hasSize(1),
+                () -> assertThat(notifications.get(0).getId()).isEqualTo(notification1.getId())
+        );
+    }
 }

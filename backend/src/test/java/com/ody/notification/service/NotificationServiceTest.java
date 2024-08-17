@@ -24,6 +24,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -115,5 +116,47 @@ class NotificationServiceTest extends BaseServiceTest {
 
         BDDMockito.verify(taskScheduler, Mockito.times(1))
                 .schedule(any(Runnable.class), any(Instant.class));
+    }
+
+    @Test
+    void unSubscribeTopic() {
+        Member member = memberRepository.save(Fixture.MEMBER1);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        Meeting sojuMeeting = meetingRepository.save(Fixture.SOJU_MEETING);
+        Mate jojo = mateRepository.save(
+                new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+        Mate kaki = mateRepository.save(
+                new Mate(sojuMeeting, member, new Nickname("카키"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+
+        Notification notification1 = new Notification(
+                jojo,
+                NotificationType.DEPARTURE_REMINDER,
+                LocalDateTime.now(),
+                NotificationStatus.DONE,
+                new FcmTopic(odyMeeting)
+        );
+        Notification notification2 = new Notification(
+                kaki,
+                NotificationType.DEPARTURE_REMINDER,
+                LocalDateTime.now(),
+                NotificationStatus.DONE,
+                new FcmTopic(sojuMeeting)
+        );
+        Notification notification3 = new Notification(
+                kaki,
+                NotificationType.ENTRY,
+                LocalDateTime.now(),
+                NotificationStatus.DONE,
+                new FcmTopic(sojuMeeting)
+        );
+        notificationRepository.save(notification1);
+        notificationRepository.save(notification2);
+        notificationRepository.save(notification3);
+
+        notificationService.unSubscribeTopic(List.of(odyMeeting, sojuMeeting));
+
+        BDDMockito.verify(fcmSubscriber, Mockito.times(2)).unSubscribeTopic(any(), any());
     }
 }
