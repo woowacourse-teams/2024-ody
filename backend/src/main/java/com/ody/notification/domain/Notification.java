@@ -2,6 +2,7 @@ package com.ody.notification.domain;
 
 import com.ody.common.domain.BaseEntity;
 import com.ody.mate.domain.Mate;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -44,19 +45,38 @@ public class Notification extends BaseEntity {
     @NotNull
     private NotificationStatus status;
 
-    public Notification(Mate mate, NotificationType type, LocalDateTime sendAt, NotificationStatus status) {
-        this(null, mate, type, sendAt, status);
+    @Embedded
+    private FcmTopic fcmTopic;
+
+    public Notification(
+            Mate mate,
+            NotificationType type,
+            LocalDateTime sendAt,
+            NotificationStatus status,
+            FcmTopic fcmTopic
+    ) {
+        this(null, mate, type, sendAt, status, fcmTopic);
     }
 
     public static Notification createEntry(Mate mate) {
-        return new Notification(mate, NotificationType.ENTRY, LocalDateTime.now(), NotificationStatus.PENDING);
+        return new Notification(mate, NotificationType.ENTRY, LocalDateTime.now(), NotificationStatus.PENDING, null);
     }
 
-    public static Notification createDepartureReminder(Mate mate, LocalDateTime sendAt) {
-        return new Notification(mate, NotificationType.DEPARTURE_REMINDER, sendAt, NotificationStatus.PENDING);
+    public static Notification createDepartureReminder(Mate mate, LocalDateTime sendAt, FcmTopic fcmTopic) {
+        return new Notification(
+                mate,
+                NotificationType.DEPARTURE_REMINDER,
+                sendAt,
+                NotificationStatus.PENDING,
+                fcmTopic
+        );
     }
 
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
+    }
+
+    public String getFcmTopicValue() {
+        return fcmTopic.getValue();
     }
 }
