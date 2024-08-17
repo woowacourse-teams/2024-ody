@@ -18,6 +18,9 @@ spring:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
+  sql:
+    init:
+      schema-locations:
 
 odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT
