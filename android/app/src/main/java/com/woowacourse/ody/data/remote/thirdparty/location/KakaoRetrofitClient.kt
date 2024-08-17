@@ -3,6 +3,7 @@ package com.woowacourse.ody.data.remote.thirdparty.location
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.BuildConfig
+import com.woowacourse.ody.data.retrofit.ApiResultCallAdapter
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -29,6 +30,7 @@ class KakaoRetrofitClient {
         Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
+            .addCallAdapterFactory(ApiResultCallAdapter.Factory())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }

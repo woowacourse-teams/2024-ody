@@ -7,12 +7,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.webkit.WebViewAssetLoader
+import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.OdyApplication
+import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
 import com.woowacourse.ody.presentation.address.listener.AddressReceiveListener
 import com.woowacourse.ody.presentation.address.model.toGeoLocationUiModel
@@ -66,7 +70,22 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
             setFragmentResult(REQUEST_KEY, bundleOf(GEO_LOCATION_UI_MODEL_KEY to geoLocationUiModel))
             dismiss()
         }
+        viewModel.networkErrorEvent.observe(viewLifecycleOwner) {
+            showRetrySnackBar()
+        }
+        viewModel.errorEvent.observe(viewLifecycleOwner) {
+            showErrorToast()
+        }
     }
+
+    private fun showRetrySnackBar() {
+        Snackbar.make(requireView(), R.string.network_error_guide, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.retry_button) {
+                viewModel.retryLastAction()
+            }.show()
+    }
+
+    private fun showErrorToast() = Toast.makeText(requireContext(), R.string.error_guide, Toast.LENGTH_SHORT).show()
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun showAddressSearchWebView() {
