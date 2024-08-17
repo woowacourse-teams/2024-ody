@@ -18,9 +18,7 @@ interface MeetingRepository {
         currentLongitude: String,
     ): Result<MateEtaInfo>
 
-    suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>>
-
-    suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>>
+    suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>>
 
     suspend fun fetchMeeting(meetingId: Long): Result<Meeting>
 }

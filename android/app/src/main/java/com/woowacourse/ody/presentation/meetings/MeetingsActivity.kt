@@ -99,6 +99,12 @@ class MeetingsActivity :
                 is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
             }
         }
+        viewModel.networkErrorEvent.observe(this) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+        viewModel.errorEvent.observe(this) {
+            showToast(R.string.error_guide)
+        }
     }
 
     override fun onFab() {

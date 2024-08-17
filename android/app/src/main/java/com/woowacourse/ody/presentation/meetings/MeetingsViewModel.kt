@@ -32,20 +32,29 @@ class MeetingsViewModel(
 
     val isMeetingCatalogsEmpty: LiveData<Boolean> = _meetingCatalogs.map { it.isEmpty() }
 
-    fun fetchMeetingCatalogs() =
+    private val _networkErrorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val networkErrorEvent: SingleLiveData<Unit> get() = _networkErrorEvent
+
+    private val _errorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val errorEvent: SingleLiveData<Unit> get() = _errorEvent
+
+    private var lastFailedAction: (() -> Unit)? = null
+
+    fun fetchMeetingCatalogs() {
         viewModelScope.launch {
-            meetingRepository.fetchMeetingCatalogs2()
+            meetingRepository.fetchMeetingCatalogs()
                 .onSuccess {
                     _meetingCatalogs.value = it.toMeetingCatalogUiModels()
                 }.onFailure { code, errorMessage ->
-                    analyticsHelper.logNetworkErrorEvent(TAG, errorMessage)
-                    Timber.e("code: $code, message: $errorMessage")
-                }.onNetworkError { exception ->
-                    Timber.e(exception)
-                }.onUnexpected { t ->
-                    Timber.e(t)
+                    _errorEvent.setValue(Unit)
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    Timber.e("$code $errorMessage")
+                }.onNetworkError {
+                    _networkErrorEvent.setValue(Unit)
+                    lastFailedAction = { fetchMeetingCatalogs() }
                 }
         }
+    }
 
     override fun navigateToEtaDashboard(meetingId: Long) {
         _navigateAction.postValue(MeetingsNavigateAction.NavigateToEtaDashboard(meetingId))
@@ -61,6 +70,10 @@ class MeetingsViewModel(
         newList[position] =
             newList[position].copy(isFolded = !newList[position].isFolded)
         _meetingCatalogs.value = newList
+    }
+
+    fun retryLastAction() {
+        lastFailedAction?.invoke()
     }
 
     companion object {

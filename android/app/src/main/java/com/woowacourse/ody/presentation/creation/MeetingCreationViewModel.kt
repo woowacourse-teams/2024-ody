@@ -116,6 +116,7 @@ class MeetingCreationViewModel(
                 Timber.e("$code $errorMessage")
             }.onNetworkError {
                 _networkErrorEvent.setValue(Unit)
+                lastFailedAction = { createMeeting() }
             }
         }
     }

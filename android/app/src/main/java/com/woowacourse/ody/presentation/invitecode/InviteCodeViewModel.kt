@@ -50,6 +50,7 @@ class InviteCodeViewModel(
                     Timber.e("$code $errorMessage")
                 }.onNetworkError {
                     _networkErrorEvent.setValue(Unit)
+                    lastFailedAction = { checkInviteCode() }
                 }
         }
     }

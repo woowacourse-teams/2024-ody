@@ -38,10 +38,7 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         }
     }
 
-    override suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>> =
-        runCatching { service.fetchMeetingCatalogs().toMeetingCatalogs() }
-
-    override suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>> =
+    override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> =
         service.fetchMeetingCatalogs2().map { it.toMeetingCatalogs() }
 
     private fun compress(coordinate: String): String {

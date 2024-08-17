@@ -36,7 +36,7 @@ object FakeMeetingRepository : MeetingRepository {
         return Result.success(meetingCatalogs)
     }
 
-    override suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>> {
+    override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> {
         return ApiResult.Success(meetingCatalogs)
     }
 
