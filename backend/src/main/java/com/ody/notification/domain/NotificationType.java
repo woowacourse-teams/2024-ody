@@ -4,5 +4,6 @@ public enum NotificationType {
 
     ENTRY,
     DEPARTURE_REMINDER,
+    NUDGE,
     ;
 }
