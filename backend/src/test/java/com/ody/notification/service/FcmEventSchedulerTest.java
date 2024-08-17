@@ -70,15 +70,15 @@ class FcmEventSchedulerTest extends BaseServiceTest {
         doAnswer(invocation -> {
             latch.countDown();
             return null;
-        }).when(getFcmPushSender()).sendPushNotification(fcmSendRequest);
+        }).when(fcmPushSender).sendPushNotification(fcmSendRequest);
 
         // 2초후에 메세지가 가도록 설정한 fcmSendRequest를 인자로 넣어 실제 sendPushNotification()를 호출한다.
-        getFcmPushSender().sendPushNotification(fcmSendRequest);
+        fcmPushSender.sendPushNotification(fcmSendRequest);
 
         // latch의 카운트가 0이될 때까지 대기할 시간을 정의한다.
         assertThat(latch.await(2, TimeUnit.SECONDS)).isTrue();
 
         // sendPushNotification() 메서드가 호출되었는지 검증한다.
-        verify(getFcmPushSender()).sendPushNotification(fcmSendRequest);
+        verify(fcmPushSender).sendPushNotification(fcmSendRequest);
     }
 }

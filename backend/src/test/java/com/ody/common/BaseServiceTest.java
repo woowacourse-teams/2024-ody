@@ -18,24 +18,20 @@ import org.springframework.test.context.ActiveProfiles;
 public abstract class BaseServiceTest {
 
     @MockBean
-    private FcmConfig fcmConfig;
+    protected FcmConfig fcmConfig;
 
     @MockBean
-    private FcmPushSender fcmPushSender;
+    protected FcmPushSender fcmPushSender;
 
     @MockBean
-    private FcmSubscriber fcmSubscriber;
+    protected FcmSubscriber fcmSubscriber;
 
     @Autowired
-    private DatabaseCleaner databaseCleaner;
+    protected DatabaseCleaner databaseCleaner;
 
     @BeforeEach
     void cleanUp() {
         databaseCleaner.cleanUp();
-    }
-
-    public FcmPushSender getFcmPushSender() {
-        return fcmPushSender;
     }
 }
 
