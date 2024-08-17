@@ -116,7 +116,7 @@ class MateServiceTest extends BaseServiceTest {
                 .isInstanceOf(OdyBadRequestException.class);
     }
 
-    @DisplayName("Eta상태가 지각 위기인 mate를 콕 찌를 수 있다")
+    @DisplayName("약속이 1분 뒤이고 소요시간이 2분으로 Eta상태가 지각 위기인 mate를 콕 찌를 수 있다")
     @Test
     void nudgeSuccessWhenLateWarning() {
         long remainingTime = 1L;
@@ -131,7 +131,7 @@ class MateServiceTest extends BaseServiceTest {
         Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any());
     }
 
-    @DisplayName("Eta상태가 지각인 mate를 콕 찌를 수 있다")
+    @DisplayName("약속이 지금이고 소요시간이 2분으로 Eta상태가 지각인 mate를 콕 찌를 수 있다")
     @Test
     void nudgeSuccessWhenLate() {
         Meeting nowMeeting = makeSavedMeetingByTime(TimeUtil.nowWithTrim());
@@ -145,16 +145,29 @@ class MateServiceTest extends BaseServiceTest {
         Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any());
     }
 
-    @DisplayName("Eta상태가 지각이나 지각 위기가 아닌 mate를 재촉하면 예외가 발생한다")
+    @DisplayName("약속이 3분 뒤이고 소요시간이 2분으로 Eta상태가 도착 예정인 mate를 재촉하면 예외가 발생한다")
     @Test
-    void nudgeFail() {
-
+    void nudgeFailWhenArriavalSoon() {
         long remainingTime = 3L;
         Meeting threeMinutesLaterMeeting = makeSavedMeetingByTime(TimeUtil.nowWithTrim().plusMinutes(remainingTime));
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Mate mate = new Mate(threeMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
         Mate savedMate = mateRepository.save(mate);
         Eta arrivalSoonEta = etaRepository.save(new Eta(mate, remainingTime - 1L));
+
+        assertThatThrownBy(() -> mateService.nudge(savedMate.getId()))
+                .isInstanceOf(OdyBadRequestException.class);
+    }
+
+    @DisplayName("3분 뒤 약속에 약속장소에 도착하여 Eta상태가 도착인 mate를 재촉하면 예외가 발생한다")
+    @Test
+    void nudgeFailWhenArrived() {
+        long remainingTime = 3L;
+        Meeting threeMinutesLaterMeeting = makeSavedMeetingByTime(TimeUtil.nowWithTrim().plusMinutes(remainingTime));
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Mate mate = new Mate(threeMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.TARGET_LOCATION, 10L);
+        Mate savedMate = mateRepository.save(mate);
+        Eta arrivalSoonEta = etaRepository.save(new Eta(mate, 0L));
 
         assertThatThrownBy(() -> mateService.nudge(savedMate.getId()))
                 .isInstanceOf(OdyBadRequestException.class);
