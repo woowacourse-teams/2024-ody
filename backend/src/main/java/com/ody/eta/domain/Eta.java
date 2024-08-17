@@ -33,15 +33,20 @@ public class Eta {
     @JoinColumn(name = "mate_id")
     private Mate mate;
 
+    @NotNull
     private long remainingMinutes;
 
+    @NotNull
     private boolean isArrived;
 
+    @NotNull
     private boolean isMissing;
 
     @Column(updatable = false)
+    @NotNull
     private LocalDateTime createdAt;
 
+    @NotNull
     private LocalDateTime updatedAt;
 
     public Eta(Mate mate, Long remainingMinutes) {
