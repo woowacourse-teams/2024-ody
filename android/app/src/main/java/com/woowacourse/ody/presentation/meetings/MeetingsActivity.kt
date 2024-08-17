@@ -1,11 +1,15 @@
 package com.woowacourse.ody.presentation.meetings
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.animation.doOnEnd
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
 import com.woowacourse.ody.presentation.common.PermissionHelper
@@ -13,6 +17,7 @@ import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
+import com.woowacourse.ody.presentation.login.LoginActivity
 import com.woowacourse.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsListener
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
@@ -22,6 +27,8 @@ class MeetingsActivity :
         R.layout.activity_meetings,
     ),
     MeetingsListener {
+    private lateinit var splashScreen: SplashScreen
+
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
             analyticsHelper,
@@ -37,10 +44,24 @@ class MeetingsActivity :
     private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        splashScreen = installSplashScreen()
+        startSplash()
         super.onCreate(savedInstanceState)
-        initializeObserve()
-        initializeBinding()
-        requestPermissions()
+    }
+
+    private fun startSplash() {
+        splashScreen.setOnExitAnimationListener { splashScreenView ->
+            val hasToken = true
+
+            ObjectAnimator.ofPropertyValuesHolder(splashScreenView.iconView).run {
+                duration = 1500L
+                doOnEnd {
+                    handleSplashScreen(hasToken)
+                    splashScreenView.remove()
+                }
+                start()
+            }
+        }
     }
 
     override fun onResume() {
@@ -51,6 +72,18 @@ class MeetingsActivity :
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
         binding.listener = this
+    }
+
+    private fun handleSplashScreen(hasToken: Boolean) {
+        if (hasToken) {
+            initializeObserve()
+            initializeBinding()
+            requestPermissions()
+        } else {
+            splashScreen.setKeepOnScreenCondition { true }
+            startActivity(Intent(this@MeetingsActivity, LoginActivity::class.java))
+            finish()
+        }
     }
 
     private fun initializeObserve() {
