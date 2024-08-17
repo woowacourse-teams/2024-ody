@@ -1,13 +1,15 @@
 package com.woowacourse.ody.presentation.meetings
 
-import android.app.AlertDialog
+import android.animation.ObjectAnimator
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.animation.doOnEnd
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
 import com.woowacourse.ody.presentation.common.PermissionHelper
@@ -15,14 +17,18 @@ import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 import com.woowacourse.ody.presentation.creation.MeetingCreationActivity
 import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
+import com.woowacourse.ody.presentation.login.LoginActivity
 import com.woowacourse.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsListener
-import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardActivity
-import com.woowacourse.ody.presentation.room.log.NotificationLogActivity
+import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 
 class MeetingsActivity :
-    BindingActivity<ActivityMeetingsBinding>(R.layout.activity_meetings),
+    BindingActivity<ActivityMeetingsBinding>(
+        R.layout.activity_meetings,
+    ),
     MeetingsListener {
+    private lateinit var splashScreen: SplashScreen
+
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
             analyticsHelper,
@@ -38,10 +44,24 @@ class MeetingsActivity :
     private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        splashScreen = installSplashScreen()
+        startSplash()
         super.onCreate(savedInstanceState)
-        initializeObserve()
-        initializeBinding()
-        requestPermissions()
+    }
+
+    private fun startSplash() {
+        splashScreen.setOnExitAnimationListener { splashScreenView ->
+            val hasToken = true
+
+            ObjectAnimator.ofPropertyValuesHolder(splashScreenView.iconView).run {
+                duration = 1500L
+                doOnEnd {
+                    handleSplashScreen(hasToken)
+                    splashScreenView.remove()
+                }
+                start()
+            }
+        }
     }
 
     override fun onResume() {
@@ -54,6 +74,18 @@ class MeetingsActivity :
         binding.listener = this
     }
 
+    private fun handleSplashScreen(hasToken: Boolean) {
+        if (hasToken) {
+            initializeObserve()
+            initializeBinding()
+            requestPermissions()
+        } else {
+            splashScreen.setKeepOnScreenCondition { true }
+            startActivity(Intent(this@MeetingsActivity, LoginActivity::class.java))
+            finish()
+        }
+    }
+
     private fun initializeObserve() {
         viewModel.meetingCatalogs.observe(this) {
             adapter.submitList(it)
@@ -63,14 +95,8 @@ class MeetingsActivity :
         }
         viewModel.navigateAction.observe(this) {
             when (it) {
-                is MeetingsNavigateAction.NavigateToEta ->
-                    navigateToEta(
-                        it.meetingId,
-                        it.inviteCode,
-                        it.title,
-                    )
-
-                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToMeetingRoom(it.meetingId)
+                is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
+                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
             }
         }
     }
@@ -91,6 +117,30 @@ class MeetingsActivity :
         closeNavigateMenu()
     }
 
+    private fun navigateToNotificationLog(meetingId: Long) {
+        val intent =
+            MeetingRoomActivity.getIntent(
+                this,
+                meetingId,
+                MeetingRoomActivity.NAVIGATE_TO_NOTIFICATION_LOG,
+            )
+        startActivity(intent)
+    }
+
+    private fun navigateToEtaDashboard(meetingId: Long) {
+        analyticsHelper.logButtonClicked(
+            eventName = "eta_button_from_meetings",
+            location = TAG,
+        )
+        val intent =
+            MeetingRoomActivity.getIntent(
+                this,
+                meetingId,
+                MeetingRoomActivity.NAVIGATE_TO_ETA_DASHBOARD,
+            )
+        startActivity(intent)
+    }
+
     override fun guideItemDisabled() {
         showSnackBar(R.string.meetings_entrance_unavailable_guide)
     }
@@ -98,22 +148,6 @@ class MeetingsActivity :
     private fun closeNavigateMenu() {
         binding.cvMenuView.visibility = View.GONE
         binding.fabMeetingsNavigator.isSelected = false
-    }
-
-    private fun navigateToMeetingRoom(meetingId: Long) {
-        startActivity(NotificationLogActivity.getIntent(this, meetingId))
-    }
-
-    private fun navigateToEta(
-        meetingId: Long,
-        inviteCode: String,
-        title: String,
-    ) {
-        analyticsHelper.logButtonClicked(
-            eventName = "eta_button_from_meetings",
-            location = TAG,
-        )
-        startActivity(EtaDashboardActivity.getIntent(this, meetingId, inviteCode, title))
     }
 
     private fun requestPermissions() {
@@ -168,24 +202,6 @@ class MeetingsActivity :
             showSnackBar(requiredMessage)
         }
         requestNextPermission()
-    }
-
-    private fun showBackgroundLocationPermissionDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
-        val listener =
-            DialogInterface.OnClickListener { _, which ->
-                when (which) {
-                    DialogInterface.BUTTON_POSITIVE ->
-                        permissionHelper.requestBackgroundLocationPermission(this)
-                }
-            }
-        builder.setTitle(getString(R.string.request_background_permission_dialog_title))
-        builder.setPositiveButton(
-            getString(R.string.request_background_permission_dialog_yes),
-            listener,
-        )
-        builder.setNegativeButton(getString(R.string.request_background_permission_dialog_no), null)
-        builder.show()
     }
 
     companion object {

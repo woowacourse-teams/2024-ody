@@ -17,6 +17,7 @@ firebaseMessaging = "24.0.0"
 firebaseMessagingKtx = "24.0.0"
 fragmentKtx = "1.8.2"
 fragmentTesting = "1.8.2"
+glide = "4.12.0"
 googleServices = "4.4.2"
 junitJupiter = "5.10.2"
 junitVersion = "1.2.1"
@@ -31,6 +32,7 @@ moshi = "1.15.1"
 parcelize = "1.6.0-M1"
 playServicesLocation = "21.3.0"
 retrofit = "2.11.0"
+splashScreen = "1.0.1"
 timber = "5.0.1"
 viewPager = "1.1.0"
 webkit = "1.11.0"
@@ -46,6 +48,7 @@ androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-view-pager = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewPager" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
 androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "fragmentTesting" }
 androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "lifecycle" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -94,6 +97,9 @@ play-services-location = { module = "com.google.android.gms:play-services-locati
 
 # coroutines
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+
+# glide
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

@@ -1,6 +1,7 @@
 package com.ody.meeting.dto.request;
 
 import com.ody.common.annotation.FutureOrPresentDateTime;
+import com.ody.common.annotation.SupportRegion;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@SupportRegion(latitudeFieldName = "targetLatitude", longitudeFieldName = "targetLongitude")
 @FutureOrPresentDateTime(dateFieldName = "date", timeFieldName = "time")
 public record MeetingSaveRequestV1(
 

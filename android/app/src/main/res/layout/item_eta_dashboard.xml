@@ -22,7 +22,7 @@
 
         <TextView
             android:id="@+id/tv_nickname_dashboard"
-            style="@style/pretendard_bold_24"
+            style="@style/pretendard_bold_20"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -33,11 +33,12 @@
             app:layout_constraintEnd_toStartOf="@id/tv_badge_dashboard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="올리브" />
+            tools:text="크림묻은올리브" />
 
         <TextView
             android:id="@+id/tv_badge_dashboard"
             style="@style/pretendard_medium_16"
+            etaBadgeAnimation="@{eta.etaTypeUiModel}"
             android:layout_width="80dp"
             android:layout_height="32dp"
             android:background="@drawable/rectangle_radius_15"

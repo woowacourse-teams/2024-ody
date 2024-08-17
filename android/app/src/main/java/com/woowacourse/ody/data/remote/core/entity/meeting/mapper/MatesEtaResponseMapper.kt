@@ -18,7 +18,7 @@ private fun MateEtaResponse.toMateEta(): MateEta {
     return MateEta(
         nickname = nickname,
         etaType = status.toEtaType(),
-        durationMinute = durationMinutes,
+        durationMinute = durationMinutes.toInt(),
     )
 }
 

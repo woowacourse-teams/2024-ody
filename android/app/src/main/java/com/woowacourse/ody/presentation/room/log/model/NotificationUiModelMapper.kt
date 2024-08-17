@@ -9,6 +9,7 @@ fun NotificationLog.toNotificationUiModel(): NotificationLogUiModel {
         type,
         nickname,
         createdAt.format(dateTimeFormatter),
+        imageUrl,
     )
 }
 

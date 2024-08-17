@@ -8,6 +8,7 @@ import com.ody.mate.service.MateService;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -53,7 +54,7 @@ public class MateController implements MateControllerSwagger {
     @PostMapping("/v1/mates")
     public ResponseEntity<MateSaveResponse> saveV1(
             @AuthMember Member member,
-            @RequestBody MateSaveRequest mateSaveRequest
+            @Valid @RequestBody MateSaveRequest mateSaveRequest
     ) {
         MateSaveResponse mateSaveResponse = meetingService.saveMateAndSendNotifications(mateSaveRequest, member);
         return ResponseEntity.status(HttpStatus.CREATED)

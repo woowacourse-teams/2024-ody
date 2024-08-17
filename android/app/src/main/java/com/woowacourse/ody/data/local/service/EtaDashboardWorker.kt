@@ -9,7 +9,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.woowacourse.ody.OdyApplication
@@ -53,9 +55,16 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
             return updateMatesEta(true, "0.0", "0.0")
         }
 
+        val currentLocationRequest =
+            CurrentLocationRequest.Builder()
+                .setDurationMillis(30_000L)
+                .setMaxUpdateAgeMillis(60_000L)
+                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                .build()
+
         val location =
             suspendCancellableCoroutine { continuation ->
-                fusedLocationProviderClient.lastLocation
+                fusedLocationProviderClient.getCurrentLocation(currentLocationRequest, null)
                     .addOnSuccessListener { location ->
                         continuation.resume(location) {
                             Timber.d("${location.latitude} ${location.longitude}")

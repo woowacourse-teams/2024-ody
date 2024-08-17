@@ -2,6 +2,7 @@ package com.woowacourse.ody.presentation.room.etadashboard
 
 import android.graphics.Point
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -40,6 +41,17 @@ fun TextView.setOnClickMissingTooltip(
     setOnClickListener {
         val point = this.getPointOnScreen()
         missingToolTipListener.onClickMissingToolTipListener(point, isUserSelf)
+    }
+}
+
+@BindingAdapter("etaBadgeAnimation")
+fun TextView.setEtaBadgeAnimation(etaTypeUiModel: EtaTypeUiModel) {
+    if (
+        etaTypeUiModel == EtaTypeUiModel.LATE ||
+        etaTypeUiModel == EtaTypeUiModel.LATE_WARNING
+    ) {
+        val animation = AnimationUtils.loadAnimation(context, R.anim.bounce_duration_500)
+        this.startAnimation(animation)
     }
 }
 

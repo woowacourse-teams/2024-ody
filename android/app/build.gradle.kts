@@ -51,6 +51,9 @@ android {
         dataBinding = true
         viewBinding = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -64,6 +67,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.core.android)
@@ -109,4 +113,7 @@ dependencies {
 
     // coroutines
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // glide
+    implementation(libs.glide)
 }
