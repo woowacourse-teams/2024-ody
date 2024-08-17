@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ public class MeetingService {
     private final MateService mateService;
     private final MeetingRepository meetingRepository;
     private final MateRepository mateRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional
     public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
@@ -94,6 +96,8 @@ public class MeetingService {
     @Transactional
     public void scheduleOverdueMeetings() {
         meetingRepository.updateAllByOverdueMeetings();
+        List<Meeting> meetings = meetingRepository.findAllByUpdatedTodayAndOverdue();
         log.info("약속 시간이 지난 약속들 overdue = true로 update 쿼리 실행");
+        publisher.publishEvent(meetings);
     }
 }

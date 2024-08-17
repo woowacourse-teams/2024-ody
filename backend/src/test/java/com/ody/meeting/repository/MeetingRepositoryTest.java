@@ -93,4 +93,43 @@ class MeetingRepositoryTest {
 
         assertThat(meetingRepository.findAll()).extracting(Meeting::isOverdue).containsExactly(false, true, true);
     }
+
+    @DisplayName("오늘 약속의 기한이 지난 약속 리스트들을 조회한다")
+    @Test
+    void findAllByUpdatedTodayAndOverdue() {
+        LocalDateTime oneHoursLater = LocalDateTime.now().plusHours(1L);
+        Meeting oneHoursLaterMeeting = new Meeting(
+                "우테코 등교",
+                oneHoursLater.toLocalDate(),
+                oneHoursLater.toLocalTime(),
+                TARGET_LOCATION,
+                "초대코드"
+        );
+        meetingRepository.save(oneHoursLaterMeeting);
+
+        LocalDateTime oneDayBefore = LocalDateTime.now().minusDays(1L);
+        Meeting oneDayBeforeMeeting = new Meeting(
+                "기상시간",
+                oneDayBefore.toLocalDate(),
+                oneDayBefore.toLocalTime(),
+                TARGET_LOCATION,
+                "초대코드"
+        );
+        meetingRepository.save(oneDayBeforeMeeting);
+
+        LocalDateTime twoDayBefore = LocalDateTime.now().minusDays(2L);
+        Meeting twoDayBeforeMeeting = new Meeting(
+                "클라이밍",
+                twoDayBefore.toLocalDate(),
+                twoDayBefore.toLocalTime(),
+                TARGET_LOCATION,
+                "초대코드"
+        );
+        meetingRepository.save(twoDayBeforeMeeting);
+
+        meetingRepository.updateAllByOverdueMeetings();
+
+        assertThat(meetingRepository.findAllByUpdatedTodayAndOverdue()).extracting(Meeting::getId)
+                .containsExactly(oneDayBeforeMeeting.getId(), twoDayBeforeMeeting.getId());
+    }
 }
