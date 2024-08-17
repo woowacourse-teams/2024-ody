@@ -7,7 +7,7 @@ import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 
 interface MeetingRepository {
-    suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit>
+    suspend fun fetchInviteCodeValidity(inviteCode: String): ApiResult<Unit>
 
     suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String>
 

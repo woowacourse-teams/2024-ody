@@ -17,7 +17,7 @@ interface MeetingService {
     @GET("invite-codes/{inviteCode}/validate")
     suspend fun getInviteCodeValidity(
         @Path(value = "inviteCode") inviteCode: String,
-    )
+    ): ApiResult<Unit>
 
     @POST("/v1/meetings")
     suspend fun postMeeting(

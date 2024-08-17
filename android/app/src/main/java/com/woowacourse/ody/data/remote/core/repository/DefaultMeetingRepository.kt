@@ -15,8 +15,8 @@ import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 
 class DefaultMeetingRepository(private val service: MeetingService) : MeetingRepository {
-    override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> {
-        return runCatching { service.getInviteCodeValidity(inviteCode) }
+    override suspend fun fetchInviteCodeValidity(inviteCode: String): ApiResult<Unit> {
+        return service.getInviteCodeValidity(inviteCode)
     }
 
     override suspend fun fetchMeeting(meetingId: Long): Result<Meeting> = runCatching { service.fetchMeeting(meetingId).toMeeting() }
