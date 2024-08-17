@@ -3,7 +3,6 @@ package com.woowacourse.ody.presentation.creation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
@@ -13,6 +12,7 @@ import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
+import com.woowacourse.ody.presentation.common.BaseViewModel
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
@@ -27,7 +27,7 @@ import java.time.LocalTime
 class MeetingCreationViewModel(
     private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
-) : ViewModel(), MeetingCreationListener {
+) : BaseViewModel(), MeetingCreationListener {
     val meetingCreationInfoType: MutableLiveData<MeetingCreationInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
@@ -59,14 +59,6 @@ class MeetingCreationViewModel(
 
     private val _inviteCode: MutableLiveData<String> = MutableLiveData()
     val inviteCode: LiveData<String> get() = _inviteCode
-
-    private val _networkErrorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val networkErrorEvent: SingleLiveData<Unit> get() = _networkErrorEvent
-
-    private val _errorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val errorEvent: SingleLiveData<Unit> get() = _errorEvent
-
-    private var lastFailedAction: (() -> Unit)? = null
 
     init {
         initializeIsValidInfo()
@@ -183,10 +175,6 @@ class MeetingCreationViewModel(
 
     override fun onClickCreationMeeting() {
         _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToCreationComplete)
-    }
-
-    fun retryLastAction() {
-        lastFailedAction?.invoke()
     }
 
     companion object {

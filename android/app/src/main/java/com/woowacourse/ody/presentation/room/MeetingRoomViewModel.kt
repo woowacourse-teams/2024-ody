@@ -2,7 +2,6 @@ package com.woowacourse.ody.presentation.room
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
@@ -12,6 +11,7 @@ import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
+import com.woowacourse.ody.presentation.common.BaseViewModel
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
@@ -34,7 +34,7 @@ class MeetingRoomViewModel(
     matesEtaRepository: MatesEtaRepository,
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     private val matesEta: LiveData<MateEtaInfo?> = matesEtaRepository.fetchMatesEta(meetingId = meetingId)
 
     val mateEtaUiModels: LiveData<List<MateEtaUiModel>?> =
@@ -54,14 +54,6 @@ class MeetingRoomViewModel(
 
     private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
     val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
-
-    private val _networkErrorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val networkErrorEvent: SingleLiveData<Unit> get() = _networkErrorEvent
-
-    private val _errorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val errorEvent: SingleLiveData<Unit> get() = _errorEvent
-
-    private var lastFailedAction: (() -> Unit)? = null
 
     init {
         fetchMeeting()
@@ -107,10 +99,6 @@ class MeetingRoomViewModel(
             location = TAG,
         )
         _navigateToEtaDashboardEvent.setValue(Unit)
-    }
-
-    fun retryLastAction() {
-        lastFailedAction?.invoke()
     }
 
     companion object {

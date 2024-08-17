@@ -2,13 +2,13 @@ package com.woowacourse.ody.presentation.invitecode
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
 import com.woowacourse.ody.domain.apiresult.onNetworkError
 import com.woowacourse.ody.domain.apiresult.onSuccess
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.presentation.common.BaseViewModel
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
@@ -19,7 +19,7 @@ import timber.log.Timber
 class InviteCodeViewModel(
     private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     val inviteCode: MutableLiveData<String> = MutableLiveData()
     val hasInviteCode: LiveData<Boolean> = inviteCode.map { it.isNotEmpty() }
 
@@ -28,11 +28,6 @@ class InviteCodeViewModel(
 
     private val _navigateAction: MutableSingleLiveData<InviteCodeNavigateAction> = MutableSingleLiveData()
     val navigateAction: SingleLiveData<InviteCodeNavigateAction> get() = _navigateAction
-
-    private val _networkErrorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val networkErrorEvent: SingleLiveData<Unit> get() = _networkErrorEvent
-
-    private var lastFailedAction: (() -> Unit)? = null
 
     fun clearInviteCode() {
         inviteCode.value = ""
@@ -53,10 +48,6 @@ class InviteCodeViewModel(
                     lastFailedAction = { checkInviteCode() }
                 }
         }
-    }
-
-    fun retryLastAction() {
-        lastFailedAction?.invoke()
     }
 
     companion object {

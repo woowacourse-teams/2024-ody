@@ -3,7 +3,6 @@ package com.woowacourse.ody.presentation.join
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
@@ -14,6 +13,7 @@ import com.woowacourse.ody.domain.model.MeetingJoinInfo
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
+import com.woowacourse.ody.presentation.common.BaseViewModel
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
@@ -29,7 +29,7 @@ class MeetingJoinViewModel(
     private val inviteCode: String,
     private val joinRepository: JoinRepository,
     private val matesEtaRepository: MatesEtaRepository,
-) : ViewModel(), MeetingJoinListener {
+) : BaseViewModel(), MeetingJoinListener {
     val meetingJoinInfoType: MutableLiveData<MeetingJoinInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
@@ -44,14 +44,6 @@ class MeetingJoinViewModel(
     private val _navigateAction: MutableSingleLiveData<MeetingJoinNavigateAction> =
         MutableSingleLiveData()
     val navigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _navigateAction
-
-    private val _networkErrorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val networkErrorEvent: SingleLiveData<Unit> get() = _networkErrorEvent
-
-    private val _errorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val errorEvent: SingleLiveData<Unit> get() = _errorEvent
-
-    private var lastFailedAction: (() -> Unit)? = null
 
     init {
         initializeIsValidInfo()
@@ -136,10 +128,6 @@ class MeetingJoinViewModel(
             matesEtaRepository.reserveEtaFetchingJob(meetingId, currentReserveTimeMilliSeconds)
             currentReserveTimeMilliSeconds += RESERVE_INTERVAL
         }
-    }
-
-    fun retryLastAction() {
-        lastFailedAction?.invoke()
     }
 
     companion object {

@@ -2,13 +2,13 @@ package com.woowacourse.ody.presentation.meetings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
 import com.woowacourse.ody.domain.apiresult.onNetworkError
 import com.woowacourse.ody.domain.apiresult.onSuccess
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.presentation.common.BaseViewModel
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
@@ -22,7 +22,7 @@ import timber.log.Timber
 class MeetingsViewModel(
     private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
-) : ViewModel(), MeetingsItemListener {
+) : BaseViewModel(), MeetingsItemListener {
     private val _meetingCatalogs = MutableLiveData<List<MeetingUiModel>>()
     val meetingCatalogs: LiveData<List<MeetingUiModel>> = _meetingCatalogs
 
@@ -30,14 +30,6 @@ class MeetingsViewModel(
     val navigateAction: SingleLiveData<MeetingsNavigateAction> = _navigateAction
 
     val isMeetingCatalogsEmpty: LiveData<Boolean> = _meetingCatalogs.map { it.isEmpty() }
-
-    private val _networkErrorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val networkErrorEvent: SingleLiveData<Unit> get() = _networkErrorEvent
-
-    private val _errorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val errorEvent: SingleLiveData<Unit> get() = _errorEvent
-
-    private var lastFailedAction: (() -> Unit)? = null
 
     fun fetchMeetingCatalogs() {
         viewModelScope.launch {
@@ -69,10 +61,6 @@ class MeetingsViewModel(
         newList[position] =
             newList[position].copy(isFolded = !newList[position].isFolded)
         _meetingCatalogs.value = newList
-    }
-
-    fun retryLastAction() {
-        lastFailedAction?.invoke()
     }
 
     companion object {
