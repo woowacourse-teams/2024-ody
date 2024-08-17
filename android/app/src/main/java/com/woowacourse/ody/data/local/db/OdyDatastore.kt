@@ -12,24 +12,6 @@ import kotlinx.coroutines.flow.map
 class OdyDatastore(private val context: Context) {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = ODY_KEY)
 
-    suspend fun setInviteCode(inviteCode: String) {
-        context.dataStore.edit {
-            it[INVITE_CODE] = inviteCode
-        }
-    }
-
-    fun getInviteCode(): Flow<Result<String>> {
-        return context.dataStore.data.map { preferences ->
-            preferences[INVITE_CODE].let {
-                if (!it.isNullOrEmpty()) {
-                    Result.success(it)
-                } else {
-                    Result.failure(Exception())
-                }
-            }
-        }
-    }
-
     suspend fun setToken(token: String) {
         context.dataStore.edit {
             it[TOKEN] = token
@@ -38,7 +20,7 @@ class OdyDatastore(private val context: Context) {
 
     fun getToken(): Flow<Result<String>> {
         return context.dataStore.data.map { preferences ->
-            preferences[INVITE_CODE].let {
+            preferences[TOKEN].let {
                 if (!it.isNullOrEmpty()) {
                     Result.success(it)
                 } else {
@@ -50,7 +32,6 @@ class OdyDatastore(private val context: Context) {
 
     companion object {
         private const val ODY_KEY = "ody_key"
-        private val INVITE_CODE = stringPreferencesKey("inviteCode")
         private val TOKEN = stringPreferencesKey("token")
     }
 }
