@@ -103,11 +103,11 @@ class MeetingCreationViewModel(
             ).onSuccess {
                 _inviteCode.value = it
             }.onFailure { code, errorMessage ->
-                _errorEvent.setValue(Unit)
+                handleError()
                 analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                 Timber.e("$code $errorMessage")
             }.onNetworkError {
-                _networkErrorEvent.setValue(Unit)
+                handleNetworkError()
                 lastFailedAction = { createMeeting() }
             }
         }

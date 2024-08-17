@@ -65,11 +65,11 @@ class MeetingRoomViewModel(
                 .onSuccess {
                     _notificationLogs.value = it.toNotificationUiModels()
                 }.onFailure { code, errorMessage ->
-                    _errorEvent.setValue(Unit)
+                    handleError()
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                     Timber.e("$code $errorMessage")
                 }.onNetworkError {
-                    _networkErrorEvent.setValue(Unit)
+                    handleNetworkError()
                     lastFailedAction = { fetchNotificationLogs() }
                 }
         }
@@ -83,11 +83,11 @@ class MeetingRoomViewModel(
                     _mates.value = it.toMateUiModels()
                     fetchNotificationLogs()
                 }.onFailure { code, errorMessage ->
-                    _errorEvent.setValue(Unit)
+                    handleError()
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                     Timber.e("$code $errorMessage")
                 }.onNetworkError {
-                    _networkErrorEvent.setValue(Unit)
+                    handleNetworkError()
                     lastFailedAction = { fetchMeeting() }
                 }
         }

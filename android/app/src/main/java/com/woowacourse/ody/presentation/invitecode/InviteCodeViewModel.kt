@@ -44,7 +44,7 @@ class InviteCodeViewModel(
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                     Timber.e("$code $errorMessage")
                 }.onNetworkError {
-                    _networkErrorEvent.setValue(Unit)
+                    handleNetworkError()
                     lastFailedAction = { checkInviteCode() }
                 }
         }
