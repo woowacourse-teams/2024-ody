@@ -1,13 +1,11 @@
 package com.woowacourse.ody.presentation.meetings
 
 import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import android.view.animation.AnticipateInterpolator
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen
@@ -55,22 +53,10 @@ class MeetingsActivity :
         splashScreen.setOnExitAnimationListener { splashScreenView ->
             val hasToken = true
 
-            val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 1.3f, 1f)
-            val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 1.3f, 1f)
-
-            ObjectAnimator.ofPropertyValuesHolder(splashScreenView.iconView, scaleX, scaleY).run {
-                interpolator = AnticipateInterpolator()
+            ObjectAnimator.ofPropertyValuesHolder(splashScreenView.iconView).run {
                 duration = 1500L
                 doOnEnd {
-                    if (hasToken) {
-                        initializeObserve()
-                        initializeBinding()
-                        requestPermissions()
-                    } else {
-                        splashScreen.setKeepOnScreenCondition { true }
-                        startActivity(Intent(this@MeetingsActivity, LoginActivity::class.java))
-                        finish()
-                    }
+                    handleSplashScreen(hasToken)
                     splashScreenView.remove()
                 }
                 start()
@@ -86,6 +72,18 @@ class MeetingsActivity :
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
         binding.listener = this
+    }
+
+    private fun handleSplashScreen(hasToken: Boolean) {
+        if (hasToken) {
+            initializeObserve()
+            initializeBinding()
+            requestPermissions()
+        } else {
+            splashScreen.setKeepOnScreenCondition { true }
+            startActivity(Intent(this@MeetingsActivity, LoginActivity::class.java))
+            finish()
+        }
     }
 
     private fun initializeObserve() {

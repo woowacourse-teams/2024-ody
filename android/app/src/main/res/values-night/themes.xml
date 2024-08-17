@@ -1,4 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="Base.Theme.Ody" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:statusBarColor">@color/cream</item>
         <item name="android:windowBackground">@color/cream</item>
@@ -7,10 +8,9 @@
 
     <style name="Theme.Ody" parent="Base.Theme.Ody" />
 
-    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/cream</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_ody</item>
-        <item name="windowSplashScreenAnimationDuration">1000</item>
+    <style name="AppTheme.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/purple_800</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen</item>
         <item name="postSplashScreenTheme">@style/Theme.Ody</item>
     </style>
 </resources>
