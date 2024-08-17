@@ -22,7 +22,7 @@ public class FcmPushSender {
     @Transactional
     public void sendPushNotification(FcmSendRequest fcmSendRequest) {
         Notification notification = fcmSendRequest.notification();
-        PushMessage pushMessage = new PushMessage(fcmSendRequest.topic(), notification);
+        PushMessage pushMessage = new PushMessage(fcmSendRequest.fcmTopic(), notification);
         sendMessage(pushMessage.getMessage(), notification);
     }
 
