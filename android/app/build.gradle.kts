@@ -112,4 +112,7 @@ dependencies {
 
     // coroutines
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // glide
+    implementation(libs.glide)
 }
