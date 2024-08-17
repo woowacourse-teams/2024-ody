@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.ody.domain.apiresult.onFailure
+import com.woowacourse.ody.domain.apiresult.onNetworkError
+import com.woowacourse.ody.domain.apiresult.onSuccess
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
@@ -27,7 +30,7 @@ import timber.log.Timber
 
 class MeetingRoomViewModel(
     private val analyticsHelper: AnalyticsHelper,
-    meetingId: Long,
+    private val meetingId: Long,
     matesEtaRepository: MatesEtaRepository,
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
@@ -52,32 +55,51 @@ class MeetingRoomViewModel(
     private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
     val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
 
+    private val _networkErrorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val networkErrorEvent: SingleLiveData<Unit> get() = _networkErrorEvent
+
+    private val _errorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val errorEvent: SingleLiveData<Unit> get() = _errorEvent
+
+    private var lastFailedAction: (() -> Unit)? = null
+
     init {
-        fetchMeeting(meetingId)
+        fetchMeeting()
     }
 
-    private fun fetchNotificationLogs(meetingId: Long) =
+    private fun fetchNotificationLogs(){
         viewModelScope.launch {
             notificationLogRepository.fetchNotificationLogs(meetingId)
                 .onSuccess {
                     _notificationLogs.value = it.toNotificationUiModels()
-                }.onFailure {
-                    analyticsHelper.logNetworkErrorEvent(TAG, it.message)
-                    Timber.e(it.message)
+                }.onFailure { code, errorMessage ->
+                    _errorEvent.setValue(Unit)
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    Timber.e("$code $errorMessage")
+                }.onNetworkError {
+                    _networkErrorEvent.setValue(Unit)
+                    lastFailedAction = { fetchNotificationLogs() }
                 }
         }
+    }
 
-    private fun fetchMeeting(meetingId: Long) =
+    private fun fetchMeeting() {
         viewModelScope.launch {
             meetingRepository.fetchMeeting(meetingId)
                 .onSuccess {
                     _meeting.value = it.toMeetingUiModel()
                     _mates.value = it.toMateUiModels()
-                    fetchNotificationLogs(meetingId)
-                }.onFailure {
-                    Timber.e(it.message)
+                    fetchNotificationLogs()
+                }.onFailure { code, errorMessage ->
+                    _errorEvent.setValue(Unit)
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    Timber.e("$code $errorMessage")
+                }.onNetworkError {
+                    _networkErrorEvent.setValue(Unit)
+                    lastFailedAction = { fetchMeeting() }
                 }
         }
+    }
 
     fun navigateToEtaDashboard() {
         analyticsHelper.logButtonClicked(
@@ -85,6 +107,10 @@ class MeetingRoomViewModel(
             location = TAG,
         )
         _navigateToEtaDashboardEvent.setValue(Unit)
+    }
+
+    fun retryLastAction() {
+        lastFailedAction?.invoke()
     }
 
     companion object {

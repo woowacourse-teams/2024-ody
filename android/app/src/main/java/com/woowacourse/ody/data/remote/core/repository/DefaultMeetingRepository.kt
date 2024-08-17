@@ -19,7 +19,8 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         return service.getInviteCodeValidity(inviteCode)
     }
 
-    override suspend fun fetchMeeting(meetingId: Long): Result<Meeting> = runCatching { service.fetchMeeting(meetingId).toMeeting() }
+    override suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting> =
+        service.fetchMeeting(meetingId).map { it.toMeeting() }
 
     override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String> =
         service.postMeeting(meetingCreationInfo.toMeetingRequest()).map { it.inviteCode }
@@ -39,7 +40,7 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
     }
 
     override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> =
-        service.fetchMeetingCatalogs2().map { it.toMeetingCatalogs() }
+        service.fetchMeetingCatalogs().map { it.toMeetingCatalogs() }
 
     private fun compress(coordinate: String): String {
         val endIndex = minOf(9, coordinate.length)

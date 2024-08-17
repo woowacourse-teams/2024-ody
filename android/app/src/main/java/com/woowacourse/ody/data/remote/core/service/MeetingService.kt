@@ -31,13 +31,10 @@ interface MeetingService {
     ): MatesEtaResponse
 
     @GET("/v1/meetings/me")
-    suspend fun fetchMeetingCatalogs(): MeetingCatalogsResponse
-
-    @GET("/v1/meetings/me")
-    suspend fun fetchMeetingCatalogs2(): ApiResult<MeetingCatalogsResponse>
+    suspend fun fetchMeetingCatalogs(): ApiResult<MeetingCatalogsResponse>
 
     @GET("/v1/meetings/{meetingId}")
     suspend fun fetchMeeting(
         @Path(value = "meetingId") meetingId: Long,
-    ): MeetingResponse
+    ): ApiResult<MeetingResponse>
 }

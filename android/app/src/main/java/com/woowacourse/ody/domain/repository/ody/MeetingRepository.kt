@@ -20,5 +20,5 @@ interface MeetingRepository {
 
     suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>>
 
-    suspend fun fetchMeeting(meetingId: Long): Result<Meeting>
+    suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting>
 }
