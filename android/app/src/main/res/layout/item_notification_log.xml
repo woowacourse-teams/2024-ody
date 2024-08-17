@@ -43,9 +43,12 @@
         <TextView
             android:id="@+id/tv_log_form"
             style="@style/pretendard_medium_18"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             app:layout_constraintBottom_toTopOf="@id/tv_log_created"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_nickname"
             app:layout_constraintTop_toTopOf="parent"
             app:notificationType="@{log.type}"
