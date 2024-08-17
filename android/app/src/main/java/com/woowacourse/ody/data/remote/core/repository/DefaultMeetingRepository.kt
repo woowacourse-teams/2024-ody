@@ -19,8 +19,9 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         return service.getInviteCodeValidity(inviteCode)
     }
 
-    override suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting> =
-        service.fetchMeeting(meetingId).map { it.toMeeting() }
+    override suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting> {
+        return service.fetchMeeting(meetingId).map { it.toMeeting() }
+    }
 
     override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String> =
         service.postMeeting(meetingCreationInfo.toMeetingRequest()).map { it.inviteCode }

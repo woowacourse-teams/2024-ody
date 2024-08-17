@@ -41,11 +41,13 @@ abstract class BindingActivity<T : ViewDataBinding>(
         snackBar?.dismiss()
         snackBar =
             Snackbar.make(binding.root, R.string.network_error_guide, Snackbar.LENGTH_INDEFINITE)
-            .setAction(R.string.retry_button) { action() }
+                .setAction(R.string.retry_button) { action() }
         snackBar?.show()
     }
 
-    protected fun showToast(@StringRes messageId: Int) {
+    protected fun showToast(
+        @StringRes messageId: Int,
+    ) {
         Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show()
     }
 

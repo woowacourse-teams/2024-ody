@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
 import com.woowacourse.ody.domain.apiresult.onNetworkError
 import com.woowacourse.ody.domain.apiresult.onSuccess
-import com.woowacourse.ody.domain.apiresult.onUnexpected
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData

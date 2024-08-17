@@ -67,7 +67,7 @@ class MeetingRoomViewModel(
         fetchMeeting()
     }
 
-    private fun fetchNotificationLogs(){
+    private fun fetchNotificationLogs() {
         viewModelScope.launch {
             notificationLogRepository.fetchNotificationLogs(meetingId)
                 .onSuccess {
