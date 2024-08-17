@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.ody.domain.apiresult.onFailure
+import com.woowacourse.ody.domain.apiresult.onNetworkError
+import com.woowacourse.ody.domain.apiresult.onSuccess
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.MeetingJoinInfo
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
@@ -42,6 +45,14 @@ class MeetingJoinViewModel(
         MutableSingleLiveData()
     val navigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _navigateAction
 
+    private val _networkErrorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val networkErrorEvent: SingleLiveData<Unit> get() = _networkErrorEvent
+
+    private val _errorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val errorEvent: SingleLiveData<Unit> get() = _errorEvent
+
+    private var lastFailedAction: (() -> Unit)? = null
+
     init {
         initializeIsValidInfo()
     }
@@ -76,9 +87,12 @@ class MeetingJoinViewModel(
             ).onSuccess {
                 reserveEtaFetchingJobs(it.meetingId, it.meetingDateTime)
                 _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
-            }.onFailure {
-                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
-                Timber.e(it.message)
+            }.onFailure { code, errorMessage ->
+                _errorEvent.setValue(Unit)
+                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                Timber.e("$code $errorMessage")
+            }.onNetworkError {
+                _networkErrorEvent.setValue(Unit)
             }
         }
     }
@@ -121,6 +135,10 @@ class MeetingJoinViewModel(
             matesEtaRepository.reserveEtaFetchingJob(meetingId, currentReserveTimeMilliSeconds)
             currentReserveTimeMilliSeconds += RESERVE_INTERVAL
         }
+    }
+
+    fun retryLastAction() {
+        lastFailedAction?.invoke()
     }
 
     companion object {
