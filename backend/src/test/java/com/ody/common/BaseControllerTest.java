@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 public abstract class BaseControllerTest {
 
     @MockBean
-    protected FcmConfig fcmConfig;
+    private FcmConfig fcmConfig;
 
     @MockBean
     protected FcmSubscriber fcmSubscriber;
@@ -28,7 +28,7 @@ public abstract class BaseControllerTest {
     protected FcmPushSender fcmPushSender;
 
     @Autowired
-    protected DatabaseCleaner databaseCleaner;
+    private DatabaseCleaner databaseCleaner;
 
     @BeforeEach
     void databaseCleanUp() {
