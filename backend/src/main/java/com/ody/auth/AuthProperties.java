@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
-@ConfigurationProperties(prefix = "auth")
 @RequiredArgsConstructor
+@ConfigurationProperties(prefix = "auth")
 public class AuthProperties {
 
     private final String accessKey;

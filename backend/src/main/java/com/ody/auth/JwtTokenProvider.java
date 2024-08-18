@@ -5,14 +5,16 @@ import com.ody.auth.token.RefreshToken;
 import com.ody.member.domain.Member;
 import io.jsonwebtoken.Jwts;
 import java.util.Date;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import lombok.Getter;
 
-@RequiredArgsConstructor
-@EnableConfigurationProperties(AuthProperties.class)
+@Getter
 public class JwtTokenProvider {
 
     private final AuthProperties authProperties;
+
+    public JwtTokenProvider(AuthProperties authProperties) {
+        this.authProperties = authProperties;
+    }
 
     public AccessToken createAccessToken(Member member) {
         return new AccessToken(member, authProperties);
