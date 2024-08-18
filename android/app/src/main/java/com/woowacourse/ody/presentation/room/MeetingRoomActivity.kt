@@ -56,6 +56,12 @@ class MeetingRoomActivity :
         viewModel.navigateToEtaDashboardEvent.observe(this) {
             addFragment(EtaDashboardFragment())
         }
+        viewModel.networkErrorEvent.observe(this) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+        viewModel.errorEvent.observe(this) {
+            showSnackBar(R.string.error_guide)
+        }
     }
 
     private fun initializeFragment() {

@@ -112,4 +112,7 @@
     <string name="address_question_hint">주소를 찾아보세요</string>
     <string name="address_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
     <string name="invalid_address">지원하지 않는 지역이에요. 다시 선택해 주세요.</string>
+    <string name="error_guide">오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</string>
+    <string name="network_error_guide">네트워크 연결 확인 후 다시 시도해 주세요.</string>
+    <string name="retry_button">재시도</string>
 </resources>
