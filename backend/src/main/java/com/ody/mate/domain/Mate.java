@@ -2,6 +2,7 @@ package com.ody.mate.domain;
 
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -66,5 +67,9 @@ public class Mate {
 
     public String getNicknameValue() {
         return nickname.getValue();
+    }
+
+    public DeviceToken getMemberDeviceToken() {
+        return member.getDeviceToken();
     }
 }
