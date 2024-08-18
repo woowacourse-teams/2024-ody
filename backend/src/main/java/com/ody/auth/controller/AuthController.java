@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -20,7 +21,7 @@ public class AuthController implements AuthControllerSwagger {
 
     @Override
     @PostMapping("/v1/auth/kakao")
-    public ResponseEntity<AuthResponse> authKakao(@Valid AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> authKakao(@Valid @RequestBody AuthRequest authRequest) {
         AuthResponse authResponse = memberService.save(authRequest);
         return ResponseEntity.ok(authResponse);
     }
