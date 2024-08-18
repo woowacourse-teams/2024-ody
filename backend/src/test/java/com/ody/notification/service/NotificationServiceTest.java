@@ -118,6 +118,7 @@ class NotificationServiceTest extends BaseServiceTest {
                 .schedule(any(Runnable.class), any(Instant.class));
     }
 
+    @DisplayName("모임방에 대한 구독을 취소한다")
     @Test
     void unSubscribeTopic() {
         Member member = memberRepository.save(Fixture.MEMBER1);
