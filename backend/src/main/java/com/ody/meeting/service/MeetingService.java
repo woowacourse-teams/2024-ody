@@ -95,7 +95,7 @@ public class MeetingService {
     @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
     @Transactional
     public void scheduleOverdueMeetings() {
-        meetingRepository.updateAllByOverdueMeetings();
+        meetingRepository.updateAllByNotOverdueMeetings();
         List<Meeting> meetings = meetingRepository.findAllByUpdatedTodayAndOverdue();
         log.info("약속 시간이 지난 약속들 overdue = true로 update 쿼리 실행");
         publisher.publishEvent(meetings);

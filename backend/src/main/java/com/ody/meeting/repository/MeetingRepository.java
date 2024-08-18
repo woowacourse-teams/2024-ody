@@ -20,7 +20,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("update Meeting m set m.overdue = true where m.overdue = false and m.date < CURRENT_DATE")
-    void updateAllByOverdueMeetings();
+    void updateAllByNotOverdueMeetings();
 
     @Query("select m from Meeting m where m.overdue = true and CAST(m.updatedAt AS LOCALDATE) = CURRENT_DATE")
     List<Meeting> findAllByUpdatedTodayAndOverdue();

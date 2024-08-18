@@ -89,7 +89,7 @@ class MeetingRepositoryTest {
         );
         meetingRepository.save(twoDayBeforeMeeting);
 
-        meetingRepository.updateAllByOverdueMeetings();
+        meetingRepository.updateAllByNotOverdueMeetings();
 
         assertThat(meetingRepository.findAll()).extracting(Meeting::isOverdue).containsExactly(false, true, true);
     }
@@ -127,7 +127,7 @@ class MeetingRepositoryTest {
         );
         meetingRepository.save(twoDayBeforeMeeting);
 
-        meetingRepository.updateAllByOverdueMeetings();
+        meetingRepository.updateAllByNotOverdueMeetings();
 
         assertThat(meetingRepository.findAllByUpdatedTodayAndOverdue()).extracting(Meeting::getId)
                 .containsExactly(oneDayBeforeMeeting.getId(), twoDayBeforeMeeting.getId());
