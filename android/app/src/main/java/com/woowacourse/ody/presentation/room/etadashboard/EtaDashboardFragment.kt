@@ -103,7 +103,7 @@ class EtaDashboardFragment :
     }
 
     override fun onShare() {
-        val bitmap = binding.root.getBitmap()
+        val bitmap = binding.rvEtaDashboard.getBitmap()
         val byteArray = bitmap.toByteArray()
         viewModel.uploadImage(byteArray)
     }
