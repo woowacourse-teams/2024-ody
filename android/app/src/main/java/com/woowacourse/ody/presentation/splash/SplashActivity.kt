@@ -7,7 +7,7 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.woowacourse.ody.R
-import com.woowacourse.ody.presentation.meetings.MeetingsActivity
+import com.woowacourse.ody.presentation.login.LoginActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -23,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun initializeObserve() {
         viewModel.navigateAction.observe(this) {
-            val intent = MeetingsActivity.getIntent(this@SplashActivity)
+            val intent = LoginActivity.getIntent(this@SplashActivity)
             startActivity(intent)
             finish()
         }

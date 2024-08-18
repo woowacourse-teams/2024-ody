@@ -2,6 +2,7 @@ package com.woowacourse.ody
 
 import android.app.Application
 import androidx.work.WorkManager
+import com.kakao.sdk.common.KakaoSdk
 import com.woowacourse.ody.BuildConfig.DEBUG
 import com.woowacourse.ody.data.local.db.OdyDatastore
 import com.woowacourse.ody.data.local.repository.DefaultMatesEtaRepository
@@ -35,8 +36,10 @@ class OdyApplication : Application() {
 
     private val joinService: JoinService = retrofit.create(JoinService::class.java)
     private val meetingService: MeetingService = retrofit.create(MeetingService::class.java)
-    private val notificationService: NotificationService = retrofit.create(NotificationService::class.java)
-    private val kakaoLocationService: KakaoLocationService = kakaoRetrofit.create(KakaoLocationService::class.java)
+    private val notificationService: NotificationService =
+        retrofit.create(NotificationService::class.java)
+    private val kakaoLocationService: KakaoLocationService =
+        kakaoRetrofit.create(KakaoLocationService::class.java)
 
     private val workerManager: WorkManager by lazy { WorkManager.getInstance(this) }
     val analyticsHelper: AnalyticsHelper by lazy { FirebaseAnalyticsHelper(this) }
@@ -63,6 +66,7 @@ class OdyApplication : Application() {
         if (DEBUG) {
             Timber.plant(OdyDebugTree)
         }
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 }
 
