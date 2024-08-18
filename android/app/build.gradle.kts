@@ -78,6 +78,7 @@ dependencies {
     // firebase
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage.ktx)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.messaging.ktx)
     implementation(platform(libs.firebase.bom))

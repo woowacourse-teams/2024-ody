@@ -15,6 +15,7 @@ firebaseBom = "33.1.2"
 firebaseCrashlytics = "3.0.2"
 firebaseMessaging = "24.0.0"
 firebaseMessagingKtx = "24.0.0"
+firebaseStorageKtx = "21.0.0"
 fragmentKtx = "1.8.2"
 fragmentTesting = "1.8.2"
 glide = "4.12.0"
@@ -72,6 +73,7 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
 
 # retrofit
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
