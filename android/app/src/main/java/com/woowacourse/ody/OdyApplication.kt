@@ -24,6 +24,8 @@ import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.common.PermissionHelper
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.FirebaseAnalyticsHelper
+import com.woowacourse.ody.presentation.common.capture.FirebaseImageStorage
+import com.woowacourse.ody.presentation.common.capture.ImageStorage
 import com.woowacourse.ody.presentation.notification.NotificationHelper
 import retrofit2.Retrofit
 import timber.log.Timber
@@ -42,6 +44,7 @@ class OdyApplication : Application() {
     val analyticsHelper: AnalyticsHelper by lazy { FirebaseAnalyticsHelper(this) }
     val notificationHelper: NotificationHelper by lazy { NotificationHelper(this) }
     val permissionHelper: PermissionHelper by lazy { PermissionHelper(this) }
+    val imageStorage: ImageStorage = FirebaseImageStorage()
 
     val joinRepository: JoinRepository by lazy { DefaultJoinRepository(joinService) }
     val meetingRepository: MeetingRepository by lazy { DefaultMeetingRepository(meetingService) }
