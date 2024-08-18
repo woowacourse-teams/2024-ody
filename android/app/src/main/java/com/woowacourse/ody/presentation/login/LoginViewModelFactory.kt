@@ -2,7 +2,7 @@ package com.woowacourse.ody.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.woowacourse.ody.data.remote.thirdparty.login.DefaultLoginRepository
+import com.woowacourse.ody.data.remote.core.repository.DefaultLoginRepository
 
 class LoginViewModelFactory(
     private val loginRepository: DefaultLoginRepository,

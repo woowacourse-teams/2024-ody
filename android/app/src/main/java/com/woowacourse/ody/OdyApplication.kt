@@ -12,6 +12,7 @@ import com.woowacourse.ody.data.remote.core.repository.DefaultJoinRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultNotificationLogRepository
 import com.woowacourse.ody.data.remote.core.service.JoinService
+import com.woowacourse.ody.data.remote.core.service.LoginService
 import com.woowacourse.ody.data.remote.core.service.MeetingService
 import com.woowacourse.ody.data.remote.core.service.NotificationService
 import com.woowacourse.ody.data.remote.thirdparty.location.KakaoRetrofitClient
@@ -40,6 +41,7 @@ class OdyApplication : Application() {
         retrofit.create(NotificationService::class.java)
     private val kakaoLocationService: KakaoLocationService =
         kakaoRetrofit.create(KakaoLocationService::class.java)
+    val loginService = retrofit.create(LoginService::class.java)
 
     private val workerManager: WorkManager by lazy { WorkManager.getInstance(this) }
     val analyticsHelper: AnalyticsHelper by lazy { FirebaseAnalyticsHelper(this) }

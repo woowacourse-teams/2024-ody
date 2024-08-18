@@ -4,16 +4,18 @@ import android.content.Context
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
-import com.woowacourse.ody.data.remote.thirdparty.login.AuthToken
-import com.woowacourse.ody.data.remote.thirdparty.login.OAuthLoginService
-import timber.log.Timber
+import com.woowacourse.ody.data.remote.thirdparty.login.ThirdPartyLoginService
+import com.woowacourse.ody.data.remote.thirdparty.login.model.AuthToken
+import com.woowacourse.ody.data.remote.thirdparty.login.model.UserProfile
+import com.woowacourse.ody.domain.common.flatMap
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class KakaoLoginService(private val context: Context) : OAuthLoginService {
-    override suspend fun login(): Result<AuthToken> =
+class KakaoOAuthLoginService(private val context: Context) : ThirdPartyLoginService {
+    override suspend fun login(): Result<UserProfile> = loginWithKakao().flatMap { requestUserProfile() }
+
+    private suspend fun loginWithKakao(): Result<AuthToken> =
         loginWithKakaoTalk().onFailure { error ->
-            Timber.tag(TAG).e(error)
             if (error !is ClientError || error.reason != ClientErrorCause.Cancelled) {
                 return loginWithKakaoAccount()
             }
@@ -41,7 +43,14 @@ class KakaoLoginService(private val context: Context) : OAuthLoginService {
             }
         }
 
-    companion object {
-        private const val TAG = "KakaoLoginService"
-    }
+    private suspend fun requestUserProfile() =
+        suspendCoroutine<Result<UserProfile>> { continuation ->
+            UserApiClient.instance.me { user, error ->
+                if (error != null) {
+                    continuation.resume(Result.failure(error))
+                } else if (user != null) {
+                    continuation.resume(Result.success(user.toUserProfile()))
+                }
+            }
+        }
 }

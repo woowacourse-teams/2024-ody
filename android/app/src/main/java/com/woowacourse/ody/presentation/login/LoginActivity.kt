@@ -6,13 +6,20 @@ import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
 import com.woowacourse.ody.R
-import com.woowacourse.ody.data.remote.thirdparty.login.DefaultLoginRepository
+import com.woowacourse.ody.data.remote.core.repository.DefaultLoginRepository
+import com.woowacourse.ody.data.remote.thirdparty.login.kakao.KakaoOAuthLoginService
 import com.woowacourse.ody.databinding.ActivityLoginBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
 
 class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_login) {
     private val viewModel: LoginViewModel by lazy {
-        val loginRepository = DefaultLoginRepository(this)
+        val kakaoOAuthLoginService = KakaoOAuthLoginService(this)
+        val loginRepository =
+            DefaultLoginRepository(
+                application.loginService,
+                kakaoOAuthLoginService,
+                application.fcmTokenRepository,
+            )
         LoginViewModelFactory(loginRepository).create(LoginViewModel::class.java)
     }
 

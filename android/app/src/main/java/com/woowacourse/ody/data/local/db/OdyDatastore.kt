@@ -24,25 +24,25 @@ class OdyDatastore(private val context: Context) {
                 if (!it.isNullOrEmpty()) {
                     Result.success(it)
                 } else {
-                    Result.failure(Exception())
+                    Result.failure(Exception("Invite code is empty"))
                 }
             }
         }
     }
 
-    suspend fun setToken(token: String) {
+    suspend fun setFCMToken(token: String) {
         context.dataStore.edit {
-            it[TOKEN] = token
+            it[FCM_TOKEN] = token
         }
     }
 
-    fun getToken(): Flow<Result<String>> {
+    fun getFCMToken(): Flow<Result<String>> {
         return context.dataStore.data.map { preferences ->
-            preferences[INVITE_CODE].let {
+            preferences[FCM_TOKEN].let {
                 if (!it.isNullOrEmpty()) {
                     Result.success(it)
                 } else {
-                    Result.failure(Exception())
+                    Result.failure(Exception("FCM Token is empty"))
                 }
             }
         }
@@ -51,6 +51,6 @@ class OdyDatastore(private val context: Context) {
     companion object {
         private const val ODY_KEY = "ody_key"
         private val INVITE_CODE = stringPreferencesKey("inviteCode")
-        private val TOKEN = stringPreferencesKey("token")
+        private val FCM_TOKEN = stringPreferencesKey("fcmToken")
     }
 }

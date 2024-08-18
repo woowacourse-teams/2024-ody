@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.first
 class DefaultFCMTokenRepository(
     private val odyDatastore: OdyDatastore,
 ) : FCMTokenRepository {
-    override suspend fun fetchFCMToken(): Result<String> = odyDatastore.getToken().first()
+    override suspend fun fetchFCMToken(): Result<String> = odyDatastore.getFCMToken().first()
 
-    override suspend fun postFCMToken(fcmToken: String) = odyDatastore.setToken(fcmToken)
+    override suspend fun postFCMToken(fcmToken: String) = odyDatastore.setFCMToken(fcmToken)
 }
