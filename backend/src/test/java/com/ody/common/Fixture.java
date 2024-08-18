@@ -65,9 +65,9 @@ public class Fixture {
     public static Member MEMBER2 = new Member(new DeviceToken("Bearer device-token=testToken2"));
     public static Member MEMBER3 = new Member(new DeviceToken("Bearer device-token=testToken3"));
 
-    public static String MEMBER1_TOKEN = MEMBER1.getDeviceToken().getDeviceToken();
-    public static String MEMBER2_TOKEN = MEMBER2.getDeviceToken().getDeviceToken();
-    public static String MEMBER3_TOKEN = MEMBER3.getDeviceToken().getDeviceToken();
+    public static String MEMBER1_TOKEN = MEMBER1.getDeviceToken().getValue();
+    public static String MEMBER2_TOKEN = MEMBER2.getDeviceToken().getValue();
+    public static String MEMBER3_TOKEN = MEMBER3.getDeviceToken().getValue();
 
     private Fixture() {
     }

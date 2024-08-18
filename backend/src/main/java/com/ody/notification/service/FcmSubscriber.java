@@ -15,8 +15,8 @@ public class FcmSubscriber {
     public void subscribeTopic(FcmTopic fcmTopic, DeviceToken deviceToken) {
         try {
             FirebaseMessaging.getInstance()
-                    .subscribeToTopic(List.of(deviceToken.getDeviceToken()), fcmTopic.getValue());
-            log.info("주제 구독에 성공했습니다. -- TOKEN = {}, TOPIC = {}", deviceToken.getDeviceToken(), fcmTopic.getValue());
+                    .subscribeToTopic(List.of(deviceToken.getValue()), fcmTopic.getValue());
+            log.info("주제 구독에 성공했습니다. -- TOKEN = {}, TOPIC = {}", deviceToken.getValue(), fcmTopic.getValue());
         } catch (Exception exception) {
             log.error("주제 구독에 실패했습니다. -- {}", exception.getMessage());
             throw new OdyServerErrorException("모임 구독에 실패했습니다");

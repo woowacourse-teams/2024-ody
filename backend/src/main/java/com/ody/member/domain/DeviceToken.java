@@ -14,15 +14,15 @@ public class DeviceToken {
 
     private static final String DEVICE_TOKEN_PREFIX = "Bearer device-token=";
 
-    @Column(unique = true, nullable = false)
-    private String deviceToken;
+    @Column(name = "deviceToken", unique = true, nullable = false)
+    private String value;
 
-    public DeviceToken(String deviceToken) {
-        validatePrefix(deviceToken);
-        String token = deviceToken.substring(DEVICE_TOKEN_PREFIX.length())
+    public DeviceToken(String value) {
+        validatePrefix(value);
+        String token = value.substring(DEVICE_TOKEN_PREFIX.length())
                 .strip();
         validateBlank(token);
-        this.deviceToken = token;
+        this.value = token;
     }
 
     private void validatePrefix(String value) {

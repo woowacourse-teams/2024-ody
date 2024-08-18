@@ -147,7 +147,7 @@ class MeetingControllerTest extends BaseControllerTest {
                 .log()
                 .all()
                 .header(HttpHeaders.AUTHORIZATION,
-                        "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                        "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
                 .when()
                 .get("/meetings/1/noti-log")
                 .then()
@@ -191,7 +191,7 @@ class MeetingControllerTest extends BaseControllerTest {
 
             RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION,
-                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
                     .body(mateEtaRequest)
                     .contentType(ContentType.JSON)
                     .when()
@@ -214,7 +214,7 @@ class MeetingControllerTest extends BaseControllerTest {
                     origin.getLongitude());
             MateEtaResponse mateEtaMissingResponse = RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION,
-                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
                     .body(mateEtaMissingRequest)
                     .contentType(ContentType.JSON)
                     .when()
@@ -233,7 +233,7 @@ class MeetingControllerTest extends BaseControllerTest {
                     .log()
                     .all()
                     .header(HttpHeaders.AUTHORIZATION,
-                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
                     .body(mateEtaNotMissingRequest)
                     .contentType(ContentType.JSON)
                     .when()
@@ -266,7 +266,7 @@ class MeetingControllerTest extends BaseControllerTest {
                     origin.getLongitude());
             MateEtaResponses mateEtaResponses = RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION,
-                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getDeviceToken())
+                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
                     .body(mateEtaMissingRequest)
                     .contentType(ContentType.JSON)
                     .when()
