@@ -1,8 +1,7 @@
 package com.ody.common.argumentresolver;
 
+import com.ody.auth.service.AuthService;
 import com.ody.common.annotation.AuthMember;
-import com.ody.member.domain.DeviceToken;
-import com.ody.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +13,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberService memberService;
+    private final AuthService authService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -28,8 +27,7 @@ public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory
     ) {
-        DeviceToken deviceToken = new DeviceToken(webRequest.getHeader(HttpHeaders.AUTHORIZATION));
-        return memberService.findByDeviceToken(deviceToken);
+        return authService.parseAccessToken(webRequest.getHeader(HttpHeaders.AUTHORIZATION));
     }
 }
 

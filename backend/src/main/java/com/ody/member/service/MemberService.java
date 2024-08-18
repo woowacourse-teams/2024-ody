@@ -2,6 +2,7 @@ package com.ody.member.service;
 
 import com.ody.auth.dto.request.AuthRequest;
 import com.ody.auth.dto.response.AuthResponse;
+import com.ody.auth.service.AuthService;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.member.domain.DeviceToken;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MemberService {
 
+    private final AuthService authService;
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -36,11 +38,17 @@ public class MemberService {
             throw new OdyBadRequestException(String.format("중복된 providerId(%s)입니다.", member.getProviderId()));
         }
 
-        return new AuthResponse();
+        Member savedMember = memberRepository.save(member);
+        return authService.issueToken(savedMember);
     }
 
     public Member findByDeviceToken(DeviceToken deviceToken) {
         return memberRepository.findFirstByDeviceToken(deviceToken)
                 .orElseThrow(() -> new OdyUnauthorizedException("존재하지 않는 회원 입니다."));
+    }
+
+    public Member findById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new OdyUnauthorizedException("존재하지 않는 회원입니다."));
     }
 }
