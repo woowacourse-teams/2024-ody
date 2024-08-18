@@ -17,6 +17,7 @@ import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
+import com.woowacourse.ody.presentation.common.capture.ImageStorage
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
 import com.woowacourse.ody.presentation.room.log.model.MateUiModel
@@ -27,6 +28,7 @@ import com.woowacourse.ody.presentation.room.log.model.toMeetingUiModel
 import com.woowacourse.ody.presentation.room.log.model.toNotificationUiModels
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDateTime
 
 class MeetingRoomViewModel(
     private val analyticsHelper: AnalyticsHelper,
@@ -34,8 +36,10 @@ class MeetingRoomViewModel(
     matesEtaRepository: MatesEtaRepository,
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
+    private val imageStorage: ImageStorage,
 ) : BaseViewModel() {
-    private val matesEta: LiveData<MateEtaInfo?> = matesEtaRepository.fetchMatesEta(meetingId = meetingId)
+    private val matesEta: LiveData<MateEtaInfo?> =
+        matesEtaRepository.fetchMatesEta(meetingId = meetingId)
 
     val mateEtaUiModels: LiveData<List<MateEtaUiModel>?> =
         matesEta.map {
@@ -43,7 +47,8 @@ class MeetingRoomViewModel(
             mateEtaInfo.toMateEtaUiModels()
         }
 
-    private val _meeting: MutableLiveData<MeetingDetailUiModel> = MutableLiveData(MeetingDetailUiModel())
+    private val _meeting: MutableLiveData<MeetingDetailUiModel> =
+        MutableLiveData(MeetingDetailUiModel())
     val meeting: LiveData<MeetingDetailUiModel> = _meeting
 
     private val _mates: MutableLiveData<List<MateUiModel>> = MutableLiveData()
@@ -54,6 +59,9 @@ class MeetingRoomViewModel(
 
     private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
     val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
+
+    private val _etaDashboardImageUrl: MutableLiveData<String> = MutableLiveData()
+    val etaDashboardImageUrl: LiveData<String> get() = _etaDashboardImageUrl
 
     init {
         fetchMeeting()
@@ -99,6 +107,18 @@ class MeetingRoomViewModel(
             location = TAG,
         )
         _navigateToEtaDashboardEvent.setValue(Unit)
+    }
+
+    fun uploadImage(byteArray: ByteArray) {
+        viewModelScope.launch {
+            imageStorage.upload(byteArray = byteArray, fileName = LocalDateTime.now().toString())
+                .onSuccess {
+                    _etaDashboardImageUrl.value = it
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = { uploadImage(byteArray) }
+                }
+        }
     }
 
     companion object {

@@ -24,6 +24,7 @@ class MeetingRoomActivity :
             application.matesEtaRepository,
             application.notificationLogRepository,
             application.meetingRepository,
+            application.imageStorage,
         )
     }
     private val fragments: Map<String, Fragment> by lazy {

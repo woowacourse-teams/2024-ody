@@ -15,6 +15,8 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentEtaDashboardBinding
 import com.woowacourse.ody.databinding.LayoutMissingTooltipBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
+import com.woowacourse.ody.presentation.common.capture.getBitmap
+import com.woowacourse.ody.presentation.common.capture.toByteArray
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
@@ -52,6 +54,9 @@ class EtaDashboardFragment :
     private fun initializeObserve() {
         viewModel.mateEtaUiModels.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+        }
+        viewModel.etaDashboardImageUrl.observe(viewLifecycleOwner) {
+            // 카카오 공유하기
         }
     }
 
@@ -98,6 +103,8 @@ class EtaDashboardFragment :
     }
 
     override fun onShare() {
-        // TODO 추후 카카오 공유하기 기능 연결
+        val bitmap = binding.root.getBitmap()
+        val byteArray = bitmap.toByteArray()
+        viewModel.uploadImage(byteArray)
     }
 }
