@@ -57,8 +57,12 @@ public class NotificationService {
         saveAndSendNotification(notification);
     }
 
-    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate, RouteTime routeTime,
-                                                          FcmTopic fcmTopic) {
+    private void saveAndSendDepartureReminderNotification(
+            Meeting meeting,
+            Mate mate,
+            RouteTime routeTime,
+            FcmTopic fcmTopic
+    ) {
         DepartureTime departureTime = new DepartureTime(routeTime, meeting);
         LocalDateTime sendAt = calculateSendAt(departureTime);
         Notification notification = Notification.createDepartureReminder(mate, sendAt, fcmTopic);
