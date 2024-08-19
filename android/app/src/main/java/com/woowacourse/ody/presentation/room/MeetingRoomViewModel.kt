@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.ody.R
 import com.woowacourse.ody.domain.apiresult.onFailure
 import com.woowacourse.ody.domain.apiresult.onNetworkError
 import com.woowacourse.ody.domain.apiresult.onSuccess
+import com.woowacourse.ody.domain.apiresult.onUnexpected
 import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
@@ -17,7 +19,9 @@ import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
-import com.woowacourse.ody.presentation.common.capture.ImageStorage
+import com.woowacourse.ody.presentation.common.image.ImageShareContent
+import com.woowacourse.ody.presentation.common.image.ImageShareHelper
+import com.woowacourse.ody.presentation.common.image.ImageStorage
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
 import com.woowacourse.ody.presentation.room.log.model.MateUiModel
@@ -37,6 +41,7 @@ class MeetingRoomViewModel(
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
     private val imageStorage: ImageStorage,
+    private val imageShareHelper: ImageShareHelper,
 ) : BaseViewModel() {
     private val matesEta: LiveData<MateEtaInfo?> =
         matesEtaRepository.fetchMatesEta(meetingId = meetingId)
@@ -60,8 +65,8 @@ class MeetingRoomViewModel(
     private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
     val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
 
-    private val _etaDashboardImageUrl: MutableLiveData<String> = MutableLiveData()
-    val etaDashboardImageUrl: LiveData<String> get() = _etaDashboardImageUrl
+    private val _isSuccessEtaDashboardShare: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val isSuccessEtaDashboardShare: SingleLiveData<Unit> get() = _isSuccessEtaDashboardShare
 
     init {
         fetchMeeting()
@@ -109,14 +114,42 @@ class MeetingRoomViewModel(
         _navigateToEtaDashboardEvent.setValue(Unit)
     }
 
-    fun uploadImage(byteArray: ByteArray) {
+    fun shareEtaDashboard(
+        title: String,
+        description: String,
+        buttonTitle: String,
+        imageByteArray: ByteArray
+    ) {
         viewModelScope.launch {
-            imageStorage.upload(byteArray = byteArray, fileName = LocalDateTime.now().toString())
+            imageStorage.upload(
+                byteArray = imageByteArray,
+                fileName = LocalDateTime.now().toString(),
+            )
                 .onSuccess {
-                    _etaDashboardImageUrl.value = it
+                    val imageShareContent =
+                        ImageShareContent(
+                            title = title,
+                            description = description,
+                            buttonTitle = buttonTitle,
+                            imageUrl = it,
+                            link = "https://github.com/woowacourse-teams/2024-ody",
+                        )
+                    shareImage(imageShareContent)
                 }.onNetworkError {
                     handleNetworkError()
-                    lastFailedAction = { uploadImage(byteArray) }
+                    lastFailedAction = {
+                        shareEtaDashboard(title, description, buttonTitle, imageByteArray)
+                    }
+                }
+        }
+    }
+
+    private fun shareImage(imageShareContent: ImageShareContent) {
+        viewModelScope.launch {
+            imageShareHelper.share(imageShareContent)
+                .onSuccess {  }
+                .onUnexpected {
+                    handleError()
                 }
         }
     }

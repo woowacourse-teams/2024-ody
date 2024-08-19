@@ -7,7 +7,8 @@ import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
-import com.woowacourse.ody.presentation.common.capture.ImageStorage
+import com.woowacourse.ody.presentation.common.image.ImageShareHelper
+import com.woowacourse.ody.presentation.common.image.ImageStorage
 
 class MeetingRoomViewModelFactory(
     private val analyticsHelper: AnalyticsHelper,
@@ -16,6 +17,7 @@ class MeetingRoomViewModelFactory(
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
     private val imageStorage: ImageStorage,
+    private val imageShareHelper: ImageShareHelper,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(
         modelClass: Class<T>,
@@ -28,7 +30,8 @@ class MeetingRoomViewModelFactory(
                 matesEtaRepository,
                 notificationLogRepository,
                 meetingRepository,
-                imageStorage
+                imageStorage,
+                imageShareHelper,
             ) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")

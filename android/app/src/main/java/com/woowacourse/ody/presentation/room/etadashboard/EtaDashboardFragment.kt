@@ -15,8 +15,8 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentEtaDashboardBinding
 import com.woowacourse.ody.databinding.LayoutMissingTooltipBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
-import com.woowacourse.ody.presentation.common.capture.getBitmap
-import com.woowacourse.ody.presentation.common.capture.toByteArray
+import com.woowacourse.ody.presentation.common.image.getBitmap
+import com.woowacourse.ody.presentation.common.image.toByteArray
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
@@ -55,8 +55,8 @@ class EtaDashboardFragment :
         viewModel.mateEtaUiModels.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
-        viewModel.etaDashboardImageUrl.observe(viewLifecycleOwner) {
-            // 카카오 공유하기
+        viewModel.isSuccessEtaDashboardShare.observe(viewLifecycleOwner) {
+            showSnackBar(R.string.eta_dashboard_share_success)
         }
     }
 
@@ -105,6 +105,11 @@ class EtaDashboardFragment :
     override fun onShare() {
         val bitmap = binding.rvEtaDashboard.getBitmap()
         val byteArray = bitmap.toByteArray()
-        viewModel.uploadImage(byteArray)
+        viewModel.shareEtaDashboard(
+            title = getString(R.string.eta_dashboard_share_title),
+            description = getString(R.string.eta_dashboard_share_description),
+            buttonTitle = getString(R.string.eta_dashboard_share_button),
+            imageByteArray = byteArray,
+        )
     }
 }
