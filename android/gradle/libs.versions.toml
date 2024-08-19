@@ -35,6 +35,7 @@ playServicesLocation = "21.3.0"
 retrofit = "2.11.0"
 splashScreen = "1.0.1"
 timber = "5.0.1"
+v2Share = "2.20.3"
 viewPager = "1.1.0"
 webkit = "1.11.0"
 workRuntimeKtx = "2.9.1"
@@ -102,6 +103,9 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 
 # glide
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+
+# kakao share
+v2-share = { module = "com.kakao.sdk:v2-share", version.ref = "v2Share" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

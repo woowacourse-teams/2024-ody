@@ -117,4 +117,7 @@ dependencies {
 
     // glide
     implementation(libs.glide)
+
+    // kakao share
+    implementation(libs.v2.share)
 }
