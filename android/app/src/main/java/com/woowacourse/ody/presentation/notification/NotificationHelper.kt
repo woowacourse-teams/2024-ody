@@ -31,6 +31,10 @@ class NotificationHelper(private val context: Context) {
                 context.getString(R.string.fcm_notification_departure, nickname)
             }
 
+            NotificationType.NUDGE -> {
+                context.getString(R.string.fcm_notification_nudge)
+            }
+
             NotificationType.DEFAULT -> {
                 ""
             }
