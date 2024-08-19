@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.common.capture
+package com.woowacourse.ody.presentation.common.image
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

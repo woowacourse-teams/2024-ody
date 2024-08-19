@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.common.capture
+package com.woowacourse.ody.presentation.common.image
 
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
