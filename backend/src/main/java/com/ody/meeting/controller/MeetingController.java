@@ -10,6 +10,7 @@ import com.ody.mate.dto.response.MateResponse;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
+import com.ody.meeting.dto.response.MateEtaResponseV2;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
@@ -158,6 +159,24 @@ public class MeetingController implements MeetingControllerSwagger {
             @Valid @RequestBody MateEtaRequest mateEtaRequest
     ) {
         MateEtaResponsesV2 mateEtaResponses = mateService.findAllMateEtas(mateEtaRequest, meetingId, member);
+        return ResponseEntity.ok(mateEtaResponses);
+    }
+
+    @Override
+    @PatchMapping("/v2/meetings/{meetingId}/mates/etas")
+    public ResponseEntity<MateEtaResponsesV2> findAllMateEtasV2(
+            @AuthMember Member member,
+            @PathVariable Long meetingId,
+            @Valid @RequestBody MateEtaRequest mateEtaRequest
+    ) {
+        MateEtaResponsesV2 mateEtaResponses = new MateEtaResponsesV2(
+                4,
+                new MateEtaResponseV2(3, "콜리", EtaStatus.LATE_WARNING, 83),
+                new MateEtaResponseV2(2, "올리브", EtaStatus.ARRIVAL_SOON, 10),
+                new MateEtaResponseV2(1, "해음", EtaStatus.ARRIVED, 0),
+                new MateEtaResponseV2(4, "콜리", EtaStatus.MISSING, -1)
+        );
+
         return ResponseEntity.ok(mateEtaResponses);
     }
 }

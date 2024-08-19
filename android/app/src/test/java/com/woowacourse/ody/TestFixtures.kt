@@ -94,7 +94,6 @@ val notificationLogs: List<NotificationLog> =
         ),
     )
 
-private val userNickname = "해음"
 private val nicknames = listOf("콜리", "올리브", "카키", "해음")
 private val mateEtaTypes =
     listOf(EtaType.LATE_WARNING, EtaType.ARRIVAL_SOON, EtaType.ARRIVED, EtaType.MISSING)
@@ -102,8 +101,8 @@ val mateEtaDurationMinutes = listOf(83, 10, 0, -1)
 
 val mateEtaInfo =
     MateEtaInfo(
-        userNickname = userNickname,
+        userId = 3L,
         nicknames.mapIndexed { idx, nickname ->
-            MateEta(nickname, mateEtaTypes[idx], mateEtaDurationMinutes[idx])
+            MateEta(idx.toLong(), nickname, mateEtaTypes[idx], mateEtaDurationMinutes[idx])
         },
     )

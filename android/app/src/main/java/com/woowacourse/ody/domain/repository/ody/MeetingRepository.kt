@@ -7,9 +7,9 @@ import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 
 interface MeetingRepository {
-    suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit>
+    suspend fun fetchInviteCodeValidity(inviteCode: String): ApiResult<Unit>
 
-    suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String>
+    suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String>
 
     suspend fun patchMatesEta(
         meetingId: Long,
@@ -18,9 +18,7 @@ interface MeetingRepository {
         currentLongitude: String,
     ): Result<MateEtaInfo>
 
-    suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>>
+    suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>>
 
-    suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>>
-
-    suspend fun fetchMeeting(meetingId: Long): Result<Meeting>
+    suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting>
 }

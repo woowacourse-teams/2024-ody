@@ -17,27 +17,24 @@ interface MeetingService {
     @GET("invite-codes/{inviteCode}/validate")
     suspend fun getInviteCodeValidity(
         @Path(value = "inviteCode") inviteCode: String,
-    )
+    ): ApiResult<Unit>
 
     @POST("/v1/meetings")
     suspend fun postMeeting(
         @Body meetingRequest: MeetingRequest,
-    ): MeetingCreationResponse
+    ): ApiResult<MeetingCreationResponse>
 
-    @PATCH("/v1/meetings/{meetingId}/mates/etas")
+    @PATCH("/v2/meetings/{meetingId}/mates/etas")
     suspend fun patchMatesEta(
         @Path(value = "meetingId") meetingId: Long,
         @Body matesEtaRequest: MatesEtaRequest,
     ): MatesEtaResponse
 
     @GET("/v1/meetings/me")
-    suspend fun fetchMeetingCatalogs(): MeetingCatalogsResponse
-
-    @GET("/v1/meetings/me")
-    suspend fun fetchMeetingCatalogs2(): ApiResult<MeetingCatalogsResponse>
+    suspend fun fetchMeetingCatalogs(): ApiResult<MeetingCatalogsResponse>
 
     @GET("/v1/meetings/{meetingId}")
     suspend fun fetchMeeting(
         @Path(value = "meetingId") meetingId: Long,
-    ): MeetingResponse
+    ): ApiResult<MeetingResponse>
 }

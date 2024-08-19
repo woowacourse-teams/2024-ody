@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.OdyApplication
+import com.woowacourse.ody.R
 
 abstract class BindingActivity<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
@@ -32,6 +33,14 @@ abstract class BindingActivity<T : ViewDataBinding>(
     ) {
         snackBar?.dismiss()
         snackBar = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).apply { action() }
+        snackBar?.show()
+    }
+
+    protected fun showRetrySnackBar(action: () -> Unit) {
+        snackBar?.dismiss()
+        snackBar =
+            Snackbar.make(binding.root, R.string.network_error_guide, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.retry_button) { action() }
         snackBar?.show()
     }
 

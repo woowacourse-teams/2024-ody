@@ -3,13 +3,16 @@ package com.woowacourse.ody.presentation.creation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.ody.domain.apiresult.onFailure
+import com.woowacourse.ody.domain.apiresult.onNetworkError
+import com.woowacourse.ody.domain.apiresult.onSuccess
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
+import com.woowacourse.ody.presentation.common.BaseViewModel
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
@@ -24,7 +27,7 @@ import java.time.LocalTime
 class MeetingCreationViewModel(
     private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
-) : ViewModel(), MeetingCreationListener {
+) : BaseViewModel(), MeetingCreationListener {
     val meetingCreationInfoType: MutableLiveData<MeetingCreationInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
@@ -99,9 +102,13 @@ class MeetingCreationViewModel(
                 ),
             ).onSuccess {
                 _inviteCode.value = it
-            }.onFailure {
-                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
-                Timber.e(it.message)
+            }.onFailure { code, errorMessage ->
+                handleError()
+                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                Timber.e("$code $errorMessage")
+            }.onNetworkError {
+                handleNetworkError()
+                lastFailedAction = { createMeeting() }
             }
         }
     }

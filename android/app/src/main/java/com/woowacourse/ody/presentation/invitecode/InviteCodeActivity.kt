@@ -38,6 +38,9 @@ class InviteCodeActivity : BindingActivity<ActivityInviteCodeBinding>(R.layout.a
             navigateToJoinView()
             finish()
         }
+        viewModel.networkErrorEvent.observe(this) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
     }
 
     private fun navigateToJoinView() {
