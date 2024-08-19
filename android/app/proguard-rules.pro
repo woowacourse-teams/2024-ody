@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# kakao
+-keep class com.kakao.sdk.**.model.* { <fields>; }
+
+# retrofit
+-keep class com.woowacourse.ody.data.retrofit.* { <fields>; }
+-keep class com.woowacourse.ody.domain.apiresult.ApiResult
