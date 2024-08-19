@@ -4,7 +4,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    defer-datasource-initialization: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
