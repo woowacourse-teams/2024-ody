@@ -2,6 +2,7 @@ package com.woowacourse.ody
 
 import android.app.Application
 import androidx.work.WorkManager
+import com.kakao.sdk.common.KakaoSdk
 import com.woowacourse.ody.BuildConfig.DEBUG
 import com.woowacourse.ody.data.local.db.OdyDatastore
 import com.woowacourse.ody.data.local.repository.DefaultMatesEtaRepository
@@ -24,8 +25,8 @@ import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.common.PermissionHelper
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.FirebaseAnalyticsHelper
-import com.woowacourse.ody.presentation.common.capture.FirebaseImageStorage
-import com.woowacourse.ody.presentation.common.capture.ImageStorage
+import com.woowacourse.ody.presentation.common.image.FirebaseImageStorage
+import com.woowacourse.ody.presentation.common.image.ImageStorage
 import com.woowacourse.ody.presentation.notification.NotificationHelper
 import retrofit2.Retrofit
 import timber.log.Timber
@@ -63,6 +64,8 @@ class OdyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY)
+
         if (DEBUG) {
             Timber.plant(OdyDebugTree)
         }
