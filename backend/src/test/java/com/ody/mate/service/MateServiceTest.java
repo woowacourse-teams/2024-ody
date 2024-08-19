@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
 import com.ody.common.exception.OdyBadRequestException;
+import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
@@ -95,7 +96,7 @@ class MateServiceTest extends BaseServiceTest {
         Mate mate1 = mateRepository.save(new Mate(meeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
         Mate mate2 = mateRepository.save(new Mate(meeting, member2, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
 
-        List<Mate> mates = mateService.findAllByMemberAndMeetingId(member1, meeting.getId());
+        List<Mate> mates = mateService.findAllByMeetingIdIfMate(member1, meeting.getId());
         List<Long> mateIds = mates.stream()
                 .map(Mate::getId)
                 .toList();
@@ -112,8 +113,8 @@ class MateServiceTest extends BaseServiceTest {
         Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
         mateRepository.save(new Mate(meeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
 
-        assertThatThrownBy(() -> mateService.findAllByMemberAndMeetingId(member2, meeting.getId()))
-                .isInstanceOf(OdyBadRequestException.class);
+        assertThatThrownBy(() -> mateService.findAllByMeetingIdIfMate(member2, meeting.getId()))
+                .isInstanceOf(OdyNotFoundException.class);
     }
 
     @DisplayName("약속이 1분 뒤이고 소요시간이 2분으로 Eta상태가 지각 위기인 mate를 콕 찌를 수 있다")

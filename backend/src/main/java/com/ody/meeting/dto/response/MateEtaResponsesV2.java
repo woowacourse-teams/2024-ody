@@ -14,7 +14,4 @@ public record MateEtaResponsesV2(
         List<MateEtaResponseV2> mateEtas
 ) {
 
-    public MateEtaResponsesV2(long requesterMateId, MateEtaResponseV2... mateEtaResponseV2) {
-        this(requesterMateId, Arrays.asList(mateEtaResponseV2));
-    }
 }
