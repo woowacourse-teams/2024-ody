@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.woowacourse.ody.databinding.ItemEtaDashboardBinding
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
+import com.woowacourse.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 
 class MateEtasAdapter(
     private val missingToolTipListener: MissingToolTipListener,
+    private val nudgeListener: NudgeListener,
 ) : ListAdapter<MateEtaUiModel, MateEtaViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -23,7 +25,7 @@ class MateEtasAdapter(
         holder: MateEtaViewHolder,
         position: Int,
     ) {
-        holder.bind(getItem(position), missingToolTipListener)
+        holder.bind(getItem(position), missingToolTipListener, nudgeListener)
     }
 
     companion object {

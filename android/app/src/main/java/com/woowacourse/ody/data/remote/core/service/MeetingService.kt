@@ -37,4 +37,9 @@ interface MeetingService {
     suspend fun fetchMeeting(
         @Path(value = "meetingId") meetingId: Long,
     ): ApiResult<MeetingResponse>
+
+    @GET("/v1/mates/{mateId}/nudge")
+    suspend fun getNudge(
+        @Path(value = "mateId") mateId: Long,
+    ): ApiResult<Unit>
 }

@@ -23,6 +23,8 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         return service.fetchMeeting(meetingId).map { it.toMeeting() }
     }
 
+    override suspend fun fetchNudge(mateId: Long): ApiResult<Unit> = service.getNudge(mateId)
+
     override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String> =
         service.postMeeting(meetingCreationInfo.toMeetingRequest()).map { it.inviteCode }
 

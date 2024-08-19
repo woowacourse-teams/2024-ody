@@ -17,6 +17,7 @@ import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
+import com.woowacourse.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
 import com.woowacourse.ody.presentation.room.log.model.MateUiModel
@@ -34,8 +35,9 @@ class MeetingRoomViewModel(
     matesEtaRepository: MatesEtaRepository,
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
-) : BaseViewModel() {
-    private val matesEta: LiveData<MateEtaInfo?> = matesEtaRepository.fetchMatesEta(meetingId = meetingId)
+) : BaseViewModel(), NudgeListener {
+    private val matesEta: LiveData<MateEtaInfo?> =
+        matesEtaRepository.fetchMatesEta(meetingId = meetingId)
 
     val mateEtaUiModels: LiveData<List<MateEtaUiModel>?> =
         matesEta.map {
@@ -43,7 +45,8 @@ class MeetingRoomViewModel(
             mateEtaInfo.toMateEtaUiModels()
         }
 
-    private val _meeting: MutableLiveData<MeetingDetailUiModel> = MutableLiveData(MeetingDetailUiModel())
+    private val _meeting: MutableLiveData<MeetingDetailUiModel> =
+        MutableLiveData(MeetingDetailUiModel())
     val meeting: LiveData<MeetingDetailUiModel> = _meeting
 
     private val _mates: MutableLiveData<List<MateUiModel>> = MutableLiveData()
@@ -52,8 +55,12 @@ class MeetingRoomViewModel(
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
     val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs
 
-    private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
+    private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> =
+        MutableSingleLiveData<Unit>()
     val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
+
+    private val _nudgeSuccess: MutableSingleLiveData<String> = MutableSingleLiveData()
+    val nudgeSuccess: SingleLiveData<String> get() = _nudgeSuccess
 
     init {
         fetchMeeting()
@@ -99,6 +106,25 @@ class MeetingRoomViewModel(
             location = TAG,
         )
         _navigateToEtaDashboardEvent.setValue(Unit)
+    }
+
+    override fun nudgeMate(mateId: Long) {
+        viewModelScope.launch {
+            meetingRepository.fetchNudge(mateId)
+                .onSuccess {
+                    val mateNickname =
+                        matesEta.value?.mateEtas?.find { it.mateId == mateId }?.nickname
+                            ?: return@onSuccess
+                    _nudgeSuccess.postValue(mateNickname)
+                }.onFailure { code, errorMessage ->
+                    handleError()
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    Timber.e("$code $errorMessage")
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = { nudgeMate(mateId) }
+                }
+        }
     }
 
     companion object {
