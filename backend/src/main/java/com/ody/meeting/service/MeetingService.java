@@ -82,6 +82,7 @@ public class MeetingService {
         return MeetingWithMatesResponse.of(meeting, mates);
     }
 
+    @Transactional
     public MateSaveResponse saveMateAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
