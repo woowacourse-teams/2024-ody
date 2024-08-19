@@ -13,6 +13,7 @@ create table if not exists meeting (
     latitude varchar(255) not null,
     longitude varchar(255) not null,
     invite_code varchar(255) not null,
+    created_at timestamp not null default current_timestamp(),
     primary key (id)
 );
 
@@ -36,10 +37,10 @@ create table if not exists eta (
     id bigint not null auto_increment,
     mate_id bigint not null,
     remaining_minutes bigint not null,
-    is_arrived tinyint(1) not null default false,
-    is_missing tinyint(1) not null default false,
-    created_at timestamp not null default current_timestamp(),
-    updated_at timestamp not null default current_timestamp(),
+    is_arrived boolean not null,
+    is_missing boolean not null,
+    created_at timestamp not null,
+    updated_at timestamp not null,
     primary key (id),
     constraint fk_eta_mate_id foreign key (mate_id) references mate (id)
 );
