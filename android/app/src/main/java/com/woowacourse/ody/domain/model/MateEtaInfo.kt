@@ -1,6 +1,6 @@
 package com.woowacourse.ody.domain.model
 
 data class MateEtaInfo(
-    val userNickname: String,
+    val userId: Long,
     val mateEtas: List<MateEta>,
 )

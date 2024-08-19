@@ -7,7 +7,7 @@ import com.woowacourse.ody.domain.model.MateEta
 import com.woowacourse.ody.domain.model.MateEtaInfo
 
 fun MatesEtaResponse.toMateEtaInfo(): MateEtaInfo {
-    return MateEtaInfo(userNickname = ownerNickname, mateEtas = matesEtaResponses.toMateEtas())
+    return MateEtaInfo(userId = requesterMateId, mateEtas = matesEtaResponses.toMateEtas())
 }
 
 fun List<MateEtaResponse>.toMateEtas(): List<MateEta> {
@@ -16,6 +16,7 @@ fun List<MateEtaResponse>.toMateEtas(): List<MateEta> {
 
 private fun MateEtaResponse.toMateEta(): MateEta {
     return MateEta(
+        mateId = mateId,
         nickname = nickname,
         etaType = status.toEtaType(),
         durationMinute = durationMinutes.toInt(),

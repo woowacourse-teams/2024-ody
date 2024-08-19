@@ -24,7 +24,7 @@ interface MeetingService {
         @Body meetingRequest: MeetingRequest,
     ): ApiResult<MeetingCreationResponse>
 
-    @PATCH("/v1/meetings/{meetingId}/mates/etas")
+    @PATCH("/v2/meetings/{meetingId}/mates/etas")
     suspend fun patchMatesEta(
         @Path(value = "meetingId") meetingId: Long,
         @Body matesEtaRequest: MatesEtaRequest,
