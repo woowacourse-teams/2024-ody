@@ -35,13 +35,13 @@ create table if not exists mate (
 create table if not exists eta (
     id bigint not null auto_increment,
     mate_id bigint not null,
-    is_arrived boolean not null,
-    is_missing boolean not null,
     remaining_minutes bigint not null,
-    created_at timestamp(6) not null,
-    updated_at timestamp(6) not null,
+    is_arrived tinyint(1) not null default false,
+    is_missing tinyint(1) not null default false,
+    created_at timestamp not null default current_timestamp(),
+    updated_at timestamp not null default current_timestamp(),
     primary key (id),
-    constraint fk_mate_id foreign key (mate_id) references mate (id)
+    constraint fk_eta_mate_id foreign key (mate_id) references mate (id)
 );
 
 create table if not exists notification (
@@ -49,8 +49,8 @@ create table if not exists notification (
     mate_id bigint not null,
     `type` varchar(225) check (`type` in ('departure_reminder','entry')) not null,
     status varchar(225) check (status in ('done','pending')) not null,
-    send_at timestamp(6) not null,
-    created_at timestamp(6) not null default current_timestamp,
+    send_at timestamp not null,
+    created_at timestamp not null default current_timestamp(),
     primary key (id),
-    constraint fk_mate_id foreign key (mate_id) references mate (id)
+    constraint fk_notification_mate_id foreign key (mate_id) references mate (id)
 );
