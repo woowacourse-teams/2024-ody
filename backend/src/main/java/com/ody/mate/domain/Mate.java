@@ -64,6 +64,11 @@ public class Mate {
         this(null, meeting, member, nickname, origin, estimatedMinutes);
     }
 
+    public boolean isAttended(Meeting otherMeeting) {
+        long myMeetingId = this.meeting.getId();
+        return myMeetingId == otherMeeting.getId();
+    }
+
     public String getNicknameValue() {
         return nickname.getValue();
     }
