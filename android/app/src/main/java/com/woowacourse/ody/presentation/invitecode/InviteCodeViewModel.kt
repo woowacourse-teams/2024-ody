@@ -36,6 +36,7 @@ class InviteCodeViewModel(
     fun checkInviteCode() {
         viewModelScope.launch {
             val inviteCode = inviteCode.value ?: return@launch
+            startLoading()
             meetingRepository.fetchInviteCodeValidity(inviteCode)
                 .onSuccess {
                     _navigateAction.setValue(InviteCodeNavigateAction.CodeNavigateToJoin)
@@ -47,6 +48,7 @@ class InviteCodeViewModel(
                     handleNetworkError()
                     lastFailedAction = { checkInviteCode() }
                 }
+            stopLoading()
         }
     }
 

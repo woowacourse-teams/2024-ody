@@ -65,6 +65,13 @@ class MeetingRoomActivity :
         viewModel.errorEvent.observe(this) {
             showSnackBar(R.string.error_guide)
         }
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@observe
+            }
+            hideLoadingDialog()
+        }
     }
 
     private fun initializeFragment() {
