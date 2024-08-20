@@ -30,7 +30,6 @@ public class FcmPushSender {
         sendMessage(nudgeMessage.getMessage(), notification);
     }
 
-
     private void sendMessage(Message message, Notification notification) {
         try {
             FirebaseMessaging.getInstance().send(message);
