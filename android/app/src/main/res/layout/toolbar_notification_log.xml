@@ -19,7 +19,7 @@
 
         <variable
             name="menuListener"
-            type="com.woowacourse.ody.presentation.room.etadashboard.listener.MenuListener" />
+            type="com.woowacourse.ody.presentation.room.log.listener.MenuListener" />
     </data>
 
     <androidx.appcompat.widget.Toolbar

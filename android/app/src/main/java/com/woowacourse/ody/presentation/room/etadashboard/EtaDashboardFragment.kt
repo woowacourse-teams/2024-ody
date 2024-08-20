@@ -21,7 +21,7 @@ import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
-import com.woowacourse.ody.presentation.room.log.listener.ShareListener
+import com.woowacourse.ody.presentation.room.etadashboard.listener.ShareListener
 
 class EtaDashboardFragment :
     BindingFragment<FragmentEtaDashboardBinding>(R.layout.fragment_eta_dashboard),
@@ -103,7 +103,7 @@ class EtaDashboardFragment :
         val bitmap = binding.rvEtaDashboard.getBitmap()
         val byteArray = bitmap.toByteArray()
         viewModel.shareEtaDashboard(
-            description = getString(R.string.eta_dashboard_share_description),
+            title = getString(R.string.eta_dashboard_share_description),
             buttonTitle = getString(R.string.eta_dashboard_share_button),
             imageByteArray = byteArray,
             imageWidthPixel = bitmap.width,
