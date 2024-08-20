@@ -28,19 +28,21 @@ class KakaoImageShareHelper(private val context: Context) : ImageShareHelper {
                 mobileWebUrl = imageShareContent.link,
             )
         return FeedTemplate(
-            content = Content(
-                title = imageShareContent.description,
-                imageUrl = imageShareContent.imageUrl,
-                imageWidth = imageShareContent.imageWidthPixel,
-                imageHeight = imageShareContent.imageHeightPixel,
-                link = link,
-            ),
-            buttons = listOf(
-                Button(
-                    imageShareContent.buttonTitle,
-                    link,
-                )
-            )
+            content =
+                Content(
+                    title = imageShareContent.description,
+                    imageUrl = imageShareContent.imageUrl,
+                    imageWidth = imageShareContent.imageWidthPixel,
+                    imageHeight = imageShareContent.imageHeightPixel,
+                    link = link,
+                ),
+            buttons =
+                listOf(
+                    Button(
+                        imageShareContent.buttonTitle,
+                        link,
+                    ),
+                ),
         )
     }
 

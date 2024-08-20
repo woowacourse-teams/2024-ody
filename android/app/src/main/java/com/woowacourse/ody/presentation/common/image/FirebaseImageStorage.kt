@@ -2,8 +2,8 @@ package com.woowacourse.ody.presentation.common.image
 
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.tasks.await
 import com.woowacourse.ody.domain.apiresult.ApiResult
+import kotlinx.coroutines.tasks.await
 import java.io.IOException
 
 class FirebaseImageStorage : ImageStorage {
@@ -11,7 +11,7 @@ class FirebaseImageStorage : ImageStorage {
 
     override suspend fun upload(
         byteArray: ByteArray,
-        fileName: String
+        fileName: String,
     ): ApiResult<String> {
         val imageRef = storageReference.child("images/$fileName")
 
