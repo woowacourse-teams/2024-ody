@@ -51,6 +51,15 @@ abstract class BindingFragment<T : ViewDataBinding>(
         snackBar?.show()
     }
 
+    fun showSnackBar(
+        message: String,
+        action: Snackbar.() -> Unit = {},
+    ) {
+        snackBar?.dismiss()
+        snackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).apply { action() }
+        snackBar?.show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

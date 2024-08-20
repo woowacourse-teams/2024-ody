@@ -78,4 +78,15 @@ class MeetingRoomViewModelTest {
         val notificationLogUiModel = viewModel.notificationLogs.getOrAwaitValue()
         assertThat(notificationLogUiModel).isEqualTo(notificationLogs.toNotificationUiModels())
     }
+
+    @Test
+    fun `친구 재촉을 하면 친구 재촉이 성공한다`() {
+        // when
+        viewModel.nudgeMate(0)
+
+        // then
+        val nudgedNickname = viewModel.nudgeSuccessMate.getOrAwaitValue()
+
+        assertThat(nudgedNickname).isEqualTo("콜리")
+    }
 }

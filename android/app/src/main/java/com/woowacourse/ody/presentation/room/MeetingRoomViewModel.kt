@@ -21,6 +21,7 @@ import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.common.image.ImageShareContent
 import com.woowacourse.ody.presentation.common.image.ImageShareHelper
+import com.woowacourse.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
 import com.woowacourse.ody.presentation.room.log.model.MateUiModel
@@ -41,7 +42,7 @@ class MeetingRoomViewModel(
     private val meetingRepository: MeetingRepository,
     private val imageStorage: ImageStorage,
     private val imageShareHelper: ImageShareHelper,
-) : BaseViewModel() {
+) : BaseViewModel(), NudgeListener {
     private val matesEta: LiveData<MateEtaInfo?> =
         matesEtaRepository.fetchMatesEta(meetingId = meetingId)
 
@@ -64,8 +65,30 @@ class MeetingRoomViewModel(
     private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
     val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
 
+    private val _nudgeSuccessMate: MutableSingleLiveData<String> = MutableSingleLiveData()
+    val nudgeSuccessMate: SingleLiveData<String> get() = _nudgeSuccessMate
+
     init {
         fetchMeeting()
+    }
+
+    override fun nudgeMate(mateId: Long) {
+        viewModelScope.launch {
+            meetingRepository.fetchNudge(mateId)
+                .onSuccess {
+                    val mateNickname =
+                        matesEta.value?.mateEtas?.find { it.mateId == mateId }?.nickname
+                            ?: return@onSuccess
+                    _nudgeSuccessMate.postValue(mateNickname)
+                }.onFailure { code, errorMessage ->
+                    handleError()
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    Timber.e("$code $errorMessage")
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = { nudgeMate(mateId) }
+                }
+        }
     }
 
     private fun fetchNotificationLogs() {

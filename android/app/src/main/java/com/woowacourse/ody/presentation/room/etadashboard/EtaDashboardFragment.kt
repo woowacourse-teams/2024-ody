@@ -28,7 +28,7 @@ class EtaDashboardFragment :
     MissingToolTipListener,
     ShareListener {
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
-    private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this) }
+    private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this, viewModel) }
     private val parentActivity: Activity by lazy { requireActivity() }
 
     override fun onViewCreated(
@@ -54,6 +54,9 @@ class EtaDashboardFragment :
     private fun initializeObserve() {
         viewModel.mateEtaUiModels.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+        }
+        viewModel.nudgeSuccessMate.observe(viewLifecycleOwner) { nickName ->
+            showSnackBar(getString(R.string.nudge_success, nickName))
         }
     }
 
