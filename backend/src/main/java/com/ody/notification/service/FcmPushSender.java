@@ -8,7 +8,6 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.message.NudgeMessage;
 import com.ody.notification.domain.message.PushMessage;
 import com.ody.notification.dto.request.FcmSendRequest;
-import com.ody.notification.dto.request.NudgeRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,11 +26,10 @@ public class FcmPushSender {
     }
 
     @Transactional
-    public void sendNudgeMessage(NudgeRequest nudgeRequest) {
-        Notification notification = nudgeRequest.notification();
-        NudgeMessage nudgeMessage = new NudgeMessage(nudgeRequest.deviceToken(), notification);
+    public void sendNudgeMessage(Notification notification, NudgeMessage nudgeMessage) {
         sendMessage(nudgeMessage.getMessage(), notification);
     }
+
 
     private void sendMessage(Message message, Notification notification) {
         try {

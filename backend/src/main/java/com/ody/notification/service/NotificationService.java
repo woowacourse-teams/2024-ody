@@ -5,8 +5,8 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.message.NudgeMessage;
 import com.ody.notification.dto.request.FcmSendRequest;
-import com.ody.notification.dto.request.NudgeRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
@@ -81,11 +81,11 @@ public class NotificationService {
     }
 
     @Transactional
-    public void sendNudgeMessage(Mate mate) {
-        Notification notification = Notification.createNudge(mate);
+    public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
+        Notification notification = Notification.createNudge(nudgedMate);
         Notification nudgeNotification = notificationRepository.save(notification);
-        NudgeRequest nudgeRequest = new NudgeRequest(mate, nudgeNotification);
-        fcmPushSender.sendNudgeMessage(nudgeRequest);
-        nudgeNotification.updateStatusToDone();
+        NudgeMessage nudgeMessage = new NudgeMessage(nudgedMate.getMember().getDeviceToken(),
+                requestMate.getNicknameValue());
+        fcmPushSender.sendNudgeMessage(nudgeNotification, nudgeMessage);
     }
 }

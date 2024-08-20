@@ -7,6 +7,7 @@ import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.service.EtaService;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequest;
+import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
@@ -57,10 +58,12 @@ public class MateService {
     }
 
     @Transactional
-    public void nudge(Long mateId) {
-        Mate mate = findFetchedMate(mateId);
-        if (canNudge(mate)) {
-            notificationService.sendNudgeMessage(mate);
+    public void nudge(NudgeRequest nudgeRequest) {
+        Mate requestMate = findFetchedMate(nudgeRequest.requestMateId());
+        Mate nudgedMate = findFetchedMate(nudgeRequest.nudgedMateId());
+
+        if (requestMate.isAttended(nudgedMate.getMeeting()) && canNudge(nudgedMate)) {
+            notificationService.sendNudgeMessage(requestMate, nudgedMate);
             return;
         }
         throw new OdyBadRequestException("요청한 참여자의 상태가 지각이나 지각위기가 아닙니다");
