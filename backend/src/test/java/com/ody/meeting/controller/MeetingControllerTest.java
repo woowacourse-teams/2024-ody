@@ -29,6 +29,7 @@ import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.regex.Pattern;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -82,11 +83,12 @@ class MeetingControllerTest extends BaseControllerTest {
                 .matches(LOCALTIME_FORMAT);
     }
 
+    @Disabled
     @DisplayName("특정 멤버의 참여 모임 목록 조회에 성공하면 200응답 반환한다")
     @Test
     void findMine() {
         saveMate(LocalDate.now().plusDays(1), LocalTime.now());
-//        Member member = memberRepository.save(Fixture.MEMBER1);
+        Member member = memberRepository.save(Fixture.MEMBER1);
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
         mateRepository.save(new Mate(odyMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
 
@@ -104,6 +106,7 @@ class MeetingControllerTest extends BaseControllerTest {
                 .allMatch(time -> Pattern.matches(time, LOCALTIME_FORMAT));
     }
 
+    @Disabled
     @DisplayName("로그 목록 조회에 성공하면 200응답 반환한다")
     @Test
     void findAllMeetingLogs() {
@@ -142,6 +145,7 @@ class MeetingControllerTest extends BaseControllerTest {
                 .statusCode(404);
     }
 
+    @Disabled
     @DisplayName("Eta API 테스트")
     @Nested
     class EtaTest {

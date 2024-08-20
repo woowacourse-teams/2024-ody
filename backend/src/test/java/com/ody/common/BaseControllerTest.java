@@ -80,13 +80,9 @@ public abstract class BaseControllerTest {
         );
     }
 
-    protected Meeting saveMeeting(LocalDate date, LocalTime time) {
-        
-    }
-
     protected MateSaveResponse saveMate(LocalDate date, LocalTime time) {
         String authorization = saveMember();
-saveMeeting()
+
         MeetingSaveRequestV1 meetingRequest = new MeetingSaveRequestV1(
                 "기본 약속",
                 date,

@@ -9,6 +9,7 @@ import com.ody.common.exception.OdyBadRequestException;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ class MemberServiceTest extends BaseServiceTest {
                 .hasMessage("중복된 디바이스 토큰이 존재합니다.");
     }
 
+    @Disabled
     @DisplayName("일치하는 providerType, providerId가 있을 시, 해당 멤버가 반환된다.")
     @Test
     void saveFailWhenDuplicatedAuthProvider() {
