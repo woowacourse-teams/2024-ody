@@ -30,6 +30,7 @@ public class AuthService {
         return memberService.findById(memberId);
     }
 
+    @Transactional
     public AuthResponse issueTokens(AuthRequest authRequest) {
         Member member = memberService.save(authRequest.toMember());
         return issueNewTokens(member.getId());
