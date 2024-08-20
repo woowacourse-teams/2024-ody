@@ -62,7 +62,7 @@ public class MateController implements MateControllerSwagger {
 
     @Override
     @PostMapping("/v1/mates/nudge")
-    public ResponseEntity<Void> nudgeMate(@RequestBody NudgeRequest nudgeRequest) {
+    public ResponseEntity<Void> nudgeMate(@RequestBody @Valid NudgeRequest nudgeRequest) {
         mateService.nudge(nudgeRequest);
         return ResponseEntity.ok().build();
     }
