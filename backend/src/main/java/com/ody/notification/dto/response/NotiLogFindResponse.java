@@ -14,14 +14,18 @@ public record NotiLogFindResponse(
         String nickname,
 
         @Schema(description = "생성 시각", example = "2024-07-17 08:59:32")
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+
+        @Schema(description = "참여자 프로필 사진 url", example = "imageUrl")
+        String imageUrl
 ) {
 
     public NotiLogFindResponse(Notification notification) {
         this(
                 notification.getType().toString(),
                 notification.getMate().getNicknameValue(),
-                TimeUtil.trimSecondsAndNanos(notification.getSendAt())
+                TimeUtil.trimSecondsAndNanos(notification.getSendAt()),
+                notification.getMate().getMemberImageUrl()
         );
     }
 }

@@ -15,7 +15,7 @@ public record MateResponse(
 
     public static List<MateResponse> from(List<Mate> mates) {
         return mates.stream()
-                .map(mate -> new MateResponse(mate.getNicknameValue(), mate.getMember().getImageUrl()))
+                .map(mate -> new MateResponse(mate.getNicknameValue(), mate.getMemberImageUrl()))
                 .toList();
     }
 }
