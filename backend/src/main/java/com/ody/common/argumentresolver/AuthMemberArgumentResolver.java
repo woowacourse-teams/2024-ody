@@ -1,9 +1,11 @@
 package com.ody.common.argumentresolver;
 
-import com.ody.auth.domain.AuthorizationHeader;
 import com.ody.auth.service.AuthService;
 import com.ody.common.annotation.AuthMember;
+import com.ody.common.exception.OdyException;
+import com.ody.common.exception.OdyUnauthorizedException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -11,6 +13,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Slf4j
 @RequiredArgsConstructor
 public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -28,7 +31,12 @@ public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory
     ) {
-        return authService.parseAccessToken(webRequest.getHeader(HttpHeaders.AUTHORIZATION));
+        try {
+            return authService.parseAccessToken(webRequest.getHeader(HttpHeaders.AUTHORIZATION));
+        } catch (OdyException exception) {
+            log.warn(exception.getMessage());
+            throw new OdyUnauthorizedException("액세스 토큰이 유효하지 않습니다.");
+        }
     }
 }
 

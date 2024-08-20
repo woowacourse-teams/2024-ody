@@ -2,9 +2,11 @@ package com.ody.auth;
 
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
-import com.ody.member.domain.Member;
+import com.ody.common.exception.OdyBadRequestException;
+import com.ody.common.exception.OdyUnauthorizedException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import java.time.LocalTime;
 import java.util.Date;
 import lombok.Getter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -38,16 +40,23 @@ public class JwtTokenProvider {
         return Long.parseLong(memberId);
     }
 
-    public boolean isUnexpired(AccessToken accessToken) {
-        System.out.println("accessToken = " + accessToken.getValue());
-        Date expiration = Jwts.parser()
-                .setSigningKey(authProperties.getAccessKey())
-                .parseClaimsJws(accessToken.getValue())
-                .getBody()
-                .getExpiration();
+    public void validate(AccessToken accessToken) {
+        if (!isUnexpired(accessToken)) {
+            throw new OdyUnauthorizedException("만료된 액세스 토큰입니다.");
+        }
+    }
 
-        Date today = new Date();
-        return today.before(expiration) || today.equals(expiration);
+    public boolean isUnexpired(AccessToken accessToken) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(authProperties.getAccessKey())
+                    .parseClaimsJws(accessToken.getValue());
+            return true;
+        } catch (ExpiredJwtException exception) {
+            return false;
+        } catch (JwtException exception) {
+            throw new OdyBadRequestException(exception.getMessage());
+        }
     }
 
     public boolean isUnexpired(RefreshToken refreshToken) {

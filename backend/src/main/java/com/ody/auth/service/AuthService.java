@@ -25,9 +25,7 @@ public class AuthService {
 
     public Member parseAccessToken(String rawAccessToken) {
         AccessToken accessToken = new AccessToken(rawAccessToken);
-        if (!jwtTokenProvider.isUnexpired(accessToken)) {
-            throw new OdyUnauthorizedException("유효하지 않은 액세스 토큰입니다.");
-        }
+        jwtTokenProvider.validate(accessToken);
         long memberId = jwtTokenProvider.parseAccessToken(accessToken);
         return memberService.findById(memberId);
     }
