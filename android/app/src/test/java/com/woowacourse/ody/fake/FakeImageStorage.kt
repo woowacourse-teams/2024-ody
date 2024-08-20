@@ -1,7 +1,7 @@
 package com.woowacourse.ody.fake
 
 import com.woowacourse.ody.domain.apiresult.ApiResult
-import com.woowacourse.ody.presentation.common.image.ImageStorage
+import com.woowacourse.ody.domain.repository.image.ImageStorage
 
 object FakeImageStorage : ImageStorage {
     override suspend fun upload(

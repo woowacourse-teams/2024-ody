@@ -25,8 +25,8 @@ import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.common.PermissionHelper
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.FirebaseAnalyticsHelper
-import com.woowacourse.ody.presentation.common.image.FirebaseImageStorage
-import com.woowacourse.ody.presentation.common.image.ImageStorage
+import com.woowacourse.ody.data.remote.thirdparty.image.FirebaseImageStorage
+import com.woowacourse.ody.domain.repository.image.ImageStorage
 import com.woowacourse.ody.presentation.notification.NotificationHelper
 import retrofit2.Retrofit
 import timber.log.Timber

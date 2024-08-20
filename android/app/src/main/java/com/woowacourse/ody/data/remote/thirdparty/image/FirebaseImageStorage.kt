@@ -1,8 +1,9 @@
-package com.woowacourse.ody.presentation.common.image
+package com.woowacourse.ody.data.remote.thirdparty.image
 
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.woowacourse.ody.domain.apiresult.ApiResult
+import com.woowacourse.ody.domain.repository.image.ImageStorage
 import kotlinx.coroutines.tasks.await
 import java.io.IOException
 

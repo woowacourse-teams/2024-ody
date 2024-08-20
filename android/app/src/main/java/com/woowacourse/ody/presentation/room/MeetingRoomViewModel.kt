@@ -20,7 +20,7 @@ import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.common.image.ImageShareContent
 import com.woowacourse.ody.presentation.common.image.ImageShareHelper
-import com.woowacourse.ody.presentation.common.image.ImageStorage
+import com.woowacourse.ody.domain.repository.image.ImageStorage
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
 import com.woowacourse.ody.presentation.room.log.model.MateUiModel

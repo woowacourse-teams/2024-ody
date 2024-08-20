@@ -1,4 +1,4 @@
-package com.woowacourse.ody.presentation.common.image
+package com.woowacourse.ody.domain.repository.image
 
 import com.woowacourse.ody.domain.apiresult.ApiResult
 

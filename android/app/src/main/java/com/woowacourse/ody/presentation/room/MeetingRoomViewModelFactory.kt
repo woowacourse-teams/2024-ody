@@ -8,7 +8,7 @@ import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.image.ImageShareHelper
-import com.woowacourse.ody.presentation.common.image.ImageStorage
+import com.woowacourse.ody.domain.repository.image.ImageStorage
 
 class MeetingRoomViewModelFactory(
     private val analyticsHelper: AnalyticsHelper,
