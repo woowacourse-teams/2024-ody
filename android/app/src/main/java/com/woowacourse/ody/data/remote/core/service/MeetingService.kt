@@ -15,7 +15,7 @@ import retrofit2.http.Path
 
 interface MeetingService {
     @GET("invite-codes/{inviteCode}/validate")
-    suspend fun getInviteCodeValidity(
+    suspend fun fetchInviteCodeValidity(
         @Path(value = "inviteCode") inviteCode: String,
     ): ApiResult<Unit>
 
@@ -39,7 +39,7 @@ interface MeetingService {
     ): ApiResult<MeetingResponse>
 
     @GET("/v1/mates/{mateId}/nudge")
-    suspend fun getNudge(
+    suspend fun fetchNudge(
         @Path(value = "mateId") mateId: Long,
     ): ApiResult<Unit>
 }
