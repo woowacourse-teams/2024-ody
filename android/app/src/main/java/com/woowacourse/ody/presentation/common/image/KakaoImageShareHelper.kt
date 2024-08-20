@@ -9,6 +9,8 @@ import com.kakao.sdk.template.model.Content
 import com.kakao.sdk.template.model.FeedTemplate
 import com.kakao.sdk.template.model.Link
 import com.woowacourse.ody.domain.apiresult.ApiResult
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 class KakaoImageShareHelper(private val context: Context) : ImageShareHelper {
     override suspend fun share(imageShareContent: ImageShareContent): ApiResult<Unit> {
@@ -42,28 +44,28 @@ class KakaoImageShareHelper(private val context: Context) : ImageShareHelper {
         )
     }
 
-    private fun shareFeedByApp(feed: FeedTemplate): ApiResult<Unit> {
-        var isSuccess = false
-        ShareClient.instance.shareDefault(context, feed) { sharingResult, error ->
-            if (error != null) {
-                return@shareDefault
-            } else if (sharingResult != null) {
-                isSuccess = true
-                context.startActivity(sharingResult.intent)
+    private suspend fun shareFeedByApp(feed: FeedTemplate): ApiResult<Unit> {
+        return suspendCancellableCoroutine { continuation ->
+            ShareClient.instance.shareDefault(context, feed) { sharingResult, error ->
+                if (error != null) {
+                    continuation.resume(ApiResult.Unexpected(Throwable()))
+                } else if (sharingResult != null) {
+                    context.startActivity(sharingResult.intent)
+                    continuation.resume(ApiResult.Success(Unit))
+                }
             }
         }
-
-        if (isSuccess) ApiResult.Success(Unit)
-        return ApiResult.Unexpected(Throwable())
     }
 
-    private fun shareFeedByWeb(feed: FeedTemplate): ApiResult<Unit> {
-        val sharerUrl = WebSharerClient.instance.makeDefaultUrl(feed)
-        return try {
-            KakaoCustomTabsClient.openWithDefault(context, sharerUrl)
-            ApiResult.Success(Unit)
-        } catch (e: UnsupportedOperationException) {
-            ApiResult.Unexpected(Throwable())
+    private suspend fun shareFeedByWeb(feed: FeedTemplate): ApiResult<Unit> {
+        return suspendCancellableCoroutine { continuation ->
+            val sharerUrl = WebSharerClient.instance.makeDefaultUrl(feed)
+            try {
+                KakaoCustomTabsClient.openWithDefault(context, sharerUrl)
+                continuation.resume(ApiResult.Success(Unit))
+            } catch (e: UnsupportedOperationException) {
+                continuation.resume(ApiResult.Unexpected(Throwable()))
+            }
         }
     }
 }
