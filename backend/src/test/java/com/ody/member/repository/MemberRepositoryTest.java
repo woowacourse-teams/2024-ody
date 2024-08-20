@@ -2,6 +2,7 @@ package com.ody.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ody.auth.token.RefreshToken;
 import com.ody.common.Fixture;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;

@@ -50,5 +50,5 @@ public interface AuthControllerSwagger {
     )
     @ErrorCode400
     @ErrorCode500
-    ResponseEntity<AuthResponse> refreshAccessToken(@Parameter(hidden = true) Member member);
+    ResponseEntity<AuthResponse> refreshAccessToken(@Parameter(hidden = true) String authorization);
 }

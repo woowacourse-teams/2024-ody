@@ -16,7 +16,7 @@ public record AuthResponse(
         String refreshToken
 ) {
 
-    public static final String TOKEN_TYPE = "Bearer ";
+    public static final String TOKEN_TYPE = "Bearer";
 
     public AuthResponse(AccessToken accessToken, RefreshToken refreshToken) {
         this(TOKEN_TYPE, accessToken.getValue(), refreshToken.getValue());

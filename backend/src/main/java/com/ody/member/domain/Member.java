@@ -1,5 +1,6 @@
 package com.ody.member.domain;
 
+import com.ody.auth.token.RefreshToken;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -47,12 +48,15 @@ public class Member {
     @Embedded
     private DeviceToken deviceToken;
 
+    @Embedded
+    private RefreshToken refreshToken;
+
     public Member(DeviceToken deviceToken) { // TODO: 제거
-        this(null, new AuthProvider("1234"), "ahdzlrjsdn", "image", deviceToken);
+        this(null, new AuthProvider("1234"), "ahdzlrjsdn", "image", deviceToken, new RefreshToken("rt"));
     }
 
     public Member(String providerId, String nickname, String imageUrl, DeviceToken deviceToken) {
-        this(null, new AuthProvider(providerId), nickname, imageUrl, deviceToken);
+        this(null, new AuthProvider(providerId), nickname, imageUrl, deviceToken, null);
     }
 
     public String getDeviceTokenValue() {
@@ -65,5 +69,13 @@ public class Member {
 
     public String getProviderId() {
         return authProvider.getProviderId();
+    }
+
+    public boolean isSame(RefreshToken otherRefreshToken) {
+        return this.refreshToken.equals(otherRefreshToken);
+    }
+
+    public void updateRefreshToken(RefreshToken refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

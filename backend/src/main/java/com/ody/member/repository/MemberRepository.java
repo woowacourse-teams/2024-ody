@@ -11,4 +11,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findFirstByDeviceToken(DeviceToken deviceToken);
 
     boolean existsByAuthProvider(AuthProvider authProvider);
+
+    Optional<Member> findByAuthProvider(AuthProvider authProvider);
 }

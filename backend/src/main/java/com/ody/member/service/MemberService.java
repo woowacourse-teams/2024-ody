@@ -1,8 +1,6 @@
 package com.ody.member.service;
 
-import com.ody.auth.dto.request.AuthRequest;
-import com.ody.auth.dto.response.AuthResponse;
-import com.ody.auth.service.AuthService;
+import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.member.domain.DeviceToken;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MemberService {
 
-    private final AuthService authService;
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -29,17 +26,12 @@ public class MemberService {
     }
 
     @Transactional
-    public AuthResponse save(AuthRequest authRequest) {
-        if (memberRepository.findFirstByDeviceToken(authRequest.toDeviceToken()).isPresent()) {
+    public Member save(Member member) {
+        if (memberRepository.findFirstByDeviceToken(member.getDeviceToken()).isPresent()) {
             throw new OdyBadRequestException("중복된 디바이스 토큰이 존재합니다.");
         }
-        Member member = authRequest.toMember();
-        if (memberRepository.existsByAuthProvider(member.getAuthProvider())) {
-            throw new OdyBadRequestException(String.format("중복된 providerId(%s)입니다.", member.getProviderId()));
-        }
-
-        Member savedMember = memberRepository.save(member);
-        return authService.issueToken(savedMember);
+        return memberRepository.findByAuthProvider(member.getAuthProvider())
+                .orElseGet(() -> memberRepository.save(member));
     }
 
     public Member findByDeviceToken(DeviceToken deviceToken) {
@@ -50,5 +42,15 @@ public class MemberService {
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new OdyUnauthorizedException("존재하지 않는 회원입니다."));
+    }
+
+    public boolean isMemberRefreshToken(long memberId, RefreshToken refreshToken) {
+        Member member = findById(memberId);
+        return member.isSame(refreshToken);
+    }
+
+    public void updateRefreshToken(long memberId, RefreshToken refreshToken) {
+        Member member = findById(memberId);
+        member.updateRefreshToken(refreshToken);
     }
 }

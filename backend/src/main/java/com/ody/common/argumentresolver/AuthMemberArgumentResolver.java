@@ -1,5 +1,6 @@
 package com.ody.common.argumentresolver;
 
+import com.ody.auth.domain.AuthorizationHeader;
 import com.ody.auth.service.AuthService;
 import com.ody.common.annotation.AuthMember;
 import lombok.RequiredArgsConstructor;
