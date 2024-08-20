@@ -22,6 +22,7 @@ glide = "4.12.0"
 googleServices = "4.4.2"
 junitJupiter = "5.10.2"
 junitVersion = "1.2.1"
+kakaoShare = "2.20.3"
 kotlin = "1.9.0"
 ksp = "1.9.0-1.0.13"
 ktlint = "12.1.1"
@@ -35,7 +36,6 @@ playServicesLocation = "21.3.0"
 retrofit = "2.11.0"
 splashScreen = "1.0.1"
 timber = "5.0.1"
-v2Share = "2.20.3"
 viewPager = "1.1.0"
 webkit = "1.11.0"
 workRuntimeKtx = "2.9.1"
@@ -105,7 +105,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 
 # kakao share
-v2-share = { module = "com.kakao.sdk:v2-share", version.ref = "v2Share" }
+kakao-share = { module = "com.kakao.sdk:v2-share", version.ref = "kakaoShare" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
