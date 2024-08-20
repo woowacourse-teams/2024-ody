@@ -38,7 +38,8 @@ private fun RecyclerView.getItemsHeight(): Int {
 }
 
 fun Bitmap.toByteArray(): ByteArray {
-    val byteArrayOutputStream = ByteArrayOutputStream()
-    compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-    return byteArrayOutputStream.toByteArray()
+    return ByteArrayOutputStream().use { byteArrayOutputStream ->
+        compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        byteArrayOutputStream.toByteArray()
+    }
 }
