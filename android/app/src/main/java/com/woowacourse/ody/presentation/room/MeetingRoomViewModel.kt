@@ -61,7 +61,8 @@ class MeetingRoomViewModel(
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
     val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs
 
-    private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
+    private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> =
+        MutableSingleLiveData<Unit>()
     val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
 
     init {
@@ -141,7 +142,13 @@ class MeetingRoomViewModel(
                 }.onNetworkError {
                     handleNetworkError()
                     lastFailedAction = {
-                        shareEtaDashboard(title, buttonTitle, imageByteArray, imageWidthPixel, imageHeightPixel)
+                        shareEtaDashboard(
+                            title,
+                            buttonTitle,
+                            imageByteArray,
+                            imageWidthPixel,
+                            imageHeightPixel
+                        )
                     }
                 }
             stopLoading()
@@ -154,6 +161,7 @@ class MeetingRoomViewModel(
         buttonTitle: String,
         imageUrl: String,
     ) {
+        startLoading()
         val imageShareContent =
             ImageShareContent(
                 title = title,
@@ -163,6 +171,7 @@ class MeetingRoomViewModel(
                 link = "https://github.com/woowacourse-teams/2024-ody",
             )
         shareImage(imageShareContent)
+        stopLoading()
     }
 
     private fun shareImage(imageShareContent: ImageShareContent) {
