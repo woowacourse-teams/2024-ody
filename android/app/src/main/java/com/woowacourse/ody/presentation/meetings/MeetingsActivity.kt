@@ -105,6 +105,13 @@ class MeetingsActivity :
         viewModel.errorEvent.observe(this) {
             showSnackBar(R.string.error_guide)
         }
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@observe
+            }
+            hideLoadingDialog()
+        }
     }
 
     override fun onFab() {
