@@ -10,6 +10,7 @@ import androidx.fragment.app.commit
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingRoomBinding
 import com.woowacourse.ody.presentation.common.binding.BindingActivity
+import com.woowacourse.ody.presentation.common.image.KakaoImageShareHelper
 import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.room.etadashboard.EtaDashboardFragment
 import com.woowacourse.ody.presentation.room.log.NotificationLogFragment
@@ -24,6 +25,8 @@ class MeetingRoomActivity :
             application.matesEtaRepository,
             application.notificationLogRepository,
             application.meetingRepository,
+            application.imageStorage,
+            KakaoImageShareHelper(this),
         )
     }
     private val fragments: Map<String, Fragment> by lazy {

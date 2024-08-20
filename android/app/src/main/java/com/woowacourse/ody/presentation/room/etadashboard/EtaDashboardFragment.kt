@@ -15,6 +15,8 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentEtaDashboardBinding
 import com.woowacourse.ody.databinding.LayoutMissingTooltipBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
+import com.woowacourse.ody.presentation.common.image.getBitmap
+import com.woowacourse.ody.presentation.common.image.toByteArray
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
@@ -98,6 +100,14 @@ class EtaDashboardFragment :
     }
 
     override fun onShare() {
-        // TODO 추후 카카오 공유하기 기능 연결
+        val bitmap = binding.rvEtaDashboard.getBitmap()
+        val byteArray = bitmap.toByteArray()
+        viewModel.shareEtaDashboard(
+            description = getString(R.string.eta_dashboard_share_description),
+            buttonTitle = getString(R.string.eta_dashboard_share_button),
+            imageByteArray = byteArray,
+            imageWidthPixel = bitmap.width,
+            imageHeightPixel = bitmap.height,
+        )
     }
 }
