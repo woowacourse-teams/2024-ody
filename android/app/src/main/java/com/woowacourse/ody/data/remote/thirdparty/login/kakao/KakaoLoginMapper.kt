@@ -2,8 +2,8 @@ package com.woowacourse.ody.data.remote.thirdparty.login.kakao
 
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.model.User
-import com.woowacourse.ody.data.remote.thirdparty.login.model.AuthToken
-import com.woowacourse.ody.data.remote.thirdparty.login.model.UserProfile
+import com.woowacourse.ody.data.remote.thirdparty.login.entity.UserProfile
+import com.woowacourse.ody.domain.model.AuthToken
 
 fun OAuthToken.toAuthToken(): AuthToken =
     AuthToken(

@@ -32,7 +32,7 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="24dp"
             android:src="@drawable/img_kakao_login"
-            android:onClick="@{() -> vm.loginWithKakao()}"
+            android:onClick="@{() -> vm.loginWithKakao(context)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="477:72"
             app:layout_constraintEnd_toEndOf="parent"

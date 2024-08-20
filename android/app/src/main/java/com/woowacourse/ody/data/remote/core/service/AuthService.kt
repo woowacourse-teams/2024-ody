@@ -6,14 +6,12 @@ import com.woowacourse.ody.domain.apiresult.ApiResult
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface LoginService {
+interface AuthService {
     @POST("/v1/auth/kakao")
     suspend fun loginWithKakao(
         @Body loginRequest: LoginRequest,
     ): ApiResult<LoginResponse>
 
     @POST("/v1/auth/refresh")
-    suspend fun refreshAccessToken(
-        @Body refreshToken: String,
-    ): ApiResult<LoginResponse>
+    suspend fun refreshAccessToken(): ApiResult<LoginResponse>
 }
