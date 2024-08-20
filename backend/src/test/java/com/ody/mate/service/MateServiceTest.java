@@ -127,9 +127,9 @@ class MateServiceTest extends BaseServiceTest {
         @DisplayName("약속이 1분 뒤이고 소요시간이 2분으로 Eta상태가 지각 위기인 mate를 재촉할 수 있다")
         @Test
         void nudgeSuccessWhenLateWarning() {
-            Meeting oneMinutesLaterMeeting = makeSavedMeetingByTime(1L);
-            Mate requestMate = makeRequestMate(oneMinutesLaterMeeting);
-            Mate nudgedLateWarningMate = makeNudgedMate(oneMinutesLaterMeeting, Fixture.ORIGIN_LOCATION);
+            Meeting oneMinuteLaterMeeting = makeSavedMeetingByRemainingMinutes(1L);
+            Mate requestMate = makeRequestMate(oneMinuteLaterMeeting);
+            Mate nudgedLateWarningMate = makeNudgedMate(oneMinuteLaterMeeting, Fixture.ORIGIN_LOCATION);
             Eta lateWarningEta = etaRepository.save(new Eta(nudgedLateWarningMate, 2L));
 
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
@@ -141,7 +141,7 @@ class MateServiceTest extends BaseServiceTest {
         @DisplayName("약속이 지금이고 소요시간이 2분으로 Eta상태가 지각인 mate를 재촉할 수 있다")
         @Test
         void nudgeSuccessWhenLate() {
-            Meeting nowMeeting = makeSavedMeetingByTime(0L);
+            Meeting nowMeeting = makeSavedMeetingByRemainingMinutes(0L);
             Mate requestMate = makeRequestMate(nowMeeting);
             Mate nudgedLateMate = makeNudgedMate(nowMeeting, Fixture.ORIGIN_LOCATION);
             Eta lateEta = etaRepository.save(new Eta(nudgedLateMate, 2L));
@@ -155,10 +155,8 @@ class MateServiceTest extends BaseServiceTest {
         @DisplayName("같은 약속 참여자가 아니라면 재촉할 수 없다")
         @Test
         void nudgedFailedWhenDifferentMeetingAttender() {
-            Meeting meeting1 = makeSavedMeetingByTime(1L);
-            Meeting meeting2 = makeSavedMeetingByTime(1L);
-            System.out.println(meeting1.getId());
-            System.out.println(meeting2.getId());
+            Meeting meeting1 = makeSavedMeetingByRemainingMinutes(1L);
+            Meeting meeting2 = makeSavedMeetingByRemainingMinutes(1L);
             Mate requestMate = makeRequestMate(meeting1);
             Mate nudgedMate = makeNudgedMate(meeting2, Fixture.ORIGIN_LOCATION);
 
@@ -171,7 +169,7 @@ class MateServiceTest extends BaseServiceTest {
         @DisplayName("약속이 3분 뒤이고 소요시간이 2분으로 Eta상태가 도착 예정인 mate를 재촉하면 예외가 발생한다")
         @Test
         void nudgeFailWhenArriavalSoon() {
-            Meeting threeMinutesLaterMeeting = makeSavedMeetingByTime(3L);
+            Meeting threeMinutesLaterMeeting = makeSavedMeetingByRemainingMinutes(3L);
             Mate requestMate = makeRequestMate(threeMinutesLaterMeeting);
             Mate nudgedArriavalSoonMate = makeNudgedMate(threeMinutesLaterMeeting, Fixture.ORIGIN_LOCATION);
 
@@ -185,7 +183,7 @@ class MateServiceTest extends BaseServiceTest {
         @DisplayName("3분 뒤 약속에 약속장소에 도착하여 Eta상태가 도착인 mate를 재촉하면 예외가 발생한다")
         @Test
         void nudgeFailWhenArrived() {
-            Meeting threeMinutesLaterMeeting = makeSavedMeetingByTime(3L);
+            Meeting threeMinutesLaterMeeting = makeSavedMeetingByRemainingMinutes(3L);
             Mate requestMate = makeRequestMate(threeMinutesLaterMeeting);
             Mate nudgedArrivedMate = makeNudgedMate(threeMinutesLaterMeeting, Fixture.TARGET_LOCATION);
             Eta arrivedEta = etaRepository.save(new Eta(nudgedArrivedMate, 0L));
@@ -196,7 +194,7 @@ class MateServiceTest extends BaseServiceTest {
                     .isInstanceOf(OdyBadRequestException.class);
         }
 
-        private Meeting makeSavedMeetingByTime(long remainingMinutes) {
+        private Meeting makeSavedMeetingByRemainingMinutes(long remainingMinutes) {
             LocalDateTime time = TimeUtil.nowWithTrim().plusMinutes(remainingMinutes);
             Meeting meeting = new Meeting(
                     "오디",
