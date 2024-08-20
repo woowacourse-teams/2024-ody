@@ -9,8 +9,8 @@ import com.kakao.sdk.template.model.Content
 import com.kakao.sdk.template.model.FeedTemplate
 import com.kakao.sdk.template.model.Link
 import com.woowacourse.ody.domain.apiresult.ApiResult
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class KakaoImageShareHelper(private val context: Context) : ImageShareHelper {
     override suspend fun share(imageShareContent: ImageShareContent): ApiResult<Unit> {
@@ -29,25 +29,25 @@ class KakaoImageShareHelper(private val context: Context) : ImageShareHelper {
             )
         return FeedTemplate(
             content =
-                Content(
-                    title = imageShareContent.description,
-                    imageUrl = imageShareContent.imageUrl,
-                    imageWidth = imageShareContent.imageWidthPixel,
-                    imageHeight = imageShareContent.imageHeightPixel,
-                    link = link,
-                ),
+            Content(
+                title = imageShareContent.description,
+                imageUrl = imageShareContent.imageUrl,
+                imageWidth = imageShareContent.imageWidthPixel,
+                imageHeight = imageShareContent.imageHeightPixel,
+                link = link,
+            ),
             buttons =
-                listOf(
-                    Button(
-                        imageShareContent.buttonTitle,
-                        link,
-                    ),
+            listOf(
+                Button(
+                    imageShareContent.buttonTitle,
+                    link,
                 ),
+            ),
         )
     }
 
     private suspend fun shareFeedByApp(feed: FeedTemplate): ApiResult<Unit> {
-        return suspendCancellableCoroutine { continuation ->
+        return suspendCoroutine { continuation ->
             ShareClient.instance.shareDefault(context, feed) { sharingResult, error ->
                 if (error != null) {
                     continuation.resume(ApiResult.Unexpected(Throwable()))
@@ -60,7 +60,7 @@ class KakaoImageShareHelper(private val context: Context) : ImageShareHelper {
     }
 
     private suspend fun shareFeedByWeb(feed: FeedTemplate): ApiResult<Unit> {
-        return suspendCancellableCoroutine { continuation ->
+        return suspendCoroutine { continuation ->
             val sharerUrl = WebSharerClient.instance.makeDefaultUrl(feed)
             try {
                 KakaoCustomTabsClient.openWithDefault(context, sharerUrl)
