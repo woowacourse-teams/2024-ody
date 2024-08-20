@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
 import com.woowacourse.ody.domain.apiresult.onNetworkError
 import com.woowacourse.ody.domain.apiresult.onSuccess
+import com.woowacourse.ody.domain.apiresult.onUnexpected
 import com.woowacourse.ody.domain.model.MateEtaInfo
+import com.woowacourse.ody.domain.repository.image.ImageStorage
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
@@ -18,6 +20,8 @@ import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logButtonClicked
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.woowacourse.ody.presentation.room.etadashboard.listener.NudgeListener
+import com.woowacourse.ody.presentation.common.image.ImageShareContent
+import com.woowacourse.ody.presentation.common.image.ImageShareHelper
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.toMateEtaUiModels
 import com.woowacourse.ody.presentation.room.log.model.MateUiModel
@@ -28,6 +32,7 @@ import com.woowacourse.ody.presentation.room.log.model.toMeetingUiModel
 import com.woowacourse.ody.presentation.room.log.model.toNotificationUiModels
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDateTime
 
 class MeetingRoomViewModel(
     private val analyticsHelper: AnalyticsHelper,
@@ -35,6 +40,8 @@ class MeetingRoomViewModel(
     matesEtaRepository: MatesEtaRepository,
     private val notificationLogRepository: NotificationLogRepository,
     private val meetingRepository: MeetingRepository,
+    private val imageStorage: ImageStorage,
+    private val imageShareHelper: ImageShareHelper,
 ) : BaseViewModel(), NudgeListener {
     private val matesEta: LiveData<MateEtaInfo?> =
         matesEtaRepository.fetchMatesEta(meetingId = meetingId)
@@ -123,6 +130,44 @@ class MeetingRoomViewModel(
                 }.onNetworkError {
                     handleNetworkError()
                     lastFailedAction = { nudgeMate(mateId) }
+               
+     fun shareEtaDashboard(
+        description: String,
+        buttonTitle: String,
+        imageByteArray: ByteArray,
+        imageWidthPixel: Int,
+        imageHeightPixel: Int,
+    ) {
+        viewModelScope.launch {
+            imageStorage.upload(
+                byteArray = imageByteArray,
+                fileName = LocalDateTime.now().toString(),
+            )
+                .onSuccess {
+                    val imageShareContent =
+                        ImageShareContent(
+                            description = description,
+                            buttonTitle = buttonTitle,
+                            imageUrl = it,
+                            imageWidthPixel = imageWidthPixel,
+                            imageHeightPixel = imageHeightPixel,
+                            link = "https://github.com/woowacourse-teams/2024-ody",
+                        )
+                    shareImage(imageShareContent)
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = {
+                        shareEtaDashboard(description, buttonTitle, imageByteArray, imageWidthPixel, imageHeightPixel)
+                    }
+                }
+        }
+    }
+
+    private fun shareImage(imageShareContent: ImageShareContent) {
+        viewModelScope.launch {
+            imageShareHelper.share(imageShareContent)
+                .onUnexpected {
+                    handleError()
                 }
         }
     }

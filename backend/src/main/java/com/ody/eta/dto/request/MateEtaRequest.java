@@ -1,8 +1,8 @@
 package com.ody.eta.dto.request;
 
 import com.ody.common.annotation.SupportRegion;
+import com.ody.meeting.domain.Location;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 @SupportRegion(latitudeFieldName = "currentLatitude", longitudeFieldName = "currentLongitude")
@@ -20,4 +20,7 @@ public record MateEtaRequest(
         String currentLongitude
 ) {
 
+    public Location toLocation() {
+        return new Location(currentLatitude, currentLongitude);
+    }
 }
