@@ -3,12 +3,12 @@ package com.woowacourse.ody.presentation.room
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.woowacourse.ody.domain.repository.image.ImageStorage
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.image.ImageShareHelper
-import com.woowacourse.ody.domain.repository.image.ImageStorage
 
 class MeetingRoomViewModelFactory(
     private val analyticsHelper: AnalyticsHelper,

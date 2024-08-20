@@ -14,9 +14,11 @@ import com.woowacourse.ody.data.remote.core.repository.DefaultNotificationLogRep
 import com.woowacourse.ody.data.remote.core.service.JoinService
 import com.woowacourse.ody.data.remote.core.service.MeetingService
 import com.woowacourse.ody.data.remote.core.service.NotificationService
+import com.woowacourse.ody.data.remote.thirdparty.image.FirebaseImageStorage
 import com.woowacourse.ody.data.remote.thirdparty.location.KakaoRetrofitClient
 import com.woowacourse.ody.data.remote.thirdparty.location.repository.KakaoGeoLocationRepository
 import com.woowacourse.ody.data.remote.thirdparty.location.service.KakaoLocationService
+import com.woowacourse.ody.domain.repository.image.ImageStorage
 import com.woowacourse.ody.domain.repository.ody.FCMTokenRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
@@ -25,8 +27,6 @@ import com.woowacourse.ody.domain.repository.ody.NotificationLogRepository
 import com.woowacourse.ody.presentation.common.PermissionHelper
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.FirebaseAnalyticsHelper
-import com.woowacourse.ody.data.remote.thirdparty.image.FirebaseImageStorage
-import com.woowacourse.ody.domain.repository.image.ImageStorage
 import com.woowacourse.ody.presentation.notification.NotificationHelper
 import retrofit2.Retrofit
 import timber.log.Timber
