@@ -2,6 +2,8 @@ package com.woowacourse.ody.presentation.room
 
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
+import com.woowacourse.ody.fake.FakeImageShareHelper
+import com.woowacourse.ody.fake.FakeImageStorage
 import com.woowacourse.ody.fake.FakeMatesEtaRepository
 import com.woowacourse.ody.fake.FakeMeetingRepository
 import com.woowacourse.ody.fake.FakeNotificationLogRepository
@@ -39,6 +41,8 @@ class MeetingRoomViewModelTest {
                 matesEtaRepository = matesEtaRepository,
                 notificationLogRepository = FakeNotificationLogRepository,
                 meetingRepository = FakeMeetingRepository,
+                imageStorage = FakeImageStorage,
+                imageShareHelper = FakeImageShareHelper,
             )
     }
 
