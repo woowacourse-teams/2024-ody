@@ -1,7 +1,6 @@
 package com.woowacourse.ody.data.remote.core
 
 import com.woowacourse.ody.BuildConfig
-import com.woowacourse.ody.data.retrofit.AccessTokenInterceptor
 import com.woowacourse.ody.data.retrofit.ApiResultCallAdapter
 import com.woowacourse.ody.data.retrofit.RefreshTokenInterceptor
 import com.woowacourse.ody.domain.repository.ody.AuthTokenRepository
@@ -28,14 +27,9 @@ class RetrofitClient(
     private val okHttpClient: OkHttpClient by lazy {
         val builder =
             OkHttpClient.Builder()
-                .addInterceptor(accessTokenInterceptor)
                 .addInterceptor(refreshTokenInterceptor)
                 .addInterceptor(loggingInterceptor)
         builder.build()
-    }
-
-    private val accessTokenInterceptor: Interceptor by lazy {
-        AccessTokenInterceptor(authTokenRepository)
     }
 
     private val refreshTokenInterceptor: Interceptor by lazy {
