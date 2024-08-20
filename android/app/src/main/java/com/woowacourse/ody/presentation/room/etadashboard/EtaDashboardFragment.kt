@@ -53,7 +53,7 @@ class EtaDashboardFragment :
         viewModel.mateEtaUiModels.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
-        viewModel.nudgeSuccess.observe(viewLifecycleOwner) { nickName ->
+        viewModel.nudgeSuccessMate.observe(viewLifecycleOwner) { nickName ->
             showSnackBar(getString(R.string.nudge_success, nickName))
         }
     }

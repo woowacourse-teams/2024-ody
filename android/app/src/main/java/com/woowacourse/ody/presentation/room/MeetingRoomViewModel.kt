@@ -56,11 +56,11 @@ class MeetingRoomViewModel(
     val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs
 
     private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> =
-        MutableSingleLiveData<Unit>()
+        MutableSingleLiveData()
     val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
 
-    private val _nudgeSuccess: MutableSingleLiveData<String> = MutableSingleLiveData()
-    val nudgeSuccess: SingleLiveData<String> get() = _nudgeSuccess
+    private val _nudgeSuccessMate: MutableSingleLiveData<String> = MutableSingleLiveData()
+    val nudgeSuccessMate: SingleLiveData<String> get() = _nudgeSuccessMate
 
     init {
         fetchMeeting()
@@ -115,7 +115,7 @@ class MeetingRoomViewModel(
                     val mateNickname =
                         matesEta.value?.mateEtas?.find { it.mateId == mateId }?.nickname
                             ?: return@onSuccess
-                    _nudgeSuccess.postValue(mateNickname)
+                    _nudgeSuccessMate.postValue(mateNickname)
                 }.onFailure { code, errorMessage ->
                     handleError()
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
