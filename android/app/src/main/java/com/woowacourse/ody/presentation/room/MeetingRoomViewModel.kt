@@ -147,7 +147,7 @@ class MeetingRoomViewModel(
                             buttonTitle,
                             imageByteArray,
                             imageWidthPixel,
-                            imageHeightPixel
+                            imageHeightPixel,
                         )
                     }
                 }
