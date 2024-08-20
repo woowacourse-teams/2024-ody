@@ -91,6 +91,7 @@ class MeetingCreationViewModel(
         val destinationLongitude = destinationGeoLocation.value?.longitude ?: return
 
         viewModelScope.launch {
+            startLoading()
             meetingRepository.postMeeting(
                 MeetingCreationInfo(
                     name,
@@ -110,6 +111,7 @@ class MeetingCreationViewModel(
                 handleNetworkError()
                 lastFailedAction = { createMeeting() }
             }
+            stopLoading()
         }
     }
 

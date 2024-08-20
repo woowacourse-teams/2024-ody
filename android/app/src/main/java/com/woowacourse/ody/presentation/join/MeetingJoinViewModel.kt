@@ -68,6 +68,7 @@ class MeetingJoinViewModel(
         val departureLongitude = departureGeoLocation.value?.longitude ?: return
 
         viewModelScope.launch {
+            startLoading()
             joinRepository.postMates(
                 MeetingJoinInfo(
                     inviteCode,
@@ -87,6 +88,7 @@ class MeetingJoinViewModel(
                 handleNetworkError()
                 lastFailedAction = { joinMeeting() }
             }
+            stopLoading()
         }
     }
 

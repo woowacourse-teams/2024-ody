@@ -23,6 +23,7 @@ class AddressSearchViewModel(
 
     fun fetchGeoLocation(address: String) {
         viewModelScope.launch {
+            startLoading()
             locationRepository.fetchGeoLocation(address)
                 .onSuccess {
                     _geoLocation.value = it
@@ -36,6 +37,7 @@ class AddressSearchViewModel(
                     handleNetworkError()
                     lastFailedAction = { fetchGeoLocation(address) }
                 }
+            stopLoading()
         }
     }
 

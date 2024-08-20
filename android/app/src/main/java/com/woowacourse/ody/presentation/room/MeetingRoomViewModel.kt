@@ -70,6 +70,7 @@ class MeetingRoomViewModel(
 
     private fun fetchNotificationLogs() {
         viewModelScope.launch {
+            startLoading()
             notificationLogRepository.fetchNotificationLogs(meetingId)
                 .onSuccess {
                     _notificationLogs.value = it.toNotificationUiModels()
@@ -81,11 +82,13 @@ class MeetingRoomViewModel(
                     handleNetworkError()
                     lastFailedAction = { fetchNotificationLogs() }
                 }
+            stopLoading()
         }
     }
 
     private fun fetchMeeting() {
         viewModelScope.launch {
+            startLoading()
             meetingRepository.fetchMeeting(meetingId)
                 .onSuccess {
                     _meeting.value = it.toMeetingUiModel()
@@ -99,6 +102,7 @@ class MeetingRoomViewModel(
                     handleNetworkError()
                     lastFailedAction = { fetchMeeting() }
                 }
+            stopLoading()
         }
     }
 
@@ -118,6 +122,7 @@ class MeetingRoomViewModel(
         imageHeightPixel: Int,
     ) {
         viewModelScope.launch {
+            startLoading()
             imageStorage.upload(
                 byteArray = imageByteArray,
                 fileName = LocalDateTime.now().toString(),
@@ -139,6 +144,7 @@ class MeetingRoomViewModel(
                         shareEtaDashboard(title, buttonTitle, imageByteArray, imageWidthPixel, imageHeightPixel)
                     }
                 }
+            stopLoading()
         }
     }
 

@@ -33,6 +33,7 @@ class MeetingsViewModel(
 
     fun fetchMeetingCatalogs() {
         viewModelScope.launch {
+            startLoading()
             meetingRepository.fetchMeetingCatalogs()
                 .onSuccess {
                     _meetingCatalogs.value = it.toMeetingCatalogUiModels()
@@ -44,6 +45,7 @@ class MeetingsViewModel(
                     handleNetworkError()
                     lastFailedAction = { fetchMeetingCatalogs() }
                 }
+            stopLoading()
         }
     }
 
