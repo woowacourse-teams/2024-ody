@@ -2,6 +2,7 @@ package com.ody.eta.dto.response;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Arrays;
 import java.util.List;
 
 public record MateEtaResponses(
@@ -13,4 +14,7 @@ public record MateEtaResponses(
         List<MateEtaResponse> mateEtas
 ) {
 
+    public MateEtaResponses(String ownerNickname, MateEtaResponse... mateEtas) {
+        this(ownerNickname, Arrays.asList(mateEtas));
+    }
 }
