@@ -11,9 +11,11 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.OdyApplication
+import kotlinx.coroutines.launch
 
 abstract class BindingFragment<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
@@ -27,9 +29,11 @@ abstract class BindingFragment<T : ViewDataBinding>(
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-        analyticsHelper.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+        lifecycleScope.launch {
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
+            analyticsHelper.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+        }
     }
 
     override fun onCreateView(
@@ -55,6 +59,8 @@ abstract class BindingFragment<T : ViewDataBinding>(
         super.onDestroyView()
         _binding = null
         snackBar = null
-        analyticsHelper.logEvent(javaClass.simpleName + " destroyed", bundleOf())
+        lifecycleScope.launch {
+            analyticsHelper.logEvent(javaClass.simpleName + " destroyed", bundleOf())
+        }
     }
 }
