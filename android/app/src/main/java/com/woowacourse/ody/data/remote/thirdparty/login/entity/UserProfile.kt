@@ -1,4 +1,4 @@
-package com.woowacourse.ody.data.remote.thirdparty.login.model
+package com.woowacourse.ody.data.remote.thirdparty.login.entity
 
 data class UserProfile(
     val providerId: String,
