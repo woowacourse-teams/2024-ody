@@ -2,6 +2,7 @@ package com.ody.mate.domain;
 
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -14,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -65,11 +67,14 @@ public class Mate {
     }
 
     public boolean isAttended(Meeting otherMeeting) {
-        long myMeetingId = this.meeting.getId();
-        return myMeetingId == otherMeeting.getId();
+        return Objects.equals(this.meeting.getId(), otherMeeting.getId());
     }
 
     public String getNicknameValue() {
         return nickname.getValue();
+    }
+
+    public DeviceToken getMemberDeviceToken(){
+        return member.getDeviceToken();
     }
 }
