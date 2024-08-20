@@ -65,9 +65,6 @@ class MeetingRoomViewModel(
     private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
     val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
 
-    private val _isSuccessEtaDashboardShare: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val isSuccessEtaDashboardShare: SingleLiveData<Unit> get() = _isSuccessEtaDashboardShare
-
     init {
         fetchMeeting()
     }
@@ -115,10 +112,11 @@ class MeetingRoomViewModel(
     }
 
     fun shareEtaDashboard(
-        title: String,
         description: String,
         buttonTitle: String,
-        imageByteArray: ByteArray
+        imageByteArray: ByteArray,
+        imageWidthPixel: Int,
+        imageHeightPixel: Int,
     ) {
         viewModelScope.launch {
             imageStorage.upload(
@@ -128,17 +126,18 @@ class MeetingRoomViewModel(
                 .onSuccess {
                     val imageShareContent =
                         ImageShareContent(
-                            title = title,
                             description = description,
                             buttonTitle = buttonTitle,
                             imageUrl = it,
+                            imageWidthPixel = imageWidthPixel,
+                            imageHeightPixel = imageHeightPixel,
                             link = "https://github.com/woowacourse-teams/2024-ody",
                         )
                     shareImage(imageShareContent)
                 }.onNetworkError {
                     handleNetworkError()
                     lastFailedAction = {
-                        shareEtaDashboard(title, description, buttonTitle, imageByteArray)
+                        shareEtaDashboard(description, buttonTitle, imageByteArray, imageWidthPixel, imageHeightPixel)
                     }
                 }
         }
@@ -147,7 +146,6 @@ class MeetingRoomViewModel(
     private fun shareImage(imageShareContent: ImageShareContent) {
         viewModelScope.launch {
             imageShareHelper.share(imageShareContent)
-                .onSuccess {  }
                 .onUnexpected {
                     handleError()
                 }

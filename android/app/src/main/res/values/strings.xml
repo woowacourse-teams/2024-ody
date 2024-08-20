@@ -105,10 +105,8 @@
     <string name="question_mark">\?</string>
     <string name="location_permission_self_guide">위치 권한을 켜서 오디인지 공유해 보세요.</string>
     <string name="location_permission_friend_guide">친구의 위치 권한이 꺼져있어요.</string>
-    <string name="eta_dashboard_share_title">오디</string>
     <string name="eta_dashboard_share_description">친구들의 도착 예정 정보를 확인해보세요!</string>
     <string name="eta_dashboard_share_button">확인하러 가기</string>
-    <string name="eta_dashboard_share_success">친구에게 성공적으로 공유했어요!</string>
 
     <!-- all -->
     <string name="next_button">다음</string>

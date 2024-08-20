@@ -55,9 +55,6 @@ class EtaDashboardFragment :
         viewModel.mateEtaUiModels.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
-        viewModel.isSuccessEtaDashboardShare.observe(viewLifecycleOwner) {
-            showSnackBar(R.string.eta_dashboard_share_success)
-        }
     }
 
     override fun onClickMissingToolTipListener(
@@ -106,10 +103,11 @@ class EtaDashboardFragment :
         val bitmap = binding.rvEtaDashboard.getBitmap()
         val byteArray = bitmap.toByteArray()
         viewModel.shareEtaDashboard(
-            title = getString(R.string.eta_dashboard_share_title),
             description = getString(R.string.eta_dashboard_share_description),
             buttonTitle = getString(R.string.eta_dashboard_share_button),
             imageByteArray = byteArray,
+            imageWidthPixel = bitmap.width,
+            imageHeightPixel = bitmap.height,
         )
     }
 }
