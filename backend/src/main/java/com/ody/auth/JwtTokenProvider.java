@@ -60,13 +60,15 @@ public class JwtTokenProvider {
     }
 
     public boolean isUnexpired(RefreshToken refreshToken) {
-        Date expiration = Jwts.parser()
-                .setSigningKey(authProperties.getRefreshKey())
-                .parseClaimsJws(refreshToken.getValue())
-                .getBody()
-                .getExpiration();
-
-        Date today = new Date();
-        return today.before(expiration) || today.equals(expiration);
+        try {
+            Jwts.parser()
+                    .setSigningKey(authProperties.getRefreshKey())
+                    .parseClaimsJws(refreshToken.getValue());
+            return true;
+        } catch (ExpiredJwtException exception) {
+            return false;
+        } catch (JwtException exception) {
+            throw new OdyBadRequestException(exception.getMessage());
+        }
     }
 }
