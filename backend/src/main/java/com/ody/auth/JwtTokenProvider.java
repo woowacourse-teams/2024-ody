@@ -4,6 +4,7 @@ import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyUnauthorizedException;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -32,12 +33,17 @@ public class JwtTokenProvider {
     }
 
     public long parseAccessToken(AccessToken accessToken) {
-        String memberId = Jwts.parser()
-                .setSigningKey(authProperties.getAccessKey())
-                .parseClaimsJws(accessToken.getValue())
-                .getBody()
-                .getSubject();
-        return Long.parseLong(memberId);
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(authProperties.getAccessKey())
+                    .parseClaimsJws(accessToken.getValue())
+                    .getBody();
+            return Long.parseLong(claims.getSubject());
+        } catch (ExpiredJwtException exception) {
+            return Long.parseLong(exception.getClaims().getSubject());
+        } catch (JwtException exception) {
+            throw new OdyBadRequestException(exception.getMessage());
+        }
     }
 
     public void validate(AccessToken accessToken) {

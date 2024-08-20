@@ -80,4 +80,21 @@ class JwtTokenProviderTest extends BaseServiceTest {
         assertThatThrownBy(() -> jwtTokenProvider.isUnexpired(accessToken))
                 .isInstanceOf(OdyBadRequestException.class);
     }
+
+    @DisplayName("만료된 액세스 토큰을 파싱한다.")
+    @Test
+    void parseExpiredAccessToken() {
+        AuthProperties authProperties = new AuthProperties(
+                jwtTokenProvider.getAuthProperties().getAccessKey(),
+                jwtTokenProvider.getAuthProperties().getRefreshKey(),
+                0,
+                0
+        );
+        long memberId = 1L;
+        AccessToken accessToken = new AccessToken(memberId, authProperties);
+
+        long actual = jwtTokenProvider.parseAccessToken(accessToken);
+
+        assertThat(actual).isEqualTo(memberId);
+    }
 }
