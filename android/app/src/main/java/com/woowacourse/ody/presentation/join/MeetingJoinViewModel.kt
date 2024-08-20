@@ -142,5 +142,4 @@ class MeetingJoinViewModel(
     }
 }
 
-fun LocalDateTime.toMilliSeconds(zoneId: String): Long =
-    atZone(ZoneId.of(zoneId)).toInstant().toEpochMilli()
+fun LocalDateTime.toMilliSeconds(zoneId: String): Long = atZone(ZoneId.of(zoneId)).toInstant().toEpochMilli()
