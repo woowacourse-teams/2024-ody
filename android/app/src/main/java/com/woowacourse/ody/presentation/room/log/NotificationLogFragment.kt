@@ -9,10 +9,10 @@ import com.woowacourse.ody.databinding.FragmentNotificationLogBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
-import com.woowacourse.ody.presentation.room.log.listener.MenuListener
 import com.woowacourse.ody.presentation.room.log.adapter.MatesAdapter
 import com.woowacourse.ody.presentation.room.log.adapter.NotificationLogsAdapter
 import com.woowacourse.ody.presentation.room.log.listener.InviteCodeCopyListener
+import com.woowacourse.ody.presentation.room.log.listener.MenuListener
 
 class NotificationLogFragment :
     BindingFragment<FragmentNotificationLogBinding>(R.layout.fragment_notification_log),
@@ -65,6 +65,7 @@ class NotificationLogFragment :
 
     companion object {
         private const val INVITE_CODE_SHARE_IMAGE_URL =
-            "https://firebasestorage.googleapis.com/v0/b/oddy-4482e.appspot.com/o/happyody.png?alt=media&token=8712f463-2998-4662-810a-8f75a316021c"
+            "https://firebasestorage.googleapis.com/v0/b/oddy-4482e.appspot.com" +
+                "/o/happyody.png?alt=media&token=8712f463-2998-4662-810a-8f75a316021c"
     }
 }
