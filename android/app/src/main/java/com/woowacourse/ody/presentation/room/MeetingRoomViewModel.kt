@@ -131,10 +131,12 @@ class MeetingRoomViewModel(
     }
 
     fun navigateToEtaDashboard() {
-        analyticsHelper.logButtonClicked(
-            eventName = "eta_button_from_notification_log",
-            location = TAG,
-        )
+        viewModelScope.launch {
+            analyticsHelper.logButtonClicked(
+                eventName = "eta_button_from_notification_log",
+                location = TAG,
+            )
+        }
         _navigateToEtaDashboardEvent.setValue(Unit)
     }
 

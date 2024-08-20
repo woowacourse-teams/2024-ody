@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
 import com.woowacourse.ody.presentation.common.PermissionHelper
@@ -21,6 +22,7 @@ import com.woowacourse.ody.presentation.login.LoginActivity
 import com.woowacourse.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsListener
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
+import kotlinx.coroutines.launch
 
 class MeetingsActivity :
     BindingActivity<ActivityMeetingsBinding>(
@@ -141,10 +143,12 @@ class MeetingsActivity :
     }
 
     private fun navigateToEtaDashboard(meetingId: Long) {
-        analyticsHelper.logButtonClicked(
-            eventName = "eta_button_from_meetings",
-            location = TAG,
-        )
+        lifecycleScope.launch {
+            analyticsHelper.logButtonClicked(
+                eventName = "eta_button_from_meetings",
+                location = TAG,
+            )
+        }
         val intent =
             MeetingRoomActivity.getIntent(
                 this,
