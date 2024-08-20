@@ -62,7 +62,8 @@ class MeetingRoomViewModel(
     private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
     val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs
 
-    private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData<Unit>()
+    private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> =
+        MutableSingleLiveData<Unit>()
     val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
 
     private val _nudgeSuccessMate: MutableSingleLiveData<String> = MutableSingleLiveData()
@@ -138,7 +139,7 @@ class MeetingRoomViewModel(
     }
 
     fun shareEtaDashboard(
-        description: String,
+        title: String,
         buttonTitle: String,
         imageByteArray: ByteArray,
         imageWidthPixel: Int,
@@ -153,7 +154,7 @@ class MeetingRoomViewModel(
                 .onSuccess {
                     val imageShareContent =
                         ImageShareContent(
-                            description = description,
+                            title = title,
                             buttonTitle = buttonTitle,
                             imageUrl = it,
                             imageWidthPixel = imageWidthPixel,
@@ -164,11 +165,36 @@ class MeetingRoomViewModel(
                 }.onNetworkError {
                     handleNetworkError()
                     lastFailedAction = {
-                        shareEtaDashboard(description, buttonTitle, imageByteArray, imageWidthPixel, imageHeightPixel)
+                        shareEtaDashboard(
+                            title,
+                            buttonTitle,
+                            imageByteArray,
+                            imageWidthPixel,
+                            imageHeightPixel,
+                        )
                     }
                 }
             stopLoading()
         }
+    }
+
+    fun shareInviteCode(
+        title: String,
+        description: String,
+        buttonTitle: String,
+        imageUrl: String,
+    ) {
+        startLoading()
+        val imageShareContent =
+            ImageShareContent(
+                title = title,
+                description = description,
+                buttonTitle = buttonTitle,
+                imageUrl = imageUrl,
+                link = "https://github.com/woowacourse-teams/2024-ody",
+            )
+        shareImage(imageShareContent)
+        stopLoading()
     }
 
     private fun shareImage(imageShareContent: ImageShareContent) {

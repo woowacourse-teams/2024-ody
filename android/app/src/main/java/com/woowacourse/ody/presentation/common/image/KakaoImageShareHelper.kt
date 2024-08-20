@@ -30,7 +30,8 @@ class KakaoImageShareHelper(private val context: Context) : ImageShareHelper {
         return FeedTemplate(
             content =
                 Content(
-                    title = imageShareContent.description,
+                    title = imageShareContent.title,
+                    description = imageShareContent.description,
                     imageUrl = imageShareContent.imageUrl,
                     imageWidth = imageShareContent.imageWidthPixel,
                     imageHeight = imageShareContent.imageHeightPixel,
