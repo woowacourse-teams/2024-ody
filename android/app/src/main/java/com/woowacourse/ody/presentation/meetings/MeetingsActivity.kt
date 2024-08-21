@@ -78,9 +78,9 @@ class MeetingsActivity :
 
     private fun handleSplashScreen() {
         initializeObserve()
-        viewModel.checkIfLogined()
         initializeBinding()
         requestPermissions()
+        viewModel.checkIfLogined()
     }
 
     private fun initializeObserve() {
