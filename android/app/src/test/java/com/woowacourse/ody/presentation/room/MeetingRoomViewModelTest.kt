@@ -1,5 +1,6 @@
 package com.woowacourse.ody.presentation.room
 
+import com.woowacourse.ody.domain.model.Nudge
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeImageShareHelper
@@ -82,7 +83,7 @@ class MeetingRoomViewModelTest {
     @Test
     fun `친구 재촉을 하면 친구 재촉이 성공한다`() {
         // when
-        viewModel.nudgeMate(0)
+        viewModel.nudgeMate(1, 0)
 
         // then
         val nudgedNickname = viewModel.nudgeSuccessMate.getOrAwaitValue()
