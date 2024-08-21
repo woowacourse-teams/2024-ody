@@ -17,8 +17,6 @@ public class TestAuthConfig {
 
     @Bean
     public AuthProperties authProperties(){
-        AuthProperties authProperties = new AuthProperties("accessKey", "refereshKey", 60000, 60000);
-        System.out.println("authProperties.getAccessKey() = " + authProperties.getAccessKey());
-        return authProperties;
+        return new AuthProperties("accessKey", "refreshKey", 60000, 60000);
     }
 }
