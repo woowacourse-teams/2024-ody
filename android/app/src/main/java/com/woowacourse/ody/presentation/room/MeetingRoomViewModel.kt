@@ -9,6 +9,7 @@ import com.woowacourse.ody.domain.apiresult.onNetworkError
 import com.woowacourse.ody.domain.apiresult.onSuccess
 import com.woowacourse.ody.domain.apiresult.onUnexpected
 import com.woowacourse.ody.domain.model.MateEtaInfo
+import com.woowacourse.ody.domain.model.Nudge
 import com.woowacourse.ody.domain.repository.image.ImageStorage
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
@@ -73,9 +74,12 @@ class MeetingRoomViewModel(
         fetchMeeting()
     }
 
-    override fun nudgeMate(mateId: Long) {
+    override fun nudgeMate(
+        nudgeId: Long,
+        mateId: Long,
+    ) {
         viewModelScope.launch {
-            meetingRepository.fetchNudge(mateId)
+            meetingRepository.postNudge(Nudge(nudgeId, mateId))
                 .onSuccess {
                     val mateNickname =
                         matesEta.value?.mateEtas?.find { it.mateId == mateId }?.nickname
@@ -87,7 +91,7 @@ class MeetingRoomViewModel(
                     Timber.e("$code $errorMessage")
                 }.onNetworkError {
                     handleNetworkError()
-                    lastFailedAction = { nudgeMate(mateId) }
+                    lastFailedAction = { nudgeMate(nudgeId, mateId) }
                 }
         }
     }
