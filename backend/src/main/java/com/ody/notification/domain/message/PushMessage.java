@@ -10,8 +10,8 @@ public class PushMessage {
 
     private final Message message;
 
-    public PushMessage(FcmTopic topic, Notification notification){
-        this.message= Message.builder()
+    public PushMessage(FcmTopic topic, Notification notification) {
+        this.message = Message.builder()
                 .putData("type", notification.getType().toString())
                 .putData("nickname", notification.getMate().getNicknameValue())
                 .setTopic(topic.getValue())

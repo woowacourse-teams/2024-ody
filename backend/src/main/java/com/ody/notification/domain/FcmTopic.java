@@ -11,7 +11,7 @@ public class FcmTopic {
     public FcmTopic(Meeting meeting) {
         this(build(meeting));
     }
-    
+
     public FcmTopic(String rawValue) {
         this.value = rawValue.replace(":", "-");
     }

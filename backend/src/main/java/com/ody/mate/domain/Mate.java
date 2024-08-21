@@ -74,7 +74,7 @@ public class Mate {
         return nickname.getValue();
     }
 
-    public DeviceToken getMemberDeviceToken(){
+    public DeviceToken getMemberDeviceToken() {
         return member.getDeviceToken();
     }
 }
