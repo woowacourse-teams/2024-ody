@@ -1,17 +1,18 @@
 package com.ody.meeting.domain;
 
+import com.ody.common.exception.OdyBadRequestException;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Coordinates {
 
     @NotNull
@@ -19,6 +20,20 @@ public class Coordinates {
 
     @NotNull
     private String longitude;
+
+    public Coordinates(String latitude, String longitude) {
+        this.latitude = formatForDoubleConversion(latitude);
+        this.longitude = formatForDoubleConversion(longitude);
+    }
+
+    private String formatForDoubleConversion(String rawCoordinate) {
+        try {
+            BigDecimal coordinate = new BigDecimal(rawCoordinate);
+            return coordinate.setScale(7, RoundingMode.HALF_UP).toString();
+        } catch (NumberFormatException exception) {
+            throw new OdyBadRequestException("double로 변환 불가능한 좌표입니다.");
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
