@@ -25,7 +25,7 @@ class OdyDatastore(private val context: Context) {
                 if (!it.isNullOrEmpty()) {
                     Result.success(it)
                 } else {
-                    Result.failure(Exception("Invite code is empty"))
+                    Result.failure(Exception("초대 코드가 null입니다"))
                 }
             }
         }
@@ -43,7 +43,7 @@ class OdyDatastore(private val context: Context) {
                 if (!it.isNullOrEmpty()) {
                     Result.success(it)
                 } else {
-                    Result.failure(Exception("FCM Token is empty"))
+                    Result.failure(Exception("FCM 토큰이 null입니다"))
                 }
             }
         }
@@ -63,7 +63,7 @@ class OdyDatastore(private val context: Context) {
             if (!accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty()) {
                 Result.success(AuthToken(accessToken, refreshToken))
             } else {
-                Result.failure(Exception("Auth token is empty"))
+                Result.failure(Exception("accessToken 또는 refreshToken이 null입니다"))
             }
         }
     }

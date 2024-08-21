@@ -19,7 +19,7 @@ class DefaultAuthTokenRepository(
     }
 
     override suspend fun refreshAuthToken(): ApiResult<AuthToken> {
-        return refreshTokenService.get().refreshAccessToken().map {
+        return refreshTokenService.get().postRefreshToken().map {
             val authToken = it.toAuthToken()
             odyDatastore.setAuthToken(authToken)
             authToken
