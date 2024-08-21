@@ -2,6 +2,7 @@ package com.ody.mate.controller;
 
 import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.request.MateSaveRequestV2;
+import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.meeting.dto.response.MeetingSaveResponse;
@@ -78,10 +79,11 @@ public interface MateControllerSwagger {
 
     @Operation(
             summary = "참여자 재촉하기",
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = NudgeRequest.class))),
             responses = {@ApiResponse(responseCode = "200", description = "재촉하기 성공")}
     )
     @ErrorCode400(description = "유효하지 않은 mateId")
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<Void> nudgeMate(@Parameter(name = "참여자 Id", required = true) Long mateId);
+    ResponseEntity<Void> nudgeMate(NudgeRequest nudgeRequest);
 }

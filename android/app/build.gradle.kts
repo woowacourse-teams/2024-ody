@@ -29,10 +29,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
         buildConfigField("String", "KAKAO_API_KEY", properties["KAKAO_API_KEY"].toString())
+        buildConfigField("String", "KAKAO_NATIVE_KEY", properties["KAKAO_NATIVE_KEY"].toString())
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["KAKAO_NATIVE_KEY"].toString()
     }
     buildTypes {
+        debug {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -78,6 +89,7 @@ dependencies {
     // firebase
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage.ktx)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.messaging.ktx)
     implementation(platform(libs.firebase.bom))
@@ -116,4 +128,7 @@ dependencies {
 
     // glide
     implementation(libs.glide)
+
+    // kakao share
+    implementation(libs.kakao.share)
 }

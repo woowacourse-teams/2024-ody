@@ -15,18 +15,20 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentEtaDashboardBinding
 import com.woowacourse.ody.databinding.LayoutMissingTooltipBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
+import com.woowacourse.ody.presentation.common.image.getBitmap
+import com.woowacourse.ody.presentation.common.image.toByteArray
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
-import com.woowacourse.ody.presentation.room.log.listener.ShareListener
+import com.woowacourse.ody.presentation.room.etadashboard.listener.ShareListener
 
 class EtaDashboardFragment :
     BindingFragment<FragmentEtaDashboardBinding>(R.layout.fragment_eta_dashboard),
     MissingToolTipListener,
     ShareListener {
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
-    private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this) }
+    private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this, viewModel) }
     private val parentActivity: Activity by lazy { requireActivity() }
 
     override fun onViewCreated(
@@ -52,6 +54,9 @@ class EtaDashboardFragment :
     private fun initializeObserve() {
         viewModel.mateEtaUiModels.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+        }
+        viewModel.nudgeSuccessMate.observe(viewLifecycleOwner) { nickName ->
+            showSnackBar(getString(R.string.nudge_success, nickName))
         }
     }
 
@@ -98,6 +103,14 @@ class EtaDashboardFragment :
     }
 
     override fun onShare() {
-        // TODO 추후 카카오 공유하기 기능 연결
+        val bitmap = binding.rvEtaDashboard.getBitmap()
+        val byteArray = bitmap.toByteArray()
+        viewModel.shareEtaDashboard(
+            title = getString(R.string.eta_dashboard_share_description),
+            buttonTitle = getString(R.string.eta_dashboard_share_button),
+            imageByteArray = byteArray,
+            imageWidthPixel = bitmap.width,
+            imageHeightPixel = bitmap.height,
+        )
     }
 }

@@ -1,5 +1,7 @@
 package com.woowacourse.ody.presentation.common
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 abstract class BaseViewModel : ViewModel() {
@@ -11,6 +13,9 @@ abstract class BaseViewModel : ViewModel() {
 
     protected var lastFailedAction: (() -> Unit)? = null
 
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun retryLastAction() {
         lastFailedAction?.invoke()
     }
@@ -21,5 +26,13 @@ abstract class BaseViewModel : ViewModel() {
 
     fun handleError() {
         _errorEvent.setValue(Unit)
+    }
+
+    fun startLoading() {
+        _isLoading.value = true
+    }
+
+    fun stopLoading() {
+        _isLoading.value = false
     }
 }

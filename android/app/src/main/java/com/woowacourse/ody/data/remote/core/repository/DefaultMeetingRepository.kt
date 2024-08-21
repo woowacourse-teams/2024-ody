@@ -16,12 +16,14 @@ import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 
 class DefaultMeetingRepository(private val service: MeetingService) : MeetingRepository {
     override suspend fun fetchInviteCodeValidity(inviteCode: String): ApiResult<Unit> {
-        return service.getInviteCodeValidity(inviteCode)
+        return service.fetchInviteCodeValidity(inviteCode)
     }
 
     override suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting> {
         return service.fetchMeeting(meetingId).map { it.toMeeting() }
     }
+
+    override suspend fun fetchNudge(mateId: Long): ApiResult<Unit> = service.fetchNudge(mateId)
 
     override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String> =
         service.postMeeting(meetingCreationInfo.toMeetingRequest()).map { it.inviteCode }

@@ -15,7 +15,7 @@ import retrofit2.http.Path
 
 interface MeetingService {
     @GET("invite-codes/{inviteCode}/validate")
-    suspend fun getInviteCodeValidity(
+    suspend fun fetchInviteCodeValidity(
         @Path(value = "inviteCode") inviteCode: String,
     ): ApiResult<Unit>
 
@@ -24,7 +24,7 @@ interface MeetingService {
         @Body meetingRequest: MeetingRequest,
     ): ApiResult<MeetingCreationResponse>
 
-    @PATCH("/v1/meetings/{meetingId}/mates/etas")
+    @PATCH("/v2/meetings/{meetingId}/mates/etas")
     suspend fun patchMatesEta(
         @Path(value = "meetingId") meetingId: Long,
         @Body matesEtaRequest: MatesEtaRequest,
@@ -37,4 +37,9 @@ interface MeetingService {
     suspend fun fetchMeeting(
         @Path(value = "meetingId") meetingId: Long,
     ): ApiResult<MeetingResponse>
+
+    @GET("/v1/mates/{mateId}/nudge")
+    suspend fun fetchNudge(
+        @Path(value = "mateId") mateId: Long,
+    ): ApiResult<Unit>
 }

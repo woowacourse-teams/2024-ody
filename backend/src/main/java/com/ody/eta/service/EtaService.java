@@ -4,14 +4,12 @@ import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
-import com.ody.eta.dto.response.MateEtaResponse;
-import com.ody.eta.dto.response.MateEtaResponses;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
-import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
-import com.ody.member.domain.Member;
+import com.ody.meeting.dto.response.MateEtaResponseV2;
+import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.DistanceCalculator;
@@ -29,7 +27,6 @@ public class EtaService {
 
     private final RouteService routeService;
     private final EtaRepository etaRepository;
-    private final MateRepository mateRepository;
 
     @Transactional
     public Eta saveFirstEtaOfMate(Mate mate, RouteTime routeTime) {
@@ -37,30 +34,35 @@ public class EtaService {
     }
 
     @Transactional
-    public MateEtaResponses findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
-        Mate requestMate = findByMeetingIdAndMemberId(meetingId, member.getId());
-        Meeting meeting = requestMate.getMeeting();
-        Eta mateEta = findByMateId(requestMate.getId());
-        mateEta.updateMissingBy(mateEtaRequest.isMissing());
+    public MateEtaResponsesV2 findAllMateEtas(MateEtaRequest mateEtaRequest, Mate mate) {
+        Meeting meeting = mate.getMeeting();
+        Eta mateEta = findByMateId(mate.getId());
 
-        if (!mateEta.isMissing() && determineArrived(mateEtaRequest, meeting)) {
-            mateEta.updateArrived();
-        }
-        if (!mateEta.isMissing() && (!mateEta.isArrived() && isRouteClientCallTime(mateEta))) {
-            Location currentLocation = new Location(
-                    mateEtaRequest.currentLatitude(),
-                    mateEtaRequest.currentLongitude()
-            );
-            RouteTime routeTime = routeService.calculateRouteTime(currentLocation, meeting.getTarget());
-            mateEta.updateRemainingMinutes(routeTime.getMinutes());
-        }
+        updateMateEta(mateEtaRequest, mateEta, meeting);
 
-        return etaRepository.findAllByMeetingId(meetingId).stream()
-                .map(eta -> MateEtaResponse.of(eta, meeting))
+        return etaRepository.findAllByMeetingId(meeting.getId()).stream()
+                .map(eta -> MateEtaResponseV2.of(eta, meeting))
                 .collect(Collectors.collectingAndThen(
                         Collectors.toList(),
-                        mateEtaResponses -> new MateEtaResponses(requestMate.getNicknameValue(), mateEtaResponses))
-                );
+                        mateEtas -> new MateEtaResponsesV2(mate.getId(), mateEtas)
+                ));
+    }
+
+    private void updateMateEta(MateEtaRequest mateEtaRequest, Eta mateEta, Meeting meeting) {
+        mateEta.updateMissingBy(mateEtaRequest.isMissing());
+        if (mateEta.isMissing()) {
+            return;
+        }
+
+        if (determineArrived(mateEtaRequest.toLocation(), meeting)) {
+            mateEta.updateArrived();
+            return;
+        }
+
+        if (isRouteClientCallTime(mateEta)) {
+            RouteTime routeTime = routeService.calculateRouteTime(mateEtaRequest.toLocation(), meeting.getTarget());
+            mateEta.updateRemainingMinutes(routeTime.getMinutes());
+        }
     }
 
     public EtaStatus findEtaStatus(Mate mate) {
@@ -72,16 +74,9 @@ public class EtaService {
         return !mateEta.isModified() || mateEta.differenceMinutesFromLastUpdated() >= ROUTE_CLIENT_CALL_CYCLE_MINUTES;
     }
 
-    private boolean determineArrived(MateEtaRequest mateEtaRequest, Meeting meeting) {
-        double distance = DistanceCalculator.calculate(
-                new Location(mateEtaRequest.currentLatitude(), mateEtaRequest.currentLongitude()), meeting.getTarget()
-        );
+    private boolean determineArrived(Location origin, Meeting meeting) {
+        double distance = DistanceCalculator.calculate(origin, meeting.getTarget());
         return distance <= ARRIVED_THRESHOLD_METER && !meeting.isEnd();
-    }
-
-    private Mate findByMeetingIdAndMemberId(Long meetingId, Long memberId) {
-        return mateRepository.findByMeetingIdAndMemberId(meetingId, memberId)
-                .orElseThrow(() -> new OdyNotFoundException("참여하고 있지 않는 약속방입니다"));
     }
 
     private Eta findByMateId(Long mateId) {

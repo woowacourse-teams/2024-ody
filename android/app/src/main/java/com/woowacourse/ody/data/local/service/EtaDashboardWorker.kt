@@ -95,7 +95,7 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
     }
 
     private fun MateEtaInfo.toMateEtaInfoResponse(): MatesEtaInfoResponse {
-        return MatesEtaInfoResponse(userNickname, mateEtas)
+        return MatesEtaInfoResponse(userId, mateEtas)
     }
 
     private fun MatesEtaInfoResponse.convertMateEtasToJson(): String {
