@@ -30,7 +30,7 @@ class LoginViewModel(
         }
     }
 
-    fun loginWithKakao(context: Context) =
+    fun loginWithKakao(context: Context) {
         viewModelScope.launch {
             kakaoLoginRepository.login(context)
                 .onSuccess {
@@ -39,8 +39,10 @@ class LoginViewModel(
                     handleError()
                 }.onNetworkError {
                     handleNetworkError()
+                    lastFailedAction = { loginWithKakao(context) }
                 }
         }
+    }
 
     private fun navigateToMeetings() {
         _navigateAction.setValue(LoginNavigateAction.NavigateToMeetings)

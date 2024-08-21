@@ -33,7 +33,7 @@ class KakaoLoginRepository(
         }
         loginRequest.getOrNull().let { request ->
             if (request == null) return ApiResult.Unexpected(Exception("LoginRequest is null"))
-            return loginService.loginWithKakao(request).map {
+            return loginService.postLoginWithKakao(request).map {
                 val token = it.toAuthToken()
                 odyDatastore.setAuthToken(token)
                 token

@@ -8,7 +8,7 @@ import retrofit2.http.POST
 
 interface LoginService {
     @POST("/v1/auth/kakao")
-    suspend fun loginWithKakao(
+    suspend fun postLoginWithKakao(
         @Body loginRequest: LoginRequest,
     ): ApiResult<LoginResponse>
 }
