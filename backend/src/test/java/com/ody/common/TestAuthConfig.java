@@ -11,12 +11,12 @@ import org.springframework.context.annotation.Profile;
 public class TestAuthConfig {
 
     @Bean
-    public JwtTokenProvider jwtTokenProvider(){
+    public JwtTokenProvider jwtTokenProvider() {
         return new JwtTokenProvider(authProperties());
     }
 
     @Bean
-    public AuthProperties authProperties(){
-        return new AuthProperties("accessKey", "refreshKey", 60000, 60000);
+    public AuthProperties authProperties() {
+        return TokenFixture.getAuthPropertiesForValidToken();
     }
 }

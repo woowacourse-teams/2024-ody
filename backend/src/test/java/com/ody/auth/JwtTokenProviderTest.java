@@ -7,15 +7,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
+import com.ody.common.TokenFixture;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyException;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,42 +24,25 @@ class JwtTokenProviderTest extends BaseServiceTest {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    private long memberId;
-    private AuthProperties authProperties;
-    private AuthProperties authPropertiesForExpiredToken;
-    private AuthProperties authPropertiesForInvalidToken;
-    private AccessToken validAccessToken;
-    private AccessToken expiredAccessToken;
-    private AccessToken invalidAccessToken;
-    private RefreshToken validRefreshToken;
-    private RefreshToken expiredRefreshToken;
-    private RefreshToken invalidRefreshToken;
+    private static long memberId;
+    private static AccessToken validAccessToken;
+    private static AccessToken expiredAccessToken;
+    private static AccessToken invalidAccessToken;
+    private static RefreshToken validRefreshToken;
+    private static RefreshToken expiredRefreshToken;
+    private static RefreshToken invalidRefreshToken;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void beforeAll() {
         memberId = 1L;
 
-        authProperties = jwtTokenProvider.getAuthProperties();
-        authPropertiesForExpiredToken = new AuthProperties(
-                authProperties.getAccessKey(),
-                authProperties.getRefreshKey(),
-                0,
-                0
-        );
-        authPropertiesForInvalidToken = new AuthProperties(
-                "wrongAccessKey",
-                "wrongRefreshKey",
-                60000,
-                60000
-        );
+        validAccessToken = TokenFixture.getValidAccessToken(memberId);
+        expiredAccessToken = TokenFixture.getExpiredAccessToken(memberId);
+        invalidAccessToken = TokenFixture.getInvalidAccessToken(memberId);
 
-        validAccessToken = jwtTokenProvider.createAccessToken(memberId);
-        expiredAccessToken = new AccessToken(memberId, authPropertiesForExpiredToken);
-        invalidAccessToken = new AccessToken(memberId, authPropertiesForInvalidToken);
-
-        validRefreshToken = jwtTokenProvider.createRefreshToken();
-        expiredRefreshToken = new RefreshToken(authPropertiesForExpiredToken);
-        invalidRefreshToken = new RefreshToken(authPropertiesForInvalidToken);
+        validRefreshToken = TokenFixture.getValidRefreshToken();
+        expiredRefreshToken = TokenFixture.getExpiredRefreshToken();
+        invalidRefreshToken = TokenFixture.getInvalidRefreshToken();
     }
 
     @DisplayName("액세스 토큰을 파싱한다.")
@@ -91,7 +73,6 @@ class JwtTokenProviderTest extends BaseServiceTest {
         }
     }
 
-    @TestInstance(Lifecycle.PER_CLASS)
     @DisplayName("액세스 토큰을 검증한다.")
     @Nested
     class validateAccessToken {
@@ -111,7 +92,7 @@ class JwtTokenProviderTest extends BaseServiceTest {
                     .isInstanceOf(OdyException.class);
         }
 
-        private Stream<AccessToken> getExpiredOrInvalidAccessTokenArguments() {
+        private static Stream<AccessToken> getExpiredOrInvalidAccessTokenArguments() {
             return Stream.of(expiredAccessToken, invalidAccessToken);
         }
     }
