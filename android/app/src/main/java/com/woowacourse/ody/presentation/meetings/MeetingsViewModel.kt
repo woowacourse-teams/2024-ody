@@ -4,11 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.woowacourse.ody.data.remote.thirdparty.login.kakao.KakaoLoginRepository
 import com.woowacourse.ody.domain.apiresult.onFailure
 import com.woowacourse.ody.domain.apiresult.onNetworkError
 import com.woowacourse.ody.domain.apiresult.onSuccess
-import com.woowacourse.ody.domain.repository.ody.AuthTokenRepository
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.presentation.common.BaseViewModel
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
@@ -24,8 +22,6 @@ import timber.log.Timber
 class MeetingsViewModel(
     private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
-    private val kakaoLoginRepository: KakaoLoginRepository,
-    private val authTokenRepository: AuthTokenRepository,
 ) : BaseViewModel(), MeetingsItemListener {
     private val _meetingCatalogs = MutableLiveData<List<MeetingUiModel>>()
     val meetingCatalogs: LiveData<List<MeetingUiModel>> = _meetingCatalogs
@@ -34,20 +30,6 @@ class MeetingsViewModel(
     val navigateAction: SingleLiveData<MeetingsNavigateAction> = _navigateAction
 
     val isMeetingCatalogsEmpty: LiveData<Boolean> = _meetingCatalogs.map { it.isEmpty() }
-
-    fun checkIfLogined() {
-        Timber.d(kakaoLoginRepository.checkIfLogined().toString())
-        if (!kakaoLoginRepository.checkIfLogined()) navigateToLogin()
-        viewModelScope.launch {
-            authTokenRepository.fetchAuthToken().onSuccess {
-                Timber.d(it.toString())
-                if (it.accessToken.isEmpty()) navigateToLogin()
-            }.onFailure {
-                Timber.e(it)
-                navigateToLogin()
-            }
-        }
-    }
 
     fun fetchMeetingCatalogs() {
         viewModelScope.launch {
@@ -65,10 +47,6 @@ class MeetingsViewModel(
                 }
             stopLoading()
         }
-    }
-
-    fun navigateToLogin() {
-        _navigateAction.postValue(MeetingsNavigateAction.NavigateToLogin)
     }
 
     override fun navigateToEtaDashboard(meetingId: Long) {

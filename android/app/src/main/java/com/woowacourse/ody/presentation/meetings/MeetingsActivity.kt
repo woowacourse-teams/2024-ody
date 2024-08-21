@@ -1,15 +1,11 @@
 package com.woowacourse.ody.presentation.meetings
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.core.animation.doOnEnd
-import androidx.core.splashscreen.SplashScreen
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
@@ -29,14 +25,10 @@ class MeetingsActivity :
         R.layout.activity_meetings,
     ),
     MeetingsListener {
-    private lateinit var splashScreen: SplashScreen
-
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
             analyticsHelper,
             application.meetingRepository,
-            application.kakaoLoginRepository,
-            application.authTokenRepository,
         )
     }
     private val adapter by lazy {
@@ -48,22 +40,10 @@ class MeetingsActivity :
     private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        splashScreen = installSplashScreen()
-        startSplash()
         super.onCreate(savedInstanceState)
-    }
-
-    private fun startSplash() {
-        splashScreen.setOnExitAnimationListener { splashScreenView ->
-            ObjectAnimator.ofPropertyValuesHolder(splashScreenView.iconView).run {
-                duration = 1500L
-                doOnEnd {
-                    handleSplashScreen()
-                    splashScreenView.remove()
-                }
-                start()
-            }
-        }
+        initializeObserve()
+        initializeBinding()
+        requestPermissions()
     }
 
     override fun onResume() {
@@ -74,13 +54,6 @@ class MeetingsActivity :
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
         binding.listener = this
-    }
-
-    private fun handleSplashScreen() {
-        initializeObserve()
-        initializeBinding()
-        requestPermissions()
-        viewModel.checkIfLogined()
     }
 
     private fun initializeObserve() {
