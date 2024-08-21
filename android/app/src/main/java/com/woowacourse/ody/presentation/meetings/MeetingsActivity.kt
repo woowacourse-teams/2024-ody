@@ -35,6 +35,8 @@ class MeetingsActivity :
         MeetingsViewModelFactory(
             analyticsHelper,
             application.meetingRepository,
+            application.kakaoLoginRepository,
+            application.authTokenRepository,
         )
     }
     private val adapter by lazy {
@@ -53,12 +55,10 @@ class MeetingsActivity :
 
     private fun startSplash() {
         splashScreen.setOnExitAnimationListener { splashScreenView ->
-            val hasToken = true
-
             ObjectAnimator.ofPropertyValuesHolder(splashScreenView.iconView).run {
                 duration = 1500L
                 doOnEnd {
-                    handleSplashScreen(hasToken)
+                    handleSplashScreen()
                     splashScreenView.remove()
                 }
                 start()
@@ -76,16 +76,11 @@ class MeetingsActivity :
         binding.listener = this
     }
 
-    private fun handleSplashScreen(hasToken: Boolean) {
-        if (hasToken) {
-            initializeObserve()
-            initializeBinding()
-            requestPermissions()
-        } else {
-            splashScreen.setKeepOnScreenCondition { true }
-            startActivity(Intent(this@MeetingsActivity, LoginActivity::class.java))
-            finish()
-        }
+    private fun handleSplashScreen() {
+        initializeObserve()
+        viewModel.checkIfLogined()
+        initializeBinding()
+        requestPermissions()
     }
 
     private fun initializeObserve() {
@@ -99,6 +94,7 @@ class MeetingsActivity :
             when (it) {
                 is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
                 is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
+                is MeetingsNavigateAction.NavigateToLogin -> navigateToLogin()
             }
         }
         viewModel.networkErrorEvent.observe(this) {
@@ -155,6 +151,12 @@ class MeetingsActivity :
                 meetingId,
                 MeetingRoomActivity.NAVIGATE_TO_ETA_DASHBOARD,
             )
+        startActivity(intent)
+    }
+
+    private fun navigateToLogin() {
+        val intent =
+            LoginActivity.getIntent(this)
         startActivity(intent)
     }
 

@@ -4,7 +4,7 @@ import android.content.Context
 import com.woowacourse.ody.data.local.db.OdyDatastore
 import com.woowacourse.ody.data.remote.core.entity.login.mapper.toAuthToken
 import com.woowacourse.ody.data.remote.core.entity.login.request.LoginRequest
-import com.woowacourse.ody.data.remote.core.service.AuthService
+import com.woowacourse.ody.data.remote.core.service.LoginService
 import com.woowacourse.ody.data.remote.thirdparty.login.entity.UserProfile
 import com.woowacourse.ody.domain.apiresult.ApiResult
 import com.woowacourse.ody.domain.apiresult.map
@@ -13,11 +13,15 @@ import com.woowacourse.ody.domain.model.AuthToken
 import com.woowacourse.ody.domain.repository.ody.FCMTokenRepository
 
 class KakaoLoginRepository(
-    private val authService: AuthService,
+    private val loginService: LoginService,
     private val odyDatastore: OdyDatastore,
     private val kakaoOAuthLoginService: KakaoOAuthLoginService,
     private val fcmTokenRepository: FCMTokenRepository,
 ) {
+    fun checkIfLogined(): Boolean {
+        return kakaoOAuthLoginService.checkIfLogined()
+    }
+
     suspend fun login(context: Context): ApiResult<AuthToken> {
         val loginRequest = kakaoOAuthLoginService.login(context).flatMap { buildLoginRequest(it) }
         if (loginRequest.isFailure) {
@@ -29,7 +33,7 @@ class KakaoLoginRepository(
         }
         loginRequest.getOrNull().let { request ->
             if (request == null) return ApiResult.Unexpected(Exception("LoginRequest is null"))
-            return authService.loginWithKakao(request).map {
+            return loginService.loginWithKakao(request).map {
                 val token = it.toAuthToken()
                 odyDatastore.setAuthToken(token)
                 token

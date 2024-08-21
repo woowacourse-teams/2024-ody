@@ -12,10 +12,11 @@ import com.woowacourse.ody.data.remote.core.repository.DefaultFCMTokenRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultJoinRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultNotificationLogRepository
-import com.woowacourse.ody.data.remote.core.service.AuthService
 import com.woowacourse.ody.data.remote.core.service.JoinService
+import com.woowacourse.ody.data.remote.core.service.LoginService
 import com.woowacourse.ody.data.remote.core.service.MeetingService
 import com.woowacourse.ody.data.remote.core.service.NotificationService
+import com.woowacourse.ody.data.remote.core.service.RefreshTokenService
 import com.woowacourse.ody.data.remote.thirdparty.image.FirebaseImageStorage
 import com.woowacourse.ody.data.remote.thirdparty.location.KakaoRetrofitClient
 import com.woowacourse.ody.data.remote.thirdparty.location.repository.KakaoGeoLocationRepository
@@ -23,8 +24,8 @@ import com.woowacourse.ody.data.remote.thirdparty.location.service.KakaoLocation
 import com.woowacourse.ody.data.remote.thirdparty.login.kakao.KakaoLoginRepository
 import com.woowacourse.ody.data.remote.thirdparty.login.kakao.KakaoOAuthLoginService
 import com.woowacourse.ody.domain.common.Provider
-import com.woowacourse.ody.domain.repository.ody.AuthTokenRepository
 import com.woowacourse.ody.domain.repository.image.ImageStorage
+import com.woowacourse.ody.domain.repository.ody.AuthTokenRepository
 import com.woowacourse.ody.domain.repository.ody.FCMTokenRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
@@ -41,20 +42,27 @@ class OdyApplication : Application() {
     private val odyDatastore by lazy {
         OdyDatastore(this)
     }
-    private val authService by lazy {
-        Provider<AuthService> { retrofit.create(AuthService::class.java) }
+
+    private val refreshTokenService by lazy {
+        Provider {
+            refreshRetrofit.create(RefreshTokenService::class.java)
+        }
     }
-    private val authTokenRepository: AuthTokenRepository by lazy {
+
+    val authTokenRepository: AuthTokenRepository by lazy {
         DefaultAuthTokenRepository(
             odyDatastore,
-            authService,
+            refreshTokenService,
         )
     }
     private val retrofit: Retrofit = RetrofitClient(authTokenRepository).retrofit
+    private val loginRetrofit: Retrofit = RetrofitClient(authTokenRepository).loginRetrofit
+    private val refreshRetrofit: Retrofit = RetrofitClient(authTokenRepository).refreshRetrofit
     private val kakaoRetrofit: Retrofit = KakaoRetrofitClient().retrofit
 
     private val joinService: JoinService = retrofit.create(JoinService::class.java)
     private val meetingService: MeetingService = retrofit.create(MeetingService::class.java)
+    private val loginService: LoginService = loginRetrofit.create(LoginService::class.java)
     private val notificationService: NotificationService =
         retrofit.create(NotificationService::class.java)
     private val kakaoLocationService: KakaoLocationService =
@@ -83,7 +91,7 @@ class OdyApplication : Application() {
 
     val kakaoLoginRepository: KakaoLoginRepository by lazy {
         KakaoLoginRepository(
-            authService.get(),
+            loginService,
             odyDatastore,
             KakaoOAuthLoginService(),
             fcmTokenRepository,

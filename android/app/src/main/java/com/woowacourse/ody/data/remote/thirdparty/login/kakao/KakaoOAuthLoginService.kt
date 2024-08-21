@@ -1,6 +1,7 @@
 package com.woowacourse.ody.data.remote.thirdparty.login.kakao
 
 import android.content.Context
+import com.kakao.sdk.auth.TokenManagerProvider
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
@@ -14,6 +15,8 @@ class KakaoOAuthLoginService {
     suspend fun login(context: Context): Result<UserProfile> {
         return loginWithKakao(context).flatMap { requestUserProfile() }
     }
+
+    fun checkIfLogined(): Boolean = TokenManagerProvider.instance.manager.getToken() != null
 
     private suspend fun loginWithKakao(context: Context): Result<AuthToken> =
         loginWithKakaoTalk(context).onFailure { error ->
