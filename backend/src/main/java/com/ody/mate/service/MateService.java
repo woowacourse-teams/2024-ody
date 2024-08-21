@@ -66,7 +66,7 @@ public class MateService {
             notificationService.sendNudgeMessage(requestMate, nudgedMate);
             return;
         }
-        throw new OdyBadRequestException("요청한 참여자의 상태가 지각이나 지각위기가 아닙니다");
+        throw new OdyBadRequestException("재촉한 참여자가 같은 약속 참여자가 아니거나 지각/지각위기가 아닙니다");
     }
 
     private Mate findFetchedMate(Long mateId) {
