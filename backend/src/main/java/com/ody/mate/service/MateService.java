@@ -10,7 +10,7 @@ import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.repository.MateRepository;
-import com.ody.meeting.domain.Location;
+import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
@@ -40,12 +40,8 @@ public class MateService {
             throw new OdyBadRequestException("모임에 이미 참여한 회원입니다.");
         }
 
-        Location origin = new Location(
-                mateSaveRequest.originAddress(),
-                mateSaveRequest.originLatitude(),
-                mateSaveRequest.originLongitude()
-        );
-        RouteTime routeTime = routeService.calculateRouteTime(origin, meeting.getTarget());
+        Coordinates origin = new Coordinates(mateSaveRequest.originLatitude(), mateSaveRequest.originLongitude());
+        RouteTime routeTime = routeService.calculateRouteTime(origin, meeting.getTargetCoordinates());
         Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, routeTime.getMinutes()));
         etaService.saveFirstEtaOfMate(mate, routeTime);
         notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken(), routeTime);

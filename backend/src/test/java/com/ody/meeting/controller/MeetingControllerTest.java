@@ -189,7 +189,11 @@ class MeetingControllerTest extends BaseControllerTest {
             Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin, 10L));
             etaRepository.save(new Eta(mate, 10L));
 
-            MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+            MateEtaRequest mateEtaRequest = new MateEtaRequest(
+                    false,
+                    origin.getCoordinates().getLatitude(),
+                    origin.getCoordinates().getLongitude()
+            );
 
             RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION,
