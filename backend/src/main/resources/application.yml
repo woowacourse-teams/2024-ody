@@ -36,7 +36,7 @@ spring:
 
 log:
   file:
-    path: ./ody-logs
+    path: ./ody-dev-logs
 
 ---
 
@@ -48,14 +48,3 @@ spring:
 log:
   file:
     path: /ody-dev-logs
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: prod
-
-log:
-  file:
-    path: /ody-prod-logs
