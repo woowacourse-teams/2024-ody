@@ -5,8 +5,8 @@ on:
     branches:
 #      - develop
       - feature/443
-    paths:
-      - backend/**
+#    paths:
+#      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
