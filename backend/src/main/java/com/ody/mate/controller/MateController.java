@@ -2,6 +2,8 @@ package com.ody.mate.controller;
 
 import com.ody.common.annotation.AuthMember;
 import com.ody.mate.dto.request.MateSaveRequest;
+import com.ody.mate.dto.request.NudgeRequest;
+import com.ody.mate.dto.response.MateResponse;
 import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.service.MeetingService;
@@ -10,8 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,9 +35,9 @@ public class MateController implements MateControllerSwagger {
     }
 
     @Override
-    @GetMapping("/v1/mates/{mateId}/nudge")
-    public ResponseEntity<Void> nudgeMate(@PathVariable(value = "mateId") Long mateId) {
-        mateService.nudge(mateId);
+    @PostMapping("/v1/mates/nudge")
+    public ResponseEntity<Void> nudgeMate(@RequestBody @Valid NudgeRequest nudgeRequest) {
+        mateService.nudge(nudgeRequest);
         return ResponseEntity.ok().build();
     }
 }
