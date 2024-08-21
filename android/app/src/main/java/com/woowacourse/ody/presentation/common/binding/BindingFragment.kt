@@ -29,7 +29,7 @@ abstract class BindingFragment<T : ViewDataBinding>(
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
             analyticsHelper.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
