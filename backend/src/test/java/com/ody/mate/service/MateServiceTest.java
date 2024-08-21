@@ -15,7 +15,9 @@ import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.mate.dto.request.MateSaveRequest;
+import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
@@ -24,6 +26,7 @@ import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,71 +120,102 @@ class MateServiceTest extends BaseServiceTest {
                 .isInstanceOf(OdyNotFoundException.class);
     }
 
-    @DisplayName("약속이 1분 뒤이고 소요시간이 2분으로 Eta상태가 지각 위기인 mate를 콕 찌를 수 있다")
-    @Test
-    void nudgeSuccessWhenLateWarning() {
-        long remainingTime = 1L;
-        Meeting oneMinutesLaterMeeting = makeSavedMeetingByTime(TimeUtil.nowWithTrim().plusMinutes(remainingTime));
-        Member member1 = memberRepository.save(Fixture.MEMBER1);
-        Mate mate = new Mate(oneMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
-        mate = mateRepository.save(mate);
-        Eta lateWarningEta = etaRepository.save(new Eta(mate, remainingTime + 1L));
+    @DisplayName("재촉하기 테스트")
+    @Nested
+    class NudgeTest {
 
-        mateService.nudge(mate.getId());
+        @DisplayName("약속이 1분 뒤이고 소요시간이 2분으로 Eta상태가 지각 위기인 mate를 재촉할 수 있다")
+        @Test
+        void nudgeSuccessWhenLateWarning() {
+            Meeting oneMinuteLaterMeeting = makeSavedMeetingByRemainingMinutes(1L);
+            Mate requestMate = makeRequestMate(oneMinuteLaterMeeting);
+            Mate nudgedLateWarningMate = makeNudgedMate(oneMinuteLaterMeeting, Fixture.ORIGIN_LOCATION);
+            Eta lateWarningEta = etaRepository.save(new Eta(nudgedLateWarningMate, 2L));
 
-        Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any());
-    }
+            NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
+            mateService.nudge(nudgeRequest);
 
-    @DisplayName("약속이 지금이고 소요시간이 2분으로 Eta상태가 지각인 mate를 콕 찌를 수 있다")
-    @Test
-    void nudgeSuccessWhenLate() {
-        Meeting nowMeeting = makeSavedMeetingByTime(TimeUtil.nowWithTrim());
-        Member member1 = memberRepository.save(Fixture.MEMBER1);
-        Mate mate = new Mate(nowMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
-        mate = mateRepository.save(mate);
-        Eta lateEta = etaRepository.save(new Eta(mate, 2L));
+            Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any(), any());
+        }
 
-        mateService.nudge(mate.getId());
+        @DisplayName("약속이 지금이고 소요시간이 2분으로 Eta상태가 지각인 mate를 재촉할 수 있다")
+        @Test
+        void nudgeSuccessWhenLate() {
+            Meeting nowMeeting = makeSavedMeetingByRemainingMinutes(0L);
+            Mate requestMate = makeRequestMate(nowMeeting);
+            Mate nudgedLateMate = makeNudgedMate(nowMeeting, Fixture.ORIGIN_LOCATION);
+            Eta lateEta = etaRepository.save(new Eta(nudgedLateMate, 2L));
 
-        Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any());
-    }
+            NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateMate.getId());
+            mateService.nudge(nudgeRequest);
 
-    @DisplayName("약속이 3분 뒤이고 소요시간이 2분으로 Eta상태가 도착 예정인 mate를 재촉하면 예외가 발생한다")
-    @Test
-    void nudgeFailWhenArriavalSoon() {
-        long remainingTime = 3L;
-        Meeting threeMinutesLaterMeeting = makeSavedMeetingByTime(TimeUtil.nowWithTrim().plusMinutes(remainingTime));
-        Member member1 = memberRepository.save(Fixture.MEMBER1);
-        Mate mate = new Mate(threeMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
-        Mate savedMate = mateRepository.save(mate);
-        Eta arrivalSoonEta = etaRepository.save(new Eta(mate, remainingTime - 1L));
+            Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any(), any());
+        }
 
-        assertThatThrownBy(() -> mateService.nudge(savedMate.getId()))
-                .isInstanceOf(OdyBadRequestException.class);
-    }
+        @DisplayName("같은 약속 참여자가 아니라면 재촉할 수 없다")
+        @Test
+        void nudgedFailedWhenDifferentMeetingAttender() {
+            Meeting meeting1 = makeSavedMeetingByRemainingMinutes(1L);
+            Meeting meeting2 = makeSavedMeetingByRemainingMinutes(1L);
+            Mate requestMate = makeRequestMate(meeting1);
+            Mate nudgedMate = makeNudgedMate(meeting2, Fixture.ORIGIN_LOCATION);
 
-    @DisplayName("3분 뒤 약속에 약속장소에 도착하여 Eta상태가 도착인 mate를 재촉하면 예외가 발생한다")
-    @Test
-    void nudgeFailWhenArrived() {
-        long remainingTime = 3L;
-        Meeting threeMinutesLaterMeeting = makeSavedMeetingByTime(TimeUtil.nowWithTrim().plusMinutes(remainingTime));
-        Member member1 = memberRepository.save(Fixture.MEMBER1);
-        Mate mate = new Mate(threeMinutesLaterMeeting, member1, new Nickname("콜리"), Fixture.TARGET_LOCATION, 10L);
-        Mate savedMate = mateRepository.save(mate);
-        Eta arrivalSoonEta = etaRepository.save(new Eta(mate, 0L));
+            NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedMate.getId());
 
-        assertThatThrownBy(() -> mateService.nudge(savedMate.getId()))
-                .isInstanceOf(OdyBadRequestException.class);
-    }
+            assertThatThrownBy(() -> mateService.nudge(nudgeRequest))
+                    .isInstanceOf(OdyBadRequestException.class);
+        }
 
-    private Meeting makeSavedMeetingByTime(LocalDateTime time) {
-        Meeting meeting = new Meeting(
-                "오디",
-                time.toLocalDate(),
-                time.toLocalTime(),
-                Fixture.TARGET_LOCATION,
-                "초대코드"
-        );
-        return meetingRepository.save(meeting);
+        @DisplayName("약속이 3분 뒤이고 소요시간이 2분으로 Eta상태가 도착 예정인 mate를 재촉하면 예외가 발생한다")
+        @Test
+        void nudgeFailWhenArriavalSoon() {
+            Meeting threeMinutesLaterMeeting = makeSavedMeetingByRemainingMinutes(3L);
+            Mate requestMate = makeRequestMate(threeMinutesLaterMeeting);
+            Mate nudgedArriavalSoonMate = makeNudgedMate(threeMinutesLaterMeeting, Fixture.ORIGIN_LOCATION);
+
+            NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedArriavalSoonMate.getId());
+            Eta arrivalSoonEta = etaRepository.save(new Eta(nudgedArriavalSoonMate, 2L));
+
+            assertThatThrownBy(() -> mateService.nudge(nudgeRequest))
+                    .isInstanceOf(OdyBadRequestException.class);
+        }
+
+        @DisplayName("3분 뒤 약속에 약속장소에 도착하여 Eta상태가 도착인 mate를 재촉하면 예외가 발생한다")
+        @Test
+        void nudgeFailWhenArrived() {
+            Meeting threeMinutesLaterMeeting = makeSavedMeetingByRemainingMinutes(3L);
+            Mate requestMate = makeRequestMate(threeMinutesLaterMeeting);
+            Mate nudgedArrivedMate = makeNudgedMate(threeMinutesLaterMeeting, Fixture.TARGET_LOCATION);
+            Eta arrivedEta = etaRepository.save(new Eta(nudgedArrivedMate, 0L));
+
+            NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedArrivedMate.getId());
+
+            assertThatThrownBy(() -> mateService.nudge(nudgeRequest))
+                    .isInstanceOf(OdyBadRequestException.class);
+        }
+
+        private Meeting makeSavedMeetingByRemainingMinutes(long remainingMinutes) {
+            LocalDateTime time = TimeUtil.nowWithTrim().plusMinutes(remainingMinutes);
+            Meeting meeting = new Meeting(
+                    "오디",
+                    time.toLocalDate(),
+                    time.toLocalTime(),
+                    Fixture.TARGET_LOCATION,
+                    "초대코드"
+            );
+            return meetingRepository.save(meeting);
+        }
+
+        private Mate makeRequestMate(Meeting meeting) {
+            Member member = memberRepository.save(Fixture.MEMBER1);
+            Mate requestMate = new Mate(meeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L);
+            return mateRepository.save(requestMate);
+        }
+
+        private Mate makeNudgedMate(Meeting meeting, Location origin) {
+            Member member = memberRepository.save(Fixture.MEMBER2);
+            Mate requestMate = new Mate(meeting, member, new Nickname("콜리"), origin, 10L);
+            return mateRepository.save(requestMate);
+        }
     }
 }
