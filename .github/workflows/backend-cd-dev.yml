@@ -3,6 +3,7 @@ name: backend-cd-dev
 on:
   push:
     branches:
+#      - develop
       - feature/443
     paths:
       - backend/**
@@ -22,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: develop
+#          ref: develop
           submodules: true
           token: ${{ secrets.GIT_TOKEN }}
 
