@@ -117,10 +117,4 @@ dependencies {
 
     // kakao sdk
     implementation(libs.kakao.sdk.v2.user)
-
-    // okhttp3
-    implementation(libs.okhttp3)
-
-    // mockWebServer
-    testImplementation(libs.mockWebServer)
 }
