@@ -1,6 +1,7 @@
 package com.woowacourse.ody.presentation.address
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -20,6 +21,7 @@ import com.woowacourse.ody.presentation.address.listener.AddressReceiveListener
 import com.woowacourse.ody.presentation.address.model.toGeoLocationUiModel
 import com.woowacourse.ody.presentation.address.web.AddressSearchInterface
 import com.woowacourse.ody.presentation.address.web.LocalContentWebViewClient
+import com.woowacourse.ody.presentation.common.LoadingDialog
 
 class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private var _binding: DialogAddressSearchBinding? = null
@@ -27,13 +29,13 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private val application: OdyApplication by lazy {
         requireContext().applicationContext as OdyApplication
     }
-
     private val viewModel: AddressSearchViewModel by viewModels {
         AddressSearchViewModelFactory(
             application.analyticsHelper,
             application.kakaoGeoLocationRepository,
         )
     }
+    private val loadingDialog: Dialog by lazy { LoadingDialog(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,6 +75,13 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
         }
         viewModel.errorEvent.observe(viewLifecycleOwner) {
             showErrorSnackBar()
+        }
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                loadingDialog.show()
+                return@observe
+            }
+            loadingDialog.dismiss()
         }
     }
 

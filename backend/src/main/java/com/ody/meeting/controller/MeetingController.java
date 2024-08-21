@@ -3,9 +3,11 @@ package com.ody.meeting.controller;
 import com.ody.common.annotation.AuthMember;
 import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
+import com.ody.eta.dto.response.MateEtaResponse;
 import com.ody.eta.dto.response.MateEtaResponses;
 import com.ody.eta.service.EtaService;
 import com.ody.mate.dto.response.MateResponse;
+import com.ody.mate.service.MateService;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MateEtaResponseV2;
@@ -41,8 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MeetingController implements MeetingControllerSwagger {
 
     private final MeetingService meetingService;
-    private final EtaService etaService;
     private final NotificationService notificationService;
+    private final MateService mateService;
 
     @Override
     @PostMapping("/meetings")
@@ -140,25 +142,23 @@ public class MeetingController implements MeetingControllerSwagger {
             @PathVariable Long meetingId,
             @Valid @RequestBody MateEtaRequest mateEtaRequest
     ) {
-        MateEtaResponses mateStatuses = etaService.findAllMateEtas(mateEtaRequest, meetingId, member);
-        return ResponseEntity.ok(mateStatuses);
+        MateEtaResponses mateEtaResponses = new MateEtaResponses(
+                "카키공주",
+                new MateEtaResponse("콜리", EtaStatus.LATE_WARNING, 83),
+                new MateEtaResponse("올리브", EtaStatus.ARRIVAL_SOON, 10),
+                new MateEtaResponse("해음", EtaStatus.ARRIVED, 0),
+                new MateEtaResponse("카키공주", EtaStatus.MISSING, -1)
+        );
+        return ResponseEntity.ok(mateEtaResponses);
     }
 
-    @Override
     @PatchMapping("/v2/meetings/{meetingId}/mates/etas")
     public ResponseEntity<MateEtaResponsesV2> findAllMateEtasV2(
             @AuthMember Member member,
             @PathVariable Long meetingId,
             @Valid @RequestBody MateEtaRequest mateEtaRequest
     ) {
-        MateEtaResponsesV2 mateEtaResponses = new MateEtaResponsesV2(
-                4,
-                new MateEtaResponseV2(3, "콜리", EtaStatus.LATE_WARNING, 83),
-                new MateEtaResponseV2(2, "올리브", EtaStatus.ARRIVAL_SOON, 10),
-                new MateEtaResponseV2(1, "해음", EtaStatus.ARRIVED, 0),
-                new MateEtaResponseV2(4, "콜리", EtaStatus.MISSING, -1)
-        );
-
+        MateEtaResponsesV2 mateEtaResponses = mateService.findAllMateEtas(mateEtaRequest, meetingId, member);
         return ResponseEntity.ok(mateEtaResponses);
     }
 }

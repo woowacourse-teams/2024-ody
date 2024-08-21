@@ -1,14 +1,18 @@
 package com.ody.mate.service;
 
 import com.ody.common.exception.OdyBadRequestException;
+import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.domain.EtaStatus;
+import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.service.EtaService;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequest;
+import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
+import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
 import com.ody.notification.service.NotificationService;
 import com.ody.route.domain.RouteTime;
@@ -48,31 +52,40 @@ public class MateService {
         return MateSaveResponse.from(mate);
     }
 
-    public List<Mate> findAllByMemberAndMeetingId(Member member, long meetingId) {
-        if (!mateRepository.existsByMeetingIdAndMemberId(meetingId, member.getId())) {
-            throw new OdyBadRequestException("존재하지 않는 모임이거나 약속 참여자가 아닙니다.");
-        }
+    public List<Mate> findAllByMeetingIdIfMate(Member member, long meetingId) {
+        findByMeetingIdAndMemberId(meetingId, member.getId());
         return mateRepository.findAllByMeetingId(meetingId);
     }
 
     @Transactional
-    public void nudge(Long mateId) {
-        Mate mate = findFetchedMate(mateId);
-        if (canNudge(mate)) {
-            notificationService.sendNudgeMessage(mate);
+    public void nudge(NudgeRequest nudgeRequest) {
+        Mate requestMate = findFetchedMate(nudgeRequest.requestMateId());
+        Mate nudgedMate = findFetchedMate(nudgeRequest.nudgedMateId());
+
+        if (requestMate.isAttended(nudgedMate.getMeeting()) && canNudge(nudgedMate)) {
+            notificationService.sendNudgeMessage(requestMate, nudgedMate);
             return;
         }
-        throw new OdyBadRequestException("요청한 참여자의 상태가 지각이나 지각위기가 아닙니다");
+        throw new OdyBadRequestException("재촉한 참여자가 같은 약속 참여자가 아니거나 지각/지각위기가 아닙니다");
     }
 
     private Mate findFetchedMate(Long mateId) {
-        Mate mate = mateRepository.findFetchedMateById(mateId)
-                .orElseThrow(() -> new OdyBadRequestException("존재하지 않은 약속 참여자입니다."));
-        return mate;
+        return mateRepository.findFetchedMateById(mateId)
+                .orElseThrow(() -> new OdyBadRequestException("존재하지 않는 약속 참여자입니다."));
     }
 
     private boolean canNudge(Mate mate) {
         EtaStatus etaStatus = etaService.findEtaStatus(mate);
         return etaStatus == EtaStatus.LATE_WARNING || etaStatus == EtaStatus.LATE;
+    }
+
+    public MateEtaResponsesV2 findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
+        Mate mate = findByMeetingIdAndMemberId(meetingId, member.getId());
+        return etaService.findAllMateEtas(mateEtaRequest, mate);
+    }
+
+    private Mate findByMeetingIdAndMemberId(Long meetingId, Long memberId) {
+        return mateRepository.findByMeetingIdAndMemberId(meetingId, memberId)
+                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 약속이거나 약속 참여자가 아닙니다."));
     }
 }

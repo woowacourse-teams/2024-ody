@@ -21,4 +21,6 @@ interface MeetingRepository {
     suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>>
 
     suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting>
+
+    suspend fun fetchNudge(mateId: Long): ApiResult<Unit>
 }

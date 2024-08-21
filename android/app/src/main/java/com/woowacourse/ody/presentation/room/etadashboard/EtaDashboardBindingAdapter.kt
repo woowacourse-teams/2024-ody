@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.woowacourse.ody.R
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
+import com.woowacourse.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.woowacourse.ody.presentation.room.etadashboard.model.EtaDurationMinuteTypeUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.EtaTypeUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
@@ -52,6 +53,21 @@ fun TextView.setEtaBadgeAnimation(etaTypeUiModel: EtaTypeUiModel) {
     ) {
         val animation = AnimationUtils.loadAnimation(context, R.anim.bounce_duration_500)
         this.startAnimation(animation)
+    }
+}
+
+@BindingAdapter("canNudge", "nudgeListener")
+fun TextView.setOnClickNudge(
+    mateEtaUiModel: MateEtaUiModel,
+    nudgeListener: NudgeListener,
+) {
+    setOnClickListener {
+        if (
+            mateEtaUiModel.isUserSelf.not() &&
+            (mateEtaUiModel.etaTypeUiModel == EtaTypeUiModel.LATE || mateEtaUiModel.etaTypeUiModel == EtaTypeUiModel.LATE_WARNING)
+        ) {
+            nudgeListener.nudgeMate(mateId = mateEtaUiModel.mateId)
+        }
     }
 }
 

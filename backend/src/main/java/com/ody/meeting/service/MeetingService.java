@@ -78,10 +78,11 @@ public class MeetingService {
 
     public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {
         Meeting meeting = findById(meetingId);
-        List<Mate> mates = mateService.findAllByMemberAndMeetingId(member, meetingId);
+        List<Mate> mates = mateService.findAllByMeetingIdIfMate(member, meeting.getId());
         return MeetingWithMatesResponse.of(meeting, mates);
     }
 
+    @Transactional
     public MateSaveResponse saveMateAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);

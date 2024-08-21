@@ -11,7 +11,7 @@
 
         <variable
             name="shareListener"
-            type="com.woowacourse.ody.presentation.room.log.listener.ShareListener" />
+            type="com.woowacourse.ody.presentation.room.etadashboard.listener.ShareListener" />
 
         <variable
             name="backListener"

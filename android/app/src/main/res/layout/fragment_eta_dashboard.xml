@@ -11,7 +11,7 @@
 
         <variable
             name="shareListener"
-            type="com.woowacourse.ody.presentation.room.log.listener.ShareListener" />
+            type="com.woowacourse.ody.presentation.room.etadashboard.listener.ShareListener" />
 
         <variable
             name="backListener"
@@ -40,6 +40,7 @@
             android:id="@+id/rv_eta_dashboard"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@color/cream"
             android:clipToPadding="false"
             android:paddingVertical="11dp"
             app:itemAnimator="@{null}"
