@@ -45,7 +45,6 @@ public class Member {
     @NotNull
     private String imageUrl;
 
-    @NotNull
     @Embedded
     private DeviceToken deviceToken;
 
