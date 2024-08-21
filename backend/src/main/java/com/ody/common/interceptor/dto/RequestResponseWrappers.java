@@ -6,14 +6,14 @@ import org.apache.http.HttpHeaders;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-public record RequestResponseWrappers(
+public class RequestResponseWrappers {
 
-        ContentCachingRequestWrapper requestWrapper,
-        ContentCachingResponseWrapper responseWrapper
-) {
+    private final ContentCachingRequestWrapper requestWrapper;
+    private final ContentCachingResponseWrapper responseWrapper;
 
     public RequestResponseWrappers(HttpServletRequest request, HttpServletResponse response) {
-        this((ContentCachingRequestWrapper) request, (ContentCachingResponseWrapper) response);
+        requestWrapper = (ContentCachingRequestWrapper) request;
+        responseWrapper = (ContentCachingResponseWrapper) response;
     }
 
     public String requestAndResponseMessage() {
