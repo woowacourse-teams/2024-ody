@@ -9,17 +9,18 @@ import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.inviteCode
 import com.woowacourse.ody.mateEtaInfo
 import com.woowacourse.ody.meeting
+import com.woowacourse.ody.meetingCatalogs
 
 object FakeMeetingRepository : MeetingRepository {
-    override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> =
+    override suspend fun fetchInviteCodeValidity(inviteCode: String): ApiResult<Unit> =
         if (inviteCode.length <= 8) {
-            Result.success(Unit)
+            ApiResult.Success(Unit)
         } else {
-            Result.failure(Exception())
+            ApiResult.Failure(400, "")
         }
 
-    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> {
-        return Result.success(inviteCode)
+    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String> {
+        return ApiResult.Success(inviteCode)
     }
 
     override suspend fun patchMatesEta(
@@ -31,13 +32,11 @@ object FakeMeetingRepository : MeetingRepository {
         return Result.success(mateEtaInfo)
     }
 
-    override suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>> {
-        return Result.success(emptyList())
+    override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> {
+        return ApiResult.Success(meetingCatalogs)
     }
 
-    override suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>> {
-        return ApiResult.Success(emptyList())
-    }
+    override suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting> = ApiResult.Success(meeting)
 
-    override suspend fun fetchMeeting(meetingId: Long): Result<Meeting> = Result.success(meeting)
+    override suspend fun fetchNudge(mateId: Long): ApiResult<Unit> = ApiResult.Success(Unit)
 }

@@ -5,6 +5,6 @@ import com.woowacourse.ody.domain.model.MateEta
 
 @JsonClass(generateAdapter = true)
 data class MatesEtaInfoResponse(
-    val userNickname: String,
+    val userId: Long,
     val mateEtas: List<MateEta>,
 )

@@ -10,13 +10,16 @@
             type="java.lang.String" />
 
         <variable
-            name="shareListener"
-            type="com.woowacourse.ody.presentation.room.log.listener.ShareListener" />
+            name="mateCount"
+            type="java.lang.Integer" />
 
         <variable
             name="backListener"
             type="com.woowacourse.ody.presentation.common.listener.BackListener" />
 
+        <variable
+            name="menuListener"
+            type="com.woowacourse.ody.presentation.room.log.listener.MenuListener" />
     </data>
 
     <androidx.appcompat.widget.Toolbar
@@ -35,7 +38,6 @@
                 android:onClick="@{() -> backListener.onBack()}"
                 android:src="@drawable/ic_arrow_back"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,26 +46,39 @@
                 style="@style/pretendard_bold_24"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
+                android:layout_marginHorizontal="14dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{title}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/iv_share"
+                app:layout_constraintEnd_toStartOf="@id/tv_mate_count"
                 app:layout_constraintStart_toEndOf="@id/iv_back"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="엄청나게긴모임이름엄청나게긴모임이름" />
+                tools:text="아주긴모임이름아주긴모임이름" />
+
+            <TextView
+                android:id="@+id/tv_mate_count"
+                style="@style/pretendard_bold_20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/notification_log_mate_count(mateCount)}"
+                android:textColor="@color/gray_500"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/iv_menu"
+                app:layout_constraintStart_toEndOf="@id/tv_title"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="3명" />
 
             <ImageView
-                android:id="@+id/iv_share"
+                android:id="@+id/iv_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="14dp"
-                android:onClick="@{() -> shareListener.onShare()}"
-                android:src="@drawable/ic_share"
+                android:onClick="@{() -> menuListener.onClickMenu()}"
+                android:src="@drawable/ic_menu"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_title"
+                app:layout_constraintStart_toEndOf="@id/tv_mate_count"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

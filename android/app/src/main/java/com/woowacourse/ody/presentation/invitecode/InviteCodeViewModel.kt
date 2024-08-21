@@ -2,20 +2,24 @@ package com.woowacourse.ody.presentation.invitecode
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.ody.domain.apiresult.onFailure
+import com.woowacourse.ody.domain.apiresult.onNetworkError
+import com.woowacourse.ody.domain.apiresult.onSuccess
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.presentation.common.BaseViewModel
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
 import com.woowacourse.ody.presentation.common.analytics.logNetworkErrorEvent
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class InviteCodeViewModel(
     private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     val inviteCode: MutableLiveData<String> = MutableLiveData()
     val hasInviteCode: LiveData<Boolean> = inviteCode.map { it.isNotEmpty() }
 
@@ -32,13 +36,19 @@ class InviteCodeViewModel(
     fun checkInviteCode() {
         viewModelScope.launch {
             val inviteCode = inviteCode.value ?: return@launch
+            startLoading()
             meetingRepository.fetchInviteCodeValidity(inviteCode)
                 .onSuccess {
                     _navigateAction.setValue(InviteCodeNavigateAction.CodeNavigateToJoin)
-                }.onFailure {
-                    analyticsHelper.logNetworkErrorEvent(TAG, it.message)
+                }.onFailure { code, errorMessage ->
                     _invalidInviteCodeEvent.setValue(Unit)
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    Timber.e("$code $errorMessage")
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = { checkInviteCode() }
                 }
+            stopLoading()
         }
     }
 

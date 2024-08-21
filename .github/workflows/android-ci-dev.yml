@@ -49,6 +49,7 @@ jobs:
         run: |
           echo base_url='${{ secrets.BASE_URL }}' > ./local.properties
           echo kakao_api_key='{{ secrets.KAKAO_API_KEY }}' > ./local.properties
+          echo kakao_native_key='{{ secrets.KAKAO_NATIVE_KEY }}' > ./local.properties
 
       - name: Check ktLint
         run: ./gradlew ktlintCheck

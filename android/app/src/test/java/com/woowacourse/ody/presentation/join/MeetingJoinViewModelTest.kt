@@ -1,13 +1,10 @@
-package com.woowacourse.ody.viewmodel
+package com.woowacourse.ody.presentation.join
 
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeJoinRepository
 import com.woowacourse.ody.fake.FakeMatesEtaRepository
 import com.woowacourse.ody.meetingId
-import com.woowacourse.ody.presentation.join.MeetingJoinInfoType
-import com.woowacourse.ody.presentation.join.MeetingJoinNavigateAction
-import com.woowacourse.ody.presentation.join.MeetingJoinViewModel
 import com.woowacourse.ody.util.CoroutinesTestExtension
 import com.woowacourse.ody.util.InstantTaskExecutorExtension
 import com.woowacourse.ody.util.getOrAwaitValue

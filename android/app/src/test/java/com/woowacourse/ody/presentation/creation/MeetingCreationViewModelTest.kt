@@ -1,11 +1,9 @@
-package com.woowacourse.ody.viewmodel
+package com.woowacourse.ody.presentation.creation
 
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeMeetingRepository
 import com.woowacourse.ody.inviteCode
-import com.woowacourse.ody.presentation.creation.MeetingCreationInfoType
-import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
 import com.woowacourse.ody.util.CoroutinesTestExtension
 import com.woowacourse.ody.util.InstantTaskExecutorExtension
 import com.woowacourse.ody.util.getOrAwaitValue

@@ -2,14 +2,13 @@ package com.woowacourse.ody.presentation.meetings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
 import com.woowacourse.ody.domain.apiresult.onNetworkError
 import com.woowacourse.ody.domain.apiresult.onSuccess
-import com.woowacourse.ody.domain.apiresult.onUnexpected
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
+import com.woowacourse.ody.presentation.common.BaseViewModel
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
@@ -23,7 +22,7 @@ import timber.log.Timber
 class MeetingsViewModel(
     private val analyticsHelper: AnalyticsHelper,
     private val meetingRepository: MeetingRepository,
-) : ViewModel(), MeetingsItemListener {
+) : BaseViewModel(), MeetingsItemListener {
     private val _meetingCatalogs = MutableLiveData<List<MeetingUiModel>>()
     val meetingCatalogs: LiveData<List<MeetingUiModel>> = _meetingCatalogs
 
@@ -32,36 +31,31 @@ class MeetingsViewModel(
 
     val isMeetingCatalogsEmpty: LiveData<Boolean> = _meetingCatalogs.map { it.isEmpty() }
 
-    fun fetchMeetingCatalogs() =
+    fun fetchMeetingCatalogs() {
         viewModelScope.launch {
-            meetingRepository.fetchMeetingCatalogs2()
+            startLoading()
+            meetingRepository.fetchMeetingCatalogs()
                 .onSuccess {
                     _meetingCatalogs.value = it.toMeetingCatalogUiModels()
                 }.onFailure { code, errorMessage ->
-                    analyticsHelper.logNetworkErrorEvent(TAG, errorMessage)
-                    Timber.e("code: $code, message: $errorMessage")
-                }.onNetworkError { exception ->
-                    Timber.e(exception)
-                }.onUnexpected { t ->
-                    Timber.e(t)
+                    handleError()
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    Timber.e("$code $errorMessage")
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = { fetchMeetingCatalogs() }
                 }
-        }
-
-    override fun navigateToEtaDashboard(meetingId: Long) {
-        viewModelScope.launch {
-            meetingRepository.fetchMeeting(meetingId).onSuccess {
-                _navigateAction.postValue(
-                    MeetingsNavigateAction.NavigateToEtaDashboard(meetingId = it.id),
-                )
-            }.onFailure {
-                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
-                Timber.e(it)
-            }
+            stopLoading()
         }
     }
 
-    override fun navigateToNotificationLog(meetingId: Long) =
+    override fun navigateToEtaDashboard(meetingId: Long) {
+        _navigateAction.postValue(MeetingsNavigateAction.NavigateToEtaDashboard(meetingId))
+    }
+
+    override fun navigateToNotificationLog(meetingId: Long) {
         _navigateAction.postValue(MeetingsNavigateAction.NavigateToNotificationLog(meetingId))
+    }
 
     override fun toggleFold(position: Int) {
         val currentList = _meetingCatalogs.value ?: emptyList()

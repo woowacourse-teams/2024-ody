@@ -15,14 +15,18 @@ import com.woowacourse.ody.domain.model.MeetingCreationInfo
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 
 class DefaultMeetingRepository(private val service: MeetingService) : MeetingRepository {
-    override suspend fun fetchInviteCodeValidity(inviteCode: String): Result<Unit> {
-        return runCatching { service.getInviteCodeValidity(inviteCode) }
+    override suspend fun fetchInviteCodeValidity(inviteCode: String): ApiResult<Unit> {
+        return service.fetchInviteCodeValidity(inviteCode)
     }
 
-    override suspend fun fetchMeeting(meetingId: Long): Result<Meeting> = runCatching { service.fetchMeeting(meetingId).toMeeting() }
+    override suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting> {
+        return service.fetchMeeting(meetingId).map { it.toMeeting() }
+    }
 
-    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): Result<String> =
-        runCatching { service.postMeeting(meetingCreationInfo.toMeetingRequest()).inviteCode }
+    override suspend fun fetchNudge(mateId: Long): ApiResult<Unit> = service.fetchNudge(mateId)
+
+    override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String> =
+        service.postMeeting(meetingCreationInfo.toMeetingRequest()).map { it.inviteCode }
 
     override suspend fun patchMatesEta(
         meetingId: Long,
@@ -38,11 +42,8 @@ class DefaultMeetingRepository(private val service: MeetingService) : MeetingRep
         }
     }
 
-    override suspend fun fetchMeetingCatalogs(): Result<List<MeetingCatalog>> =
-        runCatching { service.fetchMeetingCatalogs().toMeetingCatalogs() }
-
-    override suspend fun fetchMeetingCatalogs2(): ApiResult<List<MeetingCatalog>> =
-        service.fetchMeetingCatalogs2().map { it.toMeetingCatalogs() }
+    override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> =
+        service.fetchMeetingCatalogs().map { it.toMeetingCatalogs() }
 
     private fun compress(coordinate: String): String {
         val endIndex = minOf(9, coordinate.length)

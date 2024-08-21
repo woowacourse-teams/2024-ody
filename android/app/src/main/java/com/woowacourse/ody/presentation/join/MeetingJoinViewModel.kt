@@ -3,14 +3,17 @@ package com.woowacourse.ody.presentation.join
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.woowacourse.ody.domain.apiresult.onFailure
+import com.woowacourse.ody.domain.apiresult.onNetworkError
+import com.woowacourse.ody.domain.apiresult.onSuccess
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.domain.model.MeetingJoinInfo
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.domain.validator.AddressValidator
+import com.woowacourse.ody.presentation.common.BaseViewModel
 import com.woowacourse.ody.presentation.common.MutableSingleLiveData
 import com.woowacourse.ody.presentation.common.SingleLiveData
 import com.woowacourse.ody.presentation.common.analytics.AnalyticsHelper
@@ -26,7 +29,7 @@ class MeetingJoinViewModel(
     private val inviteCode: String,
     private val joinRepository: JoinRepository,
     private val matesEtaRepository: MatesEtaRepository,
-) : ViewModel(), MeetingJoinListener {
+) : BaseViewModel(), MeetingJoinListener {
     val meetingJoinInfoType: MutableLiveData<MeetingJoinInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
@@ -65,6 +68,7 @@ class MeetingJoinViewModel(
         val departureLongitude = departureGeoLocation.value?.longitude ?: return
 
         viewModelScope.launch {
+            startLoading()
             joinRepository.postMates(
                 MeetingJoinInfo(
                     inviteCode,
@@ -76,10 +80,15 @@ class MeetingJoinViewModel(
             ).onSuccess {
                 reserveEtaFetchingJobs(it.meetingId, it.meetingDateTime)
                 _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
-            }.onFailure {
-                analyticsHelper.logNetworkErrorEvent(TAG, it.message)
-                Timber.e(it.message)
+            }.onFailure { code, errorMessage ->
+                handleError()
+                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                Timber.e("$code $errorMessage")
+            }.onNetworkError {
+                handleNetworkError()
+                lastFailedAction = { joinMeeting() }
             }
+            stopLoading()
         }
     }
 

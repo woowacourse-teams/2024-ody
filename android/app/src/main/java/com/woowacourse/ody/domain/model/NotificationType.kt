@@ -4,6 +4,7 @@ enum class NotificationType {
     ENTRY,
     DEPARTURE_REMINDER,
     DEPARTURE,
+    NUDGE,
     DEFAULT,
     ;
 
@@ -13,6 +14,7 @@ enum class NotificationType {
                 "ENTRY" -> ENTRY
                 "DEPARTURE_REMINDER" -> DEPARTURE_REMINDER
                 "DEPARTURE" -> DEPARTURE
+                "NUDGE" -> NUDGE
                 else -> DEFAULT
             }
     }

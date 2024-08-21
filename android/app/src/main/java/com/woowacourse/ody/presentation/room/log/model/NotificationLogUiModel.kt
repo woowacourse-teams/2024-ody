@@ -6,4 +6,5 @@ data class NotificationLogUiModel(
     val type: NotificationType,
     val nickname: String,
     val created: String,
+    val imageUrl: String,
 )

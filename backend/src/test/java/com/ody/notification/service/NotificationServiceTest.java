@@ -1,6 +1,8 @@
 package com.ody.notification.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
@@ -22,6 +24,7 @@ import java.time.LocalTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -76,5 +79,23 @@ class NotificationServiceTest extends BaseServiceTest {
     private boolean isNow(Notification notification) {
         return TimeUtil.trimSecondsAndNanos(notification.getSendAt())
                 .isEqual(TimeUtil.nowWithTrim());
+    }
+
+    @DisplayName("재촉하기 메시지가 발송된다")
+    @Test
+    void sendSendNudgeMessageMessage() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Member member2 = memberRepository.save(Fixture.MEMBER2);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        Mate requestMate = mateRepository.save(
+                new Mate(odyMeeting, member1, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+        Mate nudgedMate = mateRepository.save(
+                new Mate(odyMeeting, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+
+        notificationService.sendNudgeMessage(requestMate, nudgedMate);
+
+        Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any(), any());
     }
 }

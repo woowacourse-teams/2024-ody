@@ -2,11 +2,13 @@ package com.woowacourse.ody.presentation.room.etadashboard
 
 import android.graphics.Point
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.woowacourse.ody.R
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
+import com.woowacourse.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.woowacourse.ody.presentation.room.etadashboard.model.EtaDurationMinuteTypeUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.EtaTypeUiModel
 import com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel
@@ -40,6 +42,32 @@ fun TextView.setOnClickMissingTooltip(
     setOnClickListener {
         val point = this.getPointOnScreen()
         missingToolTipListener.onClickMissingToolTipListener(point, isUserSelf)
+    }
+}
+
+@BindingAdapter("etaBadgeAnimation")
+fun TextView.setEtaBadgeAnimation(etaTypeUiModel: EtaTypeUiModel) {
+    if (
+        etaTypeUiModel == EtaTypeUiModel.LATE ||
+        etaTypeUiModel == EtaTypeUiModel.LATE_WARNING
+    ) {
+        val animation = AnimationUtils.loadAnimation(context, R.anim.bounce_duration_500)
+        this.startAnimation(animation)
+    }
+}
+
+@BindingAdapter("canNudge", "nudgeListener")
+fun TextView.setOnClickNudge(
+    mateEtaUiModel: MateEtaUiModel,
+    nudgeListener: NudgeListener,
+) {
+    setOnClickListener {
+        if (
+            mateEtaUiModel.isUserSelf.not() &&
+            (mateEtaUiModel.etaTypeUiModel == EtaTypeUiModel.LATE || mateEtaUiModel.etaTypeUiModel == EtaTypeUiModel.LATE_WARNING)
+        ) {
+            nudgeListener.nudgeMate(mateId = mateEtaUiModel.mateId)
+        }
     }
 }
 

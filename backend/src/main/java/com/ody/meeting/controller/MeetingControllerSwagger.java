@@ -2,6 +2,7 @@ package com.ody.meeting.controller;
 
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.dto.response.MateEtaResponses;
+import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
@@ -160,13 +161,39 @@ public interface MeetingControllerSwagger {
                             description = "클라이언트 입력 오류 또는 약속 시간 30분 전보다 이른 시간에 조회 시도 시",
                             content = @Content(schema = @Schema(implementation = ProblemDetail.class))
                     )
-            }
+            },
+            deprecated = true
     )
     @ErrorCode400
     @ErrorCode401
     @ErrorCode404(description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우")
     @ErrorCode500
     ResponseEntity<MateEtaResponses> findAllMateEtas(
+            @Parameter(hidden = true) Member member,
+            Long meetingId,
+            MateEtaRequest mateEtaRequest
+    );
+
+    @Operation(
+            summary = "약속 참여자 도착 현황 조회",
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateEtaRequest.class))),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "약속 참여자 도착 현황 조회 성공",
+                            content = @Content(schema = @Schema(implementation = MateEtaResponsesV2.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "클라이언트 입력 오류 또는 약속 시간 30분 전보다 이른 시간에 조회 시도 시",
+                            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+                    )
+            }
+    )
+    @ErrorCode401
+    @ErrorCode404(description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우")
+    @ErrorCode500
+    ResponseEntity<MateEtaResponsesV2> findAllMateEtasV2(
             @Parameter(hidden = true) Member member,
             Long meetingId,
             MateEtaRequest mateEtaRequest

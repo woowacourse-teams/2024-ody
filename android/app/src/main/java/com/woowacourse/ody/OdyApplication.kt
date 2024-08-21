@@ -16,6 +16,7 @@ import com.woowacourse.ody.data.remote.core.service.AuthService
 import com.woowacourse.ody.data.remote.core.service.JoinService
 import com.woowacourse.ody.data.remote.core.service.MeetingService
 import com.woowacourse.ody.data.remote.core.service.NotificationService
+import com.woowacourse.ody.data.remote.thirdparty.image.FirebaseImageStorage
 import com.woowacourse.ody.data.remote.thirdparty.location.KakaoRetrofitClient
 import com.woowacourse.ody.data.remote.thirdparty.location.repository.KakaoGeoLocationRepository
 import com.woowacourse.ody.data.remote.thirdparty.location.service.KakaoLocationService
@@ -23,6 +24,7 @@ import com.woowacourse.ody.data.remote.thirdparty.login.kakao.KakaoLoginReposito
 import com.woowacourse.ody.data.remote.thirdparty.login.kakao.KakaoOAuthLoginService
 import com.woowacourse.ody.domain.common.Provider
 import com.woowacourse.ody.domain.repository.ody.AuthTokenRepository
+import com.woowacourse.ody.domain.repository.image.ImageStorage
 import com.woowacourse.ody.domain.repository.ody.FCMTokenRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
@@ -61,6 +63,7 @@ class OdyApplication : Application() {
     val analyticsHelper: AnalyticsHelper by lazy { FirebaseAnalyticsHelper(this) }
     val notificationHelper: NotificationHelper by lazy { NotificationHelper(this) }
     val permissionHelper: PermissionHelper by lazy { PermissionHelper(this) }
+    val imageStorage: ImageStorage = FirebaseImageStorage()
 
     val joinRepository: JoinRepository by lazy { DefaultJoinRepository(joinService) }
     val meetingRepository: MeetingRepository by lazy { DefaultMeetingRepository(meetingService) }
@@ -89,10 +92,12 @@ class OdyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY)
+
         if (DEBUG) {
             Timber.plant(OdyDebugTree)
         }
-        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY)
     }
 }
 

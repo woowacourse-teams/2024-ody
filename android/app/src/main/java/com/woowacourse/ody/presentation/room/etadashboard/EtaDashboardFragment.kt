@@ -15,15 +15,20 @@ import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentEtaDashboardBinding
 import com.woowacourse.ody.databinding.LayoutMissingTooltipBinding
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
+import com.woowacourse.ody.presentation.common.image.getBitmap
+import com.woowacourse.ody.presentation.common.image.toByteArray
+import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.room.MeetingRoomViewModel
 import com.woowacourse.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
 import com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener
+import com.woowacourse.ody.presentation.room.etadashboard.listener.ShareListener
 
 class EtaDashboardFragment :
     BindingFragment<FragmentEtaDashboardBinding>(R.layout.fragment_eta_dashboard),
-    MissingToolTipListener {
+    MissingToolTipListener,
+    ShareListener {
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
-    private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this) }
+    private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this, viewModel) }
     private val parentActivity: Activity by lazy { requireActivity() }
 
     override fun onViewCreated(
@@ -32,16 +37,26 @@ class EtaDashboardFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
         initializeMateEtaList()
+        initializeBinding()
         initializeObserve()
     }
 
     private fun initializeMateEtaList() {
-        binding.rvDashboard.adapter = adapter
+        binding.rvEtaDashboard.adapter = adapter
+    }
+
+    private fun initializeBinding() {
+        binding.vm = viewModel
+        binding.shareListener = this
+        binding.backListener = requireActivity() as MeetingRoomActivity
     }
 
     private fun initializeObserve() {
         viewModel.mateEtaUiModels.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+        }
+        viewModel.nudgeSuccessMate.observe(viewLifecycleOwner) { nickName ->
+            showSnackBar(getString(R.string.nudge_success, nickName))
         }
     }
 
@@ -49,7 +64,8 @@ class EtaDashboardFragment :
         point: Point,
         isUserSelf: Boolean,
     ) {
-        val messageId = if (isUserSelf) R.string.location_permission_self_guide else R.string.location_permission_friend_guide
+        val messageId =
+            if (isUserSelf) R.string.location_permission_self_guide else R.string.location_permission_friend_guide
         showPopupWindow(messageId, point)
     }
 
@@ -78,6 +94,23 @@ class EtaDashboardFragment :
         val adjustedX = point.x - popupWidth
         val adjustedY = point.y - popupHeight
 
-        popupWindow.showAtLocation(parentActivity.window.decorView, Gravity.NO_GRAVITY, adjustedX, adjustedY)
+        popupWindow.showAtLocation(
+            parentActivity.window.decorView,
+            Gravity.NO_GRAVITY,
+            adjustedX,
+            adjustedY,
+        )
+    }
+
+    override fun onShare() {
+        val bitmap = binding.rvEtaDashboard.getBitmap()
+        val byteArray = bitmap.toByteArray()
+        viewModel.shareEtaDashboard(
+            title = getString(R.string.eta_dashboard_share_description),
+            buttonTitle = getString(R.string.eta_dashboard_share_button),
+            imageByteArray = byteArray,
+            imageWidthPixel = bitmap.width,
+            imageHeightPixel = bitmap.height,
+        )
     }
 }

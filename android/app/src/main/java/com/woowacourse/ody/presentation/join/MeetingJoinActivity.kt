@@ -62,7 +62,6 @@ class MeetingJoinActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-
         viewModel.navigateAction.observe(this) {
             when (it) {
                 is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
@@ -73,6 +72,19 @@ class MeetingJoinActivity :
                     startActivity(JoinCompleteActivity.getIntent(this))
                 }
             }
+        }
+        viewModel.networkErrorEvent.observe(this) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+        viewModel.errorEvent.observe(this) {
+            showSnackBar(R.string.error_guide)
+        }
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@observe
+            }
+            hideLoadingDialog()
         }
     }
 

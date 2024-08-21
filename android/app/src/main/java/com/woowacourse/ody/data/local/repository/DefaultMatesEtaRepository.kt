@@ -47,6 +47,6 @@ class DefaultMatesEtaRepository(
                 .build()
         val jsonAdapter = moshi.adapter(MatesEtaInfoResponse::class.java)
         val convertResult = jsonAdapter.fromJson(this) ?: return null
-        return MateEtaInfo(convertResult.userNickname, convertResult.mateEtas)
+        return MateEtaInfo(convertResult.userId, convertResult.mateEtas)
     }
 }

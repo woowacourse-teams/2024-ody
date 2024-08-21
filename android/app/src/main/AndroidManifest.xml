@@ -17,6 +17,10 @@
         android:name="google_analytics_adid_collection_enabled"
         android:value="false" />
 
+    <queries>
+        <package android:name="com.kakao.talk" />
+    </queries>
+
     <application
         android:name=".OdyApplication"
         android:allowBackup="true"
@@ -35,8 +39,22 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.meetings.MeetingsActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="kakaolink"
+                    android:scheme="kakao${KAKAO_NATIVE_KEY}" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".presentation.invitecode.InviteCodeActivity"
             android:exported="false"
@@ -62,16 +80,6 @@
             android:name=".presentation.room.MeetingRoomActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.splash.SplashActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
@@ -80,7 +88,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:host="oauth" android:scheme="kakao${KAKAO_NATIVE_APP_KEY}" />
+                <data android:host="oauth" android:scheme="kakao${KAKAO_NATIVE_KEY}" />
             </intent-filter>
         </activity>
 

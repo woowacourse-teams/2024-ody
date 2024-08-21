@@ -1,6 +1,7 @@
 package com.woowacourse.ody.presentation.address
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,12 +13,15 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.webkit.WebViewAssetLoader
+import com.google.android.material.snackbar.Snackbar
 import com.woowacourse.ody.OdyApplication
+import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
 import com.woowacourse.ody.presentation.address.listener.AddressReceiveListener
 import com.woowacourse.ody.presentation.address.model.toGeoLocationUiModel
 import com.woowacourse.ody.presentation.address.web.AddressSearchInterface
 import com.woowacourse.ody.presentation.address.web.LocalContentWebViewClient
+import com.woowacourse.ody.presentation.common.LoadingDialog
 
 class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private var _binding: DialogAddressSearchBinding? = null
@@ -25,13 +29,13 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private val application: OdyApplication by lazy {
         requireContext().applicationContext as OdyApplication
     }
-
     private val viewModel: AddressSearchViewModel by viewModels {
         AddressSearchViewModelFactory(
             application.analyticsHelper,
             application.kakaoGeoLocationRepository,
         )
     }
+    private val loadingDialog: Dialog by lazy { LoadingDialog(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +70,29 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
             setFragmentResult(REQUEST_KEY, bundleOf(GEO_LOCATION_UI_MODEL_KEY to geoLocationUiModel))
             dismiss()
         }
+        viewModel.networkErrorEvent.observe(viewLifecycleOwner) {
+            showRetrySnackBar()
+        }
+        viewModel.errorEvent.observe(viewLifecycleOwner) {
+            showErrorSnackBar()
+        }
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                loadingDialog.show()
+                return@observe
+            }
+            loadingDialog.dismiss()
+        }
     }
+
+    private fun showRetrySnackBar() {
+        Snackbar.make(requireView(), R.string.network_error_guide, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.retry_button) {
+                viewModel.retryLastAction()
+            }.show()
+    }
+
+    private fun showErrorSnackBar() = Snackbar.make(binding.root, R.string.error_guide, Snackbar.LENGTH_SHORT).show()
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun showAddressSearchWebView() {
