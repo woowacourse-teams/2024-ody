@@ -55,6 +55,12 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
             val intent = MeetingsActivity.getIntent(this@LoginActivity)
             startActivity(intent)
         }
+        viewModel.networkErrorEvent.observe(this) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+        viewModel.errorEvent.observe(this) {
+            showSnackBar(R.string.error_guide)
+        }
     }
 
     companion object {
