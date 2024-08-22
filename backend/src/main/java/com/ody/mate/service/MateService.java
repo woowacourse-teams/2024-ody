@@ -12,7 +12,7 @@ import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
-import com.ody.meeting.domain.Location;
+import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
@@ -49,7 +49,10 @@ public class MateService {
     }
 
     private Mate saveMateAndEta(MateSaveRequestV2 mateSaveRequest, Member member, Meeting meeting) {
-        RouteTime routeTime = routeService.calculateRouteTime(mateSaveRequest.toOrigin(), meeting.getTarget());
+        RouteTime routeTime = routeService.calculateRouteTime(
+                mateSaveRequest.toOriginCoordinates(),
+                meeting.getTargetCoordinates()
+        );
         Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, routeTime.getMinutes()));
         etaService.saveFirstEtaOfMate(mate, routeTime);
         return mate;

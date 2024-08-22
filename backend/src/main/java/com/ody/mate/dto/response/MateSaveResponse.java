@@ -40,9 +40,9 @@ public record MateSaveResponse(
                 meeting.getName(),
                 meeting.getDate(),
                 meeting.getTime(),
-                meeting.getTarget().getAddress(),
-                meeting.getTarget().getLatitude(),
-                meeting.getTarget().getLongitude(),
+                meeting.getTargetAddress(),
+                meeting.getTargetLatitude(),
+                meeting.getTargetLongitude(),
                 meeting.getInviteCode()
         );
     }

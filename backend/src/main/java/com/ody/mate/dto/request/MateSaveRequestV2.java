@@ -2,6 +2,7 @@ package com.ody.mate.dto.request;
 
 import com.ody.common.annotation.SupportRegion;
 import com.ody.mate.domain.Mate;
+import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
@@ -28,11 +29,12 @@ public record MateSaveRequestV2(
         String originLongitude
 ) {
 
-    public Location toOrigin() {
-        return new Location(originAddress, originLatitude, originLongitude);
+    public Mate toMate(Meeting meeting, Member member, long estimatedMinutes) {
+        Location origin = new Location(originAddress, originLatitude, originLongitude);
+        return new Mate(meeting, member, origin, estimatedMinutes);
     }
 
-    public Mate toMate(Meeting meeting, Member member, long estimatedMinutes) {
-        return new Mate(meeting, member, toOrigin(), estimatedMinutes);
+    public Coordinates toOriginCoordinates() {
+        return new Coordinates(originLatitude, originLongitude);
     }
 }

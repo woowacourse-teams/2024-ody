@@ -1,7 +1,7 @@
 package com.ody.route.service;
 
 import com.ody.common.exception.OdyServerErrorException;
-import com.ody.meeting.domain.Location;
+import com.ody.meeting.domain.Coordinates;
 import com.ody.route.config.RouteProperties;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.dto.OdsayResponse;
@@ -27,12 +27,12 @@ public class OdsayRouteClient implements RouteClient {
     }
 
     @Override
-    public RouteTime calculateRouteTime(Location origin, Location target) {
+    public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         OdsayResponse response = getOdsayResponse(origin, target);
         return responseToRouteTime(response);
     }
 
-    private OdsayResponse getOdsayResponse(Location origin, Location target) {
+    private OdsayResponse getOdsayResponse(Coordinates origin, Coordinates target) {
         OdsayResponse response = restClient.get()
                 .uri(makeURI(origin, target))
                 .retrieve()
@@ -42,7 +42,7 @@ public class OdsayRouteClient implements RouteClient {
         });
     }
 
-    private URI makeURI(Location origin, Location target) {
+    private URI makeURI(Coordinates origin, Coordinates target) {
         String uri = routeProperties.getUrl()
                 + "?SX=" + origin.getLongitude()
                 + "&SY=" + origin.getLatitude()

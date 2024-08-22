@@ -7,7 +7,6 @@ import com.ody.common.config.JpaAuditingConfig;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
-import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
@@ -15,9 +14,7 @@ import com.ody.member.repository.MemberRepository;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,8 +46,10 @@ class NotificationRepositoryTest {
 
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
 
-        Mate mate1 = mateRepository.save(new Mate(odyMeeting, member1, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L));
-        Mate mate2 = mateRepository.save(new Mate(odyMeeting, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L));
+        Mate mate1 = mateRepository.save(
+                new Mate(odyMeeting, member1, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L));
+        Mate mate2 = mateRepository.save(
+                new Mate(odyMeeting, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L));
 
         Notification notification1 = new Notification(
                 mate1,
@@ -80,8 +79,10 @@ class NotificationRepositoryTest {
 
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
 
-        Mate mate1 = mateRepository.save(new Mate(odyMeeting, member1, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L));
-        Mate mate2 = mateRepository.save(new Mate(odyMeeting, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L));
+        Mate mate1 = mateRepository.save(
+                new Mate(odyMeeting, member1, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L));
+        Mate mate2 = mateRepository.save(
+                new Mate(odyMeeting, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L));
 
         Notification pastNotification = new Notification(
                 mate1,

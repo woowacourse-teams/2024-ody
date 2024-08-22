@@ -6,7 +6,7 @@ import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
-import com.ody.meeting.domain.Location;
+import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponseV2;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
@@ -54,13 +54,16 @@ public class EtaService {
             return;
         }
 
-        if (determineArrived(mateEtaRequest.toLocation(), meeting)) {
+        if (determineArrived(mateEtaRequest.toCoordinates(), meeting)) {
             mateEta.updateArrived();
             return;
         }
 
         if (isRouteClientCallTime(mateEta)) {
-            RouteTime routeTime = routeService.calculateRouteTime(mateEtaRequest.toLocation(), meeting.getTarget());
+            RouteTime routeTime = routeService.calculateRouteTime(
+                    mateEtaRequest.toCoordinates(),
+                    meeting.getTargetCoordinates()
+            );
             mateEta.updateRemainingMinutes(routeTime.getMinutes());
         }
     }
@@ -74,8 +77,8 @@ public class EtaService {
         return !mateEta.isModified() || mateEta.differenceMinutesFromLastUpdated() >= ROUTE_CLIENT_CALL_CYCLE_MINUTES;
     }
 
-    private boolean determineArrived(Location origin, Meeting meeting) {
-        double distance = DistanceCalculator.calculate(origin, meeting.getTarget());
+    private boolean determineArrived(Coordinates origin, Meeting meeting) {
+        double distance = DistanceCalculator.calculate(origin, meeting.getTargetCoordinates());
         return distance <= ARRIVED_THRESHOLD_METER && !meeting.isEnd();
     }
 

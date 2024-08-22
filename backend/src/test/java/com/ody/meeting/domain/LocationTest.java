@@ -25,36 +25,4 @@ class LocationTest {
         assertThatThrownBy(() -> new Location("경남 김해시 율하3로 76", "0", "0"))
                 .isInstanceOf(OdyBadRequestException.class);
     }
-
-    @DisplayName("위도는 -90부터 90 범위, 소수점 자리수 6 이하이며 소수점 및 부호를 포함할 수 있다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"-90", "90", "-90.000000"})
-    void createWithValidLatitude(String latitude) {
-        assertThatCode(() -> new Location("서울 강남구 테헤란로 411", latitude, "0"))
-                .doesNotThrowAnyException();
-    }
-
-    @DisplayName("위도는 -90부터 90 범위, 소수점 자리수 6 이하가 아니면 예외가 발생한다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"-90.000001", "90.000001", "-90.0000001", "abc", ""})
-    void createWithInvalidLatitude(String latitude) {
-        assertThatThrownBy(() -> new Location("서울 강남구 테헤란로 411", latitude, "0"))
-                .isInstanceOf(OdyBadRequestException.class);
-    }
-
-    @DisplayName("경도는 -180부터 180 범위, 소수점 자리수 6 이하이며 소수점 및 부호를 포함할 수 있다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"-180", "180", "-180.000"})
-    void createWithValidLongitude(String longitude) {
-        assertThatCode(() -> new Location("서울 강남구 테헤란로 411", "0", longitude))
-                .doesNotThrowAnyException();
-    }
-
-    @DisplayName("경도는 -180부터 180 범위, 소수점 자리수 6 이하가 아니면 예외가 발생한다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"-180.000001", "180.000001", "-180.0000001", "abc", ""})
-    void createWithInvalidLongitude(String longitude) {
-        assertThatThrownBy(() -> new Location("서울 강남구 테헤란로 411", "0", longitude))
-                .isInstanceOf(OdyBadRequestException.class);
-    }
 }

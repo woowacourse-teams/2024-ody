@@ -49,9 +49,9 @@ public record MeetingWithMatesResponse(
                 meeting.getName(),
                 meeting.getDate(),
                 TimeUtil.trimSecondsAndNanos(meeting.getTime()),
-                meeting.getTarget().getAddress(),
-                meeting.getTarget().getLatitude(),
-                meeting.getTarget().getLongitude(),
+                meeting.getTargetAddress(),
+                meeting.getTargetLatitude(),
+                meeting.getTargetLongitude(),
                 mates.size(),
                 MateResponse.from(mates),
                 meeting.getInviteCode()

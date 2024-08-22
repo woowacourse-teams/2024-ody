@@ -39,9 +39,9 @@ public record MeetingSaveResponseV1(
                 meeting.getName(),
                 meeting.getDate(),
                 TimeUtil.trimSecondsAndNanos(meeting.getTime()),
-                meeting.getTarget().getAddress(),
-                meeting.getTarget().getLatitude(),
-                meeting.getTarget().getLongitude(),
+                meeting.getTargetAddress(),
+                meeting.getTargetLatitude(),
+                meeting.getTargetLongitude(),
                 meeting.getInviteCode()
         );
     }

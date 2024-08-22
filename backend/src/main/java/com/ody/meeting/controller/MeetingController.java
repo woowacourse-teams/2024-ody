@@ -2,6 +2,9 @@ package com.ody.meeting.controller;
 
 import com.ody.common.annotation.AuthMember;
 import com.ody.eta.dto.request.MateEtaRequest;
+import com.ody.eta.dto.response.MateEtaResponse;
+import com.ody.eta.dto.response.MateEtaResponses;
+import com.ody.mate.dto.response.MateResponse;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
