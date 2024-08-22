@@ -26,7 +26,7 @@ class KakaoOAuthLoginService {
         }
 
     private suspend fun loginWithKakaoTalk(context: Context): Result<AuthToken> =
-        suspendCoroutine<Result<AuthToken>> { continuation ->
+        suspendCoroutine { continuation ->
             UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
                 if (error != null) {
                     continuation.resume(Result.failure(error))
@@ -37,7 +37,7 @@ class KakaoOAuthLoginService {
         }
 
     private suspend fun loginWithKakaoAccount(context: Context): Result<AuthToken> =
-        suspendCoroutine<Result<AuthToken>> { continuation ->
+        suspendCoroutine { continuation ->
             UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
                 if (error != null) {
                     continuation.resume(Result.failure(error))
@@ -47,8 +47,8 @@ class KakaoOAuthLoginService {
             }
         }
 
-    private suspend fun requestUserProfile() =
-        suspendCoroutine<Result<UserProfile>> { continuation ->
+    private suspend fun requestUserProfile(): Result<UserProfile> =
+        suspendCoroutine { continuation ->
             UserApiClient.instance.me { user, error ->
                 if (error != null) {
                     continuation.resume(Result.failure(error))

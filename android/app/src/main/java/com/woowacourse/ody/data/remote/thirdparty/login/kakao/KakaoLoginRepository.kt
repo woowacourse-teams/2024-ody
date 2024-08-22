@@ -24,20 +24,22 @@ class KakaoLoginRepository(
 
     suspend fun login(context: Context): ApiResult<AuthToken> {
         val loginRequest = kakaoOAuthLoginService.login(context).flatMap { buildLoginRequest(it) }
+
         if (loginRequest.isFailure) {
-            return ApiResult.Unexpected(
-                loginRequest.exceptionOrNull().let {
-                    it ?: Exception("LoginRequest Exception is null")
-                },
-            )
+            val loginRequestException =
+                loginRequest.exceptionOrNull() ?: Exception("LoginRequest exception이 null입니다")
+            return ApiResult.Unexpected(loginRequestException)
         }
-        loginRequest.getOrNull().let { request ->
-            if (request == null) return ApiResult.Unexpected(Exception("LoginRequest is null"))
-            return loginService.postLoginWithKakao(request).map {
-                val token = it.toAuthToken()
-                odyDatastore.setAuthToken(token)
-                token
-            }
+
+        val result =
+            loginRequest.getOrNull() ?: return ApiResult.Unexpected(
+                Exception("LoginRequest 가 null 입니다"),
+            )
+
+        return loginService.postLoginWithKakao(result).map {
+            val token = it.toAuthToken()
+            odyDatastore.setAuthToken(token)
+            token
         }
     }
 
