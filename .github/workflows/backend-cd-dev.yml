@@ -83,11 +83,8 @@ jobs:
         run: |
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
           export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
-          export GIT_SHA=${{ github.sha }}
-          export DEV_DATASOURCE_URL=${{ secrets.DEV_DATASOURCE_URL }}
-          export DEV_DATASOURCE_USERNAME=${{ secrets.DEV_DATASOURCE_USERNAME }}
-          export DEV_DATASOURCE_PASSWORD=${{ secrets.DEV_DATASOURCE_PASSWORD }}
           export DEV_MYSQL_PASSWORD=${{ secrets.DEV_MYSQL_PASSWORD }}
+          export GIT_SHA=${{ github.sha }}
           docker compose up -d
 
       - name: Check Docker Process
