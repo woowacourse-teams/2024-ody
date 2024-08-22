@@ -6,9 +6,7 @@ import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
-import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
-import com.ody.meeting.dto.response.MeetingSaveResponses;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.member.domain.Member;
 import com.ody.notification.dto.response.NotiLogFindResponses;
@@ -30,21 +28,6 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "Meeting API")
 @SecurityRequirement(name = "Authorization")
 public interface MeetingControllerSwagger {
-
-    @Operation(
-            summary = "참여중인 약속 목록 조회",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "약속 목록 조회 성공",
-                            content = @Content(schema = @Schema(implementation = MeetingSaveResponses.class))
-                    )
-            },
-            deprecated = true
-    )
-    @ErrorCode401
-    @ErrorCode500
-    ResponseEntity<MeetingSaveResponses> findMine(@Parameter(hidden = true) Member member);
 
     @Operation(
             summary = "로그 목록 조회",
@@ -110,25 +93,6 @@ public interface MeetingControllerSwagger {
     ResponseEntity<Void> validateInviteCode(@Parameter(hidden = true) Member member, String inviteCode);
 
     @Operation(
-            summary = "모임 개설",
-            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequest.class))),
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "모임 개설 성공",
-                            content = @Content(schema = @Schema(implementation = MeetingSaveResponse.class))
-                    )
-            }
-    )
-    @ErrorCode400
-    @ErrorCode401
-    @ErrorCode500
-    ResponseEntity<MeetingSaveResponse> save(
-            @Parameter(hidden = true) Member member,
-            MeetingSaveRequest meetingSaveRequest
-    );
-
-    @Operation(
             summary = "약속 개설",
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MeetingSaveRequestV1.class))),
             responses = {
@@ -145,33 +109,6 @@ public interface MeetingControllerSwagger {
     ResponseEntity<MeetingSaveResponseV1> saveV1(
             @Parameter(hidden = true) Member member,
             MeetingSaveRequestV1 meetingSaveRequestV1
-    );
-
-    @Operation(
-            summary = "약속 참여자 eta 상태 목록 조회",
-            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateEtaRequest.class))),
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "약속 참여자 eta 상태 목록 조회 성공",
-                            content = @Content(schema = @Schema(implementation = MateEtaResponses.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "클라이언트 입력 오류 또는 약속 시간 30분 전보다 이른 시간에 조회 시도 시",
-                            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
-                    )
-            },
-            deprecated = true
-    )
-    @ErrorCode400
-    @ErrorCode401
-    @ErrorCode404(description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우")
-    @ErrorCode500
-    ResponseEntity<MateEtaResponses> findAllMateEtas(
-            @Parameter(hidden = true) Member member,
-            Long meetingId,
-            MateEtaRequest mateEtaRequest
     );
 
     @Operation(

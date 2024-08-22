@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <configuration>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <springProperty scope="context" name="LOG_FILE_PATH" source="log.file.path"/>
+    <property name="LOG_CONSOLE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS, UTC+09:00} %clr([%level]) [%thread] %cyan([%logger{36}]) - %msg%n"/>
+    <property name="LOG_FILE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS, UTC+09:00} [%level] [%thread] [%logger{36}] - %msg%n"/>
 
     <appender name="ODY_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -11,9 +16,7 @@
             <onMismatch>ACCEPT</onMismatch>
         </filter>
         <encoder>
-            <pattern>
-                %d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger{36}] - %msg%n
-            </pattern>
+            <pattern>${LOG_CONSOLE_PATTERN}</pattern>
         </encoder>
     </appender>
 
@@ -33,9 +36,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>
-                %d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger{36}] - %msg%n
-            </pattern>
+            <pattern>${LOG_FILE_PATTERN}</pattern>
         </encoder>
     </appender>
 
@@ -55,9 +56,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>
-                %d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger{36}] - %msg%n
-            </pattern>
+            <pattern>${LOG_FILE_PATTERN}</pattern>
         </encoder>
     </appender>
 
@@ -77,9 +76,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>
-                %d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger{36}] - %msg%n
-            </pattern>
+            <pattern>${LOG_FILE_PATTERN}</pattern>
         </encoder>
     </appender>
 
