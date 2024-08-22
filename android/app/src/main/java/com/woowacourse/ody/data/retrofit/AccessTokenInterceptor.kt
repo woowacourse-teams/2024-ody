@@ -44,7 +44,6 @@ class AccessTokenInterceptor(
 
     private fun refreshAuthToken(): ApiResult<AuthToken> =
         runBlocking(Dispatchers.IO) {
-            println(tokenRepository)
             tokenRepository.refreshAuthToken()
         }
 }
