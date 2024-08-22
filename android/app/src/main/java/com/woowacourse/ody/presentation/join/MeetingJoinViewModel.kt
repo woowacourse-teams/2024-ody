@@ -1,9 +1,7 @@
 package com.woowacourse.ody.presentation.join
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
 import com.woowacourse.ody.domain.apiresult.onNetworkError
@@ -33,9 +31,6 @@ class MeetingJoinViewModel(
     val meetingJoinInfoType: MutableLiveData<MeetingJoinInfoType> = MutableLiveData()
     val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
 
-    val nickname: MutableLiveData<String> = MutableLiveData()
-    val nicknameLength: LiveData<Int> = nickname.map { it.length }
-
     val departureGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
 
     private val _invalidDepartureEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
@@ -52,17 +47,11 @@ class MeetingJoinViewModel(
     private fun initializeIsValidInfo() {
         with(isValidInfo) {
             addSource(meetingJoinInfoType) { checkInfoValidity() }
-            addSource(nickname) { checkInfoValidity() }
             addSource(departureGeoLocation) { checkInfoValidity() }
         }
     }
 
-    fun clearNickname() {
-        nickname.value = ""
-    }
-
     fun joinMeeting() {
-        val nickname = nickname.value ?: return
         val departureAddress = departureGeoLocation.value?.address ?: return
         val departureLatitude = departureGeoLocation.value?.latitude ?: return
         val departureLongitude = departureGeoLocation.value?.longitude ?: return
@@ -72,7 +61,6 @@ class MeetingJoinViewModel(
             joinRepository.postMates(
                 MeetingJoinInfo(
                     inviteCode,
-                    nickname,
                     departureAddress,
                     departureLatitude,
                     departureLongitude,
@@ -96,15 +84,9 @@ class MeetingJoinViewModel(
         val meetingJoinInfoType = meetingJoinInfoType.value ?: return
         val isValid =
             when (meetingJoinInfoType) {
-                MeetingJoinInfoType.NICKNAME -> isValidNickName()
                 MeetingJoinInfoType.DEPARTURE -> isValidDeparturePoint()
             }
         isValidInfo.value = isValid
-    }
-
-    private fun isValidNickName(): Boolean {
-        val nickName = nickname.value ?: return false
-        return nickName.isNotEmpty() && nickName.length <= NICK_NAME_MAX_LENGTH
     }
 
     private fun isValidDeparturePoint(): Boolean {
@@ -135,7 +117,6 @@ class MeetingJoinViewModel(
     companion object {
         private const val TAG = "MeetingJoinViewModel"
 
-        const val NICK_NAME_MAX_LENGTH = 9
         private const val LOCAL_ZONE_ID = "Asia/Seoul"
         private const val MILLI_SECOND_OF_MINUTE = 60_000
         private const val START_RESERVE_MILLI_SECOND = -30 * MILLI_SECOND_OF_MINUTE
