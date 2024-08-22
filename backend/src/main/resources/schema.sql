@@ -1,8 +1,13 @@
 create table if not exists member (
     id bigint not null auto_increment,
+    provider_type varchar(255) check (provider_type in ('kakao')) not null,
+    provider_id varchar(255) not null,
     nickname varchar(255) not null,
-    device_token varchar(255) not null unique,
-    primary key (id)
+    image_url varchar(255) not null,
+    device_token varchar(255) unique,
+    refresh_token varchar(255),
+    primary key (id),
+    constraint unique_provider_type_and_provider_id unique (provider_type, provider_id)
 );
 
 create table if not exists meeting (

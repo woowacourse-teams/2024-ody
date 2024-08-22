@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(uniqueConstraints = {
         @UniqueConstraint(
-                name = "uniqueProviderAndProviderId",
+                name = "uniqueProviderTypeAndProviderId",
                 columnNames = {"providerType", "providerId"}
         ),
         @UniqueConstraint(

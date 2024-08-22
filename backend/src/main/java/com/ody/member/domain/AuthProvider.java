@@ -1,6 +1,8 @@
 package com.ody.member.domain;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class AuthProvider {
 
     @NotNull
+    @Enumerated(value = EnumType.STRING)
     private ProviderType providerType;
 
     @NotNull
