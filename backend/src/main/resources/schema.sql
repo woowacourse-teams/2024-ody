@@ -35,7 +35,6 @@ create table if not exists mate (
     primary key (id),
     constraint fk_meeting_id foreign key (meeting_id) references meeting (id),
     constraint fk_member_id foreign key (member_id) references member (id),
-    constraint unique_meeting_and_nickname unique (meeting_id, nickname),
     constraint unique_meeting_and_member unique (meeting_id, member_id)
 );
 
@@ -54,7 +53,7 @@ create table if not exists eta (
 create table if not exists notification (
     id bigint not null auto_increment,
     mate_id bigint not null,
-    `type` varchar(225) check (`type` in ('departure_reminder','entry')) not null,
+    `type` varchar(225) check (`type` in ('departure_reminder','entry', 'nudge')) not null,
     status varchar(225) check (status in ('done','pending')) not null,
     send_at timestamp not null,
     created_at timestamp not null default current_timestamp(),
