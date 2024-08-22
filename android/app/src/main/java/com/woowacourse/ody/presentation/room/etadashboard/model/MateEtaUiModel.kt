@@ -6,6 +6,7 @@ data class MateEtaUiModel(
     val durationMinute: Int,
     val isMissing: Boolean,
     val isUserSelf: Boolean,
+    val userId: Long,
     val mateId: Long,
 ) {
     fun getEtaDurationMinuteTypeUiModel(): EtaDurationMinuteTypeUiModel {

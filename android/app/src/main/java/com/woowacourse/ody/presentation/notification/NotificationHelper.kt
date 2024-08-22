@@ -32,7 +32,7 @@ class NotificationHelper(private val context: Context) {
             }
 
             NotificationType.NUDGE -> {
-                context.getString(R.string.fcm_notification_nudge)
+                context.getString(R.string.fcm_notification_nudge, nickname)
             }
 
             NotificationType.DEFAULT -> {

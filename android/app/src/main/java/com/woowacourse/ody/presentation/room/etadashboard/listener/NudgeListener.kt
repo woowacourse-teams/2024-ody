@@ -1,5 +1,8 @@
 package com.woowacourse.ody.presentation.room.etadashboard.listener
 
 interface NudgeListener {
-    fun nudgeMate(mateId: Long)
+    fun nudgeMate(
+        nudgeId: Long,
+        mateId: Long,
+    )
 }

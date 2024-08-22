@@ -15,6 +15,7 @@ private fun MateEta.toMateEtaUiModel(userId: Long): MateEtaUiModel {
         durationMinute = durationMinute,
         isMissing = etaType == EtaType.MISSING,
         isUserSelf = userId == mateId,
+        userId = userId,
         mateId = mateId,
     )
 }

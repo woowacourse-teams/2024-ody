@@ -5,6 +5,7 @@ import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
+import com.woowacourse.ody.domain.model.Nudge
 import com.woowacourse.ody.domain.repository.ody.MeetingRepository
 import com.woowacourse.ody.inviteCode
 import com.woowacourse.ody.mateEtaInfo
@@ -38,5 +39,5 @@ object FakeMeetingRepository : MeetingRepository {
 
     override suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting> = ApiResult.Success(meeting)
 
-    override suspend fun fetchNudge(mateId: Long): ApiResult<Unit> = ApiResult.Success(Unit)
+    override suspend fun postNudge(nudge: Nudge): ApiResult<Unit> = ApiResult.Success(Unit)
 }
