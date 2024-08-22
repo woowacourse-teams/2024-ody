@@ -4,8 +4,6 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen
@@ -29,7 +27,6 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
         splashScreen = installSplashScreen()
         startSplash()
         super.onCreate(savedInstanceState)
-        window.makeTransparentStatusBar()
         initializeObserve()
         viewModel.checkIfLogined()
     }
@@ -37,7 +34,7 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
     private fun startSplash() {
         splashScreen.setOnExitAnimationListener { splashScreenView ->
             ObjectAnimator.ofPropertyValuesHolder(splashScreenView.iconView).run {
-                duration = 1500L
+                duration = SPLASH_DELAY_DURATION
                 doOnEnd {
                     splashScreenView.remove()
                 }
@@ -54,6 +51,7 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
         viewModel.navigateAction.observe(this) {
             val intent = MeetingsActivity.getIntent(this@LoginActivity)
             startActivity(intent)
+            finish()
         }
         viewModel.networkErrorEvent.observe(this) {
             showRetrySnackBar { viewModel.retryLastAction() }
@@ -64,15 +62,10 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
     }
 
     companion object {
+        private const val SPLASH_DELAY_DURATION = 1500L
+
         fun getIntent(context: Context): Intent {
             return Intent(context, LoginActivity::class.java)
         }
     }
-}
-
-private fun Window.makeTransparentStatusBar() {
-    setFlags(
-        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-    )
 }

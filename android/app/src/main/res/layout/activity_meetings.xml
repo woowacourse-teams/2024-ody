@@ -16,10 +16,6 @@
             type="com.woowacourse.ody.presentation.meetings.MeetingsViewModel" />
 
         <variable
-            name="isCatalogsEmpty"
-            type="Boolean" />
-
-        <variable
             name="isFloatingButtonExpanded"
             type="Boolean" />
 
@@ -41,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:visibility="@{isCatalogsEmpty}">
+            app:visibility="@{vm.isMeetingCatalogsEmpty}">
 
             <ImageView
                 android:id="@+id/iv_ody_character"
@@ -73,8 +69,9 @@
             android:padding="16dp"
             app:itemAnimator="@{null}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_intro"
-            app:visibility="@{!isCatalogsEmpty}"
+            app:visibility="@{!vm.isMeetingCatalogsEmpty}"
             tools:listitem="@layout/item_meeting_catalog" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

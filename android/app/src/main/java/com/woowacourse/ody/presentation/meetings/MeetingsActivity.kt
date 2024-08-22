@@ -54,14 +54,13 @@ class MeetingsActivity :
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
         binding.listener = this
+        binding.lifecycleOwner = this
+        binding.vm = viewModel
     }
 
     private fun initializeObserve() {
         viewModel.meetingCatalogs.observe(this) {
             adapter.submitList(it)
-        }
-        viewModel.isMeetingCatalogsEmpty.observe(this) {
-            binding.isCatalogsEmpty = it
         }
         viewModel.navigateAction.observe(this) {
             when (it) {
@@ -128,8 +127,7 @@ class MeetingsActivity :
     }
 
     private fun navigateToLogin() {
-        val intent =
-            LoginActivity.getIntent(this)
+        val intent = LoginActivity.getIntent(this)
         startActivity(intent)
     }
 

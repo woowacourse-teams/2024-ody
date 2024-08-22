@@ -2,7 +2,6 @@ package com.woowacourse.ody.presentation.meetings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
 import com.woowacourse.ody.domain.apiresult.onNetworkError
@@ -24,19 +23,22 @@ class MeetingsViewModel(
     private val meetingRepository: MeetingRepository,
 ) : BaseViewModel(), MeetingsItemListener {
     private val _meetingCatalogs = MutableLiveData<List<MeetingUiModel>>()
-    val meetingCatalogs: LiveData<List<MeetingUiModel>> = _meetingCatalogs
+    val meetingCatalogs: LiveData<List<MeetingUiModel>> get() = _meetingCatalogs
 
     private val _navigateAction = MutableSingleLiveData<MeetingsNavigateAction>()
     val navigateAction: SingleLiveData<MeetingsNavigateAction> = _navigateAction
 
-    val isMeetingCatalogsEmpty: LiveData<Boolean> = _meetingCatalogs.map { it.isEmpty() }
+    private val _isMeetingCatalogsEmpty: MutableLiveData<Boolean> = MutableLiveData()
+    val isMeetingCatalogsEmpty: LiveData<Boolean> get() = _isMeetingCatalogsEmpty
 
     fun fetchMeetingCatalogs() {
         viewModelScope.launch {
             startLoading()
             meetingRepository.fetchMeetingCatalogs()
                 .onSuccess {
-                    _meetingCatalogs.value = it.toMeetingCatalogUiModels()
+                    val meetingCatalogs = it.toMeetingCatalogUiModels()
+                    _meetingCatalogs.value = meetingCatalogs
+                    _isMeetingCatalogsEmpty.value = meetingCatalogs.isEmpty()
                 }.onFailure { code, errorMessage ->
                     handleError()
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
