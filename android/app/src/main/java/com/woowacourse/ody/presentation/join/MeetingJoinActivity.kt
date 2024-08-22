@@ -100,8 +100,7 @@ class MeetingJoinActivity :
 
     private fun getInviteCode(): String = intent.getStringExtra(INVITE_CODE_KEY) ?: ""
 
-    override fun onSearch() =
-        AddressSearchDialog().show(supportFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+    override fun onSearch() = AddressSearchDialog().show(supportFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
     override fun onReceive(geoLocation: GeoLocation) {
         binding.etDeparture.setText(geoLocation.address)

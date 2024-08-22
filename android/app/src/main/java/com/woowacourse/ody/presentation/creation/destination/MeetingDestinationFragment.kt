@@ -1,7 +1,6 @@
 package com.woowacourse.ody.presentation.creation.destination
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.woowacourse.ody.R
