@@ -21,11 +21,18 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    private String nickname;
+
     @Embedded
     @NotNull
     private DeviceToken deviceToken;
 
     public Member(DeviceToken deviceToken) {
-        this(null, deviceToken);
+        this(null, "회원 닉네임", deviceToken);
+    }
+
+    public Member(String nickname, DeviceToken deviceToken) {
+        this(null, nickname, deviceToken);
     }
 }

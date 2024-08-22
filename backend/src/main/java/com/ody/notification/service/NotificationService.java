@@ -35,15 +35,10 @@ public class NotificationService {
     private final TaskScheduler taskScheduler;
 
     @Transactional
-    public void saveAndSendNotifications(
-            Meeting meeting,
-            Mate mate,
-            DeviceToken deviceToken,
-            RouteTime routeTime
-    ) {
+    public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
         saveAndSendEntryNotification(meeting, mate);
         fcmSubscriber.subscribeTopic(new FcmTopic(meeting), deviceToken);
-        saveAndSendDepartureReminderNotification(meeting, mate, routeTime);
+        saveAndSendDepartureReminderNotification(meeting, mate);
     }
 
     private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
@@ -51,8 +46,8 @@ public class NotificationService {
         saveAndSendNotification(meeting, notification);
     }
 
-    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate, RouteTime routeTime) {
-        DepartureTime departureTime = new DepartureTime(routeTime, meeting);
+    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate) {
+        DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
         LocalDateTime sendAt = calculateSendAt(departureTime);
         Notification notification = Notification.createDepartureReminder(mate, sendAt);
         saveAndSendNotification(meeting, notification);
