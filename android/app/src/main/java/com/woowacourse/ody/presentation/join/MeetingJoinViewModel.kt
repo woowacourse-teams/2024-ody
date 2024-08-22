@@ -117,7 +117,6 @@ class MeetingJoinViewModel(
     companion object {
         private const val TAG = "MeetingJoinViewModel"
 
-        const val NICK_NAME_MAX_LENGTH = 9
         private const val LOCAL_ZONE_ID = "Asia/Seoul"
         private const val MILLI_SECOND_OF_MINUTE = 60_000
         private const val START_RESERVE_MILLI_SECOND = -30 * MILLI_SECOND_OF_MINUTE

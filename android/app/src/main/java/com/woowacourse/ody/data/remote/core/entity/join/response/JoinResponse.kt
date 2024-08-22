@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 data class JoinResponse(
     @Json(name = "meetingId")
     val meetingId: Long,
-    @Json(name = "name")
+    @Json(name = "date")
     val date: String,
     @Json(name = "time")
     val time: String,
