@@ -200,8 +200,11 @@ class MateServiceTest extends BaseServiceTest {
                     Fixture.ORIGIN_LOCATION.getLatitude(),
                     Fixture.ORIGIN_LOCATION.getLongitude()
             );
-            MateSaveResponseV2 mateSaveResponse = mateService.saveAndSendNotifications(mateSaveRequest, member2,
-                    meeting);
+            MateSaveResponseV2 mateSaveResponse = mateService.saveAndSendNotifications(
+                    mateSaveRequest,
+                    member2,
+                    meeting
+            );
 
             assertThat(mateSaveResponse.meetingId()).isEqualTo(mate1.getId());
         }
