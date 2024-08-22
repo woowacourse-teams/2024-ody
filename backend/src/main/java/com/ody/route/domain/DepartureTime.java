@@ -12,7 +12,7 @@ public class DepartureTime {
     private final LocalDateTime value;
 
     public DepartureTime(Meeting meeting, long estimatedMinutes) {
-        LocalDateTime meetingTime = LocalDateTime.of(meeting.getDate(), meeting.getTime());
+        LocalDateTime meetingTime = meeting.getMeetingTime();
         this.value = meetingTime.minusMinutes(estimatedMinutes + MINUTE_GAP);
     }
 
