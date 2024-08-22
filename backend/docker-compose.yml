@@ -1,0 +1,33 @@
+services:
+  db:
+    image: mysql:latest
+    container_name: ody-dev-db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: ${DEV_MYSQL_PASSWORD}
+      MYSQL_DATABASE: ody
+      TZ: Asia/Seoul
+    volumes:
+      - /mysql-data:/var/lib/mysql
+    networks:
+      - ody-develop-network
+
+  web:
+    image: ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:${GIT_SHA}-dev
+    container_name: ody-dev-app
+    ports:
+      - "8080:8080"
+    links:
+      - db
+    volumes:
+      - /var/logs/ody-dev-logs:/ody-dev-logs
+    platform: linux/arm64
+    networks:
+      - ody-develop-network
+
+networks:
+  ody-develop-network:
+    driver: bridge

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <springProperty scope="context" name="LOG_FILE_PATH" source="log.file.path"/>
+    <property name="LOG_CONSOLE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS, UTC+09:00} %clr([%level]) [%thread] %cyan([%logger{36}]) - %msg%n"/>
+    <property name="LOG_FILE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS, UTC+09:00} [%level] [%thread] [%logger{36}] - %msg%n"/>
+
+    <appender name="ODY_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${LOG_CONSOLE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ODY_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE_PATH}/ody-info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_FILE_PATH}/ody-info.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>2</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>500MB</maxFileSize>
+        </triggeringPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${LOG_FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ODY_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE_PATH}/ody-warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_FILE_PATH}/ody-warn.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>2</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>500MB</maxFileSize>
+        </triggeringPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${LOG_FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ODY_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE_PATH}/ody-error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_FILE_PATH}/ody-error.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>2</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>500MB</maxFileSize>
+        </triggeringPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${LOG_FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="ODY_CONSOLE"/>
+        <appender-ref ref="ODY_INFO"/>
+        <appender-ref ref="ODY_WARN"/>
+        <appender-ref ref="ODY_ERROR"/>
+    </root>
+</configuration>
