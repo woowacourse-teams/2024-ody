@@ -65,7 +65,7 @@ class NotificationLogFragment :
 
     companion object {
         private const val INVITE_CODE_SHARE_IMAGE_URL =
-            "https://firebasestorage.googleapis.com/v0/b/oddy-4482e.appspot.com" +
-                "/o/happyody.png?alt=media&token=631fb9b9-a19d-418d-b0b4-426f9c64268f"
+            "https://firebasestorage.googleapis.com/" +
+                "v0/b/oddy-4482e.appspot.com/o/odyimage.png?alt=media&token=b3e1db2f-3eb6-46b9-b431-9ac9b6f182a6"
     }
 }
