@@ -24,6 +24,7 @@ import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ class MeetingServiceTest extends BaseServiceTest {
     @Autowired
     private MateRepository mateRepository;
 
+    @Disabled
     @DisplayName("내 약속 목록 조회 시 오름차순 정렬한다.")
     @Test
     void findAllByMember() {

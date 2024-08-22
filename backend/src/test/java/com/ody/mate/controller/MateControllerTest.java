@@ -30,8 +30,7 @@ class MateControllerTest extends BaseControllerTest {
     @DisplayName("Authorization 헤더로 device token을 받아 참여자를 저장하면 201을 응답한다")
     @Test
     void saveV1() {
-        String deviceToken = "Bearer device-token=testToken";
-        memberService.save(new DeviceToken(deviceToken));
+        String authorization = saveMember();
 
         MeetingSaveRequestV1 meetingSaveRequestV1 = new MeetingSaveRequestV1(
                 "우테코 16조",
@@ -53,7 +52,7 @@ class MateControllerTest extends BaseControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, deviceToken)
+                .header(HttpHeaders.AUTHORIZATION, authorization)
                 .body(mateSaveRequest)
                 .when()
                 .post("/v1/mates")

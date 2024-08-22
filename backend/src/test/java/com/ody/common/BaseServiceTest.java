@@ -12,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-@Import({JpaAuditingConfig.class, TestRouteConfig.class})
+@Import({JpaAuditingConfig.class, TestRouteConfig.class, TestAuthConfig.class})
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 public abstract class BaseServiceTest {

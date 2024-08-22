@@ -57,6 +57,9 @@ dependencies {
 
 	annotationProcessor 'org.projectlombok:lombok'
 	compileOnly 'org.projectlombok:lombok'
+
+	implementation "io.jsonwebtoken:jjwt:0.9.1"
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
 }
 
 tasks.named('test') {
