@@ -59,13 +59,12 @@ class MeetingJoinViewModelTest {
     fun `출발지 주소가 수도권이라면 유효하다`() {
         // given
         setUpInitializeInfo()
-        viewModel.meetingJoinInfoType.value = MeetingJoinInfoType.DEPARTURE
 
         // when
         viewModel.departureGeoLocation.value = GeoLocation(address = "인천광역시 남동구", "0.0", "0.0")
 
         // then
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        val actual = viewModel.isValidDeparture.getOrAwaitValue()
         assertThat(actual).isTrue
     }
 
@@ -73,18 +72,16 @@ class MeetingJoinViewModelTest {
     fun `출발지 주소가 수도권이 아니라면 유효하지 않다`() {
         // given
         setUpInitializeInfo()
-        viewModel.meetingJoinInfoType.value = MeetingJoinInfoType.DEPARTURE
 
         // when
         viewModel.departureGeoLocation.value = GeoLocation(address = "부산광역시 동구", "0.0", "0.0")
 
         // then
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        val actual = viewModel.isValidDeparture.getOrAwaitValue()
         assertThat(actual).isFalse
     }
 
     private fun setUpInitializeInfo() {
         viewModel.departureGeoLocation.value = GeoLocation("인천광역시 남동구", "10.0", "10.0")
-        viewModel.isValidInfo.value = true
     }
 }
