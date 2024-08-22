@@ -27,8 +27,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_PROD_URL", properties["BASE_PROD_URL"].toString())
-        buildConfigField("String", "BASE_DEV_URL", properties["BASE_DEV_URL"].toString())
         buildConfigField("String", "KAKAO_API_KEY", properties["KAKAO_API_KEY"].toString())
         buildConfigField("String", "KAKAO_NATIVE_KEY", properties["KAKAO_NATIVE_KEY"].toString())
         manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["KAKAO_NATIVE_KEY"].toString()
@@ -37,6 +35,7 @@ android {
         debug {
             isMinifyEnabled = true
             isShrinkResources = true
+            buildConfigField("String", "BASE_URL", properties["BASE_DEV_URL"].toString())
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -45,6 +44,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            buildConfigField("String", "BASE_URL", properties["BASE_PROD_URL"].toString())
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",

@@ -49,6 +49,6 @@ class RetrofitClient {
     }
 
     companion object {
-        private val BASE_URL = if (BuildConfig.DEBUG) BuildConfig.BASE_DEV_URL else BuildConfig.BASE_PROD_URL
+        private const val BASE_URL = BuildConfig.BASE_URL
     }
 }
