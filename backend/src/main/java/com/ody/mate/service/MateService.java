@@ -40,8 +40,10 @@ public class MateService {
             throw new OdyBadRequestException("모임에 이미 참여한 회원입니다.");
         }
 
-        Coordinates origin = new Coordinates(mateSaveRequest.originLatitude(), mateSaveRequest.originLongitude());
-        RouteTime routeTime = routeService.calculateRouteTime(origin, meeting.getTargetCoordinates());
+        RouteTime routeTime = routeService.calculateRouteTime(
+                mateSaveRequest.toOriginCoordinates(),
+                meeting.getTargetCoordinates()
+        );
         Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, routeTime.getMinutes()));
         etaService.saveFirstEtaOfMate(mate, routeTime);
         notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken(), routeTime);
