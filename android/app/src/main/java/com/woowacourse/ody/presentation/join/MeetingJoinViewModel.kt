@@ -30,6 +30,7 @@ class MeetingJoinViewModel(
     private val matesEtaRepository: MatesEtaRepository,
 ) : BaseViewModel(), MeetingJoinListener {
     val departureGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
+    val departureAddress: LiveData<String> = departureGeoLocation.map { it.address }
 
     private val _invalidDepartureEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
     val invalidDepartureEvent: SingleLiveData<Unit> get() = _invalidDepartureEvent

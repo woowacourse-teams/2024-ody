@@ -42,7 +42,6 @@ class MeetingDestinationFragment :
     override fun onSearch() = AddressSearchDialog().show(childFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
     override fun onReceive(geoLocation: GeoLocation) {
-        binding.etDestination.setText(geoLocation.address)
         viewModel.destinationGeoLocation.value = geoLocation
     }
 

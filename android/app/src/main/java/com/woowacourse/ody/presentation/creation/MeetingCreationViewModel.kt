@@ -46,6 +46,7 @@ class MeetingCreationViewModel(
     val invalidMeetingTimeEvent: SingleLiveData<Unit> get() = _invalidMeetingTimeEvent
 
     val destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
+    val destinationAddress: LiveData<String> = destinationGeoLocation.map { it.address }
 
     private val _invalidDestinationEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
     val invalidDestinationEvent: SingleLiveData<Unit> get() = _invalidDestinationEvent
