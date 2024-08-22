@@ -1,7 +1,8 @@
 package com.woowacourse.ody.presentation.join
 
-import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.woowacourse.ody.domain.apiresult.onFailure
 import com.woowacourse.ody.domain.apiresult.onNetworkError
@@ -28,28 +29,15 @@ class MeetingJoinViewModel(
     private val joinRepository: JoinRepository,
     private val matesEtaRepository: MatesEtaRepository,
 ) : BaseViewModel(), MeetingJoinListener {
-    val meetingJoinInfoType: MutableLiveData<MeetingJoinInfoType> = MutableLiveData()
-    val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
-
     val departureGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
 
     private val _invalidDepartureEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
     val invalidDepartureEvent: SingleLiveData<Unit> get() = _invalidDepartureEvent
+    val isValidDeparture: LiveData<Boolean> = departureGeoLocation.map { isValidDeparturePoint() }
 
     private val _navigateAction: MutableSingleLiveData<MeetingJoinNavigateAction> =
         MutableSingleLiveData()
     val navigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _navigateAction
-
-    init {
-        initializeIsValidInfo()
-    }
-
-    private fun initializeIsValidInfo() {
-        with(isValidInfo) {
-            addSource(meetingJoinInfoType) { checkInfoValidity() }
-            addSource(departureGeoLocation) { checkInfoValidity() }
-        }
-    }
 
     fun joinMeeting() {
         val departureAddress = departureGeoLocation.value?.address ?: return
@@ -78,15 +66,6 @@ class MeetingJoinViewModel(
             }
             stopLoading()
         }
-    }
-
-    private fun checkInfoValidity() {
-        val meetingJoinInfoType = meetingJoinInfoType.value ?: return
-        val isValid =
-            when (meetingJoinInfoType) {
-                MeetingJoinInfoType.DEPARTURE -> isValidDeparturePoint()
-            }
-        isValidInfo.value = isValid
     }
 
     private fun isValidDeparturePoint(): Boolean {

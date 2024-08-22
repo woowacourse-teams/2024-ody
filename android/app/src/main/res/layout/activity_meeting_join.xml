@@ -89,7 +89,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_next"
             style="@style/bottom_button_style"
-            android:enabled="@{vm.isValidInfo}"
+            android:enabled="@{vm.isValidDeparture}"
             android:onClick="@{() -> nextListener.onNext()}"
             android:text="@string/next_button"
             app:layout_constraintBottom_toBottomOf="parent"
