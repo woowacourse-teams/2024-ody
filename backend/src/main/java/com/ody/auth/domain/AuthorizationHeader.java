@@ -2,7 +2,7 @@ package com.ody.auth.domain;
 
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
-import com.ody.common.exception.OdyUnauthorizedException;
+import com.ody.common.exception.OdyBadRequestException;
 import lombok.Getter;
 
 @Getter
@@ -26,7 +26,7 @@ public class AuthorizationHeader {
 
     private void validate(String[] parsed) {
         if (parsed.length != 3) {
-            throw new OdyUnauthorizedException("토큰 방식, 액세스 토큰, 리프레시 토큰이 필요합니다.");
+            throw new OdyBadRequestException("토큰 방식, 액세스 토큰, 리프레시 토큰이 필요합니다.");
         }
     }
 }
