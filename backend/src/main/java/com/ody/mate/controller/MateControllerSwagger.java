@@ -26,24 +26,6 @@ import org.springframework.http.ResponseEntity;
 public interface MateControllerSwagger {
 
     @Operation(
-            summary = "모임 참여",
-            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateSaveRequest.class))),
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "모임 참여 성공",
-                            content = @Content(schema = @Schema(implementation = MeetingSaveResponse.class))
-                    )
-            },
-            deprecated = true
-    )
-    @ErrorCode400
-    @ErrorCode401
-    @ErrorCode404(description = "유효하지 않은 초대코드")
-    @ErrorCode500
-    ResponseEntity<MeetingSaveResponse> save(@Parameter(hidden = true) Member member, MateSaveRequest mateSaveRequest);
-
-    @Operation(
             summary = "약속 참여",
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateSaveRequest.class))),
             responses = {
