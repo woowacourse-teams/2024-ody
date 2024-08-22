@@ -32,8 +32,4 @@ public record MateSaveRequest(
         Location origin = new Location(originAddress, originLatitude, originLongitude);
         return new Mate(meeting, member, new Nickname(nickname), origin, estimatedMinutes);
     }
-
-    public Coordinates toOriginCoordinates() {
-        return new Coordinates(originLatitude, originLongitude);
-    }
 }
