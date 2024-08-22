@@ -56,17 +56,17 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew bundleRelease
 
-      - name: sign app aab
+      - name: Sign app aab
         id: sign_app
         uses: r0adkll/sign-android-release@v1
         with:
           releaseDirectory: /home/runner/work/2024-ody/2024-ody/android/app/build/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY}}
-          alias: ${{ secrets.ALIAS}}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD}}
-          keyPassword: ${{ secrets.KEY_PASSWORD}}
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - name: deploy to play console
+      - name: Deploy to play console
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
