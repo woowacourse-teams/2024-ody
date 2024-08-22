@@ -5,8 +5,8 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.message.NudgeMessage;
 import com.ody.notification.dto.request.FcmSendRequest;
-import com.ody.notification.dto.request.NudgeRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
@@ -35,15 +35,10 @@ public class NotificationService {
     private final TaskScheduler taskScheduler;
 
     @Transactional
-    public void saveAndSendNotifications(
-            Meeting meeting,
-            Mate mate,
-            DeviceToken deviceToken,
-            RouteTime routeTime
-    ) {
+    public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
         saveAndSendEntryNotification(meeting, mate);
         fcmSubscriber.subscribeTopic(new FcmTopic(meeting), deviceToken);
-        saveAndSendDepartureReminderNotification(meeting, mate, routeTime);
+        saveAndSendDepartureReminderNotification(meeting, mate);
     }
 
     private void saveAndSendEntryNotification(Meeting meeting, Mate mate) {
@@ -51,8 +46,8 @@ public class NotificationService {
         saveAndSendNotification(meeting, notification);
     }
 
-    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate, RouteTime routeTime) {
-        DepartureTime departureTime = new DepartureTime(routeTime, meeting);
+    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate) {
+        DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
         LocalDateTime sendAt = calculateSendAt(departureTime);
         Notification notification = Notification.createDepartureReminder(mate, sendAt);
         saveAndSendNotification(meeting, notification);
@@ -81,11 +76,10 @@ public class NotificationService {
     }
 
     @Transactional
-    public void sendNudgeMessage(Mate mate) {
-        Notification notification = Notification.createNudge(mate);
+    public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
+        Notification notification = Notification.createNudge(nudgedMate);
         Notification nudgeNotification = notificationRepository.save(notification);
-        NudgeRequest nudgeRequest = new NudgeRequest(mate, nudgeNotification);
-        fcmPushSender.sendNudgeMessage(nudgeRequest);
-        nudgeNotification.updateStatusToDone();
+        NudgeMessage nudgeMessage = new NudgeMessage(nudgedMate.getMemberDeviceToken(), requestMate.getNicknameValue());
+        fcmPushSender.sendNudgeMessage(nudgeNotification, nudgeMessage);
     }
 }

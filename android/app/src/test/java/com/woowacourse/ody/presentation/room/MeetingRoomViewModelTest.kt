@@ -2,6 +2,8 @@ package com.woowacourse.ody.presentation.room
 
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
+import com.woowacourse.ody.fake.FakeImageShareHelper
+import com.woowacourse.ody.fake.FakeImageStorage
 import com.woowacourse.ody.fake.FakeMatesEtaRepository
 import com.woowacourse.ody.fake.FakeMeetingRepository
 import com.woowacourse.ody.fake.FakeNotificationLogRepository
@@ -39,6 +41,8 @@ class MeetingRoomViewModelTest {
                 matesEtaRepository = matesEtaRepository,
                 notificationLogRepository = FakeNotificationLogRepository,
                 meetingRepository = FakeMeetingRepository,
+                imageStorage = FakeImageStorage,
+                imageShareHelper = FakeImageShareHelper,
             )
     }
 
@@ -73,5 +77,16 @@ class MeetingRoomViewModelTest {
 
         val notificationLogUiModel = viewModel.notificationLogs.getOrAwaitValue()
         assertThat(notificationLogUiModel).isEqualTo(notificationLogs.toNotificationUiModels())
+    }
+
+    @Test
+    fun `친구 재촉을 하면 친구 재촉이 성공한다`() {
+        // when
+        viewModel.nudgeMate(0)
+
+        // then
+        val nudgedNickname = viewModel.nudgeSuccessMate.getOrAwaitValue()
+
+        assertThat(nudgedNickname).isEqualTo("콜리")
     }
 }

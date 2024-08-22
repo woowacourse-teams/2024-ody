@@ -11,9 +11,9 @@ public class DepartureTime {
 
     private final LocalDateTime value;
 
-    public DepartureTime(RouteTime routeTime, Meeting meeting) {
-        LocalDateTime meetingTime = LocalDateTime.of(meeting.getDate(), meeting.getTime());
-        this.value = meetingTime.minusMinutes(routeTime.getMinutes() + MINUTE_GAP);
+    public DepartureTime(Meeting meeting, long estimatedMinutes) {
+        LocalDateTime meetingTime = meeting.getMeetingTime();
+        this.value = meetingTime.minusMinutes(estimatedMinutes + MINUTE_GAP);
     }
 
     public boolean isBefore(LocalDateTime target) {

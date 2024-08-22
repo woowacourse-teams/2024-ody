@@ -37,4 +37,6 @@ object FakeMeetingRepository : MeetingRepository {
     }
 
     override suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting> = ApiResult.Success(meeting)
+
+    override suspend fun fetchNudge(mateId: Long): ApiResult<Unit> = ApiResult.Success(Unit)
 }

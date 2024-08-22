@@ -31,8 +31,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Clean Build With Gradle Wrapper
-        run: ./gradlew clean build
+      - name: Clean And Test With Gradle
+        run: ./gradlew clean test
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2

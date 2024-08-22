@@ -17,6 +17,8 @@ import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
+import com.ody.meeting.dto.response.MateEtaResponseV2;
+import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.repository.MeetingRepository;
@@ -169,7 +171,7 @@ class MeetingControllerTest extends BaseControllerTest {
                     .body(mateEtaRequest)
                     .contentType(ContentType.JSON)
                     .when()
-                    .patch("/v1/meetings/1/mates/etas")
+                    .patch("/v2/meetings/1/mates/etas")
                     .then().log().all()
                     .statusCode(200);
         }
@@ -186,24 +188,24 @@ class MeetingControllerTest extends BaseControllerTest {
 
             MateEtaRequest mateEtaMissingRequest = new MateEtaRequest(true, origin.getLatitude(),
                     origin.getLongitude());
-            MateEtaResponse mateEtaMissingResponse = RestAssured.given().log().all()
+            MateEtaResponseV2 mateEtaMissingResponse = RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION,
                             "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
                     .body(mateEtaMissingRequest)
                     .contentType(ContentType.JSON)
                     .when()
-                    .patch("/v1/meetings/1/mates/etas")
+                    .patch("/v2/meetings/1/mates/etas")
                     .then().log().all()
                     .statusCode(200)
                     .extract()
-                    .as(MateEtaResponses.class)
+                    .as(MateEtaResponsesV2.class)
                     .mateEtas().get(0);
 
             assertThat(mateEtaMissingResponse.status()).isEqualTo(EtaStatus.MISSING);
 
             MateEtaRequest mateEtaNotMissingRequest = new MateEtaRequest(false, origin.getLatitude(),
                     origin.getLongitude());
-            MateEtaResponse mateEtaNotMissingResponse = RestAssured.given()
+            MateEtaResponseV2 mateEtaNotMissingResponse = RestAssured.given()
                     .log()
                     .all()
                     .header(HttpHeaders.AUTHORIZATION,
@@ -211,11 +213,11 @@ class MeetingControllerTest extends BaseControllerTest {
                     .body(mateEtaNotMissingRequest)
                     .contentType(ContentType.JSON)
                     .when()
-                    .patch("/v1/meetings/1/mates/etas")
+                    .patch("/v2/meetings/1/mates/etas")
                     .then().log().all()
                     .statusCode(200)
                     .extract()
-                    .as(MateEtaResponses.class)
+                    .as(MateEtaResponsesV2.class)
                     .mateEtas().get(0);
 
             assertThat(mateEtaNotMissingResponse.status()).isNotEqualTo(EtaStatus.MISSING);
@@ -238,17 +240,17 @@ class MeetingControllerTest extends BaseControllerTest {
 
             MateEtaRequest mateEtaMissingRequest = new MateEtaRequest(true, origin.getLatitude(),
                     origin.getLongitude());
-            MateEtaResponses mateEtaResponses = RestAssured.given().log().all()
+            MateEtaResponsesV2 mateEtaResponses = RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION,
                             "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
                     .body(mateEtaMissingRequest)
                     .contentType(ContentType.JSON)
                     .when()
-                    .patch("/v1/meetings/1/mates/etas")
+                    .patch("/v2/meetings/1/mates/etas")
                     .then().log().all()
                     .statusCode(200)
                     .extract()
-                    .as(MateEtaResponses.class);
+                    .as(MateEtaResponsesV2.class);
 
             assertThat(mateEtaResponses.mateEtas().get(0).status()).isEqualTo(EtaStatus.MISSING);
             assertThat(mateEtaResponses.mateEtas().get(1).status()).isNotEqualTo(EtaStatus.MISSING);

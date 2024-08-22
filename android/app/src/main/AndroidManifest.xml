@@ -17,6 +17,10 @@
         android:name="google_analytics_adid_collection_enabled"
         android:value="false" />
 
+    <queries>
+        <package android:name="com.kakao.talk" />
+    </queries>
+
     <application
         android:name=".OdyApplication"
         android:allowBackup="true"
@@ -40,8 +44,16 @@
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="kakaolink"
+                    android:scheme="kakao${KAKAO_NATIVE_KEY}" />
             </intent-filter>
         </activity>
         <activity

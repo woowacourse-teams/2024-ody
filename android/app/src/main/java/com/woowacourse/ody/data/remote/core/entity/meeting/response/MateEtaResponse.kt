@@ -5,6 +5,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class MateEtaResponse(
+    @Json(name = "mateId")
+    val mateId: Long,
     @Json(name = "nickname")
     val nickname: String,
     @Json(name = "status")

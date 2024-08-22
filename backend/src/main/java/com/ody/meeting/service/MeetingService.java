@@ -2,8 +2,8 @@ package com.ody.meeting.service;
 
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
-import com.ody.mate.dto.request.MateSaveRequest;
-import com.ody.mate.dto.response.MateSaveResponse;
+import com.ody.mate.dto.request.MateSaveRequestV2;
+import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
@@ -78,11 +78,12 @@ public class MeetingService {
 
     public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {
         Meeting meeting = findById(meetingId);
-        List<Mate> mates = mateService.findAllByMemberAndMeetingId(member, meetingId);
+        List<Mate> mates = mateService.findAllByMeetingIdIfMate(member, meeting.getId());
         return MeetingWithMatesResponse.of(meeting, mates);
     }
 
-    public MateSaveResponse saveMateAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
+    @Transactional
+    public MateSaveResponseV2 saveMateAndSendNotifications(MateSaveRequestV2 mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
     }

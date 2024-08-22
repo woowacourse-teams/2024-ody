@@ -1,6 +1,5 @@
 package com.woowacourse.ody.presentation.common.binding
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +10,11 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.woowacourse.ody.OdyApplication
+import kotlinx.coroutines.launch
 
 abstract class BindingFragment<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
@@ -25,13 +26,6 @@ abstract class BindingFragment<T : ViewDataBinding>(
     val application by lazy { requireContext().applicationContext as OdyApplication }
     val analyticsHelper by lazy { application.analyticsHelper }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, javaClass.simpleName)
-        analyticsHelper.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,6 +34,17 @@ abstract class BindingFragment<T : ViewDataBinding>(
         _binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
+    }
+
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+        viewLifecycleOwner.lifecycleScope.launch {
+            val bundle = bundleOf(FirebaseAnalytics.Param.SCREEN_NAME to javaClass.simpleName)
+            analyticsHelper.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+        }
     }
 
     fun showSnackBar(
@@ -51,10 +56,21 @@ abstract class BindingFragment<T : ViewDataBinding>(
         snackBar?.show()
     }
 
+    fun showSnackBar(
+        message: String,
+        action: Snackbar.() -> Unit = {},
+    ) {
+        snackBar?.dismiss()
+        snackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).apply { action() }
+        snackBar?.show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
         snackBar = null
-        analyticsHelper.logEvent(javaClass.simpleName + " destroyed", bundleOf())
+        viewLifecycleOwner.lifecycleScope.launch {
+            analyticsHelper.logEvent(javaClass.simpleName + " destroyed", bundleOf())
+        }
     }
 }
