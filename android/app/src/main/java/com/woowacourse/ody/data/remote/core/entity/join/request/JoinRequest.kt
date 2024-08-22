@@ -7,8 +7,6 @@ import com.squareup.moshi.JsonClass
 data class JoinRequest(
     @Json(name = "inviteCode")
     val inviteCode: String,
-    @Json(name = "nickname")
-    val nickname: String,
     @Json(name = "originAddress")
     val originAddress: String,
     @Json(name = "originLatitude")

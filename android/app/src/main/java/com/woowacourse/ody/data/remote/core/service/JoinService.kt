@@ -7,7 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface JoinService {
-    @POST("/v1/mates")
+    @POST("/v2/mates")
     suspend fun postMates(
         @Body joinRequest: JoinRequest,
     ): ApiResult<JoinResponse>
