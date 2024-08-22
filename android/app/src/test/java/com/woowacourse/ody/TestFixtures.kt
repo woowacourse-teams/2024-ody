@@ -58,49 +58,49 @@ val notificationLogs: List<NotificationLog> =
             "B",
             LocalDateTime.of(2024, 7, 7, 14, 31),
             "",
-            ),
+        ),
         NotificationLog(
             NotificationType.ENTRY,
             "C",
             LocalDateTime.of(2024, 7, 7, 14, 32),
             "",
-            ),
+        ),
         NotificationLog(
             NotificationType.DEPARTURE_REMINDER,
             "A",
             LocalDateTime.of(2024, 7, 7, 14, 33),
             "",
-            ),
+        ),
         NotificationLog(
             NotificationType.DEPARTURE_REMINDER,
             "B",
             LocalDateTime.of(2024, 7, 7, 14, 34),
             "",
-            ),
+        ),
         NotificationLog(
             NotificationType.DEPARTURE_REMINDER,
             "C",
             LocalDateTime.of(2024, 7, 7, 14, 35),
             "",
-            ),
+        ),
         NotificationLog(
             NotificationType.DEPARTURE,
             "A",
             LocalDateTime.of(2024, 7, 7, 14, 36),
             "",
-            ),
+        ),
         NotificationLog(
             NotificationType.DEPARTURE,
             "B",
             LocalDateTime.of(2024, 7, 7, 14, 37),
             "",
-            ),
+        ),
         NotificationLog(
             NotificationType.DEPARTURE,
             "C",
             LocalDateTime.of(2024, 7, 7, 14, 38),
             "",
-            ),
+        ),
     )
 
 private val nicknames = listOf("콜리", "올리브", "카키", "해음")
