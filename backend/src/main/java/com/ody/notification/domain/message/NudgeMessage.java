@@ -14,7 +14,7 @@ public class NudgeMessage {
         this.message = Message.builder()
                 .putData("type", NotificationType.NUDGE.name())
                 .putData("nickname", requestMateNickName)
-                .setToken(nudgeMateDeviceToken.getDeviceToken())
+                .setToken(nudgeMateDeviceToken.getValue())
                 .build();
     }
 }
