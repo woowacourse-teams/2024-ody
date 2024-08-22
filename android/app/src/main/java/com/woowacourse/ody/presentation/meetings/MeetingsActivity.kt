@@ -54,6 +54,8 @@ class MeetingsActivity :
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
         binding.listener = this
+        binding.lifecycleOwner = this
+        binding.vm = viewModel
     }
 
     private fun initializeObserve() {

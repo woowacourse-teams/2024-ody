@@ -38,7 +38,6 @@ class MeetingsViewModel(
             startLoading()
             meetingRepository.fetchMeetingCatalogs()
                 .onSuccess {
-                    Log.e("TEST", it.toString())
                     val meetingCatalogs = it.toMeetingCatalogUiModels()
                     _meetingCatalogs.value = meetingCatalogs
                     _isMeetingCatalogsEmpty.value = meetingCatalogs.isEmpty()
