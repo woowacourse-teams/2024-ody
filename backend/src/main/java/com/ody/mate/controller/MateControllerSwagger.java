@@ -27,23 +27,6 @@ public interface MateControllerSwagger {
 
     @Operation(
             summary = "약속 참여",
-            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateSaveRequest.class))),
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "약속 참여 성공",
-                            content = @Content(schema = @Schema(implementation = MateSaveResponse.class))
-                    )
-            }
-    )
-    @ErrorCode400
-    @ErrorCode401
-    @ErrorCode404(description = "유효하지 않은 초대코드")
-    @ErrorCode500
-    ResponseEntity<MateSaveResponse> saveV1(@Parameter(hidden = true) Member member, MateSaveRequest mateSaveRequest);
-
-    @Operation(
-            summary = "약속 참여",
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = MateSaveRequestV2.class))),
             responses = {
                     @ApiResponse(
