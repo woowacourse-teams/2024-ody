@@ -14,7 +14,7 @@ fun MeetingResponse.toMeeting(): Meeting =
         targetPosition = targetAddress,
         meetingDate = date.parseToLocalDate(),
         meetingTime = time.parseToLocalTime(),
-        mates = mates.map { Mate(nickname = it.nickname) },
+        mates = mates.map { Mate(nickname = it.nickname, imageUrl = it.imageUrl) },
         inviteCode = inviteCode,
     )
 

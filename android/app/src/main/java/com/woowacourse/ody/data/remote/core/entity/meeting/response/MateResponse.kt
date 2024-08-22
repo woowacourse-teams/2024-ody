@@ -7,4 +7,6 @@ import com.squareup.moshi.JsonClass
 data class MateResponse(
     @Json(name = "nickname")
     val nickname: String,
+    @Json(name = "imageUrl")
+    val imageUrl: String,
 )
