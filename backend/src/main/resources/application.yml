@@ -3,7 +3,7 @@ spring:
     import: classpath:private/private.yml
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -64,19 +64,6 @@ spring:
   config:
     activate:
       on-profile: dev
-    import: classpath:private/private.yml
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-#    defer-datasource-initialization: true
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:schema.sql
-
 
 log:
   file:
