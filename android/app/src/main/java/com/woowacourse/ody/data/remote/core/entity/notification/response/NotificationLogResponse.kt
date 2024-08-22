@@ -11,4 +11,6 @@ data class NotificationLogResponse(
     val nickname: String,
     @Json(name = "createdAt")
     val createdAt: String,
+    @Json(name = "imageUrl")
+    val imageUrl: String,
 )

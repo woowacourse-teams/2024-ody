@@ -11,7 +11,9 @@ fun NotificationLogsResponse.toNotificationList(): List<NotificationLog> =
         val type = NotificationType.from(it.type)
         val nickname = it.nickname
         val createdAt = it.createdAt.parseToLocalDateTime()
-        NotificationLog(type, nickname, createdAt)
+        val imageUrl = it.imageUrl
+
+        NotificationLog(type, nickname, createdAt, imageUrl)
     }
 
 private fun String.parseToLocalDateTime(): LocalDateTime {
