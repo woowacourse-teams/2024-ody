@@ -14,7 +14,6 @@ import com.woowacourse.ody.presentation.common.listener.BackListener
 import com.woowacourse.ody.presentation.common.listener.NextListener
 import com.woowacourse.ody.presentation.join.complete.JoinCompleteActivity
 import com.woowacourse.ody.presentation.join.departure.JoinDepartureFragment
-import com.woowacourse.ody.presentation.join.nickname.JoinNickNameFragment
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 
 class MeetingJoinActivity :
@@ -30,7 +29,7 @@ class MeetingJoinActivity :
         )
     }
     private val fragments: List<Fragment> by lazy {
-        listOf(JoinNickNameFragment(), JoinDepartureFragment())
+        listOf(JoinDepartureFragment())
     }
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {

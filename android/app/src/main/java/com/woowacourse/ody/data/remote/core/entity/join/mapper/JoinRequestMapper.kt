@@ -6,7 +6,6 @@ import com.woowacourse.ody.domain.model.MeetingJoinInfo
 fun MeetingJoinInfo.toJoinRequest(): JoinRequest =
     JoinRequest(
         inviteCode = inviteCode,
-        nickname = nickname,
         originAddress = originAddress,
         originLatitude = compress(originLatitude),
         originLongitude = compress(originLongitude),
