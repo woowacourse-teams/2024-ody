@@ -20,11 +20,11 @@ import org.springframework.http.ResponseEntity;
 public interface AuthControllerSwagger {
 
     @Operation(
-            summary = "카카오 회원 생성",
+            summary = "카카오 소셜 로그인",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "카카오 회원 생성 성공",
+                            description = "카카오 소셜 로그인 성공",
                             content = @Content(schema = @Schema(implementation = AuthResponse.class))
                     )
             }
