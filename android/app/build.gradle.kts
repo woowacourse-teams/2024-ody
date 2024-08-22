@@ -131,4 +131,7 @@ dependencies {
 
     // kakao share
     implementation(libs.kakao.share)
+
+    // kakao sdk
+    implementation(libs.kakao.sdk.v2.user)
 }

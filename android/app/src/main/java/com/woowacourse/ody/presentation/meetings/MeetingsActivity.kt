@@ -1,15 +1,11 @@
 package com.woowacourse.ody.presentation.meetings
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.core.animation.doOnEnd
-import androidx.core.splashscreen.SplashScreen
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.ActivityMeetingsBinding
@@ -29,8 +25,6 @@ class MeetingsActivity :
         R.layout.activity_meetings,
     ),
     MeetingsListener {
-    private lateinit var splashScreen: SplashScreen
-
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
             analyticsHelper,
@@ -46,24 +40,10 @@ class MeetingsActivity :
     private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        splashScreen = installSplashScreen()
-        startSplash()
         super.onCreate(savedInstanceState)
-    }
-
-    private fun startSplash() {
-        splashScreen.setOnExitAnimationListener { splashScreenView ->
-            val hasToken = true
-
-            ObjectAnimator.ofPropertyValuesHolder(splashScreenView.iconView).run {
-                duration = 1500L
-                doOnEnd {
-                    handleSplashScreen(hasToken)
-                    splashScreenView.remove()
-                }
-                start()
-            }
-        }
+        initializeObserve()
+        initializeBinding()
+        requestPermissions()
     }
 
     override fun onResume() {
@@ -74,18 +54,6 @@ class MeetingsActivity :
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
         binding.listener = this
-    }
-
-    private fun handleSplashScreen(hasToken: Boolean) {
-        if (hasToken) {
-            initializeObserve()
-            initializeBinding()
-            requestPermissions()
-        } else {
-            splashScreen.setKeepOnScreenCondition { true }
-            startActivity(Intent(this@MeetingsActivity, LoginActivity::class.java))
-            finish()
-        }
     }
 
     private fun initializeObserve() {
@@ -99,6 +67,7 @@ class MeetingsActivity :
             when (it) {
                 is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
                 is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
+                is MeetingsNavigateAction.NavigateToLogin -> navigateToLogin()
             }
         }
         viewModel.networkErrorEvent.observe(this) {
@@ -155,6 +124,12 @@ class MeetingsActivity :
                 meetingId,
                 MeetingRoomActivity.NAVIGATE_TO_ETA_DASHBOARD,
             )
+        startActivity(intent)
+    }
+
+    private fun navigateToLogin() {
+        val intent =
+            LoginActivity.getIntent(this)
         startActivity(intent)
     }
 

@@ -11,7 +11,10 @@ class MeetingsViewModelFactory(
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(MeetingsViewModel::class.java)) {
-            MeetingsViewModel(analyticsHelper, meetingRepository) as T
+            MeetingsViewModel(
+                analyticsHelper,
+                meetingRepository,
+            ) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")
         }

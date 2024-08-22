@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.work.WorkManager
 import com.kakao.sdk.common.KakaoSdk
 import com.woowacourse.ody.BuildConfig.DEBUG
+import com.woowacourse.ody.data.DefaultAuthTokenRepository
 import com.woowacourse.ody.data.local.db.OdyDatastore
 import com.woowacourse.ody.data.local.repository.DefaultMatesEtaRepository
 import com.woowacourse.ody.data.remote.core.RetrofitClient
@@ -12,13 +13,19 @@ import com.woowacourse.ody.data.remote.core.repository.DefaultJoinRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.woowacourse.ody.data.remote.core.repository.DefaultNotificationLogRepository
 import com.woowacourse.ody.data.remote.core.service.JoinService
+import com.woowacourse.ody.data.remote.core.service.LoginService
 import com.woowacourse.ody.data.remote.core.service.MeetingService
 import com.woowacourse.ody.data.remote.core.service.NotificationService
+import com.woowacourse.ody.data.remote.core.service.RefreshTokenService
 import com.woowacourse.ody.data.remote.thirdparty.image.FirebaseImageStorage
 import com.woowacourse.ody.data.remote.thirdparty.location.KakaoRetrofitClient
 import com.woowacourse.ody.data.remote.thirdparty.location.repository.KakaoGeoLocationRepository
 import com.woowacourse.ody.data.remote.thirdparty.location.service.KakaoLocationService
+import com.woowacourse.ody.data.remote.thirdparty.login.kakao.KakaoLoginRepository
+import com.woowacourse.ody.data.remote.thirdparty.login.kakao.KakaoOAuthLoginService
+import com.woowacourse.ody.domain.common.Provider
 import com.woowacourse.ody.domain.repository.image.ImageStorage
+import com.woowacourse.ody.domain.repository.ody.AuthTokenRepository
 import com.woowacourse.ody.domain.repository.ody.FCMTokenRepository
 import com.woowacourse.ody.domain.repository.ody.JoinRepository
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
@@ -32,15 +39,34 @@ import retrofit2.Retrofit
 import timber.log.Timber
 
 class OdyApplication : Application() {
-    private val odyDatastore by lazy { OdyDatastore(this) }
-    private val retrofit: Retrofit = RetrofitClient().retrofit
+    private val odyDatastore by lazy {
+        OdyDatastore(this)
+    }
+
+    private val refreshTokenService by lazy {
+        Provider {
+            refreshRetrofit.create(RefreshTokenService::class.java)
+        }
+    }
+
+    val authTokenRepository: AuthTokenRepository by lazy {
+        DefaultAuthTokenRepository(
+            odyDatastore,
+            refreshTokenService,
+        )
+    }
+    private val retrofit: Retrofit = RetrofitClient(authTokenRepository).retrofit
+    private val loginRetrofit: Retrofit = RetrofitClient(authTokenRepository).loginRetrofit
+    private val refreshRetrofit: Retrofit = RetrofitClient(authTokenRepository).refreshRetrofit
     private val kakaoRetrofit: Retrofit = KakaoRetrofitClient().retrofit
 
     private val joinService: JoinService = retrofit.create(JoinService::class.java)
     private val meetingService: MeetingService = retrofit.create(MeetingService::class.java)
-    private val notificationService: NotificationService = retrofit.create(NotificationService::class.java)
-    private val kakaoLocationService: KakaoLocationService = kakaoRetrofit.create(KakaoLocationService::class.java)
-
+    private val loginService: LoginService = loginRetrofit.create(LoginService::class.java)
+    private val notificationService: NotificationService =
+        retrofit.create(NotificationService::class.java)
+    private val kakaoLocationService: KakaoLocationService =
+        kakaoRetrofit.create(KakaoLocationService::class.java)
     private val workerManager: WorkManager by lazy { WorkManager.getInstance(this) }
     val analyticsHelper: AnalyticsHelper by lazy { FirebaseAnalyticsHelper(this) }
     val notificationHelper: NotificationHelper by lazy { NotificationHelper(this) }
@@ -56,19 +82,29 @@ class OdyApplication : Application() {
             notificationService,
         )
     }
+
     val kakaoGeoLocationRepository: KakaoGeoLocationRepository by lazy {
         KakaoGeoLocationRepository(
             kakaoLocationService,
         )
     }
 
+    val kakaoLoginRepository: KakaoLoginRepository by lazy {
+        KakaoLoginRepository(
+            loginService,
+            odyDatastore,
+            KakaoOAuthLoginService(),
+            fcmTokenRepository,
+        )
+    }
+
     override fun onCreate() {
         super.onCreate()
-        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY)
 
         if (DEBUG) {
             Timber.plant(OdyDebugTree)
         }
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY)
     }
 }
 
