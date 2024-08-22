@@ -7,7 +7,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-    defer-datasource-initialization: true
+#    defer-datasource-initialization: true
   sql:
     init:
       mode: always
@@ -71,7 +71,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-    defer-datasource-initialization: true
+#    defer-datasource-initialization: true
   sql:
     init:
       mode: always
