@@ -13,24 +13,6 @@ import kotlinx.coroutines.flow.map
 class OdyDatastore(private val context: Context) {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = ODY_KEY)
 
-    suspend fun setInviteCode(inviteCode: String) {
-        context.dataStore.edit {
-            it[INVITE_CODE] = inviteCode
-        }
-    }
-
-    fun getInviteCode(): Flow<Result<String>> {
-        return context.dataStore.data.map { preferences ->
-            preferences[INVITE_CODE].let {
-                if (!it.isNullOrEmpty()) {
-                    Result.success(it)
-                } else {
-                    Result.failure(Exception("초대 코드가 null입니다"))
-                }
-            }
-        }
-    }
-
     suspend fun setFCMToken(token: String) {
         context.dataStore.edit {
             it[FCM_TOKEN] = token
