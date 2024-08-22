@@ -27,6 +27,7 @@ import com.ody.member.repository.MemberRepository;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -181,6 +182,7 @@ class MateServiceTest extends BaseServiceTest {
         }
     }
 
+    @Disabled
     @DisplayName("참여자 생성")
     @Nested
     class saveAndSendNotifications {

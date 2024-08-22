@@ -55,6 +55,10 @@ public class Member {
         this(null, new AuthProvider("1234"), "ahdzlrjsdn", "image", deviceToken, new RefreshToken("rt"));
     }
 
+    public Member(String nickname, DeviceToken deviceToken) {
+        this(null, new AuthProvider("1234"), nickname, "image", deviceToken, new RefreshToken("rt"));
+    }
+
     public Member(String providerId, String nickname, String imageUrl, DeviceToken deviceToken) {
         this(null, new AuthProvider(providerId), nickname, imageUrl, deviceToken, null);
     }
