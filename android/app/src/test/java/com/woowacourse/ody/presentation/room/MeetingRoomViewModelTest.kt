@@ -1,6 +1,5 @@
 package com.woowacourse.ody.presentation.room
 
-import com.woowacourse.ody.domain.model.Nudge
 import com.woowacourse.ody.domain.repository.ody.MatesEtaRepository
 import com.woowacourse.ody.fake.FakeAnalyticsHelper
 import com.woowacourse.ody.fake.FakeImageShareHelper
