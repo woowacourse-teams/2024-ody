@@ -54,6 +54,7 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
         viewModel.navigateAction.observe(this) {
             val intent = MeetingsActivity.getIntent(this@LoginActivity)
             startActivity(intent)
+            finish()
         }
         viewModel.networkErrorEvent.observe(this) {
             showRetrySnackBar { viewModel.retryLastAction() }
