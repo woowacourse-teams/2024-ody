@@ -10,7 +10,7 @@ public record MateSaveResponseV2(
         @Schema(description = "약속 ID", example = "1")
         Long meetingId,
 
-        @Schema(description = "약속 날짜", type = "string", example = "2024-07-15")
+        @Schema(description = "약속 날짜", type = "string", example = "2024-09-15")
         LocalDate date,
 
         @Schema(description = "약속 시간", type = "string", example = "14:00")
