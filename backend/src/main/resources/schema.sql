@@ -1,5 +1,6 @@
 create table if not exists member (
     id bigint not null auto_increment,
+    nickname varchar(255) not null,
     device_token varchar(255) not null unique,
     primary key (id)
 );
