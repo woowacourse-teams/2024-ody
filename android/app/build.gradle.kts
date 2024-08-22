@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.android.junit.jupiter)
     alias(libs.plugins.jetbrains.kotlin.kapt)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.kotlin.plugin.parcelize)
 }
 
 val properties = Properties()
