@@ -9,7 +9,7 @@ on:
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
-  DOCKER_CONTAINER_NAME: ody-backend
+  DOCKER_CONTAINER_NAME: ody-prod-app
 
 jobs:
   build-and-push:

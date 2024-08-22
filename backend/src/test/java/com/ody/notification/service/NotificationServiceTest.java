@@ -61,9 +61,9 @@ class NotificationServiceTest extends BaseServiceTest {
         );
         Meeting savedPastMeeting = meetingRepository.save(pastMeeting);
         Mate mate = mateRepository.save(
-                new Mate(savedPastMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
-        RouteTime routeTime = new RouteTime(1);
-        notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken(), routeTime);
+                new Mate(savedPastMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 1L)
+        );
+        notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
 
         Optional<Notification> departureNotification = notificationRepository.findAll().stream()
                 .filter(notification -> isDepartureReminder(notification) && isNow(notification))

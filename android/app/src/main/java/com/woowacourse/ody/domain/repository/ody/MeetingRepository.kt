@@ -5,6 +5,7 @@ import com.woowacourse.ody.domain.model.MateEtaInfo
 import com.woowacourse.ody.domain.model.Meeting
 import com.woowacourse.ody.domain.model.MeetingCatalog
 import com.woowacourse.ody.domain.model.MeetingCreationInfo
+import com.woowacourse.ody.domain.model.Nudge
 
 interface MeetingRepository {
     suspend fun fetchInviteCodeValidity(inviteCode: String): ApiResult<Unit>
@@ -22,5 +23,5 @@ interface MeetingRepository {
 
     suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting>
 
-    suspend fun fetchNudge(mateId: Long): ApiResult<Unit>
+    suspend fun postNudge(nudge: Nudge): ApiResult<Unit>
 }

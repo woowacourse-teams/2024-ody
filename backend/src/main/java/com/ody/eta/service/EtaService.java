@@ -28,6 +28,7 @@ public class EtaService {
     private final RouteService routeService;
     private final EtaRepository etaRepository;
 
+    @Transactional
     public Eta saveFirstEtaOfMate(Mate mate, RouteTime routeTime) {
         return etaRepository.save(new Eta(mate, routeTime.getMinutes()));
     }

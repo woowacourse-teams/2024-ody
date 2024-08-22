@@ -66,7 +66,10 @@ fun TextView.setOnClickNudge(
             mateEtaUiModel.isUserSelf.not() &&
             (mateEtaUiModel.etaTypeUiModel == EtaTypeUiModel.LATE || mateEtaUiModel.etaTypeUiModel == EtaTypeUiModel.LATE_WARNING)
         ) {
-            nudgeListener.nudgeMate(mateId = mateEtaUiModel.mateId)
+            nudgeListener.nudgeMate(
+                nudgeId = mateEtaUiModel.userId,
+                mateId = mateEtaUiModel.mateId,
+            )
         }
     }
 }

@@ -2,6 +2,7 @@ package com.woowacourse.ody.data.remote.core.service
 
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MatesEtaRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.request.MeetingRequest
+import com.woowacourse.ody.data.remote.core.entity.meeting.request.NudgeRequest
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MatesEtaResponse
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingCatalogsResponse
 import com.woowacourse.ody.data.remote.core.entity.meeting.response.MeetingCreationResponse
@@ -38,8 +39,8 @@ interface MeetingService {
         @Path(value = "meetingId") meetingId: Long,
     ): ApiResult<MeetingResponse>
 
-    @GET("/v1/mates/{mateId}/nudge")
-    suspend fun fetchNudge(
-        @Path(value = "mateId") mateId: Long,
+    @POST("/v1/mates/nudge")
+    suspend fun postNudge(
+        @Body nudgeRequest: NudgeRequest,
     ): ApiResult<Unit>
 }

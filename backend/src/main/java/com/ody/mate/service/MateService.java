@@ -7,8 +7,10 @@ import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.service.EtaService;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequest;
+import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponse;
+import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
@@ -32,22 +34,28 @@ public class MateService {
     private final NotificationService notificationService;
     private final RouteService routeService;
 
-    public MateSaveResponse saveAndSendNotifications(MateSaveRequest mateSaveRequest, Member member, Meeting meeting) {
-        if (mateRepository.existsByMeetingIdAndNickname_Value(meeting.getId(), mateSaveRequest.nickname())) {
-            throw new OdyBadRequestException("모임 내 같은 닉네임이 존재합니다.");
-        }
+    @Transactional
+    public MateSaveResponseV2 saveAndSendNotifications(
+            MateSaveRequestV2 mateSaveRequest,
+            Member member,
+            Meeting meeting
+    ) {
         if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
-            throw new OdyBadRequestException("모임에 이미 참여한 회원입니다.");
+            throw new OdyBadRequestException("약속에 이미 참여한 회원입니다.");
         }
+        Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
+        notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken());
+        return MateSaveResponseV2.from(meeting);
+    }
 
+    private Mate saveMateAndEta(MateSaveRequestV2 mateSaveRequest, Member member, Meeting meeting) {
         RouteTime routeTime = routeService.calculateRouteTime(
                 mateSaveRequest.toOriginCoordinates(),
                 meeting.getTargetCoordinates()
         );
         Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, routeTime.getMinutes()));
         etaService.saveFirstEtaOfMate(mate, routeTime);
-        notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken(), routeTime);
-        return MateSaveResponse.from(mate);
+        return mate;
     }
 
     public List<Mate> findAllByMeetingIdIfMate(Member member, long meetingId) {
