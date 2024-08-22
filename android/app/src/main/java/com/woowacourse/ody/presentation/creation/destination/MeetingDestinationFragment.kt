@@ -1,17 +1,14 @@
 package com.woowacourse.ody.presentation.creation.destination
 
-import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.FragmentMeetingDestinationBinding
 import com.woowacourse.ody.domain.model.GeoLocation
 import com.woowacourse.ody.presentation.address.AddressSearchDialog
 import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
-import com.woowacourse.ody.presentation.address.model.GeoLocationUiModel
-import com.woowacourse.ody.presentation.address.model.toGeoLocation
 import com.woowacourse.ody.presentation.common.binding.BindingFragment
 import com.woowacourse.ody.presentation.creation.MeetingCreationInfoType
 import com.woowacourse.ody.presentation.creation.MeetingCreationViewModel
@@ -30,7 +27,6 @@ class MeetingDestinationFragment :
         super.onViewCreated(view, savedInstanceState)
         initializeBinding()
         initializeObserve()
-        initializeView()
     }
 
     private fun initializeBinding() {
@@ -44,28 +40,12 @@ class MeetingDestinationFragment :
         }
     }
 
-    private fun initializeView() {
-        setFragmentResultListener(AddressSearchDialog.REQUEST_KEY) { _, bundle ->
-            val geoLocation = bundle.getGeoLocation() ?: return@setFragmentResultListener
-            binding.etDestination.setText(geoLocation.address)
-            viewModel.destinationGeoLocation.value = geoLocation
-        }
-    }
+    override fun onSearch() = AddressSearchDialog().show(childFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
-    private fun Bundle.getGeoLocation(): GeoLocation? {
-        val geoLocationUiModel =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                getParcelable(
-                    AddressSearchDialog.GEO_LOCATION_UI_MODEL_KEY,
-                    GeoLocationUiModel::class.java,
-                )
-            } else {
-                getParcelable<GeoLocationUiModel>(AddressSearchDialog.GEO_LOCATION_UI_MODEL_KEY)
-            }
-        return geoLocationUiModel?.toGeoLocation()
+    override fun onReceive(geoLocation: GeoLocation) {
+        binding.etDestination.setText(geoLocation.address)
+        viewModel.destinationGeoLocation.value = geoLocation
     }
-
-    override fun onSearch() = AddressSearchDialog().show(parentFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
 
     override fun onResume() {
         super.onResume()

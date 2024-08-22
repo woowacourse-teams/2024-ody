@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.webkit.WebViewAssetLoader
 import com.google.android.material.snackbar.Snackbar
@@ -18,7 +16,7 @@ import com.woowacourse.ody.OdyApplication
 import com.woowacourse.ody.R
 import com.woowacourse.ody.databinding.DialogAddressSearchBinding
 import com.woowacourse.ody.presentation.address.listener.AddressReceiveListener
-import com.woowacourse.ody.presentation.address.model.toGeoLocationUiModel
+import com.woowacourse.ody.presentation.address.listener.AddressSearchListener
 import com.woowacourse.ody.presentation.address.web.AddressSearchInterface
 import com.woowacourse.ody.presentation.address.web.LocalContentWebViewClient
 import com.woowacourse.ody.presentation.common.LoadingDialog
@@ -66,8 +64,8 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
 
     private fun initializeObserve() {
         viewModel.geoLocation.observe(viewLifecycleOwner) {
-            val geoLocationUiModel = it.toGeoLocationUiModel()
-            setFragmentResult(REQUEST_KEY, bundleOf(GEO_LOCATION_UI_MODEL_KEY to geoLocationUiModel))
+            (parentFragment as? AddressSearchListener)?.onReceive(it)
+            (activity as? AddressSearchListener)?.onReceive(it)
             dismiss()
         }
         viewModel.networkErrorEvent.observe(viewLifecycleOwner) {
@@ -120,9 +118,6 @@ class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     }
 
     companion object {
-        const val REQUEST_KEY = "address_search_request_key"
-        const val GEO_LOCATION_UI_MODEL_KEY = "geo_location_ui_model_key"
-
         private const val DOMAIN = "com.woowacourse.ody"
         private const val JS_BRIDGE = "address_search"
         private const val FILE_NAME = "address.html"
