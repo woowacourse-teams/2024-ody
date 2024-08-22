@@ -1,7 +1,6 @@
 spring:
   config:
     import: classpath:private/private.yml
-
   jpa:
     hibernate:
       ddl-auto: validate
@@ -12,7 +11,6 @@ spring:
     init:
       mode: always
       schema-locations: classpath:schema.sql
-
   profiles:
     active: dev
 
