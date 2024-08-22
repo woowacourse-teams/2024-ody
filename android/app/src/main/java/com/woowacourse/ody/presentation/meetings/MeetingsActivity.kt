@@ -60,9 +60,6 @@ class MeetingsActivity :
         viewModel.meetingCatalogs.observe(this) {
             adapter.submitList(it)
         }
-        viewModel.isMeetingCatalogsEmpty.observe(this) {
-            binding.isCatalogsEmpty = it
-        }
         viewModel.navigateAction.observe(this) {
             when (it) {
                 is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
@@ -128,8 +125,7 @@ class MeetingsActivity :
     }
 
     private fun navigateToLogin() {
-        val intent =
-            LoginActivity.getIntent(this)
+        val intent = LoginActivity.getIntent(this)
         startActivity(intent)
     }
 
