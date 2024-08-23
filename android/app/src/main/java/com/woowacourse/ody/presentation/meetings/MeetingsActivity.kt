@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.R
@@ -39,6 +41,24 @@ class MeetingsActivity :
     }
     private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
 
+    private val onBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            private var lastBackPressedTime = 0L
+
+            override fun handleOnBackPressed() {
+                if (lastBackPressedTime > System.currentTimeMillis() - 2000) {
+                    finish()
+                } else {
+                    Toast.makeText(
+                        this@MeetingsActivity,
+                        "앱을 종료하려면 뒤로 가기를 한 번 더 눌려주세요.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                    lastBackPressedTime = System.currentTimeMillis()
+                }
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeObserve()
@@ -59,6 +79,7 @@ class MeetingsActivity :
     }
 
     private fun initializeObserve() {
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         viewModel.meetingCatalogs.observe(this) {
             adapter.submitList(it)
         }
