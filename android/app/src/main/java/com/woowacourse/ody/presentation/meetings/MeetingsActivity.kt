@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.woowacourse.ody.R
@@ -38,6 +40,7 @@ class MeetingsActivity :
         )
     }
     private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
+    private var lastBackPressedTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +62,7 @@ class MeetingsActivity :
     }
 
     private fun initializeObserve() {
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback())
         viewModel.meetingCatalogs.observe(this) {
             adapter.submitList(it)
         }
@@ -183,6 +187,23 @@ class MeetingsActivity :
         }
     }
 
+    private fun onBackPressedCallback(): OnBackPressedCallback {
+        return object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (lastBackPressedTime > System.currentTimeMillis() - BACK_PRESSED_DELAY) {
+                    finish()
+                } else {
+                    Toast.makeText(
+                        this@MeetingsActivity,
+                        R.string.meetings_back_pressed_guide,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                    lastBackPressedTime = System.currentTimeMillis()
+                }
+            }
+        }
+    }
+
     private fun checkPermissionAndProceed(
         grantResult: Int,
         requiredMessage: Int,
@@ -196,6 +217,7 @@ class MeetingsActivity :
 
     companion object {
         private const val TAG = "MeetingsActivity"
+        private const val BACK_PRESSED_DELAY = 2000
 
         fun getIntent(context: Context): Intent = Intent(context, MeetingsActivity::class.java)
     }
