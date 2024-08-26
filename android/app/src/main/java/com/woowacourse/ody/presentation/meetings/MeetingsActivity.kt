@@ -40,24 +40,7 @@ class MeetingsActivity :
         )
     }
     private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
-
-    private val onBackPressedCallback: OnBackPressedCallback =
-        object : OnBackPressedCallback(true) {
-            private var lastBackPressedTime = 0L
-
-            override fun handleOnBackPressed() {
-                if (lastBackPressedTime > System.currentTimeMillis() - 2000) {
-                    finish()
-                } else {
-                    Toast.makeText(
-                        this@MeetingsActivity,
-                        "앱을 종료하려면 뒤로 가기를 한 번 더 눌려주세요.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                    lastBackPressedTime = System.currentTimeMillis()
-                }
-            }
-        }
+    private var lastBackPressedTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +62,7 @@ class MeetingsActivity :
     }
 
     private fun initializeObserve() {
-        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback())
         viewModel.meetingCatalogs.observe(this) {
             adapter.submitList(it)
         }
@@ -204,6 +187,23 @@ class MeetingsActivity :
         }
     }
 
+    private fun onBackPressedCallback(): OnBackPressedCallback {
+        return object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (lastBackPressedTime > System.currentTimeMillis() - BACK_PRESSED_DELAY) {
+                    finish()
+                } else {
+                    Toast.makeText(
+                        this@MeetingsActivity,
+                        R.string.meetings_back_pressed_guide,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                    lastBackPressedTime = System.currentTimeMillis()
+                }
+            }
+        }
+    }
+
     private fun checkPermissionAndProceed(
         grantResult: Int,
         requiredMessage: Int,
@@ -217,6 +217,7 @@ class MeetingsActivity :
 
     companion object {
         private const val TAG = "MeetingsActivity"
+        private const val BACK_PRESSED_DELAY = 2000
 
         fun getIntent(context: Context): Intent = Intent(context, MeetingsActivity::class.java)
     }
