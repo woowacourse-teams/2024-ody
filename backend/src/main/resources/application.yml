@@ -1,81 +1,15 @@
 spring:
   config:
     import: classpath:private/private.yml
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-#    defer-datasource-initialization: true
-  sql:
-    init:
-      mode: never
-      schema-locations: classpath:schema.sql
   profiles:
-    active: dev
-
-springdoc:
-  default-consumes-media-type: application/json;charset=UTF-8
-  default-produces-media-type: application/json;charset=UTF-8
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    disable-swagger-default-url: true
-    display-request-duration: true
-    operations-sorter: alpha
-    enabled: true
-
-odsay:
-  url: https://api.odsay.com/v1/api/searchPubTransPathT
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: local
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: true
-  datasource:
-    url: jdbc:h2:mem:database
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-  jpa:
-    hibernate:
-      ddl-auto: validate
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:schema.sql
-
-log:
-  file:
-    path: ./ody-dev-logs
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: dev
-
-log:
-  file:
-    path: /ody-dev-logs
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: prod
-
-log:
-  file:
-    path: /ody-prod-logs
+    default: "local"
+    groups:
+      local:
+        - local
+        - common
+      dev:
+        - dev
+        - common
+      prod:
+        - prod
+        - common
