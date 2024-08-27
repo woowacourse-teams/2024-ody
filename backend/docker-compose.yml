@@ -9,7 +9,6 @@ services:
       MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD: ${DEV_MYSQL_PASSWORD}
       MYSQL_DATABASE: ody
-      TZ: Asia/Seoul
     volumes:
       - /mysql-data:/var/lib/mysql
     networks:
