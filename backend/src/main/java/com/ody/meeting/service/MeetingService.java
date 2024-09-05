@@ -1,5 +1,6 @@
 package com.ody.meeting.service;
 
+import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequestV2;
@@ -15,6 +16,8 @@ import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.util.InviteCodeGenerator;
+import com.ody.util.TimeUtil;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,6 +88,15 @@ public class MeetingService {
     @Transactional
     public MateSaveResponseV2 saveMateAndSendNotifications(MateSaveRequestV2 mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
+        if (isOverDueMeeting(meeting)) {
+            throw new OdyBadRequestException("과거 약속에 참여할 수 없습니다.");
+        }
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
+    }
+
+    private boolean isOverDueMeeting(Meeting meeting) {
+        LocalDateTime now = TimeUtil.nowWithTrim();
+        LocalDateTime meetingTime = meeting.getMeetingTime();
+        return now.isAfter(meetingTime);
     }
 }
