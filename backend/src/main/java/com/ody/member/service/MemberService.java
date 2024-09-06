@@ -65,11 +65,7 @@ public class MemberService {
         return member.isSame(refreshToken);
     }
 
-    public void removeMemberRefreshToken(long memberId) {
-        Member member = findById(memberId);
-        member.updateRefreshTokenNull();
-    }
-
+    @Transactional
     public void updateRefreshToken(long memberId, RefreshToken refreshToken) {
         Member member = findById(memberId);
         member.updateRefreshToken(refreshToken);
