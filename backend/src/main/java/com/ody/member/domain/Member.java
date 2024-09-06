@@ -78,6 +78,10 @@ public class Member {
         return this.refreshToken.equals(otherRefreshToken);
     }
 
+    public boolean isSame(AuthProvider otherAuthProvider) {
+        return this.authProvider.equals(otherAuthProvider);
+    }
+
     public void updateRefreshToken(RefreshToken refreshToken) {
         this.refreshToken = refreshToken;
     }
@@ -88,13 +92,5 @@ public class Member {
 
     public void updateDeviceToken(DeviceToken deviceToken) {
         this.deviceToken = deviceToken;
-    }
-
-    public void updateRefreshTokenNull() {
-        updateRefreshToken(null);
-    }
-
-    public boolean isSame(AuthProvider otherAuthProvider) {
-        return this.authProvider.equals(otherAuthProvider);
     }
 }
