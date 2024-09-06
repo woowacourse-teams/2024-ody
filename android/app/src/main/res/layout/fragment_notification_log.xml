@@ -7,19 +7,19 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.room.MeetingRoomViewModel" />
+            type="com.ydo.ody.presentation.room.MeetingRoomViewModel" />
 
         <variable
             name="backListener"
-            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
+            type="com.ydo.ody.presentation.common.listener.BackListener" />
 
         <variable
             name="menuListener"
-            type="com.woowacourse.ody.presentation.room.log.listener.MenuListener" />
+            type="com.ydo.ody.presentation.room.log.listener.MenuListener" />
 
         <variable
             name="inviteCodeCopyListener"
-            type="com.woowacourse.ody.presentation.room.log.listener.InviteCodeCopyListener" />
+            type="com.ydo.ody.presentation.room.log.listener.InviteCodeCopyListener" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout

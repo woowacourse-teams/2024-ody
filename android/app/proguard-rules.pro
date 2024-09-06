@@ -30,5 +30,5 @@
 -dontwarn org.openjsse.**
 
 # retrofit
--keep class com.woowacourse.ody.data.retrofit.* { <fields>; }
--keep class com.woowacourse.ody.domain.apiresult.ApiResult
+-keep class com.ydo.ody.data.retrofit.* { <fields>; }
+-keep class com.ydo.ody.domain.apiresult.ApiResult

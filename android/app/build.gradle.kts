@@ -15,11 +15,11 @@ val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
-    namespace = "com.woowacourse.ody"
+    namespace = "com.ydo.ody"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.woowacourse.ody"
+        applicationId = "com.ydo.ody"
         minSdk = 26
         targetSdk = 34
         versionCode = 7

@@ -7,19 +7,19 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.join.MeetingJoinViewModel" />
+            type="com.ydo.ody.presentation.join.MeetingJoinViewModel" />
 
         <variable
             name="nextListener"
-            type="com.woowacourse.ody.presentation.common.listener.NextListener" />
+            type="com.ydo.ody.presentation.common.listener.NextListener" />
 
         <variable
             name="backListener"
-            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
+            type="com.ydo.ody.presentation.common.listener.BackListener" />
 
         <variable
             name="addressSearchListener"
-            type="com.woowacourse.ody.presentation.address.listener.AddressSearchListener" />
+            type="com.ydo.ody.presentation.address.listener.AddressSearchListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

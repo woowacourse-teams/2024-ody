@@ -7,15 +7,15 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.room.MeetingRoomViewModel" />
+            type="com.ydo.ody.presentation.room.MeetingRoomViewModel" />
 
         <variable
             name="shareListener"
-            type="com.woowacourse.ody.presentation.room.etadashboard.listener.ShareListener" />
+            type="com.ydo.ody.presentation.room.etadashboard.listener.ShareListener" />
 
         <variable
             name="backListener"
-            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
+            type="com.ydo.ody.presentation.common.listener.BackListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

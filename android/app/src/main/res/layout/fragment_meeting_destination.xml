@@ -6,11 +6,11 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.creation.MeetingCreationViewModel" />
+            type="com.ydo.ody.presentation.creation.MeetingCreationViewModel" />
 
         <variable
             name="addressSearchListener"
-            type="com.woowacourse.ody.presentation.address.listener.AddressSearchListener" />
+            type="com.ydo.ody.presentation.address.listener.AddressSearchListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

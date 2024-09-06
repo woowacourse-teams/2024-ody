@@ -7,15 +7,15 @@
 
         <variable
             name="eta"
-            type="com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel" />
+            type="com.ydo.ody.presentation.room.etadashboard.model.MateEtaUiModel" />
 
         <variable
             name="missingTooltipListener"
-            type="com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener" />
+            type="com.ydo.ody.presentation.room.etadashboard.listener.MissingToolTipListener" />
 
         <variable
             name="nudgeListener"
-            type="com.woowacourse.ody.presentation.room.etadashboard.listener.NudgeListener" />
+            type="com.ydo.ody.presentation.room.etadashboard.listener.NudgeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

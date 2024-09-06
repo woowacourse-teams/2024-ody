@@ -6,7 +6,7 @@
     <data>
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.login.LoginViewModel" />
+            type="com.ydo.ody.presentation.login.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -6,11 +6,11 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.invitecode.InviteCodeViewModel" />
+            type="com.ydo.ody.presentation.invitecode.InviteCodeViewModel" />
 
         <variable
             name="backListener"
-            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
+            type="com.ydo.ody.presentation.common.listener.BackListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
