@@ -9,11 +9,11 @@
 
         <variable
             name="listener"
-            type="com.woowacourse.ody.presentation.meetings.listener.MeetingsListener" />
+            type="com.mulberry.ody.presentation.meetings.listener.MeetingsListener" />
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.meetings.MeetingsViewModel" />
+            type="com.mulberry.ody.presentation.meetings.MeetingsViewModel" />
 
         <variable
             name="isFloatingButtonExpanded"

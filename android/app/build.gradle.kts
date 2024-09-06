@@ -15,11 +15,11 @@ val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
-    namespace = "com.woowacourse.ody"
+    namespace = "com.mulberry.ody"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.woowacourse.ody"
+        applicationId = "com.mulberry.ody"
         minSdk = 26
         targetSdk = 34
         versionCode = 7
@@ -29,7 +29,7 @@ android {
         buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
         buildConfigField("String", "KAKAO_API_KEY", properties["KAKAO_API_KEY"].toString())
         buildConfigField("String", "KAKAO_NATIVE_KEY", properties["KAKAO_NATIVE_KEY"].toString())
-        manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["KAKAO_NATIVE_KEY"].toString()
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["KAKAO_NATIVE_KEY"].toString().trim('"')
     }
     buildTypes {
         debug {
