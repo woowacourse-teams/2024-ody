@@ -19,6 +19,9 @@
             name="isFloatingButtonExpanded"
             type="Boolean" />
 
+        <variable
+            name="settingListener"
+            type="com.woowacourse.ody.presentation.meetings.listener.SettingListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,6 +31,7 @@
 
         <include
             android:id="@+id/tb_intro"
+            app:settingListener="@{settingListener}"
             layout="@layout/toolbar_intro" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

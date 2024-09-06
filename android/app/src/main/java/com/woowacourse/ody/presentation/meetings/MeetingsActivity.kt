@@ -19,14 +19,15 @@ import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import com.woowacourse.ody.presentation.login.LoginActivity
 import com.woowacourse.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsListener
+import com.woowacourse.ody.presentation.meetings.listener.SettingListener
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
+import com.woowacourse.ody.presentation.setting.SettingActivity
 import kotlinx.coroutines.launch
 
 class MeetingsActivity :
     BindingActivity<ActivityMeetingsBinding>(
         R.layout.activity_meetings,
-    ),
-    MeetingsListener {
+    ), MeetingsListener, SettingListener {
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
             analyticsHelper,
@@ -59,6 +60,7 @@ class MeetingsActivity :
         binding.listener = this
         binding.lifecycleOwner = this
         binding.vm = viewModel
+        binding.settingListener = this
     }
 
     private fun initializeObserve() {
@@ -213,6 +215,10 @@ class MeetingsActivity :
             showSnackBar(requiredMessage)
         }
         requestNextPermission()
+    }
+
+    override fun onSetting() {
+        startActivity(SettingActivity.getIntent(this))
     }
 
     companion object {
