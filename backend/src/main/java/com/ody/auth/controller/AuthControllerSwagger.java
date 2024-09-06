@@ -56,7 +56,7 @@ public interface AuthControllerSwagger {
             summary = "로그 아웃",
             responses = {@ApiResponse(responseCode = "200", description = "로그아웃 성공")}
     )
-    @ErrorCode400(description = "유효하지 않은 리프레시 토큰")
+    @ErrorCode400(description = "유효하지 않은 토큰 정보")
     @ErrorCode500
     ResponseEntity<Void> logout(@Parameter(hidden = true) String authorization);
 }
