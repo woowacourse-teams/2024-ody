@@ -88,15 +88,9 @@ public class MeetingService {
     @Transactional
     public MateSaveResponseV2 saveMateAndSendNotifications(MateSaveRequestV2 mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
-        if (isOverDueMeeting(meeting)) {
+        if (meeting.isEnd()) {
             throw new OdyBadRequestException("과거 약속에 참여할 수 없습니다.");
         }
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
-    }
-
-    private boolean isOverDueMeeting(Meeting meeting) {
-        LocalDateTime now = TimeUtil.nowWithTrim();
-        LocalDateTime meetingTime = meeting.getMeetingTime();
-        return now.isAfter(meetingTime);
     }
 }
