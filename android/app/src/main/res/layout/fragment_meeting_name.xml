@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.ydo.ody.presentation.creation.MeetingCreationViewModel" />
+            type="com.mulberry.ody.presentation.creation.MeetingCreationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

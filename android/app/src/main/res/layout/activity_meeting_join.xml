@@ -7,19 +7,19 @@
 
         <variable
             name="vm"
-            type="com.ydo.ody.presentation.join.MeetingJoinViewModel" />
+            type="com.mulberry.ody.presentation.join.MeetingJoinViewModel" />
 
         <variable
             name="nextListener"
-            type="com.ydo.ody.presentation.common.listener.NextListener" />
+            type="com.mulberry.ody.presentation.common.listener.NextListener" />
 
         <variable
             name="backListener"
-            type="com.ydo.ody.presentation.common.listener.BackListener" />
+            type="com.mulberry.ody.presentation.common.listener.BackListener" />
 
         <variable
             name="addressSearchListener"
-            type="com.ydo.ody.presentation.address.listener.AddressSearchListener" />
+            type="com.mulberry.ody.presentation.address.listener.AddressSearchListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

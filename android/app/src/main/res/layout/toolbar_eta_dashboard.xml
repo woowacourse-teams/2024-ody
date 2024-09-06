@@ -11,11 +11,11 @@
 
         <variable
             name="shareListener"
-            type="com.ydo.ody.presentation.room.etadashboard.listener.ShareListener" />
+            type="com.mulberry.ody.presentation.room.etadashboard.listener.ShareListener" />
 
         <variable
             name="backListener"
-            type="com.ydo.ody.presentation.common.listener.BackListener" />
+            type="com.mulberry.ody.presentation.common.listener.BackListener" />
 
     </data>
 
