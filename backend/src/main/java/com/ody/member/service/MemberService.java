@@ -67,7 +67,7 @@ public class MemberService {
 
     public void removeMemberRefreshToken(long memberId) {
         Member member = findById(memberId);
-        member.removeRefreshToken();
+        member.updateRefreshTokenNull();
     }
 
     public void updateRefreshToken(long memberId, RefreshToken refreshToken) {

@@ -45,10 +45,6 @@ public class RefreshToken {
                 .compact();
     }
 
-    public void clear() {
-        this.value = null;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

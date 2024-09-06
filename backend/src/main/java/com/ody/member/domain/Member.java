@@ -62,10 +62,6 @@ public class Member {
         this(null, new AuthProvider(providerId), nickname, imageUrl, deviceToken, null);
     }
 
-    public void removeRefreshToken() {
-        this.refreshToken.clear();
-    }
-
     public String getDeviceTokenValue() {
         return deviceToken.getValue();
     }
@@ -92,6 +88,10 @@ public class Member {
 
     public void updateDeviceToken(DeviceToken deviceToken) {
         this.deviceToken = deviceToken;
+    }
+
+    public void updateRefreshTokenNull() {
+        updateRefreshToken(null);
     }
 
     public boolean isSame(AuthProvider otherAuthProvider) {
