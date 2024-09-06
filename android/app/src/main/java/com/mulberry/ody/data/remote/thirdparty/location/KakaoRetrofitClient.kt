@@ -1,9 +1,9 @@
 package com.mulberry.ody.data.remote.thirdparty.location
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.data.retrofit.ApiResultCallAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

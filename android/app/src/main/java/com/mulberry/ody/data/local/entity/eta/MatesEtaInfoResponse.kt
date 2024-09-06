@@ -1,7 +1,7 @@
 package com.mulberry.ody.data.local.entity.eta
 
-import com.squareup.moshi.JsonClass
 import com.mulberry.ody.domain.model.MateEta
+import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class MatesEtaInfoResponse(
