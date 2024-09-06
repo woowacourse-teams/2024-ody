@@ -45,15 +45,23 @@ public class AuthService {
         if (jwtTokenProvider.isUnexpired(accessToken)) {
             return new AuthResponse(accessToken, refreshToken);
         }
+        validateRefreshTokenExpiration(refreshToken);
+
+        long memberId = jwtTokenProvider.parseAccessToken(accessToken);
+        checkSameMemberToken(memberId, refreshToken);
+        return issueNewTokens(memberId);
+    }
+
+    private void validateRefreshTokenExpiration(RefreshToken refreshToken) {
         if (!jwtTokenProvider.isUnexpired(refreshToken)) {
             throw new OdyUnauthorizedException("리프레시 토큰이 만료되었습니다.");
         }
+    }
 
-        long memberId = jwtTokenProvider.parseAccessToken(accessToken);
+    private void checkSameMemberToken(long memberId, RefreshToken refreshToken) {
         if (!memberService.isMemberRefreshToken(memberId, refreshToken)) {
             throw new OdyBadRequestException("리프레시 토큰이 유효하지 않습니다.");
         }
-        return issueNewTokens(memberId);
     }
 
     private AuthResponse issueNewTokens(long memberId) {
@@ -61,5 +69,19 @@ public class AuthService {
         RefreshToken refreshToken = jwtTokenProvider.createRefreshToken();
         memberService.updateRefreshToken(memberId, refreshToken);
         return new AuthResponse(accessToken, refreshToken);
+    }
+
+    @Transactional
+    public void logout(String rawAuthorizationHeader) {
+        AuthorizationHeader authorizationHeader = new AuthorizationHeader(rawAuthorizationHeader);
+        AccessToken accessToken = authorizationHeader.getAccessToken();
+        RefreshToken refreshToken = authorizationHeader.getRefreshToken();
+
+        jwtTokenProvider.validate(accessToken);
+        validateRefreshTokenExpiration(refreshToken);
+
+        long memberId = jwtTokenProvider.parseAccessToken(accessToken);
+        checkSameMemberToken(memberId, refreshToken);
+        memberService.removeMemberRefreshToken(memberId);
     }
 }
