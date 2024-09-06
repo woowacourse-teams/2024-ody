@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -61,6 +60,10 @@ public class Member {
 
     public Member(String providerId, String nickname, String imageUrl, DeviceToken deviceToken) {
         this(null, new AuthProvider(providerId), nickname, imageUrl, deviceToken, null);
+    }
+
+    public void removeRefreshToken() {
+        this.refreshToken.clear();
     }
 
     public String getDeviceTokenValue() {
