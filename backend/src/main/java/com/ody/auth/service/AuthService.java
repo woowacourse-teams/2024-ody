@@ -45,23 +45,11 @@ public class AuthService {
         if (jwtTokenProvider.isUnexpired(accessToken)) {
             return new AuthResponse(accessToken, refreshToken);
         }
-        validateRefreshTokenExpiration(refreshToken);
 
+        jwtTokenProvider.validate(refreshToken);
         long memberId = jwtTokenProvider.parseAccessToken(accessToken);
         checkSameMemberToken(memberId, refreshToken);
         return issueNewTokens(memberId);
-    }
-
-    private void validateRefreshTokenExpiration(RefreshToken refreshToken) {
-        if (!jwtTokenProvider.isUnexpired(refreshToken)) {
-            throw new OdyUnauthorizedException("리프레시 토큰이 만료되었습니다.");
-        }
-    }
-
-    private void checkSameMemberToken(long memberId, RefreshToken refreshToken) {
-        if (!memberService.isMemberRefreshToken(memberId, refreshToken)) {
-            throw new OdyBadRequestException("리프레시 토큰이 유효하지 않습니다.");
-        }
     }
 
     private AuthResponse issueNewTokens(long memberId) {
@@ -77,11 +65,25 @@ public class AuthService {
         AccessToken accessToken = authorizationHeader.getAccessToken();
         RefreshToken refreshToken = authorizationHeader.getRefreshToken();
 
-        jwtTokenProvider.validate(accessToken);
-        validateRefreshTokenExpiration(refreshToken);
+        checkTokenExpiration(accessToken, refreshToken);
 
         long memberId = jwtTokenProvider.parseAccessToken(accessToken);
         checkSameMemberToken(memberId, refreshToken);
-        memberService.removeMemberRefreshToken(memberId);
+        memberService.updateRefreshToken(memberId, null);
+    }
+
+    private void checkTokenExpiration(AccessToken accessToken, RefreshToken refreshToken) {
+        try {
+            jwtTokenProvider.validate(accessToken);
+            jwtTokenProvider.validate(refreshToken);
+        } catch (OdyUnauthorizedException exception) {
+            throw new OdyBadRequestException(exception.getMessage());
+        }
+    }
+
+    private void checkSameMemberToken(long memberId, RefreshToken refreshToken) {
+        if (!memberService.isMemberRefreshToken(memberId, refreshToken)) {
+            throw new OdyBadRequestException("리프레시 토큰 정보가 일치하지 않습니다");
+        }
     }
 }

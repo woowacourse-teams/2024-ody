@@ -1,51 +1,93 @@
 package com.ody.auth.service;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.ody.auth.token.AccessToken;
+import com.ody.auth.token.RefreshToken;
+import com.ody.common.BaseServiceTest;
+import com.ody.common.TokenFixture;
+import com.ody.common.exception.OdyBadRequestException;
+import com.ody.common.exception.OdyUnauthorizedException;
+import com.ody.member.domain.DeviceToken;
+import com.ody.member.domain.Member;
+import com.ody.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
-class AuthServiceTest {
+class AuthServiceTest extends BaseServiceTest {
 
-    @DisplayName("액세스 토큰을 파싱한다.")
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @DisplayName("로그 아웃 테스트")
     @Nested
-    class parseAccessToken {
+    class LogOutTest {
 
-        @DisplayName("유효하고 만료되지 않은 액세스 토큰을 파싱할 수 있다.")
+        @DisplayName("성공 : 유효한 액세스 토큰 + 유효한 리프레시 토큰")
         @Test
-        void parseAccessTokenSuccess() {
+        void logOutSuccess() {
+            RefreshToken validRefreshToken = TokenFixture.getValidRefreshToken();
+            Member member = createMemberByRefreshToken(validRefreshToken);
+            AccessToken validAccessToken = TokenFixture.getValidAccessToken(member.getId());
 
+            String authorizationHeader = resolveAuthorizationHeader(validAccessToken, validRefreshToken);
+
+            assertThatCode(() -> authService.logout(authorizationHeader))
+                    .doesNotThrowAnyException();
         }
 
-        @DisplayName("유효하지 않거나 만료된 액세스 토큰을 파싱할 수 없다.")
-        @ParameterizedTest
-        @ValueSource(strings = "")
-        void parseAccessTokenFail(String accessToken) {
-
-        }
-    }
-
-    @DisplayName("액세스 토큰을 갱신한다.")
-    @Nested
-    class renewTokens {
-
-        @DisplayName("만료된 액세스 토큰, 만료되지 않은 액세스 토큰이면 새 액세스 토큰, 리프레시 토큰을 반환한다.")
+        @DisplayName("실패 : 만료된 액세스 토큰으로 로그아웃 시도 시 400을 반환한다")
         @Test
-        void renewTokensSuccess() {
+        void logOutFail_When_ExpiredAccessToken() {
+            RefreshToken validRefreshToken = TokenFixture.getValidRefreshToken();
+            Member member = createMemberByRefreshToken(validRefreshToken);
+            AccessToken expiredAccessToken = TokenFixture.getExpiredAccessToken(member.getId());
+            String authorizationHeader = resolveAuthorizationHeader(expiredAccessToken, validRefreshToken);
 
+            assertThatThrownBy(() -> authService.logout(authorizationHeader))
+                    .isInstanceOf(OdyBadRequestException.class);
         }
 
-        @DisplayName("만료되지 않은 액세스 토큰이면 기존 액세스 토큰, 리프레시 토큰을 반환한다.")
+        @DisplayName("실패 : 만료된 리프레시 토큰으로 로그아웃 시도 시 400을 반환한다")
         @Test
-        void renewTokensWithUnexpiredAccessToken() {
+        void logOutFail_When_ExpiredRefreshToken() {
+            RefreshToken expiredRefreshToken = TokenFixture.getExpiredRefreshToken();
+            Member member = createMemberByRefreshToken(expiredRefreshToken);
+            AccessToken validAccessToken = TokenFixture.getValidAccessToken(member.getId());
+            String authorizationHeader = resolveAuthorizationHeader(validAccessToken, expiredRefreshToken);
 
+            assertThatThrownBy(() -> authService.logout(authorizationHeader))
+                    .isInstanceOf(OdyBadRequestException.class);
         }
 
-        @DisplayName("만료된 리프레시 토큰이면 401 에러가 발생한다.")
+        @DisplayName("실패 : 액세스 토큰 파싱 멤버와 리프레시 토큰 정보가 일치하지 않으면 401을 반환한다")
         @Test
-        void renewTokensWithExpiredRefreshToken() {
+        void logOutFail_When_NotSameMemberToken() {
+            RefreshToken validRefreshToken = TokenFixture.getRefreshToken(TokenFixture.authPropertiesForValidToken);
+            Member member = createMemberByRefreshToken(validRefreshToken);
+            AccessToken validAccessToken = TokenFixture.getValidAccessToken(member.getId());
 
+            RefreshToken otherRefreshToken = TokenFixture.getRefreshToken(TokenFixture.authPropertiesForValidToken2);
+            String authorizationHeader = resolveAuthorizationHeader(validAccessToken, otherRefreshToken);
+
+            assertThatThrownBy(() -> authService.logout(authorizationHeader))
+                    .isInstanceOf(OdyBadRequestException.class);
+        }
+
+        private String resolveAuthorizationHeader(AccessToken accessToken, RefreshToken refreshToken) {
+            return "Bearer access-token=" + accessToken.getValue() + " refresh-token=" + refreshToken.getValue();
+        }
+
+        private Member createMemberByRefreshToken(RefreshToken refreshToken) {
+            Member member = new Member("pid", "콜리", "imageUrl", new DeviceToken("deviceToken"));
+            member.updateRefreshToken(refreshToken);
+            return memberRepository.save(member);
         }
     }
 }
