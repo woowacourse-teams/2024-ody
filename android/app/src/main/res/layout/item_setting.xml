@@ -7,11 +7,11 @@
 
         <variable
             name="setting"
-            type="com.woowacourse.ody.presentation.setting.model.Setting" />
+            type="com.mulberry.ody.presentation.setting.model.Setting" />
 
         <variable
             name="settingListener"
-            type="com.woowacourse.ody.presentation.setting.listener.SettingListener" />
+            type="com.mulberry.ody.presentation.setting.listener.SettingListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

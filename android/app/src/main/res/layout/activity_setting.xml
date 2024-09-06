@@ -7,14 +7,14 @@
 
         <variable
             name="backListener"
-            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
+            type="com.mulberry.ody.presentation.common.listener.BackListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.setting.SettingActivity">
+        tools:context="com.mulberry.ody.presentation.setting.SettingActivity">
 
         <include
             android:id="@+id/tb_setting"

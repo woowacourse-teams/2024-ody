@@ -1,16 +1,20 @@
 package com.ody.meeting.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
+import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
+import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.response.MateResponse;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
@@ -186,5 +190,49 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertThatThrownBy(() -> meetingService.findMeetingWithMates(member, 1L))
                 .isInstanceOf(OdyNotFoundException.class);
+    }
+
+    @DisplayName("지나지 않은 약속에 참여가 가능하다")
+    @Test
+    void saveMateSuccess() {
+        Meeting notOverdueMeeting = makeSavedMeetingByRemainingMinutes(1L);
+        Member member = memberRepository.save(Fixture.MEMBER2);
+        MateSaveRequestV2 mateSaveRequest = makeMateRequestByMeeting(notOverdueMeeting);
+
+        assertThatCode(() -> meetingService.saveMateAndSendNotifications(mateSaveRequest, member))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("지난 약속에 참여가 불가하다")
+    @Test
+    void saveMateFail_When_tryAttendOverdueMeeting() {
+        Meeting overdueMeeting = makeSavedMeetingByRemainingMinutes(-1L);
+        Member member = memberRepository.save(Fixture.MEMBER1);
+        MateSaveRequestV2 mateSaveRequest = makeMateRequestByMeeting(overdueMeeting);
+
+        assertThatThrownBy(() -> meetingService.saveMateAndSendNotifications(mateSaveRequest, member))
+                .isInstanceOf(OdyBadRequestException.class);
+    }
+
+    private MateSaveRequestV2 makeMateRequestByMeeting(Meeting meeting) {
+        Location origin = Fixture.ORIGIN_LOCATION;
+        return new MateSaveRequestV2(
+                InviteCodeGenerator.encode(meeting.getId()),
+                origin.getAddress(),
+                origin.getLatitude(),
+                origin.getLongitude()
+        );
+    }
+
+    private Meeting makeSavedMeetingByRemainingMinutes(long remainingMinutes) {
+        LocalDateTime time = TimeUtil.nowWithTrim().plusMinutes(remainingMinutes);
+        Meeting meeting = new Meeting(
+                "오디",
+                time.toLocalDate(),
+                time.toLocalTime(),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        );
+        return meetingRepository.save(meeting);
     }
 }
