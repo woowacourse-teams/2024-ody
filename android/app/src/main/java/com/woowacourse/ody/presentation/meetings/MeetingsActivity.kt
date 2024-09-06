@@ -19,7 +19,6 @@ import com.woowacourse.ody.presentation.invitecode.InviteCodeActivity
 import com.woowacourse.ody.presentation.login.LoginActivity
 import com.woowacourse.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.woowacourse.ody.presentation.meetings.listener.MeetingsListener
-import com.woowacourse.ody.presentation.meetings.listener.SettingListener
 import com.woowacourse.ody.presentation.room.MeetingRoomActivity
 import com.woowacourse.ody.presentation.setting.SettingActivity
 import kotlinx.coroutines.launch
@@ -27,7 +26,8 @@ import kotlinx.coroutines.launch
 class MeetingsActivity :
     BindingActivity<ActivityMeetingsBinding>(
         R.layout.activity_meetings,
-    ), MeetingsListener, SettingListener {
+    ),
+    MeetingsListener {
     private val viewModel by viewModels<MeetingsViewModel> {
         MeetingsViewModelFactory(
             analyticsHelper,
@@ -60,7 +60,6 @@ class MeetingsActivity :
         binding.listener = this
         binding.lifecycleOwner = this
         binding.vm = viewModel
-        binding.settingListener = this
     }
 
     private fun initializeObserve() {
@@ -104,6 +103,10 @@ class MeetingsActivity :
     override fun onCreateMeeting() {
         startActivity(MeetingCreationActivity.getIntent(this))
         closeNavigateMenu()
+    }
+
+    override fun onSetting() {
+        startActivity(SettingActivity.getIntent(this))
     }
 
     private fun navigateToNotificationLog(meetingId: Long) {
@@ -215,10 +218,6 @@ class MeetingsActivity :
             showSnackBar(requiredMessage)
         }
         requestNextPermission()
-    }
-
-    override fun onSetting() {
-        startActivity(SettingActivity.getIntent(this))
     }
 
     companion object {
