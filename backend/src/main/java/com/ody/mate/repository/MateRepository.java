@@ -13,7 +13,8 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             from Mate mate
             join fetch mate.meeting
             join fetch mate.member
-            where mate.id = :id
+            where mate.id = :id 
+            and mate.meeting.overdue = false
             """)
     Optional<Mate> findFetchedMateById(Long id);
 
@@ -21,7 +22,8 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             select mate
             from Mate mate
             join fetch mate.member
-            where mate.meeting.id = :meetingId
+            where mate.meeting.id = :meetingId 
+            and mate.meeting.overdue = false
             """)
     List<Mate> findAllByMeetingId(Long meetingId);
 
