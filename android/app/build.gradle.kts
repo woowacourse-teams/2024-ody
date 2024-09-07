@@ -9,30 +9,40 @@ plugins {
     alias(libs.plugins.android.junit.jupiter)
     alias(libs.plugins.jetbrains.kotlin.kapt)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.kotlin.plugin.parcelize)
 }
 
 val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
-    namespace = "com.woowacourse.ody"
+    namespace = "com.mulberry.ody"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.woowacourse.ody"
+        applicationId = "com.mulberry.ody"
         minSdk = 26
         targetSdk = 34
-        versionCode = 4
+        versionCode = 7
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
         buildConfigField("String", "KAKAO_API_KEY", properties["KAKAO_API_KEY"].toString())
+        buildConfigField("String", "KAKAO_NATIVE_KEY", properties["KAKAO_NATIVE_KEY"].toString())
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["KAKAO_NATIVE_KEY"].toString().trim('"')
     }
     buildTypes {
+        debug {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -67,6 +77,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.core.android)
@@ -77,6 +88,7 @@ dependencies {
     // firebase
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage.ktx)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.messaging.ktx)
     implementation(platform(libs.firebase.bom))
@@ -112,4 +124,13 @@ dependencies {
 
     // coroutines
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // glide
+    implementation(libs.glide)
+
+    // kakao share
+    implementation(libs.kakao.share)
+
+    // kakao sdk
+    implementation(libs.kakao.sdk.v2.user)
 }

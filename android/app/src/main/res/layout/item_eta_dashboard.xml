@@ -7,11 +7,15 @@
 
         <variable
             name="eta"
-            type="com.woowacourse.ody.presentation.room.etadashboard.model.MateEtaUiModel" />
+            type="com.mulberry.ody.presentation.room.etadashboard.model.MateEtaUiModel" />
 
         <variable
             name="missingTooltipListener"
-            type="com.woowacourse.ody.presentation.room.etadashboard.listener.MissingToolTipListener" />
+            type="com.mulberry.ody.presentation.room.etadashboard.listener.MissingToolTipListener" />
+
+        <variable
+            name="nudgeListener"
+            type="com.mulberry.ody.presentation.room.etadashboard.listener.NudgeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +42,9 @@
         <TextView
             android:id="@+id/tv_badge_dashboard"
             style="@style/pretendard_medium_16"
+            canNudge="@{eta}"
             etaBadgeAnimation="@{eta.etaTypeUiModel}"
+            nudgeListener="@{nudgeListener}"
             android:layout_width="80dp"
             android:layout_height="32dp"
             android:background="@drawable/rectangle_radius_15"

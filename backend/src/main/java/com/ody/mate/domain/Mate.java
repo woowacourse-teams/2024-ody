@@ -15,16 +15,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Table(uniqueConstraints = {
-        @UniqueConstraint(
-                name = "uniqueMeetingAndNickname",
-                columnNames = {"meeting_id", "nickname"}
-        ),
         @UniqueConstraint(
                 name = "uniqueMeetingAndMember",
                 columnNames = {"meeting_id", "member_id"}
@@ -50,9 +47,8 @@ public class Mate {
     @NotNull
     private Member member;
 
-    @Embedded
     @NotNull
-    private Nickname nickname;
+    private String nickname;
 
     @Embedded
     @NotNull
@@ -61,12 +57,29 @@ public class Mate {
     @NotNull
     private long estimatedMinutes;
 
+    // TODO: Nickname 객체 유지 여부에 따라 메서드 수정
     public Mate(Meeting meeting, Member member, Nickname nickname, Location origin, long estimatedMinutes) {
-        this(null, meeting, member, nickname, origin, estimatedMinutes);
+        this(null, meeting, member, nickname.getValue(), origin, estimatedMinutes);
+    }
+
+    public Mate(Meeting meeting, Member member, Location origin, long estimatedMinutes) {
+        this(null, meeting, member, member.getNickname(), origin, estimatedMinutes);
+    }
+
+    public boolean isAttended(Meeting otherMeeting) {
+        return Objects.equals(this.meeting.getId(), otherMeeting.getId());
     }
 
     public String getNicknameValue() {
-        return nickname.getValue();
+        return nickname;
+    }
+
+    public DeviceToken getMemberDeviceToken() {
+        return member.getDeviceToken();
+    }
+
+    public String getMemberImageUrl() {
+        return member.getImageUrl();
     }
 
     public DeviceToken getMemberDeviceToken() {

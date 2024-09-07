@@ -9,7 +9,6 @@ on:
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
-  DOCKER_CONTAINER_NAME: ody-backend
 
 jobs:
   build-and-push:
@@ -75,16 +74,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Clean Up Legacy Image And Pull
+      - name: Clean Up Legacy Image
         run: |
-          docker image prune -a -f
-          docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev
+          docker compose down || true
+          docker rmi $(docker images -q) -f || true
 
-      - name: Set up Container And Run Docker Image
+      - name: Docker Compose up
         run: |
-          docker stop $DOCKER_CONTAINER_NAME || true
-          docker rm $DOCKER_CONTAINER_NAME || true
-          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-dev-logs:/ody-dev-logs -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev
+          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+          export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
+          export DEV_MYSQL_PASSWORD=${{ secrets.DEV_MYSQL_PASSWORD }}
+          export GIT_SHA=${{ github.sha }}
+          docker compose up -d
 
       - name: Check Docker Process
         run: docker ps

@@ -66,4 +66,20 @@ public class Meeting extends BaseEntity {
     public LocalDateTime getMeetingTime() {
         return TimeUtil.trimSecondsAndNanos(LocalDateTime.of(date, time));
     }
+
+    public String getTargetAddress() {
+        return target.getAddress();
+    }
+
+    public Coordinates getTargetCoordinates() {
+        return target.getCoordinates();
+    }
+
+    public String getTargetLatitude() {
+        return target.getLatitude();
+    }
+
+    public String getTargetLongitude() {
+        return target.getLongitude();
+    }
 }

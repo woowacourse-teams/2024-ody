@@ -1,9 +1,10 @@
 package com.ody.meeting.service;
 
+import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
-import com.ody.mate.dto.request.MateSaveRequest;
-import com.ody.mate.dto.response.MateSaveResponse;
+import com.ody.mate.dto.request.MateSaveRequestV2;
+import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
@@ -16,6 +17,8 @@ import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
+import com.ody.util.TimeUtil;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,12 +86,16 @@ public class MeetingService {
 
     public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {
         Meeting meeting = findById(meetingId);
-        List<Mate> mates = mateService.findAllByMemberAndMeetingId(member, meetingId);
+        List<Mate> mates = mateService.findAllByMeetingIdIfMate(member, meeting.getId());
         return MeetingWithMatesResponse.of(meeting, mates);
     }
 
-    public MateSaveResponse saveMateAndSendNotifications(MateSaveRequest mateSaveRequest, Member member) {
+    @Transactional
+    public MateSaveResponseV2 saveMateAndSendNotifications(MateSaveRequestV2 mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
+        if (meeting.isEnd()) {
+            throw new OdyBadRequestException("과거 약속에 참여할 수 없습니다.");
+        }
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
     }
 

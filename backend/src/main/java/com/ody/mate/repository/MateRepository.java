@@ -8,6 +8,21 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface MateRepository extends JpaRepository<Mate, Long> {
 
+    @Query("""
+            select mate
+            from Mate mate
+            join fetch mate.meeting
+            join fetch mate.member
+            where mate.id = :id
+            """)
+    Optional<Mate> findFetchedMateById(Long id);
+
+    @Query("""
+            select mate
+            from Mate mate
+            join fetch mate.member
+            where mate.meeting.id = :meetingId
+            """)
     List<Mate> findAllByMeetingId(Long meetingId);
 
     @Query("""
@@ -18,8 +33,6 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             and mate.meeting.id = :meetingId
             """)
     Optional<Mate> findByMeetingIdAndMemberId(Long meetingId, Long memberId);
-
-    boolean existsByMeetingIdAndNickname_Value(Long meetingId, String value);
 
     boolean existsByMeetingIdAndMemberId(Long memberId, Long meetingId);
 

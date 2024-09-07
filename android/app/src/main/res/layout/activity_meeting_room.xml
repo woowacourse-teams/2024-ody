@@ -7,56 +7,24 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.room.MeetingRoomViewModel" />
-
-        <variable
-            name="shareListener"
-            type="com.woowacourse.ody.presentation.room.log.listener.ShareListener" />
-
-        <variable
-            name="copyInviteCodeListener"
-            type="com.woowacourse.ody.presentation.room.log.listener.CopyInviteCodeListener" />
-
-        <variable
-            name="backListener"
-            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
+            type="com.mulberry.ody.presentation.room.MeetingRoomViewModel" />
 
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".presentation.room.">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            tools:context=".presentation.room."
-            android:layout_height="match_parent">
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv_meeting_room"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <include
-                android:id="@+id/tb_log"
-                layout="@layout/toolbar_meeting_room"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:backListener="@{backListener}"
-                app:layout_constraintBottom_toTopOf="@id/fcv_meeting_room"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shareListener="@{shareListener}"
-                app:title="@{vm.meeting.name}" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fcv_meeting_room"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tb_log" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <include
-            layout="@layout/bottom_sheet_code_copy"
-            app:copyInviteCodeListener="@{copyInviteCodeListener}" />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

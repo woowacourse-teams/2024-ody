@@ -73,6 +73,10 @@ public class Notification extends BaseEntity {
         );
     }
 
+    public static Notification createNudge(Mate mate) {
+        return new Notification(mate, NotificationType.NUDGE, LocalDateTime.now(), NotificationStatus.PENDING);
+    }
+
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
     }

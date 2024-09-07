@@ -9,21 +9,20 @@ import com.ody.common.Fixture;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
-import com.ody.eta.dto.response.MateEtaResponse;
-import com.ody.eta.dto.response.MateEtaResponses;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
+import com.ody.meeting.dto.response.MateEtaResponseV2;
+import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -72,7 +71,7 @@ class EtaServiceTest extends BaseServiceTest {
             BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
                     .thenReturn(new RouteTime(10L));
 
-            etaService.findAllMateEtas(mateEtaRequest, odyMeeting.getId(), member);
+            etaService.findAllMateEtas(mateEtaRequest, mate);
 
             BDDMockito.verify(routeservice, Mockito.times(1)).calculateRouteTime(any(), any());
         }
@@ -90,7 +89,7 @@ class EtaServiceTest extends BaseServiceTest {
             etaRepository.save(new Eta(mate, 30L, LocalDateTime.now(), updateTime));
             MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
-            etaService.findAllMateEtas(mateEtaRequest, odyMeeting.getId(), member);
+            etaService.findAllMateEtas(mateEtaRequest, mate);
 
             BDDMockito.verify(routeservice, Mockito.never()).calculateRouteTime(any(), any());
         }
@@ -119,13 +118,13 @@ class EtaServiceTest extends BaseServiceTest {
             BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
                     .thenReturn(new RouteTime(31L));
 
-            etaService.findAllMateEtas(mateEtaRequest, thirtyMinutesLaterMeeting.getId(), member);
+            etaService.findAllMateEtas(mateEtaRequest, mate);
 
             BDDMockito.verify(routeservice, Mockito.times(1)).calculateRouteTime(any(), any());
         }
     }
 
-    @DisplayName("현재 시간 <= 약속 시간 && 직선거리가 300m 이내 일 경우 도차 상태로 업데이트한다.")
+    @DisplayName("현재 시간 <= 약속 시간 && 직선거리가 300m 이내 일 경우 도착 상태로 업데이트한다.")
     @Test
     void findAllMateEtas() {
         Location origin = Fixture.ORIGIN_LOCATION;
@@ -146,9 +145,9 @@ class EtaServiceTest extends BaseServiceTest {
         etaRepository.save(new Eta(mate, 30L));
         MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
-        MateEtaResponses etas = etaService.findAllMateEtas(mateEtaRequest, nowMeeting.getId(), member);
-        MateEtaResponse mateEtaResponse = etas.mateEtas().stream()
-                .filter(response -> response.nickname().equals(mate.getNicknameValue()))
+        MateEtaResponsesV2 etas = etaService.findAllMateEtas(mateEtaRequest, mate);
+        MateEtaResponseV2 mateEtaResponse = etas.mateEtas().stream()
+                .filter(response -> response.mateId() == mate.getId())
                 .findAny()
                 .get();
 

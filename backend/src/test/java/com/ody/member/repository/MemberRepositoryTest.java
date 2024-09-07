@@ -2,7 +2,9 @@ package com.ody.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ody.auth.token.RefreshToken;
 import com.ody.common.Fixture;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,5 +25,16 @@ class MemberRepositoryTest {
         Member findMember = memberRepository.findFirstByDeviceToken(member.getDeviceToken()).get();
 
         assertThat(findMember.getId()).isEqualTo(member.getId());
+    }
+
+    @DisplayName("임의의 providerType, providerId를 가진 회원이 존재하는지 조회한다.")
+    @Test
+    void existsByAuthProvider() {
+        Member member = new Member("12345", "몽키건우", "imageurl", new DeviceToken("Bearer device-token=dt"));
+        memberRepository.save(member);
+
+        boolean actual = memberRepository.existsByAuthProvider(member.getAuthProvider());
+
+        assertThat(actual).isTrue();
     }
 }

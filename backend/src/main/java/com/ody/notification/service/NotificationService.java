@@ -1,6 +1,5 @@
 package com.ody.notification.service;
 
-import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
@@ -8,6 +7,7 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
+import com.ody.notification.domain.message.NudgeMessage;
 import com.ody.notification.dto.request.FcmSendRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
@@ -39,16 +39,10 @@ public class NotificationService {
     private final TaskScheduler taskScheduler;
 
     @Transactional
-    public void saveAndSendNotifications(
-            Meeting meeting,
-            Mate mate,
-            DeviceToken deviceToken,
-            RouteTime routeTime
-    ) {
-        saveAndSendEntryNotification(mate);
-        FcmTopic fcmTopic = new FcmTopic(meeting);
-        fcmSubscriber.subscribeTopic(fcmTopic, deviceToken);
-        saveAndSendDepartureReminderNotification(meeting, mate, routeTime, fcmTopic);
+    public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
+        saveAndSendEntryNotification(meeting, mate);
+        fcmSubscriber.subscribeTopic(new FcmTopic(meeting), deviceToken);
+        saveAndSendDepartureReminderNotification(meeting, mate);
     }
 
     private void saveAndSendEntryNotification(Mate mate) {
@@ -56,13 +50,8 @@ public class NotificationService {
         saveAndSendNotification(notification);
     }
 
-    private void saveAndSendDepartureReminderNotification(
-            Meeting meeting,
-            Mate mate,
-            RouteTime routeTime,
-            FcmTopic fcmTopic
-    ) {
-        DepartureTime departureTime = new DepartureTime(routeTime, meeting);
+    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate) {
+        DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
         LocalDateTime sendAt = calculateSendAt(departureTime);
         Notification notification = Notification.createDepartureReminder(mate, sendAt, fcmTopic);
         saveAndSendNotification(notification);
@@ -101,9 +90,12 @@ public class NotificationService {
         return notificationRepository.findAllMeetingLogs(meetingId);
     }
 
-    public Notification findById(Long notificationId) {
-        return notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 알림입니다."));
+    @Transactional
+    public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
+        Notification notification = Notification.createNudge(nudgedMate);
+        Notification nudgeNotification = notificationRepository.save(notification);
+        NudgeMessage nudgeMessage = new NudgeMessage(nudgedMate.getMemberDeviceToken(), requestMate.getNicknameValue());
+        fcmPushSender.sendNudgeMessage(nudgeNotification, nudgeMessage);
     }
 
     public void unSubscribeTopic(List<Meeting> meetings) {

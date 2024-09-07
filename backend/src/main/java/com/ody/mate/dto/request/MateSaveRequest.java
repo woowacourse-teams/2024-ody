@@ -3,6 +3,7 @@ package com.ody.mate.dto.request;
 import com.ody.common.annotation.SupportRegion;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
+import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;

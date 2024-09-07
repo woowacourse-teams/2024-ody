@@ -2,6 +2,7 @@ package com.ody.notification.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
@@ -70,9 +71,9 @@ class NotificationServiceTest extends BaseServiceTest {
         );
         Meeting savedPastMeeting = meetingRepository.save(pastMeeting);
         Mate mate = mateRepository.save(
-                new Mate(savedPastMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
-        RouteTime routeTime = new RouteTime(1);
-        notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken(), routeTime);
+                new Mate(savedPastMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 1L)
+        );
+        notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
 
         Optional<Notification> departureNotification = notificationRepository.findAll().stream()
                 .filter(notification -> isDepartureReminder(notification) && isNow(notification))
@@ -159,5 +160,22 @@ class NotificationServiceTest extends BaseServiceTest {
         notificationService.unSubscribeTopic(List.of(odyMeeting, sojuMeeting));
 
         BDDMockito.verify(fcmSubscriber, Mockito.times(2)).unSubscribeTopic(any(), any());
+
+    @DisplayName("재촉하기 메시지가 발송된다")
+    @Test
+    void sendSendNudgeMessageMessage() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Member member2 = memberRepository.save(Fixture.MEMBER2);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        Mate requestMate = mateRepository.save(
+                new Mate(odyMeeting, member1, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+        Mate nudgedMate = mateRepository.save(
+                new Mate(odyMeeting, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L)
+        );
+
+        notificationService.sendNudgeMessage(requestMate, nudgedMate);
+
+        Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any(), any());
     }
 }
