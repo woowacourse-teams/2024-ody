@@ -12,6 +12,7 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -131,5 +132,35 @@ class MeetingRepositoryTest {
 
         assertThat(meetingRepository.findAllByUpdatedTodayAndOverdue()).extracting(Meeting::getId)
                 .containsExactly(oneDayBeforeMeeting.getId(), twoDayBeforeMeeting.getId());
+    }
+
+    @DisplayName("약속 기한이 지나지 않은 모임방을 조회한다.")
+    @Test
+    void findByIdAndOverdueFalse() {
+        LocalDateTime dateTime = TimeUtil.nowWithTrim();
+        Meeting wotecoMeeting = new Meeting(
+                null,
+                "우테코 등교",
+                dateTime.toLocalDate(),
+                dateTime.toLocalTime(),
+                TARGET_LOCATION,
+                "초대코드",
+                true
+        );
+        Meeting savedWotecoMeeting = meetingRepository.save(wotecoMeeting);
+
+        Meeting odyMeeting = new Meeting(
+                null,
+                "오디 회식",
+                dateTime.toLocalDate(),
+                dateTime.toLocalTime(),
+                TARGET_LOCATION,
+                "초대코드",
+                false
+        );
+        Meeting savedOdyMeeting = meetingRepository.save(odyMeeting);
+
+        assertThat(meetingRepository.findByIdAndOverdueFalse(savedWotecoMeeting.getId())).isEmpty();
+        assertThat(meetingRepository.findByIdAndOverdueFalse(savedOdyMeeting.getId())).isPresent();
     }
 }

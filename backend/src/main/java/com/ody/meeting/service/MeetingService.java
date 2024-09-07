@@ -63,7 +63,7 @@ public class MeetingService {
     }
 
     public Meeting findById(Long meetingId) {
-        return meetingRepository.findById(meetingId)
+        return meetingRepository.findByIdAndOverdueFalse(meetingId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 모임입니다."));
     }
 
