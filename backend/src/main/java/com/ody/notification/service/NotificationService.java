@@ -24,7 +24,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
 @Service
@@ -107,7 +106,6 @@ public class NotificationService {
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 알림입니다."));
     }
 
-    @TransactionalEventListener
     public void unSubscribeTopic(List<Meeting> meetings) {
         for (Meeting meeting : meetings) {
             notificationRepository.findAllMeetingIdAndType(meeting.getId(), NotificationType.DEPARTURE_REMINDER)

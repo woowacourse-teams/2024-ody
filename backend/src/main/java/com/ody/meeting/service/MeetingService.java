@@ -14,13 +14,13 @@ import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
+import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,7 @@ public class MeetingService {
     private final MateService mateService;
     private final MeetingRepository meetingRepository;
     private final MateRepository mateRepository;
-    private final ApplicationEventPublisher publisher;
+    private final NotificationService notificationService;
 
     @Transactional
     public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
@@ -93,11 +93,10 @@ public class MeetingService {
     }
 
     @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
-    @Transactional
     public void scheduleOverdueMeetings() {
         meetingRepository.updateAllByNotOverdueMeetings();
         List<Meeting> meetings = meetingRepository.findAllByUpdatedTodayAndOverdue();
         log.info("약속 시간이 지난 약속들 overdue = true로 update 쿼리 실행");
-        publisher.publishEvent(meetings);
+        notificationService.unSubscribeTopic(meetings);
     }
 }
