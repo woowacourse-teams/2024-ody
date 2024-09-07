@@ -11,7 +11,6 @@ import com.ody.notification.domain.message.NudgeMessage;
 import com.ody.notification.dto.request.FcmSendRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
-import com.ody.route.domain.RouteTime;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -40,9 +39,10 @@ public class NotificationService {
 
     @Transactional
     public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
-        saveAndSendEntryNotification(meeting, mate);
-        fcmSubscriber.subscribeTopic(new FcmTopic(meeting), deviceToken);
-        saveAndSendDepartureReminderNotification(meeting, mate);
+        saveAndSendEntryNotification(mate);
+        FcmTopic fcmTopic = new FcmTopic(meeting);
+        fcmSubscriber.subscribeTopic(fcmTopic, deviceToken);
+        saveAndSendDepartureReminderNotification(meeting, mate, fcmTopic);
     }
 
     private void saveAndSendEntryNotification(Mate mate) {
@@ -50,7 +50,7 @@ public class NotificationService {
         saveAndSendNotification(notification);
     }
 
-    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate) {
+    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
         DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
         LocalDateTime sendAt = calculateSendAt(departureTime);
         Notification notification = Notification.createDepartureReminder(mate, sendAt, fcmTopic);

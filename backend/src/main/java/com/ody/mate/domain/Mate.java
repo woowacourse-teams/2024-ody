@@ -81,8 +81,4 @@ public class Mate {
     public String getMemberImageUrl() {
         return member.getImageUrl();
     }
-
-    public DeviceToken getMemberDeviceToken() {
-        return member.getDeviceToken();
-    }
 }

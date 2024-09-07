@@ -2,7 +2,6 @@ package com.ody.notification.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
@@ -18,7 +17,6 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.repository.NotificationRepository;
-import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
@@ -160,6 +158,7 @@ class NotificationServiceTest extends BaseServiceTest {
         notificationService.unSubscribeTopic(List.of(odyMeeting, sojuMeeting));
 
         BDDMockito.verify(fcmSubscriber, Mockito.times(2)).unSubscribeTopic(any(), any());
+    }
 
     @DisplayName("재촉하기 메시지가 발송된다")
     @Test
@@ -176,6 +175,6 @@ class NotificationServiceTest extends BaseServiceTest {
 
         notificationService.sendNudgeMessage(requestMate, nudgedMate);
 
-        Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any(), any());
+        Mockito.verify(fcmPushSender, Mockito.times(1)).sendNudgeMessage(any(), any());
     }
 }
