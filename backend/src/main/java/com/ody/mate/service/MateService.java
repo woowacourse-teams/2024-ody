@@ -29,10 +29,13 @@ public class MateService {
 
     public MateSaveResponse saveAndSendNotifications(MateSaveRequest mateSaveRequest, Member member, Meeting meeting) {
         if (mateRepository.existsByMeetingIdAndNickname_Value(meeting.getId(), mateSaveRequest.nickname())) {
-            throw new OdyBadRequestException("모임 내 같은 닉네임이 존재합니다.");
+            throw new OdyBadRequestException("약속방 내 같은 닉네임이 존재합니다.");
         }
         if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
-            throw new OdyBadRequestException("모임에 이미 참여한 회원입니다.");
+            throw new OdyBadRequestException("약속방에 이미 참여한 회원입니다.");
+        }
+        if (meeting.isOverdue()) {
+            throw new OdyBadRequestException("참여 가능한 시간이 지난 약속방에 참여할 수 없습니다.");
         }
 
         Location origin = new Location(
@@ -49,7 +52,7 @@ public class MateService {
 
     public List<Mate> findAllByMemberAndMeetingId(Member member, long meetingId) {
         if (!mateRepository.existsByMeetingIdAndMemberId(meetingId, member.getId())) {
-            throw new OdyBadRequestException("존재하지 않는 모임이거나 약속 참여자가 아닙니다.");
+            throw new OdyBadRequestException("존재하지 않는 약속방이거나 약속 참여자가 아닙니다.");
         }
         return mateRepository.findAllByMeetingId(meetingId);
     }
