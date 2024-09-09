@@ -33,8 +33,8 @@ class SettingActivity :
         val dividerItemDecoration =
             MaterialDividerItemDecoration(this, LinearLayout.VERTICAL).apply {
                 isLastItemDecorated = false
-                dividerInsetStart = dpToPx(26)
-                dividerInsetEnd = dpToPx(26)
+                dividerInsetStart = dpToPx(SETTING_ITEM_HORIZONTAL_MARGIN_DP)
+                dividerInsetEnd = dpToPx(SETTING_ITEM_HORIZONTAL_MARGIN_DP)
             }
 
         binding.rvSetting.addItemDecoration(dividerItemDecoration)
@@ -66,6 +66,8 @@ class SettingActivity :
     }
 
     companion object {
+        private const val SETTING_ITEM_HORIZONTAL_MARGIN_DP = 26
+
         fun getIntent(context: Context): Intent = Intent(context, SettingActivity::class.java)
     }
 }
