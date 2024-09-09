@@ -1,6 +1,7 @@
 package com.mulberry.ody.data.remote.thirdparty.login.kakao
 
 import android.content.Context
+import com.kakao.sdk.user.UserApiClient
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
 import com.mulberry.ody.data.remote.core.entity.login.request.LoginRequest
@@ -52,4 +53,11 @@ class KakaoLoginRepository(
                 userProfile.imageUrl,
             )
         }
+
+    suspend fun cancelAccount(): ApiResult<Unit> {
+        UserApiClient.instance.unlink { error ->
+            if (error != null) throw error
+        }
+        return ApiResult.Success(Unit)
+    }
 }
