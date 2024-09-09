@@ -38,4 +38,3 @@ fun ImageView.setImageRes(
 ) {
     setImageResource(iconRes)
 }
-
