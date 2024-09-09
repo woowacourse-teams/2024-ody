@@ -38,10 +38,10 @@ public class MateService {
     @Transactional
     public MateSaveResponseV2 saveAndSendNotifications(MateSaveRequestV2 mateSaveRequest, Member member, Meeting meeting) {
         if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
-            throw new OdyBadRequestException("약속방에 이미 참여한 회원입니다.");
+            throw new OdyBadRequestException("약속에 이미 참여한 회원입니다.");
         }
         if (meeting.isOverdue()) {
-            throw new OdyBadRequestException("참여 가능한 시간이 지난 약속방에 참여할 수 없습니다.");
+            throw new OdyBadRequestException("참여 가능한 시간이 지난 약속에 참여할 수 없습니다.");
         }
 
         Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);

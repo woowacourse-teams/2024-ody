@@ -57,7 +57,7 @@ class MeetingRepositoryTest {
         );
     }
 
-    @DisplayName("약속 날짜가 오늘 이전인 약속방들의 overdue 상태를 true로 변경한다")
+    @DisplayName("약속 날짜가 오늘 이전인 약속들의 overdue 상태를 true로 변경한다")
     @Test
     void updateAllByOverdueMeetings() {
         LocalDateTime oneHoursLater = LocalDateTime.now().plusHours(1L);

@@ -80,7 +80,7 @@ public class MeetingService {
     private MeetingFindByMemberResponse makeMeetingFindByMemberResponse(Member member, Meeting meeting) {
         int mateCount = mateRepository.countByMeetingId(meeting.getId());
         Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId())
-                .orElseThrow(() -> new OdyNotFoundException("참여하고 있지 않는 약속방입니다"));
+                .orElseThrow(() -> new OdyNotFoundException("참여하고 있지 않는 약속입니다"));
         return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
     }
 
