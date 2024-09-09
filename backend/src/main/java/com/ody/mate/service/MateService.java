@@ -6,13 +6,10 @@ import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.service.EtaService;
 import com.ody.mate.domain.Mate;
-import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
-import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
-import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
@@ -61,7 +58,7 @@ public class MateService {
 
     public List<Mate> findAllByMeetingIdIfMate(Member member, long meetingId) {
         findByMeetingIdAndMemberId(meetingId, member.getId());
-        return mateRepository.findAllByMeetingId(meetingId);
+        return mateRepository.findAllByOverdueFalseMeetingId(meetingId);
     }
 
     @Transactional
