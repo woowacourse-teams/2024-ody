@@ -25,13 +25,13 @@ class AuthServiceTest extends BaseServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @DisplayName("로그 아웃 테스트")
+    @DisplayName("로그아웃 테스트")
     @Nested
     class LogOutTest {
 
-        @DisplayName("성공 : 유효한 액세스 토큰 + 유효한 리프레시 토큰")
+        @DisplayName("성공 : 유효한 액세스 토큰")
         @Test
-        void logOutSuccess() {
+        void logoutSuccess() {
             RefreshToken validRefreshToken = TokenFixture.getValidRefreshToken();
             Member member = createMemberByRefreshToken(validRefreshToken);
             AccessToken validAccessToken = TokenFixture.getValidAccessToken(member.getId());
@@ -42,39 +42,27 @@ class AuthServiceTest extends BaseServiceTest {
                     .doesNotThrowAnyException();
         }
 
-        @DisplayName("실패 : 만료된 액세스 토큰으로 로그아웃 시도 시 400을 반환한다")
+        @DisplayName("실패 : 만료된 액세스 토큰으로 로그아웃 시도 시 401을 반환한다")
         @Test
-        void logOutFail_When_ExpiredAccessToken() {
+        void logoutFailWhenExpiredAccessToken() {
             RefreshToken validRefreshToken = TokenFixture.getValidRefreshToken();
             Member member = createMemberByRefreshToken(validRefreshToken);
             AccessToken expiredAccessToken = TokenFixture.getExpiredAccessToken(member.getId());
             String authorizationHeader = resolveAuthorizationHeader(expiredAccessToken, validRefreshToken);
 
             assertThatThrownBy(() -> authService.logout(authorizationHeader))
-                    .isInstanceOf(OdyBadRequestException.class);
+                    .isInstanceOf(OdyUnauthorizedException.class);
         }
 
-        @DisplayName("실패 : 만료된 리프레시 토큰으로 로그아웃 시도 시 400을 반환한다")
+        @DisplayName("실패 : 이미 로그아웃한 유저 엑세스 토큰으로 로그아웃 시도 시 400을 반환한다")
         @Test
-        void logOutFail_When_ExpiredRefreshToken() {
-            RefreshToken expiredRefreshToken = TokenFixture.getExpiredRefreshToken();
-            Member member = createMemberByRefreshToken(expiredRefreshToken);
-            AccessToken validAccessToken = TokenFixture.getValidAccessToken(member.getId());
-            String authorizationHeader = resolveAuthorizationHeader(validAccessToken, expiredRefreshToken);
-
-            assertThatThrownBy(() -> authService.logout(authorizationHeader))
-                    .isInstanceOf(OdyBadRequestException.class);
-        }
-
-        @DisplayName("실패 : 액세스 토큰 파싱 멤버와 리프레시 토큰 정보가 일치하지 않으면 401을 반환한다")
-        @Test
-        void logOutFail_When_NotSameMemberToken() {
-            RefreshToken validRefreshToken = TokenFixture.getRefreshToken(TokenFixture.authPropertiesForValidToken);
+        void logoutFailWhenTryAlreadyLogoutMember() {
+            RefreshToken validRefreshToken = TokenFixture.getValidRefreshToken();
             Member member = createMemberByRefreshToken(validRefreshToken);
             AccessToken validAccessToken = TokenFixture.getValidAccessToken(member.getId());
+            String authorizationHeader = resolveAuthorizationHeader(validAccessToken, validRefreshToken);
 
-            RefreshToken otherRefreshToken = TokenFixture.getRefreshToken(TokenFixture.authPropertiesForValidToken2);
-            String authorizationHeader = resolveAuthorizationHeader(validAccessToken, otherRefreshToken);
+            member.updateRefreshToken(null);
 
             assertThatThrownBy(() -> authService.logout(authorizationHeader))
                     .isInstanceOf(OdyBadRequestException.class);

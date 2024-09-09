@@ -74,6 +74,10 @@ public class Member {
         return authProvider.getProviderId();
     }
 
+    public boolean isLogout() {
+        return refreshToken == null;
+    }
+
     public boolean isSame(RefreshToken otherRefreshToken) {
         return this.refreshToken.equals(otherRefreshToken);
     }

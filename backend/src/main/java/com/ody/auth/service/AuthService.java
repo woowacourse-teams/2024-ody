@@ -48,7 +48,7 @@ public class AuthService {
 
         jwtTokenProvider.validate(refreshToken);
         long memberId = jwtTokenProvider.parseAccessToken(accessToken);
-        checkSameMemberToken(memberId, refreshToken);
+        checkAlreadyLogout(memberId);
         return issueNewTokens(memberId);
     }
 
@@ -60,30 +60,19 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(String rawAuthorizationHeader) {
-        AuthorizationHeader authorizationHeader = new AuthorizationHeader(rawAuthorizationHeader);
-        AccessToken accessToken = authorizationHeader.getAccessToken();
-        RefreshToken refreshToken = authorizationHeader.getRefreshToken();
-
-        checkTokenExpiration(accessToken, refreshToken);
+    public void logout(String rawAccessTokenValue) {
+        AccessToken accessToken = new AccessToken(rawAccessTokenValue);
+        jwtTokenProvider.validate(accessToken);
 
         long memberId = jwtTokenProvider.parseAccessToken(accessToken);
-        checkSameMemberToken(memberId, refreshToken);
+        checkAlreadyLogout(memberId);
         memberService.updateRefreshToken(memberId, null);
     }
 
-    private void checkTokenExpiration(AccessToken accessToken, RefreshToken refreshToken) {
-        try {
-            jwtTokenProvider.validate(accessToken);
-            jwtTokenProvider.validate(refreshToken);
-        } catch (OdyUnauthorizedException exception) {
-            throw new OdyBadRequestException(exception.getMessage());
-        }
-    }
-
-    private void checkSameMemberToken(long memberId, RefreshToken refreshToken) {
-        if (!memberService.isMemberRefreshToken(memberId, refreshToken)) {
-            throw new OdyBadRequestException("리프레시 토큰 정보가 일치하지 않습니다");
+    private void checkAlreadyLogout(long memberId) {
+        Member member = memberService.findById(memberId);
+        if(member.isLogout()){
+            throw new OdyBadRequestException("이미 회원이 로그아웃 상태입니다.");
         }
     }
 }

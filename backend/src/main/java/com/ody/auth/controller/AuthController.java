@@ -37,8 +37,8 @@ public class AuthController implements AuthControllerSwagger {
 
     @Override
     @PostMapping("/v1/auth/logout")
-    public ResponseEntity<Void> logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
-        authService.logout(authorization);
+    public ResponseEntity<Void> logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String rawAccessTokenValue) {
+        authService.logout(rawAccessTokenValue);
         return ResponseEntity.ok().build();
     }
 }
