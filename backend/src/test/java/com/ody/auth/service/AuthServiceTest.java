@@ -36,9 +36,9 @@ class AuthServiceTest extends BaseServiceTest {
             Member member = createMemberByRefreshToken(validRefreshToken);
             AccessToken validAccessToken = TokenFixture.getValidAccessToken(member.getId());
 
-            String authorizationHeader = resolveAuthorizationHeader(validAccessToken, validRefreshToken);
+            String rawAccessTokenValue = resolveRawAccessToken(validAccessToken);
 
-            assertThatCode(() -> authService.logout(authorizationHeader))
+            assertThatCode(() -> authService.logout(rawAccessTokenValue))
                     .doesNotThrowAnyException();
         }
 
@@ -48,28 +48,25 @@ class AuthServiceTest extends BaseServiceTest {
             RefreshToken validRefreshToken = TokenFixture.getValidRefreshToken();
             Member member = createMemberByRefreshToken(validRefreshToken);
             AccessToken expiredAccessToken = TokenFixture.getExpiredAccessToken(member.getId());
-            String authorizationHeader = resolveAuthorizationHeader(expiredAccessToken, validRefreshToken);
+            String rawAccessTokenValue = resolveRawAccessToken(expiredAccessToken);
 
-            assertThatThrownBy(() -> authService.logout(authorizationHeader))
+            assertThatThrownBy(() -> authService.logout(rawAccessTokenValue))
                     .isInstanceOf(OdyUnauthorizedException.class);
         }
 
         @DisplayName("실패 : 이미 로그아웃한 유저 엑세스 토큰으로 로그아웃 시도 시 400을 반환한다")
         @Test
         void logoutFailWhenTryAlreadyLogoutMember() {
-            RefreshToken validRefreshToken = TokenFixture.getValidRefreshToken();
-            Member member = createMemberByRefreshToken(validRefreshToken);
+            Member member = createMemberByRefreshToken(null);
             AccessToken validAccessToken = TokenFixture.getValidAccessToken(member.getId());
-            String authorizationHeader = resolveAuthorizationHeader(validAccessToken, validRefreshToken);
+            String rawAccessTokenValue = resolveRawAccessToken(validAccessToken);
 
-            member.updateRefreshToken(null);
-
-            assertThatThrownBy(() -> authService.logout(authorizationHeader))
+            assertThatThrownBy(() -> authService.logout(rawAccessTokenValue))
                     .isInstanceOf(OdyBadRequestException.class);
         }
 
-        private String resolveAuthorizationHeader(AccessToken accessToken, RefreshToken refreshToken) {
-            return "Bearer access-token=" + accessToken.getValue() + " refresh-token=" + refreshToken.getValue();
+        private String resolveRawAccessToken(AccessToken accessToken) {
+            return "Bearer access-token=" + accessToken.getValue();
         }
 
         private Member createMemberByRefreshToken(RefreshToken refreshToken) {

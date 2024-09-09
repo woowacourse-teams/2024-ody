@@ -75,7 +75,7 @@ public class Member {
     }
 
     public boolean isLogout() {
-        return refreshToken == null;
+        return this.refreshToken == null;
     }
 
     public boolean isSame(RefreshToken otherRefreshToken) {
