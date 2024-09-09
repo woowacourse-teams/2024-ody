@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.mulberry.ody.databinding.ItemSettingBinding
 import com.mulberry.ody.presentation.setting.listener.SettingListener
-import com.mulberry.ody.presentation.setting.model.Setting
+import com.mulberry.ody.presentation.setting.model.SettingUiModel
 
 class SettingsAdapter(
     private val settingListener: SettingListener,
-) : ListAdapter<Setting, SettingsViewHolder>(DiffCallback()) {
+) : ListAdapter<SettingUiModel, SettingsViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -32,15 +32,15 @@ class SettingsAdapter(
 
     override fun getItemCount(): Int = currentList.size
 
-    class DiffCallback : DiffUtil.ItemCallback<Setting>() {
+    class DiffCallback : DiffUtil.ItemCallback<SettingUiModel>() {
         override fun areItemsTheSame(
-            oldItem: Setting,
-            newItem: Setting,
+            oldItem: SettingUiModel,
+            newItem: SettingUiModel,
         ): Boolean = oldItem == newItem
 
         override fun areContentsTheSame(
-            oldItem: Setting,
-            newItem: Setting,
+            oldItem: SettingUiModel,
+            newItem: SettingUiModel,
         ): Boolean = oldItem == newItem
     }
 }

@@ -1,7 +1,7 @@
 package com.mulberry.ody.presentation.setting.listener
 
-import com.mulberry.ody.presentation.setting.model.Setting
+import com.mulberry.ody.presentation.setting.model.SettingUiModel
 
 interface SettingListener {
-    fun onSetting(setting: Setting)
+    fun onClickSettingItem(settingUiModel: SettingUiModel)
 }

@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.mulberry.ody.R
 
-enum class Setting(
+enum class SettingUiModel(
     @DrawableRes val icon: Int,
     @StringRes val description: Int,
 ) {

@@ -2,6 +2,7 @@ package com.mulberry.ody.presentation.common
 
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -30,3 +31,11 @@ fun ImageView.setCircleImageUrl(imageUrl: String) {
         .circleCrop()
         .into(this)
 }
+
+@BindingAdapter("imageRes")
+fun ImageView.setImageRes(
+    @DrawableRes iconRes: Int,
+) {
+    setImageResource(iconRes)
+}
+

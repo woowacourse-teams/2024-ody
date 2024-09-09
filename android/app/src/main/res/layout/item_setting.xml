@@ -7,7 +7,7 @@
 
         <variable
             name="setting"
-            type="com.mulberry.ody.presentation.setting.model.Setting" />
+            type="com.mulberry.ody.presentation.setting.model.SettingUiModel" />
 
         <variable
             name="settingListener"
@@ -21,7 +21,7 @@
 
         <ImageView
             android:id="@+id/ic_setting"
-            icon="@{setting.icon}"
+            imageRes="@{setting.icon}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:onClick="@{() -> settingListener.onSetting(setting)}"
+            android:onClick="@{() -> settingListener.onClickSettingItem(setting)}"
             android:text="@{setting.description}"
             app:layout_constraintBottom_toBottomOf="@id/ic_setting"
             app:layout_constraintStart_toEndOf="@id/ic_setting"

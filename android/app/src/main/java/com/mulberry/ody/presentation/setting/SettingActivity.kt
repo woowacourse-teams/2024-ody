@@ -11,7 +11,7 @@ import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
 import com.mulberry.ody.presentation.setting.listener.SettingListener
-import com.mulberry.ody.presentation.setting.model.Setting
+import com.mulberry.ody.presentation.setting.model.SettingUiModel
 
 class SettingActivity :
     BindingActivity<ActivitySettingBinding>(R.layout.activity_setting),
@@ -39,23 +39,23 @@ class SettingActivity :
 
         binding.rvSetting.addItemDecoration(dividerItemDecoration)
 
-        adapter.submitList(Setting.entries)
+        adapter.submitList(SettingUiModel.entries)
     }
 
     override fun onBack() = finish()
 
-    override fun onSetting(setting: Setting) {
-        when (setting) {
-            Setting.PRIVACY_POLICY -> {
+    override fun onClickSettingItem(settingUiModel: SettingUiModel) {
+        when (settingUiModel) {
+            SettingUiModel.PRIVACY_POLICY -> {
             }
 
-            Setting.TERM -> {
+            SettingUiModel.TERM -> {
             }
 
-            Setting.LOGOUT -> {
+            SettingUiModel.LOGOUT -> {
             }
 
-            Setting.WITHDRAW -> {
+            SettingUiModel.WITHDRAW -> {
             }
         }
     }
