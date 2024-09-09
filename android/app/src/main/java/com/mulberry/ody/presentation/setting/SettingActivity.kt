@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
@@ -46,12 +47,12 @@ class SettingActivity :
     override fun onClickSettingItem(settingUiModel: SettingUiModel) {
         when (settingUiModel) {
             SettingUiModel.PRIVACY_POLICY -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URI))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_POLICY_URI))
                 startActivity(intent)
             }
 
             SettingUiModel.TERM -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(TERM_URI))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.TERM_URI))
                 startActivity(intent)
             }
 
@@ -70,10 +71,6 @@ class SettingActivity :
 
     companion object {
         private const val SETTING_ITEM_HORIZONTAL_MARGIN_DP = 26
-        private const val PRIVACY_POLICY_URI =
-            "https://sly-face-106.notion.site/fecbe589eb23471ba2d0685cb3c2d274?pvs=4"
-        private const val TERM_URI =
-            "https://sly-face-106.notion.site/beb204b6e6724ecbbb83496448fc7b53?pvs=4"
 
         fun getIntent(context: Context): Intent = Intent(context, SettingActivity::class.java)
     }
