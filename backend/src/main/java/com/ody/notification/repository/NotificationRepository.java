@@ -1,8 +1,10 @@
 package com.ody.notification.repository;
 
 import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.NotificationStatus;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
@@ -16,4 +18,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             order by noti.sendAt asc
             """)
     List<Notification> findAllMeetingLogs(Long meetingId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("update Notification noti set noti.status = :newStatus where noti.mate.id = :mateId and noti.status = :targetStatus")
+    void updateStatusFromTargetToNewByMateId(NotificationStatus targetStatus, NotificationStatus newStatus, long mateId);
 }

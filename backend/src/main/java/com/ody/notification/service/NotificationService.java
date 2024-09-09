@@ -5,11 +5,11 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.message.NudgeMessage;
 import com.ody.notification.dto.request.FcmSendRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
-import com.ody.route.domain.RouteTime;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -81,5 +81,14 @@ public class NotificationService {
         Notification nudgeNotification = notificationRepository.save(notification);
         NudgeMessage nudgeMessage = new NudgeMessage(nudgedMate.getMemberDeviceToken(), requestMate.getNicknameValue());
         fcmPushSender.sendNudgeMessage(nudgeNotification, nudgeMessage);
+    }
+
+    @Transactional
+    public void updateAllStatusPendingToDismissed(long mateId) {
+        notificationRepository.updateStatusFromTargetToNewByMateId(
+                NotificationStatus.PENDING,
+                NotificationStatus.DISMISSED,
+                mateId
+        );
     }
 }
