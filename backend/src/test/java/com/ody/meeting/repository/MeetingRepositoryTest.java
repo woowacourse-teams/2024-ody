@@ -160,7 +160,9 @@ class MeetingRepositoryTest {
         );
         Meeting savedNotOverdueMeeting = meetingRepository.save(notOverdueMeeting);
 
-        assertThat(meetingRepository.findByIdAndOverdueFalse(savedOverdueMeeting.getId())).isEmpty();
-        assertThat(meetingRepository.findByIdAndOverdueFalse(savedNotOverdueMeeting.getId())).isPresent();
+        assertAll(
+                () -> assertThat(meetingRepository.findByIdAndOverdueFalse(savedOverdueMeeting.getId())).isEmpty(),
+                () -> assertThat(meetingRepository.findByIdAndOverdueFalse(savedNotOverdueMeeting.getId())).isPresent()
+        );
     }
 }
