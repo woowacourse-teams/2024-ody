@@ -10,4 +10,16 @@ sealed interface ApiResult<out T> {
     data class NetworkError(val exception: IOException) : ApiResult<Nothing>
 
     class Unexpected(val t: Throwable) : ApiResult<Nothing>
+
+    val isSuccess: Boolean
+        get() = this is Success
+
+    val isFailure: Boolean
+        get() = this is Failure
+
+    val isNetworkError: Boolean
+        get() = this is NetworkError
+
+    val isUnexpected: Boolean
+        get() = this is Unexpected
 }
