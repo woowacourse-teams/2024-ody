@@ -21,7 +21,7 @@ class SettingActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initSettingAdapter()
+        initializeSettingAdapter()
     }
 
     override fun initializeBinding() {
@@ -29,7 +29,7 @@ class SettingActivity :
         binding.rvSetting.adapter = adapter
     }
 
-    private fun initSettingAdapter() {
+    private fun initializeSettingAdapter() {
         val dividerItemDecoration =
             MaterialDividerItemDecoration(this, LinearLayout.VERTICAL).apply {
                 isLastItemDecorated = false
