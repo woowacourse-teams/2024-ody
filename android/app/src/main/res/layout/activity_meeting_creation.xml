@@ -7,11 +7,11 @@
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.creation.MeetingCreationViewModel" />
+            type="com.mulberry.ody.presentation.creation.MeetingCreationViewModel" />
 
         <variable
             name="backListener"
-            type="com.woowacourse.ody.presentation.common.listener.BackListener" />
+            type="com.mulberry.ody.presentation.common.listener.BackListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
