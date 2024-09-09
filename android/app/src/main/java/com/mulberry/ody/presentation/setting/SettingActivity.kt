@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
@@ -65,6 +66,7 @@ class SettingActivity :
 
             SettingUiModel.LOGOUT -> {
                 viewModel.kakaoLogout()
+                Toast.makeText(this, R.string.logout_success, Toast.LENGTH_SHORT).show()
                 navigateToLogin()
             }
 
