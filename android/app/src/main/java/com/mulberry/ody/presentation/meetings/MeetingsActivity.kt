@@ -20,6 +20,7 @@ import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.mulberry.ody.presentation.meetings.listener.MeetingsListener
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
+import com.mulberry.ody.presentation.setting.SettingActivity
 import kotlinx.coroutines.launch
 
 class MeetingsActivity :
@@ -137,6 +138,10 @@ class MeetingsActivity :
 
     override fun guideItemDisabled() {
         showSnackBar(R.string.meetings_entrance_unavailable_guide)
+    }
+
+    override fun onClickSetting() {
+        startActivity(SettingActivity.getIntent(this))
     }
 
     private fun closeNavigateMenu() {

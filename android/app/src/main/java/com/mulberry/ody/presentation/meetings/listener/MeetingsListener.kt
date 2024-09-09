@@ -8,4 +8,6 @@ interface MeetingsListener {
     fun onCreateMeeting()
 
     fun guideItemDisabled()
+
+    fun onClickSetting()
 }

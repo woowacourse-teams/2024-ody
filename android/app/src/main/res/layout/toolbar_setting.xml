@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="meetingsListener"
-            type="com.mulberry.ody.presentation.meetings.listener.MeetingsListener" />
+            name="backListener"
+            type="com.mulberry.ody.presentation.common.listener.BackListener" />
     </data>
 
     <androidx.appcompat.widget.Toolbar
@@ -17,25 +17,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                style="@style/pretendard_bold_24"
+            <ImageView
+                android:id="@+id/iv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/app_name"
+                android:layout_marginStart="14dp"
+                android:onClick="@{() -> backListener.onBack()}"
+                android:src="@drawable/ic_arrow_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/iv_setting"
+            <TextView
+                style="@style/pretendard_bold_24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:onClick="@{() -> meetingsListener.onClickSetting()}"
-                android:src="@drawable/ic_setting"
+                android:text="@string/setting_main_title"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
