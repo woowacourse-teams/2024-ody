@@ -138,7 +138,7 @@ class MeetingRepositoryTest {
     @Test
     void findByIdAndOverdueFalse() {
         LocalDateTime dateTime = TimeUtil.nowWithTrim();
-        Meeting wotecoMeeting = new Meeting(
+        Meeting overdueMeeting = new Meeting(
                 null,
                 "우테코 등교",
                 dateTime.toLocalDate(),
@@ -147,9 +147,9 @@ class MeetingRepositoryTest {
                 "초대코드",
                 true
         );
-        Meeting savedWotecoMeeting = meetingRepository.save(wotecoMeeting);
+        Meeting savedOverdueMeeting = meetingRepository.save(overdueMeeting);
 
-        Meeting odyMeeting = new Meeting(
+        Meeting notOverdueMeeting = new Meeting(
                 null,
                 "오디 회식",
                 dateTime.toLocalDate(),
@@ -158,9 +158,9 @@ class MeetingRepositoryTest {
                 "초대코드",
                 false
         );
-        Meeting savedOdyMeeting = meetingRepository.save(odyMeeting);
+        Meeting savedNotOverdueMeeting = meetingRepository.save(notOverdueMeeting);
 
-        assertThat(meetingRepository.findByIdAndOverdueFalse(savedWotecoMeeting.getId())).isEmpty();
-        assertThat(meetingRepository.findByIdAndOverdueFalse(savedOdyMeeting.getId())).isPresent();
+        assertThat(meetingRepository.findByIdAndOverdueFalse(savedOverdueMeeting.getId())).isEmpty();
+        assertThat(meetingRepository.findByIdAndOverdueFalse(savedNotOverdueMeeting.getId())).isPresent();
     }
 }
