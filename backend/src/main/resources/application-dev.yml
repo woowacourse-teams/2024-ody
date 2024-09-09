@@ -3,7 +3,7 @@ spring:
     import: classpath:private/private.yml
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
