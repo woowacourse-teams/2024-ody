@@ -2,9 +2,11 @@ package com.mulberry.ody.presentation.setting
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
@@ -36,9 +38,7 @@ class SettingActivity :
                 dividerInsetStart = dpToPx(SETTING_ITEM_HORIZONTAL_MARGIN_DP)
                 dividerInsetEnd = dpToPx(SETTING_ITEM_HORIZONTAL_MARGIN_DP)
             }
-
         binding.rvSetting.addItemDecoration(dividerItemDecoration)
-
         adapter.submitList(SettingUiModel.entries)
     }
 
@@ -47,9 +47,13 @@ class SettingActivity :
     override fun onClickSettingItem(settingUiModel: SettingUiModel) {
         when (settingUiModel) {
             SettingUiModel.PRIVACY_POLICY -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_POLICY_URI))
+                startActivity(intent)
             }
 
             SettingUiModel.TERM -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.TERM_URI))
+                startActivity(intent)
             }
 
             SettingUiModel.LOGOUT -> {
