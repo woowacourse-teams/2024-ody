@@ -27,7 +27,7 @@ class AuthServiceTest extends BaseServiceTest {
 
     @DisplayName("로그아웃 테스트")
     @Nested
-    class LogOutTest {
+    class LogoutTest {
 
         @DisplayName("성공 : 유효한 액세스 토큰")
         @Test
