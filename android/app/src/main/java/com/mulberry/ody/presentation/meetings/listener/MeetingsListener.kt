@@ -9,5 +9,5 @@ interface MeetingsListener {
 
     fun guideItemDisabled()
 
-    fun onSetting()
+    fun onClickSetting()
 }

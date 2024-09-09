@@ -140,7 +140,7 @@ class MeetingsActivity :
         showSnackBar(R.string.meetings_entrance_unavailable_guide)
     }
 
-    override fun onSetting() {
+    override fun onClickSetting() {
         startActivity(SettingActivity.getIntent(this))
     }
 
