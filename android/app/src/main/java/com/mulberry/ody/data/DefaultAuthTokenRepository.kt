@@ -25,4 +25,9 @@ class DefaultAuthTokenRepository(
             authToken
         }
     }
+
+    override suspend fun deleteAuthToken(): ApiResult<Unit> {
+        odyDatastore.deleteAuthToken()
+        return ApiResult.Success(Unit)
+    }
 }
