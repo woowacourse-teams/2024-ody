@@ -1,6 +1,4 @@
 spring:
-  config:
-    import: classpath:private/private.yml
   jpa:
     hibernate:
       ddl-auto: validate
