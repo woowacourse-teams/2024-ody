@@ -18,5 +18,4 @@ spring:
 
 log:
   file:
-    path: ./ody-dev-logs
-
+    path: ./ody-local-logs
