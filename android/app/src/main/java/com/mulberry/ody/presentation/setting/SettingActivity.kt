@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
+import androidx.activity.viewModels
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
@@ -20,6 +21,11 @@ class SettingActivity :
     BackListener,
     SettingListener {
     private val adapter by lazy { SettingsAdapter(this) }
+    private val viewModel by viewModels<SettingViewModel> {
+        SettingViewModelFactory(
+            application.kakaoLoginRepository,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +63,7 @@ class SettingActivity :
             }
 
             SettingUiModel.LOGOUT -> {
+                viewModel.kakaoLogout()
             }
 
             SettingUiModel.WITHDRAW -> {
