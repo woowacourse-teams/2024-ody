@@ -5,12 +5,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
+import androidx.activity.viewModels
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
+import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
 import com.mulberry.ody.presentation.setting.listener.SettingListener
 import com.mulberry.ody.presentation.setting.model.SettingUiModel
@@ -20,10 +22,18 @@ class SettingActivity :
     BackListener,
     SettingListener {
     private val adapter by lazy { SettingsAdapter(this) }
+    private val viewModel by viewModels<SettingViewModel> {
+        SettingViewModelFactory(
+            analyticsHelper,
+            application.authTokenRepository,
+            application.kakaoLoginRepository,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeSettingAdapter()
+        initializeObserve()
     }
 
     override fun initializeBinding() {
@@ -40,6 +50,19 @@ class SettingActivity :
             }
         binding.rvSetting.addItemDecoration(dividerItemDecoration)
         adapter.submitList(SettingUiModel.entries)
+    }
+
+    private fun initializeObserve(){
+        viewModel.networkErrorEvent.observe(this) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+        viewModel.errorEvent.observe(this) {
+            showSnackBar(R.string.error_guide)
+        }
+        viewModel.isSuccessWithdrawal.observe(this) {
+            startActivity(LoginActivity.getIntent(this))
+            finishAffinity()
+        }
     }
 
     override fun onBack() = finish()
@@ -60,6 +83,7 @@ class SettingActivity :
             }
 
             SettingUiModel.WITHDRAW -> {
+                viewModel.withdrawAccount()
             }
         }
     }
