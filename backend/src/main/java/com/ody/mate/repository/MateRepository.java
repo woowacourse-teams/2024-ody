@@ -13,8 +13,7 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             from Mate mate
             join fetch mate.meeting
             join fetch mate.member
-            where mate.id = :id 
-            and mate.meeting.overdue = false
+            where mate.id = :id
             """)
     Optional<Mate> findFetchedMateById(Long id);
 

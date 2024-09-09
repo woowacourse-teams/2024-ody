@@ -77,8 +77,12 @@ public class MateService {
     }
 
     private Mate findFetchedMate(Long mateId) {
-        return mateRepository.findFetchedMateById(mateId)
+        Mate mate = mateRepository.findFetchedMateById(mateId)
                 .orElseThrow(() -> new OdyBadRequestException("존재하지 않는 약속 참여자입니다."));
+        if (mate.getMeeting().isOverdue()) {
+            throw new OdyBadRequestException("기한이 지난 약속입니다.");
+        }
+        return mate;
     }
 
     private boolean canNudge(Mate mate) {
