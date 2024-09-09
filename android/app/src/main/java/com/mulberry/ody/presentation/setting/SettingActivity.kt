@@ -12,6 +12,7 @@ import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
+import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
 import com.mulberry.ody.presentation.setting.listener.SettingListener
 import com.mulberry.ody.presentation.setting.model.SettingUiModel
@@ -64,11 +65,19 @@ class SettingActivity :
 
             SettingUiModel.LOGOUT -> {
                 viewModel.kakaoLogout()
+                navigateToLogin()
             }
 
             SettingUiModel.WITHDRAW -> {
             }
         }
+    }
+
+    private fun navigateToLogin() {
+        val intent = LoginActivity.getIntent(this)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+        finish()
     }
 
     private fun dpToPx(dp: Int): Int {
