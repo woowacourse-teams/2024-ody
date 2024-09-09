@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.viewModels
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
@@ -14,6 +13,7 @@ import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.login.LoginActivity
+import com.mulberry.ody.presentation.login.LoginNavigatedReason
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
 import com.mulberry.ody.presentation.setting.listener.SettingListener
 import com.mulberry.ody.presentation.setting.model.SettingUiModel
@@ -66,7 +66,6 @@ class SettingActivity :
 
             SettingUiModel.LOGOUT -> {
                 viewModel.kakaoLogout()
-                Toast.makeText(this, R.string.logout_success, Toast.LENGTH_SHORT).show()
                 navigateToLogin()
             }
 
@@ -78,6 +77,7 @@ class SettingActivity :
     private fun navigateToLogin() {
         val intent = LoginActivity.getIntent(this)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.putExtra(NAVIGATED_REASON, LoginNavigatedReason.LOGOUT)
         startActivity(intent)
         finish()
     }
@@ -88,6 +88,7 @@ class SettingActivity :
     }
 
     companion object {
+        private val NAVIGATED_REASON = "NAVIGATED_REASON"
         private const val SETTING_ITEM_HORIZONTAL_MARGIN_DP = 26
 
         fun getIntent(context: Context): Intent = Intent(context, SettingActivity::class.java)

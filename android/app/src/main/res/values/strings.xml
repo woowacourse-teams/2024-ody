@@ -90,6 +90,7 @@
     <!-- activity_setting -->
     <string name="setting_main_title">설정</string>
     <string name="logout_success">로그아웃 되었습니다.</string>
+    <string name="withdrawal_success">회원 탈퇴 되었습니다.</string>
 
     <!-- item_setting -->
     <string name="item_privacy_policy">개인정보 처리 방침</string>

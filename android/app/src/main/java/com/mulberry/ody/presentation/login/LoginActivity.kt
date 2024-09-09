@@ -20,6 +20,7 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeObserve()
+        viewModel.checkIfNavigated()
         viewModel.checkIfLogined()
     }
 
@@ -28,6 +29,16 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
     }
 
     private fun initializeObserve() {
+        viewModel.navigatedReason.observe(this) {
+            when (it) {
+                LoginNavigatedReason.LOGOUT -> {
+                    showSnackBar(R.string.logout_success)
+                }
+                LoginNavigatedReason.WITHDRAWAL -> {
+                    showSnackBar(R.string.withdrawal_success)
+                }
+            }
+        }
         viewModel.navigateAction.observe(this) {
             val intent = MeetingsActivity.getIntent(this@LoginActivity)
             startActivity(intent)
