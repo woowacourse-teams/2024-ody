@@ -48,7 +48,7 @@ class KakaoLoginRepository(
     suspend fun logout(): ApiResult<Unit> {
         val kakaoLogoutRequest = kakaoOAuthLoginService.logout()
         val logoutRequest = logoutService.postLogout()
-        odyDatastore.removeAuthToken() // 로그아웃이 실패하더라도 토큰을 지웁니다.
+        odyDatastore.removeAuthToken()
 
         if (kakaoLogoutRequest.isFailure) {
             val exception =
