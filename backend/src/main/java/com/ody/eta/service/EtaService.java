@@ -86,4 +86,9 @@ public class EtaService {
         return etaRepository.findByMateId(mateId)
                 .orElseThrow(() -> new OdyNotFoundException("ETA 정보를 찾을 수 없습니다"));
     }
+
+    public void deleteByMateId(long mateId) {
+        etaRepository.findByMateId(mateId)
+                .ifPresent(etaRepository::delete);
+    }
 }

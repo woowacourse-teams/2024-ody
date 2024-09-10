@@ -76,7 +76,7 @@ class EtaTest {
         Member member1 = Fixture.MEMBER1;
         Mate mate = new Mate(odyMeeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L);
         LocalDateTime now = TimeUtil.nowWithTrim();
-        Eta eta = new Eta(1L, mate, 10L, false, false, now, now.minusMinutes(3L));
+        Eta eta = new Eta(1L, mate, 10L, false, false, now, now.minusMinutes(3L), null);
 
         assertThat(eta.countDownMinutes()).isEqualTo(eta.getRemainingMinutes() - 3L);
     }
