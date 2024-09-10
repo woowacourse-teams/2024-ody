@@ -4,10 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseServiceTest;
+import com.ody.eta.domain.Eta;
+import com.ody.eta.repository.EtaRepository;
+import com.ody.mate.domain.Mate;
+import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.notification.domain.Notification;
+import com.ody.notification.repository.NotificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,6 +27,15 @@ class MemberServiceTest extends BaseServiceTest {
 
     @Autowired
     MemberService memberService;
+
+    @Autowired
+    MateRepository mateRepository;
+
+    @Autowired
+    EtaRepository etaRepository;
+
+    @Autowired
+    NotificationRepository notificationRepository;
 
     @DisplayName("회원을 생성한다.")
     @Nested
@@ -92,5 +108,24 @@ class MemberServiceTest extends BaseServiceTest {
         private DeviceToken getDeviceTokenByAuthProvider(String providerId) {
             return memberRepository.findByAuthProvider(new AuthProvider(providerId)).get().getDeviceToken();
         }
+    }
+
+    @DisplayName("회원을 삭제한다.")
+    @Test
+    void delete() {
+        Member member = fixtureGenerator.generateMember();
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Mate mate = fixtureGenerator.generateMate(meeting, member);
+        Eta eta = fixtureGenerator.generateEta(mate);
+        Notification notification = fixtureGenerator.generateNotification(mate);
+
+        memberService.delete(member.getId());
+
+        assertAll(
+                () -> assertThat(memberRepository.findById(member.getId())).isEmpty(),
+                () -> assertThat(mateRepository.findAllByMemberId(member.getId())).isEmpty(),
+                () -> assertThat(etaRepository.findById(eta.getId())),
+                () -> assertThat(notificationRepository.findById(notification.getId())).isNotEmpty()
+        );
     }
 }

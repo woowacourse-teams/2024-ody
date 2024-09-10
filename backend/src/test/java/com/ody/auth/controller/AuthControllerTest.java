@@ -89,7 +89,8 @@ class AuthControllerTest extends BaseControllerTest {
                     "nickname",
                     "imageUrl",
                     new DeviceToken(deviceToken),
-                    new RefreshToken("refresh-token=refreshToken")
+                    new RefreshToken("refresh-token=refreshToken"),
+                    null
             );
             return memberRepository.save(member);
         }
@@ -204,7 +205,8 @@ class AuthControllerTest extends BaseControllerTest {
                 "nickname",
                 "imageUrl",
                 new DeviceToken("deviceToken"),
-                new RefreshToken("refresh-token=" + refreshToken.getValue())
+                new RefreshToken("refresh-token=" + refreshToken.getValue()),
+                null
         );
         return memberRepository.save(member);
     }

@@ -2,20 +2,32 @@ package com.ody.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ody.auth.token.RefreshToken;
 import com.ody.common.Fixture;
+import com.ody.common.FixtureGenerator;
+import com.ody.common.FixtureGeneratorConfig;
+import com.ody.common.config.JpaAuditingConfig;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
+import jakarta.persistence.EntityManager;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
+@Import({JpaAuditingConfig.class, FixtureGeneratorConfig.class})
 @DataJpaTest
 class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private FixtureGenerator fixtureGenerator;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @DisplayName("기기 토큰으로 회원을 조회한다")
     @Test
@@ -36,5 +48,29 @@ class MemberRepositoryTest {
         boolean actual = memberRepository.existsByAuthProvider(member.getAuthProvider());
 
         assertThat(actual).isTrue();
+    }
+
+    @DisplayName("회원을 삭제(soft delete)한다.")
+    @Test
+    void delete() {
+        Member member = fixtureGenerator.generateMember();
+
+        memberRepository.delete(member);
+
+        Member actual = (Member) entityManager.createNativeQuery("select * from Member where id = ?", Member.class)
+                .setParameter(1, member.getId())
+                .getSingleResult();
+        assertThat(actual.getDeletedAt()).isNotNull();
+    }
+
+    @DisplayName("삭제된 회원은 조회하지 않는다.")
+    @Test
+    void doNotFindDeletedMember() {
+        Member member = fixtureGenerator.generateMember();
+
+        memberRepository.delete(member);
+
+        Optional<Member> actual = memberRepository.findById(member.getId());
+        assertThat(actual).isNotPresent();
     }
 }
