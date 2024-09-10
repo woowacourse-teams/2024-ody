@@ -3,6 +3,7 @@ package com.ody.notification.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ody.common.Fixture;
+import com.ody.common.FixtureGenerator;
 import com.ody.common.config.JpaAuditingConfig;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.repository.MateRepository;
@@ -23,8 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+@Import({JpaAuditingConfig.class, FixtureGenerator.class})
 @DataJpaTest
-@Import(JpaAuditingConfig.class)
 class NotificationRepositoryTest {
 
     @Autowired
@@ -39,6 +40,9 @@ class NotificationRepositoryTest {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private FixtureGenerator fixtureGenerator;
+
     @DisplayName("특정 모임의 Notification 반환")
     @Test
     void findAllMeetingLogsById() {
@@ -47,8 +51,8 @@ class NotificationRepositoryTest {
 
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
 
-        Mate mate1 = generateMate(odyMeeting, member1);
-        Mate mate2 = generateMate(odyMeeting, member2);
+        Mate mate1 = fixtureGenerator.generateMate(odyMeeting, member1);
+        Mate mate2 = fixtureGenerator.generateMate(odyMeeting, member2);
 
         Notification notification1 = new Notification(
                 mate1,
@@ -78,8 +82,8 @@ class NotificationRepositoryTest {
 
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
 
-        Mate mate1 = generateMate(odyMeeting, member1);
-        Mate mate2 = generateMate(odyMeeting, member2);
+        Mate mate1 = fixtureGenerator.generateMate(odyMeeting, member1);
+        Mate mate2 = fixtureGenerator.generateMate(odyMeeting, member2);
 
         Notification pastNotification = new Notification(
                 mate1,
@@ -104,11 +108,11 @@ class NotificationRepositoryTest {
     @DisplayName("특정 참여자의 A 상태인 알람을 모두 B 상태로 변경한다.")
     @Test
     void updateStatusFromTargetToNewByMateId() {
-        Mate mate = generateMate();
-        generateNotification(mate, NotificationStatus.PENDING);
-        generateNotification(mate, NotificationStatus.DONE);
-        generateNotification(mate, NotificationStatus.DISMISSED);
-        generateNotification(mate, NotificationStatus.PENDING);
+        Mate mate = fixtureGenerator.generateMate();
+        fixtureGenerator.generateNotification(mate, NotificationStatus.PENDING);
+        fixtureGenerator.generateNotification(mate, NotificationStatus.DONE);
+        fixtureGenerator.generateNotification(mate, NotificationStatus.DISMISSED);
+        fixtureGenerator.generateNotification(mate, NotificationStatus.PENDING);
 
         notificationRepository.updateStatusFromTargetToNewByMateId(
                 NotificationStatus.PENDING,
@@ -125,40 +129,5 @@ class NotificationRepositoryTest {
                 NotificationStatus.DISMISSED,
                 NotificationStatus.DISMISSED
         );
-    }
-
-    private Meeting generateMeeting() {
-        LocalDateTime now = TimeUtil.nowWithTrim();
-        return meetingRepository.save(new Meeting(
-                "name",
-                now.toLocalDate(),
-                now.toLocalTime(),
-                Fixture.TARGET_LOCATION,
-                "invitecode"
-        ));
-    }
-
-    private Member generateMember() {
-        return memberRepository.save(new Member(
-                "providerid",
-                "nickname",
-                "imageurl",
-                new DeviceToken("devicetoken")
-        ));
-    }
-
-    private Mate generateMate() {
-        Meeting meeting = generateMeeting();
-        Member member = generateMember();
-        return generateMate(meeting, member);
-    }
-
-    private Mate generateMate(Meeting meeting, Member member) {
-        return mateRepository.save(new Mate(meeting, member, Fixture.ORIGIN_LOCATION, 10L));
-    }
-
-    private Notification generateNotification(Mate mate, NotificationStatus notificationStatus) {
-        LocalDateTime now = TimeUtil.nowWithTrim();
-        return notificationRepository.save(new Notification(mate, NotificationType.ENTRY, now, notificationStatus));
     }
 }

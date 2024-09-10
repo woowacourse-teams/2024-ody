@@ -63,4 +63,8 @@ public class Notification extends BaseEntity {
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
     }
+
+    public boolean isStatusDismissed() {
+        return status.isDismissed();
+    }
 }

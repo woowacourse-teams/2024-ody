@@ -84,7 +84,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void updateAllStatusPendingToDismissed(long mateId) {
+    public void updateAllStatusPendingToDismissedByMateId(long mateId) {
         notificationRepository.updateStatusFromTargetToNewByMateId(
                 NotificationStatus.PENDING,
                 NotificationStatus.DISMISSED,
