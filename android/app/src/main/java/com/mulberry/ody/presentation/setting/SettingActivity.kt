@@ -101,7 +101,7 @@ class SettingActivity :
     }
 
     companion object {
-        private val NAVIGATED_REASON = "NAVIGATED_REASON"
+        private const val NAVIGATED_REASON = "NAVIGATED_REASON"
         private const val SETTING_ITEM_HORIZONTAL_MARGIN_DP = 26
 
         fun getIntent(context: Context): Intent = Intent(context, SettingActivity::class.java)
