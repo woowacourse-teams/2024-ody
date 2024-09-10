@@ -9,6 +9,7 @@ import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
@@ -89,6 +90,12 @@ public class FixtureGenerator {
 
     public Notification generateNotification(Mate mate, NotificationStatus notificationStatus) {
         LocalDateTime now = TimeUtil.nowWithTrim();
-        return notificationRepository.save(new Notification(mate, NotificationType.ENTRY, now, notificationStatus));
+        return notificationRepository.save(new Notification(
+                mate,
+                NotificationType.ENTRY,
+                now,
+                notificationStatus,
+                new FcmTopic(mate.getMeeting())
+        ));
     }
 }
