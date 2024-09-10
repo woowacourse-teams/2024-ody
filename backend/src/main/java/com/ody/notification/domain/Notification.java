@@ -60,7 +60,7 @@ public class Notification extends BaseEntity {
     }
 
     public static Notification createEntry(Mate mate) {
-        return new Notification(mate, NotificationType.ENTRY, LocalDateTime.now(), NotificationStatus.PENDING, null);
+        return new Notification(mate, NotificationType.ENTRY, LocalDateTime.now(), NotificationStatus.DONE, null);
     }
 
     public static Notification createDepartureReminder(Mate mate, LocalDateTime sendAt, FcmTopic fcmTopic) {
@@ -74,7 +74,11 @@ public class Notification extends BaseEntity {
     }
 
     public static Notification createNudge(Mate mate) {
-        return new Notification(mate, NotificationType.NUDGE, LocalDateTime.now(), NotificationStatus.PENDING, null);
+        return new Notification(mate, NotificationType.NUDGE, LocalDateTime.now(), NotificationStatus.DONE, null);
+    }
+
+    public boolean isDepartureReminder() {
+        return this.type == NotificationType.DEPARTURE_REMINDER;
     }
 
     public void updateStatusToDone() {
