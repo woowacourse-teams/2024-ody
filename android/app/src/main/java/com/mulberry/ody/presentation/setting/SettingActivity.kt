@@ -1,11 +1,15 @@
 package com.mulberry.ody.presentation.setting
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
+import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
@@ -52,7 +56,14 @@ class SettingActivity :
         adapter.submitList(SettingUiModel.entries)
     }
 
-    private fun initializeObserve(){
+    private fun initializeObserve() {
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@observe
+            }
+            hideLoadingDialog()
+        }
         viewModel.networkErrorEvent.observe(this) {
             showRetrySnackBar { viewModel.retryLastAction() }
         }
@@ -86,6 +97,29 @@ class SettingActivity :
                 viewModel.withdrawAccount()
             }
         }
+    }
+
+    private fun showWithDrawalDialog() {
+        val image = AppCompatResources.getDrawable(this@SettingActivity, R.drawable.ic_sad_ody)
+        val imageView = ImageView(this).apply { setImageDrawable(image) }
+
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(imageView)
+        }
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("이미지 다이얼로그")
+            .setView(layout)
+            .setPositiveButton("확인") { dialog, _ ->
+                Log.e("TEST", "g화긴")
+            }
+            .setNegativeButton("취소") { dialog, _ ->
+                Log.e("TEST", "c취소")
+            }
+            .create()
+
+        dialog.show()
     }
 
     private fun dpToPx(dp: Int): Int {

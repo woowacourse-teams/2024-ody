@@ -6,6 +6,7 @@ import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
 import com.mulberry.ody.data.remote.core.entity.login.request.LoginRequest
 import com.mulberry.ody.data.remote.core.service.LoginService
+import com.mulberry.ody.data.remote.core.service.MemberService
 import com.mulberry.ody.data.remote.thirdparty.login.entity.UserProfile
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map
@@ -19,6 +20,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class KakaoLoginRepository(
     private val loginService: LoginService,
+    private val memberService: MemberService,
     private val odyDatastore: OdyDatastore,
     private val kakaoOAuthLoginService: KakaoOAuthLoginService,
     private val fcmTokenRepository: FCMTokenRepository,
@@ -59,6 +61,7 @@ class KakaoLoginRepository(
         }
 
     suspend fun withdrawAccount(): ApiResult<Unit> {
+        memberService.deleteMember()
         return try {
             val result = suspendCoroutine { continuation ->
                 UserApiClient.instance.unlink { error ->

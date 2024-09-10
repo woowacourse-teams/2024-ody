@@ -24,6 +24,7 @@ class SettingViewModel(
 
     fun withdrawAccount() {
         viewModelScope.launch {
+            startLoading()
             kakaoLoginRepository.withdrawAccount()
                 .onSuccess {
                     deleteAuthToken()
@@ -36,6 +37,7 @@ class SettingViewModel(
                     handleNetworkError()
                     lastFailedAction = { withdrawAccount() }
                 }
+            stopLoading()
         }
     }
 
