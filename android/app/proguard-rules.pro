@@ -32,3 +32,4 @@
 # retrofit
 -keep class com.mulberry.ody.data.retrofit.* { <fields>; }
 -keep class com.mulberry.ody.domain.apiresult.ApiResult
+-keep class com.mulberry.ody.data.remote.core.service.* { *; }
