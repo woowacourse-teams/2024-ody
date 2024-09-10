@@ -17,8 +17,6 @@ import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
-import com.ody.util.TimeUtil;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,8 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MeetingService {
 
-    private static final String DEFAULT_INVITE_CODE = "초대코드";
-
     private final MateService mateService;
     private final MeetingRepository meetingRepository;
     private final MateRepository mateRepository;
@@ -43,28 +39,35 @@ public class MeetingService {
 
     @Transactional
     public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
-        Meeting meeting = meetingRepository.save(meetingSaveRequestV1.toMeeting(DEFAULT_INVITE_CODE));
-        String encodedInviteCode = InviteCodeGenerator.encode(meeting.getId());
-        meeting.updateInviteCode(encodedInviteCode);
+        String inviteCode = generateUniqueInviteCode();
+        Meeting meeting = meetingRepository.save(meetingSaveRequestV1.toMeeting(inviteCode));
         return MeetingSaveResponseV1.from(meeting);
+    }
+
+    private String generateUniqueInviteCode() {
+        String inviteCode = InviteCodeGenerator.generate();
+        while (meetingRepository.existsByInviteCode(inviteCode)) {
+            inviteCode = InviteCodeGenerator.generate();
+        }
+        return inviteCode;
     }
 
     public void validateInviteCode(String inviteCode) {
         try {
             findByInviteCode(inviteCode);
         } catch (OdyNotFoundException exception) {
-            throw new OdyNotFoundException("존재하지 않는 초대 코드 입니다.");
+            throw new OdyNotFoundException("유효하지 않은 초대코드입니다.");
         }
     }
 
     public Meeting findByInviteCode(String inviteCode) {
-        Long meetingId = InviteCodeGenerator.decode(inviteCode);
-        return findById(meetingId);
+        return meetingRepository.findByInviteCode(inviteCode)
+                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 초대코드 입니다."));
     }
 
     public Meeting findById(Long meetingId) {
         return meetingRepository.findByIdAndOverdueFalse(meetingId)
-                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 모임입니다."));
+                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 약속입니다."));
     }
 
     public MeetingFindByMemberResponses findAllByMember(Member member) {

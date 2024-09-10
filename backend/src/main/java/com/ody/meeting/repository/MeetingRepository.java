@@ -27,4 +27,8 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     List<Meeting> findAllByUpdatedTodayAndOverdue();
 
     Optional<Meeting> findByIdAndOverdueFalse(Long id);
+
+    boolean existsByInviteCode(String inviteCode);
+
+    Optional<Meeting> findByInviteCode(String inviteCode);
 }
