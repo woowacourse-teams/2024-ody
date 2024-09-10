@@ -2,12 +2,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
   sql:
     init:
-      mode: always
+      mode: never
       schema-locations: classpath:schema.sql
 
 log:
