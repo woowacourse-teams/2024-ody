@@ -32,6 +32,20 @@ class SettingActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeSettingAdapter()
+        initializeObserve()
+    }
+
+    private fun initializeObserve() {
+        viewModel.loginNavigateEvent.observe(this) {
+            when (it) {
+                LoginNavigatedReason.LOGOUT -> {
+                    navigateToLogin()
+                }
+
+                LoginNavigatedReason.WITHDRAWAL -> {
+                }
+            }
+        }
     }
 
     override fun initializeBinding() {
@@ -66,7 +80,6 @@ class SettingActivity :
 
             SettingUiModel.LOGOUT -> {
                 viewModel.kakaoLogout()
-                navigateToLogin()
             }
 
             SettingUiModel.WITHDRAW -> {
