@@ -100,13 +100,15 @@ public class MateService {
     @Transactional
     public void deleteByMemberId(long memberId) {
         mateRepository.findAllByMemberId(memberId)
-                .forEach(mate -> deleteById(mate.getId()));
+                .forEach(this::delete);
     }
 
-    private void deleteById(long mateId) {
-        notificationService.updateAllStatusPendingToDismissedByMateId(mateId);
-        etaService.deleteByMateId(mateId);
-        mateRepository.findById(mateId)
+    private void delete(Mate mate) {
+        notificationService.saveMemberDeletionNotification(mate);
+
+        notificationService.updateAllStatusPendingToDismissedByMateId(mate.getId());
+        etaService.deleteByMateId(mate.getId());
+        mateRepository.findById(mate.getId())
                 .ifPresent(mateRepository::delete);
     }
 }

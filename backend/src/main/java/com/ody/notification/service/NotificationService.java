@@ -107,6 +107,12 @@ public class NotificationService {
         );
     }
 
+    @Transactional
+    public void saveMemberDeletionNotification(Mate mate) {
+        Notification notification = Notification.createMemberDeletion(mate);
+        notificationRepository.save(notification);
+    }
+
     public void unSubscribeTopic(List<Meeting> meetings) {
         for (Meeting meeting : meetings) {
             notificationRepository.findAllMeetingIdAndType(meeting.getId(), NotificationType.DEPARTURE_REMINDER)

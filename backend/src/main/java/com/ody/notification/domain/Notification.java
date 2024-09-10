@@ -77,6 +77,16 @@ public class Notification extends BaseEntity {
         return new Notification(mate, NotificationType.NUDGE, LocalDateTime.now(), NotificationStatus.PENDING, null);
     }
 
+    public static Notification createMemberDeletion(Mate mate) {
+        return new Notification(
+                mate,
+                NotificationType.MEMBER_DELETION,
+                LocalDateTime.now(),
+                NotificationStatus.DISMISSED,
+                null
+        );
+    }
+
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
     }
