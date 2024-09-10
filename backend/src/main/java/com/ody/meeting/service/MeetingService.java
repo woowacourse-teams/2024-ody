@@ -15,6 +15,7 @@ import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
+import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
@@ -22,9 +23,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -35,6 +39,7 @@ public class MeetingService {
     private final MateService mateService;
     private final MeetingRepository meetingRepository;
     private final MateRepository mateRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
@@ -58,7 +63,7 @@ public class MeetingService {
     }
 
     public Meeting findById(Long meetingId) {
-        return meetingRepository.findById(meetingId)
+        return meetingRepository.findByIdAndOverdueFalse(meetingId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 모임입니다."));
     }
 
@@ -75,7 +80,7 @@ public class MeetingService {
     private MeetingFindByMemberResponse makeMeetingFindByMemberResponse(Member member, Meeting meeting) {
         int mateCount = mateRepository.countByMeetingId(meeting.getId());
         Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId())
-                .orElseThrow(() -> new OdyNotFoundException("참여하고 있지 않는 약속방입니다"));
+                .orElseThrow(() -> new OdyNotFoundException("참여하고 있지 않는 약속입니다"));
         return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
     }
 
@@ -92,5 +97,13 @@ public class MeetingService {
             throw new OdyBadRequestException("과거 약속에 참여할 수 없습니다.");
         }
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
+    }
+
+    @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
+    public void scheduleOverdueMeetings() {
+        meetingRepository.updateAllByNotOverdueMeetings();
+        List<Meeting> meetings = meetingRepository.findAllByUpdatedTodayAndOverdue();
+        log.info("약속 시간이 지난 약속들 overdue = true로 update 쿼리 실행");
+        notificationService.unSubscribeTopic(meetings);
     }
 }

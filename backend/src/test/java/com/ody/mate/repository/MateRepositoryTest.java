@@ -74,7 +74,7 @@ class MateRepositoryTest {
                 new Mate(odyMeeting, member2, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
         mateRepository.save(new Mate(sojuMeeting, member3, new Nickname("카키"), Fixture.ORIGIN_LOCATION, 10L));
 
-        List<Mate> meeting1Mates = mateRepository.findAllByMeetingId(odyMeeting.getId());
+        List<Mate> meeting1Mates = mateRepository.findAllByOverdueFalseMeetingId(odyMeeting.getId());
 
         assertThat(meeting1Mates).containsExactlyElementsOf(List.of(mate1, mate2));
     }

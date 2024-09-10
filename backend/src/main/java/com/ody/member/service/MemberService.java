@@ -47,11 +47,7 @@ public class MemberService {
                 .orElseThrow(() -> new OdyUnauthorizedException("존재하지 않는 회원입니다."));
     }
 
-    public boolean isMemberRefreshToken(long memberId, RefreshToken refreshToken) {
-        Member member = findById(memberId);
-        return member.isSame(refreshToken);
-    }
-
+    @Transactional
     public void updateRefreshToken(long memberId, RefreshToken refreshToken) {
         Member member = findById(memberId);
         member.updateRefreshToken(refreshToken);

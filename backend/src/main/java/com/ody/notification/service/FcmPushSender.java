@@ -24,7 +24,7 @@ public class FcmPushSender {
         if (notification.isStatusDismissed()) {
             return;
         }
-        PushMessage pushMessage = new PushMessage(fcmSendRequest.fcmTopic(), notification);
+        PushMessage pushMessage = new PushMessage(notification);
         sendMessage(pushMessage.getMessage(), notification);
     }
 

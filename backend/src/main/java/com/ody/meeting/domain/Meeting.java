@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Meeting extends BaseEntity {
 
     @Id
@@ -42,8 +42,11 @@ public class Meeting extends BaseEntity {
     @NotNull
     private String inviteCode;
 
+    @NotNull
+    private boolean overdue;
+
     public Meeting(String name, LocalDate date, LocalTime time, Location target, String inviteCode) {
-        this(null, name, date, TimeUtil.trimSecondsAndNanos(time), target, inviteCode);
+        this(null, name, date, TimeUtil.trimSecondsAndNanos(time), target, inviteCode, false);
     }
 
     public void updateInviteCode(String inviteCode) {

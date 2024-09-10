@@ -43,18 +43,21 @@ class FcmEventSchedulerTest extends BaseServiceTest {
     @DisplayName("예약 알림이 2초 후에 전송된다")
     @Test
     void testScheduledNotificationIsSentAtCorrectTime() throws InterruptedException {
-        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
         Member member = memberRepository.save(Fixture.MEMBER1);
-        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
+        Mate mate = mateRepository.save(
+                new Mate(odyMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L)
+        );
 
         LocalDateTime sendAt = LocalDateTime.now().plusSeconds(2);
         Notification notification = notificationRepository.save(new Notification(
                 mate,
                 NotificationType.DEPARTURE_REMINDER,
                 sendAt,
-                NotificationStatus.PENDING
+                NotificationStatus.PENDING,
+                new FcmTopic(odyMeeting)
         ));
-        FcmSendRequest fcmSendRequest = new FcmSendRequest(new FcmTopic(meeting), notification);
+        FcmSendRequest fcmSendRequest = new FcmSendRequest(notification);
 
         // 비동기 작업을 동기화 시키기 위한 클래스
         // 파라미터 인자에 비동기 작업의 개수를 입력해준다.
@@ -67,15 +70,15 @@ class FcmEventSchedulerTest extends BaseServiceTest {
         doAnswer(invocation -> {
             latch.countDown();
             return null;
-        }).when(getFcmPushSender()).sendPushNotification(fcmSendRequest);
+        }).when(fcmPushSender).sendPushNotification(fcmSendRequest);
 
         // 2초후에 메세지가 가도록 설정한 fcmSendRequest를 인자로 넣어 실제 sendPushNotification()를 호출한다.
-        getFcmPushSender().sendPushNotification(fcmSendRequest);
+        fcmPushSender.sendPushNotification(fcmSendRequest);
 
         // latch의 카운트가 0이될 때까지 대기할 시간을 정의한다.
         assertThat(latch.await(2, TimeUnit.SECONDS)).isTrue();
 
         // sendPushNotification() 메서드가 호출되었는지 검증한다.
-        verify(getFcmPushSender()).sendPushNotification(fcmSendRequest);
+        verify(fcmPushSender).sendPushNotification(fcmSendRequest);
     }
 }

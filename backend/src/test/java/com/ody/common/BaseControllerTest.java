@@ -33,10 +33,10 @@ public abstract class BaseControllerTest {
     private FcmConfig fcmConfig;
 
     @MockBean
-    private FcmSubscriber fcmSubscriber;
+    protected FcmSubscriber fcmSubscriber;
 
     @MockBean
-    private FcmPushSender fcmPushSender;
+    protected FcmPushSender fcmPushSender;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;

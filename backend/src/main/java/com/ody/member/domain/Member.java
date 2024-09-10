@@ -14,9 +14,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Getter
 @Table(uniqueConstraints = {
         @UniqueConstraint(
                 name = "uniqueProviderTypeAndProviderId",
@@ -27,12 +29,6 @@ import org.hibernate.annotations.SQLRestriction;
                 columnNames = {"deviceToken"}
         ),
 })
-@Entity
-@Getter
-@SQLRestriction("deleted_at is NULL")
-@SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Member {
 
     @Id
@@ -73,8 +69,12 @@ public class Member {
         return authProvider.getProviderId();
     }
 
-    public boolean isSame(RefreshToken otherRefreshToken) {
-        return this.refreshToken.equals(otherRefreshToken);
+    public boolean isLogout() {
+        return this.refreshToken == null;
+    }
+
+    public boolean isSame(AuthProvider otherAuthProvider) {
+        return this.authProvider.equals(otherAuthProvider);
     }
 
     public void updateRefreshToken(RefreshToken refreshToken) {
@@ -87,9 +87,5 @@ public class Member {
 
     public void updateDeviceToken(DeviceToken deviceToken) {
         this.deviceToken = deviceToken;
-    }
-
-    public boolean isSame(AuthProvider otherAuthProvider) {
-        return this.authProvider.equals(otherAuthProvider);
     }
 }

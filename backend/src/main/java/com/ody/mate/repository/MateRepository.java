@@ -21,9 +21,10 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             select mate
             from Mate mate
             join fetch mate.member
-            where mate.meeting.id = :meetingId
+            where mate.meeting.id = :meetingId 
+            and mate.meeting.overdue = false
             """)
-    List<Mate> findAllByMeetingId(Long meetingId);
+    List<Mate> findAllByOverdueFalseMeetingId(Long meetingId);
 
     @Query("""
             select mate
