@@ -4,7 +4,9 @@ import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Meeting;
 import java.util.Arrays;
 import java.util.function.BiPredicate;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public enum EtaStatus {
 
     MISSING((eta, meeting) -> eta.isMissing()),
@@ -21,9 +23,17 @@ public enum EtaStatus {
     }
 
     public static EtaStatus of(Eta mateEta, Meeting meeting) {
-        return Arrays.stream(values())
+        EtaStatus etaStatus = Arrays.stream(values())
                 .filter(status -> status.condition.test(mateEta, meeting))
                 .findFirst()
                 .orElseThrow(() -> new OdyServerErrorException("참여자의 ETA 상태를 판단할 수 없습니다"));
+        if (etaStatus == EtaStatus.LATE) {
+            log.info("[report_LATE_MATE] mate_id: {}, member_id: {}, meeting_id: {}",
+                    mateEta.getMate().getId(),
+                    mateEta.getMate().getMember().getId(),
+                    meeting.getId()
+            );
+        }
+        return etaStatus;
     }
 }
