@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bg_address_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="22dp"
+            android:backgroundTint="@color/cream"
+            app:cardCornerRadius="@dimen/rectangle_radius_20"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_withdrawal"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="35dp"
+                    android:src="@drawable/ic_sad_ody"
+                    app:layout_constraintBottom_toTopOf="@id/tv_withdrawal_title_front"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_withdrawal_title_front"
+                    style="@style/pretendard_bold_24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_withdrawal_title_front"
+                    app:layout_constraintBottom_toTopOf="@id/tv_withdrawal_subtitle"
+                    app:layout_constraintEnd_toStartOf="@id/tv_withdrawal_title_middle"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_withdrawal" />
+
+                <TextView
+                    android:id="@+id/tv_withdrawal_title_middle"
+                    style="@style/pretendard_bold_24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_withdrawal_title_middle"
+                    android:textColor="@color/purple_800"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_withdrawal_title_front"
+                    app:layout_constraintEnd_toStartOf="@id/tv_withdrawal_title_back"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@id/tv_withdrawal_title_front"
+                    app:layout_constraintTop_toTopOf="@id/tv_withdrawal_title_front" />
+
+                <TextView
+                    android:id="@+id/tv_withdrawal_title_back"
+                    style="@style/pretendard_bold_24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_withdrawal_title_back"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_withdrawal_title_front"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@id/tv_withdrawal_title_middle"
+                    app:layout_constraintTop_toTopOf="@id/tv_withdrawal_title_front" />
+
+                <TextView
+                    android:id="@+id/tv_withdrawal_subtitle"
+                    style="@style/pretendard_medium_16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/setting_withdrawal_subtitle"
+                    app:layout_constraintBottom_toTopOf="@id/guide_line_1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_withdrawal_title_front" />
+
+                <View
+                    android:id="@+id/guide_line_1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@color/gray_350"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_withdrawal_cancel"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_withdrawal_subtitle" />
+
+                <TextView
+                    android:id="@+id/tv_withdrawal_cancel"
+                    style="@style/pretendard_medium_18"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="22dp"
+                    android:gravity="center"
+                    android:text="@string/cancel_button"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/guide_line_2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/guide_line_1" />
+
+                <View
+                    android:id="@+id/guide_line_2"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/gray_350"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tv_withdrawal"
+                    app:layout_constraintStart_toEndOf="@id/tv_withdrawal_cancel"
+                    app:layout_constraintTop_toBottomOf="@id/guide_line_1" />
+
+                <TextView
+                    android:id="@+id/tv_withdrawal"
+                    style="@style/pretendard_medium_18"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/setting_withdrawal_button"
+                    android:textColor="@color/gray_400"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/guide_line_2"
+                    app:layout_constraintTop_toBottomOf="@id/guide_line_1" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
