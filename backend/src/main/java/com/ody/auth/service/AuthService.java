@@ -52,6 +52,13 @@ public class AuthService {
         return issueNewTokens(memberId);
     }
 
+    private void checkAlreadyLogout(long memberId) {
+        Member member = memberService.findById(memberId);
+        if(member.isLogout()){
+            throw new OdyBadRequestException("회원이 로그아웃 상태입니다.");
+        }
+    }
+
     private AuthResponse issueNewTokens(long memberId) {
         AccessToken accessToken = jwtTokenProvider.createAccessToken(memberId);
         RefreshToken refreshToken = jwtTokenProvider.createRefreshToken();
@@ -65,14 +72,6 @@ public class AuthService {
         jwtTokenProvider.validate(accessToken);
 
         long memberId = jwtTokenProvider.parseAccessToken(accessToken);
-        checkAlreadyLogout(memberId);
         memberService.updateRefreshToken(memberId, null);
-    }
-
-    private void checkAlreadyLogout(long memberId) {
-        Member member = memberService.findById(memberId);
-        if(member.isLogout()){
-            throw new OdyBadRequestException("이미 회원이 로그아웃 상태입니다.");
-        }
     }
 }

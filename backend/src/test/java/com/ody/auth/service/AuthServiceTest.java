@@ -42,6 +42,18 @@ class AuthServiceTest extends BaseServiceTest {
                     .doesNotThrowAnyException();
         }
 
+        @DisplayName("회원이 이미 로그아웃 상태더라도 200을 반환한다")
+        @Test
+        void logoutSuccessWhenAlreadyLogout() {
+            Member logoutMember = createMemberByRefreshToken(null);
+            AccessToken validAccessToken = TokenFixture.getValidAccessToken(logoutMember.getId());
+
+            String rawAccessTokenValue = resolveRawAccessToken(validAccessToken);
+
+            assertThatCode(() -> authService.logout(rawAccessTokenValue))
+                    .doesNotThrowAnyException();
+        }
+
         @DisplayName("실패 : 만료된 액세스 토큰으로 로그아웃 시도 시 401을 반환한다")
         @Test
         void logoutFailWhenExpiredAccessToken() {
@@ -52,17 +64,6 @@ class AuthServiceTest extends BaseServiceTest {
 
             assertThatThrownBy(() -> authService.logout(rawAccessTokenValue))
                     .isInstanceOf(OdyUnauthorizedException.class);
-        }
-
-        @DisplayName("실패 : 이미 로그아웃한 유저 엑세스 토큰으로 로그아웃 시도 시 400을 반환한다")
-        @Test
-        void logoutFailWhenTryAlreadyLogoutMember() {
-            Member member = createMemberByRefreshToken(null);
-            AccessToken validAccessToken = TokenFixture.getValidAccessToken(member.getId());
-            String rawAccessTokenValue = resolveRawAccessToken(validAccessToken);
-
-            assertThatThrownBy(() -> authService.logout(rawAccessTokenValue))
-                    .isInstanceOf(OdyBadRequestException.class);
         }
 
         private String resolveRawAccessToken(AccessToken accessToken) {
