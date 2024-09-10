@@ -1,47 +1,42 @@
 package com.ody.util;
 
-import com.ody.common.exception.OdyNotFoundException;
+import com.ody.common.exception.OdyServerErrorException;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Random;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InviteCodeGenerator {
 
-    private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final Random RANDOM = new Random();
-    private static final int RANDOM_LENGTH = 2;
+    private static final int BYTE_CONVERT_FOR_HEX_LENGTH = 4;
+    private static final String HEX_FORMAT = "%02x";
 
-    public static String encode(Long meetingId) {
-        byte[] bytes = String.format("%04d", meetingId)
-                .getBytes(StandardCharsets.UTF_8);
-        String base64Encoded = Base64.getUrlEncoder()
-                .withoutPadding()
-                .encodeToString(bytes);
-        return generateRandomString(base64Encoded);
+    public static String generate() {
+        String uuid = UUID.randomUUID().toString();
+        byte[] hashBytes = encryptBySHA256(uuid.getBytes(StandardCharsets.UTF_8));
+        return convertToHex(hashBytes, BYTE_CONVERT_FOR_HEX_LENGTH).toUpperCase();
     }
 
-    private static String generateRandomString(String base64Encoded) {
-        StringBuilder randomString = new StringBuilder(base64Encoded);
-        for (int i = 0; i < RANDOM_LENGTH; i++) {
-            int index = RANDOM.nextInt(CHARACTERS.length());
-            randomString.append(CHARACTERS.charAt(index));
-        }
-        return randomString.toString();
-    }
-
-    public static Long decode(String inviteCode) {
-        String base64Part = inviteCode.substring(0, inviteCode.length() - RANDOM_LENGTH);
-        byte[] decodedBytes = Base64.getUrlDecoder()
-                .decode(base64Part);
-        String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
-
+    private static byte[] encryptBySHA256(byte[] input) {
         try {
-            return Long.parseLong(decodedString.trim());
-        } catch (NumberFormatException exception) {
-            throw new OdyNotFoundException("유효하지 않은 초대 코드입니다.");
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            return messageDigest.digest(input);
+        } catch (NoSuchAlgorithmException exception) {
+            log.error("알고리즘 지원 불가 에러 발생 : {}", exception.getMessage());
+            throw new OdyServerErrorException(exception.getMessage());
         }
+    }
+
+    private static String convertToHex(byte[] hashBytes, int length) {
+        StringBuilder sb = new StringBuilder();
+        for (int byteIndex = 0; byteIndex < length; byteIndex++) {
+            sb.append(String.format(HEX_FORMAT, hashBytes[byteIndex]));
+        }
+        return sb.toString();
     }
 }
