@@ -29,6 +29,9 @@ public abstract class BaseServiceTest {
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
+    @Autowired
+    protected FixtureGenerator fixtureGenerator;
+
     @BeforeEach
     void cleanUp() {
         databaseCleaner.cleanUp();

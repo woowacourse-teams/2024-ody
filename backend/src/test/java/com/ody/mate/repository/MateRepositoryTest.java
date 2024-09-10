@@ -3,18 +3,27 @@ package com.ody.mate.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ody.common.Fixture;
+import com.ody.common.FixtureGenerator;
+import com.ody.common.config.JpaAuditingConfig;
+import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.notification.repository.NotificationRepository;
+import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
+@Import(JpaAuditingConfig.class)
 @DataJpaTest
 class MateRepositoryTest {
 
@@ -26,6 +35,28 @@ class MateRepositoryTest {
 
     @Autowired
     private MateRepository mateRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
+    private EtaRepository etaRepository;
+
+    private FixtureGenerator fixtureGenerator;
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @BeforeEach
+    void setUp() {
+        fixtureGenerator = new FixtureGenerator(
+                meetingRepository,
+                memberRepository,
+                mateRepository,
+                notificationRepository,
+                etaRepository
+        );
+    }
 
     @DisplayName("모임 ID로 모임 참여자를 찾는다")
     @Test
@@ -82,5 +113,29 @@ class MateRepositoryTest {
         Mate actualMate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member1.getId()).get();
 
         assertThat(actualMate.getId()).isEqualTo(expectedMate.getId());
+    }
+
+    @DisplayName("참여자를 삭제(soft delete)한다.")
+    @Test
+    void delete() {
+        Mate mate = fixtureGenerator.generateMate();
+
+        mateRepository.delete(mate);
+
+        Mate actual = (Mate) entityManager.createNativeQuery("select * from Mate where id = ?", Mate.class)
+                .setParameter(1, mate.getId())
+                .getSingleResult();
+        assertThat(actual.getDeletedAt()).isNotNull();
+    }
+
+    @DisplayName("삭제된 참여자는 조회하지 않는다.")
+    @Test
+    void doNotFindDeletedMate() {
+        Mate mate = fixtureGenerator.generateMate();
+
+        mateRepository.delete(mate);
+
+        Optional<Mate> actual = mateRepository.findById(mate.getId());
+        assertThat(actual).isNotPresent();
     }
 }

@@ -6,13 +6,10 @@ import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.service.EtaService;
 import com.ody.mate.domain.Mate;
-import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
-import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
-import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
@@ -93,5 +90,18 @@ public class MateService {
     private Mate findByMeetingIdAndMemberId(Long meetingId, Long memberId) {
         return mateRepository.findByMeetingIdAndMemberId(meetingId, memberId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 약속이거나 약속 참여자가 아닙니다."));
+    }
+
+    @Transactional
+    public void deleteByMemberId(long memberId) {
+        mateRepository.findAllByMemberId(memberId)
+                .forEach(mate -> deleteById(mate.getId()));
+    }
+
+    private void deleteById(long mateId) {
+        notificationService.updateAllStatusPendingToDismissedByMateId(mateId);
+        etaService.deleteByMateId(mateId);
+        mateRepository.findById(mateId)
+                .ifPresent(mateRepository::delete);
     }
 }
