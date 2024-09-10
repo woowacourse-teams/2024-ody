@@ -32,10 +32,10 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
         viewModel.navigatedReason.observe(this) {
             when (it) {
                 LoginNavigatedReason.LOGOUT -> {
-                    showSnackBar(R.string.logout_success)
+                    showSnackBar(R.string.login_logout_success)
                 }
                 LoginNavigatedReason.WITHDRAWAL -> {
-                    showSnackBar(R.string.withdrawal_success)
+                    showSnackBar(R.string.login_withdrawal_success)
                 }
             }
         }
