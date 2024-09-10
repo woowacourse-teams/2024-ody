@@ -14,8 +14,8 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         splashScreen = installSplashScreen()
         startSplash()
-        navigateToLogin()
         super.onCreate(savedInstanceState)
+        navigateToLogin()
     }
 
     private fun startSplash() {
