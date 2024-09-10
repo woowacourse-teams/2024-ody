@@ -1,6 +1,4 @@
 spring:
-  config:
-    import: classpath:private/private.yml
   profiles:
     default: "local"
     groups:

@@ -11,3 +11,10 @@ springdoc:
 
 odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT
+  api-key: ENC(8A1VHDvR44k6DXfWB5oudFz9FH4a0ZtqK5bApHvyrWQHiFK13Z6ZeBxVGufZFbbaI/1etI1hSyE=)
+
+auth:
+  access-key: ENC(jp1TJCM6l22zIzInTUvt9VXrb1WhNm1zY3dFgTSj6ad3585f5K7Q8A==)
+  access-expiration: ENC(RA/POzGT/Baq/ba9MxmMAQ==)
+  refresh-key: ENC(5uLKuwtNdyXnr61LRqQJ6Q2sfbhjW5vxgLADB4Na8YgoIkLvcmJk+A==)
+  refresh-expiration: ENC(LUMzldRJndHMoxKs+pyCF5J0MrT94NY+)
