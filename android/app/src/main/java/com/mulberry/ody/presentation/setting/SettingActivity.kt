@@ -20,6 +20,7 @@ import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
 import com.mulberry.ody.presentation.setting.listener.SettingListener
 import com.mulberry.ody.presentation.setting.model.SettingUiModel
+import com.mulberry.ody.presentation.setting.withdrawal.WithDrawalDialog
 
 class SettingActivity :
     BindingActivity<ActivitySettingBinding>(R.layout.activity_setting),
@@ -94,7 +95,7 @@ class SettingActivity :
             }
 
             SettingUiModel.WITHDRAW -> {
-                viewModel.withdrawAccount()
+                WithDrawalDialog().show(supportFragmentManager, WITHDRAWAL_DIALOG_TAG)
             }
         }
     }
@@ -129,6 +130,7 @@ class SettingActivity :
 
     companion object {
         private const val SETTING_ITEM_HORIZONTAL_MARGIN_DP = 26
+        private const val WITHDRAWAL_DIALOG_TAG = "withdrawal_dialog"
 
         fun getIntent(context: Context): Intent = Intent(context, SettingActivity::class.java)
     }

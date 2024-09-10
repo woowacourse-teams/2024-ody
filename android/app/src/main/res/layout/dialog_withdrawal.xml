@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/setting_withdrawal_button"
-                    android:textColor="@color/gray_400"
+                    android:textColor="@color/red"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/guide_line_2"
