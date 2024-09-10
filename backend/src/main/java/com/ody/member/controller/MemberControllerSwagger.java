@@ -1,5 +1,6 @@
 package com.ody.member.controller;
 
+import com.ody.member.domain.Member;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,13 +13,6 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "Member API")
 @SecurityRequirement(name = "Authorization")
 public interface MemberControllerSwagger {
-
-    @Operation(
-            summary = "회원 추가",
-            responses = @ApiResponse(responseCode = "201", description = "회원 추가 성공")
-    )
-    @ErrorCode500
-    ResponseEntity<Void> save(@Parameter(hidden = true) String authorization);
 
     @Operation(
             summary = "회원 삭제",
