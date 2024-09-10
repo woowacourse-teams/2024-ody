@@ -45,15 +45,18 @@ public class AuthService {
         if (jwtTokenProvider.isUnexpired(accessToken)) {
             return new AuthResponse(accessToken, refreshToken);
         }
-        if (!jwtTokenProvider.isUnexpired(refreshToken)) {
-            throw new OdyUnauthorizedException("리프레시 토큰이 만료되었습니다.");
-        }
 
+        jwtTokenProvider.validate(refreshToken);
         long memberId = jwtTokenProvider.parseAccessToken(accessToken);
-        if (!memberService.isMemberRefreshToken(memberId, refreshToken)) {
-            throw new OdyBadRequestException("리프레시 토큰이 유효하지 않습니다.");
-        }
+        checkAlreadyLogout(memberId);
         return issueNewTokens(memberId);
+    }
+
+    private void checkAlreadyLogout(long memberId) {
+        Member member = memberService.findById(memberId);
+        if(member.isLogout()){
+            throw new OdyBadRequestException("회원이 로그아웃 상태입니다.");
+        }
     }
 
     private AuthResponse issueNewTokens(long memberId) {
@@ -61,5 +64,14 @@ public class AuthService {
         RefreshToken refreshToken = jwtTokenProvider.createRefreshToken();
         memberService.updateRefreshToken(memberId, refreshToken);
         return new AuthResponse(accessToken, refreshToken);
+    }
+
+    @Transactional
+    public void logout(String rawAccessTokenValue) {
+        AccessToken accessToken = new AccessToken(rawAccessTokenValue);
+        jwtTokenProvider.validate(accessToken);
+
+        long memberId = jwtTokenProvider.parseAccessToken(accessToken);
+        memberService.updateRefreshToken(memberId, null);
     }
 }

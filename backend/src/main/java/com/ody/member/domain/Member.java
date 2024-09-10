@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -75,8 +74,12 @@ public class Member {
         return authProvider.getProviderId();
     }
 
-    public boolean isSame(RefreshToken otherRefreshToken) {
-        return this.refreshToken.equals(otherRefreshToken);
+    public boolean isLogout() {
+        return this.refreshToken == null;
+    }
+
+    public boolean isSame(AuthProvider otherAuthProvider) {
+        return this.authProvider.equals(otherAuthProvider);
     }
 
     public void updateRefreshToken(RefreshToken refreshToken) {
@@ -89,9 +92,5 @@ public class Member {
 
     public void updateDeviceToken(DeviceToken deviceToken) {
         this.deviceToken = deviceToken;
-    }
-
-    public boolean isSame(AuthProvider otherAuthProvider) {
-        return this.authProvider.equals(otherAuthProvider);
     }
 }

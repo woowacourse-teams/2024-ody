@@ -3,6 +3,7 @@ package com.ody.member.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
@@ -83,6 +84,20 @@ class MemberServiceTest extends BaseServiceTest {
             memberService.save(createMember("pid", "newDeviceToken"));
 
             assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("newDeviceToken");
+        }
+
+        @DisplayName("특정 회원의 리프레시 토큰을 삭제할 수 있다")
+        @Test
+        void removeMemberRefreshToken() {
+            Member member = createMember("pid", "deviceToken");
+            RefreshToken refreshToken = new RefreshToken("refresh-token=token");
+            member.updateRefreshToken(refreshToken);
+            member = memberRepository.save(member);
+
+            memberService.updateRefreshToken(member.getId(), null);
+
+            Member findMember = memberService.findById(member.getId());
+            assertThat(findMember.getRefreshToken()).isNull();
         }
 
         private Member createMember(String providerId, String deviceToken) {

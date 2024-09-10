@@ -6,11 +6,18 @@ import com.ody.auth.token.RefreshToken;
 
 public class TokenFixture {
 
-    private static AuthProperties authPropertiesForValidToken = new AuthProperties(
+    public static AuthProperties authPropertiesForValidToken = new AuthProperties(
             "accessKey",
             "refreshKey",
             60000,
             60000
+    );
+
+    public static AuthProperties authPropertiesForValidToken2 = new AuthProperties(
+            "accessKey",
+            "refreshKey",
+            30000,
+            30000
     );
 
     private static AuthProperties authPropertiesForExpiredToken = new AuthProperties(
@@ -45,6 +52,10 @@ public class TokenFixture {
 
     public static RefreshToken getValidRefreshToken() {
         return new RefreshToken(authPropertiesForValidToken);
+    }
+
+    public static RefreshToken getRefreshToken(AuthProperties authProperties) {
+        return new RefreshToken(authProperties);
     }
 
     public static RefreshToken getExpiredRefreshToken() {

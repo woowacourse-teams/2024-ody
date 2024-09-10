@@ -34,4 +34,11 @@ public class AuthController implements AuthControllerSwagger {
         AuthResponse authResponse = authService.renewTokens(authorization);
         return ResponseEntity.ok(authResponse);
     }
+
+    @Override
+    @PostMapping("/v1/auth/logout")
+    public ResponseEntity<Void> logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String rawAccessTokenValue) {
+        authService.logout(rawAccessTokenValue);
+        return ResponseEntity.ok().build();
+    }
 }

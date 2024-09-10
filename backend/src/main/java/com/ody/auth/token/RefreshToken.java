@@ -2,7 +2,6 @@ package com.ody.auth.token;
 
 import com.ody.auth.AuthProperties;
 import com.ody.common.exception.OdyBadRequestException;
-import com.ody.common.exception.OdyUnauthorizedException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.persistence.Column;
@@ -10,10 +9,8 @@ import jakarta.persistence.Embeddable;
 import java.util.Date;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @Embeddable
