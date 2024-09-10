@@ -18,7 +18,7 @@ create table if not exists meeting (
     address varchar(255) not null,
     latitude varchar(255) not null,
     longitude varchar(255) not null,
-    invite_code varchar(255) not null,
+    invite_code char(8) not null unique,
     overdue boolean not null,
     created_at timestamp not null default current_timestamp(),
     updated_at timestamp not null default current_timestamp(),
