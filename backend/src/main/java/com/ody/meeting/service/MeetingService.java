@@ -62,7 +62,7 @@ public class MeetingService {
 
     public Meeting findByInviteCode(String inviteCode) {
         return meetingRepository.findByInviteCode(inviteCode)
-                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 초대코드 입니다."));
+                .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 초대코드입니다."));
     }
 
     public Meeting findById(Long meetingId) {
