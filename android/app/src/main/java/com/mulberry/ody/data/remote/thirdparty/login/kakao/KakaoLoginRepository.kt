@@ -89,15 +89,16 @@ class KakaoLoginRepository(
 
     private suspend fun withdrawAccountByKakao(): ApiResult<Unit> {
         return try {
-            val result = suspendCoroutine { continuation ->
-                UserApiClient.instance.unlink { error ->
-                    if (error != null) {
-                        continuation.resumeWithException(error)
-                    } else {
-                        continuation.resume(Unit)
+            val result =
+                suspendCoroutine { continuation ->
+                    UserApiClient.instance.unlink { error ->
+                        if (error != null) {
+                            continuation.resumeWithException(error)
+                        } else {
+                            continuation.resume(Unit)
+                        }
                     }
                 }
-            }
             ApiResult.Success(result)
         } catch (e: IOException) {
             ApiResult.NetworkError(e)
