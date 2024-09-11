@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  sql:
+    init:
+      mode: never
+      schema-locations: classpath:schema.sql
+
+log:
+  file:
+    path: /ody-prod-logs

@@ -19,7 +19,9 @@ create table if not exists meeting (
     latitude varchar(255) not null,
     longitude varchar(255) not null,
     invite_code varchar(255) not null,
+    overdue boolean not null,
     created_at timestamp not null default current_timestamp(),
+    updated_at timestamp not null default current_timestamp(),
     primary key (id)
 );
 
@@ -54,9 +56,11 @@ create table if not exists notification (
     id bigint not null auto_increment,
     mate_id bigint not null,
     `type` varchar(225) check (`type` in ('departure_reminder','entry', 'nudge')) not null,
-    status varchar(225) check (status in ('done','pending')) not null,
     send_at timestamp not null,
+    status varchar(225) check (status in ('done','pending')) not null,
+    fcm_topic varchar(225) null,
     created_at timestamp not null default current_timestamp(),
+    updated_at timestamp not null default current_timestamp(),
     primary key (id),
     constraint fk_notification_mate_id foreign key (mate_id) references mate (id)
 );

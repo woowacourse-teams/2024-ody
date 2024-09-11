@@ -50,9 +50,10 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
-    suspend fun deleteAuthToken() {
-        context.dataStore.edit { preferences ->
-            preferences.remove(ACCESS_TOKEN)
+    suspend fun removeAuthToken() {
+        context.dataStore.edit {
+            it.remove(ACCESS_TOKEN)
+            it.remove(REFRESH_TOKEN)
         }
     }
 

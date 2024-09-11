@@ -87,6 +87,10 @@
     <string name="invite_code_input_hint">초대 코드</string>
     <string name="invalid_invite_code">초대 코드가 뭔가 이상한데요? 🤔</string>
 
+    <!-- activity_login -->
+    <string name="login_logout_success">로그아웃 되었습니다.</string>
+    <string name="login_withdrawal_success">회원 탈퇴 되었습니다.</string>
+
     <!-- activity_setting -->
     <string name="setting_main_title">설정</string>
     <string name="setting_withdrawal_title_front">정말&#160;</string>

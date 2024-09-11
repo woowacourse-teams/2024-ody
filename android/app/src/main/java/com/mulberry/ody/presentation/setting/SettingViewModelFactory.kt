@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mulberry.ody.data.remote.thirdparty.login.kakao.KakaoLoginRepository
 import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
-import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 
 class SettingViewModelFactory(

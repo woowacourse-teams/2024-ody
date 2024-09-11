@@ -1,15 +1,11 @@
 package com.mulberry.ody.presentation.setting
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
-import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
@@ -17,6 +13,7 @@ import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.login.LoginActivity
+import com.mulberry.ody.presentation.login.LoginNavigatedReason
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
 import com.mulberry.ody.presentation.setting.listener.SettingListener
 import com.mulberry.ody.presentation.setting.model.SettingUiModel
@@ -41,23 +38,18 @@ class SettingActivity :
         initializeObserve()
     }
 
-    override fun initializeBinding() {
-        binding.backListener = this
-        binding.rvSetting.adapter = adapter
-    }
-
-    private fun initializeSettingAdapter() {
-        val dividerItemDecoration =
-            MaterialDividerItemDecoration(this, LinearLayout.VERTICAL).apply {
-                isLastItemDecorated = false
-                dividerInsetStart = dpToPx(SETTING_ITEM_HORIZONTAL_MARGIN_DP)
-                dividerInsetEnd = dpToPx(SETTING_ITEM_HORIZONTAL_MARGIN_DP)
-            }
-        binding.rvSetting.addItemDecoration(dividerItemDecoration)
-        adapter.submitList(SettingUiModel.entries)
-    }
-
     private fun initializeObserve() {
+        viewModel.loginNavigateEvent.observe(this) {
+            when (it) {
+                LoginNavigatedReason.LOGOUT -> {
+                    navigateToLogin()
+                }
+
+                LoginNavigatedReason.WITHDRAWAL -> {
+                }
+            }
+        }
+
         viewModel.isLoading.observe(this) { isLoading ->
             if (isLoading) {
                 showLoadingDialog()
@@ -77,6 +69,22 @@ class SettingActivity :
         }
     }
 
+    override fun initializeBinding() {
+        binding.backListener = this
+        binding.rvSetting.adapter = adapter
+    }
+
+    private fun initializeSettingAdapter() {
+        val dividerItemDecoration =
+            MaterialDividerItemDecoration(this, LinearLayout.VERTICAL).apply {
+                isLastItemDecorated = false
+                dividerInsetStart = dpToPx(SETTING_ITEM_HORIZONTAL_MARGIN_DP)
+                dividerInsetEnd = dpToPx(SETTING_ITEM_HORIZONTAL_MARGIN_DP)
+            }
+        binding.rvSetting.addItemDecoration(dividerItemDecoration)
+        adapter.submitList(SettingUiModel.entries)
+    }
+
     override fun onBack() = finish()
 
     override fun onClickSettingItem(settingUiModel: SettingUiModel) {
@@ -92,6 +100,7 @@ class SettingActivity :
             }
 
             SettingUiModel.LOGOUT -> {
+                viewModel.kakaoLogout()
             }
 
             SettingUiModel.WITHDRAW -> {
@@ -100,27 +109,12 @@ class SettingActivity :
         }
     }
 
-    private fun showWithDrawalDialog() {
-        val image = AppCompatResources.getDrawable(this@SettingActivity, R.drawable.ic_sad_ody)
-        val imageView = ImageView(this).apply { setImageDrawable(image) }
-
-        val layout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            addView(imageView)
-        }
-
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("이미지 다이얼로그")
-            .setView(layout)
-            .setPositiveButton("확인") { dialog, _ ->
-                Log.e("TEST", "g화긴")
-            }
-            .setNegativeButton("취소") { dialog, _ ->
-                Log.e("TEST", "c취소")
-            }
-            .create()
-
-        dialog.show()
+    private fun navigateToLogin() {
+        val intent = LoginActivity.getIntent(this)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.putExtra(NAVIGATED_REASON, LoginNavigatedReason.LOGOUT)
+        startActivity(intent)
+        finish()
     }
 
     private fun dpToPx(dp: Int): Int {
@@ -129,6 +123,7 @@ class SettingActivity :
     }
 
     companion object {
+        private const val NAVIGATED_REASON = "NAVIGATED_REASON"
         private const val SETTING_ITEM_HORIZONTAL_MARGIN_DP = 26
         private const val WITHDRAWAL_DIALOG_TAG = "withdrawal_dialog"
 

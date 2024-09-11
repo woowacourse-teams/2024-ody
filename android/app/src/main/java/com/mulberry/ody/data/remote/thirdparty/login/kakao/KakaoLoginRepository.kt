@@ -6,6 +6,7 @@ import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
 import com.mulberry.ody.data.remote.core.entity.login.request.LoginRequest
 import com.mulberry.ody.data.remote.core.service.LoginService
+import com.mulberry.ody.data.remote.core.service.LogoutService
 import com.mulberry.ody.data.remote.core.service.MemberService
 import com.mulberry.ody.data.remote.thirdparty.login.entity.UserProfile
 import com.mulberry.ody.domain.apiresult.ApiResult
@@ -20,6 +21,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class KakaoLoginRepository(
     private val loginService: LoginService,
+    private val logoutService: LogoutService,
     private val memberService: MemberService,
     private val odyDatastore: OdyDatastore,
     private val kakaoOAuthLoginService: KakaoOAuthLoginService,
@@ -48,6 +50,22 @@ class KakaoLoginRepository(
             odyDatastore.setAuthToken(token)
             token
         }
+    }
+
+    suspend fun logout(): ApiResult<Unit> {
+        val kakaoLogoutRequest = kakaoOAuthLoginService.logout()
+        val logoutRequest = logoutService.postLogout()
+        odyDatastore.removeAuthToken()
+
+        if (kakaoLogoutRequest.isFailure) {
+            val exception =
+                kakaoLogoutRequest.exceptionOrNull() ?: return ApiResult.Unexpected(
+                    Exception("kakaoLogoutRequest가 null입니다"),
+                )
+            return ApiResult.Unexpected(exception)
+        }
+
+        return logoutRequest
     }
 
     private suspend fun buildLoginRequest(userProfile: UserProfile): Result<LoginRequest> =

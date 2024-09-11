@@ -14,9 +14,8 @@ import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.mate.dto.request.MateSaveRequestV2;
-import com.ody.mate.dto.response.MateSaveResponseV2;
-import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.request.NudgeRequest;
+import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
@@ -98,7 +97,7 @@ class MateServiceTest extends BaseServiceTest {
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
             mateService.nudge(nudgeRequest);
 
-            Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any(), any());
+            Mockito.verify(fcmPushSender, times(1)).sendNudgeMessage(any(), any());
         }
 
         @DisplayName("약속이 지금이고 소요시간이 2분으로 Eta상태가 지각인 mate를 재촉할 수 있다")
@@ -112,7 +111,7 @@ class MateServiceTest extends BaseServiceTest {
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateMate.getId());
             mateService.nudge(nudgeRequest);
 
-            Mockito.verify(getFcmPushSender(), times(1)).sendNudgeMessage(any(), any());
+            Mockito.verify(fcmPushSender, times(1)).sendNudgeMessage(any(), any());
         }
 
         @DisplayName("같은 약속 참여자가 아니라면 재촉할 수 없다")
