@@ -8,12 +8,12 @@ import java.time.format.DateTimeFormatter
 
 fun NotificationLogsResponse.toNotificationList(): List<NotificationLog> =
     this.logList.map {
-        val type = NotificationType.from(it.type)
-        val nickname = it.nickname
-        val createdAt = it.createdAt.parseToLocalDateTime()
-        val imageUrl = it.imageUrl
-
-        NotificationLog(type, nickname, createdAt, imageUrl)
+        NotificationLog(
+            type = NotificationType.from(it.type),
+            nickname = it.nickname,
+            createdAt = it.createdAt.parseToLocalDateTime(),
+            imageUrl = it.imageUrl,
+        )
     }
 
 private fun String.parseToLocalDateTime(): LocalDateTime {
