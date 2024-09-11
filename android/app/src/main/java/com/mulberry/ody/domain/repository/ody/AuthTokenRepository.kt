@@ -7,6 +7,4 @@ interface AuthTokenRepository {
     suspend fun fetchAuthToken(): Result<AuthToken>
 
     suspend fun refreshAuthToken(): ApiResult<AuthToken>
-
-    suspend fun deleteAuthToken(): ApiResult<Unit>
 }
