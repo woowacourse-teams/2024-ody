@@ -30,12 +30,12 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             select mate
             from Mate mate
             join fetch mate.meeting
-            where mate.member.id = :memberId
-            and mate.meeting.id = :meetingId
+            where mate.meeting.id = :meetingId
+            and mate.member.id = :memberId
             """)
     Optional<Mate> findByMeetingIdAndMemberId(Long meetingId, Long memberId);
 
-    boolean existsByMeetingIdAndMemberId(Long memberId, Long meetingId);
+    boolean existsByMeetingIdAndMemberId(Long meetingId, Long memberId);
 
-    int countByMeetingId(Long id);
+    int countByMeetingId(Long meetingId);
 }
