@@ -45,6 +45,7 @@ class SettingActivity :
                 }
 
                 LoginNavigatedReason.WITHDRAWAL -> {
+                    navigateToWithdrawal()
                 }
             }
         }
@@ -61,10 +62,6 @@ class SettingActivity :
         }
         viewModel.errorEvent.observe(this) {
             showSnackBar(R.string.error_guide)
-        }
-        viewModel.isSuccessWithdrawal.observe(this) {
-            startActivity(LoginActivity.getIntent(this))
-            finishAffinity()
         }
     }
 
@@ -109,11 +106,21 @@ class SettingActivity :
     }
 
     private fun navigateToLogin() {
-        val intent = LoginActivity.getIntent(this)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.putExtra(NAVIGATED_REASON, LoginNavigatedReason.LOGOUT)
+        val intent =
+            LoginActivity.getIntent(this).apply {
+                putExtra(NAVIGATED_REASON, LoginNavigatedReason.LOGOUT)
+            }
         startActivity(intent)
-        finish()
+        finishAffinity()
+    }
+
+    private fun navigateToWithdrawal() {
+        val intent =
+            LoginActivity.getIntent(this).apply {
+                putExtra(NAVIGATED_REASON, LoginNavigatedReason.WITHDRAWAL)
+            }
+        startActivity(intent)
+        finishAffinity()
     }
 
     private fun dpToPx(dp: Int): Int {

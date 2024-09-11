@@ -1,7 +1,5 @@
 package com.mulberry.ody.presentation.setting
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.data.remote.thirdparty.login.kakao.KakaoLoginRepository
 import com.mulberry.ody.domain.apiresult.onFailure
@@ -23,9 +21,6 @@ class SettingViewModel(
     private val _loginNavigateEvent: MutableSingleLiveData<LoginNavigatedReason> = MutableSingleLiveData()
     val loginNavigateEvent: SingleLiveData<LoginNavigatedReason> get() = _loginNavigateEvent
 
-    private val _isSuccessWithdrawal: MutableLiveData<Unit> = MutableLiveData()
-    val isSuccessWithdrawal: LiveData<Unit> = _isSuccessWithdrawal
-
     fun kakaoLogout() {
         viewModelScope.launch {
             kakaoLoginRepository.logout()
@@ -38,7 +33,7 @@ class SettingViewModel(
             startLoading()
             kakaoLoginRepository.withdrawAccount()
                 .onSuccess {
-                    _isSuccessWithdrawal.value = Unit
+                    _loginNavigateEvent.setValue(LoginNavigatedReason.WITHDRAWAL)
                 }.onFailure { code, errorMessage ->
                     handleError()
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
