@@ -26,6 +26,7 @@ fun ImageView.setImageUrl(imageUrl: String) {
 
 @BindingAdapter("circleImageUrl")
 fun ImageView.setCircleImageUrl(imageUrl: String) {
+    if (imageUrl.isEmpty()) return
     Glide.with(context)
         .load(imageUrl)
         .circleCrop()
