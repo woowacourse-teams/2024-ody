@@ -17,7 +17,7 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
-import com.ody.notification.dto.request.FcmSendRequest;
+import com.ody.notification.dto.request.FcmTopicSendRequest;
 import com.ody.notification.repository.NotificationRepository;
 import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
@@ -57,7 +57,7 @@ class FcmEventSchedulerTest extends BaseServiceTest {
                 NotificationStatus.PENDING,
                 new FcmTopic(odyMeeting)
         ));
-        FcmSendRequest fcmSendRequest = new FcmSendRequest(notification);
+        FcmTopicSendRequest fcmTopicSendRequest = new FcmTopicSendRequest(notification);
 
         // 비동기 작업을 동기화 시키기 위한 클래스
         // 파라미터 인자에 비동기 작업의 개수를 입력해준다.
@@ -70,15 +70,15 @@ class FcmEventSchedulerTest extends BaseServiceTest {
         doAnswer(invocation -> {
             latch.countDown();
             return null;
-        }).when(fcmPushSender).sendPushNotification(fcmSendRequest);
+        }).when(fcmPushSender).sendPushNotification(fcmTopicSendRequest);
 
         // 2초후에 메세지가 가도록 설정한 fcmSendRequest를 인자로 넣어 실제 sendPushNotification()를 호출한다.
-        fcmPushSender.sendPushNotification(fcmSendRequest);
+        fcmPushSender.sendPushNotification(fcmTopicSendRequest);
 
         // latch의 카운트가 0이될 때까지 대기할 시간을 정의한다.
         assertThat(latch.await(2, TimeUnit.SECONDS)).isTrue();
 
         // sendPushNotification() 메서드가 호출되었는지 검증한다.
-        verify(fcmPushSender).sendPushNotification(fcmSendRequest);
+        verify(fcmPushSender).sendPushNotification(fcmTopicSendRequest);
     }
 }
