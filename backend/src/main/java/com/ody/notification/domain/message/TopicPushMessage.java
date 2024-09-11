@@ -5,13 +5,13 @@ import com.ody.notification.domain.Notification;
 import lombok.Getter;
 
 @Getter
-public class PushMessage {
+public class TopicPushMessage {
 
     private final Message message;
 
-    public PushMessage(Notification notification) {
+    public TopicPushMessage(Notification notification) {
         this.message = Message.builder()
-                .putData("type", notification.getType().toString())
+                .putData("type", notification.getType().name())
                 .putData("nickname", notification.getMate().getNicknameValue())
                 .putData("meetingId", notification.getMeetingIdExtractedByFcmTopic())
                 .setTopic(notification.getFcmTopicValue())
