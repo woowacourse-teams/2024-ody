@@ -1,6 +1,7 @@
 package com.mulberry.ody.presentation.login
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.data.remote.thirdparty.login.kakao.KakaoLoginRepository
 import com.mulberry.ody.domain.apiresult.onFailure
@@ -15,10 +16,20 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val authTokenRepository: AuthTokenRepository,
     private val kakaoLoginRepository: KakaoLoginRepository,
+    private val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
+    private val _navigatedReason: MutableSingleLiveData<LoginNavigatedReason> = MutableSingleLiveData()
+    val navigatedReason: SingleLiveData<LoginNavigatedReason> get() = _navigatedReason
+
     private val _navigateAction: MutableSingleLiveData<LoginNavigateAction> =
         MutableSingleLiveData()
     val navigateAction: SingleLiveData<LoginNavigateAction> get() = _navigateAction
+
+    fun checkIfNavigated() {
+        savedStateHandle.get<LoginNavigatedReason>(NAVIGATED_REASON) ?.let { reason ->
+            _navigatedReason.setValue(reason)
+        }
+    }
 
     fun checkIfLogined() {
         viewModelScope.launch {
@@ -46,5 +57,9 @@ class LoginViewModel(
 
     private fun navigateToMeetings() {
         _navigateAction.setValue(LoginNavigateAction.NavigateToMeetings)
+    }
+
+    companion object {
+        private val NAVIGATED_REASON = "NAVIGATED_REASON"
     }
 }
