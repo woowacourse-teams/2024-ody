@@ -79,7 +79,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @PathVariable String inviteCode
     ) {
-        meetingService.validateInviteCode(inviteCode);
+        meetingService.findByInviteCode(inviteCode);
         return ResponseEntity.ok()
                 .build();
     }
