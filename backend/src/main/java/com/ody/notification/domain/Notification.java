@@ -65,7 +65,7 @@ public class Notification extends BaseEntity {
                 NotificationType.ENTRY,
                 LocalDateTime.now(),
                 NotificationStatus.PENDING,
-                new FcmTopic(mate.getMeeting())
+                null
         );
     }
 
@@ -85,7 +85,7 @@ public class Notification extends BaseEntity {
                 NotificationType.NUDGE,
                 LocalDateTime.now(),
                 NotificationStatus.PENDING,
-                new FcmTopic(nudgeMate.getMeeting())
+                null
         );
     }
 
@@ -95,10 +95,6 @@ public class Notification extends BaseEntity {
 
     public String getFcmTopicValue() {
         return fcmTopic.getValue();
-    }
-
-    public String getMeetingIdExtractedByFcmTopic() {
-        return fcmTopic.extractMeetingId();
     }
 
     public DeviceToken getMateDeviceToken() {

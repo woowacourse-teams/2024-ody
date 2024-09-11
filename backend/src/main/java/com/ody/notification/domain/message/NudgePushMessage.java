@@ -14,7 +14,7 @@ public class NudgePushMessage {
         this.message = Message.builder()
                 .putData("type", recipientNotification.getType().name())
                 .putData("nickname", requestMate.getNicknameValue())
-                .putData("meetingId", recipientNotification.getMeetingIdExtractedByFcmTopic())
+                .putData("meetingId", requestMate.getMeeting().getId().toString())
                 .setToken(recipientNotification.getMateDeviceToken().getValue())
                 .build();
     }

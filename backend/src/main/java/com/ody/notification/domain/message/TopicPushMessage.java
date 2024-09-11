@@ -13,7 +13,7 @@ public class TopicPushMessage {
         this.message = Message.builder()
                 .putData("type", notification.getType().name())
                 .putData("nickname", notification.getMate().getNicknameValue())
-                .putData("meetingId", notification.getMeetingIdExtractedByFcmTopic())
+                .putData("meetingId", notification.getMate().getMeeting().getId().toString())
                 .setTopic(notification.getFcmTopicValue())
                 .build();
     }

@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class FcmTopic {
 
     private static final String TOPIC_NAME_DELIMITER = "_";
-    private static final int MEETING_ID_INDEX = 0;
 
     @Column(name = "fcm_topic")
     private String value;
@@ -30,9 +29,5 @@ public class FcmTopic {
         return meeting.getId().toString()
                 + TOPIC_NAME_DELIMITER
                 + meeting.getCreatedAt();
-    }
-
-    public String extractMeetingId() {
-        return value.split(TOPIC_NAME_DELIMITER)[MEETING_ID_INDEX];
     }
 }
