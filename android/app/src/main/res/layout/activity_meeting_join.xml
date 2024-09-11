@@ -71,21 +71,9 @@
             android:maxLines="1"
             android:text="@{vm.departureAddress}"
             android:onClick="@{() -> addressSearchListener.onSearch()}"
-            app:layout_constraintBottom_toTopOf="@id/tv_departure_information"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_departure_front" />
-
-        <TextView
-            android:id="@+id/tv_departure_information"
-            style="@style/pretendard_regular_14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:text="@string/address_question_information"
-            android:textColor="@color/purple_800"
-            app:layout_constraintStart_toStartOf="@id/et_departure"
-            app:layout_constraintTop_toBottomOf="@id/et_departure" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_next"
