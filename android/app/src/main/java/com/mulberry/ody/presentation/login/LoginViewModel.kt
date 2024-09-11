@@ -11,9 +11,12 @@ import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.MutableSingleLiveData
 import com.mulberry.ody.presentation.common.SingleLiveData
+import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
+import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
+    private val analyticsHelper: AnalyticsHelper,
     private val authTokenRepository: AuthTokenRepository,
     private val kakaoLoginRepository: KakaoLoginRepository,
     private val savedStateHandle: SavedStateHandle,
@@ -43,15 +46,18 @@ class LoginViewModel(
 
     fun loginWithKakao(context: Context) {
         viewModelScope.launch {
+            startLoading()
             kakaoLoginRepository.login(context)
                 .onSuccess {
                     navigateToMeetings()
                 }.onFailure { code, errorMessage ->
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                     handleError()
                 }.onNetworkError {
                     handleNetworkError()
                     lastFailedAction = { loginWithKakao(context) }
                 }
+            stopLoading()
         }
     }
 
@@ -60,6 +66,7 @@ class LoginViewModel(
     }
 
     companion object {
-        private val NAVIGATED_REASON = "NAVIGATED_REASON"
+        private val TAG = LoginViewModel::class.simpleName
+        private const val NAVIGATED_REASON = "NAVIGATED_REASON"
     }
 }
