@@ -78,7 +78,7 @@ public class Notification extends BaseEntity {
     }
 
     public boolean isDepartureReminder() {
-        return this.type == NotificationType.DEPARTURE_REMINDER;
+        return this.type.isDepartureReminder();
     }
 
     public void updateStatusToDone() {
