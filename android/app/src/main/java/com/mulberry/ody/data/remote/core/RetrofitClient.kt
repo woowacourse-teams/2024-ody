@@ -12,14 +12,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 
-class RetrofitClient(
-    private val authTokenRepository: AuthTokenRepository,
-    private val baseUrl: String = BuildConfig.BASE_URL,
-) {
+class RetrofitClient(private val authTokenRepository: AuthTokenRepository) {
     val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .client(authHttpClient)
-            .baseUrl(baseUrl)
+            .baseUrl(BASE_URL)
             .addCallAdapterFactory(ApiResultCallAdapter.Factory())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
@@ -28,7 +25,7 @@ class RetrofitClient(
     val loginRetrofit: Retrofit by lazy {
         Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl(baseUrl)
+            .baseUrl(BASE_URL)
             .addCallAdapterFactory(ApiResultCallAdapter.Factory())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
@@ -37,7 +34,7 @@ class RetrofitClient(
     val refreshRetrofit: Retrofit by lazy {
         Retrofit.Builder()
             .client(refreshHttpClient)
-            .baseUrl(baseUrl)
+            .baseUrl(BASE_URL)
             .addCallAdapterFactory(ApiResultCallAdapter.Factory())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
@@ -80,5 +77,9 @@ class RetrofitClient(
                 Timber.tag("OkHttp").d(message)
             }
         HttpLoggingInterceptor(logger).setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+    companion object {
+        private val BASE_URL = if (BuildConfig.DEBUG) BuildConfig.BASE_DEV_URL else BuildConfig.BASE_PROD_URL
     }
 }
