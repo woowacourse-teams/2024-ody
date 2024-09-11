@@ -27,7 +27,6 @@ public class InviteCodeGenerator {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             return messageDigest.digest(input);
         } catch (NoSuchAlgorithmException exception) {
-            log.error("알고리즘 지원 불가 에러 발생 : {}", exception.getMessage());
             throw new OdyServerErrorException(exception.getMessage());
         }
     }
