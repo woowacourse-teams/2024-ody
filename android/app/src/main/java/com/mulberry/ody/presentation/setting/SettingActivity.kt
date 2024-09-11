@@ -27,7 +27,6 @@ class SettingActivity :
     private val viewModel by viewModels<SettingViewModel> {
         SettingViewModelFactory(
             analyticsHelper,
-            application.authTokenRepository,
             application.kakaoLoginRepository,
         )
     }

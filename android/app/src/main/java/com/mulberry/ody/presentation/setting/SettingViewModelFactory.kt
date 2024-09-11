@@ -8,14 +8,12 @@ import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 
 class SettingViewModelFactory(
     private val analyticsHelper: AnalyticsHelper,
-    private val authTokenRepository: AuthTokenRepository,
     private val kakaoLoginRepository: KakaoLoginRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(SettingViewModel::class.java)) {
             SettingViewModel(
                 analyticsHelper,
-                authTokenRepository,
                 kakaoLoginRepository,
             ) as T
         } else {

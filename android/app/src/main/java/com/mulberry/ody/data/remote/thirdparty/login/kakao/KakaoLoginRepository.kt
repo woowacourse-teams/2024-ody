@@ -79,7 +79,15 @@ class KakaoLoginRepository(
         }
 
     suspend fun withdrawAccount(): ApiResult<Unit> {
-        memberService.deleteMember()
+        val deleteMemberResult = memberService.deleteMember()
+        if (deleteMemberResult.isFailure) {
+            return deleteMemberResult
+        }
+        odyDatastore.removeAuthToken()
+        return withdrawAccountByKakao()
+    }
+
+    private suspend fun withdrawAccountByKakao(): ApiResult<Unit> {
         return try {
             val result = suspendCoroutine { continuation ->
                 UserApiClient.instance.unlink { error ->
