@@ -21,10 +21,10 @@ public abstract class BaseServiceTest {
     private FcmConfig fcmConfig;
 
     @MockBean
-    private FcmPushSender fcmPushSender;
+    protected FcmPushSender fcmPushSender;
 
     @MockBean
-    private FcmSubscriber fcmSubscriber;
+    protected FcmSubscriber fcmSubscriber;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -32,10 +32,6 @@ public abstract class BaseServiceTest {
     @BeforeEach
     void cleanUp() {
         databaseCleaner.cleanUp();
-    }
-
-    public FcmPushSender getFcmPushSender() {
-        return fcmPushSender;
     }
 }
 

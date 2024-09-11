@@ -9,20 +9,15 @@
 
         <variable
             name="listener"
-            type="com.woowacourse.ody.presentation.meetings.listener.MeetingsListener" />
+            type="com.mulberry.ody.presentation.meetings.listener.MeetingsListener" />
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.meetings.MeetingsViewModel" />
-
-        <variable
-            name="isCatalogsEmpty"
-            type="Boolean" />
+            type="com.mulberry.ody.presentation.meetings.MeetingsViewModel" />
 
         <variable
             name="isFloatingButtonExpanded"
             type="Boolean" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +27,8 @@
 
         <include
             android:id="@+id/tb_intro"
-            layout="@layout/toolbar_intro" />
+            layout="@layout/toolbar_intro"
+            app:meetingsListener="@{listener}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -41,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:visibility="@{isCatalogsEmpty}">
+            app:visibility="@{vm.isMeetingCatalogsEmpty}">
 
             <ImageView
                 android:id="@+id/iv_ody_character"
@@ -73,8 +69,9 @@
             android:padding="16dp"
             app:itemAnimator="@{null}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_intro"
-            app:visibility="@{!isCatalogsEmpty}"
+            app:visibility="@{!vm.isMeetingCatalogsEmpty}"
             tools:listitem="@layout/item_meeting_catalog" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -17,7 +17,14 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             """)
     Optional<Mate> findFetchedMateById(Long id);
 
-    List<Mate> findAllByMeetingId(Long meetingId);
+    @Query("""
+            select mate
+            from Mate mate
+            join fetch mate.member
+            where mate.meeting.id = :meetingId 
+            and mate.meeting.overdue = false
+            """)
+    List<Mate> findAllByOverdueFalseMeetingId(Long meetingId);
 
     @Query("""
             select mate

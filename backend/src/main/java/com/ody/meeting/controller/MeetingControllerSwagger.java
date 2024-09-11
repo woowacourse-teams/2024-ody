@@ -39,7 +39,7 @@ public interface MeetingControllerSwagger {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "존재하지 않은 약속방이거나 약속방 일원이 아닌 경우",
+                            description = "존재하지 않은 약속이거나 약속 일원이 아닌 경우",
                             content = @Content(schema = @Schema(implementation = ProblemDetail.class))
                     )
             }

@@ -30,5 +30,9 @@
 -dontwarn org.openjsse.**
 
 # retrofit
--keep class com.woowacourse.ody.data.retrofit.* { <fields>; }
--keep class com.woowacourse.ody.domain.apiresult.ApiResult
+-keep class com.mulberry.ody.data.retrofit.* { *; }
+-keep class com.mulberry.ody.domain.apiresult.ApiResult
+
+# moshi
+-keep class com.squareup.moshi.** { *; }
+-keep class com.mulberry.ody.data.remote.thirdparty.location.entity.response.** { *; }

@@ -2,9 +2,6 @@ package com.ody.meeting.controller;
 
 import com.ody.common.annotation.AuthMember;
 import com.ody.eta.dto.request.MateEtaRequest;
-import com.ody.eta.dto.response.MateEtaResponse;
-import com.ody.eta.dto.response.MateEtaResponses;
-import com.ody.mate.dto.response.MateResponse;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
@@ -35,8 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MeetingController implements MeetingControllerSwagger {
 
     private final MeetingService meetingService;
-    private final NotificationService notificationService;
     private final MateService mateService;
+    private final NotificationService notificationService;
 
     @Override
     @PostMapping("/v1/meetings")

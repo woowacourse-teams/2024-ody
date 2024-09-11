@@ -77,4 +77,8 @@ public class Mate {
     public DeviceToken getMemberDeviceToken() {
         return member.getDeviceToken();
     }
+
+    public String getMemberImageUrl() {
+        return member.getImageUrl();
+    }
 }

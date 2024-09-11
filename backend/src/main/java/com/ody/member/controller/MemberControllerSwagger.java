@@ -1,5 +1,6 @@
 package com.ody.member.controller;
 
+import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,4 +19,12 @@ public interface MemberControllerSwagger {
     )
     @ErrorCode500
     ResponseEntity<Void> save(@Parameter(hidden = true) String authorization);
+
+    @Operation(
+            summary = "회원 삭제",
+            responses = @ApiResponse(responseCode = "204", description = "회원 삭제 성공")
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<Void> delete(@Parameter(hidden = true) String authorization);
 }

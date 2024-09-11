@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="vm"
-            type="com.woowacourse.ody.presentation.creation.MeetingCreationViewModel" />
+            type="com.mulberry.ody.presentation.creation.MeetingCreationViewModel" />
 
         <variable
             name="addressSearchListener"
-            type="com.woowacourse.ody.presentation.address.listener.AddressSearchListener" />
+            type="com.mulberry.ody.presentation.address.listener.AddressSearchListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,6 +49,7 @@
             android:focusable="false"
             android:hint="@string/address_question_hint"
             android:inputType="text"
+            android:text="@{vm.destinationAddress}"
             android:maxLines="1"
             android:onClick="@{() -> addressSearchListener.onSearch()}"
             app:layout_constraintBottom_toTopOf="@id/tv_destination_information"
