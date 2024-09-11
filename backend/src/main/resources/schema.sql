@@ -1,6 +1,6 @@
 create table if not exists member (
     id bigint not null auto_increment,
-    provider_type varchar(255) check (provider_type in ('kakao')) not null,
+    provider_type varchar(255) check (provider_type in ('KAKAO')) not null,
     provider_id varchar(255) not null,
     nickname varchar(255) not null,
     image_url varchar(255) not null,
@@ -53,8 +53,8 @@ create table if not exists eta (
 create table if not exists notification (
     id bigint not null auto_increment,
     mate_id bigint not null,
-    `type` varchar(225) check (`type` in ('departure_reminder','entry', 'nudge')) not null,
-    status varchar(225) check (status in ('done','pending')) not null,
+    `type` varchar(225) check (`type` in ('DEPARTURE_REMINDER', 'ENTRY', 'NUDGE')) not null,
+    status varchar(225) check (status in ('DONE', 'PENDING')) not null,
     send_at timestamp not null,
     created_at timestamp not null default current_timestamp(),
     primary key (id),
