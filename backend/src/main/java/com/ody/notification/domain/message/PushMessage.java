@@ -13,6 +13,7 @@ public class PushMessage {
         this.message = Message.builder()
                 .putData("type", notification.getType().toString())
                 .putData("nickname", notification.getMate().getNicknameValue())
+                .putData("meetingId", notification.getMeetingIdExtractedByFcmTopic())
                 .setTopic(notification.getFcmTopicValue())
                 .build();
     }

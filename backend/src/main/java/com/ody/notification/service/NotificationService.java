@@ -94,7 +94,11 @@ public class NotificationService {
     public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
         Notification notification = Notification.createNudge(nudgedMate);
         Notification nudgeNotification = notificationRepository.save(notification);
-        NudgeMessage nudgeMessage = new NudgeMessage(nudgedMate.getMemberDeviceToken(), requestMate.getNicknameValue());
+        NudgeMessage nudgeMessage = new NudgeMessage(
+                nudgedMate.getMemberDeviceToken(),
+                requestMate.getNicknameValue(),
+                notification.getMeetingIdExtractedByFcmTopic()
+        );
         fcmPushSender.sendNudgeMessage(nudgeNotification, nudgeMessage);
     }
 

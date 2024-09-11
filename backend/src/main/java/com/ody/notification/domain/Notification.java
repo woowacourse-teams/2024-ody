@@ -85,6 +85,10 @@ public class Notification extends BaseEntity {
         return fcmTopic.getValue();
     }
 
+    public String getMeetingIdExtractedByFcmTopic() {
+        return fcmTopic.extractMeetingId();
+    }
+
     public DeviceToken getMateDeviceToken() {
         return mate.getMemberDeviceToken();
     }
