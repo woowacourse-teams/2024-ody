@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-@Configuration
 @Profile({"local", "dev", "prod"})
+@Configuration
 public class JasyptConfig {
 
     @Value("${jasypt.encryptor.password}")
