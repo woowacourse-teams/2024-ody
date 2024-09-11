@@ -1,13 +1,13 @@
 package com.mulberry.ody
 
 import com.mulberry.ody.domain.model.EtaType
+import com.mulberry.ody.domain.model.LogType
 import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.MateEta
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
 import com.mulberry.ody.domain.model.MeetingCatalog
 import com.mulberry.ody.domain.model.NotificationLog
-import com.mulberry.ody.domain.model.NotificationType
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -48,55 +48,55 @@ val meetingCatalogs: List<MeetingCatalog> =
 val notificationLogs: List<NotificationLog> =
     listOf(
         NotificationLog(
-            NotificationType.ENTRY,
+            LogType.ENTRY,
             "A",
             LocalDateTime.of(2024, 7, 7, 14, 30),
             "",
         ),
         NotificationLog(
-            NotificationType.ENTRY,
+            LogType.ENTRY,
             "B",
             LocalDateTime.of(2024, 7, 7, 14, 31),
             "",
         ),
         NotificationLog(
-            NotificationType.ENTRY,
+            LogType.ENTRY,
             "C",
             LocalDateTime.of(2024, 7, 7, 14, 32),
             "",
         ),
         NotificationLog(
-            NotificationType.DEPARTURE_REMINDER,
+            LogType.DEPARTURE_REMINDER,
             "A",
             LocalDateTime.of(2024, 7, 7, 14, 33),
             "",
         ),
         NotificationLog(
-            NotificationType.DEPARTURE_REMINDER,
+            LogType.DEPARTURE_REMINDER,
             "B",
             LocalDateTime.of(2024, 7, 7, 14, 34),
             "",
         ),
         NotificationLog(
-            NotificationType.DEPARTURE_REMINDER,
+            LogType.DEPARTURE_REMINDER,
             "C",
             LocalDateTime.of(2024, 7, 7, 14, 35),
             "",
         ),
         NotificationLog(
-            NotificationType.DEPARTURE,
+            LogType.DEPARTURE,
             "A",
             LocalDateTime.of(2024, 7, 7, 14, 36),
             "",
         ),
         NotificationLog(
-            NotificationType.DEPARTURE,
+            LogType.DEPARTURE,
             "B",
             LocalDateTime.of(2024, 7, 7, 14, 37),
             "",
         ),
         NotificationLog(
-            NotificationType.DEPARTURE,
+            LogType.DEPARTURE,
             "C",
             LocalDateTime.of(2024, 7, 7, 14, 38),
             "",

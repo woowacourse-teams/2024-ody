@@ -1,15 +1,15 @@
 package com.mulberry.ody.data.remote.core.entity.notification.mapper
 
 import com.mulberry.ody.data.remote.core.entity.notification.response.NotificationLogsResponse
+import com.mulberry.ody.domain.model.LogType
 import com.mulberry.ody.domain.model.NotificationLog
-import com.mulberry.ody.domain.model.NotificationType
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 fun NotificationLogsResponse.toNotificationList(): List<NotificationLog> =
     this.logList.map {
         NotificationLog(
-            type = NotificationType.from(it.type),
+            type = LogType.from(it.type),
             nickname = it.nickname,
             createdAt = it.createdAt.parseToLocalDateTime(),
             imageUrl = it.imageUrl,
