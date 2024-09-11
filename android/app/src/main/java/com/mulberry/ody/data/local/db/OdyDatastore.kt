@@ -50,6 +50,13 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
+    suspend fun removeAuthToken() {
+        context.dataStore.edit {
+            it.remove(ACCESS_TOKEN)
+            it.remove(REFRESH_TOKEN)
+        }
+    }
+
     companion object {
         private const val ODY_KEY = "ody_key"
         private val INVITE_CODE = stringPreferencesKey("inviteCode")

@@ -16,6 +16,17 @@ class KakaoOAuthLoginService {
         return loginWithKakao(context).flatMap { requestUserProfile() }
     }
 
+    suspend fun logout(): Result<Unit> =
+        suspendCoroutine { continuation ->
+            UserApiClient.instance.logout { error ->
+                if (error != null) {
+                    continuation.resume(Result.failure(error))
+                } else {
+                    continuation.resume(Result.success(Unit))
+                }
+            }
+        }
+
     fun checkIfLogined(): Boolean = TokenManagerProvider.instance.manager.getToken() != null
 
     private suspend fun loginWithKakao(context: Context): Result<AuthToken> =
