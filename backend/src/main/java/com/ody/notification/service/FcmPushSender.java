@@ -5,9 +5,9 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.notification.domain.Notification;
-import com.ody.notification.domain.message.NudgePushMessage;
-import com.ody.notification.domain.message.TopicPushMessage;
-import com.ody.notification.dto.request.FcmTopicSendRequest;
+import com.ody.notification.domain.message.DirectMessage;
+import com.ody.notification.domain.message.GroupMessage;
+import com.ody.notification.dto.request.FcmGroupSendRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,15 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class FcmPushSender {
 
     @Transactional
-    public void sendPushNotification(FcmTopicSendRequest fcmTopicSendRequest) {
-        Notification notification = fcmTopicSendRequest.notification();
-        TopicPushMessage topicPushMessage = new TopicPushMessage(notification);
-        sendMessage(topicPushMessage.getMessage(), notification);
+    public void sendPushNotification(FcmGroupSendRequest fcmGroupSendRequest) {
+        Notification notification = fcmGroupSendRequest.notification();
+        GroupMessage groupMessage = new GroupMessage(notification);
+        sendMessage(groupMessage.getMessage(), notification);
     }
 
     @Transactional
-    public void sendNudgeMessage(Notification notification, NudgePushMessage nudgePushMessage) {
-        sendMessage(nudgePushMessage.getMessage(), notification);
+    public void sendNudgeMessage(Notification notification, DirectMessage directMessage) {
+        sendMessage(directMessage.getMessage(), notification);
     }
 
     private void sendMessage(Message message, Notification notification) {

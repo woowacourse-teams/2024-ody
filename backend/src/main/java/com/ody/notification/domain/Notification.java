@@ -93,6 +93,10 @@ public class Notification extends BaseEntity {
         return mate.getMeetingId();
     }
 
+    public String getMateNicknameValue() {
+        return mate.getNicknameValue();
+    }
+
     public String getFcmTopicValue() {
         return fcmTopic.getValue();
     }

@@ -7,8 +7,8 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
-import com.ody.notification.domain.message.NudgePushMessage;
-import com.ody.notification.dto.request.FcmTopicSendRequest;
+import com.ody.notification.domain.message.DirectMessage;
+import com.ody.notification.dto.request.FcmGroupSendRequest;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.util.TimeUtil;
@@ -66,14 +66,14 @@ public class NotificationService {
 
     private void saveAndSendNotification(Notification notification) {
         Notification savedNotification = notificationRepository.save(notification);
-        FcmTopicSendRequest fcmTopicSendRequest = new FcmTopicSendRequest(savedNotification);
-        scheduleNotification(fcmTopicSendRequest);
+        FcmGroupSendRequest fcmGroupSendRequest = new FcmGroupSendRequest(savedNotification);
+        scheduleNotification(fcmGroupSendRequest);
     }
 
-    public void scheduleNotification(FcmTopicSendRequest fcmTopicSendRequest) {
-        Instant startTime = fcmTopicSendRequest.notification().getSendAt().toInstant(KST_OFFSET);
-        taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmTopicSendRequest), startTime);
-        log.info("{} 상태 알림 {}에 스케줄링 예약", fcmTopicSendRequest.notification().getStatus(), startTime);
+    public void scheduleNotification(FcmGroupSendRequest fcmGroupSendRequest) {
+        Instant startTime = fcmGroupSendRequest.notification().getSendAt().toInstant(KST_OFFSET);
+        taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmGroupSendRequest), startTime);
+        log.info("{} 상태 알림 {}에 스케줄링 예약", fcmGroupSendRequest.notification().getStatus(), startTime);
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -82,7 +82,7 @@ public class NotificationService {
                 NotificationType.DEPARTURE_REMINDER,
                 NotificationStatus.PENDING
         );
-        notifications.forEach(notification -> scheduleNotification(new FcmTopicSendRequest(notification)));
+        notifications.forEach(notification -> scheduleNotification(new FcmGroupSendRequest(notification)));
         log.info("애플리케이션 시작 - PENDING 상태 출발 알림 {}개 스케줄링", notifications.size());
     }
 
@@ -93,7 +93,7 @@ public class NotificationService {
     @Transactional
     public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
         Notification nudgeNotification = notificationRepository.save(Notification.createNudge(nudgedMate));
-        fcmPushSender.sendNudgeMessage(nudgeNotification, new NudgePushMessage(requestMate, nudgeNotification));
+        fcmPushSender.sendNudgeMessage(nudgeNotification, new DirectMessage(requestMate, nudgeNotification));
     }
 
     public void unSubscribeTopic(List<Meeting> meetings) {

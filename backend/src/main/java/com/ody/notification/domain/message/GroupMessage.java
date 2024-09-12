@@ -5,15 +5,15 @@ import com.ody.notification.domain.Notification;
 import lombok.Getter;
 
 @Getter
-public class TopicPushMessage {
+public class GroupMessage {
 
     private final Message message;
 
-    public TopicPushMessage(Notification notification) {
+    public GroupMessage(Notification notification) {
         this.message = Message.builder()
                 .putData("type", notification.getType().name())
-                .putData("nickname", notification.getMate().getNicknameValue())
-                .putData("meetingId", notification.getMate().getMeeting().getId().toString())
+                .putData("nickname", notification.getMateNicknameValue())
+                .putData("meetingId", notification.getMeetingId().toString())
                 .setTopic(notification.getFcmTopicValue())
                 .build();
     }
