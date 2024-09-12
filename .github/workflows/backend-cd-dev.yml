@@ -1,9 +1,12 @@
+
 name: backend-cd-dev
 
 on:
   push:
     branches:
-      - develop
+      - feature/529
+#      - develop
+
     paths:
       - backend/**
 
@@ -21,8 +24,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: develop
+#        with:
+#          ref: develop
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -58,7 +61,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Docker Image Build And Push
-        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev -f Dockerfile . --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} --push
+        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev -f Dockerfile . --push
 
   pull-and-deploy:
 
@@ -82,6 +85,7 @@ jobs:
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
           export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
           export DEV_MYSQL_PASSWORD=${{ secrets.DEV_MYSQL_PASSWORD }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
           export GIT_SHA=${{ github.sha }}
           docker compose up -d
 
