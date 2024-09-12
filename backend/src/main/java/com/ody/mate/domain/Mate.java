@@ -21,6 +21,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -32,6 +34,8 @@ import org.hibernate.annotations.SQLRestriction;
 })
 @Entity
 @Getter
+@Filter(name = "deletedMateFilter", condition = "deleted_at IS NOT NULL or deleted_at IS NULL")
+@FilterDef(name = "deletedMateFilter")
 @SQLDelete(sql = "UPDATE mate SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at is NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

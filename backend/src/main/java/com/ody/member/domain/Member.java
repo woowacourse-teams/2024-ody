@@ -14,6 +14,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -31,6 +33,8 @@ import org.hibernate.annotations.SQLRestriction;
                 columnNames = {"deviceToken"}
         ),
 })
+@Filter(name = "deletedMemberFilter", condition = "deleted_at IS NOT NULL or deleted_at IS NULL")
+@FilterDef(name = "deletedMemberFilter")
 @SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at is NULL")
 public class Member {

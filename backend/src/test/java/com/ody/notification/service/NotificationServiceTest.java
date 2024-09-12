@@ -12,10 +12,12 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.member.service.MemberService;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
+import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.service.RouteService;
 import com.ody.util.TimeUtil;
@@ -55,6 +57,9 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @Autowired
+    private MemberService memberService;
 
     @DisplayName("알림 생성 시점이 전송 시점보다 늦은 경우 즉시 전송된다")
     @Test
@@ -176,5 +181,23 @@ class NotificationServiceTest extends BaseServiceTest {
         notificationService.sendNudgeMessage(requestMate, nudgedMate);
 
         Mockito.verify(fcmPushSender, Mockito.times(1)).sendNudgeMessage(any(), any());
+    }
+
+    @DisplayName("삭제 회원이 포함된 로그 목록을 조회한다.")
+    @Test
+    void findAllMeetingLogsIncludingDeletedMember() {
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Mate deleteMate = fixtureGenerator.generateMate(meeting);
+        Mate mate = fixtureGenerator.generateMate(meeting);
+        fixtureGenerator.generateNotification(deleteMate);
+        fixtureGenerator.generateNotification(mate);
+
+        NotiLogFindResponses notificationsBeforeDelete = notificationService.findAllMeetingLogs(meeting.getId());
+        memberService.delete(deleteMate.getMember().getId());
+        NotiLogFindResponses notificationsAfterDelete = notificationService.findAllMeetingLogs(meeting.getId());
+
+        int expect = notificationsBeforeDelete.notiLog().size() + 1;
+        int actual = notificationsAfterDelete.notiLog().size();
+        assertThat(actual).isEqualTo(expect);
     }
 }
