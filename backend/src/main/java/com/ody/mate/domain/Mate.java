@@ -70,6 +70,10 @@ public class Mate {
         return Objects.equals(this.meeting.getId(), otherMeeting.getId());
     }
 
+    public Long getMeetingId() {
+        return meeting.getId();
+    }
+
     public String getNicknameValue() {
         return nickname;
     }

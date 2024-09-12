@@ -89,8 +89,8 @@ public class Notification extends BaseEntity {
         );
     }
 
-    public void updateStatusToDone() {
-        this.status = NotificationStatus.DONE;
+    public Long getMeetingId() {
+        return mate.getMeetingId();
     }
 
     public String getFcmTopicValue() {
@@ -99,5 +99,9 @@ public class Notification extends BaseEntity {
 
     public DeviceToken getMateDeviceToken() {
         return mate.getMemberDeviceToken();
+    }
+
+    public void updateStatusToDone() {
+        this.status = NotificationStatus.DONE;
     }
 }
