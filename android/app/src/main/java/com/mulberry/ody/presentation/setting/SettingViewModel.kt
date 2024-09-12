@@ -47,6 +47,6 @@ class SettingViewModel(
     }
 
     companion object {
-        private val TAG = SettingViewModel::class.simpleName
+        private const val TAG = "SettingViewModel"
     }
 }

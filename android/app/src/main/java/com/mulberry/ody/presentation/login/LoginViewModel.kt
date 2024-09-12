@@ -66,7 +66,7 @@ class LoginViewModel(
     }
 
     companion object {
-        private val TAG = LoginViewModel::class.simpleName
+        private const val TAG = "LoginViewModel"
         private const val NAVIGATED_REASON = "NAVIGATED_REASON"
     }
 }
