@@ -17,9 +17,13 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
+@SQLDelete(sql = "UPDATE eta SET deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted_at is NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Eta {
@@ -49,6 +53,8 @@ public class Eta {
     @NotNull
     private LocalDateTime updatedAt;
 
+    private LocalDateTime deletedAt;
+
     public Eta(Mate mate, Long remainingMinutes) {
         this(
                 null,
@@ -57,12 +63,14 @@ public class Eta {
                 false,
                 false,
                 TimeUtil.nowWithTrim(),
-                TimeUtil.nowWithTrim()
+                TimeUtil.nowWithTrim(),
+                null
         );
     }
 
+    // TODO: 테스트에서만 쓰이는 생성자
     public Eta(Mate mate, long remainingMinutes, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this(null, mate, remainingMinutes, false, false, createdAt, updatedAt);
+        this(null, mate, remainingMinutes, false, false, createdAt, updatedAt, null);
     }
 
     public boolean isModified() {

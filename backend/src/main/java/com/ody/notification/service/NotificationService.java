@@ -9,15 +9,20 @@ import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.message.DirectMessage;
 import com.ody.notification.dto.request.FcmGroupSendRequest;
+import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.util.TimeUtil;
+import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
@@ -36,6 +41,9 @@ public class NotificationService {
     private final FcmSubscriber fcmSubscriber;
     private final FcmPushSender fcmPushSender;
     private final TaskScheduler taskScheduler;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Transactional
     public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
@@ -86,14 +94,44 @@ public class NotificationService {
         log.info("애플리케이션 시작 - PENDING 상태 출발 알림 {}개 스케줄링", notifications.size());
     }
 
-    public List<Notification> findAllMeetingLogs(Long meetingId) {
-        return notificationRepository.findAllMeetingLogs(meetingId);
+    public NotiLogFindResponses findAllMeetingLogs(Long meetingId) {
+        return activateFilter(() -> {
+            List<Notification> notifications = notificationRepository.findAllMeetingLogs(meetingId);
+            return NotiLogFindResponses.from(notifications);
+        });
+    }
+
+    private <T> T activateFilter(Supplier<T> supplier) {
+        Session session = entityManager.unwrap(Session.class);
+        session.enableFilter("deletedMemberFilter");
+        session.enableFilter("deletedMateFilter");
+        try {
+            return supplier.get();
+        } finally {
+            session.disableFilter("deletedMemberFilter");
+            session.disableFilter("deletedMateFilter");
+        }
     }
 
     @Transactional
     public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
         Notification nudgeNotification = notificationRepository.save(Notification.createNudge(nudgedMate));
         fcmPushSender.sendNudgeMessage(nudgeNotification, new DirectMessage(requestMate, nudgeNotification));
+    }
+
+    @Transactional
+    public void updateAllStatusPendingToDismissedByMateId(long mateId) {
+        List<Notification> notifications = notificationRepository.findAllByMateIdAndStatus(
+                mateId,
+                NotificationStatus.PENDING
+        );
+        notifications.forEach(Notification::updateStatusToDismissed);
+    }
+
+    @Transactional
+    public void saveMemberDeletionNotification(Mate mate) {
+        Notification notification = Notification.createMemberDeletion(mate);
+        notificationRepository.save(notification);
     }
 
     public void unSubscribeTopic(List<Meeting> meetings) {

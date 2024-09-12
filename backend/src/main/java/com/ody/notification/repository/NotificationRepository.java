@@ -5,6 +5,7 @@ import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
@@ -29,4 +30,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             where noti.type = :type
             """)
     List<Notification> findAllMeetingIdAndType(Long meetingId, NotificationType type);
+
+    List<Notification> findAllByMateIdAndStatus(long mateId, NotificationStatus status);
 }

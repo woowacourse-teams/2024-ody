@@ -99,4 +99,18 @@ public class MateService {
         return mateRepository.findByMeetingIdAndMemberId(meetingId, memberId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 약속이거나 약속 참여자가 아닙니다."));
     }
+
+    @Transactional
+    public void deleteByMemberId(long memberId) {
+        mateRepository.findAllByMemberId(memberId)
+                .forEach(this::delete);
+    }
+
+    private void delete(Mate mate) {
+        notificationService.saveMemberDeletionNotification(mate);
+
+        notificationService.updateAllStatusPendingToDismissedByMateId(mate.getId());
+        etaService.deleteByMateId(mate.getId());
+        mateRepository.deleteById(mate.getId());
+    }
 }

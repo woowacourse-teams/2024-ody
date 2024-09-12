@@ -68,8 +68,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @PathVariable Long meetingId
     ) {
-        List<Notification> notifications = notificationService.findAllMeetingLogs(meetingId);
-        NotiLogFindResponses response = NotiLogFindResponses.from(notifications);
+        NotiLogFindResponses response = notificationService.findAllMeetingLogs(meetingId);
         return ResponseEntity.ok(response);
     }
 

@@ -97,7 +97,25 @@ public class Notification extends BaseEntity {
         return this.sendAt.equals(TimeUtil.nowWithTrim());
     }
 
+    public static Notification createMemberDeletion(Mate mate) {
+        return new Notification(
+                mate,
+                NotificationType.MEMBER_DELETION,
+                LocalDateTime.now(),
+                NotificationStatus.DISMISSED,
+                null
+        );
+    }
+
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
+    }
+
+    public void updateStatusToDismissed() {
+        this.status = NotificationStatus.DISMISSED;
+    }
+
+    public boolean isStatusDismissed() {
+        return status == NotificationStatus.DISMISSED;
     }
 }

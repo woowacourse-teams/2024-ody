@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
+import com.ody.common.FixtureGenerator;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
@@ -21,7 +22,6 @@ import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
-import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import com.ody.util.InviteCodeGenerator;
@@ -47,13 +47,14 @@ class MeetingServiceTest extends BaseServiceTest {
     @Autowired
     private MateRepository mateRepository;
 
+    @Autowired
+    private FixtureGenerator fixtureGenerator;
+
     @Disabled
     @DisplayName("내 약속 목록 조회 시 오름차순 정렬한다.")
     @Test
     void findAllByMember() {
-        Member member = memberRepository.save(
-                new Member(new DeviceToken("Bearer device-token=new-member-device-token"))
-        );
+        Member member = fixtureGenerator.generateMember();
 
         Meeting meetingDayAfterTomorrowAt14 = meetingRepository.save(Fixture.ODY_MEETING4);
         Meeting meetingTomorrowAt12 = meetingRepository.save(Fixture.ODY_MEETING3);

@@ -3,38 +3,19 @@ package com.ody.eta.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ody.common.BaseRepositoryTest;
 import com.ody.common.Fixture;
-import com.ody.common.config.JpaAuditingConfig;
 import com.ody.eta.domain.Eta;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
-import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
-import com.ody.member.repository.MemberRepository;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-@DataJpaTest
-@Import(JpaAuditingConfig.class)
-class EtaRepositoryTest {
-
-    @Autowired
-    private MeetingRepository meetingRepository;
-
-    @Autowired
-    private MateRepository mateRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private EtaRepository etaRepository;
+class EtaRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("특정 약속 참여자들의 Eta 목록을 반환한다")
     @Test
@@ -67,5 +48,29 @@ class EtaRepositoryTest {
                 () -> assertThat(sojuMeetingEtas).hasSize(1),
                 () -> assertThat(odyMeetingEtas).hasSize(2)
         );
+    }
+
+    @DisplayName("Eta를 삭제(soft delete)한다.")
+    @Test
+    void delete() {
+        Eta eta = fixtureGenerator.generateEta();
+
+        etaRepository.delete(eta);
+
+        Eta actual = (Eta) entityManager.createNativeQuery("select * from Eta where id = ?", Eta.class)
+                .setParameter(1, eta.getId())
+                .getSingleResult();
+        assertThat(actual.getDeletedAt()).isNotNull();
+    }
+
+    @DisplayName("삭제된 Eta는 조회하지 않는다.")
+    @Test
+    void doNotFindDeletedEta() {
+        Eta eta = fixtureGenerator.generateEta();
+
+        etaRepository.delete(eta);
+
+        Optional<Eta> actual = etaRepository.findById(eta.getId());
+        assertThat(actual).isNotPresent();
     }
 }

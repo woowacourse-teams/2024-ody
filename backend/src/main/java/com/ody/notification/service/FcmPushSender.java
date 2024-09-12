@@ -21,6 +21,9 @@ public class FcmPushSender {
     @Transactional
     public void sendPushNotification(FcmGroupSendRequest fcmGroupSendRequest) {
         Notification notification = fcmGroupSendRequest.notification();
+        if (notification.isStatusDismissed()) {
+            return;
+        }
         GroupMessage groupMessage = new GroupMessage(notification);
         sendMessage(groupMessage.getMessage(), notification);
     }
