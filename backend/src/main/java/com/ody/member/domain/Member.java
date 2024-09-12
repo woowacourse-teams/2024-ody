@@ -27,11 +27,7 @@ import org.hibernate.annotations.SQLRestriction;
         @UniqueConstraint(
                 name = "uniqueProviderTypeAndProviderId",
                 columnNames = {"providerType", "providerId"}
-        ),
-        @UniqueConstraint(
-                name = "uniqueDeviceToken",
-                columnNames = {"deviceToken"}
-        ),
+        )
 })
 @Filter(name = "deletedMemberFilter", condition = "deleted_at IS NOT NULL or deleted_at IS NULL")
 @FilterDef(name = "deletedMemberFilter")
