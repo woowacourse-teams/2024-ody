@@ -3,6 +3,7 @@ package com.ody.notification.domain;
 import com.ody.common.domain.BaseEntity;
 import com.ody.mate.domain.Mate;
 import com.ody.member.domain.DeviceToken;
+import com.ody.util.TimeUtil;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -79,6 +80,10 @@ public class Notification extends BaseEntity {
 
     public boolean isDepartureReminder() {
         return this.type.isDepartureReminder();
+    }
+
+    public boolean isNow() {
+        return this.sendAt.equals(TimeUtil.nowWithTrim());
     }
 
     public void updateStatusToDone() {
