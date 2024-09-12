@@ -2,32 +2,15 @@ package com.ody.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ody.common.BaseRepositoryTest;
 import com.ody.common.Fixture;
-import com.ody.common.FixtureGenerator;
-import com.ody.common.FixtureGeneratorConfig;
-import com.ody.common.config.JpaAuditingConfig;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
-import jakarta.persistence.EntityManager;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-@Import({JpaAuditingConfig.class, FixtureGeneratorConfig.class})
-@DataJpaTest
-class MemberRepositoryTest {
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private FixtureGenerator fixtureGenerator;
-
-    @Autowired
-    private EntityManager entityManager;
+class MemberRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("기기 토큰으로 회원을 조회한다")
     @Test

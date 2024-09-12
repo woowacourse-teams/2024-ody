@@ -4,36 +4,19 @@ import static com.ody.common.Fixture.TARGET_LOCATION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ody.common.BaseRepositoryTest;
 import com.ody.common.Fixture;
-import com.ody.common.config.JpaAuditingConfig;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
-import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
-import com.ody.member.repository.MemberRepository;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-@Import(JpaAuditingConfig.class)
-@DataJpaTest
-class MeetingRepositoryTest {
-
-    @Autowired
-    MeetingRepository meetingRepository;
-
-    @Autowired
-    MateRepository mateRepository;
-
-    @Autowired
-    MemberRepository memberRepository;
-
+class MeetingRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("특정 멤버의 약속 목록을 반환한다.")
     @Test

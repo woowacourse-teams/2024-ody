@@ -3,16 +3,12 @@ package com.ody.notification.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ody.common.BaseRepositoryTest;
 import com.ody.common.Fixture;
-import com.ody.common.FixtureGenerator;
-import com.ody.common.config.JpaAuditingConfig;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
-import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
-import com.ody.member.repository.MemberRepository;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
@@ -21,28 +17,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-@DataJpaTest
-@Import({JpaAuditingConfig.class, FixtureGenerator.class})
-class NotificationRepositoryTest {
-
-    @Autowired
-    MeetingRepository meetingRepository;
-
-    @Autowired
-    MemberRepository memberRepository;
-
-    @Autowired
-    MateRepository mateRepository;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
-
-    @Autowired
-    private FixtureGenerator fixtureGenerator;
+class NotificationRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("특정 모임의 Notification 반환")
     @Test

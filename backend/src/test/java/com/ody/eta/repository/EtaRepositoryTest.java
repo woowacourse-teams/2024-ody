@@ -3,47 +3,19 @@ package com.ody.eta.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ody.common.BaseRepositoryTest;
 import com.ody.common.Fixture;
-import com.ody.common.FixtureGenerator;
-import com.ody.common.config.JpaAuditingConfig;
 import com.ody.eta.domain.Eta;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
-import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
-import com.ody.member.repository.MemberRepository;
-import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-@Import({JpaAuditingConfig.class, FixtureGenerator.class})
-@DataJpaTest
-class EtaRepositoryTest {
-
-    @Autowired
-    private MeetingRepository meetingRepository;
-
-    @Autowired
-    private MateRepository mateRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private EtaRepository etaRepository;
-
-    @Autowired
-    private FixtureGenerator fixtureGenerator;
-
-    @Autowired
-    private EntityManager entityManager;
+class EtaRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("특정 약속 참여자들의 Eta 목록을 반환한다")
     @Test
