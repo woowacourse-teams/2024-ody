@@ -20,10 +20,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             """)
     List<Notification> findAllMeetingLogs(Long meetingId);
 
-    @Modifying(clearAutomatically = true)
-    @Query("update Notification noti set noti.status = :newStatus where noti.mate.id = :mateId and noti.status = :targetStatus")
-    void updateStatusFromTargetToNewByMateId(NotificationStatus targetStatus, NotificationStatus newStatus, long mateId);
-
     List<Notification> findAllByTypeAndStatus(NotificationType type, NotificationStatus status);
 
     @Query("""
@@ -34,4 +30,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             where noti.type = :type
             """)
     List<Notification> findAllMeetingIdAndType(Long meetingId, NotificationType type);
+
+    List<Notification> findAllByMateIdAndStatus(long mateId, NotificationStatus status);
 }

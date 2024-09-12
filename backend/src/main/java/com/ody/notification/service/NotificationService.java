@@ -123,11 +123,11 @@ public class NotificationService {
 
     @Transactional
     public void updateAllStatusPendingToDismissedByMateId(long mateId) {
-        notificationRepository.updateStatusFromTargetToNewByMateId(
-                NotificationStatus.PENDING,
-                NotificationStatus.DISMISSED,
-                mateId
+        List<Notification> notifications = notificationRepository.findAllByMateIdAndStatus(
+                mateId,
+                NotificationStatus.PENDING
         );
+        notifications.forEach(Notification::updateStatusToDismissed);
     }
 
     @Transactional

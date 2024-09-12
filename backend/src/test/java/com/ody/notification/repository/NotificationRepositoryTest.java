@@ -91,32 +91,6 @@ class NotificationRepositoryTest extends BaseRepositoryTest {
         assertThat(notifications.size()).isOne();
     }
 
-    @DisplayName("특정 참여자의 A 상태인 알람을 모두 B 상태로 변경한다.")
-    @Test
-    void updateStatusFromTargetToNewByMateId() {
-        Mate mate = fixtureGenerator.generateMate();
-        fixtureGenerator.generateNotification(mate, NotificationStatus.PENDING);
-        fixtureGenerator.generateNotification(mate, NotificationStatus.DONE);
-        fixtureGenerator.generateNotification(mate, NotificationStatus.DISMISSED);
-        fixtureGenerator.generateNotification(mate, NotificationStatus.PENDING);
-
-        notificationRepository.updateStatusFromTargetToNewByMateId(
-                NotificationStatus.PENDING,
-                NotificationStatus.DISMISSED,
-                mate.getId()
-        );
-        List<NotificationStatus> actual = notificationRepository.findAll().stream()
-                .map(Notification::getStatus)
-                .toList();
-
-        assertThat(actual).containsExactly(
-                NotificationStatus.DISMISSED,
-                NotificationStatus.DONE,
-                NotificationStatus.DISMISSED,
-                NotificationStatus.DISMISSED
-        );
-    }
-
     @DisplayName("알림 타입과 알림 상태 조건을 가진 알림 리스트를 조회한다")
     @Test
     void findAllByTypeAndStatus() {
