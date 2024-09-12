@@ -14,6 +14,7 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.repository.NotificationRepository;
+import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -47,7 +48,7 @@ public class FixtureGenerator {
                 now.toLocalDate(),
                 now.toLocalTime(),
                 Fixture.TARGET_LOCATION,
-                "invitecode"
+                InviteCodeGenerator.generate()
         ));
     }
 
