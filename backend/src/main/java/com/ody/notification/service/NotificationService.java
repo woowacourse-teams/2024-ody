@@ -101,7 +101,7 @@ public class NotificationService {
             notificationRepository.findAllMeetingIdAndType(meeting.getId(), NotificationType.DEPARTURE_REMINDER)
                     .forEach(notification -> fcmSubscriber.unSubscribeTopic(
                                     notification.getFcmTopic(),
-                                    notification.getMateDeviceToken()
+                                    notification.getMate().getMember().getDeviceToken()
                             )
                     );
         }

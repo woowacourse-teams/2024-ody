@@ -89,22 +89,6 @@ public class Notification extends BaseEntity {
         );
     }
 
-    public Long getMeetingId() {
-        return mate.getMeetingId();
-    }
-
-    public String getMateNicknameValue() {
-        return mate.getNicknameValue();
-    }
-
-    public String getFcmTopicValue() {
-        return fcmTopic.getValue();
-    }
-
-    public DeviceToken getMateDeviceToken() {
-        return mate.getMemberDeviceToken();
-    }
-
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
     }

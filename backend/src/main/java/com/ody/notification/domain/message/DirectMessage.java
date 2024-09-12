@@ -13,18 +13,18 @@ public class DirectMessage {
     public DirectMessage(Mate requestMate, Notification recipientNotification) {
         this.message = Message.builder()
                 .putData("type", recipientNotification.getType().name())
-                .putData("nickname", requestMate.getNicknameValue())
-                .putData("meetingId", requestMate.getMeetingId().toString())
-                .setToken(recipientNotification.getMateDeviceToken().getValue())
+                .putData("nickname", requestMate.getNickname())
+                .putData("meetingId", requestMate.getMeeting().getId().toString())
+                .setToken(recipientNotification.getMate().getMember().getDeviceToken().getValue())
                 .build();
     }
 
     public DirectMessage(Notification recipientNotification) {
         this.message = Message.builder()
                 .putData("type", recipientNotification.getType().name())
-                .putData("nickname", recipientNotification.getMateNicknameValue())
-                .putData("meetingId", recipientNotification.getMeetingId().toString())
-                .setToken(recipientNotification.getMateDeviceToken().getValue())
+                .putData("nickname", recipientNotification.getMate().getNickname())
+                .putData("meetingId", recipientNotification.getMate().getMeeting().getId().toString())
+                .setToken(recipientNotification.getMate().getMember().getDeviceToken().getValue())
                 .build();
     }
 }

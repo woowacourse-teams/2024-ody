@@ -12,9 +12,9 @@ public class GroupMessage {
     public GroupMessage(Notification notification) {
         this.message = Message.builder()
                 .putData("type", notification.getType().name())
-                .putData("nickname", notification.getMateNicknameValue())
-                .putData("meetingId", notification.getMeetingId().toString())
-                .setTopic(notification.getFcmTopicValue())
+                .putData("nickname", notification.getMate().getNickname())
+                .putData("meetingId", notification.getMate().getMeeting().getId().toString())
+                .setTopic(notification.getFcmTopic().getValue())
                 .build();
     }
 }

@@ -17,8 +17,6 @@ import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
-import com.ody.util.TimeUtil;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -69,20 +69,4 @@ public class Mate {
     public boolean isAttended(Meeting otherMeeting) {
         return Objects.equals(this.meeting.getId(), otherMeeting.getId());
     }
-
-    public Long getMeetingId() {
-        return meeting.getId();
-    }
-
-    public String getNicknameValue() {
-        return nickname;
-    }
-
-    public DeviceToken getMemberDeviceToken() {
-        return member.getDeviceToken();
-    }
-
-    public String getMemberImageUrl() {
-        return member.getImageUrl();
-    }
 }
