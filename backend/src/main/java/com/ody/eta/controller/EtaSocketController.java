@@ -49,8 +49,8 @@ public class EtaSocketController {
         scheduleTrigger(meetingId, LocalDateTime.now().plusSeconds(1));
     }
 
-    @MessageMapping("etas/{meetingId}")
-    @SendTo("topic/etas/{meetingId}")
+    @MessageMapping("/etas/{meetingId}")
+    @SendTo("/topic/etas/{meetingId}")
     public MateEtaResponsesV2 etaUpdate(
             @DestinationVariable Long meetingId,
             @WebSocketAuthMember Member member,
@@ -59,10 +59,12 @@ public class EtaSocketController {
         log.info("---- eta 좌표 왔다 !! - {}, {}, {}", meetingId, member, etaRequest);
         if (isOverMeetingTime(meetingId)) {
             log.info("---- websocket disconnect !! - {}", meetingId);
-            template.convertAndSend("topic/disconnect/" + meetingId);
+            template.convertAndSend("/topic/disconnect/" + meetingId);
         } else if (isTimeToSchedule(meetingId)) {
+            log.info("------schedule trigger");
             scheduleTrigger(meetingId, LocalDateTime.now().plusSeconds(10));
         }
+        log.info("---- eta 목록 반환");
         return mateService.findAllMateEtas(etaRequest, meetingId, member);
     }
 
@@ -75,7 +77,7 @@ public class EtaSocketController {
     private boolean isTimeToSchedule(Long meetingId) {
         LocalDateTime lastTriggerTime = LATEST_TRIGGER_TIME_CACHE.get(meetingId);
         Duration duration = Duration.between(lastTriggerTime, LocalDateTime.now());
-        return duration.toMinutes() >= 10;
+        return duration.toSeconds() >= 10;
     }
 
     private void scheduleTrigger(Long meetingId, LocalDateTime triggerTime) {
