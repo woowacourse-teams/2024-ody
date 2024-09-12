@@ -2,7 +2,6 @@ package com.ody.mate.domain;
 
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
-import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

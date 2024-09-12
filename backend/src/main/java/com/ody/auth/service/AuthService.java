@@ -7,7 +7,6 @@ import com.ody.auth.dto.response.AuthResponse;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyBadRequestException;
-import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.member.domain.Member;
 import com.ody.member.service.MemberService;
 import lombok.AllArgsConstructor;
@@ -54,7 +53,7 @@ public class AuthService {
 
     private void checkAlreadyLogout(long memberId) {
         Member member = memberService.findById(memberId);
-        if(member.isLogout()){
+        if (member.isLogout()) {
             throw new OdyBadRequestException("회원이 로그아웃 상태입니다.");
         }
     }
