@@ -8,7 +8,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import java.util.Date;
 import lombok.Getter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -49,6 +48,12 @@ public class JwtTokenProvider {
     public void validate(AccessToken accessToken) {
         if (!isUnexpired(accessToken)) {
             throw new OdyUnauthorizedException("만료된 액세스 토큰입니다.");
+        }
+    }
+
+    public void validate(RefreshToken refreshToken) {
+        if (!isUnexpired(refreshToken)) {
+            throw new OdyUnauthorizedException("만료된 리프레시 토큰입니다.");
         }
     }
 

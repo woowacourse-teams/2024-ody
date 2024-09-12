@@ -3,11 +3,19 @@ package com.ody.member.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
+import com.ody.eta.domain.Eta;
+import com.ody.eta.repository.EtaRepository;
+import com.ody.mate.domain.Mate;
+import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.notification.domain.Notification;
+import com.ody.notification.repository.NotificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,6 +28,15 @@ class MemberServiceTest extends BaseServiceTest {
 
     @Autowired
     MemberService memberService;
+
+    @Autowired
+    MateRepository mateRepository;
+
+    @Autowired
+    EtaRepository etaRepository;
+
+    @Autowired
+    NotificationRepository notificationRepository;
 
     @DisplayName("회원을 생성한다.")
     @Nested
@@ -85,6 +102,20 @@ class MemberServiceTest extends BaseServiceTest {
             assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("newDeviceToken");
         }
 
+        @DisplayName("특정 회원의 리프레시 토큰을 삭제할 수 있다")
+        @Test
+        void removeMemberRefreshToken() {
+            Member member = createMember("pid", "deviceToken");
+            RefreshToken refreshToken = new RefreshToken("refresh-token=token");
+            member.updateRefreshToken(refreshToken);
+            member = memberRepository.save(member);
+
+            memberService.updateRefreshToken(member.getId(), null);
+
+            Member findMember = memberService.findById(member.getId());
+            assertThat(findMember.getRefreshToken()).isNull();
+        }
+
         private Member createMember(String providerId, String deviceToken) {
             return new Member(providerId, "nickname", "imageUrl", new DeviceToken(deviceToken));
         }
@@ -92,5 +123,24 @@ class MemberServiceTest extends BaseServiceTest {
         private DeviceToken getDeviceTokenByAuthProvider(String providerId) {
             return memberRepository.findByAuthProvider(new AuthProvider(providerId)).get().getDeviceToken();
         }
+    }
+
+    @DisplayName("회원을 삭제한다.")
+    @Test
+    void delete() {
+        Member member = fixtureGenerator.generateMember();
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Mate mate = fixtureGenerator.generateMate(meeting, member);
+        Eta eta = fixtureGenerator.generateEta(mate);
+        Notification notification = fixtureGenerator.generateNotification(mate);
+
+        memberService.delete(member.getId());
+
+        assertAll(
+                () -> assertThat(memberRepository.findById(member.getId())).isEmpty(),
+                () -> assertThat(mateRepository.findAllByMemberId(member.getId())).isEmpty(),
+                () -> assertThat(etaRepository.findById(eta.getId())).isEmpty(),
+                () -> assertThat(notificationRepository.findById(notification.getId())).isNotEmpty()
+        );
     }
 }

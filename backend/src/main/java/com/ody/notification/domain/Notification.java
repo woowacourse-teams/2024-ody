@@ -2,6 +2,8 @@ package com.ody.notification.domain;
 
 import com.ody.common.domain.BaseEntity;
 import com.ody.mate.domain.Mate;
+import com.ody.util.TimeUtil;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -44,23 +46,76 @@ public class Notification extends BaseEntity {
     @NotNull
     private NotificationStatus status;
 
-    public Notification(Mate mate, NotificationType type, LocalDateTime sendAt, NotificationStatus status) {
-        this(null, mate, type, sendAt, status);
+    @Embedded
+    private FcmTopic fcmTopic;
+
+    public Notification(
+            Mate mate,
+            NotificationType type,
+            LocalDateTime sendAt,
+            NotificationStatus status,
+            FcmTopic fcmTopic
+    ) {
+        this(null, mate, type, sendAt, status, fcmTopic);
     }
 
     public static Notification createEntry(Mate mate) {
-        return new Notification(mate, NotificationType.ENTRY, LocalDateTime.now(), NotificationStatus.PENDING);
+        return new Notification(
+                mate,
+                NotificationType.ENTRY,
+                LocalDateTime.now(),
+                NotificationStatus.PENDING,
+                null
+        );
     }
 
-    public static Notification createDepartureReminder(Mate mate, LocalDateTime sendAt) {
-        return new Notification(mate, NotificationType.DEPARTURE_REMINDER, sendAt, NotificationStatus.PENDING);
+    public static Notification createDepartureReminder(Mate mate, LocalDateTime sendAt, FcmTopic fcmTopic) {
+        return new Notification(
+                mate,
+                NotificationType.DEPARTURE_REMINDER,
+                sendAt,
+                NotificationStatus.PENDING,
+                fcmTopic
+        );
     }
 
-    public static Notification createNudge(Mate mate) {
-        return new Notification(mate, NotificationType.NUDGE, LocalDateTime.now(), NotificationStatus.PENDING);
+    public static Notification createNudge(Mate nudgeMate) {
+        return new Notification(
+                nudgeMate,
+                NotificationType.NUDGE,
+                LocalDateTime.now(),
+                NotificationStatus.PENDING,
+                null
+        );
+    }
+
+    public boolean isDepartureReminder() {
+        return this.type.isDepartureReminder();
+    }
+
+    public boolean isNow() {
+        return this.sendAt.equals(TimeUtil.nowWithTrim());
+    }
+
+    public static Notification createMemberDeletion(Mate mate) {
+        return new Notification(
+                mate,
+                NotificationType.MEMBER_DELETION,
+                LocalDateTime.now(),
+                NotificationStatus.DISMISSED,
+                null
+        );
     }
 
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
+    }
+
+    public void updateStatusToDismissed() {
+        this.status = NotificationStatus.DISMISSED;
+    }
+
+    public boolean isStatusDismissed() {
+        return status == NotificationStatus.DISMISSED;
     }
 }

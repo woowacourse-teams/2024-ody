@@ -47,9 +47,12 @@ jobs:
 
       - name: Add local.properties
         run: |
-          echo base_url='${{ secrets.BASE_URL }}' > ./local.properties
+          echo base_dev_url='${{ secrets.BASE_DEV_URL }}' > ./local.properties
+          echo base_prod_url='${{ secrets.BASE_PROD_URL }}' > ./local.properties
           echo kakao_api_key='{{ secrets.KAKAO_API_KEY }}' > ./local.properties
           echo kakao_native_key='{{ secrets.KAKAO_NATIVE_KEY }}' > ./local.properties
+          echo term_uri='{{ secrets.TERM_URI }}' > ./local.properties
+          echo privacy_policy_uri='{{ secrets.PRIVACY_POLICY_URI }}' > ./local.properties
 
       - name: Check ktLint
         run: ./gradlew ktlintCheck

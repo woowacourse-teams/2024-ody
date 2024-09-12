@@ -1,6 +1,5 @@
 package com.ody.member.domain;
 
-import com.ody.common.exception.OdyUnauthorizedException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;

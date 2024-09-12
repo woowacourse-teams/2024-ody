@@ -1,23 +1,27 @@
 package com.ody.meeting.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
+import com.ody.common.FixtureGenerator;
+import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
+import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.response.MateResponse;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
-import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import com.ody.util.InviteCodeGenerator;
@@ -43,12 +47,14 @@ class MeetingServiceTest extends BaseServiceTest {
     @Autowired
     private MateRepository mateRepository;
 
+    @Autowired
+    private FixtureGenerator fixtureGenerator;
+
     @Disabled
     @DisplayName("내 약속 목록 조회 시 오름차순 정렬한다.")
     @Test
     void findAllByMember() {
-        Member member = memberRepository.save(
-                new Member(new DeviceToken("Bearer device-token=new-member-device-token")));
+        Member member = fixtureGenerator.generateMember();
 
         Meeting meetingDayAfterTomorrowAt14 = meetingRepository.save(Fixture.ODY_MEETING4);
         Meeting meetingTomorrowAt12 = meetingRepository.save(Fixture.ODY_MEETING3);
@@ -92,21 +98,21 @@ class MeetingServiceTest extends BaseServiceTest {
                 now24Hours1MinutesAgo.toLocalDate(),
                 now24Hours1MinutesAgo.toLocalTime(),
                 Fixture.TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         ));
         Meeting meeting24HoursAgo = meetingRepository.save(new Meeting(
                 "약속",
                 now24HoursAgo.toLocalDate(),
                 now24HoursAgo.toLocalTime(),
                 Fixture.TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         ));
         Meeting meeting23Hours59MinutesAgo = meetingRepository.save(new Meeting(
                 "약속",
                 now23Hours59MinutesAgo.toLocalDate(),
                 now23Hours59MinutesAgo.toLocalTime(),
                 Fixture.TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         ));
 
         mateRepository.save(
@@ -128,7 +134,7 @@ class MeetingServiceTest extends BaseServiceTest {
         assertThat(meetingIds).containsExactly(meeting24HoursAgo.getId(), meeting23Hours59MinutesAgo.getId());
     }
 
-    @DisplayName("약속 저장 및 초대 코드 갱신에 성공한다")
+    @DisplayName("약속 저장에 성공한다")
     @Test
     void saveV1Success() {
         Meeting odyMeeting = Fixture.ODY_MEETING;
@@ -142,6 +148,7 @@ class MeetingServiceTest extends BaseServiceTest {
         );
 
         MeetingSaveResponseV1 response = meetingService.saveV1(request);
+        String generatedInviteCodeByRequest = request.toMeeting(response.inviteCode()).getInviteCode();
 
         assertAll(
                 () -> assertThat(response.name()).isEqualTo(request.name()),
@@ -150,7 +157,7 @@ class MeetingServiceTest extends BaseServiceTest {
                 () -> assertThat(response.targetAddress()).isEqualTo(request.targetAddress()),
                 () -> assertThat(response.targetLatitude()).isEqualTo(request.targetLatitude()),
                 () -> assertThat(response.targetLongitude()).isEqualTo(request.targetLongitude()),
-                () -> assertThat(InviteCodeGenerator.decode(response.inviteCode())).isEqualTo(response.id())
+                () -> assertThat(response.inviteCode()).isEqualTo(generatedInviteCodeByRequest)
         );
     }
 
@@ -175,7 +182,7 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertAll(
                 () -> assertThat(response.id()).isEqualTo(meeting.getId()),
-                () -> assertThat(mateNicknames).containsOnly(mate1.getNicknameValue(), mate2.getNicknameValue())
+                () -> assertThat(mateNicknames).containsOnly(mate1.getNickname(), mate2.getNickname())
         );
     }
 
@@ -186,5 +193,49 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertThatThrownBy(() -> meetingService.findMeetingWithMates(member, 1L))
                 .isInstanceOf(OdyNotFoundException.class);
+    }
+
+    @DisplayName("지나지 않은 약속에 참여가 가능하다")
+    @Test
+    void saveMateSuccess() {
+        Meeting notOverdueMeeting = makeSavedMeetingByRemainingMinutes(1L);
+        Member member = memberRepository.save(Fixture.MEMBER2);
+        MateSaveRequestV2 mateSaveRequest = makeMateRequestByMeeting(notOverdueMeeting);
+
+        assertThatCode(() -> meetingService.saveMateAndSendNotifications(mateSaveRequest, member))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("지난 약속에 참여가 불가하다")
+    @Test
+    void saveMateFail_When_tryAttendOverdueMeeting() {
+        Meeting overdueMeeting = makeSavedMeetingByRemainingMinutes(-1L);
+        Member member = memberRepository.save(Fixture.MEMBER1);
+        MateSaveRequestV2 mateSaveRequest = makeMateRequestByMeeting(overdueMeeting);
+
+        assertThatThrownBy(() -> meetingService.saveMateAndSendNotifications(mateSaveRequest, member))
+                .isInstanceOf(OdyBadRequestException.class);
+    }
+
+    private MateSaveRequestV2 makeMateRequestByMeeting(Meeting meeting) {
+        Location origin = Fixture.ORIGIN_LOCATION;
+        return new MateSaveRequestV2(
+                meeting.getInviteCode(),
+                origin.getAddress(),
+                origin.getLatitude(),
+                origin.getLongitude()
+        );
+    }
+
+    private Meeting makeSavedMeetingByRemainingMinutes(long remainingMinutes) {
+        LocalDateTime time = TimeUtil.nowWithTrim().plusMinutes(remainingMinutes);
+        Meeting meeting = new Meeting(
+                "오디",
+                time.toLocalDate(),
+                time.toLocalTime(),
+                Fixture.TARGET_LOCATION,
+                "초대코드"
+        );
+        return meetingRepository.save(meeting);
     }
 }

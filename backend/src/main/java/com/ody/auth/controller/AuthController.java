@@ -1,6 +1,5 @@
 package com.ody.auth.controller;
 
-import com.ody.auth.domain.AuthorizationHeader;
 import com.ody.auth.dto.request.AuthRequest;
 import com.ody.auth.dto.response.AuthResponse;
 import com.ody.auth.service.AuthService;
@@ -30,8 +29,17 @@ public class AuthController implements AuthControllerSwagger {
 
     @Override
     @PostMapping("/v1/auth/refresh")
-    public ResponseEntity<AuthResponse> refreshAccessToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+    public ResponseEntity<AuthResponse> refreshAccessToken(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization
+    ) {
         AuthResponse authResponse = authService.renewTokens(authorization);
         return ResponseEntity.ok(authResponse);
+    }
+
+    @Override
+    @PostMapping("/v1/auth/logout")
+    public ResponseEntity<Void> logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String rawAccessTokenValue) {
+        authService.logout(rawAccessTokenValue);
+        return ResponseEntity.ok().build();
     }
 }

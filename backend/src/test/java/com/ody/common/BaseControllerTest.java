@@ -2,10 +2,7 @@ package com.ody.common;
 
 import com.ody.auth.dto.request.AuthRequest;
 import com.ody.auth.dto.response.AuthResponse;
-import com.ody.auth.token.AccessToken;
-import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.response.MateSaveResponse;
-import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.notification.config.FcmConfig;
 import com.ody.notification.service.FcmPushSender;
@@ -33,10 +30,10 @@ public abstract class BaseControllerTest {
     private FcmConfig fcmConfig;
 
     @MockBean
-    private FcmSubscriber fcmSubscriber;
+    protected FcmSubscriber fcmSubscriber;
 
     @MockBean
-    private FcmPushSender fcmPushSender;
+    protected FcmPushSender fcmPushSender;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -54,6 +51,7 @@ public abstract class BaseControllerTest {
         RestAssured.port = port;
     }
 
+    // TODO : 여기 이상해요
     protected String saveMember() {
         AuthRequest authRequest = new AuthRequest("dt", "pid", "제리", "imageUrl");
 
