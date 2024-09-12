@@ -33,11 +33,17 @@ public class FcmPushSender {
     private void sendMessage(Message message, Notification notification) {
         try {
             FirebaseMessaging.getInstance().send(message);
-            notification.updateStatusToDone();
-            log.info("알림 상태 업데이트 : {}", notification);
+            updateDepartureReminderToDone(notification);
         } catch (FirebaseMessagingException exception) {
             log.error("Fcm 메시지 전송 실패 : {}", exception.getMessage());
             throw new OdyServerErrorException(exception.getMessage());
+        }
+    }
+
+    private void updateDepartureReminderToDone(Notification notification) {
+        if (notification.isDepartureReminder()) {
+            notification.updateStatusToDone();
+            log.info("출발 알림 상태 업데이트 : {}", notification);
         }
     }
 }

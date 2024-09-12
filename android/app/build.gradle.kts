@@ -26,7 +26,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
+        buildConfigField("String", "BASE_DEV_URL", properties["BASE_DEV_URL"].toString())
+        buildConfigField("String", "BASE_PROD_URL", properties["BASE_PROD_URL"].toString())
         buildConfigField("String", "KAKAO_API_KEY", properties["KAKAO_API_KEY"].toString())
         buildConfigField("String", "KAKAO_NATIVE_KEY", properties["KAKAO_NATIVE_KEY"].toString())
         buildConfigField("String", "PRIVACY_POLICY_URI", properties["PRIVACY_POLICY_URI"].toString())
