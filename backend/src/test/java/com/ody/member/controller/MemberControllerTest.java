@@ -21,7 +21,7 @@ class MemberControllerTest extends BaseControllerTest {
     @Autowired
     private FixtureGenerator fixtureGenerator;
 
-    @DisplayName("회원 삭제 API 멱등성 검증")
+    @DisplayName("이미 삭제한 회원에 대한 회원 삭제 요청 시 204를 반환한다.")
     @Test
     void delete() {
         Member member = fixtureGenerator.generateMember();
