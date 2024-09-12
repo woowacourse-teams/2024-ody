@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-
 @Entity
 @Getter
 @SQLDelete(sql = "UPDATE eta SET deleted_at = NOW() WHERE id = ?")
