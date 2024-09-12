@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FcmTopic {
 
+    private static final String TOPIC_NAME_DELIMITER = "_";
+
     @Column(name = "fcm_topic")
     private String value;
 
@@ -25,7 +27,7 @@ public class FcmTopic {
 
     private static String build(Meeting meeting) {
         return meeting.getId().toString()
-                + "_"
+                + TOPIC_NAME_DELIMITER
                 + meeting.getCreatedAt();
     }
 }

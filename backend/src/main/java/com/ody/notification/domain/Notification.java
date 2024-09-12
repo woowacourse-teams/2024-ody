@@ -2,7 +2,6 @@ package com.ody.notification.domain;
 
 import com.ody.common.domain.BaseEntity;
 import com.ody.mate.domain.Mate;
-import com.ody.member.domain.DeviceToken;
 import com.ody.util.TimeUtil;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -61,7 +60,13 @@ public class Notification extends BaseEntity {
     }
 
     public static Notification createEntry(Mate mate) {
-        return new Notification(mate, NotificationType.ENTRY, LocalDateTime.now(), NotificationStatus.DONE, null);
+        return new Notification(
+                mate,
+                NotificationType.ENTRY,
+                LocalDateTime.now(),
+                NotificationStatus.PENDING,
+                null
+        );
     }
 
     public static Notification createDepartureReminder(Mate mate, LocalDateTime sendAt, FcmTopic fcmTopic) {
@@ -74,8 +79,14 @@ public class Notification extends BaseEntity {
         );
     }
 
-    public static Notification createNudge(Mate mate) {
-        return new Notification(mate, NotificationType.NUDGE, LocalDateTime.now(), NotificationStatus.DONE, null);
+    public static Notification createNudge(Mate nudgeMate) {
+        return new Notification(
+                nudgeMate,
+                NotificationType.NUDGE,
+                LocalDateTime.now(),
+                NotificationStatus.PENDING,
+                null
+        );
     }
 
     public boolean isDepartureReminder() {
@@ -88,13 +99,5 @@ public class Notification extends BaseEntity {
 
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
-    }
-
-    public String getFcmTopicValue() {
-        return fcmTopic.getValue();
-    }
-
-    public DeviceToken getMateDeviceToken() {
-        return mate.getMemberDeviceToken();
     }
 }
