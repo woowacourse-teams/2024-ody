@@ -10,6 +10,7 @@ import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
+import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,7 +50,7 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 oneHoursLater.toLocalDate(),
                 oneHoursLater.toLocalTime(),
                 TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         );
         meetingRepository.save(oneHoursLaterMeeting);
 
@@ -59,7 +60,7 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 oneDayBefore.toLocalDate(),
                 oneDayBefore.toLocalTime(),
                 TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         );
         meetingRepository.save(oneDayBeforeMeeting);
 
@@ -69,7 +70,7 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 twoDayBefore.toLocalDate(),
                 twoDayBefore.toLocalTime(),
                 TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         );
         meetingRepository.save(twoDayBeforeMeeting);
 
@@ -87,7 +88,7 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 oneHoursLater.toLocalDate(),
                 oneHoursLater.toLocalTime(),
                 TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         );
         meetingRepository.save(oneHoursLaterMeeting);
 
@@ -97,7 +98,7 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 oneDayBefore.toLocalDate(),
                 oneDayBefore.toLocalTime(),
                 TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         );
         meetingRepository.save(oneDayBeforeMeeting);
 
@@ -107,7 +108,7 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 twoDayBefore.toLocalDate(),
                 twoDayBefore.toLocalTime(),
                 TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         );
         meetingRepository.save(twoDayBeforeMeeting);
 
@@ -127,7 +128,7 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 dateTime.toLocalDate(),
                 dateTime.toLocalTime(),
                 TARGET_LOCATION,
-                "초대코드",
+                InviteCodeGenerator.generate(),
                 true
         );
         Meeting savedOverdueMeeting = meetingRepository.save(overdueMeeting);
@@ -138,7 +139,7 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 dateTime.toLocalDate(),
                 dateTime.toLocalTime(),
                 TARGET_LOCATION,
-                "초대코드",
+                InviteCodeGenerator.generate(),
                 false
         );
         Meeting savedNotOverdueMeeting = meetingRepository.save(notOverdueMeeting);
@@ -147,5 +148,29 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 () -> assertThat(meetingRepository.findByIdAndOverdueFalse(savedOverdueMeeting.getId())).isEmpty(),
                 () -> assertThat(meetingRepository.findByIdAndOverdueFalse(savedNotOverdueMeeting.getId())).isPresent()
         );
+    }
+
+    @DisplayName("존재하는 초대코드인지 확인한다.")
+    @Test
+    void existsByInviteCode() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        mateRepository.save(new Mate(odyMeeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
+
+        boolean exists = meetingRepository.existsByInviteCode(odyMeeting.getInviteCode());
+
+        assertThat(exists).isTrue();
+    }
+
+    @DisplayName("초대코드로 약속을 조회한다.")
+    @Test
+    void findByInviteCode() {
+        Member member1 = memberRepository.save(Fixture.MEMBER1);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        mateRepository.save(new Mate(odyMeeting, member1, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
+
+        Meeting meeting = meetingRepository.findByInviteCode(odyMeeting.getInviteCode()).get();
+
+        assertThat(meeting).usingRecursiveComparison().isEqualTo(odyMeeting);
     }
 }

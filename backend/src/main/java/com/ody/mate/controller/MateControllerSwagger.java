@@ -1,11 +1,8 @@
 package com.ody.mate.controller;
 
-import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
-import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.dto.response.MateSaveResponseV2;
-import com.ody.meeting.dto.response.MeetingSaveResponse;
 import com.ody.member.domain.Member;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
@@ -40,7 +37,10 @@ public interface MateControllerSwagger {
     @ErrorCode401
     @ErrorCode404(description = "유효하지 않은 초대코드")
     @ErrorCode500
-    ResponseEntity<MateSaveResponseV2> saveV2(@Parameter(hidden = true) Member member, MateSaveRequestV2 mateSaveRequest);
+    ResponseEntity<MateSaveResponseV2> saveV2(
+            @Parameter(hidden = true) Member member,
+            MateSaveRequestV2 mateSaveRequest
+    );
 
     @Operation(
             summary = "참여자 재촉하기",

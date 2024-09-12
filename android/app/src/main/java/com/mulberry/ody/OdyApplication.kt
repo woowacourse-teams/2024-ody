@@ -14,6 +14,7 @@ import com.mulberry.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultNotificationLogRepository
 import com.mulberry.ody.data.remote.core.service.JoinService
 import com.mulberry.ody.data.remote.core.service.LoginService
+import com.mulberry.ody.data.remote.core.service.LogoutService
 import com.mulberry.ody.data.remote.core.service.MeetingService
 import com.mulberry.ody.data.remote.core.service.NotificationService
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
@@ -63,6 +64,7 @@ class OdyApplication : Application() {
     private val joinService: JoinService = retrofit.create(JoinService::class.java)
     private val meetingService: MeetingService = retrofit.create(MeetingService::class.java)
     private val loginService: LoginService = loginRetrofit.create(LoginService::class.java)
+    private val logoutService: LogoutService = retrofit.create(LogoutService::class.java)
     private val notificationService: NotificationService =
         retrofit.create(NotificationService::class.java)
     private val kakaoLocationService: KakaoLocationService =
@@ -92,6 +94,7 @@ class OdyApplication : Application() {
     val kakaoLoginRepository: KakaoLoginRepository by lazy {
         KakaoLoginRepository(
             loginService,
+            logoutService,
             odyDatastore,
             KakaoOAuthLoginService(),
             fcmTokenRepository,

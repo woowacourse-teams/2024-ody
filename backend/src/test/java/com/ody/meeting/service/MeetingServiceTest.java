@@ -22,7 +22,6 @@ import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
-import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import com.ody.util.InviteCodeGenerator;
@@ -99,21 +98,21 @@ class MeetingServiceTest extends BaseServiceTest {
                 now24Hours1MinutesAgo.toLocalDate(),
                 now24Hours1MinutesAgo.toLocalTime(),
                 Fixture.TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         ));
         Meeting meeting24HoursAgo = meetingRepository.save(new Meeting(
                 "약속",
                 now24HoursAgo.toLocalDate(),
                 now24HoursAgo.toLocalTime(),
                 Fixture.TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         ));
         Meeting meeting23Hours59MinutesAgo = meetingRepository.save(new Meeting(
                 "약속",
                 now23Hours59MinutesAgo.toLocalDate(),
                 now23Hours59MinutesAgo.toLocalTime(),
                 Fixture.TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         ));
 
         mateRepository.save(
@@ -135,7 +134,7 @@ class MeetingServiceTest extends BaseServiceTest {
         assertThat(meetingIds).containsExactly(meeting24HoursAgo.getId(), meeting23Hours59MinutesAgo.getId());
     }
 
-    @DisplayName("약속 저장 및 초대 코드 갱신에 성공한다")
+    @DisplayName("약속 저장에 성공한다")
     @Test
     void saveV1Success() {
         Meeting odyMeeting = Fixture.ODY_MEETING;
@@ -149,6 +148,7 @@ class MeetingServiceTest extends BaseServiceTest {
         );
 
         MeetingSaveResponseV1 response = meetingService.saveV1(request);
+        String generatedInviteCodeByRequest = request.toMeeting(response.inviteCode()).getInviteCode();
 
         assertAll(
                 () -> assertThat(response.name()).isEqualTo(request.name()),
@@ -157,7 +157,7 @@ class MeetingServiceTest extends BaseServiceTest {
                 () -> assertThat(response.targetAddress()).isEqualTo(request.targetAddress()),
                 () -> assertThat(response.targetLatitude()).isEqualTo(request.targetLatitude()),
                 () -> assertThat(response.targetLongitude()).isEqualTo(request.targetLongitude()),
-                () -> assertThat(InviteCodeGenerator.decode(response.inviteCode())).isEqualTo(response.id())
+                () -> assertThat(response.inviteCode()).isEqualTo(generatedInviteCodeByRequest)
         );
     }
 
@@ -182,7 +182,7 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertAll(
                 () -> assertThat(response.id()).isEqualTo(meeting.getId()),
-                () -> assertThat(mateNicknames).containsOnly(mate1.getNicknameValue(), mate2.getNicknameValue())
+                () -> assertThat(mateNicknames).containsOnly(mate1.getNickname(), mate2.getNickname())
         );
     }
 
@@ -220,7 +220,7 @@ class MeetingServiceTest extends BaseServiceTest {
     private MateSaveRequestV2 makeMateRequestByMeeting(Meeting meeting) {
         Location origin = Fixture.ORIGIN_LOCATION;
         return new MateSaveRequestV2(
-                InviteCodeGenerator.encode(meeting.getId()),
+                meeting.getInviteCode(),
                 origin.getAddress(),
                 origin.getLatitude(),
                 origin.getLongitude()

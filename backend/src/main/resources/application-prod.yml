@@ -6,6 +6,11 @@ spring:
     init:
       mode: never
       schema-locations: classpath:schema.sql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(b2OC3sqkv3yOFNN3PLvGEXfS9PNhJa1KZBJO7m2UFkKaVDLrQfHW4lcAiXDKGdGQGOiTJP0fdbgRLmVOOpkRTQQBFdLk9Kc56xoqAv7zM37vAuAhiO1SXggzqFbE3nBVEiZ8LlXWbASOehuAoByOAg==)
+    username: ENC(XtfH8GdZudKEOOBZ5xIFOA==)
+    password: ENC(xiSFd4D62x3j+WrGsflwya1hTSweP+UV)
 
 log:
   file:

@@ -32,8 +32,8 @@ public record NotiLogFindResponse(
     private static NotiLogFindResponse create(Notification notification) {
         return new NotiLogFindResponse(
                 notification,
-                notification.getMate().getNicknameValue(),
-                notification.getMate().getMemberImageUrl()
+                notification.getMate().getNickname(),
+                notification.getMate().getMember().getImageUrl()
         );
     }
 
@@ -44,9 +44,9 @@ public record NotiLogFindResponse(
     private NotiLogFindResponse(Notification notification, String nickname, String imageUrl) {
         this(
                 notification.getType().toString(),
-                nickname,
+                notification.getMate().getNickname(),
                 TimeUtil.trimSecondsAndNanos(notification.getSendAt()),
-                imageUrl
+                notification.getMate().getMember().getImageUrl()
         );
     }
 }

@@ -31,9 +31,12 @@ public class MateService {
     private final NotificationService notificationService;
     private final RouteService routeService;
 
-
     @Transactional
-    public MateSaveResponseV2 saveAndSendNotifications(MateSaveRequestV2 mateSaveRequest, Member member, Meeting meeting) {
+    public MateSaveResponseV2 saveAndSendNotifications(
+            MateSaveRequestV2 mateSaveRequest,
+            Member member,
+            Meeting meeting
+    ) {
         if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
             throw new OdyBadRequestException("약속에 이미 참여한 회원입니다.");
         }

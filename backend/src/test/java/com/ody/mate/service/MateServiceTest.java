@@ -23,6 +23,7 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -165,7 +166,7 @@ class MateServiceTest extends BaseServiceTest {
                     time.toLocalDate(),
                     time.toLocalTime(),
                     Fixture.TARGET_LOCATION,
-                    "초대코드"
+                    InviteCodeGenerator.generate()
             );
             return meetingRepository.save(meeting);
         }

@@ -26,7 +26,7 @@ public class Fixture {
             LocalDate.now(),
             LocalTime.now(),
             TARGET_LOCATION,
-            "초대코드"
+            "초대코드1"
     );
 
     public static Meeting SOJU_MEETING = new Meeting(
@@ -34,7 +34,7 @@ public class Fixture {
             LocalDate.now().plusDays(1),
             LocalTime.parse("18:00"),
             TARGET_LOCATION,
-            "초대코드"
+            "초대코드2"
     );
 
     public static Meeting ODY_MEETING3 = new Meeting(
@@ -42,7 +42,7 @@ public class Fixture {
             LocalDate.now().plusDays(1),
             LocalTime.parse("12:00"),
             TARGET_LOCATION,
-            "초대코드"
+            "초대코드3"
     );
 
     public static Meeting ODY_MEETING4 = new Meeting(
@@ -50,7 +50,7 @@ public class Fixture {
             LocalDate.now().plusDays(2),
             LocalTime.parse("14:00"),
             TARGET_LOCATION,
-            "초대코드"
+            "초대코드4"
     );
 
     public static Meeting ODY_MEETING5 = new Meeting(
@@ -58,7 +58,7 @@ public class Fixture {
             LocalDate.now().plusDays(1),
             LocalTime.parse("14:00"),
             TARGET_LOCATION,
-            "초대코드"
+            "초대코드5"
     );
 
     public static Member MEMBER1 = new Member("pid1", "콜리1", "imageUrl1", new DeviceToken("dt1"));

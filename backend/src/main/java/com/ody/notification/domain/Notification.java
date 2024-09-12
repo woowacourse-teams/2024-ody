@@ -2,7 +2,7 @@ package com.ody.notification.domain;
 
 import com.ody.common.domain.BaseEntity;
 import com.ody.mate.domain.Mate;
-import com.ody.member.domain.DeviceToken;
+import com.ody.util.TimeUtil;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -60,7 +60,13 @@ public class Notification extends BaseEntity {
     }
 
     public static Notification createEntry(Mate mate) {
-        return new Notification(mate, NotificationType.ENTRY, LocalDateTime.now(), NotificationStatus.PENDING, null);
+        return new Notification(
+                mate,
+                NotificationType.ENTRY,
+                LocalDateTime.now(),
+                NotificationStatus.PENDING,
+                null
+        );
     }
 
     public static Notification createDepartureReminder(Mate mate, LocalDateTime sendAt, FcmTopic fcmTopic) {
@@ -73,8 +79,22 @@ public class Notification extends BaseEntity {
         );
     }
 
-    public static Notification createNudge(Mate mate) {
-        return new Notification(mate, NotificationType.NUDGE, LocalDateTime.now(), NotificationStatus.PENDING, null);
+    public static Notification createNudge(Mate nudgeMate) {
+        return new Notification(
+                nudgeMate,
+                NotificationType.NUDGE,
+                LocalDateTime.now(),
+                NotificationStatus.PENDING,
+                null
+        );
+    }
+
+    public boolean isDepartureReminder() {
+        return this.type.isDepartureReminder();
+    }
+
+    public boolean isNow() {
+        return this.sendAt.equals(TimeUtil.nowWithTrim());
     }
 
     public static Notification createMemberDeletion(Mate mate) {
@@ -97,13 +117,5 @@ public class Notification extends BaseEntity {
 
     public boolean isStatusDismissed() {
         return status == NotificationStatus.DISMISSED;
-    }
-
-    public String getFcmTopicValue() {
-        return fcmTopic.getValue();
-    }
-
-    public DeviceToken getMateDeviceToken() {
-        return mate.getMemberDeviceToken();
     }
 }

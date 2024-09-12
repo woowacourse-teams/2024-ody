@@ -2,6 +2,7 @@ package com.ody.meeting.domain;
 
 import com.ody.common.domain.BaseEntity;
 import com.ody.util.TimeUtil;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +41,7 @@ public class Meeting extends BaseEntity {
     private Location target;
 
     @NotNull
+    @Column(columnDefinition = "CHAR(8)", unique = true)
     private String inviteCode;
 
     @NotNull
@@ -47,10 +49,6 @@ public class Meeting extends BaseEntity {
 
     public Meeting(String name, LocalDate date, LocalTime time, Location target, String inviteCode) {
         this(null, name, date, TimeUtil.trimSecondsAndNanos(time), target, inviteCode, false);
-    }
-
-    public void updateInviteCode(String inviteCode) {
-        this.inviteCode = inviteCode;
     }
 
     public boolean isWithinPast24HoursOrLater() {

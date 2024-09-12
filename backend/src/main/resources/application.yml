@@ -1,15 +1,12 @@
 spring:
   config:
-    import: classpath:private/private.yml
+    import: common.yml
   profiles:
     default: "local"
-    groups:
+    group:
       local:
-        - local
         - common
       dev:
-        - dev
         - common
       prod:
-        - prod
         - common
