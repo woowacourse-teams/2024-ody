@@ -4,8 +4,6 @@ import com.ody.common.TestAuthConfig;
 import com.ody.common.TestRouteConfig;
 import com.ody.common.config.JpaAuditingConfig;
 import com.ody.eta.config.WebSocketConfig;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -22,17 +20,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
-import org.springframework.web.socket.sockjs.client.SockJsClient;
-import org.springframework.web.socket.sockjs.client.Transport;
-import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
-@ExtendWith(SpringExtension.class)
 @Import({JpaAuditingConfig.class, TestRouteConfig.class, TestAuthConfig.class, WebSocketConfig.class})
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BaseStompTest {
 
-    private static final String ENDPOINT ="/connect";
+    private static final String ENDPOINT = "/connect";
 
     protected StompSession stompSession;
 
@@ -52,9 +47,9 @@ public class BaseStompTest {
     @BeforeEach
     public void connect() throws ExecutionException, InterruptedException, TimeoutException {
         this.stompSession = this.websocketClient
-                .connect(url + port + ENDPOINT, new StompSessionHandlerAdapter() {})
+                .connect(url + port + ENDPOINT, new StompSessionHandlerAdapter() {
+                })
                 .get(3, TimeUnit.SECONDS);
-        System.out.println("연결됨");
     }
 
     @AfterEach
@@ -62,11 +57,5 @@ public class BaseStompTest {
         if (this.stompSession.isConnected()) {
             this.stompSession.disconnect();
         }
-    }
-
-    private List<Transport> createTransport() {
-        List<Transport> transports = new ArrayList<>(1);
-        transports.add(new WebSocketTransport(new StandardWebSocketClient()));
-        return transports;
     }
 }

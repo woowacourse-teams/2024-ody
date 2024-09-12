@@ -3,8 +3,6 @@ package com.ody.eta.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -17,14 +15,12 @@ import com.ody.mate.service.MateService;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.repository.MeetingRepository;
-import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -33,13 +29,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.broker.SimpleBrokerMessageHandler;
 import org.springframework.scheduling.TaskScheduler;
 
 class EtaSocketControllerTest extends BaseStompTest {
@@ -56,16 +50,12 @@ class EtaSocketControllerTest extends BaseStompTest {
     @SpyBean
     private SimpMessagingTemplate template;
 
-    @SpyBean
-    private MeetingService meetingService;
-
     @Autowired
     private MeetingRepository meetingRepository;
 
-
     @DisplayName("/publish/open/{meetingId} 호출 시 1초 뒤에 위치 호출 함수가 예약된다")
     @Test
-    public void callEtaMethodWhenStartConnection() throws InterruptedException {
+    void callEtaMethodWhenStartConnection() throws InterruptedException {
         Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
 
         Mockito.when(taskScheduler.schedule(any(Runnable.class), any(Instant.class)))
@@ -75,7 +65,7 @@ class EtaSocketControllerTest extends BaseStompTest {
         /* THEN */
         Thread.sleep(3000);
         verify(taskScheduler, times(1))
-                .schedule(any(Runnable.class), any(Instant.class));
+                .schedule(any(Runnable.class), any(Instant.class)); //TODO: 10 초 내 n번 open이 될때 스케쥴링은 1번만 되는지
     }
 
     @Nested
@@ -93,48 +83,29 @@ class EtaSocketControllerTest extends BaseStompTest {
 
         }
 
-        @DisplayName("/publish/etas/{meetingId} 호출 시 /topic/etas/{meetingId}를 구독한 이들에게 eta목록이 반환된다")
+        @DisplayName("약속 시간 이후, /publish/etas/{meetingId} 호출 시 disconnect 트리거를 당긴다.")
         @Test
-        public void etaUpdate() throws InterruptedException {
-            Meeting meeting = generateSavedMeetingByTime(LocalDateTime.now().plusMinutes(1L));
-            MateEtaRequest request = new MateEtaRequest(false, "37.515298", "127.103113");
-
-            MessageFrameHandler<MateEtaResponsesV2> handler = new MessageFrameHandler<>(MateEtaResponsesV2.class);
-            stompSession.subscribe("/topic/etas/" + meeting.getId(), handler); //구독
-
-            Mockito.when(taskScheduler.schedule(any(Runnable.class), any(Instant.class)))
-                    .thenReturn(null);
-
-            stompSession.send("/publish/open/" + meeting.getId(), "");
-            stompSession.send("/publish/etas/" + meeting.getId(), request);
-
-            Thread.sleep(3000);
-            verify(mateService, times(1)).findAllMateEtas(any(), any(), any());
-        }
-
-        @DisplayName("약속 시간 이후, /publish/etas/{meetingId} 호출 시  disconnect 트리거를 당긴다.")
-        @Test
-        public void triggerDisconnect() throws InterruptedException {
+        void triggerDisconnect() throws InterruptedException {
             Meeting meeting = generateSavedMeetingByTime(LocalDateTime.now().minusMinutes(10L));
             MateEtaRequest request = new MateEtaRequest(false, "37.515298", "127.103113");
 
             Mockito.when(taskScheduler.schedule(any(Runnable.class), any(Instant.class))).thenReturn(null);
-            doNothing().when(template).convertAndSend(anyString());
 
             stompSession.send("/publish/open/" + meeting.getId(), "");
+            Thread.sleep(3000);
+
             stompSession.send("/publish/etas/" + meeting.getId(), request);
 
             Thread.sleep(3000);
             ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-            verify(mateService, times(1)).findAllMateEtas(any(), any(), any());
-            verify(template, times(1)).convertAndSend(argumentCaptor.capture());
+            verify(template, times(1)).convertAndSend(argumentCaptor.capture(), anyString());
 
             assertThat(argumentCaptor.getValue()).isEqualTo("/topic/disconnect/" + meeting.getId());
         }
 
         @DisplayName("호출 한지 10초가 지난 경우, 다시 update 요청을 예약한다.")
         @Test
-        public void scheduleTriggerWhenDurationMoreThan10Seconds() throws InterruptedException {
+        void scheduleTriggerWhenDurationMoreThan10Seconds() throws InterruptedException {
             Meeting meeting = generateSavedMeetingByTime(LocalDateTime.now().plusMinutes(10L));
             MateEtaRequest request = new MateEtaRequest(false, "37.515298", "127.103113");
 
@@ -143,9 +114,11 @@ class EtaSocketControllerTest extends BaseStompTest {
                     .thenReturn(null);
 
             stompSession.send("/publish/open/" + meeting.getId(), "");
+            Thread.sleep(3000);
+
             stompSession.send("/publish/etas/" + meeting.getId(), request);
 
-            Thread.sleep(11000);
+            Thread.sleep(11000); //TODO: 10초전 트리거 타임을 셋팅해두고, 10초 뒤 실제 요청 보냈을 때 update 되는지 확인
             stompSession.send("/publish/etas/" + meeting.getId(), request);
 
             Thread.sleep(3000);
@@ -159,7 +132,7 @@ class EtaSocketControllerTest extends BaseStompTest {
 
         @DisplayName("/topic/etas/{meetingId}에 구독한 사람들이 요청을 받는다")
         @Test
-        public void subscribe() throws ExecutionException, InterruptedException, TimeoutException {
+        void subscribe() throws ExecutionException, InterruptedException, TimeoutException {
             Meeting meeting = generateSavedMeetingByTime(LocalDateTime.now().plusMinutes(1L));
             MateEtaRequest request = new MateEtaRequest(false, "37.515298", "127.103113");
             MateEtaResponsesV2 response = new MateEtaResponsesV2(100L, List.of());

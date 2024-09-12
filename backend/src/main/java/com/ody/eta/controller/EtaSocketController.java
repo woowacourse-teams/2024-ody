@@ -59,7 +59,7 @@ public class EtaSocketController {
         log.info("---- eta 좌표 왔다 !! - {}, {}, {}", meetingId, member, etaRequest);
         if (isOverMeetingTime(meetingId)) {
             log.info("---- websocket disconnect !! - {}", meetingId);
-            template.convertAndSend("/topic/disconnect/" + meetingId);
+            template.convertAndSend("/topic/disconnect/" + meetingId, "");
         } else if (isTimeToSchedule(meetingId)) {
             log.info("------schedule trigger");
             scheduleTrigger(meetingId, LocalDateTime.now().plusSeconds(10));
@@ -82,7 +82,7 @@ public class EtaSocketController {
 
     private void scheduleTrigger(Long meetingId, LocalDateTime triggerTime) {
         Instant startTime = triggerTime.toInstant(KST_OFFSET);
-        taskScheduler.schedule(() -> template.convertAndSend("topic/coordinates/" + meetingId), startTime);
+        taskScheduler.schedule(() -> template.convertAndSend("topic/coordinates/" + meetingId, ""), startTime);
         LATEST_TRIGGER_TIME_CACHE.put(meetingId, LocalDateTime.now());
         log.info("schedule 예약 완료 !! - {}, {}", meetingId, triggerTime);
     }
