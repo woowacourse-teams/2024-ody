@@ -139,7 +139,7 @@ class MemberServiceTest extends BaseServiceTest {
         assertAll(
                 () -> assertThat(memberRepository.findById(member.getId())).isEmpty(),
                 () -> assertThat(mateRepository.findAllByMemberId(member.getId())).isEmpty(),
-                () -> assertThat(etaRepository.findById(eta.getId())),
+                () -> assertThat(etaRepository.findById(eta.getId())).isEmpty(),
                 () -> assertThat(notificationRepository.findById(notification.getId())).isNotEmpty()
         );
     }
