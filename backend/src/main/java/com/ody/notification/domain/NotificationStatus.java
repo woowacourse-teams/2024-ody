@@ -6,8 +6,4 @@ public enum NotificationStatus {
     DONE,
     DISMISSED,
     ;
-
-    public boolean isDismissed() {
-        return this == DISMISSED;
-    }
 }

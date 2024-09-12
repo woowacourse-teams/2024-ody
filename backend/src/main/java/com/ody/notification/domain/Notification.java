@@ -92,7 +92,7 @@ public class Notification extends BaseEntity {
     }
 
     public boolean isStatusDismissed() {
-        return status.isDismissed();
+        return status == NotificationStatus.DISMISSED;
     }
 
     public String getFcmTopicValue() {
