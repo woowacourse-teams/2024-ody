@@ -74,19 +74,10 @@ class NotificationServiceTest extends BaseServiceTest {
         notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
 
         Optional<Notification> departureNotification = notificationRepository.findAll().stream()
-                .filter(notification -> isDepartureReminder(notification) && isNow(notification))
+                .filter(notification -> notification.isDepartureReminder() && notification.isNow())
                 .findAny();
 
         assertThat(departureNotification).isPresent();
-    }
-
-    private boolean isDepartureReminder(Notification notification) {
-        return notification.getType() == NotificationType.DEPARTURE_REMINDER;
-    }
-
-    private boolean isNow(Notification notification) {
-        return TimeUtil.trimSecondsAndNanos(notification.getSendAt())
-                .isEqual(TimeUtil.nowWithTrim());
     }
 
     @DisplayName("PENDING 상태의 알림들을 TaskScheduler로 스케줄링 한다.")

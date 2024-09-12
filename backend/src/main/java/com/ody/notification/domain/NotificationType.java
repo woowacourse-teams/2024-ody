@@ -6,4 +6,8 @@ public enum NotificationType {
     DEPARTURE_REMINDER,
     NUDGE,
     ;
+
+    public boolean isDepartureReminder() {
+        return this == DEPARTURE_REMINDER;
+    }
 }
