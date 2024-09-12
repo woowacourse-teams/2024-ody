@@ -108,7 +108,6 @@ public class MateService {
 
         notificationService.updateAllStatusPendingToDismissedByMateId(mate.getId());
         etaService.deleteByMateId(mate.getId());
-        mateRepository.findById(mate.getId())
-                .ifPresent(mateRepository::delete);
+        mateRepository.deleteById(mate.getId());
     }
 }

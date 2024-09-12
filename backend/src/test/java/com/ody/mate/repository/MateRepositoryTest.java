@@ -72,10 +72,10 @@ class MateRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("참여자를 삭제(soft delete)한다.")
     @Test
-    void delete() {
+    void deleteById() {
         Mate mate = fixtureGenerator.generateMate();
 
-        mateRepository.delete(mate);
+        mateRepository.deleteById(mate.getId());
 
         Mate actual = (Mate) entityManager.createNativeQuery("select * from Mate where id = ?", Mate.class)
                 .setParameter(1, mate.getId())

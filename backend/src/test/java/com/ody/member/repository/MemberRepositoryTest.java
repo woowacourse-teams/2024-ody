@@ -35,10 +35,10 @@ class MemberRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("회원을 삭제(soft delete)한다.")
     @Test
-    void delete() {
+    void deleteById() {
         Member member = fixtureGenerator.generateMember();
 
-        memberRepository.delete(member);
+        memberRepository.deleteById(member.getId());
 
         Member actual = (Member) entityManager.createNativeQuery("select * from Member where id = ?", Member.class)
                 .setParameter(1, member.getId())

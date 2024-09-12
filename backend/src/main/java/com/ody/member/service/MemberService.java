@@ -56,7 +56,6 @@ public class MemberService {
     @Transactional
     public void delete(long memberId) {
         mateService.deleteByMemberId(memberId);
-        memberRepository.findById(memberId)
-                .ifPresent(memberRepository::delete);
+        memberRepository.deleteById(memberId);
     }
 }
