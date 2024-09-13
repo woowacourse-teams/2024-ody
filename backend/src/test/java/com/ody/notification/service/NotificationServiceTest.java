@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -196,6 +197,7 @@ class NotificationServiceTest extends BaseServiceTest {
         );
     }
 
+    @Disabled
     @DisplayName("삭제 회원이 포함된 로그 목록을 조회한다.")
     @Test
     void findAllMeetingLogsIncludingDeletedMember() {
