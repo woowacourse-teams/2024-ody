@@ -25,29 +25,32 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EtaSocketService {
 
-    private static final ZoneOffset KST_OFFSET = ZoneOffset.ofHours(9);
-
     private final Cache<Long, LocalDateTime> lastTriggerTimeCache;;
     private final Cache<Long, LocalDateTime> meetingTimeCache;
     private final MeetingService meetingService;
     private final MateService mateService;
-    private final TaskScheduler taskScheduler;
-    private final SimpMessagingTemplate template;
+    private final SocketMessageSender socketMessageSender;
 
     public void open(Long meetingId) {
         if (!meetingTimeCache.exists(meetingId)) {
             Meeting meeting = meetingService.findById(meetingId);
             meetingTimeCache.put(meetingId, meeting.getMeetingTime());
         }
-        scheduleTrigger(meetingId, LocalDateTime.now().plusSeconds(1));
+        reserveLocationTrigger(meetingId, 1L);
+    }
+
+    private void reserveLocationTrigger(long meetingId, long timeGap) {
+        LocalDateTime triggerTime = LocalDateTime.now().plusSeconds(timeGap);
+        socketMessageSender.reserveMessage(locationTrigger(meetingId), triggerTime);
+        lastTriggerTimeCache.put(meetingId, LocalDateTime.now());
     }
 
     public MateEtaResponsesV2 etaUpdate(Long meetingId, Member member, MateEtaRequest etaRequest) {
         if (isOverMeetingTime(meetingId)) {
             log.info("--- websocket disconnect ! - {}", meetingId);
-            template.convertAndSend("/topic/disconnect/" + meetingId, "");
+            socketMessageSender.sendMessage(disconnectTrigger(meetingId));
         } else if (isTimeToSchedule(meetingId)) {
-            scheduleTrigger(meetingId, LocalDateTime.now().plusSeconds(10));
+            reserveLocationTrigger(meetingId, 10L);
         }
         return mateService.findAllMateEtas(etaRequest, meetingId, member);
     }
@@ -64,12 +67,11 @@ public class EtaSocketService {
         return duration.toSeconds() >= 10;
     }
 
-    private void scheduleTrigger(Long meetingId, LocalDateTime triggerTime) {
-        Instant startTime = triggerTime.toInstant(KST_OFFSET);
-        taskScheduler.schedule(
-                () -> template.convertAndSend("topic/coordinates/" + meetingId, ""), startTime
-        );
-        lastTriggerTimeCache.put(meetingId, LocalDateTime.now());
-        log.info("--- schedule 예약 완료 ! - {}, {}", meetingId, triggerTime);
+    private String locationTrigger(Long meetingId){
+        return "/topic/coordinates/" + meetingId;
+    }
+
+    private String disconnectTrigger(Long meetingId){
+        return "/topic/disconnect/" + meetingId;
     }
 }
