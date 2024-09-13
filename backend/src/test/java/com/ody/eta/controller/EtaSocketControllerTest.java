@@ -2,7 +2,7 @@ package com.ody.eta.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -24,11 +24,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -56,7 +53,7 @@ class EtaSocketControllerTest extends BaseStompTest {
     @DisplayName("/publish/open/{meetingId} 호출 시 1초 뒤에 위치 호출 함수가 예약된다")
     @Test
     void callEtaMethodWhenStartConnection() throws InterruptedException {
-        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
+        Meeting meeting = generateNotOverdueMeeting();
 
         Mockito.when(taskScheduler.schedule(any(Runnable.class), any(Instant.class)))
                 .thenReturn(null);
@@ -68,101 +65,124 @@ class EtaSocketControllerTest extends BaseStompTest {
                 .schedule(any(Runnable.class), any(Instant.class)); //TODO: 10 초 내 n번 open이 될때 스케쥴링은 1번만 되는지
     }
 
-    @Nested
-    class EtaUpdateTest {
+    @DisplayName("약속 시간 이후, /publish/etas/{meetingId} 호출 시 disconnect 트리거를 당긴다.")
+    @Test
+    void triggerDisconnect() throws InterruptedException, ExecutionException, TimeoutException {
+        MateEtaResponsesV2 stubResponse = new MateEtaResponsesV2(100L, List.of());
 
-        @BeforeEach
-        void setUp() {
-            MateEtaResponsesV2 stubResponse = new MateEtaResponsesV2(100L, List.of());
+        Mockito.when(authService.parseAccessToken(any()))
+                .thenReturn(generateStubMember()); //인증 처리를 위한 stub
 
-            Mockito.when(authService.parseAccessToken(any()))
-                    .thenReturn(generateStubMember()); //인증 처리를 위한 stub
+        Mockito.when(mateService.findAllMateEtas(any(), any(), any()))
+                .thenReturn(stubResponse); //응답 stub 처리
 
-            Mockito.when(mateService.findAllMateEtas(any(), any(), any()))
-                    .thenReturn(stubResponse); //응답 stub 처리
+        Mockito.when(taskScheduler.schedule(any(Runnable.class), any(Instant.class)))
+                .thenReturn(null);
 
-        }
+        Meeting notOverdueMeeting = generateNotOverdueMeeting();
+        Meeting overdueMeeting = generateOverdueMeeting();
+        MateEtaRequest request = new MateEtaRequest(false, "37.515298", "127.103113");
 
-        @DisplayName("약속 시간 이후, /publish/etas/{meetingId} 호출 시 disconnect 트리거를 당긴다.")
-        @Test
-        void triggerDisconnect() throws InterruptedException {
-            Meeting meeting = generateSavedMeetingByTime(LocalDateTime.now().minusMinutes(10L));
-            MateEtaRequest request = new MateEtaRequest(false, "37.515298", "127.103113");
+        MessageFrameHandler<MateEtaResponsesV2> handler = new MessageFrameHandler<>(MateEtaResponsesV2.class);
+        stompSession.subscribe("/topic/etas/" + overdueMeeting.getId(), handler);
+        Thread.sleep(3000);
 
-            Mockito.when(taskScheduler.schedule(any(Runnable.class), any(Instant.class))).thenReturn(null);
+        stompSession.send("/publish/open/" + overdueMeeting.getId(), "");
+        Thread.sleep(3000);
 
-            stompSession.send("/publish/open/" + meeting.getId(), "");
-            Thread.sleep(3000);
+        stompSession.send("/publish/etas/" + overdueMeeting.getId(), request);
 
-            stompSession.send("/publish/etas/" + meeting.getId(), request);
-
-            Thread.sleep(3000);
-            ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-            verify(template, times(1)).convertAndSend(argumentCaptor.capture(), anyString());
-
-            assertThat(argumentCaptor.getValue()).isEqualTo("/topic/disconnect/" + meeting.getId());
-        }
-
-        @DisplayName("호출 한지 10초가 지난 경우, 다시 update 요청을 예약한다.")
-        @Test
-        void scheduleTriggerWhenDurationMoreThan10Seconds() throws InterruptedException {
-            Meeting meeting = generateSavedMeetingByTime(LocalDateTime.now().plusMinutes(10L));
-            MateEtaRequest request = new MateEtaRequest(false, "37.515298", "127.103113");
-
-            Mockito.when(taskScheduler.schedule(any(Runnable.class), any(Instant.class)))
-                    .thenReturn(null)
-                    .thenReturn(null);
-
-            stompSession.send("/publish/open/" + meeting.getId(), "");
-            Thread.sleep(3000);
-
-            stompSession.send("/publish/etas/" + meeting.getId(), request);
-
-            Thread.sleep(11000); //TODO: 10초전 트리거 타임을 셋팅해두고, 10초 뒤 실제 요청 보냈을 때 update 되는지 확인
-            stompSession.send("/publish/etas/" + meeting.getId(), request);
-
-            Thread.sleep(3000);
-            verify(taskScheduler, times(2))
-                    .schedule(any(Runnable.class), any(Instant.class));
-        }
+        Thread.sleep(3000);
+        handler.getCompletableFuture().get(10, TimeUnit.SECONDS);
+        verify(template, times(1))
+                .convertAndSend(eq("/topic/disconnect/" + overdueMeeting.getId()), eq(""));
     }
 
-    @Nested
-    class SubscribeTest {
+    @DisplayName("호출 한지 10초가 지난 경우, 다시 update 요청을 예약한다.")
+    @Test
+    void scheduleTriggerWhenDurationMoreThan10Seconds()
+            throws InterruptedException, ExecutionException, TimeoutException {
 
-        @DisplayName("/topic/etas/{meetingId}에 구독한 사람들이 요청을 받는다")
-        @Test
-        void subscribe() throws ExecutionException, InterruptedException, TimeoutException {
-            Meeting meeting = generateSavedMeetingByTime(LocalDateTime.now().plusMinutes(1L));
-            MateEtaRequest request = new MateEtaRequest(false, "37.515298", "127.103113");
-            MateEtaResponsesV2 response = new MateEtaResponsesV2(100L, List.of());
+        MateEtaResponsesV2 stubResponse = new MateEtaResponsesV2(100L, List.of());
 
-            MessageFrameHandler<MateEtaResponsesV2> handler = new MessageFrameHandler<>(MateEtaResponsesV2.class);
-            stompSession.subscribe("/topic/etas/" + meeting.getId(), handler);
+        Mockito.when(authService.parseAccessToken(any()))
+                .thenReturn(generateStubMember()); //인증 처리를 위한 stub
 
-            Thread.sleep(3000);
+        Mockito.when(mateService.findAllMateEtas(any(), any(), any()))
+                .thenReturn(stubResponse); //응답 stub 처리
 
-            Mockito.when(authService.parseAccessToken(any())).thenReturn(generateStubMember()); //인증 처리를 위한 stub
-            Mockito.when(mateService.findAllMateEtas(any(), any(), any())).thenReturn(response); //응답 stub 처리
-            Mockito.when(taskScheduler.schedule(any(Runnable.class), any(Instant.class))).thenReturn(null);
+        Meeting notOverdueMeeting = generateNotOverdueMeeting();
+        Meeting overdueMeeting = generateOverdueMeeting();
+        MateEtaRequest request = new MateEtaRequest(false, "37.515298", "127.103113");
 
-            stompSession.send("/publish/open/" + meeting.getId(), "");
-            stompSession.send("/publish/etas/" + meeting.getId(), request);
+        Mockito.when(taskScheduler.schedule(any(Runnable.class), any(Instant.class)))
+                .thenReturn(null)
+                .thenReturn(null);
 
-            Thread.sleep(3000);
+        Thread.sleep(3000);
 
-            MateEtaResponsesV2 mateEtaResponsesV2 = handler.getCompletableFuture().get(10, TimeUnit.SECONDS);
-            assertThat(mateEtaResponsesV2.requesterMateId()).isEqualTo(response.requesterMateId());
-        }
+        stompSession.send("/publish/open/" + notOverdueMeeting.getId(), "");
+        Thread.sleep(3000);
+
+        stompSession.send("/publish/etas/" + notOverdueMeeting.getId(), request);
+
+        Thread.sleep(11000); //TODO: 10초전 트리거 타임을 셋팅해두고, 10초 뒤 실제 요청 보냈을 때 update 되는지 확인
+        stompSession.send("/publish/etas/" + notOverdueMeeting.getId(), request);
+
+        Thread.sleep(3000);
+        verify(taskScheduler, times(2))
+                .schedule(any(Runnable.class), any(Instant.class));
+    }
+//    }
+
+    @DisplayName("/topic/etas/{meetingId}에 구독한 사람들이 요청을 받는다")
+    @Test
+    void subscribe() throws ExecutionException, InterruptedException, TimeoutException {
+        Meeting notOverdueMeeting = generateNotOverdueMeeting();
+        MateEtaRequest request = new MateEtaRequest(false, "37.515298", "127.103113");
+        MateEtaResponsesV2 response = new MateEtaResponsesV2(100L, List.of());
+
+        MessageFrameHandler<MateEtaResponsesV2> handler = new MessageFrameHandler<>(MateEtaResponsesV2.class);
+        stompSession.subscribe("/topic/etas/" + notOverdueMeeting.getId(), handler);
+
+        Thread.sleep(3000);
+
+        Mockito.when(authService.parseAccessToken(any())).thenReturn(generateStubMember()); //인증 처리를 위한 stub
+        Mockito.when(mateService.findAllMateEtas(any(), any(), any())).thenReturn(response); //응답 stub 처리
+        Mockito.when(taskScheduler.schedule(any(Runnable.class), any(Instant.class))).thenReturn(null);
+
+        stompSession.send("/publish/open/" + notOverdueMeeting.getId(), "");
+        stompSession.send("/publish/etas/" + notOverdueMeeting.getId(), request);
+
+        Thread.sleep(3000);
+
+        MateEtaResponsesV2 mateEtaResponsesV2 = handler.getCompletableFuture().get(10, TimeUnit.SECONDS);
+        assertThat(mateEtaResponsesV2.requesterMateId()).isEqualTo(response.requesterMateId());
     }
 
-    private Meeting generateSavedMeetingByTime(LocalDateTime meetingTime) {
+    private Meeting generateOverdueMeeting() {
+        LocalDateTime past = LocalDateTime.now().minusMinutes(10L);
+
         Meeting meeting = new Meeting(
-                "오디",
-                meetingTime.toLocalDate(),
-                meetingTime.toLocalTime(),
+                "오디1",
+                past.toLocalDate(),
+                past.toLocalTime(),
                 Fixture.TARGET_LOCATION,
-                "초대코드"
+                "초대코드1"
+        );
+
+        return meetingRepository.save(meeting);
+    }
+
+    private Meeting generateNotOverdueMeeting() {
+        LocalDateTime future = LocalDateTime.now().plusMinutes(10L);
+
+        Meeting meeting = new Meeting(
+                "오디2",
+                future.toLocalDate(),
+                future.toLocalTime(),
+                Fixture.TARGET_LOCATION,
+                "초대코드2"
         );
 
         return meetingRepository.save(meeting);
@@ -175,6 +195,7 @@ class EtaSocketControllerTest extends BaseStompTest {
                 "콜리1",
                 "imageUrl1",
                 new DeviceToken("dt1"),
+                null,
                 null
         );
     }
