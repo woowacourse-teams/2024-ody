@@ -95,10 +95,16 @@ public class NotificationService {
     }
 
     public NotiLogFindResponses findAllMeetingLogs(Long meetingId) {
-        return activateFilter(() -> {
+        List<Notification> noti = notificationRepository.findAllMeetingLogs(meetingId);
+
+        log.info("noti without filter : {}", noti.size());
+        NotiLogFindResponses notiLogFindResponses = activateFilter(() -> {
             List<Notification> notifications = notificationRepository.findAllMeetingLogs(meetingId);
             return NotiLogFindResponses.from(notifications);
         });
+        log.info("noti with filter : {}", notiLogFindResponses.notiLog().size());
+
+        return NotiLogFindResponses.from(noti);
     }
 
     private <T> T activateFilter(Supplier<T> supplier) {
