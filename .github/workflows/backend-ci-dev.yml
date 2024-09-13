@@ -6,6 +6,9 @@ on:
       - develop
     paths:
       - backend/**
+  push:
+    branches:
+      - feature/532
 
 jobs:
   build-and-push:
