@@ -7,6 +7,7 @@ import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
 import com.ody.util.TimeUtil;
+import com.ody.util.cache.Cache;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -25,18 +26,18 @@ import org.springframework.stereotype.Service;
 public class EtaSocketService {
 
     private static final ZoneOffset KST_OFFSET = ZoneOffset.ofHours(9);
-    private static final Map<Long, LocalDateTime> LATEST_TRIGGER_TIME_CACHE = new ConcurrentHashMap<>();
-    private static final Map<Long, LocalDateTime> MEETING_TIME_CACHE = new ConcurrentHashMap<>();
 
+    private final Cache<Long, LocalDateTime> lastTriggerTimeCache;;
+    private final Cache<Long, LocalDateTime> meetingTimeCache;
     private final MeetingService meetingService;
     private final MateService mateService;
     private final TaskScheduler taskScheduler;
     private final SimpMessagingTemplate template;
 
     public void open(Long meetingId) {
-        if (!MEETING_TIME_CACHE.containsKey(meetingId)) {
+        if (!meetingTimeCache.exists(meetingId)) {
             Meeting meeting = meetingService.findById(meetingId);
-            MEETING_TIME_CACHE.put(meetingId, meeting.getMeetingTime());
+            meetingTimeCache.put(meetingId, meeting.getMeetingTime());
         }
         scheduleTrigger(meetingId, LocalDateTime.now().plusSeconds(1));
     }
@@ -52,13 +53,13 @@ public class EtaSocketService {
     }
 
     private boolean isOverMeetingTime(Long meetingId) {
-        LocalDateTime meetingTime = MEETING_TIME_CACHE.get(meetingId);
+        LocalDateTime meetingTime = meetingTimeCache.get(meetingId);
         LocalDateTime lastTriggerTime = meetingTime.plusMinutes(1L);
         return TimeUtil.nowWithTrim().isAfter(lastTriggerTime);
     }
 
     private boolean isTimeToSchedule(Long meetingId) {
-        LocalDateTime lastTriggerTime = LATEST_TRIGGER_TIME_CACHE.get(meetingId);
+        LocalDateTime lastTriggerTime = lastTriggerTimeCache.get(meetingId);
         Duration duration = Duration.between(lastTriggerTime, LocalDateTime.now());
         return duration.toSeconds() >= 10;
     }
@@ -68,7 +69,7 @@ public class EtaSocketService {
         taskScheduler.schedule(
                 () -> template.convertAndSend("topic/coordinates/" + meetingId, ""), startTime
         );
-        LATEST_TRIGGER_TIME_CACHE.put(meetingId, LocalDateTime.now());
+        lastTriggerTimeCache.put(meetingId, LocalDateTime.now());
         log.info("--- schedule 예약 완료 ! - {}, {}", meetingId, triggerTime);
     }
 }
