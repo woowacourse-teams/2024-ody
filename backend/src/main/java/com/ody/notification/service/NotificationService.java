@@ -103,6 +103,7 @@ public class NotificationService {
             return NotiLogFindResponses.from(notifications);
         });
         log.info("noti with filter : {}", notiLogFindResponses.notiLog().size());
+        log.info("noti with filter : {}", notiLogFindResponses.notiLog());
 
         return NotiLogFindResponses.from(noti);
     }
