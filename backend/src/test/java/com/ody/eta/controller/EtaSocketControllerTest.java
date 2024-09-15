@@ -7,16 +7,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 import com.ody.auth.service.AuthService;
+import com.ody.common.Fixture;
 import com.ody.common.websocket.BaseStompTest;
 import com.ody.common.websocket.MessageFrameHandler;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.service.SocketMessageSender;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
+import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
-import com.ody.util.cache.Cache;
+import com.ody.util.TimeCache;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -37,13 +39,16 @@ class EtaSocketControllerTest extends BaseStompTest {
     private MateService mateService;
 
     @MockBean
+    private MeetingService meetingService;
+
+    @MockBean
     private AuthService authService;
 
     @SpyBean
     private SocketMessageSender socketMessageSender;
 
     @SpyBean
-    private Cache<Long, LocalDateTime> timeCache;
+    private TimeCache timeCache;
 
     private MessageFrameHandler<Object> handler;
 
@@ -67,7 +72,8 @@ class EtaSocketControllerTest extends BaseStompTest {
     @DisplayName("오픈 동시 요청에 대해 위치 호출 함수가 예약된다")
     @Test
     void callEtaMethodWhenStartConnection() throws InterruptedException {
-        Mockito.when(timeCache.exists(anyLong())).thenReturn(true);
+        Mockito.when(timeCache.exists(anyLong())).thenReturn(false);
+        Mockito.when(meetingService.findById(anyLong())).thenReturn(Fixture.ODY_MEETING);
 
         subscribeTopic("coordinates");
         stompSession.send("/publish/open/1", "");
