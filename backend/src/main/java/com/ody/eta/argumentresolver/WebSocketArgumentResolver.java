@@ -23,10 +23,7 @@ public class WebSocketArgumentResolver implements HandlerMethodArgumentResolver 
     }
 
     @Override
-    public Object resolveArgument(
-            MethodParameter parameter,
-            Message<?> message
-    ) {
+    public Object resolveArgument(MethodParameter parameter, Message<?> message) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String accessToken = accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
 

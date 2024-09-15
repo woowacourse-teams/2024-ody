@@ -133,7 +133,6 @@ class EtaSocketControllerTest extends BaseStompTest {
         verify(taskScheduler, times(2))
                 .schedule(any(Runnable.class), any(Instant.class));
     }
-//    }
 
     @DisplayName("/topic/etas/{meetingId}에 구독한 사람들이 요청을 받는다")
     @Test
