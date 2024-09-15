@@ -80,7 +80,7 @@ public class EtaSocketConcurrencyTest extends BaseServiceTest {
 
         Thread.sleep(1000); //멀티 스레드 완료 대기 -> 생략하면 검증이 먼저 실행되어 에러
 
-        verify(socketMessageSender, times(2))
+        verify(socketMessageSender, times(2)) // 최초 open 예약(1번) + 10번 동시 호출(1번)
                 .reserveMessage(anyString(), any(LocalDateTime.class));
     }
 

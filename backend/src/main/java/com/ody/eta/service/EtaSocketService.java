@@ -24,7 +24,7 @@ public class EtaSocketService {
 
     private static final int LOCATION_TRIGGER_CALL_MINUTE_GAP = 10;
 
-    private final TimeCache lastTriggerTimeCache;;
+    private final TimeCache lastTriggerTimeCache;
     private final TimeCache meetingTimeCache;
     private final MeetingService meetingService;
     private final MateService mateService;
