@@ -23,7 +23,7 @@ public class SocketMessageSender {
     public void reserveMessage(String destination, LocalDateTime triggerTime) {
         Instant startTime = triggerTime.toInstant(KST_OFFSET);
         taskScheduler.schedule(() -> template.convertAndSend(destination, BLANK_PAYLOAD), startTime); //TODO payLoad로 비교
-        log.info("--- schedule 예약 완료 ! - {}, {}", destination, triggerTime);
+        log.info("--- websocket schedule 예약 완료 ! - {}, {}", destination, triggerTime);
     }
 
     public void sendMessage(String destination) {
