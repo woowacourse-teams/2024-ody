@@ -27,7 +27,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class EtaSocketConcurrencyTest extends BaseServiceTest {
+class EtaSocketConcurrencyTest extends BaseServiceTest {
 
     @SpyBean
     private SocketMessageSender socketMessageSender;
