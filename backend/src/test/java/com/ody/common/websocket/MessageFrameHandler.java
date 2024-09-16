@@ -1,10 +1,12 @@
 package com.ody.common.websocket;
 
+import groovy.util.logging.Slf4j;
 import java.lang.reflect.Type;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 
+@Slf4j
 public class MessageFrameHandler<T> implements StompFrameHandler {
 
     private final CompletableFuture<T> completableFuture = new CompletableFuture<>();
@@ -22,8 +24,7 @@ public class MessageFrameHandler<T> implements StompFrameHandler {
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        if(completableFuture.complete((T)payload)){
-            System.out.println("끝남");
+        if (completableFuture.complete((T) payload)) {
         }
     }
 
