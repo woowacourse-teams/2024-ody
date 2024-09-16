@@ -29,7 +29,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class EtaSocketConcurrencyTest extends BaseServiceTest {
 
-    @SpyBean
+    @MockBean
     private SocketMessageSender socketMessageSender;
 
     @MockBean
@@ -52,7 +52,6 @@ class EtaSocketConcurrencyTest extends BaseServiceTest {
         Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
 
         int threadNums = 10;
-        doNothing().when(socketMessageSender).reserveMessage(anyString(), any(LocalDateTime.class));
         runJobConcurrently(threadNums, () -> etaSocketService.open(meeting.getId()));
 
         Thread.sleep(1000); //멀티 스레드 완료 대기 -> 생략하면 검증이 먼저 실행되어 에러
@@ -65,10 +64,6 @@ class EtaSocketConcurrencyTest extends BaseServiceTest {
     @Test
     void reserveCoordinatesTriggerOnceWhenEtaUpdate() throws InterruptedException {
         Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
-
-        doNothing().doNothing()
-                .when(socketMessageSender)
-                .reserveMessage(anyString(), any(LocalDateTime.class));
 
         etaSocketService.open(meeting.getId());
         Thread.sleep(10000); //최초 호출 10초 뒤
