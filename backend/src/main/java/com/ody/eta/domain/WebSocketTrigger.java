@@ -6,7 +6,6 @@ public enum WebSocketTrigger {
     DISCONNECT( "/topic/disconnect/"),
     ;
 
-
     private final String url;
 
     WebSocketTrigger(String url) {
