@@ -45,9 +45,6 @@ class EtaSocketControllerTest extends BaseStompTest {
     private AuthService authService;
 
     @SpyBean
-    private SocketMessageSender socketMessageSender;
-
-    @SpyBean
     private TimeCache timeCache;
 
     private MessageFrameHandler<Object> handler;
