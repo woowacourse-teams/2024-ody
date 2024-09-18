@@ -26,3 +26,7 @@ fcm:
 jasypt:
   encryptor:
     password: ${JASYPT_ENCRYPTOR_PASSWORD}
+
+kakao:
+  url: https://kapi.kakao.com/v1/user/unlink
+  admin-key: ENC(b8lXOQquegCbdIgayVYIDBrhkNeyuucBArJScDGtEA2IWFiWeGUViiDhyZg0XpFE)
