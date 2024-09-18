@@ -14,7 +14,7 @@ public record NotiLogFindResponses(
 
     public static NotiLogFindResponses from(List<Notification> notifications) {
         return notifications.stream()
-                .map(NotiLogFindResponse::from)
+                .map(NotiLogFindResponse::new)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), NotiLogFindResponses::new));
     }
 }
