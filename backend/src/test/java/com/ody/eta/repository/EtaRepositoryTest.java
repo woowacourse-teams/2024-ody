@@ -70,6 +70,7 @@ class EtaRepositoryTest extends BaseRepositoryTest {
 
         etaRepository.delete(eta);
 
+        entityManager.flush();
         Optional<Eta> actual = etaRepository.findById(eta.getId());
         assertThat(actual).isNotPresent();
     }
