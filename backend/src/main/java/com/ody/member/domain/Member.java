@@ -31,8 +31,8 @@ import org.hibernate.annotations.SQLRestriction;
 })
 @Filter(name = "deletedMemberFilter", condition = "deleted_at IS NOT NULL or deleted_at IS NULL")
 @FilterDef(name = "deletedMemberFilter")
-@SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
-@SQLRestriction("deleted_at is NULL")
+@SQLDelete(sql = "UPDATE member SET provider_id = UUID(), nickname = '', image_url = '', deleted_at = NOW() WHERE id = ?")
+//@SQLRestriction("deleted_at is NULL")
 public class Member {
 
     @Id

@@ -1,6 +1,7 @@
 package com.ody.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseRepositoryTest;
 import com.ody.common.Fixture;
@@ -44,6 +45,21 @@ class MemberRepositoryTest extends BaseRepositoryTest {
                 .setParameter(1, member.getId())
                 .getSingleResult();
         assertThat(actual.getDeletedAt()).isNotNull();
+    }
+
+    @DisplayName("회원 삭제 시 소셜 서비스의 사용자 정보(회원번호, 닉네임, 프로필 사진)를 파기한다.")
+    @Test
+    void destroySocialUserInformationWhenDelete() {
+        Member member = fixtureGenerator.generateMember();
+        memberRepository.delete(member);
+
+        entityManager.flush();
+        Member actual = memberRepository.findById(member.getId()).get();
+        assertAll(
+                () -> assertThat(actual.getProviderId()).isNotEqualTo(member.getProviderId()),
+                () -> assertThat(actual.getNickname()).isEmpty(),
+                () -> assertThat(actual.getImageUrl()).isEmpty()
+        );
     }
 
     @DisplayName("삭제된 회원은 조회하지 않는다.")
