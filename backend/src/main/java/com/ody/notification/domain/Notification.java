@@ -118,16 +118,4 @@ public class Notification extends BaseEntity {
     public boolean isStatusDismissed() {
         return status == NotificationStatus.DISMISSED;
     }
-
-    @Override
-    public String toString() {
-        return "Notification{" +
-                "id=" + id +
-                ", mate=" + mate +
-                ", type=" + type +
-                ", sendAt=" + sendAt +
-                ", status=" + status +
-                ", fcmTopic=" + fcmTopic +
-                '}';
-    }
 }
