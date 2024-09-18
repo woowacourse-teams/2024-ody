@@ -29,4 +29,8 @@ public enum WebSocketEndpoint {
                 .filter(endpoint -> endpoint.startsWith("/publish/"))
                 .toList();
     }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
 }
