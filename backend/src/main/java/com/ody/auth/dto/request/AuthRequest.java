@@ -1,5 +1,6 @@
 package com.ody.auth.dto.request;
 
+import com.ody.mate.domain.Nickname;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,7 +29,11 @@ public record AuthRequest(
         return new DeviceToken(deviceToken);
     }
 
+    public Nickname toNickname() {
+        return new Nickname(nickname);
+    }
+
     public Member toMember() {
-        return new Member(providerId, nickname, imageUrl, toDeviceToken());
+        return new Member(providerId, toNickname(), imageUrl, toDeviceToken());
     }
 }

@@ -15,7 +15,7 @@ class MemberRepositoryTest extends BaseRepositoryTest {
     @DisplayName("기기 토큰으로 회원을 조회한다")
     @Test
     void findFirstByDeviceToken() {
-        Member member = memberRepository.save(Fixture.MEMBER1);
+        Member member = fixtureGenerator.generateMember();
 
         Member findMember = memberRepository.findFirstByDeviceToken(member.getDeviceToken()).get();
 
@@ -25,8 +25,7 @@ class MemberRepositoryTest extends BaseRepositoryTest {
     @DisplayName("임의의 providerType, providerId를 가진 회원이 존재하는지 조회한다.")
     @Test
     void existsByAuthProvider() {
-        Member member = new Member("12345", "몽키건우", "imageurl", new DeviceToken("Bearer device-token=dt"));
-        memberRepository.save(member);
+        Member member = fixtureGenerator.generateMember();
 
         boolean actual = memberRepository.existsByAuthProvider(member.getAuthProvider());
 

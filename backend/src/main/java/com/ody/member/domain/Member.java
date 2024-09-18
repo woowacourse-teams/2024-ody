@@ -1,6 +1,7 @@
 package com.ody.member.domain;
 
 import com.ody.auth.token.RefreshToken;
+import com.ody.mate.domain.Nickname;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,7 +45,7 @@ public class Member {
     private AuthProvider authProvider;
 
     @NotNull
-    private String nickname;
+    private Nickname nickname;
 
     @NotNull
     private String imageUrl;
@@ -57,20 +58,8 @@ public class Member {
 
     private LocalDateTime deletedAt;
 
-    public Member(String providerId, String nickname, String imageUrl, DeviceToken deviceToken) {
+    public Member(String providerId, Nickname nickname, String imageUrl, DeviceToken deviceToken) {
         this(null, new AuthProvider(providerId), nickname, imageUrl, deviceToken, null, null);
-    }
-
-    public String getDeviceTokenValue() {
-        return deviceToken.getValue();
-    }
-
-    public ProviderType getProviderType() {
-        return authProvider.getProviderType();
-    }
-
-    public String getProviderId() {
-        return authProvider.getProviderId();
     }
 
     public boolean isLogout() {
