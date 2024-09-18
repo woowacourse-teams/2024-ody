@@ -19,7 +19,7 @@ public record MateEtaResponse(
 
     public static MateEtaResponse of(Eta eta, Meeting meeting) {
         return new MateEtaResponse(
-                eta.getMate().getNickname(),
+                eta.getMate().getNickname().getValue(),
                 EtaStatus.of(eta, meeting),
                 mapMinutes(eta, meeting)
         );

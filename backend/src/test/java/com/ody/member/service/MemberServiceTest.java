@@ -8,6 +8,7 @@ import com.ody.common.BaseServiceTest;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.AuthProvider;
@@ -117,7 +118,7 @@ class MemberServiceTest extends BaseServiceTest {
         }
 
         private Member createMember(String providerId, String deviceToken) {
-            return new Member(providerId, "nickname", "imageUrl", new DeviceToken(deviceToken));
+            return new Member(providerId, new Nickname("nickname"), "imageUrl", new DeviceToken(deviceToken));
         }
 
         private DeviceToken getDeviceTokenByAuthProvider(String providerId) {

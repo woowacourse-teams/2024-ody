@@ -32,7 +32,7 @@ public record NotiLogFindResponse(
     private static NotiLogFindResponse create(Notification notification) {
         return new NotiLogFindResponse(
                 notification,
-                notification.getMate().getNickname(),
+                notification.getMate().getNickname().getValue(),
                 notification.getMate().getMember().getImageUrl()
         );
     }

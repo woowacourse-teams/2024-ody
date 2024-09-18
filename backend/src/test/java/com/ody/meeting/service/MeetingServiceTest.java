@@ -182,7 +182,7 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertAll(
                 () -> assertThat(response.id()).isEqualTo(meeting.getId()),
-                () -> assertThat(mateNicknames).containsOnly(mate1.getNickname(), mate2.getNickname())
+                () -> assertThat(mateNicknames).containsOnly(mate1.getNickname().getValue(), mate2.getNickname().getValue())
         );
     }
 
