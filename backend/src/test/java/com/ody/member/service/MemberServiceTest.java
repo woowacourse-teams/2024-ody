@@ -1,10 +1,12 @@
 package com.ody.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
+import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
@@ -131,16 +133,23 @@ class MemberServiceTest extends BaseServiceTest {
         Member member = fixtureGenerator.generateMember();
         Meeting meeting = fixtureGenerator.generateMeeting();
         Mate mate = fixtureGenerator.generateMate(meeting, member);
-        Eta eta = fixtureGenerator.generateEta(mate);
-        Notification notification = fixtureGenerator.generateNotification(mate);
+        fixtureGenerator.generateEta(mate);
+        fixtureGenerator.generateNotification(mate);
 
         memberService.delete(member.getId());
 
-        assertAll(
-                () -> assertThat(memberRepository.findById(member.getId())).isEmpty(),
-                () -> assertThat(mateRepository.findAllByMemberId(member.getId())).isEmpty(),
-                () -> assertThat(etaRepository.findById(eta.getId())).isEmpty(),
-                () -> assertThat(notificationRepository.findById(notification.getId())).isNotEmpty()
-        );
+        Member actual = memberRepository.findById(member.getId()).get();
+        assertThat(actual.getDeletedAt()).isNotNull();
+    }
+
+
+    @DisplayName("삭제 회원을 조회할 수 없다.")
+    @Test
+    void findDeletedMemberById() {
+        Member member = fixtureGenerator.generateMember();
+        memberService.delete(member.getId());
+
+        assertThatThrownBy(() -> memberService.findById(member.getId()))
+                .isInstanceOf(OdyUnauthorizedException.class);
     }
 }

@@ -17,17 +17,14 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
-import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.service.RouteService;
-import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -197,7 +194,6 @@ class NotificationServiceTest extends BaseServiceTest {
         );
     }
 
-    @Disabled
     @DisplayName("삭제 회원이 포함된 로그 목록을 조회한다.")
     @Test
     void findAllMeetingLogsIncludingDeletedMember() {
@@ -207,12 +203,10 @@ class NotificationServiceTest extends BaseServiceTest {
         fixtureGenerator.generateNotification(deleteMate);
         fixtureGenerator.generateNotification(mate);
 
-        NotiLogFindResponses notificationsBeforeDelete = notificationService.findAllMeetingLogs(meeting.getId());
-        memberService.delete(deleteMate.getMember().getId());
-        NotiLogFindResponses notificationsAfterDelete = notificationService.findAllMeetingLogs(meeting.getId());
+        int logCountBeforeDelete = notificationService.findAllMeetingLogs(meeting.getId()).notiLog().size();
+        memberService.delete(deleteMate.getMember().getId()); // notification added
+        int logCountAfterDelete = notificationService.findAllMeetingLogs(meeting.getId()).notiLog().size();
 
-        int expect = notificationsBeforeDelete.notiLog().size() + 1;
-        int actual = notificationsAfterDelete.notiLog().size();
-        assertThat(actual).isEqualTo(expect);
+        assertThat(logCountAfterDelete).isEqualTo(logCountBeforeDelete + 1);
     }
 }

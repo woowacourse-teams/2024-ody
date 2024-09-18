@@ -1,5 +1,6 @@
 package com.ody.notification.service;
 
+import com.ody.common.aop.DisabledDeletedFilter;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
@@ -13,16 +14,12 @@ import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
 import com.ody.util.TimeUtil;
-import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
@@ -41,9 +38,6 @@ public class NotificationService {
     private final FcmSubscriber fcmSubscriber;
     private final FcmPushSender fcmPushSender;
     private final TaskScheduler taskScheduler;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Transactional
     public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
@@ -94,30 +88,10 @@ public class NotificationService {
         log.info("애플리케이션 시작 - PENDING 상태 출발 알림 {}개 스케줄링", notifications.size());
     }
 
+    @DisabledDeletedFilter
     public NotiLogFindResponses findAllMeetingLogs(Long meetingId) {
-        List<Notification> noti = notificationRepository.findAllMeetingLogs(meetingId);
-
-        log.info("noti without filter : {}", noti.size());
-        NotiLogFindResponses notiLogFindResponses = activateFilter(() -> {
-            List<Notification> notifications = notificationRepository.findAllMeetingLogs(meetingId);
-            return NotiLogFindResponses.from(notifications);
-        });
-        log.info("noti with filter : {}", notiLogFindResponses.notiLog().size());
-        log.info("noti with filter : {}", notiLogFindResponses.notiLog());
-
-        return NotiLogFindResponses.from(noti);
-    }
-
-    private <T> T activateFilter(Supplier<T> supplier) {
-        Session session = entityManager.unwrap(Session.class);
-        session.enableFilter("deletedMemberFilter");
-        session.enableFilter("deletedMateFilter");
-        try {
-            return supplier.get();
-        } finally {
-            session.disableFilter("deletedMemberFilter");
-            session.disableFilter("deletedMateFilter");
-        }
+        List<Notification> notifications = notificationRepository.findAllMeetingLogs(meetingId);
+        return NotiLogFindResponses.from(notifications);
     }
 
     @Transactional
