@@ -3,7 +3,9 @@ name: backend-cd-dev
 on:
   push:
     branches:
-      - feature/532
+      - develop
+    paths:
+      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
