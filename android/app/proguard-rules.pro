@@ -21,7 +21,7 @@
 #-renamesourcefileattribute SourceFile
 
 # kakao share
--keep class com.kakao.sdk.**.model.* { <fields>; }
+-keep class com.kakao.sdk.**.model.* { *; }
 -keep class * extends com.google.gson.TypeAdapter
 
 # https://github.com/square/okhttp/pull/6792
@@ -32,6 +32,7 @@
 # retrofit
 -keep class com.mulberry.ody.data.retrofit.* { *; }
 -keep class com.mulberry.ody.domain.apiresult.ApiResult
+-keep class com.mulberry.ody.data.remote.core.service.* { *; }
 
 # moshi
 -keep class com.squareup.moshi.** { *; }

@@ -46,6 +46,7 @@ public class MemberService {
 
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId)
+                .filter(member -> member.getDeletedAt() == null)
                 .orElseThrow(() -> new OdyUnauthorizedException("존재하지 않는 회원입니다."));
     }
 

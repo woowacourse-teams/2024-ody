@@ -41,10 +41,10 @@ class MemberRepositoryTest extends BaseRepositoryTest {
 
         memberRepository.deleteById(member.getId());
 
-        Member actual = (Member) entityManager.createNativeQuery("select * from Member where id = ?", Member.class)
-                .setParameter(1, member.getId())
-                .getSingleResult();
-        assertThat(actual.getDeletedAt()).isNotNull();
+        entityManager.flush();
+        Optional<Member> actual = memberRepository.findById(member.getId());
+        assertThat(actual).isPresent();
+        assertThat(actual.get().getDeletedAt()).isNotNull();
     }
 
     @DisplayName("회원 삭제 시 소셜 서비스의 사용자 정보(회원번호, 닉네임, 프로필 사진)를 파기한다.")
@@ -60,16 +60,5 @@ class MemberRepositoryTest extends BaseRepositoryTest {
                 () -> assertThat(actual.getNickname()).isEmpty(),
                 () -> assertThat(actual.getImageUrl()).isEmpty()
         );
-    }
-
-    @DisplayName("삭제된 회원은 조회하지 않는다.")
-    @Test
-    void doNotFindDeletedMember() {
-        Member member = fixtureGenerator.generateMember();
-
-        memberRepository.delete(member);
-
-        Optional<Member> actual = memberRepository.findById(member.getId());
-        assertThat(actual).isNotPresent();
     }
 }

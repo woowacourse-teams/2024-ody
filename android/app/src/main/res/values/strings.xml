@@ -12,6 +12,7 @@
     <string name="item_notification_departure_reminder">(이)가 출발할 시간이에요!</string>
     <string name="item_notification_departure">(이)가 출발했어요.</string>
     <string name="item_notification_nudge">"(이)가 재촉해요. \uD83D\uDC40"</string>
+    <string name="item_notification_member_deletion">(이)가 오디를 떠났어요.</string>
     <string name="item_notification_default"> </string>
 
     <!-- activity_meeting_room.xml -->
@@ -93,6 +94,11 @@
 
     <!-- activity_setting -->
     <string name="setting_main_title">설정</string>
+    <string name="setting_withdrawal_title_front">정말&#160;</string>
+    <string name="setting_withdrawal_title_middle">오디</string>
+    <string name="setting_withdrawal_title_back">를 떠나시겠어요?</string>
+    <string name="setting_withdrawal_subtitle">참여한 약속들이 모두 사라져요.</string>
+    <string name="setting_withdrawal_button">탈퇴</string>
 
     <!-- item_setting -->
     <string name="item_privacy_policy">개인정보 처리 방침</string>
@@ -131,6 +137,7 @@
     <!-- all -->
     <string name="next_button">다음</string>
     <string name="confirm_button">확인</string>
+    <string name="cancel_button">취소</string>
     <string name="address_question_hint">주소를 찾아보세요</string>
     <string name="address_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
     <string name="invalid_address">지원하지 않는 지역이에요. 다시 선택해 주세요.</string>
