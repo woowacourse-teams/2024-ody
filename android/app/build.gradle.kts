@@ -2,6 +2,7 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.googleServices)
     alias(libs.plugins.android.application)
@@ -67,6 +68,10 @@ android {
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 dependencies {
@@ -136,4 +141,8 @@ dependencies {
 
     // kakao sdk
     implementation(libs.kakao.sdk.v2.user)
+
+    // hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 }
