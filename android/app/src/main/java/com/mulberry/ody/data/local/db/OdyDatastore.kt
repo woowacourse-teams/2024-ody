@@ -59,7 +59,6 @@ class OdyDatastore(private val context: Context) {
 
     companion object {
         private const val ODY_KEY = "ody_key"
-        private val INVITE_CODE = stringPreferencesKey("inviteCode")
         private val FCM_TOKEN = stringPreferencesKey("fcmToken")
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")

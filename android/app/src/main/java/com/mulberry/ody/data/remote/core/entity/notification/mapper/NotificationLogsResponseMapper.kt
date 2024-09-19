@@ -1,19 +1,19 @@
 package com.mulberry.ody.data.remote.core.entity.notification.mapper
 
 import com.mulberry.ody.data.remote.core.entity.notification.response.NotificationLogsResponse
+import com.mulberry.ody.domain.model.LogType
 import com.mulberry.ody.domain.model.NotificationLog
-import com.mulberry.ody.domain.model.NotificationType
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 fun NotificationLogsResponse.toNotificationList(): List<NotificationLog> =
     this.logList.map {
-        val type = NotificationType.from(it.type)
-        val nickname = it.nickname
-        val createdAt = it.createdAt.parseToLocalDateTime()
-        val imageUrl = it.imageUrl
-
-        NotificationLog(type, nickname, createdAt, imageUrl)
+        NotificationLog(
+            type = LogType.from(it.type),
+            nickname = it.nickname,
+            createdAt = it.createdAt.parseToLocalDateTime(),
+            imageUrl = it.imageUrl,
+        )
     }
 
 private fun String.parseToLocalDateTime(): LocalDateTime {

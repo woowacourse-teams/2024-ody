@@ -1,21 +1,28 @@
 package com.mulberry.ody.data.remote.thirdparty.login.kakao
 
 import android.content.Context
+import com.kakao.sdk.user.UserApiClient
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
 import com.mulberry.ody.data.remote.core.entity.login.request.LoginRequest
 import com.mulberry.ody.data.remote.core.service.LoginService
 import com.mulberry.ody.data.remote.core.service.LogoutService
+import com.mulberry.ody.data.remote.core.service.MemberService
 import com.mulberry.ody.data.remote.thirdparty.login.entity.UserProfile
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map
 import com.mulberry.ody.domain.common.flatMap
 import com.mulberry.ody.domain.model.AuthToken
 import com.mulberry.ody.domain.repository.ody.FCMTokenRepository
+import java.io.IOException
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class KakaoLoginRepository(
     private val loginService: LoginService,
     private val logoutService: LogoutService,
+    private val memberService: MemberService,
     private val odyDatastore: OdyDatastore,
     private val kakaoOAuthLoginService: KakaoOAuthLoginService,
     private val fcmTokenRepository: FCMTokenRepository,
@@ -70,4 +77,33 @@ class KakaoLoginRepository(
                 userProfile.imageUrl,
             )
         }
+
+    suspend fun withdrawAccount(): ApiResult<Unit> {
+        val deleteMemberResult = memberService.deleteMember()
+        if (deleteMemberResult.isFailure) {
+            return deleteMemberResult
+        }
+        odyDatastore.removeAuthToken()
+        return withdrawAccountByKakao()
+    }
+
+    private suspend fun withdrawAccountByKakao(): ApiResult<Unit> {
+        return try {
+            val result =
+                suspendCoroutine { continuation ->
+                    UserApiClient.instance.unlink { error ->
+                        if (error != null) {
+                            continuation.resumeWithException(error)
+                        } else {
+                            continuation.resume(Unit)
+                        }
+                    }
+                }
+            ApiResult.Success(result)
+        } catch (e: IOException) {
+            ApiResult.NetworkError(e)
+        } catch (t: Throwable) {
+            ApiResult.Unexpected(t)
+        }
+    }
 }

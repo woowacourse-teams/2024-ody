@@ -12,6 +12,7 @@ import com.mulberry.ody.presentation.meetings.MeetingsActivity
 class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_login) {
     private val viewModel: LoginViewModel by viewModels<LoginViewModel> {
         LoginViewModelFactory(
+            application.analyticsHelper,
             application.authTokenRepository,
             application.kakaoLoginRepository,
         )
@@ -48,6 +49,13 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
         }
         viewModel.errorEvent.observe(this) {
             showSnackBar(R.string.error_guide)
+        }
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@observe
+            }
+            hideLoadingDialog()
         }
     }
 
