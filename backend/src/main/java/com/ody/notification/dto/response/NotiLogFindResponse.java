@@ -20,8 +20,8 @@ public record NotiLogFindResponse(
         String imageUrl
 ) {
 
-    public NotiLogFindResponse(Notification notification) {
-        this(
+    public static NotiLogFindResponse from(Notification notification) {
+        return new NotiLogFindResponse(
                 notification.getType().toString(),
                 notification.getMate().getNickname(),
                 TimeUtil.trimSecondsAndNanos(notification.getSendAt()),
