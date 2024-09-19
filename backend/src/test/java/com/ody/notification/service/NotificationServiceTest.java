@@ -3,6 +3,7 @@ package com.ody.notification.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
+import com.ody.auth.service.KakaoAuthUnlinkClient;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
 import com.ody.mate.domain.Mate;
@@ -58,6 +59,9 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @Autowired
     private MemberService memberService;
+
+    @MockBean
+    private KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 
     @DisplayName("알림 생성 시점이 전송 시점보다 늦은 경우 즉시 전송된다")
     @Test
@@ -204,7 +208,7 @@ class NotificationServiceTest extends BaseServiceTest {
         fixtureGenerator.generateNotification(mate);
 
         int logCountBeforeDelete = notificationService.findAllMeetingLogs(meeting.getId()).notiLog().size();
-        memberService.delete(deleteMate.getMember().getId()); // notification added
+        memberService.delete(deleteMate.getMember()); // notification added
         int logCountAfterDelete = notificationService.findAllMeetingLogs(meeting.getId()).notiLog().size();
 
         assertThat(logCountAfterDelete).isEqualTo(logCountBeforeDelete + 1);

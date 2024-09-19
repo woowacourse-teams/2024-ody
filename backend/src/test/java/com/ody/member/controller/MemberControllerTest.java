@@ -52,6 +52,6 @@ class MemberControllerTest extends BaseControllerTest {
                 .when().log().all()
                 .delete("/members")
                 .then()
-                .statusCode(204);
+                .statusCode(401);
     }
 }

@@ -57,11 +57,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void delete(long memberId) {
-        memberRepository.findById(memberId)
-                        .ifPresent(member -> socialAuthUnlinkClient.unlink(member.getProviderId()));
+    public void delete(Member member) {
+        socialAuthUnlinkClient.unlink(member.getProviderId());
 
-        mateService.deleteByMemberId(memberId);
-        memberRepository.deleteById(memberId);
+        mateService.deleteByMemberId(member.getId());
+        memberRepository.delete(member);
     }
 }

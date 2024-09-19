@@ -18,6 +18,7 @@ public interface MemberControllerSwagger {
             summary = "회원 삭제",
             responses = @ApiResponse(responseCode = "204", description = "회원 삭제 성공")
     )
+    @ErrorCode401
     @ErrorCode500
-    ResponseEntity<Void> delete(@Parameter(hidden = true) String authorization);
+    ResponseEntity<Void> delete(@Parameter(hidden = true) Member member);
 }
