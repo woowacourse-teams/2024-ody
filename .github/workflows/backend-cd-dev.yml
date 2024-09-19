@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+
     paths:
       - backend/**
 
@@ -12,13 +13,10 @@ env:
 
 jobs:
   build-and-push:
-
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: backend
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -58,13 +56,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Docker Image Build And Push
-        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev -f Dockerfile . --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} --push
+        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev -f Dockerfile . --push
 
   pull-and-deploy:
-
     needs: build-and-push
     runs-on: dev
-
     steps:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -82,6 +78,7 @@ jobs:
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
           export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
           export DEV_MYSQL_PASSWORD=${{ secrets.DEV_MYSQL_PASSWORD }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
           export GIT_SHA=${{ github.sha }}
           docker compose up -d
 
