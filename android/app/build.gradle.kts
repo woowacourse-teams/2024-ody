@@ -144,5 +144,8 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android)
+
+    implementation("androidx.hilt:hilt-work:1.2.0")
+
     ksp(libs.hilt.android.compiler)
 }

@@ -23,8 +23,8 @@ abstract class BindingFragment<T : ViewDataBinding>(
     protected val binding: T
         get() = requireNotNull(_binding)
     private var snackBar: Snackbar? = null
-    val application by lazy { requireContext().applicationContext as OdyApplication }
-    val analyticsHelper by lazy { application.analyticsHelper }
+    val mApplication by lazy { requireContext().applicationContext as OdyApplication }
+//    val analyticsHelper by lazy { mApplication.analyticsHelper }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +43,7 @@ abstract class BindingFragment<T : ViewDataBinding>(
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launch {
             val bundle = bundleOf(FirebaseAnalytics.Param.SCREEN_NAME to javaClass.simpleName)
-            analyticsHelper.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+//            analyticsHelper.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
         }
     }
 
@@ -70,7 +70,7 @@ abstract class BindingFragment<T : ViewDataBinding>(
         _binding = null
         snackBar = null
         viewLifecycleOwner.lifecycleScope.launch {
-            analyticsHelper.logEvent(javaClass.simpleName + " destroyed", bundleOf())
+//            analyticsHelper.logEvent(javaClass.simpleName + " destroyed", bundleOf())
         }
     }
 }

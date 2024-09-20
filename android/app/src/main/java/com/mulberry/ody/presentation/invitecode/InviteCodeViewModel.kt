@@ -13,46 +13,51 @@ import com.mulberry.ody.presentation.common.MutableSingleLiveData
 import com.mulberry.ody.presentation.common.SingleLiveData
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class InviteCodeViewModel(
-    private val analyticsHelper: AnalyticsHelper,
-    private val meetingRepository: MeetingRepository,
-) : BaseViewModel() {
-    val inviteCode: MutableLiveData<String> = MutableLiveData()
-    val hasInviteCode: LiveData<Boolean> = inviteCode.map { it.isNotEmpty() }
+@HiltViewModel
+class InviteCodeViewModel
+    @Inject
+    constructor(
+        private val analyticsHelper: AnalyticsHelper,
+        private val meetingRepository: MeetingRepository,
+    ) : BaseViewModel() {
+        val inviteCode: MutableLiveData<String> = MutableLiveData()
+        val hasInviteCode: LiveData<Boolean> = inviteCode.map { it.isNotEmpty() }
 
-    private val _invalidInviteCodeEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val invalidInviteCodeEvent: SingleLiveData<Unit> get() = _invalidInviteCodeEvent
+        private val _invalidInviteCodeEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+        val invalidInviteCodeEvent: SingleLiveData<Unit> get() = _invalidInviteCodeEvent
 
-    private val _navigateAction: MutableSingleLiveData<InviteCodeNavigateAction> = MutableSingleLiveData()
-    val navigateAction: SingleLiveData<InviteCodeNavigateAction> get() = _navigateAction
+        private val _navigateAction: MutableSingleLiveData<InviteCodeNavigateAction> = MutableSingleLiveData()
+        val navigateAction: SingleLiveData<InviteCodeNavigateAction> get() = _navigateAction
 
-    fun clearInviteCode() {
-        inviteCode.value = ""
-    }
+        fun clearInviteCode() {
+            inviteCode.value = ""
+        }
 
-    fun checkInviteCode() {
-        viewModelScope.launch {
-            val inviteCode = inviteCode.value ?: return@launch
-            startLoading()
-            meetingRepository.fetchInviteCodeValidity(inviteCode)
-                .onSuccess {
-                    _navigateAction.setValue(InviteCodeNavigateAction.CodeNavigateToJoin)
-                }.onFailure { code, errorMessage ->
-                    _invalidInviteCodeEvent.setValue(Unit)
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    Timber.e("$code $errorMessage")
-                }.onNetworkError {
-                    handleNetworkError()
-                    lastFailedAction = { checkInviteCode() }
-                }
-            stopLoading()
+        fun checkInviteCode() {
+            viewModelScope.launch {
+                val inviteCode = inviteCode.value ?: return@launch
+                startLoading()
+                meetingRepository.fetchInviteCodeValidity(inviteCode)
+                    .onSuccess {
+                        _navigateAction.setValue(InviteCodeNavigateAction.CodeNavigateToJoin)
+                    }.onFailure { code, errorMessage ->
+                        _invalidInviteCodeEvent.setValue(Unit)
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { checkInviteCode() }
+                    }
+                stopLoading()
+            }
+        }
+
+        companion object {
+            private const val TAG = "InviteCodeViewModel"
         }
     }
-
-    companion object {
-        private const val TAG = "InviteCodeViewModel"
-    }
-}

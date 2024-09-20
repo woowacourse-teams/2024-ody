@@ -3,6 +3,7 @@ package com.mulberry.ody.data.local.service
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
@@ -12,7 +13,6 @@ import androidx.work.workDataOf
 import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.mulberry.ody.OdyApplication
 import com.mulberry.ody.data.local.entity.eta.MatesEtaInfoResponse
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
@@ -21,16 +21,23 @@ import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resumeWithException
 
-class EtaDashboardWorker(context: Context, private val workerParameters: WorkerParameters) :
-    CoroutineWorker(context, workerParameters) {
-    private val analyticsHelper: AnalyticsHelper by lazy { (applicationContext as OdyApplication).analyticsHelper }
-    private val meetingRepository: MeetingRepository by lazy { (applicationContext as OdyApplication).meetingRepository }
-    private val permissionHelper: PermissionHelper by lazy { (applicationContext as OdyApplication).permissionHelper }
+@HiltWorker
+class EtaDashboardWorker
+@AssistedInject
+constructor(
+    @Assisted context: Context,
+    @Assisted private val workerParameters: WorkerParameters,
+    private val analyticsHelper: AnalyticsHelper,
+    private val meetingRepository: MeetingRepository,
+    private val permissionHelper: PermissionHelper,
+) : CoroutineWorker(context, workerParameters) {
     private val meetingId: Long by lazy {
         workerParameters.inputData.getLong(
             MEETING_ID_KEY,
@@ -81,7 +88,7 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
         val locationManager =
             applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
     private suspend fun updateMatesEta(
@@ -109,8 +116,8 @@ class EtaDashboardWorker(context: Context, private val workerParameters: WorkerP
 
     private fun hasLocationPermissions(): Boolean {
         return permissionHelper.hasFineLocationPermission() &&
-            permissionHelper.hasCoarseLocationPermission() &&
-            permissionHelper.hasBackgroundLocationPermission()
+                permissionHelper.hasCoarseLocationPermission() &&
+                permissionHelper.hasBackgroundLocationPermission()
     }
 
     companion object {

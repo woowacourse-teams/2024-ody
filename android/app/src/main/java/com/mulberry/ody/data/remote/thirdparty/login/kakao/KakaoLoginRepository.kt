@@ -12,62 +12,66 @@ import com.mulberry.ody.domain.apiresult.map
 import com.mulberry.ody.domain.common.flatMap
 import com.mulberry.ody.domain.model.AuthToken
 import com.mulberry.ody.domain.repository.ody.FCMTokenRepository
+import com.mulberry.ody.domain.repository.ody.LoginRepository
+import javax.inject.Inject
 
-class KakaoLoginRepository(
-    private val loginService: LoginService,
-    private val logoutService: LogoutService,
-    private val odyDatastore: OdyDatastore,
-    private val kakaoOAuthLoginService: KakaoOAuthLoginService,
-    private val fcmTokenRepository: FCMTokenRepository,
-) {
-    fun checkIfLogined(): Boolean {
-        return kakaoOAuthLoginService.checkIfLogined()
-    }
-
-    suspend fun login(context: Context): ApiResult<AuthToken> {
-        val loginRequest = kakaoOAuthLoginService.login(context).flatMap { buildLoginRequest(it) }
-
-        if (loginRequest.isFailure) {
-            val loginRequestException =
-                loginRequest.exceptionOrNull() ?: Exception("LoginRequest exception이 null입니다")
-            return ApiResult.Unexpected(loginRequestException)
+class KakaoLoginRepository
+    @Inject
+    constructor(
+        private val loginService: LoginService,
+        private val logoutService: LogoutService,
+        private val odyDatastore: OdyDatastore,
+        private val kakaoOAuthLoginService: KakaoOAuthLoginService,
+        private val fcmTokenRepository: FCMTokenRepository,
+    ) : LoginRepository {
+        override fun checkIfLogined(): Boolean {
+            return kakaoOAuthLoginService.checkIfLogined()
         }
 
-        val result =
-            loginRequest.getOrNull() ?: return ApiResult.Unexpected(
-                Exception("LoginRequest 가 null 입니다"),
-            )
+        override suspend fun login(context: Context): ApiResult<AuthToken> {
+            val loginRequest = kakaoOAuthLoginService.login(context).flatMap { buildLoginRequest(it) }
 
-        return loginService.postLoginWithKakao(result).map {
-            val token = it.toAuthToken()
-            odyDatastore.setAuthToken(token)
-            token
-        }
-    }
+            if (loginRequest.isFailure) {
+                val loginRequestException =
+                    loginRequest.exceptionOrNull() ?: Exception("LoginRequest exception이 null입니다")
+                return ApiResult.Unexpected(loginRequestException)
+            }
 
-    suspend fun logout(): ApiResult<Unit> {
-        val kakaoLogoutRequest = kakaoOAuthLoginService.logout()
-        val logoutRequest = logoutService.postLogout()
-        odyDatastore.removeAuthToken()
-
-        if (kakaoLogoutRequest.isFailure) {
-            val exception =
-                kakaoLogoutRequest.exceptionOrNull() ?: return ApiResult.Unexpected(
-                    Exception("kakaoLogoutRequest가 null입니다"),
+            val result =
+                loginRequest.getOrNull() ?: return ApiResult.Unexpected(
+                    Exception("LoginRequest 가 null 입니다"),
                 )
-            return ApiResult.Unexpected(exception)
+
+            return loginService.postLoginWithKakao(result).map {
+                val token = it.toAuthToken()
+                odyDatastore.setAuthToken(token)
+                token
+            }
         }
 
-        return logoutRequest
+        override suspend fun logout(): ApiResult<Unit> {
+            val kakaoLogoutRequest = kakaoOAuthLoginService.logout()
+            val logoutRequest = logoutService.postLogout()
+            odyDatastore.removeAuthToken()
+
+            if (kakaoLogoutRequest.isFailure) {
+                val exception =
+                    kakaoLogoutRequest.exceptionOrNull() ?: return ApiResult.Unexpected(
+                        Exception("kakaoLogoutRequest가 null입니다"),
+                    )
+                return ApiResult.Unexpected(exception)
+            }
+
+            return logoutRequest
+        }
+
+        private suspend fun buildLoginRequest(userProfile: UserProfile): Result<LoginRequest> =
+            fcmTokenRepository.fetchFCMToken().map { deviceToken ->
+                LoginRequest(
+                    deviceToken,
+                    userProfile.providerId,
+                    userProfile.nickname,
+                    userProfile.imageUrl,
+                )
+            }
     }
-
-    private suspend fun buildLoginRequest(userProfile: UserProfile): Result<LoginRequest> =
-        fcmTokenRepository.fetchFCMToken().map { deviceToken ->
-            LoginRequest(
-                deviceToken,
-                userProfile.providerId,
-                userProfile.nickname,
-                userProfile.imageUrl,
-            )
-        }
-}

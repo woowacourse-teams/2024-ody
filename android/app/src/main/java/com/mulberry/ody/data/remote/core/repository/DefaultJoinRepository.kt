@@ -8,9 +8,12 @@ import com.mulberry.ody.domain.apiresult.map
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.model.ReserveInfo
 import com.mulberry.ody.domain.repository.ody.JoinRepository
+import javax.inject.Inject
 
-class DefaultJoinRepository(private val service: JoinService) : JoinRepository {
-    override suspend fun postMates(meetingJoinInfo: MeetingJoinInfo): ApiResult<ReserveInfo> {
-        return service.postMates(meetingJoinInfo.toJoinRequest()).map { it.toReserveInfo() }
+class DefaultJoinRepository
+    @Inject
+    constructor(private val service: JoinService) : JoinRepository {
+        override suspend fun postMates(meetingJoinInfo: MeetingJoinInfo): ApiResult<ReserveInfo> {
+            return service.postMates(meetingJoinInfo.toJoinRequest()).map { it.toReserveInfo() }
+        }
     }
-}

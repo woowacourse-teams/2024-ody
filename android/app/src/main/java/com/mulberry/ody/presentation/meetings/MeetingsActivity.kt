@@ -12,7 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingsBinding
 import com.mulberry.ody.presentation.common.PermissionHelper
-import com.mulberry.ody.presentation.common.analytics.logButtonClicked
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.creation.MeetingCreationActivity
 import com.mulberry.ody.presentation.invitecode.InviteCodeActivity
@@ -21,26 +20,25 @@ import com.mulberry.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.mulberry.ody.presentation.meetings.listener.MeetingsListener
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.setting.SettingActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MeetingsActivity :
     BindingActivity<ActivityMeetingsBinding>(
         R.layout.activity_meetings,
     ),
     MeetingsListener {
-    private val viewModel by viewModels<MeetingsViewModel> {
-        MeetingsViewModelFactory(
-            analyticsHelper,
-            application.meetingRepository,
-        )
-    }
+    private val viewModel: MeetingsViewModel by viewModels<MeetingsViewModel>()
     private val adapter by lazy {
         MeetingsAdapter(
             viewModel,
             this,
         )
     }
-    private val permissionHelper: PermissionHelper by lazy { (application.permissionHelper) }
+    @Inject
+    lateinit var permissionHelper: PermissionHelper
     private var lastBackPressedTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -117,10 +115,10 @@ class MeetingsActivity :
 
     private fun navigateToEtaDashboard(meetingId: Long) {
         lifecycleScope.launch {
-            analyticsHelper.logButtonClicked(
-                eventName = "eta_button_from_meetings",
-                location = TAG,
-            )
+//            analyticsHelper.logButtonClicked(
+//                eventName = "eta_button_from_meetings",
+//                location = TAG,
+//            )
         }
         val intent =
             MeetingRoomActivity.getIntent(
