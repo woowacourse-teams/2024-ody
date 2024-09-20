@@ -100,7 +100,7 @@ object NetworkModule {
             .addCallAdapterFactory(ApiResultCallAdapter.Factory())
             .addConverterFactory(
                 MoshiConverterFactory.create(
-                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build(),
                 ),
             ).build()
     }
