@@ -1,9 +1,14 @@
 package com.mulberry.ody.presentation.room
 
+import android.os.Bundle
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import androidx.savedstate.SavedStateRegistryOwner
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
@@ -31,16 +36,20 @@ import com.mulberry.ody.presentation.room.log.model.NotificationLogUiModel
 import com.mulberry.ody.presentation.room.log.model.toMateUiModels
 import com.mulberry.ody.presentation.room.log.model.toMeetingUiModel
 import com.mulberry.ody.presentation.room.log.model.toNotificationUiModels
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 class MeetingRoomViewModel
-    @Inject
+    @AssistedInject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val meetingId: Long,
+        @Assisted private val meetingId: Long,
         private val matesEtaRepository: MatesEtaRepository,
         private val notificationLogRepository: NotificationLogRepository,
         private val meetingRepository: MeetingRepository,
@@ -215,7 +224,25 @@ class MeetingRoomViewModel
             }
         }
 
+        @AssistedFactory
+        interface MeetingViewModelFactory {
+            fun create(meetingId: Long): MeetingRoomViewModel
+        }
+
         companion object {
             private const val TAG = "MeetingRoomViewModel"
+
+            fun provideFactory(
+                assistedFactory: MeetingViewModelFactory,
+                owner: SavedStateRegistryOwner,
+                defaultArgs: Bundle? = null,
+                meetingId: Long
+            ): AbstractSavedStateViewModelFactory = object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+                override fun <T : ViewModel> create(
+                    key: String, modelClass: Class<T>, handle: SavedStateHandle
+                ): T {
+                    return assistedFactory.create(meetingId) as T
+                }
+            }
         }
     }
