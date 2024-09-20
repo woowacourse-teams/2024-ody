@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -18,17 +16,11 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.SQLDelete;
 
-@Table(uniqueConstraints = {
-        @UniqueConstraint(
-                name = "uniqueProviderTypeAndProviderId",
-                columnNames = {"providerType", "providerId"}
-        )
-})
 @Entity
 @Getter
 @Filter(name = "deletedMemberFilter", condition = "deleted_at IS NULL")
 @FilterDef(name = "deletedMemberFilter")
-@SQLDelete(sql = "UPDATE member SET provider_id = UUID(), nickname = '', image_url = '', deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Member {
