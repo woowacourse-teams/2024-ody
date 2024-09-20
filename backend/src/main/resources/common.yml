@@ -10,6 +10,7 @@ springdoc:
     enabled: true
     path: /swagger-ui.html
 
+
 odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT
   api-key: ENC(8A1VHDvR44k6DXfWB5oudFz9FH4a0ZtqK5bApHvyrWQHiFK13Z6ZeBxVGufZFbbaI/1etI1hSyE=)
