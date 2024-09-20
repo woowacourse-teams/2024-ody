@@ -4,6 +4,7 @@ import com.mulberry.ody.data.remote.core.service.JoinService
 import com.mulberry.ody.data.remote.core.service.LoginService
 import com.mulberry.ody.data.remote.core.service.LogoutService
 import com.mulberry.ody.data.remote.core.service.MeetingService
+import com.mulberry.ody.data.remote.core.service.MemberService
 import com.mulberry.ody.data.remote.core.service.NotificationService
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.data.remote.thirdparty.location.service.KakaoLocationService
@@ -49,6 +50,14 @@ object ServiceModule {
         @DefaultRetrofit retrofit: Retrofit,
     ): JoinService {
         return retrofit.create(JoinService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMemberService(
+        @DefaultRetrofit retrofit: Retrofit,
+    ): MemberService {
+        return retrofit.create(MemberService::class.java)
     }
 
     @Provides

@@ -21,6 +21,8 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_marginEnd="8dp"
+            android:background="@drawable/oval"
+            android:backgroundTint="@color/gray_350"
             android:scaleType="centerCrop"
             app:circleImageUrl="@{log.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"

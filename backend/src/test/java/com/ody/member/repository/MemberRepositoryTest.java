@@ -1,6 +1,7 @@
 package com.ody.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseRepositoryTest;
 import com.ody.common.Fixture;
@@ -40,20 +41,9 @@ class MemberRepositoryTest extends BaseRepositoryTest {
 
         memberRepository.deleteById(member.getId());
 
-        Member actual = (Member) entityManager.createNativeQuery("select * from Member where id = ?", Member.class)
-                .setParameter(1, member.getId())
-                .getSingleResult();
-        assertThat(actual.getDeletedAt()).isNotNull();
-    }
-
-    @DisplayName("삭제된 회원은 조회하지 않는다.")
-    @Test
-    void doNotFindDeletedMember() {
-        Member member = fixtureGenerator.generateMember();
-
-        memberRepository.delete(member);
-
+        entityManager.flush();
         Optional<Member> actual = memberRepository.findById(member.getId());
-        assertThat(actual).isNotPresent();
+        assertThat(actual).isPresent();
+        assertThat(actual.get().getDeletedAt()).isNotNull();
     }
 }

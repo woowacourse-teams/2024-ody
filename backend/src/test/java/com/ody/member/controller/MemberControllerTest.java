@@ -1,5 +1,6 @@
 package com.ody.member.controller;
 
+import com.ody.auth.service.KakaoAuthUnlinkClient;
 import com.ody.auth.token.AccessToken;
 import com.ody.common.BaseControllerTest;
 import com.ody.common.FixtureGenerator;
@@ -12,6 +13,7 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 
@@ -20,6 +22,9 @@ class MemberControllerTest extends BaseControllerTest {
 
     @Autowired
     private FixtureGenerator fixtureGenerator;
+
+    @MockBean
+    protected KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 
     @DisplayName("이미 삭제한 회원에 대한 회원 삭제 요청 시 204를 반환한다.")
     @Test
@@ -47,6 +52,6 @@ class MemberControllerTest extends BaseControllerTest {
                 .when().log().all()
                 .delete("/members")
                 .then()
-                .statusCode(204);
+                .statusCode(401);
     }
 }

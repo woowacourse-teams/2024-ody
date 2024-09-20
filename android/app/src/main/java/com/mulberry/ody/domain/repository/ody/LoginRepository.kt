@@ -10,4 +10,6 @@ interface LoginRepository {
     suspend fun login(context: Context): ApiResult<AuthToken>
 
     suspend fun logout(): ApiResult<Unit>
+
+    suspend fun withdrawAccount(): ApiResult<Unit>
 }

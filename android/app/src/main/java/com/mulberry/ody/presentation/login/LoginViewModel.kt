@@ -11,6 +11,8 @@ import com.mulberry.ody.domain.repository.ody.LoginRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.MutableSingleLiveData
 import com.mulberry.ody.presentation.common.SingleLiveData
+import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
+import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class LoginViewModel
     @Inject
     constructor(
+        private val analyticsHelper: AnalyticsHelper,
         private val authTokenRepository: AuthTokenRepository,
         private val loginRepository: LoginRepository,
         private val savedStateHandle: SavedStateHandle,
@@ -48,15 +51,18 @@ class LoginViewModel
 
         fun loginWithKakao(context: Context) {
             viewModelScope.launch {
+                startLoading()
                 loginRepository.login(context)
                     .onSuccess {
                         navigateToMeetings()
                     }.onFailure { code, errorMessage ->
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                         handleError()
                     }.onNetworkError {
                         handleNetworkError()
                         lastFailedAction = { loginWithKakao(context) }
                     }
+                stopLoading()
             }
         }
 
@@ -65,6 +71,7 @@ class LoginViewModel
         }
 
         companion object {
-            private val NAVIGATED_REASON = "NAVIGATED_REASON"
+            private const val TAG = "LOGIN_VIEWMODEL"
+            private const val NAVIGATED_REASON = "NAVIGATED_REASON"
         }
     }

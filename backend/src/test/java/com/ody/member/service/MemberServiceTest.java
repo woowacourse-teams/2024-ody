@@ -1,11 +1,13 @@
 package com.ody.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ody.auth.service.KakaoAuthUnlinkClient;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
-import com.ody.eta.domain.Eta;
+import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.repository.MateRepository;
@@ -14,12 +16,12 @@ import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
-import com.ody.notification.domain.Notification;
 import com.ody.notification.repository.NotificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 class MemberServiceTest extends BaseServiceTest {
 
@@ -37,6 +39,9 @@ class MemberServiceTest extends BaseServiceTest {
 
     @Autowired
     NotificationRepository notificationRepository;
+
+    @MockBean
+    private KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 
     @DisplayName("회원을 생성한다.")
     @Nested
@@ -131,16 +136,22 @@ class MemberServiceTest extends BaseServiceTest {
         Member member = fixtureGenerator.generateMember();
         Meeting meeting = fixtureGenerator.generateMeeting();
         Mate mate = fixtureGenerator.generateMate(meeting, member);
-        Eta eta = fixtureGenerator.generateEta(mate);
-        Notification notification = fixtureGenerator.generateNotification(mate);
+        fixtureGenerator.generateEta(mate);
+        fixtureGenerator.generateNotification(mate);
 
-        memberService.delete(member.getId());
+        memberService.delete(member);
 
-        assertAll(
-                () -> assertThat(memberRepository.findById(member.getId())).isEmpty(),
-                () -> assertThat(mateRepository.findAllByMemberId(member.getId())).isEmpty(),
-                () -> assertThat(etaRepository.findById(eta.getId())).isEmpty(),
-                () -> assertThat(notificationRepository.findById(notification.getId())).isNotEmpty()
-        );
+        Member actual = memberRepository.findById(member.getId()).get();
+        assertThat(actual.getDeletedAt()).isNotNull();
+    }
+
+    @DisplayName("삭제 회원을 조회할 수 없다.")
+    @Test
+    void findDeletedMemberById() {
+        Member member = fixtureGenerator.generateMember();
+        memberService.delete(member);
+
+        assertThatThrownBy(() -> memberService.findById(member.getId()))
+                .isInstanceOf(OdyUnauthorizedException.class);
     }
 }

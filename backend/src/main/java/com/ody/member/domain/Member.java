@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -17,22 +15,14 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
-@Table(uniqueConstraints = {
-        @UniqueConstraint(
-                name = "uniqueProviderTypeAndProviderId",
-                columnNames = {"providerType", "providerId"}
-        )
-})
-@Filter(name = "deletedMemberFilter", condition = "deleted_at IS NOT NULL or deleted_at IS NULL")
+@Filter(name = "deletedMemberFilter", condition = "deleted_at IS NULL")
 @FilterDef(name = "deletedMemberFilter")
 @SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
-@SQLRestriction("deleted_at is NULL")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Member {
 
     @Id
