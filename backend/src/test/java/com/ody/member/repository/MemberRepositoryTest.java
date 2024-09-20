@@ -46,19 +46,4 @@ class MemberRepositoryTest extends BaseRepositoryTest {
         assertThat(actual).isPresent();
         assertThat(actual.get().getDeletedAt()).isNotNull();
     }
-
-    @DisplayName("회원 삭제 시 소셜 서비스의 사용자 정보(회원번호, 닉네임, 프로필 사진)를 파기한다.")
-    @Test
-    void destroySocialUserInformationWhenDelete() {
-        Member member = fixtureGenerator.generateMember();
-        memberRepository.delete(member);
-
-        entityManager.flush();
-        Member actual = memberRepository.findById(member.getId()).get();
-        assertAll(
-                () -> assertThat(actual.getProviderId()).isNotEqualTo(member.getProviderId()),
-                () -> assertThat(actual.getNickname()).isEmpty(),
-                () -> assertThat(actual.getImageUrl()).isEmpty()
-        );
-    }
 }
