@@ -30,7 +30,7 @@ class SettingViewModel
         fun kakaoLogout() =
             viewModelScope.launch {
                 loginRepository.logout()
-                _loginNavigateEvent.setValue (LoginNavigatedReason.LOGOUT)
+                _loginNavigateEvent.setValue(LoginNavigatedReason.LOGOUT)
             }
 
         fun withdrawAccount() {
