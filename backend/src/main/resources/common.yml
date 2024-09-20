@@ -8,6 +8,7 @@ springdoc:
     display-request-duration: true
     operations-sorter: alpha
     enabled: true
+    path: /swagger-ui.html
 
 odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT
