@@ -96,11 +96,11 @@ object NetworkModule {
     ): Retrofit {
         return Retrofit.Builder()
             .client(httpClient)
-            .baseUrl(BASE_URL)
+            .baseUrl("https://dapi.kakao.com/")
             .addCallAdapterFactory(ApiResultCallAdapter.Factory())
             .addConverterFactory(
                 MoshiConverterFactory.create(
-                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build(),
+                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
                 ),
             ).build()
     }
