@@ -77,4 +77,8 @@ public class Mate {
     public boolean isAttended(Meeting otherMeeting) {
         return Objects.equals(this.meeting.getId(), otherMeeting.getId());
     }
+
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
 }

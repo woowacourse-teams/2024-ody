@@ -1,6 +1,7 @@
 package com.ody.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseRepositoryTest;
 import com.ody.common.Fixture;

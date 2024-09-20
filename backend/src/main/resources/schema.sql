@@ -4,11 +4,10 @@ create table if not exists member (
     provider_id varchar(255) not null,
     nickname varchar(255) not null,
     image_url varchar(255) not null,
-    device_token varchar(255) unique,
+    device_token varchar(255),
     refresh_token varchar(255),
     deleted_at timestamp,
-    primary key (id),
-    constraint unique_provider_type_and_provider_id unique (provider_type, provider_id)
+    primary key (id)
 );
 
 create table if not exists meeting (

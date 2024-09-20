@@ -1,5 +1,6 @@
 package com.ody.member.service;
 
+import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.mate.service.MateService;
@@ -17,6 +18,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MateService mateService;
+    private final SocialAuthUnlinkClient socialAuthUnlinkClient;
 
     @Transactional
     public Member save(Member requestMember) {
@@ -55,8 +57,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void delete(long memberId) {
-        mateService.deleteByMemberId(memberId);
-        memberRepository.deleteById(memberId);
+    public void delete(Member member) {
+        socialAuthUnlinkClient.unlink(member.getProviderId());
+
+        mateService.deleteByMemberId(member.getId());
+        memberRepository.delete(member);
     }
 }
