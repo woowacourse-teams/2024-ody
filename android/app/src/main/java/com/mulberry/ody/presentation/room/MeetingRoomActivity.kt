@@ -21,7 +21,6 @@ import javax.inject.Inject
 class MeetingRoomActivity :
     BindingActivity<ActivityMeetingRoomBinding>(R.layout.activity_meeting_room),
     BackListener {
-
     @Inject
     lateinit var viewModelFactory: MeetingRoomViewModel.MeetingViewModelFactory
 

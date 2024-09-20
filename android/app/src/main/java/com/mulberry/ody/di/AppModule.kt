@@ -43,7 +43,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideImageHelper(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): ImageShareHelper {
         return KakaoImageShareHelper(context)
     }

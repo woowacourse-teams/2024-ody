@@ -37,6 +37,7 @@ class MeetingsActivity :
             this,
         )
     }
+
     @Inject
     lateinit var permissionHelper: PermissionHelper
     private var lastBackPressedTime = 0L

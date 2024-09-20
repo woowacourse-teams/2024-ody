@@ -39,11 +39,9 @@ import com.mulberry.ody.presentation.room.log.model.toNotificationUiModels
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
-import javax.inject.Inject
 
 class MeetingRoomViewModel
     @AssistedInject
@@ -236,13 +234,16 @@ class MeetingRoomViewModel
                 assistedFactory: MeetingViewModelFactory,
                 owner: SavedStateRegistryOwner,
                 defaultArgs: Bundle? = null,
-                meetingId: Long
-            ): AbstractSavedStateViewModelFactory = object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
-                override fun <T : ViewModel> create(
-                    key: String, modelClass: Class<T>, handle: SavedStateHandle
-                ): T {
-                    return assistedFactory.create(meetingId) as T
+                meetingId: Long,
+            ): AbstractSavedStateViewModelFactory =
+                object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+                    override fun <T : ViewModel> create(
+                        key: String,
+                        modelClass: Class<T>,
+                        handle: SavedStateHandle,
+                    ): T {
+                        return assistedFactory.create(meetingId) as T
+                    }
                 }
-            }
         }
     }
