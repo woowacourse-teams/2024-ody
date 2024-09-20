@@ -13,6 +13,10 @@ odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT
   api-key: ENC(8A1VHDvR44k6DXfWB5oudFz9FH4a0ZtqK5bApHvyrWQHiFK13Z6ZeBxVGufZFbbaI/1etI1hSyE=)
 
+google:
+  maps:
+    api-key: ENC(9BlqQHSdWla7gFE6rq53N0W9aCo9h4NXvayRKvfyL9gdMxp1sdb/Oc2Y4RgB6hZ8)
+
 auth:
   access-key: ENC(jp1TJCM6l22zIzInTUvt9VXrb1WhNm1zY3dFgTSj6ad3585f5K7Q8A==)
   access-expiration: ENC(RA/POzGT/Baq/ba9MxmMAQ==)
