@@ -35,7 +35,7 @@ class AddressSearchViewModel
                     }
                     .onFailure { code, errorMessage ->
                         handleError()
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                         Timber.e("$code $errorMessage")
                     }
                     .onNetworkError {

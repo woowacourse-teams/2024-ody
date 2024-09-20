@@ -5,26 +5,28 @@ import com.google.firebase.messaging.RemoteMessage
 import com.mulberry.ody.domain.model.NotificationType
 import com.mulberry.ody.domain.repository.ody.FCMTokenRepository
 import com.mulberry.ody.presentation.notification.NotificationHelper
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class FCMService : FirebaseMessagingService() {
-        @Inject
-        lateinit var fcmTokenRepository: FCMTokenRepository
+    @Inject
+    lateinit var fcmTokenRepository: FCMTokenRepository
 
-        @Inject
-        lateinit var notificationHelper: NotificationHelper
+    @Inject
+    lateinit var notificationHelper: NotificationHelper
 
-        override fun onMessageReceived(message: RemoteMessage) {
-            val type =
-                message.data["type"]?.let { NotificationType.from(it) } ?: NotificationType.DEFAULT
-            val nickname = message.data["nickname"] ?: ""
-            notificationHelper.showTypedNotification(type, nickname)
-        }
+    override fun onMessageReceived(message: RemoteMessage) {
+        val type =
+            message.data["type"]?.let { NotificationType.from(it) } ?: NotificationType.DEFAULT
+        val nickname = message.data["nickname"] ?: ""
+        notificationHelper.showTypedNotification(type, nickname)
+    }
 
-        override fun onNewToken(token: String) {
-            runBlocking {
-                fcmTokenRepository.postFCMToken(token)
-            }
+    override fun onNewToken(token: String) {
+        runBlocking {
+            fcmTokenRepository.postFCMToken(token)
         }
     }
+}

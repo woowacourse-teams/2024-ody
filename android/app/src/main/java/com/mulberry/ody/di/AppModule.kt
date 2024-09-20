@@ -1,12 +1,13 @@
 package com.mulberry.ody.di
 
-import android.app.Application
+import android.content.Context
 import androidx.work.WorkManager
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.notification.NotificationHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -15,19 +16,25 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideWorkerManager(application: Application): WorkManager {
-        return WorkManager.getInstance(application)
+    fun provideWorkerManager(
+        @ApplicationContext context: Context,
+    ): WorkManager {
+        return WorkManager.getInstance(context)
     }
 
     @Provides
     @Singleton
-    fun provideNotificationHelper(application: Application): NotificationHelper {
-        return NotificationHelper(application)
+    fun provideNotificationHelper(
+        @ApplicationContext context: Context,
+    ): NotificationHelper {
+        return NotificationHelper(context)
     }
 
     @Provides
     @Singleton
-    fun providePermissionHelper(application: Application): PermissionHelper {
-        return PermissionHelper(application)
+    fun providePermissionHelper(
+        @ApplicationContext context: Context,
+    ): PermissionHelper {
+        return PermissionHelper(context)
     }
 }

@@ -10,7 +10,9 @@ class DefaultFCMTokenRepository
     constructor(
         private val odyDatastore: OdyDatastore,
     ) : FCMTokenRepository {
-        override suspend fun fetchFCMToken(): Result<String> = odyDatastore.getFCMToken().first()
+        override suspend fun fetchFCMToken(): Result<String> {
+            return odyDatastore.getFCMToken().first()
+        }
 
         override suspend fun postFCMToken(fcmToken: String) = odyDatastore.setFCMToken(fcmToken)
     }

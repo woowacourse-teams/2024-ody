@@ -92,7 +92,7 @@ object NetworkModule {
     @Singleton
     @KakaoRetrofit
     fun provideKakaoRetrofit(
-        @KakaohHttpClient httpClient: OkHttpClient
+        @KakaohHttpClient httpClient: OkHttpClient,
     ): Retrofit {
         return Retrofit.Builder()
             .client(httpClient)
@@ -100,8 +100,8 @@ object NetworkModule {
             .addCallAdapterFactory(ApiResultCallAdapter.Factory())
             .addConverterFactory(
                 MoshiConverterFactory.create(
-                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-                )
+                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build(),
+                ),
             ).build()
     }
 

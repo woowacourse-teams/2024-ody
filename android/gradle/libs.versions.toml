@@ -1,6 +1,6 @@
 [versions]
 activity = "1.9.2"
-agp = "8.5.2"
+agp = "8.5.0"
 androidJunitJupiter = "1.10.0.0"
 appcompat = "1.7.0"
 assertj = "3.25.3"
