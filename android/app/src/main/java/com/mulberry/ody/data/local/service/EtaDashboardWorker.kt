@@ -33,7 +33,7 @@ class EtaDashboardWorker
     @AssistedInject
     constructor(
         @Assisted context: Context,
-        @Assisted private val workerParameters: WorkerParameters,
+        @Assisted workerParameters: WorkerParameters,
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
         private val permissionHelper: PermissionHelper,

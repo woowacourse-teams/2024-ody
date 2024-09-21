@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.androidx.webkit)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle)
     implementation(libs.androidx.view.pager)
@@ -92,6 +93,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.fragment.testing)
+    kapt(libs.androidx.hilt.compiler)
 
     // firebase
     implementation(libs.firebase.analytics)
@@ -144,7 +146,5 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.work)
     kapt(libs.hilt.android.compiler)
-    kapt(libs.androidx.hilt.compiler)
 }
