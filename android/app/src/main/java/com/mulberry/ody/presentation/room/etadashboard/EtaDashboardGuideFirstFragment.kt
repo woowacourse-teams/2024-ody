@@ -1,34 +1,21 @@
 package com.mulberry.ody.presentation.room.etadashboard
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentEtaDashboardGuideFirstBinding
+import com.mulberry.ody.presentation.common.binding.BindingFragment
 
-class EtaDashboardGuideFirstFragment : Fragment() {
-    private var _binding: FragmentEtaDashboardGuideFirstBinding? = null
-    private val binding: FragmentEtaDashboardGuideFirstBinding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentEtaDashboardGuideFirstBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
+class EtaDashboardGuideFirstFragment :
+    BindingFragment<FragmentEtaDashboardGuideFirstBinding>(R.layout.fragment_eta_dashboard_guide_first) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeView()
     }
 
     private fun initializeView() {
+        binding.title = getString(R.string.eta_dashboard_guide_title)
         binding.layoutEtaDashboardGuideNext.setOnClickListener {
             startEtaDashboardNextGuide()
         }
@@ -41,10 +28,5 @@ class EtaDashboardGuideFirstFragment : Fragment() {
             addToBackStack(null)
             parentFragmentManager.popBackStack()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

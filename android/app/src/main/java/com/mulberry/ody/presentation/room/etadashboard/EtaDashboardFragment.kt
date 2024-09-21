@@ -49,7 +49,7 @@ class EtaDashboardFragment :
     private fun initializeGuide() {
         lifecycleScope.launch {
             val isFirstSeenEtaDashboard = application.odyDatastore.getIsFirstSeenEtaDashboard().first()
-            if (true) {
+            if (isFirstSeenEtaDashboard) {
                 startEtaDashboardGuide()
                 application.odyDatastore.setIsFirstSeenEtaDashboard(false)
             }
