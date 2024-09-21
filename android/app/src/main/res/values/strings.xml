@@ -134,6 +134,10 @@
     <string name="eta_dashboard_share_description">친구들의 도착 예정 정보를 확인해보세요!</string>
     <string name="eta_dashboard_share_button">확인하러 가기</string>
 
+    <!-- activity_eta_dashboard_guide_first.xml -->
+    <string name="eta_dashboard_guide_late_warning_nudge">지각 위기 버튼을 눌러\n친구를 재촉해 보세요.</string>
+    <string name="eta_dashboard_guide_before_meeting_time">약속 시간 30분 전부터\n친구들의 위치 현황을 확인해 보세요.</string>
+
     <!-- all -->
     <string name="next_button">다음</string>
     <string name="confirm_button">확인</string>
