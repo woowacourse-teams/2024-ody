@@ -43,9 +43,9 @@
             android:layout_width="80dp"
             android:layout_height="32dp"
             android:background="@drawable/rectangle_radius_15"
-            android:backgroundTint="@color/green"
+            android:backgroundTint="@color/blue"
             android:gravity="center"
-            android:text="@string/badge_arrival_soon"
+            android:text="@string/badge_arrived"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="10분 내 도착"
+            android:text="@string/status_arrived"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_badge_dashboard_1"
@@ -93,9 +93,9 @@
             android:layout_width="80dp"
             android:layout_height="32dp"
             android:background="@drawable/rectangle_radius_15"
-            android:backgroundTint="@color/yellow"
+            android:backgroundTint="@color/red"
             android:gravity="center"
-            android:text="@string/badge_late_warning"
+            android:text="@string/badge_late"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -258,9 +258,9 @@
             android:layout_width="80dp"
             android:layout_height="32dp"
             android:background="@drawable/rectangle_radius_15"
-            android:backgroundTint="@color/yellow"
+            android:backgroundTint="@color/red"
             android:gravity="center"
-            android:text="@string/badge_late_warning"
+            android:text="@string/badge_late"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -273,7 +273,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="28분 후 도착"
+            android:text="12분 후 도착"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_badge_dashboard"
@@ -288,54 +288,54 @@
         android:layout_marginTop="-5dp"
         android:layout_marginEnd="30dp"
         android:src="@drawable/ic_diagonal_line"
-        app:layout_constraintBottom_toTopOf="@id/tv_eta_dashboard_guide_late_warning_nudge"
+        app:layout_constraintBottom_toTopOf="@id/tv_eta_dashboard_guide_late_nudge"
         app:layout_constraintTop_toBottomOf="@id/item_eta_dashboard_guide_background" />
 
     <TextView
-        android:id="@+id/tv_eta_dashboard_guide_late_warning_nudge"
+        android:id="@+id/tv_eta_dashboard_guide_late_nudge"
         style="@style/pretendard_medium_20"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:gravity="center"
-        android:text="@string/eta_dashboard_guide_late_warning_nudge"
+        android:text="@string/eta_dashboard_guide_late_nudge"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/tv_eta_dashboard_guide_before_meeting_time"
+        app:layout_constraintBottom_toTopOf="@id/tv_eta_dashboard_guide_after_meeting_time"
         app:layout_constraintTop_toBottomOf="@id/iv_eta_dashboard_guide_diagonal_line" />
 
     <TextView
-        android:id="@+id/tv_eta_dashboard_guide_before_meeting_time"
+        android:id="@+id/tv_eta_dashboard_guide_after_meeting_time"
         style="@style/pretendard_medium_20"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="110dp"
         android:gravity="center"
-        android:text="@string/eta_dashboard_guide_before_meeting_time"
+        android:text="@string/eta_dashboard_guide_after_meeting_time"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/tv_eta_dashboard_guide_late_warning_nudge" />
+        app:layout_constraintTop_toBottomOf="@id/tv_eta_dashboard_guide_late_nudge" />
 
     <LinearLayout
-        android:id="@+id/layout_eta_dashboard_guide_next"
+        android:id="@+id/layout_eta_dashboard_guide_close"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_eta_dashboard_guide_before_meeting_time">
+        app:layout_constraintTop_toBottomOf="@id/tv_eta_dashboard_guide_after_meeting_time">
 
         <ImageView
-            android:id="@+id/iv_eta_dashboard_guide_next"
+            android:id="@+id/iv_eta_dashboard_guide_close"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_right" />
+            android:src="@drawable/ic_close" />
 
         <TextView
-            android:id="@+id/tv_eta_dashboard_guide_next"
+            android:id="@+id/tv_eta_dashboard_guide_close"
             style="@style/pretendard_regular_16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
-            android:text="@string/next_button"
+            android:text="@string/close_button"
             android:textColor="@color/white" />
     </LinearLayout>
 
