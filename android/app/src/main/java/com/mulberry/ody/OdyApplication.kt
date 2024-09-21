@@ -41,9 +41,7 @@ import retrofit2.Retrofit
 import timber.log.Timber
 
 class OdyApplication : Application() {
-    private val odyDatastore by lazy {
-        OdyDatastore(this)
-    }
+    val odyDatastore by lazy { OdyDatastore(this) }
 
     private val refreshTokenService by lazy {
         Provider {
