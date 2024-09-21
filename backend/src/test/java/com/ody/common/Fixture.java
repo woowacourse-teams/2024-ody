@@ -4,6 +4,7 @@ import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
+import com.ody.util.InviteCodeGenerator;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -26,7 +27,7 @@ public class Fixture {
             LocalDate.now(),
             LocalTime.now(),
             TARGET_LOCATION,
-            "초대코드1"
+            InviteCodeGenerator.generate()
     );
 
     public static Meeting SOJU_MEETING = new Meeting(
@@ -34,7 +35,7 @@ public class Fixture {
             LocalDate.now().plusDays(1),
             LocalTime.parse("18:00"),
             TARGET_LOCATION,
-            "초대코드2"
+            InviteCodeGenerator.generate()
     );
 
     public static Meeting ODY_MEETING3 = new Meeting(
@@ -42,7 +43,7 @@ public class Fixture {
             LocalDate.now().plusDays(1),
             LocalTime.parse("12:00"),
             TARGET_LOCATION,
-            "초대코드3"
+            InviteCodeGenerator.generate()
     );
 
     public static Meeting ODY_MEETING4 = new Meeting(
@@ -50,7 +51,7 @@ public class Fixture {
             LocalDate.now().plusDays(2),
             LocalTime.parse("14:00"),
             TARGET_LOCATION,
-            "초대코드4"
+            InviteCodeGenerator.generate()
     );
 
     public static Meeting ODY_MEETING5 = new Meeting(
@@ -58,16 +59,12 @@ public class Fixture {
             LocalDate.now().plusDays(1),
             LocalTime.parse("14:00"),
             TARGET_LOCATION,
-            "초대코드5"
+            InviteCodeGenerator.generate()
     );
 
     public static Member MEMBER1 = new Member("pid1", "콜리1", "imageUrl1", new DeviceToken("dt1"));
     public static Member MEMBER2 = new Member("pid2", "콜리2", "imageUrl2", new DeviceToken("dt2"));
     public static Member MEMBER3 = new Member("pid3", "콜리3", "imageUrl3", new DeviceToken("dt3"));
-
-    public static String MEMBER1_TOKEN = MEMBER1.getDeviceToken().getValue();
-    public static String MEMBER2_TOKEN = MEMBER2.getDeviceToken().getValue();
-    public static String MEMBER3_TOKEN = MEMBER3.getDeviceToken().getValue();
 
     private Fixture() {
     }
