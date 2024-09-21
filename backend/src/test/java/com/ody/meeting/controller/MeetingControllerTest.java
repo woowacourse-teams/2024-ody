@@ -51,7 +51,7 @@ class MeetingControllerTest extends BaseControllerTest {
     @DisplayName("모임 개설 성공 시, 201을 응답한다")
     @Test
     void saveV1() {
-        String authorization = saveMember();
+        Member member = fixtureGenerator.generateMember();
 
         MeetingSaveRequestV1 meetingRequest = new MeetingSaveRequestV1(
                 "우테코 16조",
@@ -64,7 +64,7 @@ class MeetingControllerTest extends BaseControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, authorization)
+                .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
                 .body(meetingRequest)
                 .when()
                 .post("/v1/meetings")
