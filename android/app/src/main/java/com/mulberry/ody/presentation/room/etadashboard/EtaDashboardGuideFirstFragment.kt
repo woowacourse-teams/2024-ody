@@ -1,6 +1,7 @@
 package com.mulberry.ody.presentation.room.etadashboard
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +31,6 @@ class EtaDashboardGuideFirstFragment : Fragment() {
     private fun initializeView() {
         binding.layoutEtaDashboardGuideNext.setOnClickListener {
             startEtaDashboardNextGuide()
-            parentFragmentManager.popBackStack()
         }
     }
 
@@ -39,6 +39,7 @@ class EtaDashboardGuideFirstFragment : Fragment() {
             add(R.id.fcv_eta_dashboard, EtaDashboardGuideSecondFragment())
             setReorderingAllowed(true)
             addToBackStack(null)
+            parentFragmentManager.popBackStack()
         }
     }
 
