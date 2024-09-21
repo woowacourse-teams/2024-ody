@@ -8,7 +8,10 @@ import com.mulberry.ody.presentation.common.binding.BindingFragment
 
 class EtaDashboardGuideSecondFragment :
     BindingFragment<FragmentEtaDashboardGuideSecondBinding>(R.layout.fragment_eta_dashboard_guide_second) {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         initializeView()
     }
