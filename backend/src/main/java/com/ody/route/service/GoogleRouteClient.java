@@ -1,12 +1,13 @@
 package com.ody.route.service;
 
+import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
 import com.ody.route.domain.RouteTime;
+import com.ody.route.dto.DistanceMatrixElementStatus;
 import com.ody.route.dto.DistanceMatrixResponse;
-import com.ody.route.dto.DistanceMatrixResponse.Element;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import com.ody.route.dto.DistanceMatrixResponse.DistanceMatrixElement;
+import com.ody.route.dto.DistanceMatrixStatus;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClient;
@@ -27,6 +28,7 @@ public class GoogleRouteClient implements RouteClient {
     @Override
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         DistanceMatrixResponse response = getDistanceMatrixResponse(origin, target);
+        validateGoogleServerStatus(response);
         return convertToRouteTime(response);
     }
 
@@ -37,7 +39,7 @@ public class GoogleRouteClient implements RouteClient {
                 .queryParam("mode", "transit")
                 .queryParam("transit_mode", "bus|subway")
                 .queryParam("key", apiKey)
-                .build()
+                .build(false)
                 .toUriString();
 
         return restClient.get()
@@ -47,19 +49,37 @@ public class GoogleRouteClient implements RouteClient {
     }
 
     private String mapCoordinatesToUrl(Coordinates coordinates) {
-        String mappedCoordinates = coordinates.getLatitude() + "," + coordinates.getLongitude();
-        return URLEncoder.encode(mappedCoordinates, StandardCharsets.UTF_8);
+        return coordinates.getLatitude() + "," + coordinates.getLongitude();
+    }
+
+    private void validateGoogleServerStatus(DistanceMatrixResponse response) {
+        if (response.status() != DistanceMatrixStatus.OK) {
+            log.error(
+                    "Google Distance Matrix API 서비스 에러 | {} : {} | 에러 메시지 : {}",
+                    response.status(),
+                    response.status().getDescription(),
+                    response.errorMessage()
+            );
+            throw new OdyServerErrorException("Google Maps API 서비스 응답 오류");
+        }
     }
 
     private RouteTime convertToRouteTime(DistanceMatrixResponse response) {
-        Element element = response.rows().get(0).elements().get(0);
-        if ("OK".equals(element.status())) {
-            int durationSeconds = element.duration().value();
-            long durationMinutes = Duration.ofSeconds(durationSeconds).toMinutes();
-            return new RouteTime(durationMinutes);
-        } else {
-            log.error("Google Distance Matrix API 에러 발생 | status : {} | message", response.errorMessage());
-            throw new OdyServerErrorException("소요 시간 계산에 실패했습니다.");
+        DistanceMatrixElement element = response.rows().get(0).elements().get(0);
+        validateResponseElementStatus(element);
+        int durationSeconds = element.duration().value();
+        long durationMinutes = Duration.ofSeconds(durationSeconds).toMinutes();
+        return new RouteTime(durationMinutes);
+    }
+
+    private void validateResponseElementStatus(DistanceMatrixElement element) {
+        if (element.status() != DistanceMatrixElementStatus.OK) {
+            log.error(
+                    "Google Distance Matrix API 응답 요소 에러 | {} : {} ",
+                    element.status(),
+                    element.status().getDescription()
+            );
+            throw new OdyBadRequestException("Google Maps API 응답 element 에러");
         }
     }
 }
