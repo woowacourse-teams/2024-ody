@@ -6,18 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
-import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.mulberry.ody.OdyApplication
-import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 abstract class BindingFragment<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
@@ -37,7 +30,7 @@ abstract class BindingFragment<T : ViewDataBinding>(
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
-    
+
     fun showSnackBar(
         @StringRes messageId: Int,
         action: Snackbar.() -> Unit = {},
