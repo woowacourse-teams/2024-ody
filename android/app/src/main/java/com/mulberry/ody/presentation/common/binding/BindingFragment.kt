@@ -14,7 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mulberry.ody.OdyApplication
+import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 abstract class BindingFragment<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
@@ -24,7 +27,6 @@ abstract class BindingFragment<T : ViewDataBinding>(
         get() = requireNotNull(_binding)
     private var snackBar: Snackbar? = null
     val mApplication by lazy { requireContext().applicationContext as OdyApplication }
-//    val analyticsHelper by lazy { mApplication.analyticsHelper }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,8 +71,5 @@ abstract class BindingFragment<T : ViewDataBinding>(
         super.onDestroyView()
         _binding = null
         snackBar = null
-        viewLifecycleOwner.lifecycleScope.launch {
-//            analyticsHelper.logEvent(javaClass.simpleName + " destroyed", bundleOf())
-        }
     }
 }
