@@ -5,6 +5,7 @@ import com.ody.route.service.OdsayRouteClient;
 import com.ody.route.service.RouteClient;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.ClientHttpRequestFactories;
@@ -17,25 +18,25 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
+@Profile("!test")
 @Configuration
-@EnableConfigurationProperties(RouteProperties.class)
 @RequiredArgsConstructor
+@EnableConfigurationProperties(RouteProperties.class)
 public class RouteConfig {
 
     private final RouteProperties routeProperties;
-    private String googleApiKey;
 
     @Bean
     @Order(1)
-    @Profile("!test")
-    public RouteClient odySayRouteClient(RestClient.Builder routeRestClientBuilder) {
+    @Qualifier("odsay")
+    public RouteClient odysayRouteClient(RestClient.Builder routeRestClientBuilder) {
         return new OdsayRouteClient(routeProperties, routeRestClientBuilder);
     }
 
     @Bean
     @Order(2)
-    @Profile("!test")
-    public RouteClient GoogleRouteClient(
+    @Qualifier("google")
+    public RouteClient googleRouteClient(
             RestClient.Builder routeRestClientBuilder,
             @Value("${google.maps.api-key}") String googleApiKey
     ) {

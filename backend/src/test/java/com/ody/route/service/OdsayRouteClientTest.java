@@ -6,44 +6,28 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+import com.ody.common.BaseRouteClientTest;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
-import com.ody.route.config.RouteConfig;
 import com.ody.route.domain.RouteTime;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.client.MockRestServiceServer;
 
 @RestClientTest(OdsayRouteClient.class)
-@Import(RouteConfig.class)
-class OdsayRouteClientTest {
+class OdsayRouteClientTest extends BaseRouteClientTest {
 
-    @Autowired
-    private MockRestServiceServer mockServer;
-
-    @Autowired
-    private RouteClient routeClient;
-
-    @Value("${odsay.url}")
-    private String baseUrl;
-
-    @Value("${odsay.api-key}")
-    private String testApiKey;
-
-    @BeforeEach
-    void setUp() {
-        mockServer.reset();
+    @Override
+    protected RouteClient createRouteClient() {
+        return new OdsayRouteClient(routeProperties, restClientBuilder);
     }
 
     @DisplayName("길찾기 api 요청 성공 시, 올바른 소요시간을 반환한다")
@@ -103,7 +87,7 @@ class OdsayRouteClientTest {
     }
 
     private void setMockServer(Coordinates origin, Coordinates target, String responseClassPath) throws IOException {
-        String requestUri = makeUri(origin, target);
+        URI requestUri = makeUri(origin, target);
         String response = makeResponseByPath(responseClassPath);
 
         mockServer.expect(requestTo(requestUri))
@@ -111,13 +95,19 @@ class OdsayRouteClientTest {
                 .andRespond(withSuccess(response, MediaType.APPLICATION_JSON));
     }
 
-    private String makeUri(Coordinates origin, Coordinates target) {
-        return baseUrl
+    private URI makeUri(Coordinates origin, Coordinates target) {
+        String uri = routeProperties.getUrl()
                 + "?SX=" + origin.getLongitude()
                 + "&SY=" + origin.getLatitude()
                 + "&EX=" + target.getLongitude()
                 + "&EY=" + target.getLatitude()
-                + "&apiKey=" + testApiKey;
+                + "&apiKey=" + routeProperties.getApiKey();
+
+        try {
+            return new URI(uri);
+        } catch (URISyntaxException exception) {
+            throw new OdyServerErrorException(exception.getMessage());
+        }
     }
 
     private String makeResponseByPath(String path) throws IOException {
