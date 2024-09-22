@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.ody.common.BaseServiceTest;
 import com.ody.meeting.domain.Coordinates;
 import com.ody.route.domain.RouteTime;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,11 +25,6 @@ class RouteServiceTest extends BaseServiceTest {
 
     @Autowired
     private RouteService routeService;
-
-    @BeforeEach
-    void init() {
-        routeService = new RouteService(List.of(odsayRouteClient, googleRouteClient));
-    }
 
     @DisplayName("OdsayRouteClient에 에러가 발생하지 않으면 첫 번째 외부 API를 사용해 소요시간을 반환한다.")
     @Test
