@@ -25,7 +25,6 @@ class MeetingJoinViewModelTest {
         viewModel =
             MeetingJoinViewModel(
                 analyticsHelper = FakeAnalyticsHelper,
-                inviteCode = "abc123",
                 joinRepository = FakeJoinRepository(meetingId = meetingId),
                 matesEtaRepository = FakeMatesEtaRepository,
             )
@@ -37,7 +36,7 @@ class MeetingJoinViewModelTest {
         setUpInitializeInfo()
 
         // when
-        viewModel.joinMeeting()
+        viewModel.joinMeeting("abc123")
 
         // then
         val actual = viewModel.navigateAction.getValue()
@@ -48,7 +47,7 @@ class MeetingJoinViewModelTest {
     @Test
     fun `입력하지 않은 값이 있는 경우 약속 참여할 수 없다`() {
         // when
-        viewModel.joinMeeting()
+        viewModel.joinMeeting("abc123")
 
         // then
         val actual = viewModel.navigateAction.getValue()

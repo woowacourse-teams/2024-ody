@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.snackbar.Snackbar
-import com.mulberry.ody.OdyApplication
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.LoadingDialog
 
@@ -18,8 +17,6 @@ abstract class BindingActivity<T : ViewDataBinding>(
     protected lateinit var binding: T
     private var snackBar: Snackbar? = null
     private var dialog: Dialog? = null
-    val application by lazy { applicationContext as OdyApplication }
-    val analyticsHelper by lazy { application.analyticsHelper }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

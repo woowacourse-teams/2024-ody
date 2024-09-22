@@ -12,7 +12,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.webkit.WebViewAssetLoader
 import com.google.android.material.snackbar.Snackbar
-import com.mulberry.ody.OdyApplication
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.DialogAddressSearchBinding
 import com.mulberry.ody.presentation.address.listener.AddressReceiveListener
@@ -20,19 +19,13 @@ import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.address.web.AddressSearchInterface
 import com.mulberry.ody.presentation.address.web.LocalContentWebViewClient
 import com.mulberry.ody.presentation.common.LoadingDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddressSearchDialog : DialogFragment(), AddressReceiveListener {
     private var _binding: DialogAddressSearchBinding? = null
     private val binding get() = _binding!!
-    private val application: OdyApplication by lazy {
-        requireContext().applicationContext as OdyApplication
-    }
-    private val viewModel: AddressSearchViewModel by viewModels {
-        AddressSearchViewModelFactory(
-            application.analyticsHelper,
-            application.kakaoGeoLocationRepository,
-        )
-    }
+    private val viewModel: AddressSearchViewModel by viewModels<AddressSearchViewModel>()
     private val loadingDialog: Dialog by lazy { LoadingDialog(requireContext()) }
 
     override fun onCreateView(
