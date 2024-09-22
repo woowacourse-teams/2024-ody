@@ -37,18 +37,7 @@ abstract class BindingFragment<T : ViewDataBinding>(
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
-
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?,
-    ) {
-        super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.lifecycleScope.launch {
-            val bundle = bundleOf(FirebaseAnalytics.Param.SCREEN_NAME to javaClass.simpleName)
-//            analyticsHelper.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
-        }
-    }
-
+    
     fun showSnackBar(
         @StringRes messageId: Int,
         action: Snackbar.() -> Unit = {},
