@@ -19,7 +19,6 @@ abstract class BindingFragment<T : ViewDataBinding>(
     protected val binding: T
         get() = requireNotNull(_binding)
     private var snackBar: Snackbar? = null
-    val mApplication by lazy { requireContext().applicationContext as OdyApplication }
 
     override fun onCreateView(
         inflater: LayoutInflater,
