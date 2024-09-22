@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import com.mulberry.ody.OdyApplication
 
 abstract class BindingFragment<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
