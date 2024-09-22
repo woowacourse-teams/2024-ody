@@ -1,5 +1,7 @@
 package com.ody.common;
 
+import com.ody.route.service.StubGoogleRouteClient;
+import com.ody.route.service.StubOdsayRouteClient;
 import com.ody.route.service.RouteClient;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -13,13 +15,13 @@ public class TestRouteConfig {
     @Bean
     @Qualifier("odsay")
     public RouteClient odsayRouteClient() {
-        return new FakeOdsayRouteClient();
+        return new StubOdsayRouteClient();
     }
 
     @Bean
     @Qualifier("google")
     public RouteClient googleRouteClient() {
-        return new FakeGoogleRouteClient();
+        return new StubGoogleRouteClient();
     }
 }
 

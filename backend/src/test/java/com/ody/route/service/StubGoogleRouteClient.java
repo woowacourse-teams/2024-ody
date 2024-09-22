@@ -1,16 +1,15 @@
-package com.ody.common;
+package com.ody.route.service;
 
 import com.ody.meeting.domain.Coordinates;
 import com.ody.route.domain.RouteTime;
-import com.ody.route.service.RouteClient;
 
-public class FakeOdsayRouteClient implements RouteClient {
+public class StubGoogleRouteClient implements RouteClient {
 
     @Override
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         if (origin.equals(target)) {
             return RouteTime.ZERO;
         }
-        return new RouteTime(16);
+        return new RouteTime(18);
     }
 }
