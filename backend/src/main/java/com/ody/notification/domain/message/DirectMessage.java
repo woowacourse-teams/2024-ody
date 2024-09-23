@@ -13,7 +13,7 @@ public class DirectMessage {
     public DirectMessage(Mate requestMate, Notification recipientNotification) {
         this.message = Message.builder()
                 .putData("type", recipientNotification.getType().name())
-                .putData("nickname", requestMate.getNickname())
+                .putData("nickname", requestMate.getNickname().getValue())
                 .putData("meetingId", requestMate.getMeeting().getId().toString())
                 .setToken(recipientNotification.getMate().getMember().getDeviceToken().getValue())
                 .build();
@@ -22,7 +22,7 @@ public class DirectMessage {
     public DirectMessage(Notification recipientNotification) {
         this.message = Message.builder()
                 .putData("type", recipientNotification.getType().name())
-                .putData("nickname", recipientNotification.getMate().getNickname())
+                .putData("nickname", recipientNotification.getMate().getNickname().getValue())
                 .putData("meetingId", recipientNotification.getMate().getMeeting().getId().toString())
                 .setToken(recipientNotification.getMate().getMember().getDeviceToken().getValue())
                 .build();

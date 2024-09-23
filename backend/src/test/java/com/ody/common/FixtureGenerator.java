@@ -1,8 +1,10 @@
 package com.ody.common;
 
+import com.ody.auth.token.RefreshToken;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
@@ -62,8 +64,10 @@ public class FixtureGenerator {
         return generateMember(providerId, nickname, deviceToken);
     }
 
-    public Member generateMember(String providerId, String nickname, String deviceToken) {
-        return memberRepository.save(new Member(providerId, nickname, "imageurl", new DeviceToken(deviceToken)));
+    public Member generateMember(String providerId, String rawNickname, String rawDeviceToken) {
+        Nickname nickname = new Nickname(rawNickname);
+        DeviceToken deviceToken = new DeviceToken(rawDeviceToken);
+        return memberRepository.save(new Member(providerId, nickname, "imageurl", deviceToken));
     }
 
     public Mate generateMate() {
