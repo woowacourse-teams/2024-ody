@@ -64,25 +64,26 @@ jobs:
   pull-and-deploy:
 
     needs: build-and-push
-    runs-on: prod
+    runs-on:
+      - prod
+      - prod-a
+      - prod-b
 
     steps:
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: build-and-deploy-prod
+        uses: ./.github/workflows/backend-cd-pull-and-deploy.yml
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          runner-name: prod
 
-      - name: Clean Up Legacy Image And Pull
-        run: |
-          docker image prune -a -f
-          docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
+      - name: build-and-deploy-prod-a
+        if: success()
+        uses: ./.github/workflows/backend-cd-pull-and-deploy.yml
+        with:
+          runner-name: prod-a
 
-      - name: Set up Container And Run Docker Image
-        run: | 
-          docker stop $DOCKER_CONTAINER_NAME || true
-          docker rm $DOCKER_CONTAINER_NAME || true     
-          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
+      - name: build-and-deploy-prod-b
+        if: success()
+        uses: ./.github/workflows/backend-cd-pull-and-deploy.yml
+        with:
+          runner-name: prod-b
 
-      - name: Check Docker Process
-        run: docker ps
