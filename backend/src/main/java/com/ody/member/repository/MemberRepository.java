@@ -8,10 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findFirstByDeviceToken(DeviceToken deviceToken);
-
-    boolean existsByAuthProvider(AuthProvider authProvider);
-
     Optional<Member> findByAuthProvider(AuthProvider authProvider);
 
     Optional<Member> findByDeviceToken(DeviceToken deviceToken);
