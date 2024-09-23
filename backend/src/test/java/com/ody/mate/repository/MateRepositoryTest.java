@@ -77,20 +77,9 @@ class MateRepositoryTest extends BaseRepositoryTest {
 
         mateRepository.deleteById(mate.getId());
 
-        Mate actual = (Mate) entityManager.createNativeQuery("select * from Mate where id = ?", Mate.class)
-                .setParameter(1, mate.getId())
-                .getSingleResult();
-        assertThat(actual.getDeletedAt()).isNotNull();
-    }
-
-    @DisplayName("삭제된 참여자는 조회하지 않는다.")
-    @Test
-    void doNotFindDeletedMate() {
-        Mate mate = fixtureGenerator.generateMate();
-
-        mateRepository.delete(mate);
-
+        entityManager.flush();
         Optional<Mate> actual = mateRepository.findById(mate.getId());
-        assertThat(actual).isNotPresent();
+        assertThat(actual).isPresent();
+        assertThat(actual.get().getDeletedAt()).isNotNull();
     }
 }

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeviceToken {
 
-    @Column(name = "deviceToken", unique = true)
+    @Column(name = "deviceToken")
     @NotBlank
     private String value;
 

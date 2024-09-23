@@ -8,14 +8,11 @@ import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityLoginBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.meetings.MeetingsActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_login) {
-    private val viewModel: LoginViewModel by viewModels<LoginViewModel> {
-        LoginViewModelFactory(
-            application.authTokenRepository,
-            application.kakaoLoginRepository,
-        )
-    }
+    private val viewModel: LoginViewModel by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +45,13 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
         }
         viewModel.errorEvent.observe(this) {
             showSnackBar(R.string.error_guide)
+        }
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@observe
+            }
+            hideLoadingDialog()
         }
     }
 

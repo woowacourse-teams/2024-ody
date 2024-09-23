@@ -17,17 +17,16 @@ import com.mulberry.ody.presentation.login.LoginNavigatedReason
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
 import com.mulberry.ody.presentation.setting.listener.SettingListener
 import com.mulberry.ody.presentation.setting.model.SettingUiModel
+import com.mulberry.ody.presentation.setting.withdrawal.WithDrawalDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingActivity :
     BindingActivity<ActivitySettingBinding>(R.layout.activity_setting),
     BackListener,
     SettingListener {
     private val adapter by lazy { SettingsAdapter(this) }
-    private val viewModel by viewModels<SettingViewModel> {
-        SettingViewModelFactory(
-            application.kakaoLoginRepository,
-        )
-    }
+    private val viewModel by viewModels<SettingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +42,23 @@ class SettingActivity :
                 }
 
                 LoginNavigatedReason.WITHDRAWAL -> {
+                    navigateToWithdrawal()
                 }
             }
+        }
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@observe
+            }
+            hideLoadingDialog()
+        }
+        viewModel.networkErrorEvent.observe(this) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+        viewModel.errorEvent.observe(this) {
+            showSnackBar(R.string.error_guide)
         }
     }
 
@@ -83,16 +97,27 @@ class SettingActivity :
             }
 
             SettingUiModel.WITHDRAW -> {
+                WithDrawalDialog().show(supportFragmentManager, WITHDRAWAL_DIALOG_TAG)
             }
         }
     }
 
     private fun navigateToLogin() {
-        val intent = LoginActivity.getIntent(this)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.putExtra(NAVIGATED_REASON, LoginNavigatedReason.LOGOUT)
+        val intent =
+            LoginActivity.getIntent(this).apply {
+                putExtra(NAVIGATED_REASON, LoginNavigatedReason.LOGOUT)
+            }
         startActivity(intent)
-        finish()
+        finishAffinity()
+    }
+
+    private fun navigateToWithdrawal() {
+        val intent =
+            LoginActivity.getIntent(this).apply {
+                putExtra(NAVIGATED_REASON, LoginNavigatedReason.WITHDRAWAL)
+            }
+        startActivity(intent)
+        finishAffinity()
     }
 
     private fun dpToPx(dp: Int): Int {
@@ -103,6 +128,7 @@ class SettingActivity :
     companion object {
         private const val NAVIGATED_REASON = "NAVIGATED_REASON"
         private const val SETTING_ITEM_HORIZONTAL_MARGIN_DP = 26
+        private const val WITHDRAWAL_DIALOG_TAG = "withdrawal_dialog"
 
         fun getIntent(context: Context): Intent = Intent(context, SettingActivity::class.java)
     }

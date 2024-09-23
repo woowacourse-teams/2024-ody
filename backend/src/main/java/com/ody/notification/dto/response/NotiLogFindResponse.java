@@ -3,7 +3,6 @@ package com.ody.notification.dto.response;
 import com.ody.notification.domain.Notification;
 import com.ody.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 
 public record NotiLogFindResponse(
@@ -22,29 +21,13 @@ public record NotiLogFindResponse(
 ) {
 
     public static NotiLogFindResponse from(Notification notification) {
-        try {
-            return NotiLogFindResponse.create(notification);
-        } catch (EntityNotFoundException exception) {
-            return NotiLogFindResponse.createWithEmptyImageUrl(notification);
+        String imageUrl = notification.getMate().getMember().getImageUrl();
+        if (notification.getMate().isDeleted()) {
+            imageUrl = "";
         }
-    }
-
-    private static NotiLogFindResponse create(Notification notification) {
         return new NotiLogFindResponse(
-                notification,
-                notification.getMate().getNickname().getValue(),
-                notification.getMate().getMember().getImageUrl()
-        );
-    }
-
-    private static NotiLogFindResponse createWithEmptyImageUrl(Notification notification) {
-        return new NotiLogFindResponse(notification, "알 수 없음", "");
-    }
-
-    private NotiLogFindResponse(Notification notification, String nickname, String imageUrl) {
-        this(
                 notification.getType().toString(),
-                nickname,
+                notification.getMate().getNickname(),
                 TimeUtil.trimSecondsAndNanos(notification.getSendAt()),
                 imageUrl
         );

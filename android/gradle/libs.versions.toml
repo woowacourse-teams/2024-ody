@@ -11,7 +11,7 @@ datastoreCoreAndroid = "1.1.1"
 datastorePreferences = "1.1.1"
 dotsindicator = "5.0"
 espressoCore = "3.6.1"
-firebaseBom = "33.2.0"
+firebaseBom = "33.3.0"
 firebaseCrashlytics = "3.0.2"
 firebaseMessaging = "24.0.1"
 firebaseMessagingKtx = "24.0.1"
@@ -20,15 +20,18 @@ fragmentKtx = "1.8.3"
 fragmentTesting = "1.8.3"
 glide = "4.16.0"
 googleServices = "4.4.2"
+hilt= "2.52"
+hiltWork = "1.2.0"
 junitJupiter = "5.10.2"
 junitVersion = "1.2.1"
+jvm = "1.9.23"
 kakaoShare = "2.20.3"
-kotlin = "1.9.0"
-ksp = "1.9.0-1.0.13"
+kotlin = "1.9.10"
+ksp = "1.9.23-1.0.20"
 ktlint = "12.1.1"
 kakaoSdk = "2.20.3"
 lifecycle = "2.2.0"
-lifecycleViewmodel = "2.8.5"
+lifecycleViewmodel = "2.8.6"
 loggingInterceptor = "4.12.0"
 material = "1.12.0"
 moshi = "1.15.1"
@@ -37,13 +40,15 @@ retrofit = "2.11.0"
 splashScreen = "1.0.1"
 timber = "5.0.1"
 viewPager = "1.1.0"
-webkit = "1.11.0"
+webkit = "1.12.0"
 workRuntimeKtx = "2.9.1"
 
 [libraries]
 # androidx
 androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
+androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltWork" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
@@ -110,8 +115,14 @@ glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 # kakao share
 kakao-share = { module = "com.kakao.sdk:v2-share", version.ref = "kakaoShare" }
 
+# hilt
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+
 [plugins]
+jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jvm" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }

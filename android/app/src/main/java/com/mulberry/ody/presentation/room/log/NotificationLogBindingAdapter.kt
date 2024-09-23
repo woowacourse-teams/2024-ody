@@ -3,17 +3,18 @@ package com.mulberry.ody.presentation.room.log
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.mulberry.ody.R
-import com.mulberry.ody.domain.model.NotificationType
+import com.mulberry.ody.domain.model.LogType
 
 @BindingAdapter("notificationType")
-fun TextView.setTextNotificationType(notificationType: NotificationType) {
+fun TextView.setTextNotificationType(logType: LogType) {
     val stringRes =
-        when (notificationType) {
-            NotificationType.ENTRY -> R.string.item_notification_entry
-            NotificationType.DEPARTURE_REMINDER -> R.string.item_notification_departure_reminder
-            NotificationType.DEPARTURE -> R.string.item_notification_departure
-            NotificationType.NUDGE -> R.string.item_notification_nudge
-            NotificationType.DEFAULT -> R.string.item_notification_default
+        when (logType) {
+            LogType.ENTRY -> R.string.item_notification_entry
+            LogType.DEPARTURE_REMINDER -> R.string.item_notification_departure_reminder
+            LogType.DEPARTURE -> R.string.item_notification_departure
+            LogType.NUDGE -> R.string.item_notification_nudge
+            LogType.MEMBER_DELETION -> R.string.item_notification_member_deletion
+            LogType.DEFAULT -> R.string.item_notification_default
         }
     text = context.getString(stringRes)
 }
