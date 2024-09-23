@@ -25,15 +25,7 @@ public record AuthRequest(
         String imageUrl
 ) {
 
-    public DeviceToken toDeviceToken() {
-        return new DeviceToken(deviceToken);
-    }
-
-    public Nickname toNickname() {
-        return new Nickname(nickname);
-    }
-
     public Member toMember() {
-        return new Member(providerId, toNickname(), imageUrl, toDeviceToken());
+        return new Member(providerId, new Nickname(nickname), imageUrl, new DeviceToken(deviceToken));
     }
 }
