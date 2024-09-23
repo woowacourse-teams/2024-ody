@@ -27,4 +27,3 @@ public class TestRouteConfig {
         return new StubGoogleRouteClient();
     }
 }
-
