@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MeetingService {
 
     private static final ZoneOffset KST_OFFSET = ZoneOffset.ofHours(9);
-    private static final long ETA_NOTICE_TIME_DEFER = 30L;
 
     private final MateService mateService;
     private final MeetingRepository meetingRepository;
@@ -59,7 +58,7 @@ public class MeetingService {
 
     private void scheduleEtaNotice(Meeting meeting) {
         NoticeMessage noticeMessage = NoticeMessage.of(meeting, NotificationType.ETA_NOTICE);
-        LocalDateTime etaNoticeTime = meeting.getMeetingTime().minusMinutes(ETA_NOTICE_TIME_DEFER);
+        LocalDateTime etaNoticeTime = meeting.get30MinutesBeforeMeetingTime();
         Instant startTime = etaNoticeTime.toInstant(KST_OFFSET);
         taskScheduler.schedule(() -> fcmPushSender.sendNoticeMessage(noticeMessage), startTime);
     }
