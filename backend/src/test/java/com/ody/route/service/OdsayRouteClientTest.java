@@ -25,11 +25,6 @@ import org.springframework.http.MediaType;
 @RestClientTest(OdsayRouteClient.class)
 class OdsayRouteClientTest extends BaseRouteClientTest {
 
-    @Override
-    protected RouteClient createRouteClient() {
-        return new OdsayRouteClient(routeProperties, restClientBuilder);
-    }
-
     @DisplayName("길찾기 api 요청 성공 시, 올바른 소요시간을 반환한다")
     @Test
     void calculateRouteTimeSuccess() throws IOException {
@@ -114,5 +109,10 @@ class OdsayRouteClientTest extends BaseRouteClientTest {
         return new String(Files.readAllBytes(
                 new ClassPathResource(path).getFile().toPath())
         );
+    }
+
+    @Override
+    protected RouteClient createRouteClient() {
+        return new OdsayRouteClient(routeProperties, restClientBuilder);
     }
 }
