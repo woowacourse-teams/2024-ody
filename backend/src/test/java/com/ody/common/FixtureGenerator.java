@@ -1,5 +1,6 @@
 package com.ody.common;
 
+import com.ody.auth.JwtTokenProvider;
 import com.ody.auth.token.RefreshToken;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.repository.EtaRepository;
@@ -28,19 +29,22 @@ public class FixtureGenerator {
     private final MateRepository mateRepository;
     private final NotificationRepository notificationRepository;
     private final EtaRepository etaRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public FixtureGenerator(
             MeetingRepository meetingRepository,
             MemberRepository memberRepository,
             MateRepository mateRepository,
             NotificationRepository notificationRepository,
-            EtaRepository etaRepository
+            EtaRepository etaRepository,
+            JwtTokenProvider jwtTokenProvider
     ) {
         this.meetingRepository = meetingRepository;
         this.memberRepository = memberRepository;
         this.mateRepository = mateRepository;
         this.notificationRepository = notificationRepository;
         this.etaRepository = etaRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public Meeting generateMeeting() {
@@ -107,5 +111,9 @@ public class FixtureGenerator {
                 notificationStatus,
                 new FcmTopic(mate.getMeeting())
         ));
+    }
+
+    public String generateAccessTokenValueByMember(Member member) {
+        return "Bearer access-token=" + jwtTokenProvider.createAccessToken(member.getId()).getValue();
     }
 }
