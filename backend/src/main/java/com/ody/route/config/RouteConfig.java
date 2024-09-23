@@ -28,14 +28,12 @@ public class RouteConfig {
 
     @Bean
     @Order(1)
-    @Qualifier("odsay")
     public RouteClient odysayRouteClient(RestClient.Builder routeRestClientBuilder) {
         return new OdsayRouteClient(routeProperties, routeRestClientBuilder);
     }
 
     @Bean
     @Order(2)
-    @Qualifier("google")
     public RouteClient googleRouteClient(
             RestClient.Builder routeRestClientBuilder,
             @Value("${google.maps.api-key}") String googleApiKey
