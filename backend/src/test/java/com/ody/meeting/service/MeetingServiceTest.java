@@ -197,7 +197,7 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertAll(
                 () -> assertThat(meetingDateTime.minusMinutes(30).toInstant(KST_OFFSET)).isEqualTo(scheduledTime),
-                () -> Mockito.verify(fcmPushSender).sendNoticeMessage(any(NoticeMessage.class))
+                () -> Mockito.verify(fcmPushSender, Mockito.times(1)).sendNoticeMessage(any(NoticeMessage.class))
         );
     }
 
