@@ -11,7 +11,8 @@ springdoc:
 
 odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT
-  api-key: ENC(8A1VHDvR44k6DXfWB5oudFz9FH4a0ZtqK5bApHvyrWQHiFK13Z6ZeBxVGufZFbbaI/1etI1hSyE=)
+  api-key: ENC(tHrCTqN0WANDzm2bOdUftqRCbiz64bAyY48Q3FsvMfhRNAnAbpAru/ebTLbwXoDfIcZuSPUFczw=)
+  # TODO: 임시로 개인 api-key 추가 -> 팀 key로 변경 필요
 
 auth:
   access-key: ENC(jp1TJCM6l22zIzInTUvt9VXrb1WhNm1zY3dFgTSj6ad3585f5K7Q8A==)
