@@ -15,20 +15,15 @@ import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.listener.NextListener
 import com.mulberry.ody.presentation.join.complete.JoinCompleteActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MeetingJoinActivity :
     BindingActivity<ActivityMeetingJoinBinding>(R.layout.activity_meeting_join),
     NextListener,
     BackListener,
     AddressSearchListener {
-    private val viewModel: MeetingJoinViewModel by viewModels<MeetingJoinViewModel> {
-        MeetingJoinViewModelFactory(
-            application.analyticsHelper,
-            getInviteCode(),
-            application.joinRepository,
-            application.matesEtaRepository,
-        )
-    }
+    private val viewModel: MeetingJoinViewModel by viewModels<MeetingJoinViewModel>()
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -92,7 +87,7 @@ class MeetingJoinActivity :
     }
 
     override fun onNext() {
-        viewModel.joinMeeting()
+        viewModel.joinMeeting(getInviteCode())
         viewModel.onClickMeetingJoin()
     }
 

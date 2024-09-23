@@ -22,7 +22,9 @@ import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
 import com.mulberry.ody.presentation.room.etadashboard.listener.MissingToolTipListener
 import com.mulberry.ody.presentation.room.etadashboard.listener.ShareListener
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EtaDashboardFragment :
     BindingFragment<FragmentEtaDashboardBinding>(R.layout.fragment_eta_dashboard),
     MissingToolTipListener,
