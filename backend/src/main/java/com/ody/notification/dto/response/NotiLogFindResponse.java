@@ -27,7 +27,7 @@ public record NotiLogFindResponse(
         }
         return new NotiLogFindResponse(
                 notification.getType().toString(),
-                notification.getMate().getNickname(),
+                notification.getMate().getNickname().getValue(),
                 TimeUtil.trimSecondsAndNanos(notification.getSendAt()),
                 imageUrl
         );

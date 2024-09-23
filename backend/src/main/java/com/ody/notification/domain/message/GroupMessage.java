@@ -8,7 +8,7 @@ public record GroupMessage(Message message) {
     public static GroupMessage from(Notification notification) {
         Message message = Message.builder()
                 .putData("type", notification.getType().name())
-                .putData("nickname", notification.getMate().getNickname())
+                .putData("nickname", notification.getMate().getNickname().getValue())
                 .putData("meetingId", notification.getMate().getMeeting().getId().toString())
                 .setTopic(notification.getFcmTopic().getValue())
                 .build();
