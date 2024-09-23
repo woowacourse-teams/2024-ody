@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -22,6 +24,10 @@ import org.hibernate.annotations.SQLDelete;
 @Filter(name = "deletedMemberFilter", condition = "deleted_at IS NULL")
 @FilterDef(name = "deletedMemberFilter")
 @SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
+@Table(indexes = {
+        @Index(name = "index_member_device_token", columnList = "device_token"),
+        @Index(name = "index_member_auth_provider", columnList = "provider_type, provider_id")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Member {
