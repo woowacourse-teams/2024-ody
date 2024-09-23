@@ -57,7 +57,7 @@ create table if not exists eta (
 create table if not exists notification (
     id bigint not null auto_increment,
     mate_id bigint not null,
-    `type` varchar(225) check (`type` in ('DEPARTURE_REMINDER','ENTRY','NUDGE','MEMBER_DELETION')) not null,
+    `type` varchar(225) check (`type` in ('DEPARTURE_REMINDER','ENTRY','NUDGE','MEMBER_DELETION','ETA_NOTICE')) not null,
     status varchar(225) check (status in ('DONE','PENDING','DISMISSED')) not null,
     send_at timestamp not null,
     fcm_topic varchar(225) null,
