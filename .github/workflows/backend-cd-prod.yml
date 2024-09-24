@@ -72,19 +72,19 @@ jobs:
 
     steps:
       - name: build-and-deploy-prod
-        uses: ./.github/workflows/backend-cd-pull-and-deploy.yml
+        uses: ./.github/workflows/backend-pull-and-deploy.yml
         with:
           runner-name: prod
 
       - name: build-and-deploy-prod-a
         if: success()
-        uses: ./.github/workflows/backend-cd-pull-and-deploy.yml
+        uses: ./.github/workflows/backend-pull-and-deploy.yml
         with:
           runner-name: prod-a
 
       - name: build-and-deploy-prod-b
         if: success()
-        uses: ./.github/workflows/backend-cd-pull-and-deploy.yml
+        uses: ./.github/workflows/backend-pull-and-deploy.yml
         with:
           runner-name: prod-b
 
