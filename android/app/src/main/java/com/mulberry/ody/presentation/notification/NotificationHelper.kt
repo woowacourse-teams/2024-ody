@@ -33,7 +33,7 @@ class NotificationHelper(private val context: Context) {
         type: NotificationType,
         nickname: String,
         meetingName: String,
-        ): String =
+    ): String =
         when (type) {
             NotificationType.ENTRY -> context.getString(R.string.fcm_notification_entry, nickname)
             NotificationType.DEPARTURE_REMINDER -> context.getString(R.string.fcm_notification_departure_reminder, nickname)
@@ -47,14 +47,17 @@ class NotificationHelper(private val context: Context) {
         type: NotificationType,
         meetingId: String,
     ): PendingIntent? {
-        val navigationTarget = when (type) {
-            NotificationType.ENTRY,
-            NotificationType.DEPARTURE_REMINDER,
-            NotificationType.MEMBER_DELETION -> NAVIGATE_TO_NOTIFICATION_LOG
-            NotificationType.NUDGE,
-            NotificationType.ETA_NOTICE -> NAVIGATE_TO_ETA_DASHBOARD
-            NotificationType.DEFAULT -> null
-        }
+        val navigationTarget =
+            when (type) {
+                NotificationType.ENTRY,
+                NotificationType.DEPARTURE_REMINDER,
+                NotificationType.MEMBER_DELETION,
+                -> NAVIGATE_TO_NOTIFICATION_LOG
+                NotificationType.NUDGE,
+                NotificationType.ETA_NOTICE,
+                -> NAVIGATE_TO_ETA_DASHBOARD
+                NotificationType.DEFAULT -> null
+            }
 
         return navigationTarget?.let { target ->
             val intent = MeetingRoomActivity.getIntent(context, meetingId.toLong(), target)
@@ -62,7 +65,7 @@ class NotificationHelper(private val context: Context) {
                 context,
                 NOTIFICATION_REQUEST_CODE,
                 intent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
             )
         }
     }
