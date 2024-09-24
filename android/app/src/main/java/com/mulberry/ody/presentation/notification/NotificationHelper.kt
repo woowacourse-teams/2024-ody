@@ -38,7 +38,6 @@ class NotificationHelper(private val context: Context) {
             NotificationType.ENTRY -> context.getString(R.string.fcm_notification_entry, nickname)
             NotificationType.DEPARTURE_REMINDER -> context.getString(R.string.fcm_notification_departure_reminder, nickname)
             NotificationType.NUDGE -> context.getString(R.string.fcm_notification_nudge, nickname)
-            NotificationType.MEMBER_DELETION -> context.getString(R.string.fcm_notification_member_deletion, nickname)
             NotificationType.ETA_NOTICE -> context.getString(R.string.fcm_notification_eta_notice, meetingName)
             NotificationType.DEFAULT -> ""
         }
@@ -51,7 +50,6 @@ class NotificationHelper(private val context: Context) {
             when (type) {
                 NotificationType.ENTRY,
                 NotificationType.DEPARTURE_REMINDER,
-                NotificationType.MEMBER_DELETION,
                 -> NAVIGATE_TO_NOTIFICATION_LOG
                 NotificationType.NUDGE,
                 NotificationType.ETA_NOTICE,
