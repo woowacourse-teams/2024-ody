@@ -53,6 +53,10 @@ public class GoogleRouteClient implements RouteClient {
     }
 
     private void validateGoogleServerStatus(DistanceMatrixResponse response) {
+        if (response.status() == DistanceMatrixStatus.INVALID_REQUEST) {
+            log.error("Google Distance Matrix API 클라이언트 에러 |  {}", response.errorMessage());
+            throw new OdyBadRequestException("잘못된 요청으로 소요시간 계산에 실패했습니다.");
+        }
         if (response.status() != DistanceMatrixStatus.OK) {
             log.error(
                     "Google Distance Matrix API 서비스 에러 | {} : {} | 에러 메시지 : {}",
