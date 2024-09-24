@@ -7,7 +7,6 @@ import com.ody.common.exception.OdyServerErrorException;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.message.DirectMessage;
 import com.ody.notification.domain.message.GroupMessage;
-import com.ody.notification.domain.message.NoticeMessage;
 import com.ody.notification.dto.request.FcmGroupSendRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,9 +49,9 @@ public class FcmPushSender {
         }
     }
 
-    public void sendNoticeMessage(NoticeMessage noticeMessage) {
+    public void sendNoticeMessage(GroupMessage groupMessage) {
         try {
-            FirebaseMessaging.getInstance().send(noticeMessage.message());
+            FirebaseMessaging.getInstance().send(groupMessage.message());
         } catch (FirebaseMessagingException exception) {
             log.error("FCM 공지 전송 실패 : {}", exception.getMessage());
             throw new OdyServerErrorException(exception.getMessage());

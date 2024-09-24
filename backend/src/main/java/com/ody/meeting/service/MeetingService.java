@@ -16,7 +16,7 @@ import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.NotificationType;
-import com.ody.notification.domain.message.NoticeMessage;
+import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
@@ -58,7 +58,7 @@ public class MeetingService {
     }
 
     private void scheduleEtaNotice(Meeting meeting) {
-        NoticeMessage noticeMessage = NoticeMessage.of(meeting, NotificationType.ETA_NOTICE);
+        GroupMessage noticeMessage = GroupMessage.createMeetingNotice(meeting, NotificationType.ETA_NOTICE);
         LocalDateTime etaNoticeTime = meeting.getMeetingTime().minusMinutes(ETA_NOTICE_TIME_DEFER);
         Instant startTime = etaNoticeTime.toInstant(KST_OFFSET);
         taskScheduler.schedule(() -> fcmPushSender.sendNoticeMessage(noticeMessage), startTime);

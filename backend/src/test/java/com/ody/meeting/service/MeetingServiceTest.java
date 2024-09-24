@@ -25,7 +25,7 @@ import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
-import com.ody.notification.domain.message.NoticeMessage;
+import com.ody.notification.domain.message.GroupMessage;
 import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
@@ -197,7 +197,7 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertAll(
                 () -> assertThat(meetingDateTime.minusMinutes(30).toInstant(KST_OFFSET)).isEqualTo(scheduledTime),
-                () -> Mockito.verify(fcmPushSender, Mockito.times(1)).sendNoticeMessage(any(NoticeMessage.class))
+                () -> Mockito.verify(fcmPushSender, Mockito.times(1)).sendNoticeMessage(any(GroupMessage.class))
         );
     }
 
