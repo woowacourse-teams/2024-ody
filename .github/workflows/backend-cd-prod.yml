@@ -3,7 +3,7 @@ name: backend-cd-prod
 on:
   push:
     branches:
-#      - main
+      #      - main
       - feature/561
 #    paths:
 #      - backend/**
@@ -23,8 +23,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-#        with:
-#          ref: main
+      #        with:
+      #          ref: main
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -62,13 +62,11 @@ jobs:
       - name: Docker Image Build And Push
         run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod -f Dockerfile . --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} --push
 
-  pull-and-deploy:
+  pull-and-deploy-prod:
 
     needs: build-and-push
     runs-on:
       - prod
-      - prod-a
-      - prod-b
 
     steps:
       - name: build-and-deploy-prod
@@ -76,15 +74,28 @@ jobs:
         with:
           runner-name: prod
 
+  pull-and-deploy-prod-a:
+
+    needs: pull-and-deploy-prod
+    runs-on:
+      - prod-a
+
+    steps:
       - name: build-and-deploy-prod-a
         if: success()
         uses: ./.github/workflows/backend-pull-and-deploy.yml
         with:
           runner-name: prod-a
 
+  pull-and-deploy-prod-b:
+
+    needs: pull-and-deploy-prod-a
+    runs-on:
+      - prod-b
+
+    steps:
       - name: build-and-deploy-prod-b
         if: success()
         uses: ./.github/workflows/backend-pull-and-deploy.yml
         with:
           runner-name: prod-b
-
