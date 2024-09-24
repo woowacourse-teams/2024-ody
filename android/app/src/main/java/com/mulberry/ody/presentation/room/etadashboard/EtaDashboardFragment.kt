@@ -38,6 +38,7 @@ class EtaDashboardFragment :
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
     private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this, viewModel) }
     private val parentActivity: Activity by lazy { requireActivity() }
+
     @Inject lateinit var odyDatastore: OdyDatastore
 
     override fun onViewCreated(
