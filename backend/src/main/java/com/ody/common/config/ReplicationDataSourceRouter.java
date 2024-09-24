@@ -9,8 +9,10 @@ public class ReplicationDataSourceRouter extends AbstractRoutingDataSource {
 
     @Override
     protected Object determineCurrentLookupKey() {
+        boolean isTransactionActive = TransactionSynchronizationManager.isActualTransactionActive();
         boolean readOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
-        log.info("(readonly = {}) DB 연결 요청", readOnly);
-        return readOnly ? "read" : "write";
+        ReplicationType type = ReplicationType.from(isTransactionActive, readOnly);
+        log.info("(트랜잭션 활성화 여부 : {}) (readOnly : {}) => {} DB 연결", isTransactionActive, isTransactionActive, type);
+        return type;
     }
 }
