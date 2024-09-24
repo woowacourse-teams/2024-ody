@@ -20,6 +20,7 @@ import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.service.RouteService;
+import com.ody.util.InviteCodeGenerator;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -72,7 +73,7 @@ class NotificationServiceTest extends BaseServiceTest {
                 LocalDate.now().minusDays(1),
                 LocalTime.parse("14:00"),
                 Fixture.TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         );
         Meeting savedPastMeeting = meetingRepository.save(pastMeeting);
         Mate mate = mateRepository.save(
@@ -208,7 +209,7 @@ class NotificationServiceTest extends BaseServiceTest {
         fixtureGenerator.generateNotification(mate);
 
         int logCountBeforeDelete = notificationService.findAllMeetingLogs(meeting.getId()).notiLog().size();
-        memberService.delete(deleteMate.getMember()); // notification added
+        memberService.delete(deleteMate.getMember());
         int logCountAfterDelete = notificationService.findAllMeetingLogs(meeting.getId()).notiLog().size();
 
         assertThat(logCountAfterDelete).isEqualTo(logCountBeforeDelete + 1);

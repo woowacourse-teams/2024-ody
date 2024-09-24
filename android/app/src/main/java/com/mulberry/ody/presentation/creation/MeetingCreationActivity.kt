@@ -20,16 +20,13 @@ import com.mulberry.ody.presentation.creation.destination.MeetingDestinationFrag
 import com.mulberry.ody.presentation.creation.name.MeetingNameFragment
 import com.mulberry.ody.presentation.creation.time.MeetingTimeFragment
 import com.mulberry.ody.presentation.join.MeetingJoinActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MeetingCreationActivity :
     BindingActivity<ActivityMeetingCreationBinding>(R.layout.activity_meeting_creation),
     BackListener {
-    private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel> {
-        MeetingCreationViewModelFactory(
-            analyticsHelper = analyticsHelper,
-            meetingRepository = application.meetingRepository,
-        )
-    }
+    private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel>()
     private val fragments: List<Fragment> by lazy {
         listOf(
             MeetingNameFragment(),

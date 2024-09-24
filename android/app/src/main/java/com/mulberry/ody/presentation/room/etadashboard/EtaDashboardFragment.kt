@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.annotation.StringRes
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.commit
-import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentEtaDashboardBinding
 import com.mulberry.ody.databinding.LayoutMissingTooltipBinding
@@ -27,6 +25,7 @@ import com.mulberry.ody.presentation.room.etadashboard.listener.ShareListener
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class EtaDashboardFragment :
     BindingFragment<FragmentEtaDashboardBinding>(R.layout.fragment_eta_dashboard),
     MissingToolTipListener,
