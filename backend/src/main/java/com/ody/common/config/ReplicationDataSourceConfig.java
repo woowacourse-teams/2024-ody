@@ -9,11 +9,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 
 @Slf4j
+@Profile("prod")
 @Configuration
 public class ReplicationDataSourceConfig {
 
@@ -31,14 +32,11 @@ public class ReplicationDataSourceConfig {
 
     @Bean
     @Primary
-    @DependsOn("replicationRouteDataSource")
     public DataSource dataSource(DataSource replicationRouteDataSource) {
-        log.info("데이터 소스 초기화 롼료 !!");
         return new LazyConnectionDataSourceProxy(replicationRouteDataSource);
     }
 
     @Bean
-    @DependsOn({"writeDataSource", "readDataSource"})
     public DataSource replicationRouteDataSource(
             @Qualifier("writeDataSource") DataSource writeDataSource,
             @Qualifier("readDataSource") DataSource readDataSource
