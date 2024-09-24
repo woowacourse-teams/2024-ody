@@ -75,7 +75,12 @@ public class NotificationService {
     public void scheduleNotification(FcmGroupSendRequest fcmGroupSendRequest) {
         Instant startTime = fcmGroupSendRequest.notification().getSendAt().toInstant(KST_OFFSET);
         taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmGroupSendRequest), startTime);
-        log.info("{} 상태 알림 {}에 스케줄링 예약", fcmGroupSendRequest.notification().getStatus(), startTime);
+        log.info(
+                "{} 타입 {} 상태 알림 {}에 스케줄링 예약",
+                fcmGroupSendRequest.notification().getType(),
+                fcmGroupSendRequest.notification().getStatus(),
+                startTime
+        );
     }
 
     @EventListener(ApplicationReadyEvent.class)
