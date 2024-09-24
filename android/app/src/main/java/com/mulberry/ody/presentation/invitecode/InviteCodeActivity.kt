@@ -9,14 +9,11 @@ import com.mulberry.ody.databinding.ActivityInviteCodeBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.join.MeetingJoinActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class InviteCodeActivity : BindingActivity<ActivityInviteCodeBinding>(R.layout.activity_invite_code), BackListener {
-    private val viewModel: InviteCodeViewModel by viewModels<InviteCodeViewModel> {
-        InviteCodeViewModelFactory(
-            application.analyticsHelper,
-            application.meetingRepository,
-        )
-    }
+    private val viewModel: InviteCodeViewModel by viewModels<InviteCodeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

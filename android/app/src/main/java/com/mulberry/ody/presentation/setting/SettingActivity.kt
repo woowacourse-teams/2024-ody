@@ -18,18 +18,15 @@ import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
 import com.mulberry.ody.presentation.setting.listener.SettingListener
 import com.mulberry.ody.presentation.setting.model.SettingUiModel
 import com.mulberry.ody.presentation.setting.withdrawal.WithDrawalDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingActivity :
     BindingActivity<ActivitySettingBinding>(R.layout.activity_setting),
     BackListener,
     SettingListener {
     private val adapter by lazy { SettingsAdapter(this) }
-    private val viewModel by viewModels<SettingViewModel> {
-        SettingViewModelFactory(
-            analyticsHelper,
-            application.kakaoLoginRepository,
-        )
-    }
+    private val viewModel by viewModels<SettingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

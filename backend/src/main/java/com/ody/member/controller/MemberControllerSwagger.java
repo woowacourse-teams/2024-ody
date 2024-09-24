@@ -20,5 +20,5 @@ public interface MemberControllerSwagger {
     )
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<Void> delete(@Parameter(hidden = true) String authorization);
+    ResponseEntity<Void> delete(@Parameter(hidden = true) Member member);
 }

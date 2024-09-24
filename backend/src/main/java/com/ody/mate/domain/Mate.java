@@ -54,7 +54,7 @@ public class Mate {
     private Member member;
 
     @NotNull
-    private String nickname;
+    private Nickname nickname;
 
     @Embedded
     @NotNull
@@ -65,9 +65,8 @@ public class Mate {
 
     private LocalDateTime deletedAt;
 
-    // TODO: Nickname 객체 유지 여부에 따라 메서드 수정
     public Mate(Meeting meeting, Member member, Nickname nickname, Location origin, long estimatedMinutes) {
-        this(null, meeting, member, nickname.getValue(), origin, estimatedMinutes, null);
+        this(null, meeting, member, nickname, origin, estimatedMinutes, null);
     }
 
     public Mate(Meeting meeting, Member member, Location origin, long estimatedMinutes) {
@@ -76,5 +75,9 @@ public class Mate {
 
     public boolean isAttended(Meeting otherMeeting) {
         return Objects.equals(this.meeting.getId(), otherMeeting.getId());
+    }
+
+    public boolean isDeleted() {
+        return deletedAt != null;
     }
 }

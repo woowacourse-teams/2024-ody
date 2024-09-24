@@ -21,11 +21,15 @@ public record NotiLogFindResponse(
 ) {
 
     public static NotiLogFindResponse from(Notification notification) {
+        String imageUrl = notification.getMate().getMember().getImageUrl();
+        if (notification.getMate().isDeleted()) {
+            imageUrl = "";
+        }
         return new NotiLogFindResponse(
                 notification.getType().toString(),
-                notification.getMate().getNickname(),
+                notification.getMate().getNickname().getValue(),
                 TimeUtil.trimSecondsAndNanos(notification.getSendAt()),
-                notification.getMate().getMember().getImageUrl()
+                imageUrl
         );
     }
 }

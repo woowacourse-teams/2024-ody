@@ -1,8 +1,11 @@
 package com.ody.common;
 
+import com.ody.auth.JwtTokenProvider;
+import com.ody.auth.token.RefreshToken;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
+import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
@@ -26,19 +29,22 @@ public class FixtureGenerator {
     private final MateRepository mateRepository;
     private final NotificationRepository notificationRepository;
     private final EtaRepository etaRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public FixtureGenerator(
             MeetingRepository meetingRepository,
             MemberRepository memberRepository,
             MateRepository mateRepository,
             NotificationRepository notificationRepository,
-            EtaRepository etaRepository
+            EtaRepository etaRepository,
+            JwtTokenProvider jwtTokenProvider
     ) {
         this.meetingRepository = meetingRepository;
         this.memberRepository = memberRepository;
         this.mateRepository = mateRepository;
         this.notificationRepository = notificationRepository;
         this.etaRepository = etaRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public Meeting generateMeeting() {
@@ -62,8 +68,10 @@ public class FixtureGenerator {
         return generateMember(providerId, nickname, deviceToken);
     }
 
-    public Member generateMember(String providerId, String nickname, String deviceToken) {
-        return memberRepository.save(new Member(providerId, nickname, "imageurl", new DeviceToken(deviceToken)));
+    public Member generateMember(String providerId, String rawNickname, String rawDeviceToken) {
+        Nickname nickname = new Nickname(rawNickname);
+        DeviceToken deviceToken = new DeviceToken(rawDeviceToken);
+        return memberRepository.save(new Member(providerId, nickname, "imageurl", deviceToken));
     }
 
     public Mate generateMate() {
@@ -103,5 +111,9 @@ public class FixtureGenerator {
                 notificationStatus,
                 new FcmTopic(mate.getMeeting())
         ));
+    }
+
+    public String generateAccessTokenValueByMember(Member member) {
+        return "Bearer access-token=" + jwtTokenProvider.createAccessToken(member.getId()).getValue();
     }
 }

@@ -1,13 +1,12 @@
 package com.ody.member.domain;
 
 import com.ody.auth.token.RefreshToken;
+import com.ody.mate.domain.Nickname;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -18,12 +17,6 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.SQLDelete;
 
-@Table(uniqueConstraints = {
-        @UniqueConstraint(
-                name = "uniqueProviderTypeAndProviderId",
-                columnNames = {"providerType", "providerId"}
-        )
-})
 @Entity
 @Getter
 @Filter(name = "deletedMemberFilter", condition = "deleted_at IS NULL")
@@ -42,7 +35,7 @@ public class Member {
     private AuthProvider authProvider;
 
     @NotNull
-    private String nickname;
+    private Nickname nickname;
 
     @NotNull
     private String imageUrl;
@@ -55,20 +48,8 @@ public class Member {
 
     private LocalDateTime deletedAt;
 
-    public Member(String providerId, String nickname, String imageUrl, DeviceToken deviceToken) {
+    public Member(String providerId, Nickname nickname, String imageUrl, DeviceToken deviceToken) {
         this(null, new AuthProvider(providerId), nickname, imageUrl, deviceToken, null, null);
-    }
-
-    public String getDeviceTokenValue() {
-        return deviceToken.getValue();
-    }
-
-    public ProviderType getProviderType() {
-        return authProvider.getProviderType();
-    }
-
-    public String getProviderId() {
-        return authProvider.getProviderId();
     }
 
     public boolean isLogout() {

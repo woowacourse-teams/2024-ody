@@ -7,28 +7,27 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingRoomBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
-import com.mulberry.ody.presentation.common.image.KakaoImageShareHelper
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.room.etadashboard.EtaDashboardFragment
 import com.mulberry.ody.presentation.room.log.NotificationLogFragment
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MeetingRoomActivity :
     BindingActivity<ActivityMeetingRoomBinding>(R.layout.activity_meeting_room),
     BackListener {
+    @Inject
+    lateinit var viewModelFactory: MeetingRoomViewModel.MeetingViewModelFactory
+
     private val viewModel: MeetingRoomViewModel by viewModels<MeetingRoomViewModel> {
-        MeetingRoomViewModelFactory(
-            analyticsHelper,
-            getMeetingId(),
-            application.matesEtaRepository,
-            application.notificationLogRepository,
-            application.meetingRepository,
-            application.imageStorage,
-            KakaoImageShareHelper(this),
-        )
+        MeetingRoomViewModel.provideFactory(viewModelFactory, this, meetingId = getMeetingId())
     }
+
     private val fragments: Map<String, Fragment> by lazy {
         mapOf(
             NAVIGATE_TO_ETA_DASHBOARD to EtaDashboardFragment(),

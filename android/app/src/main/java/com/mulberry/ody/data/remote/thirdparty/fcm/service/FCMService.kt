@@ -2,13 +2,20 @@ package com.mulberry.ody.data.remote.thirdparty.fcm.service
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.mulberry.ody.OdyApplication
 import com.mulberry.ody.domain.model.NotificationType
+import com.mulberry.ody.domain.repository.ody.FCMTokenRepository
+import com.mulberry.ody.presentation.notification.NotificationHelper
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FCMService : FirebaseMessagingService() {
-    private val odyApplication by lazy { applicationContext as OdyApplication }
-    private val notificationHelper by lazy { odyApplication.notificationHelper }
+    @Inject
+    lateinit var fcmTokenRepository: FCMTokenRepository
+
+    @Inject
+    lateinit var notificationHelper: NotificationHelper
 
     override fun onMessageReceived(message: RemoteMessage) {
         val type =
@@ -19,7 +26,7 @@ class FCMService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         runBlocking {
-            odyApplication.fcmTokenRepository.postFCMToken(token)
+            fcmTokenRepository.postFCMToken(token)
         }
     }
 }
