@@ -65,10 +65,6 @@ public class Meeting extends BaseEntity {
         return TimeUtil.trimSecondsAndNanos(LocalDateTime.of(date, time));
     }
 
-    public LocalDateTime get30MinutesBeforeMeetingTime() {
-        return getMeetingTime().minusMinutes(30L);
-    }
-
     public String getTargetAddress() {
         return target.getAddress();
     }
