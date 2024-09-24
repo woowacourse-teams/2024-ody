@@ -54,18 +54,16 @@ class NotificationHelper(private val context: Context) {
                 NotificationType.NUDGE,
                 NotificationType.ETA_NOTICE,
                 -> NAVIGATE_TO_ETA_DASHBOARD
-                NotificationType.DEFAULT -> null
+                NotificationType.DEFAULT -> ""
             }
 
-        return navigationTarget?.let { target ->
-            val intent = MeetingRoomActivity.getIntent(context, meetingId.toLong(), target)
-            PendingIntent.getActivity(
-                context,
-                NOTIFICATION_REQUEST_CODE,
-                intent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
-            )
-        }
+        val intent = MeetingRoomActivity.getIntent(context, meetingId.toLong(), navigationTarget)
+        return PendingIntent.getActivity(
+            context,
+            NOTIFICATION_REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
     }
 
     private fun showNotification(
