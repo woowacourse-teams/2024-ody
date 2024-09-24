@@ -5,14 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * DistanceMatrixResponse 가이드 문서
- * @link <a href="https://developers.google.com/maps/documentation/distance-matrix/distance-matrix?hl=ko#DistanceMatrixResponse"></a>
- *
- * DistanceMatrixStatus 가이드 문서
- * @link <a href="https://developers.google.com/maps/documentation/distance-matrix/distance-matrix?hl=ko#DistanceMatrixStatus"></a>
- *
- * DistanceMatrixElementStatus 가이드 문서
- * @link <a href="https://developers.google.com/maps/documentation/distance-matrix/distance-matrix?hl=ko#DistanceMatrixElementStatus"></a>
+ * @link <a href="https://developers.google.com/maps/documentation/distance-matrix/distance-matrix?hl=ko#DistanceMatrixResponse">DistanceMatrixResponse 가이드 문서</a>
+ * @link <a href="https://developers.google.com/maps/documentation/distance-matrix/distance-matrix?hl=ko#DistanceMatrixStatus">DistanceMatrixStatus 가이드 문서</a>
+ * @link <a href="https://developers.google.com/maps/documentation/distance-matrix/distance-matrix?hl=ko#DistanceMatrixElementStatus">DistanceMatrixElementStatus 가이드 문서</a>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record DistanceMatrixResponse(
