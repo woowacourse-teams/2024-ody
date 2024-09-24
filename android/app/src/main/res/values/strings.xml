@@ -4,8 +4,9 @@
     <!-- fcm_notification -->
     <string name="fcm_notification_entry">%s (이)가 들어왔어요.</string>
     <string name="fcm_notification_departure_reminder">%s (이)가 출발할 시간이에요!</string>
-    <string name="fcm_notification_departure">%s (이)가 출발했어요.</string>
+    <string name="fcm_notification_member_deletion">%s (이)가 출발했어요.</string>
     <string name="fcm_notification_nudge">"\uD83D\uDC40 %s(이)가 재촉해요."</string>
+    <string name="fcm_notification_eta_notice">"%s 약속에 참여한 친구 위치를 확인해 보세요!"</string>
 
     <!-- item_notification_log.xml -->
     <string name="item_notification_entry">(이)가 들어왔어요.</string>
