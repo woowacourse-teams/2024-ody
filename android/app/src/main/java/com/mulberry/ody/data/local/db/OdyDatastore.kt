@@ -3,6 +3,7 @@ package com.mulberry.ody.data.local.db
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -57,10 +58,23 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
+    suspend fun setIsFirstSeenEtaDashboard(isFirstSeenEtaDashboard: Boolean) {
+        context.dataStore.edit {
+            it[IS_FIRST_SEEN_ETA_DASHBOARD] = isFirstSeenEtaDashboard
+        }
+    }
+
+    fun getIsFirstSeenEtaDashboard(): Flow<Boolean> {
+        return context.dataStore.data.map { preferences ->
+            preferences[IS_FIRST_SEEN_ETA_DASHBOARD] ?: true
+        }
+    }
+
     companion object {
         private const val ODY_KEY = "ody_key"
         private val FCM_TOKEN = stringPreferencesKey("fcmToken")
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+        private val IS_FIRST_SEEN_ETA_DASHBOARD = booleanPreferencesKey("is_first_seen_eta_dashboard")
     }
 }
