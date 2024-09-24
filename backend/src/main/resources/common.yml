@@ -14,6 +14,10 @@ odsay:
   api-key: ENC(tHrCTqN0WANDzm2bOdUftqRCbiz64bAyY48Q3FsvMfhRNAnAbpAru/ebTLbwXoDfIcZuSPUFczw=)
   # TODO: 임시로 개인 api-key 추가 -> 팀 key로 변경 필요
 
+google:
+  maps:
+    api-key: ENC(ISqnJHlmWWslx8mw0KghjXcJsTcxZ97AoylekuQiZN3RGyolV7oejAM3ejRtUllp)
+
 auth:
   access-key: ENC(jp1TJCM6l22zIzInTUvt9VXrb1WhNm1zY3dFgTSj6ad3585f5K7Q8A==)
   access-expiration: ENC(RA/POzGT/Baq/ba9MxmMAQ==)
