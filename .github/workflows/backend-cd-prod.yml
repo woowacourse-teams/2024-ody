@@ -68,7 +68,8 @@ jobs:
 
     strategy:
       matrix:
-        environment: [ prod, prod-a, prod-b ]
+#        environment: [ prod, prod-a, prod-b ]
+        environment: [ prod-a, prod-b ]
 
     steps:
       - name: Login to Docker Hub
@@ -86,7 +87,7 @@ jobs:
         run: |
           docker stop $DOCKER_CONTAINER_NAME || true
           docker rm $DOCKER_CONTAINER_NAME || true     
-          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
+          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
 
       - name: Check Docker Process
         run: docker ps
