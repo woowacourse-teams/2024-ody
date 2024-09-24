@@ -74,7 +74,7 @@ public class Notification extends BaseEntity {
                 mate,
                 NotificationType.DEPARTURE_REMINDER,
                 sendAt,
-                NotificationStatus.DONE,
+                NotificationStatus.PENDING,
                 fcmTopic
         );
     }
