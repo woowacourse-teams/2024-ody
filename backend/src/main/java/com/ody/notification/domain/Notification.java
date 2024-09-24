@@ -59,13 +59,13 @@ public class Notification extends BaseEntity {
         this(null, mate, type, sendAt, status, fcmTopic);
     }
 
-    public static Notification createEntry(Mate mate) {
+    public static Notification createEntry(Mate mate, FcmTopic fcmTopic) {
         return new Notification(
                 mate,
                 NotificationType.ENTRY,
                 LocalDateTime.now(),
                 NotificationStatus.PENDING,
-                null
+                fcmTopic
         );
     }
 

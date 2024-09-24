@@ -41,14 +41,14 @@ public class NotificationService {
 
     @Transactional
     public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
-        saveAndSendEntryNotification(mate);
         FcmTopic fcmTopic = new FcmTopic(meeting);
+        saveAndSendEntryNotification(mate, fcmTopic);
         fcmSubscriber.subscribeTopic(fcmTopic, deviceToken);
         saveAndSendDepartureReminderNotification(meeting, mate, fcmTopic);
     }
 
-    private void saveAndSendEntryNotification(Mate mate) {
-        Notification notification = Notification.createEntry(mate);
+    private void saveAndSendEntryNotification(Mate mate, FcmTopic fcmTopic) {
+        Notification notification = Notification.createEntry(mate, fcmTopic);
         saveAndSendNotification(notification);
     }
 
