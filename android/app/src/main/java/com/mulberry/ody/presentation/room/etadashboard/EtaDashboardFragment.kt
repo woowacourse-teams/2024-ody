@@ -11,7 +11,10 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.annotation.StringRes
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
+import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.databinding.FragmentEtaDashboardBinding
 import com.mulberry.ody.databinding.LayoutMissingTooltipBinding
 import com.mulberry.ody.presentation.common.binding.BindingFragment
@@ -22,8 +25,10 @@ import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
 import com.mulberry.ody.presentation.room.etadashboard.listener.MissingToolTipListener
 import com.mulberry.ody.presentation.room.etadashboard.listener.ShareListener
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EtaDashboardFragment :
@@ -33,6 +38,7 @@ class EtaDashboardFragment :
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
     private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this, viewModel) }
     private val parentActivity: Activity by lazy { requireActivity() }
+    @Inject lateinit var odyDatastore: OdyDatastore
 
     override fun onViewCreated(
         view: View,
@@ -47,10 +53,10 @@ class EtaDashboardFragment :
 
     private fun initializeGuide() {
         lifecycleScope.launch {
-            val isFirstSeenEtaDashboard = application.odyDatastore.getIsFirstSeenEtaDashboard().first()
+            val isFirstSeenEtaDashboard = odyDatastore.getIsFirstSeenEtaDashboard().first()
             if (isFirstSeenEtaDashboard) {
                 startEtaDashboardGuide()
-                application.odyDatastore.setIsFirstSeenEtaDashboard(false)
+                odyDatastore.setIsFirstSeenEtaDashboard(false)
             }
         }
     }
