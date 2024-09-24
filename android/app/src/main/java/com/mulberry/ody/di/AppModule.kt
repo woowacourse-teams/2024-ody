@@ -3,8 +3,6 @@ package com.mulberry.ody.di
 import android.content.Context
 import androidx.work.WorkManager
 import com.mulberry.ody.presentation.common.PermissionHelper
-import com.mulberry.ody.presentation.common.image.ImageShareHelper
-import com.mulberry.ody.presentation.common.image.KakaoImageShareHelper
 import com.mulberry.ody.presentation.notification.NotificationHelper
 import dagger.Module
 import dagger.Provides
