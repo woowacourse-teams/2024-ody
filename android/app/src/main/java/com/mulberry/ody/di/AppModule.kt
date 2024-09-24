@@ -39,12 +39,4 @@ object AppModule {
     ): PermissionHelper {
         return PermissionHelper(context)
     }
-
-    @Provides
-    @Singleton
-    fun provideImageHelper(
-        @ApplicationContext context: Context,
-    ): ImageShareHelper {
-        return KakaoImageShareHelper(context)
-    }
 }
