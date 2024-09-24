@@ -6,7 +6,6 @@ import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDestinationBinding
 import com.mulberry.ody.domain.model.GeoLocation
-import com.mulberry.ody.presentation.address.AddressSearchDialog
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.creation.MeetingCreationInfoType
@@ -39,7 +38,9 @@ class MeetingDestinationFragment :
         }
     }
 
-    override fun onSearch() = AddressSearchDialog().show(childFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+    override fun onSearch() {
+        //AddressSearchDialog().show(childFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+    }
 
     override fun onReceive(geoLocation: GeoLocation) {
         viewModel.destinationGeoLocation.value = geoLocation
@@ -48,9 +49,5 @@ class MeetingDestinationFragment :
     override fun onResume() {
         super.onResume()
         viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.DESTINATION
-    }
-
-    companion object {
-        private const val ADDRESS_SEARCH_DIALOG_TAG = "address_search_dialog"
     }
 }
