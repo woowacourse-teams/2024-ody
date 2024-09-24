@@ -14,7 +14,6 @@ env:
 
 jobs:
   build-and-push:
-
     runs-on: ubuntu-latest
 
     defaults:
@@ -62,57 +61,15 @@ jobs:
       - name: Docker Image Build And Push
         run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod -f Dockerfile . --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} --push
 
-  pull-and-deploy-prod:
+  pull-and-deploy:
     needs: build-and-push
-    runs-on: prod
-    steps:
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Clean Up Legacy Image And Pull
-        run: |
-          docker image prune -a -f
-          docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
+    runs-on: ${{ matrix.environment }}
 
-      - name: Set up Container And Run Docker Image
-        run: |
-          docker stop $DOCKER_CONTAINER_NAME || true
-          docker rm $DOCKER_CONTAINER_NAME || true     
-          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
+    strategy:
+      matrix:
+        environment: [ prod, prod-a, prod-b ]
 
-      - name: Check Docker Process
-        run: docker ps
-
-  pull-and-deploy-prod-a:
-    needs: pull-and-deploy-prod
-    runs-on: prod-a
-    steps:
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Clean Up Legacy Image And Pull
-        run: |
-          docker image prune -a -f
-          docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
-
-      - name: Set up Container And Run Docker Image
-        run: |
-          docker stop $DOCKER_CONTAINER_NAME || true
-          docker rm $DOCKER_CONTAINER_NAME || true     
-          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
-
-      - name: Check Docker Process
-        run: docker ps
-
-  pull-and-deploy-prod-b:
-    needs: pull-and-deploy-prod-a
-    runs-on: prod-b
     steps:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
