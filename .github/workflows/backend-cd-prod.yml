@@ -3,9 +3,10 @@ name: backend-cd-prod
 on:
   push:
     branches:
-      - main
-    paths:
-      - backend/**
+#      - main
+      - feature/561
+#    paths:
+#      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
@@ -22,8 +23,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
+#        with:
+#          ref: main
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
