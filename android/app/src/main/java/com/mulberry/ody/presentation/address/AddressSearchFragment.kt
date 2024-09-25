@@ -32,7 +32,7 @@ class AddressSearchFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        initializeLocations()
+        initializeAddressAdapter()
         initializeBinding()
         initializeObserve()
         binding.etAddressSearchKeyword.setOnKeyListener { _, keyCode, event ->
@@ -44,7 +44,7 @@ class AddressSearchFragment :
         }
     }
 
-    private fun initializeLocations() {
+    private fun initializeAddressAdapter() {
         binding.rvAddress.adapter = adapter
     }
 
