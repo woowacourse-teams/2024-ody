@@ -90,22 +90,24 @@ class MeetingJoinViewModel
         ) {
             val meetingTimeMilliSeconds = meetingDateTime.toMilliSeconds(LOCAL_ZONE_ID)
             val endReserveTimeMilliSeconds = meetingTimeMilliSeconds + END_RESERVE_MILLI_SECOND
-            var currentReserveTimeMilliSeconds = meetingTimeMilliSeconds + START_RESERVE_MILLI_SECOND
+            val startReserveTimeMilliSeconds = meetingTimeMilliSeconds + START_RESERVE_MILLI_SECOND
 
-            while (currentReserveTimeMilliSeconds <= endReserveTimeMilliSeconds) {
-                matesEtaRepository.reserveEtaFetchingJob(meetingId, currentReserveTimeMilliSeconds)
-                currentReserveTimeMilliSeconds += RESERVE_INTERVAL
-            }
+            val nowMilliSeconds = LocalDateTime.now().toMilliSeconds(LOCAL_ZONE_ID) + 3 * MILLI_SECOND_OF_SECOND
+            val initialTimeMilliSeconds =
+                if (nowMilliSeconds > startReserveTimeMilliSeconds) nowMilliSeconds else startReserveTimeMilliSeconds
+
+            matesEtaRepository.reserveEtaFetchingJob(meetingId, initialTimeMilliSeconds, endReserveTimeMilliSeconds, RESERVE_INTERVAL)
         }
 
         companion object {
             private const val TAG = "MeetingJoinViewModel"
 
             private const val LOCAL_ZONE_ID = "Asia/Seoul"
-            private const val MILLI_SECOND_OF_MINUTE = 60_000
+            private const val MILLI_SECOND_OF_SECOND = 1_000L
+            private const val MILLI_SECOND_OF_MINUTE = MILLI_SECOND_OF_SECOND * 60
             private const val START_RESERVE_MILLI_SECOND = -30 * MILLI_SECOND_OF_MINUTE
             private const val END_RESERVE_MILLI_SECOND = 1 * MILLI_SECOND_OF_MINUTE
-            private const val RESERVE_INTERVAL = 10_000
+            private const val RESERVE_INTERVAL = 10 * MILLI_SECOND_OF_MINUTE
         }
     }
 
