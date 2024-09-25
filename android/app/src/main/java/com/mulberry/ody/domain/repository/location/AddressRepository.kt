@@ -4,5 +4,8 @@ import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.model.Address
 
 interface AddressRepository {
-    suspend fun fetchAddresses(keyword: String): ApiResult<List<Address>>
+    suspend fun fetchAddresses(
+        keyword: String,
+        pageSize: Int,
+    ): ApiResult<List<Address>>
 }

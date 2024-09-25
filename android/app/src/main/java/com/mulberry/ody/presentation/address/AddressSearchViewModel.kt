@@ -49,7 +49,7 @@ class AddressSearchViewModel
 
             viewModelScope.launch {
                 startLoading()
-                addressRepository.fetchAddresses(addressSearchKeyword)
+                addressRepository.fetchAddresses(addressSearchKeyword, PAGE_SIZE)
                     .onSuccess {
                         addresses.value = it
                     }.onFailure { code, errorMessage ->
@@ -74,5 +74,6 @@ class AddressSearchViewModel
 
         companion object {
             private const val TAG = "AddressSearchViewModel"
+            private const val PAGE_SIZE = 10
         }
     }

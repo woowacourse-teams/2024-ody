@@ -10,7 +10,10 @@ import javax.inject.Inject
 class KakaoAddressRepository
     @Inject
     constructor(private val service: KakaoAddressService) : AddressRepository {
-        override suspend fun fetchAddresses(keyword: String): ApiResult<List<Address>> {
-            return service.fetchAddresses(keyword).map { it.toAddresses() }
+        override suspend fun fetchAddresses(
+            keyword: String,
+            pageSize: Int,
+        ): ApiResult<List<Address>> {
+            return service.fetchAddresses(keyword, pageSize).map { it.toAddresses() }
         }
     }
