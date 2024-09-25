@@ -26,7 +26,7 @@ import org.hibernate.annotations.SQLDelete;
 @SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
 @Table(indexes = {
         @Index(name = "index_member_device_token", columnList = "device_token"),
-        @Index(name = "index_member_auth_provider", columnList = "provider_type, provider_id")
+        @Index(name = "index_member_auth_provider", columnList = "provider_id, provider_type")
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
