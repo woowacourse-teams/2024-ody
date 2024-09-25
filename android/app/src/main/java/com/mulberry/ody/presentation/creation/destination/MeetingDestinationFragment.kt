@@ -15,9 +15,8 @@ import com.mulberry.ody.presentation.creation.MeetingCreationViewModel
 
 class MeetingDestinationFragment :
     BindingFragment<FragmentMeetingDestinationBinding>(
-        R.layout.fragment_meeting_destination,
-    ),
-    AddressSearchListener {
+        R.layout.fragment_meeting_destination
+    ) {
     private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
 
     override fun onViewCreated(
@@ -31,25 +30,13 @@ class MeetingDestinationFragment :
 
     private fun initializeBinding() {
         binding.vm = viewModel
-        binding.addressSearchListener = this
+        binding.addressSearchListener = activity as AddressSearchListener
     }
 
     private fun initializeObserve() {
         viewModel.invalidDestinationEvent.observe(viewLifecycleOwner) {
             showSnackBar(R.string.invalid_address)
         }
-    }
-
-    override fun onSearch() {
-        parentFragmentManager.commit {
-            add(R.id.fcv_creation, AddressSearchFragment())
-            setReorderingAllowed(true)
-            addToBackStack(null)
-        }
-    }
-
-    override fun onReceive(address: Address) {
-        viewModel.destinationAddress.value = address
     }
 
     override fun onResume() {

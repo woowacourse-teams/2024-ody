@@ -4,13 +4,18 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingCreationBinding
+import com.mulberry.ody.domain.model.Address
+import com.mulberry.ody.presentation.address.AddressSearchFragment
+import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.ViewPagerAdapter
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
@@ -25,7 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MeetingCreationActivity :
     BindingActivity<ActivityMeetingCreationBinding>(R.layout.activity_meeting_creation),
-    BackListener {
+    BackListener,
+    AddressSearchListener {
     private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel>()
     private val fragments: List<Fragment> by lazy {
         listOf(
@@ -120,6 +126,18 @@ class MeetingCreationActivity :
             viewModel.navigateToIntro()
             finish()
         }
+    }
+
+    override fun onSearch() {
+        supportFragmentManager.commit {
+            add(R.id.fcv_creation, AddressSearchFragment())
+            setReorderingAllowed(true)
+            addToBackStack(null)
+        }
+    }
+
+    override fun onReceive(address: Address) {
+        viewModel.destinationAddress.value = address
     }
 
     companion object {
