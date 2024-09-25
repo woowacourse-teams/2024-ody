@@ -9,6 +9,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.mulberry.ody.domain.model.AuthToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.UUID
 
 class OdyDatastore(private val context: Context) {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = ODY_KEY)
@@ -54,6 +55,33 @@ class OdyDatastore(private val context: Context) {
         context.dataStore.edit {
             it.remove(ACCESS_TOKEN)
             it.remove(REFRESH_TOKEN)
+        }
+    }
+
+    suspend fun setMeetingJobUUID(
+        meetingId: Long,
+        uuid: String,
+    ) {
+        context.dataStore.edit {
+            it[stringPreferencesKey(meetingId.toString())] = uuid
+        }
+    }
+
+    fun getMeetingJobUUID(meetingId: Long): Flow<UUID?> =
+        context.dataStore.data.map { preferences ->
+            val key = stringPreferencesKey(meetingId.toString())
+            val uuid =
+                if (preferences.contains(key)) {
+                    UUID.fromString(preferences[key])
+                } else {
+                    null
+                }
+            uuid
+        }
+
+    suspend fun removeMeetingJobUUID(meetingId: Long) {
+        context.dataStore.edit {
+            it.remove(stringPreferencesKey(meetingId.toString()))
         }
     }
 
