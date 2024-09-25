@@ -1,7 +1,9 @@
 package com.mulberry.ody.presentation.address
 
+import com.mulberry.ody.addresses
 import com.mulberry.ody.fake.FakeAnalyticsHelper
-import com.mulberry.ody.fake.FakeGeoLocationRepository
+import com.mulberry.ody.fake.FakeAddressRepository
+import com.mulberry.ody.presentation.address.model.toAddressUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
 import com.mulberry.ody.util.getOrAwaitValue
@@ -22,20 +24,20 @@ class AddressSearchViewModelTest {
         viewModel =
             AddressSearchViewModel(
                 analyticsHelper = FakeAnalyticsHelper,
-                locationRepository = FakeGeoLocationRepository,
+                addressRepository = FakeAddressRepository,
             )
     }
 
     @Test
     fun `주소에 대한 위경도를 받아온다`() {
         // given
-        val address = "인천광역시 남동구"
+        viewModel.addressSearchKeyword.value = "사당역"
 
         // when
-        viewModel.fetchGeoLocation(address)
+        viewModel.searchAddress()
 
         // then
-        val actual = viewModel.location.getOrAwaitValue()
-        assertThat(actual.address).isEqualTo(address)
+        val actual = viewModel.addressUiModels.getOrAwaitValue()
+        assertThat(actual).isEqualTo(addresses.toAddressUiModels())
     }
 }

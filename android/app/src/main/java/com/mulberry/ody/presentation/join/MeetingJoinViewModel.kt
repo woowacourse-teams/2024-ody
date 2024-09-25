@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
-import com.mulberry.ody.domain.model.Location
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.ody.JoinRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
@@ -33,30 +33,27 @@ class MeetingJoinViewModel
         private val joinRepository: JoinRepository,
         private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel(), MeetingJoinListener {
-        val departureLocation: MutableLiveData<Location> = MutableLiveData()
-        val departureAddress: LiveData<String> = departureLocation.map { it.address }
+        val departureAddress: MutableLiveData<Address> = MutableLiveData()
 
         private val _invalidDepartureEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
         val invalidDepartureEvent: SingleLiveData<Unit> get() = _invalidDepartureEvent
-        val isValidDeparture: LiveData<Boolean> = departureLocation.map { isValidDeparturePoint() }
+        val isValidDeparture: LiveData<Boolean> = departureAddress.map { isValidDeparturePoint() }
 
         private val _navigateAction: MutableSingleLiveData<MeetingJoinNavigateAction> =
             MutableSingleLiveData()
         val navigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _navigateAction
 
         fun joinMeeting(inviteCode: String) {
-            val departureAddress = departureLocation.value?.address ?: return
-            val departureLatitude = departureLocation.value?.latitude ?: return
-            val departureLongitude = departureLocation.value?.longitude ?: return
+            val departureAddress = departureAddress.value ?: return
 
             viewModelScope.launch {
                 startLoading()
                 joinRepository.postMates(
                     MeetingJoinInfo(
                         inviteCode,
-                        departureAddress,
-                        departureLatitude,
-                        departureLongitude,
+                        departureAddress.roadNameAddress,
+                        departureAddress.latitude,
+                        departureAddress.longitude,
                     ),
                 ).onSuccess {
                     reserveEtaFetchingJobs(it.meetingId, it.meetingDateTime)
@@ -74,8 +71,8 @@ class MeetingJoinViewModel
         }
 
         private fun isValidDeparturePoint(): Boolean {
-            val departureGeoLocation = departureLocation.value ?: return false
-            return AddressValidator.isValid(departureGeoLocation.address).also {
+            val departureAddress = departureAddress.value ?: return false
+            return AddressValidator.isValid(departureAddress.roadNameAddress).also {
                 if (!it) _invalidDepartureEvent.setValue(Unit)
             }
         }

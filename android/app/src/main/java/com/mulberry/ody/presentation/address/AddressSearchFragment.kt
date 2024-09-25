@@ -7,9 +7,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentAddressSearchBinding
-import com.mulberry.ody.presentation.address.adapter.LocationsAdapter
+import com.mulberry.ody.presentation.address.adapter.AddressesAdapter
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
-import com.mulberry.ody.presentation.address.listener.LocationListener
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.common.listener.BackListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class AddressSearchFragment :
     BindingFragment<FragmentAddressSearchBinding>(R.layout.fragment_address_search), BackListener {
     private val viewModel by viewModels<AddressSearchViewModel>()
-    private val adapter by lazy { LocationsAdapter(viewModel) }
+    private val adapter by lazy { AddressesAdapter(viewModel) }
 
     private val onBackPressedCallback: OnBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
@@ -35,7 +34,7 @@ class AddressSearchFragment :
         initializeObserve()
         binding.etAddressSearchKeyword.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                viewModel.searchLocation()
+                viewModel.searchAddress()
                 true
             }
             false
@@ -64,7 +63,7 @@ class AddressSearchFragment :
         viewModel.addressUiModels.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
-        viewModel.locationSelectEvent.observe(viewLifecycleOwner) {
+        viewModel.addressSelectEvent.observe(viewLifecycleOwner) {
             (parentFragment as? AddressSearchListener)?.onReceive(it)
             (activity as? AddressSearchListener)?.onReceive(it)
             onBack()

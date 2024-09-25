@@ -5,26 +5,26 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.mulberry.ody.databinding.ItemAddressSearchBinding
-import com.mulberry.ody.presentation.address.listener.LocationListener
-import com.mulberry.ody.presentation.address.listener.LocationViewHolder
+import com.mulberry.ody.presentation.address.listener.AddressListener
+import com.mulberry.ody.presentation.address.listener.AddressViewHolder
 import com.mulberry.ody.presentation.address.model.AddressUiModel
 
-class LocationsAdapter(
-    private val locationListener: LocationListener,
-) : ListAdapter<AddressUiModel, LocationViewHolder>(diffUtil) {
+class AddressesAdapter(
+    private val addressListener: AddressListener,
+) : ListAdapter<AddressUiModel, AddressViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): LocationViewHolder {
+    ): AddressViewHolder {
         val binding = ItemAddressSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return LocationViewHolder(binding)
+        return AddressViewHolder(binding)
     }
 
     override fun onBindViewHolder(
-        holder: LocationViewHolder,
+        holder: AddressViewHolder,
         position: Int,
     ) {
-        holder.bind(getItem(position), locationListener)
+        holder.bind(getItem(position), addressListener)
     }
 
     companion object {

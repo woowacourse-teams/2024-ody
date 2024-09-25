@@ -6,7 +6,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDestinationBinding
-import com.mulberry.ody.domain.model.Location
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.address.AddressSearchFragment
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.binding.BindingFragment
@@ -48,8 +48,8 @@ class MeetingDestinationFragment :
         }
     }
 
-    override fun onReceive(location: Location) {
-        viewModel.destinationLocation.value = location
+    override fun onReceive(address: Address) {
+        viewModel.destinationAddress.value = address
     }
 
     override fun onResume() {

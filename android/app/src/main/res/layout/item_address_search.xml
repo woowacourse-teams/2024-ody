@@ -11,14 +11,14 @@
 
         <variable
             name="locationListener"
-            type="com.mulberry.ody.presentation.address.listener.LocationListener" />
+            type="com.mulberry.ody.presentation.address.listener.AddressListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/cream"
-        android:onClick="@{() -> locationListener.onClickLocationItem(address.id)}"
+        android:onClick="@{() -> locationListener.onClickAddressItem(address.id)}"
         android:paddingVertical="18dp">
 
         <ImageView

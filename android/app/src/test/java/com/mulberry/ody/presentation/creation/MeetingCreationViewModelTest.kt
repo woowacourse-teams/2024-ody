@@ -1,6 +1,7 @@
 package com.mulberry.ody.presentation.creation
 
-import com.mulberry.ody.domain.model.Location
+import com.mulberry.ody.Address
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.inviteCode
@@ -173,7 +174,7 @@ class MeetingCreationViewModelTest {
         viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.DESTINATION
 
         // when
-        viewModel.destinationLocation.value = Location(address = "인천광역시 남동구", "0.0", "0.0")
+        viewModel.destinationAddress.value = Address(0, "인천광역시 남동구")
 
         // then
         val actual = viewModel.isValidInfo.getOrAwaitValue()
@@ -187,7 +188,7 @@ class MeetingCreationViewModelTest {
         viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.DESTINATION
 
         // when
-        viewModel.destinationLocation.value = Location(address = "부산광역시 동구", "0.0", "0.0")
+        viewModel.destinationAddress.value = Address(0, "부산광역시 동구")
 
         // then
         val actual = viewModel.isValidInfo.getOrAwaitValue()
@@ -199,7 +200,7 @@ class MeetingCreationViewModelTest {
         viewModel.meetingDate.value = LocalDate.of(2030, 7, 28)
         viewModel.meetingHour.value = 18
         viewModel.meetingMinute.value = 0
-        viewModel.destinationLocation.value = Location("인천광역시 남동구", "10.0", "10.0")
+        viewModel.destinationAddress.value = Address(id = 0, roadNameAddress = "인천광역시 남동구")
         viewModel.isValidInfo.value = true
     }
 }

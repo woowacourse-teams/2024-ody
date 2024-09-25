@@ -1,9 +1,9 @@
 package com.mulberry.ody.presentation.address.listener
 
-import com.mulberry.ody.domain.model.Location
+import com.mulberry.ody.domain.model.Address
 
 interface AddressSearchListener {
     fun onSearch()
 
-    fun onReceive(location: Location)
+    fun onReceive(address: Address)
 }

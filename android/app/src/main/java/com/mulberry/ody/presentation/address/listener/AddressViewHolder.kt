@@ -4,13 +4,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mulberry.ody.databinding.ItemAddressSearchBinding
 import com.mulberry.ody.presentation.address.model.AddressUiModel
 
-class LocationViewHolder(private val binding: ItemAddressSearchBinding) :
+class AddressViewHolder(private val binding: ItemAddressSearchBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
         addressUiModel: AddressUiModel,
-        locationListener: LocationListener,
+        addressListener: AddressListener,
     ) {
         binding.address = addressUiModel
-        binding.locationListener = locationListener
+        binding.locationListener = addressListener
     }
 }

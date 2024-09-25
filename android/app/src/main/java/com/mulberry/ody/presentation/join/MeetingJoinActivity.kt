@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import androidx.fragment.app.commit
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingJoinBinding
-import com.mulberry.ody.domain.model.Location
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.address.AddressSearchFragment
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.binding.BindingActivity
@@ -104,8 +104,8 @@ class MeetingJoinActivity :
         }
     }
 
-    override fun onReceive(location: Location) {
-        viewModel.departureLocation.value = location
+    override fun onReceive(address: Address) {
+        viewModel.departureAddress.value = address
     }
 
     companion object {
