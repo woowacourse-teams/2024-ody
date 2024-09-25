@@ -2,6 +2,7 @@ package com.ody.util;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 public class TimeUtil {
 
     private static final int ROUND_DIGITS = 0;
+
+    public static final ZoneOffset KST_OFFSET = ZoneOffset.ofHours(9);
 
     public static LocalDateTime nowWithTrim() {
         return trimSecondsAndNanos(LocalDateTime.now());

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
@@ -24,13 +25,20 @@ import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
+import com.ody.notification.domain.message.GroupMessage;
 import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.scheduling.TaskScheduler;
 
 class MeetingServiceTest extends BaseServiceTest {
 
@@ -48,6 +56,9 @@ class MeetingServiceTest extends BaseServiceTest {
 
     @Autowired
     private FixtureGenerator fixtureGenerator;
+
+    @MockBean
+    private TaskScheduler taskScheduler;
 
     @DisplayName("내 약속 목록 조회 시 오름차순 정렬한다.")
     @Test
@@ -156,6 +167,33 @@ class MeetingServiceTest extends BaseServiceTest {
                 () -> assertThat(response.targetLatitude()).isEqualTo(request.targetLatitude()),
                 () -> assertThat(response.targetLongitude()).isEqualTo(request.targetLongitude()),
                 () -> assertThat(response.inviteCode()).isEqualTo(generatedInviteCodeByRequest)
+        );
+    }
+
+    @DisplayName("약속 생성 후 약속 시간 30분 전에 ETA 공지 알림이 예약된다.")
+    @Test
+    void saveAndScheduleEtaNotice() {
+        LocalDateTime meetingDateTime = TimeUtil.nowWithTrim().plusMinutes(40);
+        MeetingSaveRequestV1 request = new MeetingSaveRequestV1(
+                "데모데이 회식",
+                meetingDateTime.toLocalDate(),
+                meetingDateTime.toLocalTime(),
+                Fixture.TARGET_LOCATION.getAddress(),
+                Fixture.TARGET_LOCATION.getLatitude(),
+                Fixture.TARGET_LOCATION.getLongitude()
+        );
+        meetingService.saveV1(request);
+
+        ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
+        ArgumentCaptor<Instant> timeCaptor = ArgumentCaptor.forClass(Instant.class);
+
+        Mockito.verify(taskScheduler).schedule(runnableCaptor.capture(), timeCaptor.capture());
+        Instant scheduledTime = timeCaptor.getValue();
+        runnableCaptor.getValue().run();
+
+        assertAll(
+                () -> assertThat(meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET)).isEqualTo(scheduledTime),
+                () -> Mockito.verify(fcmPushSender, Mockito.times(1)).sendNoticeMessage(any(GroupMessage.class))
         );
     }
 

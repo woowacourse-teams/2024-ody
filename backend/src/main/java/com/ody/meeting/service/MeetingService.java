@@ -15,13 +15,21 @@ import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
+import com.ody.notification.domain.NotificationType;
+import com.ody.notification.domain.message.GroupMessage;
+import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
+import com.ody.util.TimeUtil;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,16 +40,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MeetingService {
 
+    private static final long ETA_NOTICE_TIME_DEFER = 30L;
+
     private final MateService mateService;
     private final MeetingRepository meetingRepository;
     private final MateRepository mateRepository;
     private final NotificationService notificationService;
+    private final FcmPushSender fcmPushSender;
+    private final TaskScheduler taskScheduler;
 
     @Transactional
     public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
         String inviteCode = generateUniqueInviteCode();
         Meeting meeting = meetingRepository.save(meetingSaveRequestV1.toMeeting(inviteCode));
+        scheduleEtaNotice(meeting);
         return MeetingSaveResponseV1.from(meeting);
+    }
+
+    private void scheduleEtaNotice(Meeting meeting) {
+        GroupMessage noticeMessage = GroupMessage.createMeetingNotice(meeting, NotificationType.ETA_NOTICE);
+        LocalDateTime etaNoticeTime = meeting.getMeetingTime().minusMinutes(ETA_NOTICE_TIME_DEFER);
+        Instant startTime = etaNoticeTime.toInstant(TimeUtil.KST_OFFSET);
+        taskScheduler.schedule(() -> fcmPushSender.sendNoticeMessage(noticeMessage), startTime);
     }
 
     private String generateUniqueInviteCode() {
