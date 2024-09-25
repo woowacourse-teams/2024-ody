@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop # TODO: validate 변경
+      ddl-auto: validate
   sql:
     init:
       mode: never
