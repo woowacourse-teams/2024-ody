@@ -32,8 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class NotificationService {
 
-    private static final ZoneOffset KST_OFFSET = ZoneOffset.ofHours(9);
-
     private final NotificationRepository notificationRepository;
     private final FcmSubscriber fcmSubscriber;
     private final FcmPushSender fcmPushSender;
@@ -73,7 +71,7 @@ public class NotificationService {
     }
 
     public void scheduleNotification(FcmGroupSendRequest fcmGroupSendRequest) {
-        Instant startTime = fcmGroupSendRequest.notification().getSendAt().toInstant(KST_OFFSET);
+        Instant startTime = fcmGroupSendRequest.notification().getSendAt().toInstant(TimeUtil.KST_OFFSET);
         taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmGroupSendRequest), startTime);
         log.info(
                 "{} 타입 {} 상태 알림 {}에 스케줄링 예약",

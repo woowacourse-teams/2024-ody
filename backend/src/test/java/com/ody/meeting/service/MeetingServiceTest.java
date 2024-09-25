@@ -42,8 +42,6 @@ import org.springframework.scheduling.TaskScheduler;
 
 class MeetingServiceTest extends BaseServiceTest {
 
-    private static final ZoneOffset KST_OFFSET = ZoneOffset.ofHours(9);
-
     @Autowired
     private MeetingService meetingService;
 
@@ -194,7 +192,7 @@ class MeetingServiceTest extends BaseServiceTest {
         runnableCaptor.getValue().run();
 
         assertAll(
-                () -> assertThat(meetingDateTime.minusMinutes(30).toInstant(KST_OFFSET)).isEqualTo(scheduledTime),
+                () -> assertThat(meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET)).isEqualTo(scheduledTime),
                 () -> Mockito.verify(fcmPushSender, Mockito.times(1)).sendNoticeMessage(any(GroupMessage.class))
         );
     }

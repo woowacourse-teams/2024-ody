@@ -20,6 +20,7 @@ import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
+import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -39,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MeetingService {
 
-    private static final ZoneOffset KST_OFFSET = ZoneOffset.ofHours(9);
     private static final long ETA_NOTICE_TIME_DEFER = 30L;
 
     private final MateService mateService;
@@ -60,7 +60,7 @@ public class MeetingService {
     private void scheduleEtaNotice(Meeting meeting) {
         GroupMessage noticeMessage = GroupMessage.createMeetingNotice(meeting, NotificationType.ETA_NOTICE);
         LocalDateTime etaNoticeTime = meeting.getMeetingTime().minusMinutes(ETA_NOTICE_TIME_DEFER);
-        Instant startTime = etaNoticeTime.toInstant(KST_OFFSET);
+        Instant startTime = etaNoticeTime.toInstant(TimeUtil.KST_OFFSET);
         taskScheduler.schedule(() -> fcmPushSender.sendNoticeMessage(noticeMessage), startTime);
     }
 
