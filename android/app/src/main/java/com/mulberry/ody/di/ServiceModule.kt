@@ -39,7 +39,7 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideRefreshTokenService(
-        @DefaultRetrofit retrofit: Retrofit,
+        @RefreshRetrofit retrofit: Retrofit,
     ): RefreshTokenService {
         return Lazy { retrofit.create(RefreshTokenService::class.java) }.get()
     }

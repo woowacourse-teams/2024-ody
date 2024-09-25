@@ -32,7 +32,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -63,7 +62,6 @@ class MeetingServiceTest extends BaseServiceTest {
     @MockBean
     private TaskScheduler taskScheduler;
 
-    @Disabled
     @DisplayName("내 약속 목록 조회 시 오름차순 정렬한다.")
     @Test
     void findAllByMember() {
@@ -222,7 +220,7 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertAll(
                 () -> assertThat(response.id()).isEqualTo(meeting.getId()),
-                () -> assertThat(mateNicknames).containsOnly(mate1.getNickname(), mate2.getNickname())
+                () -> assertThat(mateNicknames).containsOnly(mate1.getNickname().getValue(), mate2.getNickname().getValue())
         );
     }
 
@@ -274,7 +272,7 @@ class MeetingServiceTest extends BaseServiceTest {
                 time.toLocalDate(),
                 time.toLocalTime(),
                 Fixture.TARGET_LOCATION,
-                "초대코드"
+                InviteCodeGenerator.generate()
         );
         return meetingRepository.save(meeting);
     }

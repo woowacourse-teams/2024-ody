@@ -13,23 +13,19 @@ import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MateEtaResponseV2;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.repository.MeetingRepository;
-import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
-import com.ody.member.service.MemberService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.regex.Pattern;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,9 +35,6 @@ import org.springframework.http.HttpHeaders;
 class MeetingControllerTest extends BaseControllerTest {
 
     private static String LOCALTIME_FORMAT = "HH:mm";
-
-    @Autowired
-    private MemberService memberService;
 
     @Autowired
     private MeetingRepository meetingRepository;
@@ -58,7 +51,7 @@ class MeetingControllerTest extends BaseControllerTest {
     @DisplayName("모임 개설 성공 시, 201을 응답한다")
     @Test
     void saveV1() {
-        String authorization = saveMember();
+        Member member = fixtureGenerator.generateMember();
 
         MeetingSaveRequestV1 meetingRequest = new MeetingSaveRequestV1(
                 "우테코 16조",
@@ -71,7 +64,7 @@ class MeetingControllerTest extends BaseControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, authorization)
+                .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
                 .body(meetingRequest)
                 .when()
                 .post("/v1/meetings")
@@ -83,17 +76,16 @@ class MeetingControllerTest extends BaseControllerTest {
                 .matches(LOCALTIME_FORMAT);
     }
 
-    @Disabled
     @DisplayName("특정 멤버의 참여 모임 목록 조회에 성공하면 200응답 반환한다")
     @Test
     void findMine() {
-        saveMate(LocalDate.now().plusDays(1), LocalTime.now());
         Member member = memberRepository.save(Fixture.MEMBER1);
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        meetingRepository.save(odyMeeting);
         mateRepository.save(new Mate(odyMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
 
         RestAssured.given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer device-token=" + Fixture.MEMBER1_TOKEN)
+                .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
                 .when()
                 .get("/v1/meetings/me")
                 .then().log().all()
@@ -106,22 +98,18 @@ class MeetingControllerTest extends BaseControllerTest {
                 .allMatch(time -> Pattern.matches(time, LOCALTIME_FORMAT));
     }
 
-    @Disabled
     @DisplayName("로그 목록 조회에 성공하면 200응답 반환한다")
     @Test
     void findAllMeetingLogs() {
         Location origin = Fixture.ORIGIN_LOCATION;
-        Location target = Fixture.TARGET_LOCATION;
         Member member = memberRepository.save(Fixture.MEMBER1);
-        Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
-        meetingRepository.save(meeting);
-        Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin, 10L));
+        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
+        mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin, 10L));
 
         RestAssured.given()
                 .log()
                 .all()
-                .header(HttpHeaders.AUTHORIZATION,
-                        "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
+                .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
                 .when()
                 .get("/meetings/1/noti-log")
                 .then()
@@ -133,10 +121,10 @@ class MeetingControllerTest extends BaseControllerTest {
     @DisplayName("유효하지 않은 초대 코드일 경우 404 에러를 반환한다.")
     @Test
     void validateInviteCode() {
-        String authorization = saveMember();
+        Member member = memberRepository.save(Fixture.MEMBER1);
 
         RestAssured.given()
-                .header(HttpHeaders.AUTHORIZATION, authorization)
+                .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
                 .when()
                 .get("/invite-codes/testcode/validate")
                 .then()
@@ -145,7 +133,6 @@ class MeetingControllerTest extends BaseControllerTest {
                 .statusCode(404);
     }
 
-    @Disabled
     @DisplayName("Eta API 테스트")
     @Nested
     class EtaTest {
@@ -154,18 +141,15 @@ class MeetingControllerTest extends BaseControllerTest {
         @Test
         void findAllMateEtas() {
             Location origin = Fixture.ORIGIN_LOCATION;
-            Location target = Fixture.TARGET_LOCATION;
             Member member = memberRepository.save(Fixture.MEMBER1);
-            Meeting meeting = new Meeting("모임1", LocalDate.now(), LocalTime.now(), target, "초대코드1");
-            meetingRepository.save(meeting);
+            Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
             Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin, 10L));
             etaRepository.save(new Eta(mate, 10L));
 
             MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
 
             RestAssured.given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION,
-                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
+                    .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
                     .body(mateEtaRequest)
                     .contentType(ContentType.JSON)
                     .when()
@@ -179,16 +163,17 @@ class MeetingControllerTest extends BaseControllerTest {
         void returnMissing_When_isMissing_returnEtaStatus_When_isNotMissing() {
             Location origin = Fixture.ORIGIN_LOCATION;
             Member member = memberRepository.save(Fixture.MEMBER1);
-            Meeting meeting = Fixture.ODY_MEETING;
-            meetingRepository.save(meeting);
+            Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
             Mate mate = mateRepository.save(new Mate(meeting, member, new Nickname("은별"), origin, 10L));
             etaRepository.save(new Eta(mate, 10L));
 
-            MateEtaRequest mateEtaMissingRequest = new MateEtaRequest(true, origin.getLatitude(),
-                    origin.getLongitude());
+            MateEtaRequest mateEtaMissingRequest = new MateEtaRequest(
+                    true,
+                    origin.getLatitude(),
+                    origin.getLongitude()
+            );
             MateEtaResponseV2 mateEtaMissingResponse = RestAssured.given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION,
-                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
+                    .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
                     .body(mateEtaMissingRequest)
                     .contentType(ContentType.JSON)
                     .when()
@@ -201,13 +186,15 @@ class MeetingControllerTest extends BaseControllerTest {
 
             assertThat(mateEtaMissingResponse.status()).isEqualTo(EtaStatus.MISSING);
 
-            MateEtaRequest mateEtaNotMissingRequest = new MateEtaRequest(false, origin.getLatitude(),
-                    origin.getLongitude());
+            MateEtaRequest mateEtaNotMissingRequest = new MateEtaRequest(
+                    false,
+                    origin.getLatitude(),
+                    origin.getLongitude()
+            );
             MateEtaResponseV2 mateEtaNotMissingResponse = RestAssured.given()
                     .log()
                     .all()
-                    .header(HttpHeaders.AUTHORIZATION,
-                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
+                    .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
                     .body(mateEtaNotMissingRequest)
                     .contentType(ContentType.JSON)
                     .when()
@@ -225,8 +212,7 @@ class MeetingControllerTest extends BaseControllerTest {
         @Test
         void returnMissing_When_isMissing_Mate() {
             Location origin = Fixture.ORIGIN_LOCATION;
-            Meeting meeting = Fixture.ODY_MEETING;
-            meetingRepository.save(meeting);
+            Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
 
             Member member1 = memberRepository.save(Fixture.MEMBER1);
             Mate jojo = mateRepository.save(new Mate(meeting, member1, new Nickname("은별"), origin, 10L));
@@ -236,11 +222,13 @@ class MeetingControllerTest extends BaseControllerTest {
             Mate coli = mateRepository.save(new Mate(meeting, member2, new Nickname("콜리"), origin, 10L));
             etaRepository.save(new Eta(coli, 10L));
 
-            MateEtaRequest mateEtaMissingRequest = new MateEtaRequest(true, origin.getLatitude(),
-                    origin.getLongitude());
+            MateEtaRequest mateEtaMissingRequest = new MateEtaRequest(
+                    true,
+                    origin.getLatitude(),
+                    origin.getLongitude()
+            );
             MateEtaResponsesV2 mateEtaResponses = RestAssured.given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION,
-                            "Bearer device-token=" + Fixture.MEMBER1.getDeviceToken().getValue())
+                    .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member1))
                     .body(mateEtaMissingRequest)
                     .contentType(ContentType.JSON)
                     .when()

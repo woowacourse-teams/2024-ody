@@ -10,10 +10,12 @@ import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
-@Import({JpaAuditingConfig.class, FixtureGenerator.class})
+@Import({JpaAuditingConfig.class, FixtureGeneratorConfig.class, TestAuthConfig.class})
+@ActiveProfiles("test")
 @DataJpaTest
-public class BaseRepositoryTest {
+public abstract class BaseRepositoryTest {
 
     @Autowired
     protected FixtureGenerator fixtureGenerator;
