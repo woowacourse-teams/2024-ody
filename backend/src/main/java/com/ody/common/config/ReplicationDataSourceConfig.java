@@ -32,11 +32,12 @@ public class ReplicationDataSourceConfig {
 
     @Bean
     @Primary
-    public DataSource dataSource(DataSource replicationRouteDataSource) {
+    public DataSource dataSource(@Qualifier("replicationRouteDataSource") DataSource replicationRouteDataSource) {
         return new LazyConnectionDataSourceProxy(replicationRouteDataSource);
     }
 
     @Bean
+    @Qualifier("replicationRouteDataSource")
     public DataSource replicationRouteDataSource(
             @Qualifier("writeDataSource") DataSource writeDataSource,
             @Qualifier("readDataSource") DataSource readDataSource
