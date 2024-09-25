@@ -3,7 +3,9 @@ package com.ody.common.config;
 import com.ody.common.exception.OdyServerErrorException;
 import java.util.Arrays;
 import java.util.function.BiPredicate;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public enum ReplicationType {
 
     READ((transactionActive, readOnly) -> !transactionActive || readOnly),
@@ -11,9 +13,6 @@ public enum ReplicationType {
 
     private final BiPredicate<Boolean, Boolean> condition;
 
-    ReplicationType(BiPredicate<Boolean, Boolean> condition) {
-        this.condition = condition;
-    }
     public static ReplicationType from(boolean transactionActive, boolean readOnly) {
         return Arrays.stream(values())
                 .filter(replicationType -> replicationType.condition.test(transactionActive, readOnly))
