@@ -13,6 +13,10 @@ spring:
       jdbc-url: jdbc:mysql://database-project.cluster-ro-cqsc6pyqhwww.ap-northeast-2.rds.amazonaws.com:3306/ody
       username: ody
       password: ENC(2n3gUzzFjknXpHDYwuF4d5BQw6XqLdsX)
+    defer-datasource-initialization: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 
 log:
   file:

@@ -90,6 +90,7 @@ public class MateService {
         return etaStatus == EtaStatus.LATE_WARNING || etaStatus == EtaStatus.LATE;
     }
 
+    @Transactional
     public MateEtaResponsesV2 findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
         Mate mate = findByMeetingIdAndMemberId(meetingId, member.getId());
         return etaService.findAllMateEtas(mateEtaRequest, mate);
