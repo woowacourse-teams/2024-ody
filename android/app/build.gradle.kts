@@ -26,7 +26,7 @@ android {
         versionCode = 7
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.mulberry.ody.presentation.CustomTestRunner"
         buildConfigField("String", "BASE_DEV_URL", properties["BASE_DEV_URL"].toString())
         buildConfigField("String", "BASE_PROD_URL", properties["BASE_PROD_URL"].toString())
         buildConfigField("String", "KAKAO_API_KEY", properties["KAKAO_API_KEY"].toString())
@@ -37,8 +37,6 @@ android {
     }
     buildTypes {
         debug {
-            isMinifyEnabled = true
-            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -93,6 +91,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.fragment.testing)
+    androidTestImplementation(libs.androidx.work.testing)
+    androidTestImplementation(libs.androidx.hilt.android.testing)
     kapt(libs.androidx.hilt.compiler)
 
     // firebase
@@ -134,6 +134,7 @@ dependencies {
 
     // coroutines
     testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
 
     // glide
     implementation(libs.glide)

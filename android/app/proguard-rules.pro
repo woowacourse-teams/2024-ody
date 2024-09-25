@@ -28,6 +28,7 @@
 -dontwarn org.bouncycastle.jsse.**
 -dontwarn org.conscrypt.*
 -dontwarn org.openjsse.**
+-keep class com.google.auto.value.*
 
 # retrofit
 -keep class com.mulberry.ody.data.retrofit.* { *; }
@@ -37,3 +38,4 @@
 # moshi
 -keep class com.squareup.moshi.** { *; }
 -keep class com.mulberry.ody.data.remote.thirdparty.location.entity.response.** { *; }
+

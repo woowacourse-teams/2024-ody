@@ -22,6 +22,7 @@ glide = "4.16.0"
 googleServices = "4.4.2"
 hilt= "2.52"
 hiltWork = "1.2.0"
+hiltAndroidTesting = "2.51.1"
 junitJupiter = "5.10.2"
 junitVersion = "1.2.1"
 jvm = "1.9.23"
@@ -42,6 +43,7 @@ timber = "5.0.1"
 viewPager = "1.1.0"
 webkit = "1.12.0"
 workRuntimeKtx = "2.9.1"
+workTesting = "2.9.1"
 
 [libraries]
 # androidx
@@ -49,12 +51,14 @@ androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
 androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltWork" }
+androidx-hilt-android-testing = {module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting"}
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-view-pager = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewPager" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "workTesting" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
 androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "fragmentTesting" }
 androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "lifecycle" }
