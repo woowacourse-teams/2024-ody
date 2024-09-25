@@ -47,7 +47,7 @@ public class ReplicationDataSourceConfig {
 
         ReplicationDataSourceRouter replicationDataSourceRouter = new ReplicationDataSourceRouter();
         replicationDataSourceRouter.setTargetDataSources(dataSourceMap);
-        replicationDataSourceRouter.setDefaultTargetDataSource(writeDataSource);
+        replicationDataSourceRouter.setDefaultTargetDataSource(readDataSource);
         return replicationDataSourceRouter;
     }
 }
