@@ -51,7 +51,7 @@ class MeetingJoinViewModel
                 joinRepository.postMates(
                     MeetingJoinInfo(
                         inviteCode,
-                        departureAddress.roadNameAddress,
+                        departureAddress.detailAddress,
                         departureAddress.latitude,
                         departureAddress.longitude,
                     ),
@@ -72,7 +72,7 @@ class MeetingJoinViewModel
 
         private fun isValidDeparturePoint(): Boolean {
             val departureAddress = departureAddress.value ?: return false
-            return AddressValidator.isValid(departureAddress.roadNameAddress).also {
+            return AddressValidator.isValid(departureAddress.detailAddress).also {
                 if (!it) _invalidDepartureEvent.setValue(Unit)
             }
         }

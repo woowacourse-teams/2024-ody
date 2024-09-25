@@ -11,6 +11,6 @@ class AddressViewHolder(private val binding: ItemAddressSearchBinding) :
         addressListener: AddressListener,
     ) {
         binding.address = addressUiModel
-        binding.locationListener = addressListener
+        binding.addressListener = addressListener
     }
 }

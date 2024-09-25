@@ -9,7 +9,6 @@ import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
 import com.mulberry.ody.domain.model.MeetingCatalog
 import com.mulberry.ody.domain.model.NotificationLog
-import com.mulberry.ody.presentation.address.model.AddressUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -119,7 +118,7 @@ val mateEtaInfo =
     )
 
 fun Address(id: Long, roadNameAddress: String): Address {
-    return Address(id = id, roadNameAddress = roadNameAddress, name = "", latitude = "0.0", longitude = "0.0")
+    return Address(id = id, detailAddress = roadNameAddress, placeName = "", latitude = "0.0", longitude = "0.0")
 }
 
 val addresses: List<Address> = List(5) { Address(id = it.toLong(), roadNameAddress = "") }

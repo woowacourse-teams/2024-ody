@@ -69,7 +69,7 @@
             android:hint="@string/address_question_hint"
             android:inputType="text"
             android:maxLines="1"
-            android:text="@{vm.departureAddress.roadNameAddress}"
+            android:text="@{vm.departureAddress.detailAddress}"
             android:onClick="@{() -> addressSearchListener.onSearch()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

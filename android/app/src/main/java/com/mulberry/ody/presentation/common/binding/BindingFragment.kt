@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.LoadingDialog
 
 abstract class BindingFragment<T : ViewDataBinding>(
@@ -58,6 +59,14 @@ abstract class BindingFragment<T : ViewDataBinding>(
 
     protected fun hideLoadingDialog() {
         dialog?.dismiss()
+    }
+
+    protected fun showRetrySnackBar(action: () -> Unit) {
+        snackBar?.dismiss()
+        snackBar =
+            Snackbar.make(binding.root, R.string.network_error_guide, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.retry_button) { action() }
+        snackBar?.show()
     }
 
     override fun onDestroyView() {

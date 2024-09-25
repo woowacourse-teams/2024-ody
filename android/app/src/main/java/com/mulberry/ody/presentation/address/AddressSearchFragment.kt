@@ -60,6 +60,10 @@ class AddressSearchFragment :
             }
             hideLoadingDialog()
         }
+        viewModel.networkErrorEvent.observe(this) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+
         viewModel.addressUiModels.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }

@@ -100,7 +100,7 @@ class MeetingCreationViewModel
                         name,
                         date.toString(),
                         LocalTime.of(meetingHour.value ?: 1, meetingMinute.value ?: 0).toString(),
-                        destinationAddress.roadNameAddress,
+                        destinationAddress.detailAddress,
                         destinationAddress.latitude,
                         destinationAddress.longitude,
                     ),
@@ -149,7 +149,7 @@ class MeetingCreationViewModel
 
         private fun isValidDestination(): Boolean {
             val destinationAddress = destinationAddress.value ?: return false
-            return AddressValidator.isValid(destinationAddress.roadNameAddress).also {
+            return AddressValidator.isValid(destinationAddress.detailAddress).also {
                 if (!it) _invalidDestinationEvent.setValue(Unit)
             }
         }

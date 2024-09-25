@@ -51,7 +51,7 @@
             android:inputType="text"
             android:maxLines="1"
             android:onClick="@{() -> addressSearchListener.onSearch()}"
-            android:text="@{vm.destinationAddress.roadNameAddress}"
+            android:text="@{vm.destinationAddress.detailAddress}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_destination_front" />
