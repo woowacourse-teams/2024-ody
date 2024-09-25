@@ -48,12 +48,19 @@ class EtaDashboardWorker
             )
         }
 
+        private val durationTime: Long by lazy {
+            workerParameters.inputData.getLong(
+                DURATION_KEY,
+                DURATION_DEFAULT_VALUE,
+            )
+        }
+
         override suspend fun doWork(): Result {
             Timber.d("doWorkStart")
             odyDatastore.setMeetingJobUUID(meetingId, id.toString())
             if (meetingId == MEETING_ID_DEFAULT_VALUE) return Result.failure()
 
-            for (i in 0..MAX_MILLIS step INTERVAL_MILLIS) {
+            for (i in 0..durationTime step INTERVAL_MILLIS) {
                 val mateEtaInfo = getLocation()
                 val mateEtaResponses = mateEtaInfo?.toMateEtaInfoResponse()
                 val data =
@@ -143,23 +150,26 @@ class EtaDashboardWorker
             private const val MEETING_ID_DEFAULT_VALUE = -1L
             private const val MAX_MINUTE = 10L
             private const val MILLIS = 1000L
-            private const val MAX_MILLIS = MAX_MINUTE * 60 * MILLIS
             private const val INTERVAL_MILLIS = 10 * MILLIS
+            private const val DURATION_KEY = "duration"
+            private const val DURATION_DEFAULT_VALUE = MAX_MINUTE * 60 * MILLIS
             const val MATE_ETA_RESPONSE_KEY = "mate_eta_response"
 
             fun getWorkRequest(
                 meetingId: Long,
-                delay: Long,
+                duration: Long,
+                initialDelay: Long,
             ): OneTimeWorkRequest {
                 val inputData =
                     Data.Builder()
                         .putLong(MEETING_ID_KEY, meetingId)
+                        .putLong(DURATION_KEY, duration)
                         .build()
 
                 return OneTimeWorkRequestBuilder<EtaDashboardWorker>()
                     .setInputData(inputData)
                     .addTag(meetingId.toString())
-                    .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                    .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                     .build()
             }
         }
