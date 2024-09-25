@@ -45,6 +45,8 @@ class AddressSearchViewModel
 
         fun searchAddress() {
             val addressSearchKeyword = addressSearchKeyword.value ?: return
+            if (addressSearchKeyword.isEmpty()) return
+
             viewModelScope.launch {
                 startLoading()
                 addressRepository.fetchAddresses(addressSearchKeyword)
@@ -64,6 +66,10 @@ class AddressSearchViewModel
         override fun onClickAddressItem(id: Long) {
             val address = _addresses.value?.find { it.id == id } ?: return
             _addressSelectEvent.setValue(address)
+        }
+
+        fun clearAddresses() {
+            _addresses.value = emptyList()
         }
 
         companion object {

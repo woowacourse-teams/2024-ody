@@ -51,7 +51,10 @@ class AddressSearchFragment :
     }
 
     private fun initializeObserve() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
@@ -71,6 +74,9 @@ class AddressSearchFragment :
             (parentFragment as? AddressSearchListener)?.onReceive(it)
             (activity as? AddressSearchListener)?.onReceive(it)
             onBack()
+        }
+        viewModel.addressSearchKeyword.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) viewModel.clearAddresses()
         }
     }
 
