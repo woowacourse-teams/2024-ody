@@ -3,9 +3,11 @@ package com.mulberry.ody.presentation.creation.destination
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDestinationBinding
-import com.mulberry.ody.domain.model.GeoLocation
+import com.mulberry.ody.domain.model.Location
+import com.mulberry.ody.presentation.address.AddressSearchFragment
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.creation.MeetingCreationInfoType
@@ -39,11 +41,15 @@ class MeetingDestinationFragment :
     }
 
     override fun onSearch() {
-        //AddressSearchDialog().show(childFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+        parentFragmentManager.commit {
+            add(R.id.fcv_creation, AddressSearchFragment())
+            setReorderingAllowed(true)
+            addToBackStack(null)
+        }
     }
 
-    override fun onReceive(geoLocation: GeoLocation) {
-        viewModel.destinationGeoLocation.value = geoLocation
+    override fun onReceive(location: Location) {
+        viewModel.destinationLocation.value = location
     }
 
     override fun onResume() {

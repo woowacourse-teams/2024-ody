@@ -5,9 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.fragment.app.commit
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingJoinBinding
-import com.mulberry.ody.domain.model.GeoLocation
+import com.mulberry.ody.domain.model.Location
+import com.mulberry.ody.presentation.address.AddressSearchFragment
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
@@ -95,11 +97,15 @@ class MeetingJoinActivity :
     private fun getInviteCode(): String = intent.getStringExtra(INVITE_CODE_KEY) ?: ""
 
     override fun onSearch() {
-        //AddressSearchDialog().show(supportFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+        supportFragmentManager.commit {
+            add(R.id.fcv_join, AddressSearchFragment())
+            setReorderingAllowed(true)
+            addToBackStack(null)
+        }
     }
 
-    override fun onReceive(geoLocation: GeoLocation) {
-        viewModel.departureGeoLocation.value = geoLocation
+    override fun onReceive(location: Location) {
+        viewModel.departureLocation.value = location
     }
 
     companion object {

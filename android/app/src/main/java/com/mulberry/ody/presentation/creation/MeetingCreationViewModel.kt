@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
-import com.mulberry.ody.domain.model.GeoLocation
+import com.mulberry.ody.domain.model.Location
 import com.mulberry.ody.domain.model.MeetingCreationInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.domain.validator.AddressValidator
@@ -50,8 +50,8 @@ class MeetingCreationViewModel
         private val _invalidMeetingTimeEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
         val invalidMeetingTimeEvent: SingleLiveData<Unit> get() = _invalidMeetingTimeEvent
 
-        val destinationGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
-        val destinationAddress: LiveData<String> = destinationGeoLocation.map { it.address }
+        val destinationLocation: MutableLiveData<Location> = MutableLiveData()
+        val destinationAddress: LiveData<String> = destinationLocation.map { it.address }
 
         private val _invalidDestinationEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
         val invalidDestinationEvent: SingleLiveData<Unit> get() = _invalidDestinationEvent
@@ -74,7 +74,7 @@ class MeetingCreationViewModel
             with(isValidInfo) {
                 addSource(meetingCreationInfoType) { checkInfoValidity() }
                 addSource(meetingName) { checkInfoValidity() }
-                addSource(destinationGeoLocation) { checkInfoValidity() }
+                addSource(destinationLocation) { checkInfoValidity() }
                 addSource(meetingHour) { isValidInfo.value = true }
                 addSource(meetingMinute) { isValidInfo.value = true }
             }
@@ -92,9 +92,9 @@ class MeetingCreationViewModel
         fun createMeeting() {
             val name = meetingName.value ?: return
             val date = meetingDate.value ?: return
-            val destinationAddress = destinationGeoLocation.value?.address ?: return
-            val destinationLatitude = destinationGeoLocation.value?.latitude ?: return
-            val destinationLongitude = destinationGeoLocation.value?.longitude ?: return
+            val destinationAddress = destinationLocation.value?.address ?: return
+            val destinationLatitude = destinationLocation.value?.latitude ?: return
+            val destinationLongitude = destinationLocation.value?.longitude ?: return
 
             viewModelScope.launch {
                 startLoading()
@@ -151,7 +151,7 @@ class MeetingCreationViewModel
         }
 
         private fun isValidDestination(): Boolean {
-            val destinationGeoLocation = destinationGeoLocation.value ?: return false
+            val destinationGeoLocation = destinationLocation.value ?: return false
             return AddressValidator.isValid(destinationGeoLocation.address).also {
                 if (!it) _invalidDestinationEvent.setValue(Unit)
             }

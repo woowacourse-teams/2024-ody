@@ -1,6 +1,6 @@
 package com.mulberry.ody.presentation.join
 
-import com.mulberry.ody.domain.model.GeoLocation
+import com.mulberry.ody.domain.model.Location
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeJoinRepository
 import com.mulberry.ody.fake.FakeMatesEtaRepository
@@ -60,7 +60,7 @@ class MeetingJoinViewModelTest {
         setUpInitializeInfo()
 
         // when
-        viewModel.departureGeoLocation.value = GeoLocation(address = "인천광역시 남동구", "0.0", "0.0")
+        viewModel.departureLocation.value = Location(address = "인천광역시 남동구", "0.0", "0.0")
 
         // then
         val actual = viewModel.isValidDeparture.getOrAwaitValue()
@@ -73,7 +73,7 @@ class MeetingJoinViewModelTest {
         setUpInitializeInfo()
 
         // when
-        viewModel.departureGeoLocation.value = GeoLocation(address = "부산광역시 동구", "0.0", "0.0")
+        viewModel.departureLocation.value = Location(address = "부산광역시 동구", "0.0", "0.0")
 
         // then
         val actual = viewModel.isValidDeparture.getOrAwaitValue()
@@ -81,6 +81,6 @@ class MeetingJoinViewModelTest {
     }
 
     private fun setUpInitializeInfo() {
-        viewModel.departureGeoLocation.value = GeoLocation("인천광역시 남동구", "10.0", "10.0")
+        viewModel.departureLocation.value = Location("인천광역시 남동구", "10.0", "10.0")
     }
 }

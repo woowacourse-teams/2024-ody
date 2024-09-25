@@ -5,11 +5,20 @@
 
     <data>
 
+        <variable
+            name="address"
+            type="com.mulberry.ody.presentation.address.model.AddressUiModel" />
+
+        <variable
+            name="locationListener"
+            type="com.mulberry.ody.presentation.address.listener.LocationListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/cream"
+        android:onClick="@{() -> locationListener.onClickLocationItem(address.id)}"
         android:paddingVertical="18dp">
 
         <ImageView
@@ -32,6 +41,7 @@
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
             android:lines="1"
+            android:text="@{address.name}"
             android:textColor="@color/purple_800"
             app:layout_constraintBottom_toTopOf="@id/tv_address_search_description"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,6 +56,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
+            android:text="@{address.address}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_address_search_title"

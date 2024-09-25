@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
-import com.mulberry.ody.domain.model.GeoLocation
+import com.mulberry.ody.domain.model.Location
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.ody.JoinRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
@@ -33,21 +33,21 @@ class MeetingJoinViewModel
         private val joinRepository: JoinRepository,
         private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel(), MeetingJoinListener {
-        val departureGeoLocation: MutableLiveData<GeoLocation> = MutableLiveData()
-        val departureAddress: LiveData<String> = departureGeoLocation.map { it.address }
+        val departureLocation: MutableLiveData<Location> = MutableLiveData()
+        val departureAddress: LiveData<String> = departureLocation.map { it.address }
 
         private val _invalidDepartureEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
         val invalidDepartureEvent: SingleLiveData<Unit> get() = _invalidDepartureEvent
-        val isValidDeparture: LiveData<Boolean> = departureGeoLocation.map { isValidDeparturePoint() }
+        val isValidDeparture: LiveData<Boolean> = departureLocation.map { isValidDeparturePoint() }
 
         private val _navigateAction: MutableSingleLiveData<MeetingJoinNavigateAction> =
             MutableSingleLiveData()
         val navigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _navigateAction
 
         fun joinMeeting(inviteCode: String) {
-            val departureAddress = departureGeoLocation.value?.address ?: return
-            val departureLatitude = departureGeoLocation.value?.latitude ?: return
-            val departureLongitude = departureGeoLocation.value?.longitude ?: return
+            val departureAddress = departureLocation.value?.address ?: return
+            val departureLatitude = departureLocation.value?.latitude ?: return
+            val departureLongitude = departureLocation.value?.longitude ?: return
 
             viewModelScope.launch {
                 startLoading()
@@ -74,7 +74,7 @@ class MeetingJoinViewModel
         }
 
         private fun isValidDeparturePoint(): Boolean {
-            val departureGeoLocation = departureGeoLocation.value ?: return false
+            val departureGeoLocation = departureLocation.value ?: return false
             return AddressValidator.isValid(departureGeoLocation.address).also {
                 if (!it) _invalidDepartureEvent.setValue(Unit)
             }

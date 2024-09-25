@@ -35,7 +35,7 @@ class AddressSearchViewModelTest {
         viewModel.fetchGeoLocation(address)
 
         // then
-        val actual = viewModel.geoLocation.getOrAwaitValue()
+        val actual = viewModel.location.getOrAwaitValue()
         assertThat(actual.address).isEqualTo(address)
     }
 }

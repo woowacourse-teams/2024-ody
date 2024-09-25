@@ -6,13 +6,18 @@
     <data>
 
         <variable
+            name="vm"
+            type="com.mulberry.ody.presentation.address.AddressSearchViewModel" />
+
+        <variable
             name="backListener"
             type="com.mulberry.ody.presentation.common.listener.BackListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/cream">
 
         <include
             android:id="@+id/tb_address_search"
@@ -44,6 +49,7 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
+            android:text="@={vm.addressSearchKeyword}"
             app:layout_constraintEnd_toStartOf="@id/iv_cancel"
             app:layout_constraintStart_toStartOf="@id/et_address_search_keyword_form"
             app:layout_constraintTop_toTopOf="@id/et_address_search_keyword_form" />
@@ -52,11 +58,13 @@
             android:id="@+id/iv_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{() -> vm.clearAddressSearchKeyword()}"
             android:src="@drawable/ic_round_cancel"
             app:layout_constraintBottom_toBottomOf="@id/et_address_search_keyword_form"
             app:layout_constraintEnd_toEndOf="@id/et_address_search_keyword_form"
             app:layout_constraintStart_toEndOf="@id/et_address_search_keyword"
-            app:layout_constraintTop_toTopOf="@id/et_address_search_keyword_form" />
+            app:layout_constraintTop_toTopOf="@id/et_address_search_keyword_form"
+            app:visibility="@{vm.hasAddressSearchKeyword}" />
 
         <TextView
             android:id="@+id/tv_address_search_empty"
@@ -70,15 +78,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_address_search_keyword"
+            app:visibility="@{vm.isEmptyAddresses}"
             tools:visibility="gone" />
 
         <View
+            android:id="@+id/separator"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_marginTop="32dp"
             android:background="@color/gray_300"
             app:layout_constraintBottom_toTopOf="@id/rv_address"
-            app:layout_constraintTop_toBottomOf="@id/et_address_search_keyword" />
+            app:layout_constraintTop_toBottomOf="@id/et_address_search_keyword"
+            app:visibility="@{!vm.isEmptyAddresses}" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_address"
@@ -92,7 +103,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_address_search_keyword"
+            app:layout_constraintTop_toBottomOf="@id/separator"
+            app:visibility="@{!vm.isEmptyAddresses}"
             tools:listitem="@layout/item_address_search" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
