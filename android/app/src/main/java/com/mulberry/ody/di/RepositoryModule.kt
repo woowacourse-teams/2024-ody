@@ -6,9 +6,7 @@ import com.mulberry.ody.data.remote.core.repository.DefaultFCMTokenRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultJoinRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultNotificationLogRepository
-import com.mulberry.ody.data.remote.thirdparty.location.repository.KakaoGeoLocationRepository
 import com.mulberry.ody.data.remote.thirdparty.login.kakao.KakaoLoginRepository
-import com.mulberry.ody.domain.repository.location.GeoLocationRepository
 import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
 import com.mulberry.ody.domain.repository.ody.FCMTokenRepository
 import com.mulberry.ody.domain.repository.ody.JoinRepository
@@ -48,10 +46,6 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindKakaoLoginRepository(kakaoLoginRepository: KakaoLoginRepository): LoginRepository
-
-    @Binds
-    @Singleton
-    fun bindSearchRepository(kakaoGeoLocationRepository: KakaoGeoLocationRepository): GeoLocationRepository
 
     @Binds
     @Singleton
