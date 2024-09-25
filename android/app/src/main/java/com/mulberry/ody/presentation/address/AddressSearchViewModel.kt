@@ -32,9 +32,9 @@ class AddressSearchViewModel
         val addressSearchKeyword: MutableLiveData<String> = MutableLiveData()
         val hasAddressSearchKeyword: LiveData<Boolean> = addressSearchKeyword.map { it.isNotEmpty() }
 
-        private val _addresses: MutableLiveData<List<Address>> = MutableLiveData(emptyList())
-        val isEmptyAddresses: LiveData<Boolean> = _addresses.map { it.isEmpty() }
-        val addressUiModels: LiveData<List<AddressUiModel>> = _addresses.map { it.toAddressUiModels() }
+        private val addresses: MutableLiveData<List<Address>> = MutableLiveData(emptyList())
+        val isEmptyAddresses: LiveData<Boolean> = addresses.map { it.isEmpty() }
+        val addressUiModels: LiveData<List<AddressUiModel>> = addresses.map { it.toAddressUiModels() }
 
         private val _addressSelectEvent: MutableSingleLiveData<Address> = MutableSingleLiveData()
         val addressSelectEvent: SingleLiveData<Address> get() = _addressSelectEvent
@@ -51,7 +51,7 @@ class AddressSearchViewModel
                 startLoading()
                 addressRepository.fetchAddresses(addressSearchKeyword)
                     .onSuccess {
-                        _addresses.value = it
+                        addresses.value = it
                     }.onFailure { code, errorMessage ->
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                         Timber.e("$code $errorMessage")
@@ -64,12 +64,12 @@ class AddressSearchViewModel
         }
 
         override fun onClickAddressItem(id: Long) {
-            val address = _addresses.value?.find { it.id == id } ?: return
+            val address = addresses.value?.find { it.id == id } ?: return
             _addressSelectEvent.setValue(address)
         }
 
         fun clearAddresses() {
-            _addresses.value = emptyList()
+            addresses.value = emptyList()
         }
 
         companion object {
