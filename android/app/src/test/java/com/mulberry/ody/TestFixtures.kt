@@ -117,7 +117,10 @@ val mateEtaInfo =
         },
     )
 
-fun Address(id: Long, roadNameAddress: String): Address {
+fun Address(
+    id: Long,
+    roadNameAddress: String,
+): Address {
     return Address(id = id, detailAddress = roadNameAddress, placeName = "", latitude = "0.0", longitude = "0.0")
 }
 

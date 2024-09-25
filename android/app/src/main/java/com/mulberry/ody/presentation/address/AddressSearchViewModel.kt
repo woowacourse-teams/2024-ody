@@ -75,4 +75,4 @@ class AddressSearchViewModel
         companion object {
             private const val TAG = "AddressSearchViewModel"
         }
-}
+    }

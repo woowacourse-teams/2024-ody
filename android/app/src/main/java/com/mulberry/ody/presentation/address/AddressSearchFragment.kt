@@ -27,7 +27,10 @@ class AddressSearchFragment :
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         initializeLocations()
         initializeBinding()
@@ -53,7 +56,7 @@ class AddressSearchFragment :
     private fun initializeObserve() {
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
-            onBackPressedCallback
+            onBackPressedCallback,
         )
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->

@@ -1,8 +1,8 @@
 package com.mulberry.ody.presentation.address
 
 import com.mulberry.ody.addresses
-import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeAddressRepository
+import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.presentation.address.model.toAddressUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension

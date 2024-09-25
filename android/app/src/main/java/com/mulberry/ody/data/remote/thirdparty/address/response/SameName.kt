@@ -10,5 +10,5 @@ data class SameName(
     @Json(name = "region")
     val region: List<String>,
     @Json(name = "selected_region")
-    val selectedRegion: String
+    val selectedRegion: String,
 )

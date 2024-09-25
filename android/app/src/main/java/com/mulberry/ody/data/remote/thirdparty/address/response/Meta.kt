@@ -12,5 +12,5 @@ data class Meta(
     @Json(name = "same_name")
     val sameName: SameName,
     @Json(name = "total_count")
-    val totalCount: Int
+    val totalCount: Int,
 )

@@ -3,11 +3,8 @@ package com.mulberry.ody.presentation.creation.destination
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.commit
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDestinationBinding
-import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.presentation.address.AddressSearchFragment
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.creation.MeetingCreationInfoType
@@ -15,7 +12,7 @@ import com.mulberry.ody.presentation.creation.MeetingCreationViewModel
 
 class MeetingDestinationFragment :
     BindingFragment<FragmentMeetingDestinationBinding>(
-        R.layout.fragment_meeting_destination
+        R.layout.fragment_meeting_destination,
     ) {
     private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
 
