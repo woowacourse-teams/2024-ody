@@ -2,15 +2,18 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    defer-datasource-initialization: false
-  sql:
-    init:
-      mode: never
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(b2OC3sqkv3yOFNN3PLvGEXfS9PNhJa1KZBJO7m2UFkKaVDLrQfHW4lcAiXDKGdGQGOiTJP0fdbgRLmVOOpkRTQQBFdLk9Kc56xoqAv7zM37vAuAhiO1SXggzqFbE3nBVEiZ8LlXWbASOehuAoByOAg==)
-    username: ENC(XtfH8GdZudKEOOBZ5xIFOA==)
-    password: ENC(xiSFd4D62x3j+WrGsflwya1hTSweP+UV)
+    write:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://database-project.cluster-cqsc6pyqhwww.ap-northeast-2.rds.amazonaws.com:3306/ody
+      username: ody
+      password: ENC(2n3gUzzFjknXpHDYwuF4d5BQw6XqLdsX)
+    read:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://database-project.cluster-ro-cqsc6pyqhwww.ap-northeast-2.rds.amazonaws.com:3306/ody
+      username: ody
+      password: ENC(2n3gUzzFjknXpHDYwuF4d5BQw6XqLdsX)
+    defer-datasource-initialization: false
   flyway:
     enabled: true
     baseline-on-migrate: true
