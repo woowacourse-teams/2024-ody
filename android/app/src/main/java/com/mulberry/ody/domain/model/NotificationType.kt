@@ -3,8 +3,8 @@ package com.mulberry.ody.domain.model
 enum class NotificationType {
     ENTRY,
     DEPARTURE_REMINDER,
-    DEPARTURE,
     NUDGE,
+    ETA_NOTICE,
     DEFAULT,
     ;
 
@@ -13,8 +13,8 @@ enum class NotificationType {
             when (tag) {
                 "ENTRY" -> ENTRY
                 "DEPARTURE_REMINDER" -> DEPARTURE_REMINDER
-                "DEPARTURE" -> DEPARTURE
                 "NUDGE" -> NUDGE
+                "ETA_NOTICE" -> ETA_NOTICE
                 else -> DEFAULT
             }
     }

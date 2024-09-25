@@ -21,7 +21,9 @@ class FCMService : FirebaseMessagingService() {
         val type =
             message.data["type"]?.let { NotificationType.from(it) } ?: NotificationType.DEFAULT
         val nickname = message.data["nickname"] ?: ""
-        notificationHelper.showTypedNotification(type, nickname)
+        val meetingId = message.data["meetingId"] ?: ""
+        val meetingName = message.data["meetingName"] ?: ""
+        notificationHelper.showNotification(type, nickname, meetingId, meetingName)
     }
 
     override fun onNewToken(token: String) {

@@ -24,3 +24,7 @@ spring:
 odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT
   api-key: testApiKey
+
+google:
+  maps:
+    api-key: testApiKey

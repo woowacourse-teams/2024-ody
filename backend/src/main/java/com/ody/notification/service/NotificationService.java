@@ -41,14 +41,14 @@ public class NotificationService {
 
     @Transactional
     public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
-        saveAndSendEntryNotification(mate);
         FcmTopic fcmTopic = new FcmTopic(meeting);
+        saveAndSendEntryNotification(mate, fcmTopic);
         fcmSubscriber.subscribeTopic(fcmTopic, deviceToken);
         saveAndSendDepartureReminderNotification(meeting, mate, fcmTopic);
     }
 
-    private void saveAndSendEntryNotification(Mate mate) {
-        Notification notification = Notification.createEntry(mate);
+    private void saveAndSendEntryNotification(Mate mate, FcmTopic fcmTopic) {
+        Notification notification = Notification.createEntry(mate, fcmTopic);
         saveAndSendNotification(notification);
     }
 
@@ -75,7 +75,12 @@ public class NotificationService {
     public void scheduleNotification(FcmGroupSendRequest fcmGroupSendRequest) {
         Instant startTime = fcmGroupSendRequest.notification().getSendAt().toInstant(KST_OFFSET);
         taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmGroupSendRequest), startTime);
-        log.info("{} 상태 알림 {}에 스케줄링 예약", fcmGroupSendRequest.notification().getStatus(), startTime);
+        log.info(
+                "{} 타입 {} 상태 알림 {}에 스케줄링 예약",
+                fcmGroupSendRequest.notification().getType(),
+                fcmGroupSendRequest.notification().getStatus(),
+                startTime
+        );
     }
 
     @EventListener(ApplicationReadyEvent.class)
