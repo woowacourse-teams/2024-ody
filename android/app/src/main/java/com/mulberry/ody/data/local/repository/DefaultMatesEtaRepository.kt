@@ -67,6 +67,10 @@ class DefaultMatesEtaRepository
                 }
             }.map { it.toMateEta() }.asLiveData()
 
+        override fun clearEtaFetchingJob() {
+            workManager.cancelAllWork()
+        }
+
         private fun WorkInfo.toMateEta(): MateEtaInfo? {
             val data =
                 if (this.state == WorkInfo.State.SUCCEEDED) {
