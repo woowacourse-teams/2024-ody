@@ -5,6 +5,7 @@ import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.repository.ody.LoginRepository
+import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.MutableSingleLiveData
 import com.mulberry.ody.presentation.common.SingleLiveData
@@ -22,6 +23,7 @@ class SettingViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         private val loginRepository: LoginRepository,
+        private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel() {
         private val _loginNavigateEvent: MutableSingleLiveData<LoginNavigatedReason> =
             MutableSingleLiveData()
@@ -39,6 +41,7 @@ class SettingViewModel
                 loginRepository.withdrawAccount()
                     .onSuccess {
                         _loginNavigateEvent.setValue(LoginNavigatedReason.WITHDRAWAL)
+                        matesEtaRepository.clearEtaFetchingJob()
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
