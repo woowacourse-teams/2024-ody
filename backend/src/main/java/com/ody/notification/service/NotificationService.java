@@ -92,7 +92,7 @@ public class NotificationService {
 
     @DisabledDeletedFilter
     public NotiLogFindResponses findAllMeetingLogs(Long meetingId) {
-        List<Notification> notifications = notificationRepository.findAllMeetingLogs(meetingId);
+        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(meetingId, LocalDateTime.now());
         return NotiLogFindResponses.from(notifications);
     }
 
