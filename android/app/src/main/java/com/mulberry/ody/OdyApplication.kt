@@ -18,6 +18,7 @@ class OdyApplication : Application(), Configuration.Provider {
         get() =
             Configuration.Builder()
                 .setWorkerFactory(workerFactory)
+                .setMaxSchedulerLimit(50)
                 .build()
 
     override fun onCreate() {

@@ -6,13 +6,14 @@ import android.location.LocationManager
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.local.entity.eta.MatesEtaInfoResponse
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
@@ -23,6 +24,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -37,6 +39,7 @@ class EtaDashboardWorker
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
         private val permissionHelper: PermissionHelper,
+        private val odyDatastore: OdyDatastore,
     ) : CoroutineWorker(context, workerParameters) {
         private val meetingId: Long by lazy {
             workerParameters.inputData.getLong(
@@ -45,12 +48,31 @@ class EtaDashboardWorker
             )
         }
 
+        private val durationTime: Long by lazy {
+            workerParameters.inputData.getLong(
+                DURATION_KEY,
+                DURATION_DEFAULT_VALUE,
+            )
+        }
+
         override suspend fun doWork(): Result {
+            odyDatastore.setMeetingJobUUID(meetingId, id.toString())
             if (meetingId == MEETING_ID_DEFAULT_VALUE) return Result.failure()
 
-            val mateEtaInfo = getLocation() ?: return Result.failure()
-            val mateEtaResponses = mateEtaInfo.toMateEtaInfoResponse()
-            return Result.success(workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses.convertMateEtasToJson()))
+            for (i in 0..durationTime step INTERVAL_MILLIS) {
+                val mateEtaInfo = getLocation()
+                val mateEtaResponses = mateEtaInfo?.toMateEtaInfoResponse()
+                val data =
+                    workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses?.convertMateEtasToJson())
+                setProgress(data)
+                delay(INTERVAL_MILLIS)
+            }
+            odyDatastore.removeMeetingJobUUID(meetingId)
+            val mateEtaInfo = getLocation()
+            val mateEtaResponses = mateEtaInfo?.toMateEtaInfoResponse()
+            val data =
+                workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses?.convertMateEtasToJson())
+            return Result.success(data)
         }
 
         @SuppressLint("MissingPermission")
@@ -64,8 +86,8 @@ class EtaDashboardWorker
 
             val currentLocationRequest =
                 CurrentLocationRequest.Builder()
-                    .setDurationMillis(30_000L)
-                    .setMaxUpdateAgeMillis(60_000L)
+                    .setDurationMillis(30 * MILLIS)
+                    .setMaxUpdateAgeMillis(60 * MILLIS)
                     .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
                     .build()
 
@@ -124,21 +146,28 @@ class EtaDashboardWorker
             private const val TAG = "EtaDashboardWorker"
             private const val MEETING_ID_KEY = "meeting_id"
             private const val MEETING_ID_DEFAULT_VALUE = -1L
+            private const val MAX_MINUTE = 10L
+            private const val MILLIS = 1000L
+            private const val INTERVAL_MILLIS = 10 * MILLIS
+            private const val DURATION_KEY = "duration"
+            private const val DURATION_DEFAULT_VALUE = MAX_MINUTE * 60 * MILLIS
             const val MATE_ETA_RESPONSE_KEY = "mate_eta_response"
 
             fun getWorkRequest(
                 meetingId: Long,
-                delay: Long,
-            ): WorkRequest {
+                duration: Long,
+                initialDelay: Long,
+            ): OneTimeWorkRequest {
                 val inputData =
                     Data.Builder()
                         .putLong(MEETING_ID_KEY, meetingId)
+                        .putLong(DURATION_KEY, duration)
                         .build()
 
                 return OneTimeWorkRequestBuilder<EtaDashboardWorker>()
                     .setInputData(inputData)
                     .addTag(meetingId.toString())
-                    .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                    .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                     .build()
             }
         }

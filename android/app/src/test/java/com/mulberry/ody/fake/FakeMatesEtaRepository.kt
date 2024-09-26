@@ -9,7 +9,9 @@ import com.mulberry.ody.mateEtaInfo
 object FakeMatesEtaRepository : MatesEtaRepository {
     override fun reserveEtaFetchingJob(
         meetingId: Long,
-        targetTimeMillisecond: Long,
+        startMillisecond: Long,
+        endMillisecond: Long,
+        interval: Long,
     ) = Unit
 
     override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> {

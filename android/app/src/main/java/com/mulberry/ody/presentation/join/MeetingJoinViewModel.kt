@@ -25,6 +25,7 @@ import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.ZoneId
 import javax.inject.Inject
+import kotlin.math.max
 
 @HiltViewModel
 class MeetingJoinViewModel
@@ -114,24 +115,29 @@ class MeetingJoinViewModel
             meetingId: Long,
             meetingDateTime: LocalDateTime,
         ) {
-            val meetingTimeMilliSeconds = meetingDateTime.toMilliSeconds(LOCAL_ZONE_ID)
-            val endReserveTimeMilliSeconds = meetingTimeMilliSeconds + END_RESERVE_MILLI_SECOND
-            var currentReserveTimeMilliSeconds = meetingTimeMilliSeconds + START_RESERVE_MILLI_SECOND
+            val initialTime = meetingDateTime.minusMinutes(BEFORE_MINUTE).toMilliSeconds(LOCAL_ZONE_ID)
+            val nowTime = LocalDateTime.now().toMilliSeconds(LOCAL_ZONE_ID)
 
-            while (currentReserveTimeMilliSeconds <= endReserveTimeMilliSeconds) {
-                matesEtaRepository.reserveEtaFetchingJob(meetingId, currentReserveTimeMilliSeconds)
-                currentReserveTimeMilliSeconds += RESERVE_INTERVAL
-            }
+            val startTime = max(initialTime, nowTime)
+            val endTime = meetingDateTime.plusMinutes(AFTER_MINUTE).toMilliSeconds(LOCAL_ZONE_ID)
+
+            matesEtaRepository.reserveEtaFetchingJob(
+                meetingId,
+                startTime,
+                endTime,
+                INTERVAL_BETWEEN_WORK_REQUEST,
+            )
         }
 
         companion object {
             private const val TAG = "MeetingJoinViewModel"
 
             private const val LOCAL_ZONE_ID = "Asia/Seoul"
-            private const val MILLI_SECOND_OF_MINUTE = 60_000
-            private const val START_RESERVE_MILLI_SECOND = -30 * MILLI_SECOND_OF_MINUTE
-            private const val END_RESERVE_MILLI_SECOND = 1 * MILLI_SECOND_OF_MINUTE
-            private const val RESERVE_INTERVAL = 10_000
+            private const val MILLI_SECOND_OF_SECOND = 1_000L
+            private const val MILLI_SECOND_OF_MINUTE = MILLI_SECOND_OF_SECOND * 60
+            private const val BEFORE_MINUTE = 30L
+            private const val AFTER_MINUTE = 1L
+            private const val INTERVAL_BETWEEN_WORK_REQUEST = 10 * MILLI_SECOND_OF_MINUTE
         }
     }
 
