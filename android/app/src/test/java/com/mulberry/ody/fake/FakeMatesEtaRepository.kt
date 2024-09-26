@@ -19,4 +19,6 @@ object FakeMatesEtaRepository : MatesEtaRepository {
         liveData.value = mateEtaInfo
         return liveData
     }
+
+    override fun clearEtaFetchingJob() = Unit
 }
