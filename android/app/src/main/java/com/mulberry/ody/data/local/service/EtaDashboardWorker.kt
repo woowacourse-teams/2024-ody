@@ -56,7 +56,6 @@ class EtaDashboardWorker
         }
 
         override suspend fun doWork(): Result {
-            Timber.d("doWorkStart")
             odyDatastore.setMeetingJobUUID(meetingId, id.toString())
             if (meetingId == MEETING_ID_DEFAULT_VALUE) return Result.failure()
 
@@ -65,7 +64,6 @@ class EtaDashboardWorker
                 val mateEtaResponses = mateEtaInfo?.toMateEtaInfoResponse()
                 val data =
                     workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses?.convertMateEtasToJson())
-                Timber.tag("EtaDashboardWorker").d("doWorkProcess $data")
                 setProgress(data)
                 delay(INTERVAL_MILLIS)
             }

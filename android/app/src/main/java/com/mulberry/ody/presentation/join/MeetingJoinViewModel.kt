@@ -24,6 +24,7 @@ import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.ZoneId
 import javax.inject.Inject
+import kotlin.math.max
 
 @HiltViewModel
 class MeetingJoinViewModel
@@ -88,17 +89,17 @@ class MeetingJoinViewModel
             meetingId: Long,
             meetingDateTime: LocalDateTime,
         ) {
-            val initialTime = meetingDateTime.minusMinutes(30).toMilliSeconds(LOCAL_ZONE_ID)
+            val initialTime = meetingDateTime.minusMinutes(BEFORE_MINUTE).toMilliSeconds(LOCAL_ZONE_ID)
             val nowTime = LocalDateTime.now().toMilliSeconds(LOCAL_ZONE_ID)
 
-            val startTime = Math.max(initialTime, nowTime)
-            val endTime = meetingDateTime.plusMinutes(1).toMilliSeconds(LOCAL_ZONE_ID)
+            val startTime = max(initialTime, nowTime)
+            val endTime = meetingDateTime.plusMinutes(AFTER_MINUTE).toMilliSeconds(LOCAL_ZONE_ID)
 
             matesEtaRepository.reserveEtaFetchingJob(
                 meetingId,
                 startTime,
                 endTime,
-                INTERVAL,
+                INTERVAL_BETWEEN_WORK_REQUEST,
             )
         }
 
@@ -108,7 +109,9 @@ class MeetingJoinViewModel
             private const val LOCAL_ZONE_ID = "Asia/Seoul"
             private const val MILLI_SECOND_OF_SECOND = 1_000L
             private const val MILLI_SECOND_OF_MINUTE = MILLI_SECOND_OF_SECOND * 60
-            private const val INTERVAL = 10 * MILLI_SECOND_OF_MINUTE
+            private const val BEFORE_MINUTE = 30L
+            private const val AFTER_MINUTE = 1L
+            private const val INTERVAL_BETWEEN_WORK_REQUEST = 10 * MILLI_SECOND_OF_MINUTE
         }
     }
 

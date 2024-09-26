@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import kotlin.math.min
 
 class DefaultMatesEtaRepository
     @Inject
@@ -25,35 +26,35 @@ class DefaultMatesEtaRepository
         private val workManager: WorkManager,
         private val odyDatastore: OdyDatastore,
     ) : MatesEtaRepository {
-        private fun getEtaFetchingRequest(
-            meetingId: Long,
-            duration: Long,
-            targetTimeMillisecond: Long,
-        ): OneTimeWorkRequest {
-            val currentTime = System.currentTimeMillis()
-            val delay = targetTimeMillisecond - currentTime
-
-            return EtaDashboardWorker.getWorkRequest(meetingId, duration, delay)
-        }
-
         override fun reserveEtaFetchingJob(
             meetingId: Long,
             startMillisecond: Long,
             endMillisecond: Long,
             interval: Long,
         ) {
-            val initialDuration = Math.min(interval, endMillisecond - startMillisecond)
+            val initialDuration = min(interval, endMillisecond - startMillisecond)
             val initialRequest = getEtaFetchingRequest(meetingId, initialDuration, startMillisecond)
 
-            var continuation = workManager.beginWith(initialRequest)
+            var workContnuation = workManager.beginWith(initialRequest)
             var currentMilliSecond = startMillisecond + interval
             while (currentMilliSecond < endMillisecond) {
-                val duration = Math.min(interval, endMillisecond - currentMilliSecond)
-                val request = getEtaFetchingRequest(meetingId, duration, currentMilliSecond)
-                continuation = continuation.then(request)
+                val duration = min(interval, endMillisecond - currentMilliSecond)
+                val workRequest = getEtaFetchingRequest(meetingId, duration, currentMilliSecond)
+                workContnuation = workContnuation.then(workRequest)
                 currentMilliSecond += interval
             }
-            continuation.enqueue()
+            workContnuation.enqueue()
+        }
+
+        private fun getEtaFetchingRequest(
+            meetingId: Long,
+            workDuration: Long,
+            targetTimeMillisecond: Long,
+        ): OneTimeWorkRequest {
+            val currentTime = System.currentTimeMillis()
+            val initialDelay = targetTimeMillisecond - currentTime
+
+            return EtaDashboardWorker.getWorkRequest(meetingId, workDuration, initialDelay)
         }
 
         @OptIn(ExperimentalCoroutinesApi::class)
