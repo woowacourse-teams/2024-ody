@@ -1,0 +1,26 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:database?serverTimezone=Asia/Seoul
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: false
+  sql:
+    init:
+      mode: always
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+log:
+  file:
+    path: ./ody-local-logs

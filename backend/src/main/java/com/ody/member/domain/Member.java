@@ -1,34 +1,29 @@
 package com.ody.member.domain;
 
 import com.ody.auth.token.RefreshToken;
+import com.ody.mate.domain.Nickname;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
-import java.util.Objects;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.SQLDelete;
 
 @Entity
+@Getter
+@Filter(name = "deletedMemberFilter", condition = "deleted_at IS NULL")
+@FilterDef(name = "deletedMemberFilter")
+@SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Getter
-@Table(uniqueConstraints = {
-        @UniqueConstraint(
-                name = "uniqueProviderTypeAndProviderId",
-                columnNames = {"providerType", "providerId"}
-        ),
-        @UniqueConstraint(
-                name = "uniqueDeviceToken",
-                columnNames = {"deviceToken"}
-        ),
-})
 public class Member {
 
     @Id
@@ -40,7 +35,7 @@ public class Member {
     private AuthProvider authProvider;
 
     @NotNull
-    private String nickname;
+    private Nickname nickname;
 
     @NotNull
     private String imageUrl;
@@ -51,32 +46,18 @@ public class Member {
     @Embedded
     private RefreshToken refreshToken;
 
-    public Member(DeviceToken deviceToken) { // TODO: 제거
-        this(null, new AuthProvider("1234"), "ahdzlrjsdn", "image", deviceToken, new RefreshToken("rt"));
+    private LocalDateTime deletedAt;
+
+    public Member(String providerId, Nickname nickname, String imageUrl, DeviceToken deviceToken) {
+        this(null, new AuthProvider(providerId), nickname, imageUrl, deviceToken, null, null);
     }
 
-    public Member(String nickname, DeviceToken deviceToken) {
-        this(null, new AuthProvider("1234"), nickname, "image", deviceToken, new RefreshToken("rt"));
+    public boolean isLogout() {
+        return this.refreshToken == null;
     }
 
-    public Member(String providerId, String nickname, String imageUrl, DeviceToken deviceToken) {
-        this(null, new AuthProvider(providerId), nickname, imageUrl, deviceToken, null);
-    }
-
-    public String getDeviceTokenValue() {
-        return deviceToken.getValue();
-    }
-
-    public ProviderType getProviderType() {
-        return authProvider.getProviderType();
-    }
-
-    public String getProviderId() {
-        return authProvider.getProviderId();
-    }
-
-    public boolean isSame(RefreshToken otherRefreshToken) {
-        return this.refreshToken.equals(otherRefreshToken);
+    public boolean isSame(AuthProvider otherAuthProvider) {
+        return this.authProvider.equals(otherAuthProvider);
     }
 
     public void updateRefreshToken(RefreshToken refreshToken) {
@@ -89,9 +70,5 @@ public class Member {
 
     public void updateDeviceToken(DeviceToken deviceToken) {
         this.deviceToken = deviceToken;
-    }
-
-    public boolean isSame(AuthProvider otherAuthProvider) {
-        return this.authProvider.equals(otherAuthProvider);
     }
 }

@@ -15,6 +15,15 @@ public class AccessToken {
 
     private final String value;
 
+    public AccessToken(long memberId, AuthProperties authProperties) {
+        Date validity = new Date(System.currentTimeMillis() + authProperties.getAccessExpiration());
+        this.value = Jwts.builder()
+                .setSubject(String.valueOf(memberId))
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, authProperties.getAccessKey())
+                .compact();
+    }
+
     public AccessToken(String rawValue) {
         validate(rawValue);
         this.value = parseAccessToken(rawValue);
@@ -28,14 +37,5 @@ public class AccessToken {
 
     private String parseAccessToken(String rawValue) {
         return rawValue.substring(ACCESS_TOKEN_PREFIX.length()).trim();
-    }
-
-    public AccessToken(long memberId, AuthProperties authProperties) {
-        Date validity = new Date(System.currentTimeMillis() + authProperties.getAccessExpiration());
-        this.value = Jwts.builder()
-                .setSubject(String.valueOf(memberId))
-                .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, authProperties.getAccessKey())
-                .compact();
     }
 }

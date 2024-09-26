@@ -4,9 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/2024-ody.iml" filepath="$PROJECT_DIR$/.idea/2024-ody.iml" />
       <module fileurl="file://$PROJECT_DIR$/backend/backend.iml" filepath="$PROJECT_DIR$/backend/backend.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ody-backend.iml" filepath="$PROJECT_DIR$/.idea/modules/ody-backend.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ody-backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ody-backend.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ody-backend.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ody-backend.test.iml" />
     </modules>
   </component>
 </project>

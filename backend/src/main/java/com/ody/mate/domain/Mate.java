@@ -2,7 +2,6 @@ package com.ody.mate.domain;
 
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
-import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -15,11 +14,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.SQLDelete;
 
 @Table(uniqueConstraints = {
         @UniqueConstraint(
@@ -28,9 +31,12 @@ import lombok.NoArgsConstructor;
         )
 })
 @Entity
+@Getter
+@Filter(name = "deletedMateFilter", condition = "deleted_at IS NULL")
+@FilterDef(name = "deletedMateFilter")
+@SQLDelete(sql = "UPDATE mate SET deleted_at = NOW() WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Getter
 public class Mate {
 
     @Id
@@ -48,7 +54,7 @@ public class Mate {
     private Member member;
 
     @NotNull
-    private String nickname;
+    private Nickname nickname;
 
     @Embedded
     @NotNull
@@ -57,28 +63,21 @@ public class Mate {
     @NotNull
     private long estimatedMinutes;
 
-    // TODO: Nickname 객체 유지 여부에 따라 메서드 수정
+    private LocalDateTime deletedAt;
+
     public Mate(Meeting meeting, Member member, Nickname nickname, Location origin, long estimatedMinutes) {
-        this(null, meeting, member, nickname.getValue(), origin, estimatedMinutes);
+        this(null, meeting, member, nickname, origin, estimatedMinutes, null);
     }
 
     public Mate(Meeting meeting, Member member, Location origin, long estimatedMinutes) {
-        this(null, meeting, member, member.getNickname(), origin, estimatedMinutes);
+        this(null, meeting, member, member.getNickname(), origin, estimatedMinutes, null);
     }
 
     public boolean isAttended(Meeting otherMeeting) {
         return Objects.equals(this.meeting.getId(), otherMeeting.getId());
     }
 
-    public String getNicknameValue() {
-        return nickname;
-    }
-
-    public DeviceToken getMemberDeviceToken() {
-        return member.getDeviceToken();
-    }
-
-    public String getMemberImageUrl() {
-        return member.getImageUrl();
+    public boolean isDeleted() {
+        return deletedAt != null;
     }
 }

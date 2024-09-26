@@ -13,7 +13,6 @@ env:
 
 jobs:
   build-and-push:
-
     runs-on: ubuntu-latest
 
     defaults:
@@ -24,8 +23,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-          submodules: true
-          token: ${{ secrets.GIT_TOKEN }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -61,12 +58,17 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Docker Image Build And Push
-        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod -f Dockerfile . --push
+        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod -f Dockerfile . --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} --push
 
   pull-and-deploy:
-
     needs: build-and-push
-    runs-on: prod
+
+    runs-on: ${{ matrix.environment }}
+
+    strategy:
+      max-parallel: 1 # 직렬처리
+      matrix:
+        environment: [ prod, prod-a, prod-b ]
 
     steps:
       - name: Login to Docker Hub
@@ -81,10 +83,10 @@ jobs:
           docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
 
       - name: Set up Container And Run Docker Image
-        run: | 
+        run: |
           docker stop $DOCKER_CONTAINER_NAME || true
           docker rm $DOCKER_CONTAINER_NAME || true     
-          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
+          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
 
       - name: Check Docker Process
         run: docker ps

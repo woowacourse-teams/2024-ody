@@ -1,9 +1,9 @@
 package com.ody.member.service;
 
+import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.auth.token.RefreshToken;
-import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyUnauthorizedException;
-import com.ody.member.domain.DeviceToken;
+import com.ody.mate.service.MateService;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import java.util.Optional;
@@ -17,14 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
-    @Transactional
-    public Member save(DeviceToken deviceToken) {
-        if (memberRepository.findFirstByDeviceToken(deviceToken).isPresent()) {
-            throw new OdyBadRequestException("중복된 토큰이 존재합니다.");
-        }
-        return memberRepository.save(new Member(deviceToken));
-    }
+    private final MateService mateService;
+    private final SocialAuthUnlinkClient socialAuthUnlinkClient;
 
     @Transactional
     public Member save(Member requestMember) {
@@ -50,23 +44,23 @@ public class MemberService {
         return memberRepository.save(requestMember);
     }
 
-    public Member findByDeviceToken(DeviceToken deviceToken) {
-        return memberRepository.findFirstByDeviceToken(deviceToken)
-                .orElseThrow(() -> new OdyUnauthorizedException("존재하지 않는 회원 입니다."));
-    }
-
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId)
+                .filter(member -> member.getDeletedAt() == null)
                 .orElseThrow(() -> new OdyUnauthorizedException("존재하지 않는 회원입니다."));
     }
 
-    public boolean isMemberRefreshToken(long memberId, RefreshToken refreshToken) {
-        Member member = findById(memberId);
-        return member.isSame(refreshToken);
-    }
-
+    @Transactional
     public void updateRefreshToken(long memberId, RefreshToken refreshToken) {
         Member member = findById(memberId);
         member.updateRefreshToken(refreshToken);
+    }
+
+    @Transactional
+    public void delete(Member member) {
+        socialAuthUnlinkClient.unlink(member.getAuthProvider().getProviderId());
+
+        mateService.deleteByMemberId(member.getId());
+        memberRepository.delete(member);
     }
 }

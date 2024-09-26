@@ -20,12 +20,16 @@ public record NotiLogFindResponse(
         String imageUrl
 ) {
 
-    public NotiLogFindResponse(Notification notification) {
-        this(
+    public static NotiLogFindResponse from(Notification notification) {
+        String imageUrl = notification.getMate().getMember().getImageUrl();
+        if (notification.getMate().isDeleted()) {
+            imageUrl = "";
+        }
+        return new NotiLogFindResponse(
                 notification.getType().toString(),
-                notification.getMate().getNicknameValue(),
+                notification.getMate().getNickname().getValue(),
                 TimeUtil.trimSecondsAndNanos(notification.getSendAt()),
-                notification.getMate().getMemberImageUrl()
+                imageUrl
         );
     }
 }

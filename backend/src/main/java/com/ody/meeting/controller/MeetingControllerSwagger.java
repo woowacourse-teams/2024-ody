@@ -1,8 +1,6 @@
 package com.ody.meeting.controller;
 
 import com.ody.eta.dto.request.MateEtaRequest;
-import com.ody.eta.dto.response.MateEtaResponses;
-import com.ody.meeting.dto.request.MeetingSaveRequest;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
@@ -39,7 +37,7 @@ public interface MeetingControllerSwagger {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "존재하지 않은 약속방이거나 약속방 일원이 아닌 경우",
+                            description = "존재하지 않은 약속이거나 약속 일원이 아닌 경우",
                             content = @Content(schema = @Schema(implementation = ProblemDetail.class))
                     )
             }

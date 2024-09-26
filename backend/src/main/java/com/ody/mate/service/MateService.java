@@ -6,13 +6,10 @@ import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.service.EtaService;
 import com.ody.mate.domain.Mate;
-import com.ody.mate.dto.request.MateSaveRequest;
 import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
-import com.ody.mate.dto.response.MateSaveResponse;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
-import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
@@ -43,6 +40,10 @@ public class MateService {
         if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
             throw new OdyBadRequestException("약속에 이미 참여한 회원입니다.");
         }
+        if (meeting.isOverdue()) {
+            throw new OdyBadRequestException("참여 가능한 시간이 지난 약속에 참여할 수 없습니다.");
+        }
+
         Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
         notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken());
         return MateSaveResponseV2.from(meeting);
@@ -60,7 +61,7 @@ public class MateService {
 
     public List<Mate> findAllByMeetingIdIfMate(Member member, long meetingId) {
         findByMeetingIdAndMemberId(meetingId, member.getId());
-        return mateRepository.findAllByMeetingId(meetingId);
+        return mateRepository.findAllByOverdueFalseMeetingId(meetingId);
     }
 
     @Transactional
@@ -76,8 +77,12 @@ public class MateService {
     }
 
     private Mate findFetchedMate(Long mateId) {
-        return mateRepository.findFetchedMateById(mateId)
+        Mate mate = mateRepository.findFetchedMateById(mateId)
                 .orElseThrow(() -> new OdyBadRequestException("존재하지 않는 약속 참여자입니다."));
+        if (mate.getMeeting().isOverdue()) {
+            throw new OdyBadRequestException("기한이 지난 약속입니다.");
+        }
+        return mate;
     }
 
     private boolean canNudge(Mate mate) {
@@ -85,6 +90,7 @@ public class MateService {
         return etaStatus == EtaStatus.LATE_WARNING || etaStatus == EtaStatus.LATE;
     }
 
+    @Transactional
     public MateEtaResponsesV2 findAllMateEtas(MateEtaRequest mateEtaRequest, Long meetingId, Member member) {
         Mate mate = findByMeetingIdAndMemberId(meetingId, member.getId());
         return etaService.findAllMateEtas(mateEtaRequest, mate);
@@ -93,5 +99,19 @@ public class MateService {
     private Mate findByMeetingIdAndMemberId(Long meetingId, Long memberId) {
         return mateRepository.findByMeetingIdAndMemberId(meetingId, memberId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 약속이거나 약속 참여자가 아닙니다."));
+    }
+
+    @Transactional
+    public void deleteByMemberId(long memberId) {
+        mateRepository.findAllByMemberId(memberId)
+                .forEach(this::delete);
+    }
+
+    private void delete(Mate mate) {
+        notificationService.saveMemberDeletionNotification(mate);
+
+        notificationService.updateAllStatusPendingToDismissedByMateId(mate.getId());
+        etaService.deleteByMateId(mate.getId());
+        mateRepository.deleteById(mate.getId());
     }
 }

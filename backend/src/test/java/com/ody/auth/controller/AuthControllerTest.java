@@ -5,6 +5,7 @@ import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseControllerTest;
 import com.ody.common.TokenFixture;
+import com.ody.mate.domain.Nickname;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
@@ -86,10 +87,11 @@ class AuthControllerTest extends BaseControllerTest {
             Member member = new Member(
                     1L,
                     new AuthProvider(providerId),
-                    "nickname",
+                    new Nickname("nickname"),
                     "imageUrl",
                     new DeviceToken(deviceToken),
-                    new RefreshToken("refresh-token=refreshToken")
+                    new RefreshToken("refresh-token=refreshToken"),
+                    null
             );
             return memberRepository.save(member);
         }
@@ -201,10 +203,11 @@ class AuthControllerTest extends BaseControllerTest {
         Member member = new Member(
                 1L,
                 new AuthProvider("pid"),
-                "nickname",
+                new Nickname("nickname"),
                 "imageUrl",
                 new DeviceToken("deviceToken"),
-                new RefreshToken("refresh-token=" + refreshToken.getValue())
+                new RefreshToken("refresh-token=" + refreshToken.getValue()),
+                null
         );
         return memberRepository.save(member);
     }

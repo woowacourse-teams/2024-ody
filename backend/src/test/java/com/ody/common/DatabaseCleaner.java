@@ -25,7 +25,7 @@ public class DatabaseCleaner {
     }
 
     private void cleanNotification() {
-        entityManager.createQuery("DELETE FROM Notification")
+        entityManager.createNativeQuery("DELETE FROM Notification")
                 .executeUpdate();
 
         entityManager.createNativeQuery("ALTER TABLE notification ALTER COLUMN id RESTART WITH 1")
@@ -36,7 +36,7 @@ public class DatabaseCleaner {
     }
 
     private void cleanEta() {
-        entityManager.createQuery("DELETE FROM Eta")
+        entityManager.createNativeQuery("DELETE FROM Eta")
                 .executeUpdate();
 
         entityManager.createNativeQuery("ALTER TABLE eta ALTER COLUMN id RESTART WITH 1")
@@ -48,7 +48,7 @@ public class DatabaseCleaner {
 
 
     private void cleanMate() {
-        entityManager.createQuery("DELETE FROM Mate")
+        entityManager.createNativeQuery("DELETE FROM Mate")
                 .executeUpdate();
 
         entityManager.createNativeQuery("ALTER TABLE mate ALTER COLUMN id RESTART WITH 1")
@@ -59,7 +59,7 @@ public class DatabaseCleaner {
     }
 
     private void cleanMeeting() {
-        entityManager.createQuery("DELETE FROM Meeting")
+        entityManager.createNativeQuery("DELETE FROM Meeting")
                 .executeUpdate();
 
         entityManager.createNativeQuery("ALTER TABLE meeting ALTER COLUMN id RESTART WITH 1")
@@ -70,7 +70,7 @@ public class DatabaseCleaner {
     }
 
     private void cleanMember() {
-        entityManager.createQuery("DELETE FROM Member")
+        entityManager.createNativeQuery("DELETE FROM Member")
                 .executeUpdate();
 
         entityManager.createNativeQuery("ALTER TABLE member ALTER COLUMN id RESTART WITH 1")

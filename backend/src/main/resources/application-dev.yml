@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: false
+  sql:
+    init:
+      mode: never
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(KUJNgDMlvi/imeVHjCO2QekgI4DNxZT9IrW0QlVVkJXJUUQ2DAUOqI91FVH7aFhXVCsfXtf0EUmF/JqN3GpXa/mVj3o4BNbqS3QsU50BgwEEodko+VwHY2ebDHUxlKA1/FXBSmu6p+Rd3rcNEzoBIA==)
+    username: ENC(jNYhZN6xMCmPQ7GZM+Hu3A==)
+    password: ENC(VRtr3RjM+XnPvRdLjrPMHyTSzDlEjR7o)
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+log:
+  file:
+    path: /ody-dev-logs
