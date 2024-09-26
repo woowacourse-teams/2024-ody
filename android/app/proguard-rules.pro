@@ -37,3 +37,4 @@
 # moshi
 -keep class com.squareup.moshi.** { *; }
 -keep class com.mulberry.ody.data.remote.thirdparty.address.response.* { *; }
+-keep class com.mulberry.ody.data.remote.thirdparty.address.response.coord.* { *; }
