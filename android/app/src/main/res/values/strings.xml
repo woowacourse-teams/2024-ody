@@ -30,6 +30,7 @@
     <string name="destination_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
 
     <!-- activity_meetings.xml -->
+    <string name="meetings_traffic_guide">*대중교통 기준</string>
     <string name="meetings_departure_postfix">에서</string>
     <string name="meetings_arrival_postfix">까지</string>
     <string name="meetings_eta_form">%1$s분 걸려요</string>
