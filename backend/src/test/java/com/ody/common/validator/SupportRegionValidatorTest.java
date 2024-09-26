@@ -11,6 +11,7 @@ import java.lang.annotation.Annotation;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -34,6 +35,16 @@ class SupportRegionValidatorTest {
         boolean valid = supportRegionValidator.isValid(mateEtaRequest, mock(ConstraintValidatorContext.class));
 
         assertThat(valid).isEqualTo(expected);
+    }
+
+    @DisplayName("행방불명 좌표(0.0)는 true를 반환한다")
+    @Test
+    void isValidMissingCoordinate() {
+        MateEtaRequest mateEtaRequest = new MateEtaRequest(false, "0.0", "0.0");
+
+        boolean valid = supportRegionValidator.isValid(mateEtaRequest, mock(ConstraintValidatorContext.class));
+
+        assertThat(valid).isEqualTo(true);
     }
 
     private static Stream<Arguments> supportRegionTestCases() {
