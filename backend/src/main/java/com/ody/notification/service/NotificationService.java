@@ -80,6 +80,7 @@ public class NotificationService {
         );
     }
 
+    @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void schedulePendingNotification() {
         List<Notification> notifications = notificationRepository.findAllByTypeAndStatus(
@@ -92,7 +93,10 @@ public class NotificationService {
 
     @DisabledDeletedFilter
     public NotiLogFindResponses findAllMeetingLogs(Long meetingId) {
-        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(meetingId, LocalDateTime.now());
+        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(
+                meetingId,
+                LocalDateTime.now()
+        );
         return NotiLogFindResponses.from(notifications);
     }
 
