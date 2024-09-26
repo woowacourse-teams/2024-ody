@@ -39,3 +39,8 @@ jasypt:
 kakao:
   url: https://kapi.kakao.com/v1/user/unlink
   admin-key: ENC(b8lXOQquegCbdIgayVYIDBrhkNeyuucBArJScDGtEA2IWFiWeGUViiDhyZg0XpFE)
+
+management: # actuator
+  health:
+    db:
+      enabled: false
