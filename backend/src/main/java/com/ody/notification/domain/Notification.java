@@ -65,7 +65,7 @@ public class Notification extends BaseEntity {
                 NotificationType.ENTRY,
                 LocalDateTime.now(),
                 NotificationStatus.DONE,
-                null
+                fcmTopic
         );
     }
 
