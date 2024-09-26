@@ -66,7 +66,7 @@ class MeetingJoinActivity :
         val fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(applicationContext)
 
-        if (hasLocationPermissions() || isLocationEnabled()) {
+        if (hasLocationPermissions() && isLocationEnabled()) {
             val currentLocationRequest =
                 CurrentLocationRequest.Builder()
                     .setDurationMillis(30_000L)
