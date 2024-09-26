@@ -13,5 +13,5 @@ interface MatesEtaRepository {
 
     fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?>
 
-    fun clearEtaFetchingJob()
+    suspend fun clearEtaFetchingJob()
 }

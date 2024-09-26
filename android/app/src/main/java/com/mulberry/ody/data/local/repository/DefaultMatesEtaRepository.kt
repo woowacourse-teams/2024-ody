@@ -52,8 +52,9 @@ class DefaultMatesEtaRepository
         override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> =
             matesEtaInfoDao.getMateEtaInfo(meetingId).map { it?.toMateEtaInfo() }
 
-        override fun clearEtaFetchingJob() {
+        override suspend fun clearEtaFetchingJob() {
             workManager.cancelAllWork()
+            matesEtaInfoDao.deleteAll()
         }
 
         private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)

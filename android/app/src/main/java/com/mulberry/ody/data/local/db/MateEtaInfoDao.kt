@@ -16,4 +16,7 @@ interface MateEtaInfoDao {
 
     @Query("DELETE FROM eta_info WHERE meetingId = :meetingId")
     suspend fun delete(meetingId: Long)
+
+    @Query("DELETE FROM eta_info")
+    suspend fun deleteAll()
 }
