@@ -16,7 +16,6 @@ import com.ody.route.domain.DepartureTime;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +76,7 @@ public class NotificationService {
                 "{} 타입 {} 상태 알림 {}에 스케줄링 예약",
                 fcmGroupSendRequest.notification().getType(),
                 fcmGroupSendRequest.notification().getStatus(),
-                startTime
+                startTime.atZone(TimeUtil.KST_OFFSET)
         );
     }
 

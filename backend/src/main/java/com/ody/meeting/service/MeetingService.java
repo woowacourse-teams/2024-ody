@@ -23,7 +23,6 @@ import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,6 +61,7 @@ public class MeetingService {
         LocalDateTime etaNoticeTime = meeting.getMeetingTime().minusMinutes(ETA_NOTICE_TIME_DEFER);
         Instant startTime = etaNoticeTime.toInstant(TimeUtil.KST_OFFSET);
         taskScheduler.schedule(() -> fcmPushSender.sendNoticeMessage(noticeMessage), startTime);
+        log.info("{} 타입 알림 {}에 스케줄링 예약", NotificationType.ETA_NOTICE, startTime.atZone(TimeUtil.KST_OFFSET));
     }
 
     private String generateUniqueInviteCode() {
