@@ -9,21 +9,19 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.mulberry.ody.data.local.db.OdyDatastore
-import com.mulberry.ody.data.local.entity.eta.MatesEtaInfoResponse
+import com.mulberry.ody.data.local.db.MateEtaInfoDao
+import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
@@ -39,7 +37,7 @@ class EtaDashboardWorker
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
         private val permissionHelper: PermissionHelper,
-        private val odyDatastore: OdyDatastore,
+        private val mateEtaInfoDao: MateEtaInfoDao,
     ) : CoroutineWorker(context, workerParameters) {
         private val meetingId: Long by lazy {
             workerParameters.inputData.getLong(
@@ -56,25 +54,20 @@ class EtaDashboardWorker
         }
 
         override suspend fun doWork(): Result {
-            odyDatastore.setMeetingJobUUID(meetingId, id.toString())
             if (meetingId == MEETING_ID_DEFAULT_VALUE) return Result.failure()
-
             for (i in 0..durationTime step INTERVAL_MILLIS) {
                 val mateEtaInfo = getLocation()
-                val mateEtaResponses = mateEtaInfo?.toMateEtaInfoResponse()
-                val data =
-                    workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses?.convertMateEtasToJson())
-                setProgress(data)
+                if (mateEtaInfo != null) {
+                    val mateEtaInfoEntity =
+                        MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
+                    mateEtaInfoDao.upsert(mateEtaInfoEntity)
+                }
                 delay(INTERVAL_MILLIS)
             }
-            odyDatastore.removeMeetingJobUUID(meetingId)
-            val mateEtaInfo = getLocation()
-            val mateEtaResponses = mateEtaInfo?.toMateEtaInfoResponse()
-            val data =
-                workDataOf(MATE_ETA_RESPONSE_KEY to mateEtaResponses?.convertMateEtasToJson())
-            return Result.success(data)
+            return Result.success()
         }
 
+        @OptIn(ExperimentalCoroutinesApi::class)
         @SuppressLint("MissingPermission")
         private suspend fun getLocation(): MateEtaInfo? {
             val fusedLocationProviderClient =
@@ -123,19 +116,6 @@ class EtaDashboardWorker
                 .getOrNull()
         }
 
-        private fun MateEtaInfo.toMateEtaInfoResponse(): MatesEtaInfoResponse {
-            return MatesEtaInfoResponse(userId, mateEtas)
-        }
-
-        private fun MatesEtaInfoResponse.convertMateEtasToJson(): String {
-            val moshi =
-                Moshi.Builder()
-                    .add(KotlinJsonAdapterFactory())
-                    .build()
-            val jsonAdapter = moshi.adapter(MatesEtaInfoResponse::class.java)
-            return jsonAdapter.toJson(this)
-        }
-
         private fun hasLocationPermissions(): Boolean {
             return permissionHelper.hasFineLocationPermission() &&
                 permissionHelper.hasCoarseLocationPermission() &&
@@ -151,7 +131,6 @@ class EtaDashboardWorker
             private const val INTERVAL_MILLIS = 10 * MILLIS
             private const val DURATION_KEY = "duration"
             private const val DURATION_DEFAULT_VALUE = MAX_MINUTE * 60 * MILLIS
-            const val MATE_ETA_RESPONSE_KEY = "mate_eta_response"
 
             fun getWorkRequest(
                 meetingId: Long,
