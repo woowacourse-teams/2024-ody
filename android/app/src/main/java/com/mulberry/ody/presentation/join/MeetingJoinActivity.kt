@@ -75,6 +75,7 @@ class MeetingJoinActivity :
                     .build()
 
             lifecycleScope.launch {
+                viewModel.startLoading()
                 val location =
                     suspendCancellableCoroutine { continuation ->
                         fusedLocationProviderClient.getCurrentLocation(currentLocationRequest, null)
@@ -87,6 +88,7 @@ class MeetingJoinActivity :
                             }
                     }
                 viewModel.getDefaultLocation(location.longitude.toString(), location.latitude.toString())
+                viewModel.stopLoading()
             }
         }
     }
