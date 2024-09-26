@@ -6,7 +6,7 @@ spring:
       settings:
         web-allow-others: true
   datasource:
-    url: jdbc:h2:mem:database
+    url: jdbc:h2:mem:database;MODE=MYSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -14,6 +14,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+      dialect: org.hibernate.dialect.MySQLDialect
     properties:
       hibernate:
         format_sql: true

@@ -1,6 +1,10 @@
 spring:
   jpa:
     open-in-view: false
+    defer-datasource-initialization: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8

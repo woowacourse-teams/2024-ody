@@ -7,19 +7,16 @@ spring:
         web-allow-others: true
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:database?serverTimezone=Asia/Seoul
+    url: jdbc:h2:mem:database?serverTimezone=Asia/Seoul;MODE=MYSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
     username: sa
     password:
   jpa:
     hibernate:
       ddl-auto: validate
-    defer-datasource-initialization: false
+      dialect: org.hibernate.dialect.MySQLDialect
   sql:
     init:
       mode: always
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
 
 log:
   file:
