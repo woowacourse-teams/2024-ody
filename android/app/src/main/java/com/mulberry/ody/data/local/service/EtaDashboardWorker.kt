@@ -103,7 +103,11 @@ class EtaDashboardWorker
                         }
                 }
 
-            return updateMatesEta(false, location.latitude.toString(), location.longitude.toString())
+            return if (location == null) {
+                updateMatesEta(true, "0.0", "0.0")
+            } else {
+                updateMatesEta(false, location.latitude.toString(), location.longitude.toString())
+            }
         }
 
         private fun isLocationEnabled(): Boolean {
