@@ -12,4 +12,8 @@ object FakeAddressRepository : AddressRepository {
     ): ApiResult<List<Address>> {
         return ApiResult.Success(addresses)
     }
+
+    override suspend fun fetchAddressesByCoord(x: String, y: String): ApiResult<String?> {
+        return ApiResult.Success("서울시 강남구")
+    }
 }
