@@ -8,4 +8,9 @@ interface AddressRepository {
         keyword: String,
         pageSize: Int,
     ): ApiResult<List<Address>>
+
+    suspend fun fetchAddressesByCoord(
+        x: String,
+        y: String,
+    ): ApiResult<String?>
 }

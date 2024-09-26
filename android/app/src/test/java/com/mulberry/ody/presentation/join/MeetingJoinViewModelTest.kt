@@ -2,6 +2,7 @@ package com.mulberry.ody.presentation.join
 
 import com.mulberry.ody.Address
 import com.mulberry.ody.domain.model.Address
+import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeJoinRepository
 import com.mulberry.ody.fake.FakeMatesEtaRepository
@@ -28,6 +29,7 @@ class MeetingJoinViewModelTest {
                 analyticsHelper = FakeAnalyticsHelper,
                 joinRepository = FakeJoinRepository(meetingId = meetingId),
                 matesEtaRepository = FakeMatesEtaRepository,
+                addressRepository = FakeAddressRepository,
             )
     }
 

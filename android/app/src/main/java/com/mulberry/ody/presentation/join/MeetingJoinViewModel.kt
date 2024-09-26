@@ -9,6 +9,7 @@ import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingJoinInfo
+import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.JoinRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.domain.validator.AddressValidator
@@ -32,6 +33,7 @@ class MeetingJoinViewModel
         private val analyticsHelper: AnalyticsHelper,
         private val joinRepository: JoinRepository,
         private val matesEtaRepository: MatesEtaRepository,
+        private val addressRepository: AddressRepository,
     ) : BaseViewModel(), MeetingJoinListener {
         val departureAddress: MutableLiveData<Address> = MutableLiveData()
 
@@ -42,6 +44,33 @@ class MeetingJoinViewModel
         private val _navigateAction: MutableSingleLiveData<MeetingJoinNavigateAction> =
             MutableSingleLiveData()
         val navigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _navigateAction
+
+        fun getDefaultLocation(
+            longitude: String,
+            latitude: String,
+        ) {
+            viewModelScope.launch {
+                startLoading()
+                addressRepository.fetchAddressesByCoord(
+                    longitude,
+                    latitude,
+                ).onSuccess {
+                    departureAddress.value =
+                        Address(
+                            detailAddress = it ?: "",
+                            longitude = longitude,
+                            latitude = latitude,
+                        )
+                }.onFailure { code, errorMessage ->
+                    handleError()
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    Timber.e("$code $errorMessage")
+                }.onNetworkError {
+                    handleNetworkError()
+                }
+                stopLoading()
+            }
+        }
 
         fun joinMeeting(inviteCode: String) {
             val departureAddress = departureAddress.value ?: return

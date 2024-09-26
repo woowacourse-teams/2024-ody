@@ -1,22 +1,34 @@
 package com.mulberry.ody.presentation.join
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.location.LocationManager
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.location.CurrentLocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingJoinBinding
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.address.AddressSearchFragment
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
+import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.listener.NextListener
 import com.mulberry.ody.presentation.join.complete.JoinCompleteActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import timber.log.Timber
+import javax.inject.Inject
+import kotlin.coroutines.resumeWithException
 
 @AndroidEntryPoint
 class MeetingJoinActivity :
@@ -32,8 +44,12 @@ class MeetingJoinActivity :
             }
         }
 
+    @Inject
+    lateinit var permissionHelper: PermissionHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initializeCurrentLocation()
         initializeBinding()
         initializeObserve()
     }
@@ -43,6 +59,51 @@ class MeetingJoinActivity :
         binding.nextListener = this
         binding.backListener = this
         binding.addressSearchListener = this
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun initializeCurrentLocation() {
+        val fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(applicationContext)
+
+        if (hasLocationPermissions() && isLocationEnabled()) {
+            val currentLocationRequest =
+                CurrentLocationRequest.Builder()
+                    .setDurationMillis(30_000L)
+                    .setMaxUpdateAgeMillis(60_000L)
+                    .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                    .build()
+
+            lifecycleScope.launch {
+                viewModel.startLoading()
+                val location =
+                    suspendCancellableCoroutine { continuation ->
+                        fusedLocationProviderClient.getCurrentLocation(currentLocationRequest, null)
+                            .addOnSuccessListener { location ->
+                                continuation.resume(location) {
+                                    Timber.d("${location.latitude} ${location.longitude}")
+                                }
+                            }.addOnFailureListener { exception ->
+                                continuation.resumeWithException(exception)
+                            }
+                    }
+                viewModel.getDefaultLocation(location.longitude.toString(), location.latitude.toString())
+                viewModel.stopLoading()
+            }
+        }
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager =
+            applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    private fun hasLocationPermissions(): Boolean {
+        return permissionHelper.hasFineLocationPermission() &&
+            permissionHelper.hasCoarseLocationPermission() &&
+            permissionHelper.hasBackgroundLocationPermission()
     }
 
     private fun initializeObserve() {
