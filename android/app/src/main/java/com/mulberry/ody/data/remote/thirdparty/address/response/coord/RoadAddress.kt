@@ -24,5 +24,5 @@ data class RoadAddress(
     @Json(name = "building_name")
     val buildingName: String,
     @Json(name = "zone_no")
-    val zoneNo: String
+    val zoneNo: String,
 )

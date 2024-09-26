@@ -8,5 +8,5 @@ data class Document(
     @Json(name = "address")
     val address: Address?,
     @Json(name = "road_address")
-    val roadAddress: RoadAddress?
+    val roadAddress: RoadAddress?,
 )
