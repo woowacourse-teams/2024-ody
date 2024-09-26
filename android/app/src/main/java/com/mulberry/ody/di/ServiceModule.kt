@@ -7,7 +7,7 @@ import com.mulberry.ody.data.remote.core.service.MeetingService
 import com.mulberry.ody.data.remote.core.service.MemberService
 import com.mulberry.ody.data.remote.core.service.NotificationService
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
-import com.mulberry.ody.data.remote.thirdparty.location.service.KakaoLocationService
+import com.mulberry.ody.data.remote.thirdparty.address.KakaoAddressService
 import com.mulberry.ody.data.remote.thirdparty.login.kakao.KakaoOAuthLoginService
 import dagger.Lazy
 import dagger.Module
@@ -22,10 +22,10 @@ import javax.inject.Singleton
 object ServiceModule {
     @Provides
     @Singleton
-    fun provideKakaoLocationService(
+    fun provideKakaoAddressService(
         @KakaoRetrofit retrofit: Retrofit,
-    ): KakaoLocationService {
-        return retrofit.create(KakaoLocationService::class.java)
+    ): KakaoAddressService {
+        return retrofit.create(KakaoAddressService::class.java)
     }
 
     @Provides
@@ -39,7 +39,7 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideRefreshTokenService(
-        @DefaultRetrofit retrofit: Retrofit,
+        @RefreshRetrofit retrofit: Retrofit,
     ): RefreshTokenService {
         return Lazy { retrofit.create(RefreshTokenService::class.java) }.get()
     }

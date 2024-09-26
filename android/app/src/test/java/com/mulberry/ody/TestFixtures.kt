@@ -1,5 +1,6 @@
 package com.mulberry.ody
 
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.EtaType
 import com.mulberry.ody.domain.model.LogType
 import com.mulberry.ody.domain.model.Mate
@@ -115,3 +116,12 @@ val mateEtaInfo =
             MateEta(idx.toLong(), nickname, mateEtaTypes[idx], mateEtaDurationMinutes[idx])
         },
     )
+
+fun Address(
+    id: Long,
+    roadNameAddress: String,
+): Address {
+    return Address(id = id, detailAddress = roadNameAddress, placeName = "", latitude = "0.0", longitude = "0.0")
+}
+
+val addresses: List<Address> = List(5) { Address(id = it.toLong(), roadNameAddress = "") }

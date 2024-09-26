@@ -58,7 +58,7 @@ public class MemberService {
 
     @Transactional
     public void delete(Member member) {
-        socialAuthUnlinkClient.unlink(member.getProviderId());
+        socialAuthUnlinkClient.unlink(member.getAuthProvider().getProviderId());
 
         mateService.deleteByMemberId(member.getId());
         memberRepository.delete(member);

@@ -71,7 +71,7 @@ class AuthServiceTest extends BaseServiceTest {
         }
 
         private Member createMemberByRefreshToken(RefreshToken refreshToken) {
-            Member member = new Member("pid", "콜리", "imageUrl", new DeviceToken("deviceToken"));
+            Member member = fixtureGenerator.generateMember();
             member.updateRefreshToken(refreshToken);
             return memberRepository.save(member);
         }

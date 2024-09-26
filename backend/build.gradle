@@ -48,6 +48,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation "io.jsonwebtoken:jjwt:0.9.1"
 	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	runtimeOnly 'com.mysql:mysql-connector-j:8.4.0'
 	runtimeOnly 'com.h2database:h2'
@@ -60,6 +61,9 @@ dependencies {
 
 	annotationProcessor 'org.projectlombok:lombok'
 	compileOnly 'org.projectlombok:lombok'
+
+	implementation "org.flywaydb:flyway-mysql"
+	implementation "org.flywaydb:flyway-core"
 }
 
 tasks.named('test') {

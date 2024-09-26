@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.common.binding
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.LoadingDialog
 
 abstract class BindingFragment<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
@@ -18,6 +21,7 @@ abstract class BindingFragment<T : ViewDataBinding>(
     protected val binding: T
         get() = requireNotNull(_binding)
     private var snackBar: Snackbar? = null
+    private var dialog: Dialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,7 +33,7 @@ abstract class BindingFragment<T : ViewDataBinding>(
         return binding.root
     }
 
-    fun showSnackBar(
+    protected fun showSnackBar(
         @StringRes messageId: Int,
         action: Snackbar.() -> Unit = {},
     ) {
@@ -38,7 +42,7 @@ abstract class BindingFragment<T : ViewDataBinding>(
         snackBar?.show()
     }
 
-    fun showSnackBar(
+    protected fun showSnackBar(
         message: String,
         action: Snackbar.() -> Unit = {},
     ) {
@@ -47,9 +51,28 @@ abstract class BindingFragment<T : ViewDataBinding>(
         snackBar?.show()
     }
 
+    protected fun showLoadingDialog() {
+        dialog?.dismiss()
+        dialog = LoadingDialog(requireContext())
+        dialog?.show()
+    }
+
+    protected fun hideLoadingDialog() {
+        dialog?.dismiss()
+    }
+
+    protected fun showRetrySnackBar(action: () -> Unit) {
+        snackBar?.dismiss()
+        snackBar =
+            Snackbar.make(binding.root, R.string.network_error_guide, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.retry_button) { action() }
+        snackBar?.show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
         snackBar = null
+        dialog = null
     }
 }

@@ -24,21 +24,20 @@ public class FcmPushSender {
         if (notification.isStatusDismissed()) {
             return;
         }
-        GroupMessage groupMessage = new GroupMessage(notification);
-        sendMessage(groupMessage.getMessage(), notification);
+        GroupMessage groupMessage = GroupMessage.from(notification);
+        sendGeneralMessage(groupMessage.message(), notification);
     }
 
-    @Transactional
     public void sendNudgeMessage(Notification notification, DirectMessage directMessage) {
-        sendMessage(directMessage.getMessage(), notification);
+        sendGeneralMessage(directMessage.message(), notification);
     }
 
-    private void sendMessage(Message message, Notification notification) {
+    private void sendGeneralMessage(Message message, Notification notification) {
         try {
             FirebaseMessaging.getInstance().send(message);
             updateDepartureReminderToDone(notification);
         } catch (FirebaseMessagingException exception) {
-            log.error("Fcm 메시지 전송 실패 : {}", exception.getMessage());
+            log.error("FCM 알림(ID : {}) 전송 실패 : {}", notification.getId(), exception.getMessage());
             throw new OdyServerErrorException(exception.getMessage());
         }
     }
@@ -46,7 +45,16 @@ public class FcmPushSender {
     private void updateDepartureReminderToDone(Notification notification) {
         if (notification.isDepartureReminder()) {
             notification.updateStatusToDone();
-            log.info("출발 알림 상태 업데이트 : {}", notification);
+            log.info("{} 타입 알림(ID : {}) 상태 업데이트", notification.getType(), notification.getId());
+        }
+    }
+
+    public void sendNoticeMessage(GroupMessage groupMessage) {
+        try {
+            FirebaseMessaging.getInstance().send(groupMessage.message());
+        } catch (FirebaseMessagingException exception) {
+            log.error("FCM 공지 전송 실패 : {}", exception.getMessage());
+            throw new OdyServerErrorException(exception.getMessage());
         }
     }
 }

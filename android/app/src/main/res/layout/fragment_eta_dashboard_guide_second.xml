@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="title"
+            type="java.lang.String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/cream">
+
+        <include
+            android:id="@+id/tb_eta_dashboard_guide"
+            layout="@layout/toolbar_eta_dashboard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/item_eta_dashboard_guide_1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@{title}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_eta_dashboard_guide_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="21dp"
+            app:layout_constraintBottom_toTopOf="@id/item_eta_dashboard_guide_2"
+            app:layout_constraintTop_toBottomOf="@id/tb_eta_dashboard_guide">
+
+            <TextView
+                android:id="@+id/tv_nickname_dashboard_1"
+                style="@style/pretendard_bold_20"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="올리브"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_badge_dashboard_1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_badge_dashboard_1"
+                style="@style/pretendard_medium_16"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:background="@drawable/rectangle_radius_15"
+                android:backgroundTint="@color/blue"
+                android:gravity="center"
+                android:text="@string/badge_arrived"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_status_dashboard_1"
+                style="@style/pretendard_regular_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/status_arrived"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_badge_dashboard_1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_eta_dashboard_guide_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="21dp"
+            app:layout_constraintBottom_toTopOf="@id/item_eta_dashboard_guide_3"
+            app:layout_constraintTop_toBottomOf="@id/item_eta_dashboard_guide_1">
+
+            <TextView
+                android:id="@+id/tv_nickname_dashboard_2"
+                style="@style/pretendard_bold_20"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="콜리"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_badge_dashboard_2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_badge_dashboard_2"
+                style="@style/pretendard_medium_16"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:background="@drawable/rectangle_radius_15"
+                android:backgroundTint="@color/red"
+                android:gravity="center"
+                android:text="@string/badge_late"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_status_dashboard_2"
+                style="@style/pretendard_regular_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="28분 후 도착"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_badge_dashboard_2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_eta_dashboard_guide_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="21dp"
+            app:layout_constraintBottom_toTopOf="@id/item_eta_dashboard_guide_4"
+            app:layout_constraintTop_toBottomOf="@id/item_eta_dashboard_guide_2">
+
+            <TextView
+                android:id="@+id/tv_nickname_dashboard_3"
+                style="@style/pretendard_bold_20"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="해음"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_badge_dashboard_3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_badge_dashboard_3"
+                style="@style/pretendard_medium_16"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:background="@drawable/rectangle_radius_15"
+                android:backgroundTint="@color/blue"
+                android:gravity="center"
+                android:text="@string/badge_arrived"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_status_dashboard_3"
+                style="@style/pretendard_regular_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/status_arrived"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_badge_dashboard_3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_eta_dashboard_guide_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="21dp"
+            app:layout_constraintTop_toBottomOf="@id/item_eta_dashboard_guide_3">
+
+            <TextView
+                android:id="@+id/tv_nickname_dashboard_4"
+                style="@style/pretendard_bold_20"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="제리"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_badge_dashboard_4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_badge_dashboard_4"
+                style="@style/pretendard_medium_16"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:background="@drawable/rectangle_radius_15"
+                android:backgroundTint="@color/blue"
+                android:gravity="center"
+                android:text="@string/badge_arrived"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_status_dashboard_4"
+                style="@style/pretendard_regular_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/status_arrived"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_badge_dashboard_4"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/gray_900_50" />
+
+        <View
+            android:id="@+id/item_eta_dashboard_guide_background"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginVertical="11dp"
+            android:background="@drawable/rectangle_radius_20"
+            android:backgroundTint="@color/cream"
+            app:layout_constraintBottom_toTopOf="@id/item_eta_dashboard_guide_3"
+            app:layout_constraintTop_toBottomOf="@id/item_eta_dashboard_guide_1" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_eta_dashboard_guide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="21dp"
+            app:layout_constraintBottom_toTopOf="@id/item_eta_dashboard_guide_3"
+            app:layout_constraintTop_toBottomOf="@id/item_eta_dashboard_guide_1">
+
+            <TextView
+                android:id="@+id/tv_nickname_dashboard"
+                style="@style/pretendard_bold_20"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="콜리"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_badge_dashboard"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_badge_dashboard"
+                style="@style/pretendard_medium_16"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:background="@drawable/rectangle_radius_15"
+                android:backgroundTint="@color/red"
+                android:gravity="center"
+                android:text="@string/badge_late"
+                android:textColor="@color/white"
+                app:etaBadgeAnimation="@{true}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_status_dashboard"
+                style="@style/pretendard_regular_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="12분 후 도착"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_badge_dashboard"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/iv_eta_dashboard_guide_diagonal_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/ic_diagonal_line"
+            app:layout_constraintBottom_toTopOf="@id/tv_eta_dashboard_guide_late_nudge"
+            app:layout_constraintTop_toBottomOf="@id/item_eta_dashboard_guide_background" />
+
+        <TextView
+            android:id="@+id/tv_eta_dashboard_guide_late_nudge"
+            style="@style/pretendard_medium_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="@string/eta_dashboard_guide_late_nudge"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/tv_eta_dashboard_guide_after_meeting_time"
+            app:layout_constraintTop_toBottomOf="@id/iv_eta_dashboard_guide_diagonal_line" />
+
+        <TextView
+            android:id="@+id/tv_eta_dashboard_guide_after_meeting_time"
+            style="@style/pretendard_medium_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="110dp"
+            android:gravity="center"
+            android:text="@string/eta_dashboard_guide_after_meeting_time"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tv_eta_dashboard_guide_late_nudge" />
+
+        <LinearLayout
+            android:id="@+id/layout_eta_dashboard_guide_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_eta_dashboard_guide_after_meeting_time">
+
+            <ImageView
+                android:id="@+id/iv_eta_dashboard_guide_close"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_close" />
+
+            <TextView
+                android:id="@+id/tv_eta_dashboard_guide_close"
+                style="@style/pretendard_regular_16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:text="@string/close_button"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

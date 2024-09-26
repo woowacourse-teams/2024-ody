@@ -17,6 +17,7 @@
     <color name="gray_800">#FF3A3A3C</color>
     <color name="gray_800_20">#332F2F2F</color>
     <color name="gray_900">#FF1C1C1E</color>
+    <color name="gray_900_50">#801C1C1E</color>
 
     <drawable name="drawable_purple_800">#FF5C47AE</drawable>
     <drawable name="drawable_gray_350">#FFD6D6D6</drawable>

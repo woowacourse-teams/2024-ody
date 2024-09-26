@@ -59,12 +59,12 @@ public class Notification extends BaseEntity {
         this(null, mate, type, sendAt, status, fcmTopic);
     }
 
-    public static Notification createEntry(Mate mate) {
+    public static Notification createEntry(Mate mate, FcmTopic fcmTopic) {
         return new Notification(
                 mate,
                 NotificationType.ENTRY,
                 LocalDateTime.now(),
-                NotificationStatus.PENDING,
+                NotificationStatus.DONE,
                 null
         );
     }
@@ -84,17 +84,9 @@ public class Notification extends BaseEntity {
                 nudgeMate,
                 NotificationType.NUDGE,
                 LocalDateTime.now(),
-                NotificationStatus.PENDING,
+                NotificationStatus.DONE,
                 null
         );
-    }
-
-    public boolean isDepartureReminder() {
-        return this.type.isDepartureReminder();
-    }
-
-    public boolean isNow() {
-        return this.sendAt.equals(TimeUtil.nowWithTrim());
     }
 
     public static Notification createMemberDeletion(Mate mate) {
@@ -107,6 +99,18 @@ public class Notification extends BaseEntity {
         );
     }
 
+    public boolean isDepartureReminder() {
+        return this.type.isDepartureReminder();
+    }
+
+    public boolean isStatusDismissed() {
+        return status == NotificationStatus.DISMISSED;
+    }
+
+    public boolean isNow() {
+        return this.sendAt.equals(TimeUtil.nowWithTrim());
+    }
+
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
     }
@@ -115,7 +119,4 @@ public class Notification extends BaseEntity {
         this.status = NotificationStatus.DISMISSED;
     }
 
-    public boolean isStatusDismissed() {
-        return status == NotificationStatus.DISMISSED;
-    }
 }

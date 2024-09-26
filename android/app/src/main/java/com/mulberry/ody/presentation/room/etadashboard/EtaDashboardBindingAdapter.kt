@@ -56,6 +56,14 @@ fun TextView.setEtaBadgeAnimation(etaTypeUiModel: EtaTypeUiModel) {
     }
 }
 
+@BindingAdapter("etaBadgeAnimation")
+fun TextView.setEtaBadgeAnimation(isPossibleNudge: Boolean) {
+    if (isPossibleNudge) {
+        val animation = AnimationUtils.loadAnimation(context, R.anim.bounce_duration_500)
+        this.startAnimation(animation)
+    }
+}
+
 @BindingAdapter("canNudge", "nudgeListener")
 fun TextView.setOnClickNudge(
     mateEtaUiModel: MateEtaUiModel,

@@ -5,10 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.fragment.app.commit
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingJoinBinding
-import com.mulberry.ody.domain.model.GeoLocation
-import com.mulberry.ody.presentation.address.AddressSearchDialog
+import com.mulberry.ody.domain.model.Address
+import com.mulberry.ody.presentation.address.AddressSearchFragment
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
@@ -95,14 +96,19 @@ class MeetingJoinActivity :
 
     private fun getInviteCode(): String = intent.getStringExtra(INVITE_CODE_KEY) ?: ""
 
-    override fun onSearch() = AddressSearchDialog().show(supportFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
+    override fun onSearch() {
+        supportFragmentManager.commit {
+            add(R.id.fcv_join, AddressSearchFragment())
+            setReorderingAllowed(true)
+            addToBackStack(null)
+        }
+    }
 
-    override fun onReceive(geoLocation: GeoLocation) {
-        viewModel.departureGeoLocation.value = geoLocation
+    override fun onReceive(address: Address) {
+        viewModel.departureAddress.value = address
     }
 
     companion object {
-        private const val ADDRESS_SEARCH_DIALOG_TAG = "address_search_dialog"
         private const val INVITE_CODE_KEY = "invite_code_key"
 
         fun getIntent(
