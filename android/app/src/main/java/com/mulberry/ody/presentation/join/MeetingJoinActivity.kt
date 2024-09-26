@@ -49,7 +49,7 @@ class MeetingJoinActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initCurrentLocation()
+        initializeCurrentLocation()
         initializeBinding()
         initializeObserve()
     }
@@ -62,7 +62,7 @@ class MeetingJoinActivity :
     }
 
     @SuppressLint("MissingPermission")
-    private fun initCurrentLocation() {
+    private fun initializeCurrentLocation() {
         val fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(applicationContext)
 
