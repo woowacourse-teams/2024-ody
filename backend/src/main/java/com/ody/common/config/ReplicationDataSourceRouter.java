@@ -12,7 +12,7 @@ public class ReplicationDataSourceRouter extends AbstractRoutingDataSource {
         boolean isTransactionActive = TransactionSynchronizationManager.isActualTransactionActive();
         boolean readOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
         ReplicationType type = ReplicationType.from(isTransactionActive, readOnly);
-        log.info("(트랜잭션 활성화 여부 : {}) (readOnly : {}) => {} DB 연결", isTransactionActive, isTransactionActive, type);
+        log.info("(트랜잭션 활성화 여부 : {}) (readOnly : {}) => {} DB 연결", isTransactionActive, readOnly, type);
         return type;
     }
 }
