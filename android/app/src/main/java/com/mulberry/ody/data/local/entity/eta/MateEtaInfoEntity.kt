@@ -8,7 +8,8 @@ import com.squareup.moshi.JsonClass
 @Entity(tableName = "eta_info")
 @JsonClass(generateAdapter = true)
 data class MateEtaInfoEntity(
-    @PrimaryKey val meetingId: Long,
+    @PrimaryKey
+    val meetingId: Long,
     val mateId: Long,
     val mateEtas: List<MateEta>,
 )
