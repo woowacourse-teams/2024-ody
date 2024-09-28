@@ -41,7 +41,7 @@ class SettingViewModel
                 loginRepository.withdrawAccount()
                     .onSuccess {
                         _loginNavigateEvent.setValue(LoginNavigatedReason.WITHDRAWAL)
-                        matesEtaRepository.clearEtaFetchingJob()
+                        clearEtaFetchingJob()
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
@@ -53,6 +53,11 @@ class SettingViewModel
                 stopLoading()
             }
         }
+
+        private fun clearEtaFetchingJob() =
+            viewModelScope.launch {
+                matesEtaRepository.clearEtaFetchingJob()
+            }
 
         companion object {
             private const val TAG = "SettingViewModel"

@@ -118,6 +118,11 @@ dependencies {
     implementation(libs.retrofit.converter.moshi)
     implementation(libs.retrofit.converter.scalars)
 
+    // room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
     // moshi
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)

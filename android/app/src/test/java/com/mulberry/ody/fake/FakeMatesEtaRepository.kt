@@ -20,5 +20,5 @@ object FakeMatesEtaRepository : MatesEtaRepository {
         return liveData
     }
 
-    override fun clearEtaFetchingJob() = Unit
+    override suspend fun clearEtaFetchingJob() = Unit
 }
