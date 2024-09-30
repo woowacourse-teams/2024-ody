@@ -28,12 +28,13 @@ class GeoLocationHelper(
             fusedLocationProviderClient.getCurrentLocation(
                 currentLocationRequest,
                 CancellationTokenSource().token,
-            ).await() ?: throw IllegalArgumentException("Location is null")
+            ).await() ?: throw IllegalArgumentException(LOCATION_EXCEPTION_MESSAGE)
         }
     }
 
     companion object {
         private const val LOCATION_REQUEST_DURATION_MILLIS = 30_000L
         private const val LOCATION_REQUEST_MAX_AGE_MILLIS = 60_000L
+        private const val LOCATION_EXCEPTION_MESSAGE = "Location이 null 입니다."
     }
 }
