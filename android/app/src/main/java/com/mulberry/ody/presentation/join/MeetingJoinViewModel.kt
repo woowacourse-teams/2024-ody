@@ -55,8 +55,8 @@ class MeetingJoinViewModel
         private fun getDefaultLocation() {
             viewModelScope.launch {
                 startLoading()
-                val location = geoLocationHelper.getCurrentCoordinate()
-                if (location != null) {
+
+                geoLocationHelper.getCurrentCoordinate().onSuccess { location ->
                     val longitude = location.longitude.toString()
                     val latitude = location.latitude.toString()
 
@@ -74,7 +74,6 @@ class MeetingJoinViewModel
                         handleNetworkError()
                     }
                 }
-
                 stopLoading()
             }
         }

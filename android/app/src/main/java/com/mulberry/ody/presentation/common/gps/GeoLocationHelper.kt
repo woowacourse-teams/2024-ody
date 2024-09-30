@@ -16,21 +16,24 @@ class GeoLocationHelper(
         LocationServices.getFusedLocationProviderClient(context)
 
     @SuppressLint("MissingPermission")
-    override suspend fun getCurrentCoordinate(): Location? {
+    override suspend fun getCurrentCoordinate(): Result<Location> {
         val currentLocationRequest =
             CurrentLocationRequest.Builder()
-                .setDurationMillis(30_000L)
-                .setMaxUpdateAgeMillis(60_000L)
+                .setDurationMillis(LOCATION_REQUEST_DURATION_MILLIS)
+                .setMaxUpdateAgeMillis(LOCATION_REQUEST_MAX_AGE_MILLIS)
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
                 .build()
 
-        return try {
+        return runCatching {
             fusedLocationProviderClient.getCurrentLocation(
                 currentLocationRequest,
                 CancellationTokenSource().token,
-            ).await()
-        } catch (e: Exception) {
-            null
+            ).await() ?: throw IllegalArgumentException("Location is null")
         }
+    }
+
+    companion object {
+        private const val LOCATION_REQUEST_DURATION_MILLIS = 30_000L
+        private const val LOCATION_REQUEST_MAX_AGE_MILLIS = 60_000L
     }
 }

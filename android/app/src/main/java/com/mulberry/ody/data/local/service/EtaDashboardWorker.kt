@@ -59,19 +59,20 @@ class EtaDashboardWorker
         }
 
         private suspend fun getLocation(): MateEtaInfo? {
-            val location = geoLocationHelper.getCurrentCoordinate()
-
-            return if (location == null) {
-                updateMatesEta(true, "0.0", "0.0")
-            } else {
-                updateMatesEta(false, location.latitude.toString(), location.longitude.toString())
-            }
+            return geoLocationHelper.getCurrentCoordinate().fold(
+                onSuccess = { location ->
+                    updateMatesEta(false, location.latitude.toString(), location.longitude.toString())
+                },
+                onFailure = {
+                    updateMatesEta(true)
+                },
+            )
         }
 
         private suspend fun updateMatesEta(
             isMissing: Boolean,
-            latitude: String,
-            longitude: String,
+            latitude: String = DEFAULT_LATITUDE,
+            longitude: String = DEFAULT_LONGITUDE,
         ): MateEtaInfo? {
             return meetingRepository.patchMatesEta(meetingId, isMissing, latitude, longitude)
                 .onFailure { analyticsHelper.logNetworkErrorEvent(TAG, it.message) }
@@ -81,12 +82,14 @@ class EtaDashboardWorker
         companion object {
             private const val TAG = "EtaDashboardWorker"
             private const val MEETING_ID_KEY = "meeting_id"
+            private const val DURATION_KEY = "duration"
             private const val MEETING_ID_DEFAULT_VALUE = -1L
             private const val MAX_MINUTE = 10L
             private const val MILLIS = 1000L
             private const val INTERVAL_MILLIS = 10 * MILLIS
-            private const val DURATION_KEY = "duration"
             private const val DURATION_DEFAULT_VALUE = MAX_MINUTE * 60 * MILLIS
+            private const val DEFAULT_LATITUDE = "0.0"
+            private const val DEFAULT_LONGITUDE = "0.0"
 
             fun getWorkRequest(
                 meetingId: Long,
