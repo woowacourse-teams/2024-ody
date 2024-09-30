@@ -100,7 +100,7 @@ class MeetingCreationViewModel
                         name,
                         date.toString(),
                         LocalTime.of(meetingHour.value ?: 1, meetingMinute.value ?: 0).toString(),
-                        destinationAddress.detailAddress,
+                        destinationAddress.placeName,
                         destinationAddress.latitude,
                         destinationAddress.longitude,
                     ),

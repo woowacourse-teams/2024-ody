@@ -10,7 +10,7 @@ fun MeetingCreationInfo.toMeetingRequest(): MeetingRequest =
         name = name,
         date = date,
         time = time,
-        targetAddress = targetAddress,
+        targetPlaceName = targetPlaceName,
         targetLatitude = compress(targetLatitude),
         targetLongitude = compress(targetLongitude),
     )

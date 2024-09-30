@@ -6,7 +6,7 @@ import com.mulberry.ody.domain.model.MeetingJoinInfo
 fun MeetingJoinInfo.toJoinRequest(): JoinRequest =
     JoinRequest(
         inviteCode = inviteCode,
-        originAddress = originAddress,
+        originPlaceName = originPlaceName,
         originLatitude = compress(originLatitude),
         originLongitude = compress(originLongitude),
     )

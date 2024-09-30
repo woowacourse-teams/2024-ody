@@ -81,7 +81,7 @@ class MeetingJoinViewModel
                 joinRepository.postMates(
                     MeetingJoinInfo(
                         inviteCode,
-                        departureAddress.detailAddress,
+                        departureAddress.placeName,
                         departureAddress.latitude,
                         departureAddress.longitude,
                     ),
