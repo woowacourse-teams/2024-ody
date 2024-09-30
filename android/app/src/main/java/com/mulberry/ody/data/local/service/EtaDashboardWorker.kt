@@ -13,7 +13,7 @@ import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
-import com.mulberry.ody.presentation.common.gps.GpsHelper
+import com.mulberry.ody.presentation.common.gps.LocationHelper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
@@ -28,7 +28,7 @@ class EtaDashboardWorker
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
         private val mateEtaInfoDao: MateEtaInfoDao,
-        private val gpsHelper: GpsHelper,
+        private val geoLocationHelper: LocationHelper,
     ) : CoroutineWorker(context, workerParameters) {
         private val meetingId: Long by lazy {
             workerParameters.inputData.getLong(
@@ -59,7 +59,7 @@ class EtaDashboardWorker
         }
 
         private suspend fun getLocation(): MateEtaInfo? {
-            val location = gpsHelper.getCurrentCoordinate()
+            val location = geoLocationHelper.getCurrentCoordinate()
 
             return if (location == null) {
                 updateMatesEta(true, "0.0", "0.0")

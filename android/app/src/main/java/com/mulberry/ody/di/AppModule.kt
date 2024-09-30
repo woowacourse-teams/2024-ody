@@ -3,7 +3,8 @@ package com.mulberry.ody.di
 import android.content.Context
 import androidx.work.WorkManager
 import com.mulberry.ody.presentation.common.PermissionHelper
-import com.mulberry.ody.presentation.common.gps.GpsHelper
+import com.mulberry.ody.presentation.common.gps.GeoLocationHelper
+import com.mulberry.ody.presentation.common.gps.LocationHelper
 import com.mulberry.ody.presentation.notification.NotificationHelper
 import dagger.Module
 import dagger.Provides
@@ -43,7 +44,7 @@ object AppModule {
     @Singleton
     fun provideGpsHelper(
         @ApplicationContext context: Context,
-    ): GpsHelper {
-        return GpsHelper(context)
+    ): LocationHelper {
+        return GeoLocationHelper(context)
     }
 }

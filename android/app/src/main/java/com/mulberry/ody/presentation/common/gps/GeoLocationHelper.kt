@@ -9,14 +9,14 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.tasks.await
 
-class GpsHelper(
+class GeoLocationHelper(
     context: Context,
-) {
+) : LocationHelper {
     private val fusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
     @SuppressLint("MissingPermission")
-    suspend fun getCurrentCoordinate(): Location? {
+    override suspend fun getCurrentCoordinate(): Location? {
         val currentLocationRequest =
             CurrentLocationRequest.Builder()
                 .setDurationMillis(30_000L)

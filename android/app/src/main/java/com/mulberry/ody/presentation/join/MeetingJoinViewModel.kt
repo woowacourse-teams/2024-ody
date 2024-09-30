@@ -18,7 +18,7 @@ import com.mulberry.ody.presentation.common.MutableSingleLiveData
 import com.mulberry.ody.presentation.common.SingleLiveData
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
-import com.mulberry.ody.presentation.common.gps.GpsHelper
+import com.mulberry.ody.presentation.common.gps.LocationHelper
 import com.mulberry.ody.presentation.join.listener.MeetingJoinListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -36,7 +36,7 @@ class MeetingJoinViewModel
         private val joinRepository: JoinRepository,
         private val matesEtaRepository: MatesEtaRepository,
         private val addressRepository: AddressRepository,
-        private val gpsHelper: GpsHelper,
+        private val geoLocationHelper: LocationHelper,
     ) : BaseViewModel(), MeetingJoinListener {
         val departureAddress: MutableLiveData<Address> = MutableLiveData()
 
@@ -55,7 +55,7 @@ class MeetingJoinViewModel
         private fun getDefaultLocation() {
             viewModelScope.launch {
                 startLoading()
-                val location = gpsHelper.getCurrentCoordinate()
+                val location = geoLocationHelper.getCurrentCoordinate()
                 if (location != null) {
                     val longitude = location.longitude.toString()
                     val latitude = location.latitude.toString()
