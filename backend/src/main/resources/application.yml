@@ -1,0 +1,12 @@
+spring:
+  config:
+    import: common.yml
+  profiles:
+    default: "local"
+    group:
+      local:
+        - common
+      dev:
+        - common
+      prod:
+        - common

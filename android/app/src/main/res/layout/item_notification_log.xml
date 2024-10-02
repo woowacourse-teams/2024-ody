@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="log"
+            type="com.mulberry.ody.presentation.room.log.model.NotificationLogUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="18dp"
+        android:layout_marginVertical="9dp">
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/oval"
+            android:backgroundTint="@color/gray_350"
+            android:scaleType="centerCrop"
+            app:circleImageUrl="@{log.imageUrl}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_nickname"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            style="@style/pretendard_bold_18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{log.nickname}"
+            app:layout_constraintBottom_toTopOf="@id/tv_log_created"
+            app:layout_constraintEnd_toStartOf="@id/tv_log_form"
+            app:layout_constraintStart_toEndOf="@id/iv_profile"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="올리브" />
+
+        <TextView
+            android:id="@+id/tv_log_form"
+            style="@style/pretendard_medium_18"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintBottom_toTopOf="@id/tv_log_created"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_nickname"
+            app:layout_constraintTop_toTopOf="parent"
+            app:notificationType="@{log.type}"
+            tools:text="(이)가 출발할 시간이에요!" />
+
+        <TextView
+            android:id="@+id/tv_log_created"
+            style="@style/pretendard_regular_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{log.created}"
+            android:textColor="@color/gray_350"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_nickname"
+            app:layout_constraintTop_toBottomOf="@id/tv_log_form"
+            tools:text="2024-08-16 18:35" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

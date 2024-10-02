@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:latest
+    container_name: ody-dev-db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: ${DEV_MYSQL_PASSWORD}
+      MYSQL_DATABASE: ody
+    volumes:
+      - ody-dev-db-vol:/var/lib/mysql
+    platform: linux/arm64
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+
+  web:
+    image: ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:${GIT_SHA}-dev
+    container_name: ody-dev-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - ody-dev-logs-vol:/ody-dev-logs
+    platform: linux/arm64
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  ody-dev-db-vol:
+  ody-dev-logs-vol:

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="pretendard_bold_28">
+        <item name="android:textSize">28dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="pretendard_bold_24">
+        <item name="android:textSize">24dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="pretendard_bold_20">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="pretendard_bold_18">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="pretendard_bold_16">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="pretendard_medium_20">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretendard_medium_18">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretendard_medium_16">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretendard_medium_14">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretendard_medium_12">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="pretendard_regular_16">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="pretendard_regular_14">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="pretendard_regular_12">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="toolbar_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="android:background">@color/cream</item>
+        <item name="contentInsetStart">0dp</item>
+    </style>
+
+    <style name="edit_text_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:background">@drawable/rectangle_edit_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColorHint">@color/gray_350</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="bottom_button_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:background">@drawable/rectangle_radius_0</item>
+        <item name="android:backgroundTint">@drawable/selector_button_color</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="number_picker_style">
+        <item name="android:textSize">28dp</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textColor">@color/gray_350</item>
+        <item name="android:textColorPrimary">@color/gray_800</item>
+        <item name="colorControlNormal">@color/purple_300</item>
+    </style>
+
+    <style name="floating_button_style">
+        <item name="cornerSize">30dp</item>
+    </style>
+
+</resources>
