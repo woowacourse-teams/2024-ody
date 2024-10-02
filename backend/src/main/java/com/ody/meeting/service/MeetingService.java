@@ -72,7 +72,12 @@ public class MeetingService {
         return inviteCode;
     }
 
-    public Meeting findByInviteCode(String inviteCode) {
+    public void validateInviteCode(Member member, String inviteCode) {
+        Meeting meeting = findByInviteCode(inviteCode);
+        mateService.validateAlreadyAttended(member, meeting);
+    }
+
+    private Meeting findByInviteCode(String inviteCode) {
         return meetingRepository.findByInviteCode(inviteCode)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 초대코드입니다."));
     }
