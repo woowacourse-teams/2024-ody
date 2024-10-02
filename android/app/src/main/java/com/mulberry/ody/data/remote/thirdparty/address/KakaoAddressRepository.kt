@@ -22,7 +22,11 @@ class KakaoAddressRepository
             y: String,
         ): ApiResult<String?> {
             return service.fetchAddressesByCoord(x, y).map {
-                it.documents[0].address?.addressName
+                if (it.documents.isNotEmpty()) {
+                    it.documents[0].address?.addressName
+                } else {
+                    null
+                }
             }
         }
     }
