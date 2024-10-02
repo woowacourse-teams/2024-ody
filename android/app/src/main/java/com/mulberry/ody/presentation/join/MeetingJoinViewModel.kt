@@ -48,7 +48,7 @@ class MeetingJoinViewModel
             MutableSingleLiveData()
         val navigateAction: SingleLiveData<MeetingJoinNavigateAction> get() = _navigateAction
 
-    fun getDefaultLocation() {
+        fun getDefaultLocation() {
             viewModelScope.launch {
                 startLoading()
 

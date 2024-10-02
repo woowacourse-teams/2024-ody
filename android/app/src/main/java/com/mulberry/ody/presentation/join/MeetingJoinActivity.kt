@@ -51,7 +51,7 @@ class MeetingJoinActivity :
         binding.addressSearchListener = this
     }
 
-    private fun initializeLocation(){
+    private fun initializeLocation()  {
         viewModel.getDefaultLocation()
     }
 
