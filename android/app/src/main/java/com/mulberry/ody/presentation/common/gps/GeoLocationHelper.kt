@@ -12,8 +12,9 @@ import kotlinx.coroutines.tasks.await
 class GeoLocationHelper(
     context: Context,
 ) : LocationHelper {
-    private val fusedLocationProviderClient =
+    private val fusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(context)
+    }
 
     @SuppressLint("MissingPermission")
     override suspend fun getCurrentCoordinate(): Result<Location> {
