@@ -41,6 +41,7 @@ class MeetingJoinActivity :
         super.onCreate(savedInstanceState)
         initializeBinding()
         initializeObserve()
+        initializeLocation()
     }
 
     override fun initializeBinding() {
@@ -48,6 +49,10 @@ class MeetingJoinActivity :
         binding.nextListener = this
         binding.backListener = this
         binding.addressSearchListener = this
+    }
+
+    private fun initializeLocation(){
+        viewModel.getDefaultLocation()
     }
 
     private fun initializeObserve() {
