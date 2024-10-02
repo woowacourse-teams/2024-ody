@@ -3,6 +3,7 @@ package com.ody.notification.repository;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,10 +16,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             from Notification noti
             left join fetch Mate m on noti.mate = m
             left join Meeting meet on m.meeting = meet
-            where meet.id = :meetingId and noti.sendAt <= now()
+            where meet.id = :meetingId and noti.sendAt <= :time
             order by noti.sendAt asc
             """)
-    List<Notification> findAllMeetingLogs(Long meetingId);
+    List<Notification> findAllMeetingLogsBeforeThanEqual(Long meetingId, LocalDateTime time);
 
     @Query("""
             select noti

@@ -49,7 +49,7 @@ class NotificationRepositoryTest extends BaseRepositoryTest {
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogs(odyMeeting.getId());
+        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(odyMeeting.getId(), LocalDateTime.now());
 
         assertThat(notifications.size()).isEqualTo(2);
     }
@@ -86,7 +86,7 @@ class NotificationRepositoryTest extends BaseRepositoryTest {
         notificationRepository.save(pastNotification);
         notificationRepository.save(futureNotification);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogs(odyMeeting.getId());
+        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(odyMeeting.getId(), LocalDateTime.now());
 
         assertThat(notifications.size()).isOne();
     }

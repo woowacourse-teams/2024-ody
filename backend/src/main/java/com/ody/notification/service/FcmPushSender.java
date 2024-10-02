@@ -8,6 +8,8 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.message.DirectMessage;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.dto.request.FcmGroupSendRequest;
+import com.ody.util.TimeUtil;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -52,6 +54,7 @@ public class FcmPushSender {
     public void sendNoticeMessage(GroupMessage groupMessage) {
         try {
             FirebaseMessaging.getInstance().send(groupMessage.message());
+            log.info("공지 알림 전송 | 전송 시간 : {}", Instant.now().atZone(TimeUtil.KST_OFFSET));
         } catch (FirebaseMessagingException exception) {
             log.error("FCM 공지 전송 실패 : {}", exception.getMessage());
             throw new OdyServerErrorException(exception.getMessage());
