@@ -30,7 +30,6 @@ import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -250,6 +249,25 @@ class MeetingServiceTest extends BaseServiceTest {
         MateSaveRequestV2 mateSaveRequest = makeMateRequestByMeeting(overdueMeeting);
 
         assertThatThrownBy(() -> meetingService.saveMateAndSendNotifications(mateSaveRequest, member))
+                .isInstanceOf(OdyBadRequestException.class);
+    }
+
+    @DisplayName("초대코드를 가진 약속을 찾을 수 없으면 404를 반환한다")
+    @Test
+    void validateInvitedCodeFailWhenNotExistsInviteCode() {
+        Member member = fixtureGenerator.generateMember();
+        assertThatThrownBy(() -> meetingService.validateInviteCode(member, "none"))
+                .isInstanceOf(OdyNotFoundException.class);
+    }
+
+    @DisplayName("이미 참여한 회원이 초대코드 검증을 요구하면 400을 반환한다")
+    @Test
+    void validateInviteCodeFailWhenAlreadyAttendedMeetingInviteCode() {
+        Member member = fixtureGenerator.generateMember();
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Mate mate = fixtureGenerator.generateMate(meeting, member);
+
+        assertThatThrownBy(() -> meetingService.validateInviteCode(member, meeting.getInviteCode()))
                 .isInstanceOf(OdyBadRequestException.class);
     }
 
