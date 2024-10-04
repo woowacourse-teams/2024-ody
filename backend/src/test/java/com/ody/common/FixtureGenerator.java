@@ -1,7 +1,6 @@
 package com.ody.common;
 
 import com.ody.auth.JwtTokenProvider;
-import com.ody.auth.token.RefreshToken;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
@@ -17,8 +16,12 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.repository.NotificationRepository;
+import com.ody.route.domain.ApiCall;
+import com.ody.route.domain.ClientType;
+import com.ody.route.repository.ApiCallRepository;
 import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -29,6 +32,7 @@ public class FixtureGenerator {
     private final MateRepository mateRepository;
     private final NotificationRepository notificationRepository;
     private final EtaRepository etaRepository;
+    private final ApiCallRepository apiCallRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     public FixtureGenerator(
@@ -37,6 +41,7 @@ public class FixtureGenerator {
             MateRepository mateRepository,
             NotificationRepository notificationRepository,
             EtaRepository etaRepository,
+            ApiCallRepository apiCallRepository,
             JwtTokenProvider jwtTokenProvider
     ) {
         this.meetingRepository = meetingRepository;
@@ -44,6 +49,7 @@ public class FixtureGenerator {
         this.mateRepository = mateRepository;
         this.notificationRepository = notificationRepository;
         this.etaRepository = etaRepository;
+        this.apiCallRepository = apiCallRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -115,5 +121,9 @@ public class FixtureGenerator {
 
     public String generateAccessTokenValueByMember(Member member) {
         return "Bearer access-token=" + jwtTokenProvider.createAccessToken(member.getId()).getValue();
+    }
+
+    public ApiCall generateApiCall(ClientType clientType, int count, LocalDate date) {
+        return apiCallRepository.save(new ApiCall(clientType, count, date));
     }
 }
