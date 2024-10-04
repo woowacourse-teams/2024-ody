@@ -12,6 +12,7 @@ import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map
 import com.mulberry.ody.domain.common.flatMap
 import com.mulberry.ody.domain.model.AuthToken
+import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
 import com.mulberry.ody.domain.repository.ody.FCMTokenRepository
 import com.mulberry.ody.domain.repository.ody.LoginRepository
 import javax.inject.Inject
@@ -23,11 +24,14 @@ class KakaoLoginRepository
         private val logoutService: LogoutService,
         private val memberService: MemberService,
         private val odyDatastore: OdyDatastore,
+        private val authTokenRepository: AuthTokenRepository,
         private val kakaoOAuthLoginService: KakaoOAuthLoginService,
         private val fcmTokenRepository: FCMTokenRepository,
     ) : LoginRepository {
-        override fun checkIfLogined(): Boolean {
-            return kakaoOAuthLoginService.checkIfLogined()
+        override suspend fun checkIfLogined(): Boolean {
+            val isKakaoLogined = kakaoOAuthLoginService.checkIfLogined()
+            val isOdyLogined = authTokenRepository.fetchAuthToken().getOrNull() != null
+            return isKakaoLogined && isOdyLogined
         }
 
         override suspend fun login(context: Context): ApiResult<AuthToken> {
