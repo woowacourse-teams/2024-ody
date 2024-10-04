@@ -15,10 +15,8 @@ class DefaultAuthTokenRepository
     @Inject
     constructor(
         private val odyDatastore: OdyDatastore,
+        private val refreshTokenService: Lazy<RefreshTokenService>,
     ) : AuthTokenRepository {
-        @Inject
-        lateinit var refreshTokenService: Lazy<RefreshTokenService>
-
         override suspend fun fetchAuthToken(): Result<AuthToken> {
             return odyDatastore.getAuthToken().first()
         }
