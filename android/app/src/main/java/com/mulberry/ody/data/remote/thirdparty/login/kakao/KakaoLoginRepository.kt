@@ -26,10 +26,10 @@ class KakaoLoginRepository
         private val kakaoOAuthLoginService: KakaoOAuthLoginService,
         private val fcmTokenRepository: FCMTokenRepository,
     ) : LoginRepository {
-        override suspend fun checkIfLogined(): Boolean {
-            val isKakaoLogined = kakaoOAuthLoginService.checkIfLogined()
-            val isOdyLogined = authTokenRepository.fetchAuthToken().getOrNull() != null
-            return isKakaoLogined && isOdyLogined
+        override suspend fun checkIfLoggedIn(): Boolean {
+            val isKakaoLoggedIn = kakaoOAuthLoginService.checkIfLoggedIn()
+            val isOdyLoggedIn = authTokenRepository.fetchAuthToken().getOrNull() != null
+            return isKakaoLoggedIn && isOdyLoggedIn
         }
 
         override suspend fun login(context: Context): ApiResult<AuthToken> {

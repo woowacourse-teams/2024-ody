@@ -38,9 +38,9 @@ class LoginViewModel
             }
         }
 
-        fun checkIfLogined() {
+        fun checkIfLoggedIn() {
             viewModelScope.launch {
-                if (loginRepository.checkIfLogined()) {
+                if (loginRepository.checkIfLoggedIn()) {
                     navigateToMeetings()
                 }
             }
