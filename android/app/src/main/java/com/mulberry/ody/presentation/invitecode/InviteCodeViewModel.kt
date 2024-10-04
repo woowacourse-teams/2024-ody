@@ -31,8 +31,8 @@ class InviteCodeViewModel
         private val _invalidInviteCodeEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
         val invalidInviteCodeEvent: SingleLiveData<Unit> get() = _invalidInviteCodeEvent
 
-    private val _alreadyParticipatedEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val alreadyParticipatedEvent: SingleLiveData<Unit> get() = _alreadyParticipatedEvent
+        private val _alreadyParticipatedEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+        val alreadyParticipatedEvent: SingleLiveData<Unit> get() = _alreadyParticipatedEvent
 
         private val _navigateAction: MutableSingleLiveData<InviteCodeNavigateAction> = MutableSingleLiveData()
         val navigateAction: SingleLiveData<InviteCodeNavigateAction> get() = _navigateAction
@@ -49,7 +49,7 @@ class InviteCodeViewModel
                     .onSuccess {
                         _navigateAction.setValue(InviteCodeNavigateAction.CodeNavigateToJoin)
                     }.onFailure { code, errorMessage ->
-                        when(code) {
+                        when (code) {
                             400 -> _alreadyParticipatedEvent.setValue(Unit)
                             404 -> _invalidInviteCodeEvent.setValue(Unit)
                         }
