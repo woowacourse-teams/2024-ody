@@ -28,4 +28,12 @@ class DefaultAuthTokenRepository
                 authToken
             }
         }
+
+        override suspend fun removeAuthToken() {
+            odyDatastore.removeAuthToken()
+        }
+
+        override suspend fun setAuthToken(authToken: AuthToken) {
+            odyDatastore.setAuthToken(authToken)
+        }
     }
