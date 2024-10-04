@@ -26,7 +26,7 @@ class KakaoLoginRepository
         private val kakaoOAuthLoginService: KakaoOAuthLoginService,
         private val fcmTokenRepository: FCMTokenRepository,
     ) : LoginRepository {
-        override fun checkIfLogined(): Boolean {
+        override fun checkIfLoggedIn(): Boolean {
             return kakaoOAuthLoginService.checkIfLogined()
         }
 

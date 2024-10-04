@@ -56,7 +56,7 @@ class MeetingJoinViewModel
                     val longitude = location.longitude.toString()
                     val latitude = location.latitude.toString()
 
-                    addressRepository.fetchAddressesByCoord(longitude, latitude).onSuccess {
+                    addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
                         departureAddress.value =
                             Address(
                                 detailAddress = it ?: "",

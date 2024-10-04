@@ -58,34 +58,7 @@ class OdyDatastore(private val context: Context) {
             it.remove(REFRESH_TOKEN)
         }
     }
-
-    suspend fun setMeetingJobUUID(
-        meetingId: Long,
-        uuid: String,
-    ) {
-        context.dataStore.edit {
-            it[stringPreferencesKey(meetingId.toString())] = uuid
-        }
-    }
-
-    fun getMeetingJobUUID(meetingId: Long): Flow<UUID?> =
-        context.dataStore.data.map { preferences ->
-            val key = stringPreferencesKey(meetingId.toString())
-            val uuid =
-                if (preferences.contains(key)) {
-                    UUID.fromString(preferences[key])
-                } else {
-                    null
-                }
-            uuid
-        }
-
-    suspend fun removeMeetingJobUUID(meetingId: Long) {
-        context.dataStore.edit {
-            it.remove(stringPreferencesKey(meetingId.toString()))
-        }
-    }
-
+    
     suspend fun setIsFirstSeenEtaDashboard(isFirstSeenEtaDashboard: Boolean) {
         context.dataStore.edit {
             it[IS_FIRST_SEEN_ETA_DASHBOARD] = isFirstSeenEtaDashboard

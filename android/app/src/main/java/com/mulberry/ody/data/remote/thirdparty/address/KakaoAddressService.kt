@@ -1,7 +1,7 @@
 package com.mulberry.ody.data.remote.thirdparty.address
 
 import com.mulberry.ody.data.remote.thirdparty.address.response.AddressResponse
-import com.mulberry.ody.data.remote.thirdparty.address.response.coord.AddressByCoordResponse
+import com.mulberry.ody.data.remote.thirdparty.address.response.coord.AddressByCoordinateResponse
 import com.mulberry.ody.domain.apiresult.ApiResult
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -17,5 +17,5 @@ interface KakaoAddressService {
     suspend fun fetchAddressesByCoord(
         @Query("x") x: String,
         @Query("y") y: String,
-    ): ApiResult<AddressByCoordResponse>
+    ): ApiResult<AddressByCoordinateResponse>
 }

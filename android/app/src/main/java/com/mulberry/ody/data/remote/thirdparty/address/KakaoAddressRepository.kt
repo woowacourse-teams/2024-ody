@@ -17,7 +17,7 @@ class KakaoAddressRepository
             return service.fetchAddresses(keyword, pageSize).map { it.toAddresses() }
         }
 
-        override suspend fun fetchAddressesByCoord(
+        override suspend fun fetchAddressesByCoordinate(
             x: String,
             y: String,
         ): ApiResult<String?> {
