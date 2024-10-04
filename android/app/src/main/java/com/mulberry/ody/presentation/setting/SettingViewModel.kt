@@ -29,11 +29,12 @@ class SettingViewModel
             MutableSingleLiveData()
         val loginNavigateEvent: SingleLiveData<LoginNavigatedReason> get() = _loginNavigateEvent
 
-        fun kakaoLogout() =
+        fun logout() {
             viewModelScope.launch {
                 loginRepository.logout()
                 _loginNavigateEvent.setValue(LoginNavigatedReason.LOGOUT)
             }
+        }
 
         fun withdrawAccount() {
             viewModelScope.launch {
