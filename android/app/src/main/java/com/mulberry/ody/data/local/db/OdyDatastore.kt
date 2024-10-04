@@ -10,7 +10,6 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.mulberry.ody.domain.model.AuthToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.UUID
 
 class OdyDatastore(private val context: Context) {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = ODY_KEY)
@@ -58,7 +57,7 @@ class OdyDatastore(private val context: Context) {
             it.remove(REFRESH_TOKEN)
         }
     }
-    
+
     suspend fun setIsFirstSeenEtaDashboard(isFirstSeenEtaDashboard: Boolean) {
         context.dataStore.edit {
             it[IS_FIRST_SEEN_ETA_DASHBOARD] = isFirstSeenEtaDashboard
