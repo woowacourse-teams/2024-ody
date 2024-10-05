@@ -19,9 +19,9 @@ public class ApiCallController {
         return ResponseEntity.ok(apiCallCountResponse);
     }
 
-    @GetMapping("/admin/api-call/count/google-maps")
-    public ResponseEntity<ApiCallCountResponse> countGoogleMapsApiCall() {
-        ApiCallCountResponse apiCallCountResponse = apiCallService.countGoogleMapsApiCall();
+    @GetMapping("/admin/api-call/count/google")
+    public ResponseEntity<ApiCallCountResponse> countGoogleApiCall() {
+        ApiCallCountResponse apiCallCountResponse = apiCallService.countGoogleApiCall();
         return ResponseEntity.ok(apiCallCountResponse);
     }
 }

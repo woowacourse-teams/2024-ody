@@ -31,11 +31,11 @@ public class ApiCallService {
                 .orElseGet(() -> new ApiCallCountResponse(0));
     }
 
-    public ApiCallCountResponse countGoogleMapsApiCall() {
+    public ApiCallCountResponse countGoogleApiCall() {
         int thisYear = Year.now().getValue();
         Month thisMonth = LocalDate.now().getMonth();
         List<ApiCall> apiCalls = apiCallRepository.findAllByClientTypeAndDateBetween(
-                ClientType.GOOGLE_MAPS,
+                ClientType.GOOGLE,
                 LocalDate.of(thisYear, thisMonth, 1),
                 LocalDate.now()
         );

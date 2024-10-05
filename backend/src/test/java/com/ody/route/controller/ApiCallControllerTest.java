@@ -21,10 +21,10 @@ class ApiCallControllerTest extends BaseControllerTest {
 
     @DisplayName("Google Maps API 호출 횟수 조회에 성공하면 200 응답을 반환한다")
     @Test
-    void countGoogleMapsApiCall() {
+    void countGoogleApiCall() {
         RestAssured.given().log().all()
                 .when()
-                .get("/admin/api-call/count/google-maps")
+                .get("/admin/api-call/count/google")
                 .then()
                 .log()
                 .all()
