@@ -154,14 +154,13 @@
             style="@style/pretendard_regular_12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray_400"
+            android:layout_marginBottom="10dp"
             android:text="@{@string/meetings_traffic_guide}"
-            app:layout_constraintTop_toBottomOf="@id/tv_meeting_eta"
+            android:textColor="@color/gray_400"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_eta"
-            android:layout_marginBottom="10dp"
-            tools:text = "*대중교통 기준"
-            />
+            app:layout_constraintTop_toBottomOf="@id/tv_meeting_eta"
+            tools:text="*대중교통 기준" />
 
 
         <include

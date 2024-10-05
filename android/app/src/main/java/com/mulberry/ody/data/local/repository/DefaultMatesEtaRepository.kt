@@ -27,15 +27,15 @@ class DefaultMatesEtaRepository
             val initialDuration = min(interval, endMillisecond - startMillisecond)
             val initialRequest = getEtaFetchingRequest(meetingId, initialDuration, startMillisecond)
 
-            var workContnuation = workManager.beginWith(initialRequest)
+            var workContinuation = workManager.beginWith(initialRequest)
             var currentMilliSecond = startMillisecond + interval
             while (currentMilliSecond < endMillisecond) {
                 val duration = min(interval, endMillisecond - currentMilliSecond)
                 val workRequest = getEtaFetchingRequest(meetingId, duration, currentMilliSecond)
-                workContnuation = workContnuation.then(workRequest)
+                workContinuation = workContinuation.then(workRequest)
                 currentMilliSecond += interval
             }
-            workContnuation.enqueue()
+            workContinuation.enqueue()
         }
 
         private fun getEtaFetchingRequest(

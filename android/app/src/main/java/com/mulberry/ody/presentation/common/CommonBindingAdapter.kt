@@ -17,13 +17,6 @@ fun ViewPager2.setEnabledSwipe(isEnabled: Boolean?) {
     setUserInputEnabled(isEnabled ?: false)
 }
 
-@BindingAdapter("imageUrl")
-fun ImageView.setImageUrl(imageUrl: String) {
-    Glide.with(context)
-        .load(imageUrl)
-        .into(this)
-}
-
 @BindingAdapter("circleImageUrl")
 fun ImageView.setCircleImageUrl(imageUrl: String) {
     if (imageUrl.isEmpty()) return
