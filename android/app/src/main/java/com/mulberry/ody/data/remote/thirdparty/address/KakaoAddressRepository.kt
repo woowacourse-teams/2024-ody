@@ -21,7 +21,7 @@ class KakaoAddressRepository
             x: String,
             y: String,
         ): ApiResult<String?> {
-            return service.fetchAddressesByCoord(x, y).map {
+            return service.fetchAddressesByCoordinate(x, y).map {
                 if (it.documents.isNotEmpty()) {
                     it.documents[0].address?.addressName
                 } else {
