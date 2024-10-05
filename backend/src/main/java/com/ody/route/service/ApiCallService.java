@@ -44,4 +44,21 @@ public class ApiCallService {
                 .sum();
         return new ApiCallCountResponse(totalCount);
     }
+
+    @Transactional
+    public ApiCall increaseCountByRouteClient(RouteClient routeClient) {
+        ClientType clientType = ClientType.from(routeClient);
+        return apiCallRepository.findFirstByDateAndClientType(LocalDate.now(), clientType)
+                .map(this::updateCount)
+                .orElseGet(() -> saveInitialCount(clientType));
+    }
+
+    private ApiCall updateCount(ApiCall apiCall) {
+        apiCall.increaseCount();
+        return apiCall;
+    }
+
+    private ApiCall saveInitialCount(ClientType clientType) {
+        return apiCallRepository.save(new ApiCall(clientType));
+    }
 }

@@ -1,8 +1,10 @@
 package com.ody.route.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import com.ody.common.BaseServiceTest;
+import com.ody.route.domain.ApiCall;
 import com.ody.route.domain.ClientType;
 import com.ody.route.dto.ApiCallCountResponse;
 import java.time.LocalDate;
@@ -60,5 +62,30 @@ class ApiCallServiceTest extends BaseServiceTest {
         ApiCallCountResponse expected = new ApiCallCountResponse(0);
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("오늘 최초 API 호출이면 count=1 저장한다.")
+    @Test
+    void firstIncreaseCountByRouteClient() {
+        LocalDate now = LocalDate.now();
+        LocalDate yesterday = now.minusDays(1);
+        fixtureGenerator.generateApiCall(ClientType.GOOGLE, 100, yesterday);
+        fixtureGenerator.generateApiCall(ClientType.ODSAY, 3, now);
+
+        ApiCall actual = apiCallService.increaseCountByRouteClient(mock(GoogleRouteClient.class));
+
+        assertThat(actual.getCount()).isEqualTo(1);
+    }
+
+    @DisplayName("오늘 최초 API 호출이 아니면 count+1 한다.")
+    @Test
+    void increaseCountByRouteClient() {
+        LocalDate now = LocalDate.now();
+        fixtureGenerator.generateApiCall(ClientType.GOOGLE, 100, now);
+        fixtureGenerator.generateApiCall(ClientType.ODSAY, 3, now);
+
+        ApiCall actual = apiCallService.increaseCountByRouteClient(mock(OdsayRouteClient.class));
+
+        assertThat(actual.getCount()).isEqualTo(4);
     }
 }

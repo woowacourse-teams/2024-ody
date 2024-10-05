@@ -41,7 +41,15 @@ public class ApiCall {
     @NotNull
     private LocalDate date;
 
+    public ApiCall(ClientType clientType) {
+        this(null, clientType, 1, LocalDate.now());
+    }
+
     public ApiCall(ClientType clientType, Integer count, LocalDate date) {
         this(null, clientType, count, date);
+    }
+
+    public void increaseCount() {
+        count++;
     }
 }
