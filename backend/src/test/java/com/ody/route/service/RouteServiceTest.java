@@ -23,6 +23,9 @@ class RouteServiceTest extends BaseServiceTest {
     @Qualifier("google")
     private RouteClient googleRouteClient;
 
+    @MockBean
+    private ApiCallService apiCallService;
+
     @Autowired
     private RouteService routeService;
 
@@ -44,7 +47,10 @@ class RouteServiceTest extends BaseServiceTest {
         assertAll(
                 () -> assertThat(result).isEqualTo(expectRouteTime.getMinutes()),
                 () -> Mockito.verify(odsayRouteClient, Mockito.times(1)).calculateRouteTime(origin, target),
-                () -> Mockito.verify(googleRouteClient, Mockito.never()).calculateRouteTime(origin, target)
+                () -> Mockito.verify(googleRouteClient, Mockito.never()).calculateRouteTime(origin, target),
+                () -> Mockito.verify(apiCallService, Mockito.times(1)).increaseCountByRouteClient(odsayRouteClient),
+                () -> Mockito.verify(apiCallService, Mockito.never()).increaseCountByRouteClient(googleRouteClient)
+
         );
     }
 
@@ -66,7 +72,9 @@ class RouteServiceTest extends BaseServiceTest {
         assertAll(
                 () -> assertThat(result).isEqualTo(expectRouteTime.getMinutes()),
                 () -> Mockito.verify(odsayRouteClient, Mockito.times(1)).calculateRouteTime(origin, target),
-                () -> Mockito.verify(googleRouteClient, Mockito.times(1)).calculateRouteTime(origin, target)
+                () -> Mockito.verify(googleRouteClient, Mockito.times(1)).calculateRouteTime(origin, target),
+                () -> Mockito.verify(apiCallService, Mockito.never()).increaseCountByRouteClient(odsayRouteClient),
+                () -> Mockito.verify(apiCallService, Mockito.times(1)).increaseCountByRouteClient(googleRouteClient)
         );
     }
 }
