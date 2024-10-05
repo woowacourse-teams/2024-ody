@@ -79,6 +79,7 @@
             android:id="@+id/iv_current_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             android:onClick="@{() -> vm.getDefaultLocation()}"
             android:src="@drawable/ic_current_location"
             app:layout_constraintBottom_toBottomOf="@id/et_departure"
