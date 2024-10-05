@@ -21,10 +21,10 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
         LocalDate now = LocalDate.now();
         ApiCall yesterdayOdsayApiCall = new ApiCall(ClientType.ODSAY, 1, now.minusDays(1));
         ApiCall todayOdsayApiCall = new ApiCall(ClientType.ODSAY, 2, now);
-        ApiCall todayGoogleMapsApiCall = new ApiCall(ClientType.GOOGLE_MAPS, 3, now);
+        ApiCall todayGoogleApiCall = new ApiCall(ClientType.GOOGLE, 3, now);
         apiCallRepository.save(yesterdayOdsayApiCall);
         apiCallRepository.save(todayOdsayApiCall);
-        apiCallRepository.save(todayGoogleMapsApiCall);
+        apiCallRepository.save(todayGoogleApiCall);
 
         // when
         Optional<ApiCall> actual = apiCallRepository.findFirstByDateAndClientType(now, ClientType.ODSAY);
@@ -40,16 +40,16 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
         // given
         LocalDate now = LocalDate.now();
         LocalDate yesterday = now.minusDays(1);
-        ApiCall yesterdayGoogleMapsApiCall = new ApiCall(ClientType.GOOGLE_MAPS, 1, yesterday);
-        ApiCall todayGoogleMapsApiCall = new ApiCall(ClientType.GOOGLE_MAPS, 3, now);
+        ApiCall yesterdayGoogleApiCall = new ApiCall(ClientType.GOOGLE, 1, yesterday);
+        ApiCall todayGoogleApiCall = new ApiCall(ClientType.GOOGLE, 3, now);
         ApiCall todayOdsayApiCall = new ApiCall(ClientType.ODSAY, 2, now);
-        apiCallRepository.save(yesterdayGoogleMapsApiCall);
-        apiCallRepository.save(todayGoogleMapsApiCall);
+        apiCallRepository.save(yesterdayGoogleApiCall);
+        apiCallRepository.save(todayGoogleApiCall);
         apiCallRepository.save(todayOdsayApiCall);
 
         // when
         List<ApiCall> actual = apiCallRepository.findAllByClientTypeAndDateBetween(
-                ClientType.GOOGLE_MAPS,
+                ClientType.GOOGLE,
                 yesterday,
                 now
         );
