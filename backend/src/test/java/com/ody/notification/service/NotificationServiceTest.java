@@ -18,6 +18,7 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
+import com.ody.notification.domain.message.DirectMessage;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.service.RouteService;
 import com.ody.util.InviteCodeGenerator;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,7 +163,7 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @DisplayName("재촉하기 메시지가 발송된다")
     @Test
-    void sendSendNudgeMessageMessage() {
+    void sendSendNudgeMessage() {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Member member2 = memberRepository.save(Fixture.MEMBER2);
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
@@ -175,6 +177,25 @@ class NotificationServiceTest extends BaseServiceTest {
         notificationService.sendNudgeMessage(requestMate, nudgedMate);
 
         Mockito.verify(fcmPushSender, Mockito.times(1)).sendNudgeMessage(any(), any());
+    }
+
+    @DisplayName("재촉하기 메시지가 발송 시, 재촉을 한 사람이 notification에 기록된다")
+    @Test
+    void logHasNudgeRequestMate() {
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Mate sender = fixtureGenerator.generateMate(meeting);
+        Mate receiver = fixtureGenerator.generateMate(meeting);
+        ArgumentCaptor<Notification> captor = ArgumentCaptor.forClass(Notification.class);
+
+        Mockito.doNothing()
+                .when(fcmPushSender)
+                .sendNudgeMessage(captor.capture(), any(DirectMessage.class));
+
+        notificationService.sendNudgeMessage(sender, receiver);
+        Notification savedNotification = captor.getValue();
+
+        assertThat(savedNotification.getMate())
+                .isEqualTo(sender);
     }
 
     @DisplayName("특정 참여자의 PENDING 상태인 알람을 모두 DISMISSED 상태로 변경한다.")
