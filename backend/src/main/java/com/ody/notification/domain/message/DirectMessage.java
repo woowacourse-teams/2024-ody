@@ -6,12 +6,12 @@ import com.ody.notification.domain.Notification;
 
 public record DirectMessage(Message message) {
 
-    public static DirectMessage createMessageToOther(Mate sender, Notification recipientNotification) {
+    public static DirectMessage createMessageToOther(Mate sender, Mate receiver, Notification recipientNotification) {
         Message message = Message.builder()
                 .putData("type", recipientNotification.getType().name())
                 .putData("nickname", sender.getNickname().getValue())
                 .putData("meetingId", sender.getMeeting().getId().toString())
-                .setToken(recipientNotification.getMate().getMember().getDeviceToken().getValue())
+                .setToken(receiver.getMember().getDeviceToken().getValue())
                 .build();
 
         return new DirectMessage(message);

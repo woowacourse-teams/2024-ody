@@ -102,10 +102,10 @@ public class NotificationService {
 
     @Transactional
     public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
-        Notification nudgeNotification = notificationRepository.save(Notification.createNudge(nudgedMate));
+        Notification nudgeNotification = notificationRepository.save(Notification.createNudge(requestMate));
         fcmPushSender.sendNudgeMessage(
                 nudgeNotification,
-                DirectMessage.createMessageToOther(requestMate, nudgeNotification)
+                DirectMessage.createMessageToOther(requestMate, nudgedMate, nudgeNotification)
         );
     }
 
