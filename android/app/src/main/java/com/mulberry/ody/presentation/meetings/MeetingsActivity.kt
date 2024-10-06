@@ -220,7 +220,6 @@ class MeetingsActivity :
     }
 
     companion object {
-        private const val TAG = "MeetingsActivity"
         private const val BACK_PRESSED_DELAY = 2000
 
         fun getIntent(context: Context): Intent = Intent(context, MeetingsActivity::class.java)

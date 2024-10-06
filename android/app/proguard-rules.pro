@@ -33,6 +33,9 @@
 -keep class com.mulberry.ody.data.retrofit.* { *; }
 -keep class com.mulberry.ody.domain.apiresult.ApiResult
 -keep class com.mulberry.ody.data.remote.core.service.* { *; }
+-keep class com.mulberry.ody.data.remote.core.entity.* { *; }
+-keep class com.mulberry.ody.data.local.entity.eta.* { *; }
+-keep class com.mulberry.ody.domain.model.* { *; }
 
 # moshi
 -keep class com.squareup.moshi.** { *; }

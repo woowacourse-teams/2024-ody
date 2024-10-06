@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ReplicationType {
 
-    READ((transactionActive, readOnly) -> !transactionActive || readOnly),
-    WRITE((transactionActive, readOnly) -> transactionActive && !readOnly);
+    READ((transactionActive, readOnly) -> transactionActive && readOnly),
+    WRITE((transactionActive, readOnly) -> !transactionActive || !readOnly);
 
     private final BiPredicate<Boolean, Boolean> condition;
 

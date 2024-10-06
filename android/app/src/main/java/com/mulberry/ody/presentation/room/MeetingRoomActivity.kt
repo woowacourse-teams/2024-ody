@@ -105,7 +105,6 @@ class MeetingRoomActivity :
     companion object {
         private const val MEETING_ID_KEY = "meeting_id"
         private const val MEETING_ID_DEFAULT_VALUE = -1L
-
         private const val NAVIGATE_VIEW_KEY = "navigate_view"
         const val NAVIGATE_TO_ETA_DASHBOARD = "eta_dashboard"
         const val NAVIGATE_TO_NOTIFICATION_LOG = "notification_log"
