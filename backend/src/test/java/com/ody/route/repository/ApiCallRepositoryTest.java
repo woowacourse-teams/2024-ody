@@ -56,8 +56,8 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(actual).extracting(ApiCall::getCount).contains(1, 3),
-                () -> assertThat(actual).extracting(ApiCall::getDate).contains(yesterday, now)
+                () -> assertThat(actual).extracting(ApiCall::getCount).containsExactly(1, 3),
+                () -> assertThat(actual).extracting(ApiCall::getDate).containsExactly(yesterday, now)
         );
     }
 }
