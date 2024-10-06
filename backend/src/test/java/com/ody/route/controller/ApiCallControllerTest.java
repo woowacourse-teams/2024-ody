@@ -13,9 +13,7 @@ class ApiCallControllerTest extends BaseControllerTest {
         RestAssured.given().log().all()
                 .when()
                 .get("/admin/api-call/count/odsay")
-                .then()
-                .log()
-                .all()
+                .then().log().all()
                 .statusCode(200);
     }
 
@@ -25,9 +23,7 @@ class ApiCallControllerTest extends BaseControllerTest {
         RestAssured.given().log().all()
                 .when()
                 .get("/admin/api-call/count/google")
-                .then()
-                .log()
-                .all()
+                .then().log().all()
                 .statusCode(200);
     }
 }
