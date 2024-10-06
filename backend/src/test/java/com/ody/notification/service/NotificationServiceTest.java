@@ -163,7 +163,7 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @DisplayName("재촉하기 메시지가 발송된다")
     @Test
-    void sendSendNudgeMessage() {
+    void sendNudgeMessage() {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Member member2 = memberRepository.save(Fixture.MEMBER2);
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
