@@ -5,8 +5,6 @@ import com.ody.route.domain.ClientType;
 import com.ody.route.dto.ApiCallCountResponse;
 import com.ody.route.repository.ApiCallRepository;
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +30,11 @@ public class ApiCallService {
     }
 
     public ApiCallCountResponse countGoogleApiCall() {
-        int thisYear = Year.now().getValue();
-        Month thisMonth = LocalDate.now().getMonth();
+        LocalDate now = LocalDate.now();
         List<ApiCall> apiCalls = apiCallRepository.findAllByClientTypeAndDateBetween(
                 ClientType.GOOGLE,
-                LocalDate.of(thisYear, thisMonth, 1),
-                LocalDate.now()
+                now.withDayOfMonth(1),
+                now
         );
         int totalCount = apiCalls.stream()
                 .mapToInt(ApiCall::getCount)
