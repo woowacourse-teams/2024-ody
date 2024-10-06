@@ -63,7 +63,7 @@ class ApiCallServiceTest extends BaseServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("오늘 최초 API 호출이면 count=1 저장한다.")
+    @DisplayName("오늘 처음 Google API 호출이면 count=1 저장한다.")
     @Test
     void firstIncreaseCountByRouteClient() {
         LocalDate now = LocalDate.now();
@@ -76,7 +76,7 @@ class ApiCallServiceTest extends BaseServiceTest {
         assertThat(actual.getCount()).isEqualTo(1);
     }
 
-    @DisplayName("오늘 최초 API 호출이 아니면 count+1 한다.")
+    @DisplayName("오늘 처음 Odsay API 호출이 아니면 count+1 한다.")
     @Test
     void increaseCountByRouteClient() {
         LocalDate now = LocalDate.now();
