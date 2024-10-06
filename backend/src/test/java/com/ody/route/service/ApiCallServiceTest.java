@@ -1,7 +1,6 @@
 package com.ody.route.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.route.domain.ApiCall;
@@ -72,7 +71,7 @@ class ApiCallServiceTest extends BaseServiceTest {
         fixtureGenerator.generateApiCall(ClientType.GOOGLE, 100, yesterday);
         fixtureGenerator.generateApiCall(ClientType.ODSAY, 3, now);
 
-        ApiCall actual = apiCallService.increaseCountByRouteClient(mock(GoogleRouteClient.class));
+        ApiCall actual = apiCallService.increaseCountByRouteClient(new StubGoogleRouteClient());
 
         assertThat(actual.getCount()).isEqualTo(1);
     }
@@ -84,7 +83,7 @@ class ApiCallServiceTest extends BaseServiceTest {
         fixtureGenerator.generateApiCall(ClientType.GOOGLE, 100, now);
         fixtureGenerator.generateApiCall(ClientType.ODSAY, 3, now);
 
-        ApiCall actual = apiCallService.increaseCountByRouteClient(mock(OdsayRouteClient.class));
+        ApiCall actual = apiCallService.increaseCountByRouteClient(new StubOdsayRouteClient());
 
         assertThat(actual.getCount()).isEqualTo(4);
     }

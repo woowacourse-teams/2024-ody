@@ -44,7 +44,7 @@ public class ApiCallService {
 
     @Transactional
     public ApiCall increaseCountByRouteClient(RouteClient routeClient) {
-        ClientType clientType = ClientType.from(routeClient);
+        ClientType clientType = routeClient.getClientType();
         return apiCallRepository.findFirstByDateAndClientType(LocalDate.now(), clientType)
                 .map(this::updateCount)
                 .orElseGet(() -> saveInitialCount(clientType));
