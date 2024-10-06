@@ -47,7 +47,7 @@ class RouteServiceTest extends BaseServiceTest {
         assertAll(
                 () -> assertThat(result).isEqualTo(expectRouteTime.getMinutes()),
                 () -> Mockito.verify(odsayRouteClient, Mockito.times(1)).calculateRouteTime(origin, target),
-                () -> Mockito.verify(googleRouteClient, Mockito.never()).calculateRouteTime(origin, target),
+                () -> Mockito.verifyNoInteractions(googleRouteClient),
                 () -> Mockito.verify(apiCallService, Mockito.times(1)).increaseCountByRouteClient(odsayRouteClient),
                 () -> Mockito.verify(apiCallService, Mockito.never()).increaseCountByRouteClient(googleRouteClient)
 
