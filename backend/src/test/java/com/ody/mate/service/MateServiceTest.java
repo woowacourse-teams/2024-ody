@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
 import com.ody.common.BaseServiceTest;
-import com.ody.common.DtoGenerator;
 import com.ody.common.Fixture;
 import com.ody.common.FixtureGenerator;
 import com.ody.common.exception.OdyBadRequestException;
@@ -144,9 +143,8 @@ class MateServiceTest extends BaseServiceTest {
         @DisplayName("하나의 약속에 동일한 닉네임을 가진 참여자가 존재할 수 있다.")
         @Test
         void saveMateWithDuplicateNickname() {
-            String nickname = "제리";
-            Member member1 = fixtureGenerator.generateMember(nickname);
-            Member member2 = fixtureGenerator.generateMember(nickname);
+            Member member1 = fixtureGenerator.generateMember();
+            Member member2 = fixtureGenerator.generateMember();
             Meeting meeting = fixtureGenerator.generateMeeting();
             Mate mate1 = fixtureGenerator.generateMate(meeting, member1);
 
@@ -164,7 +162,7 @@ class MateServiceTest extends BaseServiceTest {
         @DisplayName("하나의 약속에 동일한 회원이 존재할 수 없다.")
         @Test
         void saveMateWithDuplicateMember() {
-            Member member = fixtureGenerator.generateMember("제리");
+            Member member = fixtureGenerator.generateMember();
             Meeting meeting = fixtureGenerator.generateMeeting();
             fixtureGenerator.generateMate(meeting, member);
 
