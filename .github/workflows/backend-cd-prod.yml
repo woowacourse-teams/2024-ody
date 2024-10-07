@@ -1,11 +1,11 @@
 name: backend-cd-prod
 
 on:
-  push:
+  pull-request:
     branches:
-      - main
-    paths:
-      - backend/**
+      - 'release-be/**'
+    types:
+      - closed
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
