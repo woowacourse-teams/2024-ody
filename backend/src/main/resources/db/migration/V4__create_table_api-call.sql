@@ -4,5 +4,5 @@ create table if not exists api_call (
     `count` int not null,
     `date` date not null,
     primary key (id),
-    unique (client_type, `date`)
+    constraint unique_client_type_and_date unique (client_type, `date`)
 );
