@@ -1,8 +1,7 @@
-
 name: backend-cd-prod
 
 on:
-  pull-request:
+  pull_request:
     branches:
       - 'release-be/**'
     types:
