@@ -44,16 +44,11 @@ class DefaultMeetingRepository
             return runCatching {
                 service.patchMatesEta(
                     meetingId,
-                    MatesEtaRequest(isMissing, compress(currentLatitude), compress(currentLongitude)),
+                    MatesEtaRequest(isMissing, currentLatitude, currentLongitude),
                 ).toMateEtaInfo()
             }
         }
 
         override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> =
             service.fetchMeetingCatalogs().map { it.toMeetingCatalogs() }
-
-        private fun compress(coordinate: String): String {
-            val endIndex = minOf(9, coordinate.length)
-            return coordinate.substring(0, endIndex)
-        }
     }

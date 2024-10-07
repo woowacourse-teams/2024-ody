@@ -11,8 +11,8 @@ fun MeetingCreationInfo.toMeetingRequest(): MeetingRequest =
         date = date,
         time = time,
         targetAddress = targetAddress,
-        targetLatitude = compress(targetLatitude),
-        targetLongitude = compress(targetLongitude),
+        targetLatitude = targetLatitude,
+        targetLongitude = targetLongitude,
     )
 
 fun Nudge.toNudgeRequest(): NudgeRequest =
@@ -20,8 +20,3 @@ fun Nudge.toNudgeRequest(): NudgeRequest =
         requestMateId = requestMateId,
         nudgedMateId = nudgedMateId,
     )
-
-private fun compress(coordinate: String): String {
-    val endIndex = minOf(9, coordinate.length)
-    return coordinate.substring(0, endIndex)
-}
