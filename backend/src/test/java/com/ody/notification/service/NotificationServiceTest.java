@@ -20,11 +20,8 @@ import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.service.RouteService;
-import com.ody.util.InviteCodeGenerator;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -47,15 +44,6 @@ class NotificationServiceTest extends BaseServiceTest {
     private TaskScheduler taskScheduler;
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private MeetingRepository meetingRepository;
-
-    @Autowired
-    private MateRepository mateRepository;
-
-    @Autowired
     private NotificationRepository notificationRepository;
 
     @Autowired
@@ -67,18 +55,10 @@ class NotificationServiceTest extends BaseServiceTest {
     @DisplayName("알림 생성 시점이 전송 시점보다 늦은 경우 즉시 전송된다")
     @Test
     void sendImmediatelyIfDepartureTimeIsPast() {
-        Member member = memberRepository.save(Fixture.MEMBER1);
-        Meeting pastMeeting = new Meeting(
-                "오디",
-                LocalDate.now().minusDays(1),
-                LocalTime.parse("14:00"),
-                Fixture.TARGET_LOCATION,
-                InviteCodeGenerator.generate()
-        );
-        Meeting savedPastMeeting = meetingRepository.save(pastMeeting);
-        Mate mate = mateRepository.save(
-                new Mate(savedPastMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 1L)
-        );
+        Member member = fixtureGenerator.generateMember();
+        Meeting savedPastMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusDays(1));
+        Mate mate = fixtureGenerator.generateMate(savedPastMeeting, member);
+
         notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
 
         Optional<Notification> departureNotification = notificationRepository.findAll().stream()
@@ -91,24 +71,9 @@ class NotificationServiceTest extends BaseServiceTest {
     @DisplayName("PENDING 상태의 알림들을 TaskScheduler로 스케줄링 한다.")
     @Test
     void schedulePendingNotification() {
-        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
-        Member member = memberRepository.save(Fixture.MEMBER1);
-        Mate mate = mateRepository.save(new Mate(odyMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L));
-
-        notificationRepository.save(new Notification(
-                mate,
-                NotificationType.DEPARTURE_REMINDER,
-                LocalDateTime.now(),
-                NotificationStatus.PENDING,
-                new FcmTopic(odyMeeting)
-        ));
-        notificationRepository.save(new Notification(
-                mate,
-                NotificationType.DEPARTURE_REMINDER,
-                LocalDateTime.now(),
-                NotificationStatus.DONE,
-                new FcmTopic(odyMeeting)
-        ));
+        Mate mate = fixtureGenerator.generateMate();
+        fixtureGenerator.generateNotification(mate, NotificationType.DEPARTURE_REMINDER, NotificationStatus.PENDING);
+        fixtureGenerator.generateNotification(mate, NotificationType.DEPARTURE_REMINDER, NotificationStatus.DONE);
 
         notificationService.schedulePendingNotification();
 
@@ -119,40 +84,15 @@ class NotificationServiceTest extends BaseServiceTest {
     @DisplayName("모임방에 대한 구독을 취소한다")
     @Test
     void unSubscribeTopic() {
-        Member member = memberRepository.save(Fixture.MEMBER1);
-        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
-        Meeting sojuMeeting = meetingRepository.save(Fixture.SOJU_MEETING);
-        Mate jojo = mateRepository.save(
-                new Mate(odyMeeting, member, new Nickname("은별"), Fixture.ORIGIN_LOCATION, 10L)
-        );
-        Mate kaki = mateRepository.save(
-                new Mate(sojuMeeting, member, new Nickname("카키"), Fixture.ORIGIN_LOCATION, 10L)
-        );
+        Member member = fixtureGenerator.generateMember();
+        Meeting odyMeeting = fixtureGenerator.generateMeeting();
+        Meeting sojuMeeting = fixtureGenerator.generateMeeting();
+        Mate jojo = fixtureGenerator.generateMate(odyMeeting, member);
+        Mate kaki = fixtureGenerator.generateMate(sojuMeeting, member);
 
-        Notification notification1 = new Notification(
-                jojo,
-                NotificationType.DEPARTURE_REMINDER,
-                LocalDateTime.now(),
-                NotificationStatus.DONE,
-                new FcmTopic(odyMeeting)
-        );
-        Notification notification2 = new Notification(
-                kaki,
-                NotificationType.DEPARTURE_REMINDER,
-                LocalDateTime.now(),
-                NotificationStatus.DONE,
-                new FcmTopic(sojuMeeting)
-        );
-        Notification notification3 = new Notification(
-                kaki,
-                NotificationType.ENTRY,
-                LocalDateTime.now(),
-                NotificationStatus.DONE,
-                new FcmTopic(sojuMeeting)
-        );
-        notificationRepository.save(notification1);
-        notificationRepository.save(notification2);
-        notificationRepository.save(notification3);
+        fixtureGenerator.generateNotification(jojo, NotificationType.DEPARTURE_REMINDER, NotificationStatus.DONE);
+        fixtureGenerator.generateNotification(kaki, NotificationType.DEPARTURE_REMINDER, NotificationStatus.DONE);
+        fixtureGenerator.generateNotification(kaki, NotificationType.ENTRY, NotificationStatus.DONE);
 
         notificationService.unSubscribeTopic(List.of(odyMeeting, sojuMeeting));
 
@@ -162,15 +102,9 @@ class NotificationServiceTest extends BaseServiceTest {
     @DisplayName("재촉하기 메시지가 발송된다")
     @Test
     void sendSendNudgeMessageMessage() {
-        Member member1 = memberRepository.save(Fixture.MEMBER1);
-        Member member2 = memberRepository.save(Fixture.MEMBER2);
-        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
-        Mate requestMate = mateRepository.save(
-                new Mate(odyMeeting, member1, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 10L)
-        );
-        Mate nudgedMate = mateRepository.save(
-                new Mate(odyMeeting, member2, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L)
-        );
+        Meeting odyMeeting = fixtureGenerator.generateMeeting();
+        Mate requestMate = fixtureGenerator.generateMate(odyMeeting);
+        Mate nudgedMate = fixtureGenerator.generateMate(odyMeeting);
 
         notificationService.sendNudgeMessage(requestMate, nudgedMate);
 
