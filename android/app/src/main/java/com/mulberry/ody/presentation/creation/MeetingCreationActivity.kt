@@ -31,9 +31,9 @@ class MeetingCreationActivity :
     private val fragments: List<Fragment> by lazy {
         listOf(
             MeetingNameFragment(),
+            MeetingDestinationFragment(),
             MeetingDateFragment(),
             MeetingTimeFragment(),
-            MeetingDestinationFragment(),
         )
     }
     private val onBackPressedCallback: OnBackPressedCallback =
