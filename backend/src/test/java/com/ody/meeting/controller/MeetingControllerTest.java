@@ -112,7 +112,7 @@ class MeetingControllerTest extends BaseControllerTest {
             Mate mate = fixtureGenerator.generateMate(meeting, member);
             Eta eta = fixtureGenerator.generateEta(mate);
 
-            MateEtaRequest mateEtaRequest = dtoGenerator.generateMateRequest();
+            MateEtaRequest mateEtaRequest = dtoGenerator.generateMateEtaRequest();
 
             RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
@@ -132,7 +132,7 @@ class MeetingControllerTest extends BaseControllerTest {
             Mate mate = fixtureGenerator.generateMate(meeting, member);
             Eta eta = fixtureGenerator.generateEta(mate);
 
-            MateEtaRequest mateEtaMissingRequest = dtoGenerator.generateMateRequest(true);
+            MateEtaRequest mateEtaMissingRequest = dtoGenerator.generateMateEtaRequest(true);
 
             MateEtaResponseV2 mateEtaMissingResponse = RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
@@ -148,7 +148,7 @@ class MeetingControllerTest extends BaseControllerTest {
 
             assertThat(mateEtaMissingResponse.status()).isEqualTo(EtaStatus.MISSING);
 
-            MateEtaRequest mateEtaNotMissingRequest = dtoGenerator.generateMateRequest(false);
+            MateEtaRequest mateEtaNotMissingRequest = dtoGenerator.generateMateEtaRequest(false);
 
             MateEtaResponseV2 mateEtaNotMissingResponse = RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
@@ -178,7 +178,7 @@ class MeetingControllerTest extends BaseControllerTest {
             Mate coli = fixtureGenerator.generateMate(meeting, member2);
             fixtureGenerator.generateEta(coli);
 
-            MateEtaRequest mateEtaMissingRequest = dtoGenerator.generateMateRequest(true);
+            MateEtaRequest mateEtaMissingRequest = dtoGenerator.generateMateEtaRequest(true);
 
             MateEtaResponsesV2 mateEtaResponses = RestAssured.given().log().all()
                     .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member1))

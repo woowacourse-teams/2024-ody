@@ -1,25 +1,18 @@
 package com.ody.eta.service;
 
-import static com.ody.common.Fixture.TARGET_LOCATION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
 import com.ody.common.BaseServiceTest;
+import com.ody.common.DtoGenerator;
 import com.ody.common.Fixture;
-import com.ody.eta.domain.Eta;
 import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
-import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
-import com.ody.mate.domain.Nickname;
-import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponseV2;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
-import com.ody.meeting.repository.MeetingRepository;
-import com.ody.member.domain.Member;
-import com.ody.member.repository.MemberRepository;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import java.time.LocalDateTime;
@@ -37,19 +30,9 @@ class EtaServiceTest extends BaseServiceTest {
     private RouteService routeservice;
 
     @Autowired
-    private EtaRepository etaRepository;
-
-    @Autowired
-    private MeetingRepository meetingRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private MateRepository mateRepository;
-
-    @Autowired
     private EtaService etaService;
+
+    private DtoGenerator dtoGenerator = new DtoGenerator();
 
     @DisplayName("오디세이 호출 여부 테스트")
     @Nested
@@ -59,14 +42,12 @@ class EtaServiceTest extends BaseServiceTest {
         @Test
         void callOdsayWhenDurationIsMoreThan10Minutes() {
             Location origin = Fixture.ORIGIN_LOCATION;
-            Member member = memberRepository.save(Fixture.MEMBER1);
-            Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
-            Mate mate = mateRepository.save(
-                    new Mate(odyMeeting, member, new Nickname("은별"), origin, 10L)
-            );
+            Meeting odyMeeting = fixtureGenerator.generateMeeting();
+            Mate mate = fixtureGenerator.generateMate(odyMeeting, origin);
+
             LocalDateTime updateTime = LocalDateTime.now().minusMinutes(11L);
-            etaRepository.save(new Eta(mate, 30L, LocalDateTime.now(), updateTime));
-            MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+            fixtureGenerator.generateEta(mate, 30L, updateTime);
+            MateEtaRequest mateEtaRequest = dtoGenerator.generateMateEtaRequest(false, origin);
 
             BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
                     .thenReturn(new RouteTime(10L));
@@ -80,40 +61,28 @@ class EtaServiceTest extends BaseServiceTest {
         @Test
         void callOdsayWhenDurationIsLessThan10Minutes() {
             Location origin = Fixture.ORIGIN_LOCATION;
-            Member member = memberRepository.save(Fixture.MEMBER1);
-            Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
-            Mate mate = mateRepository.save(
-                    new Mate(odyMeeting, member, new Nickname("은별"), origin, 10L)
-            );
+            Meeting odyMeeting = fixtureGenerator.generateMeeting();
+            Mate mate = fixtureGenerator.generateMate(odyMeeting, origin);
+
             LocalDateTime updateTime = LocalDateTime.now().minusMinutes(9L);
-            etaRepository.save(new Eta(mate, 30L, LocalDateTime.now(), updateTime));
-            MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+            fixtureGenerator.generateEta(mate, 30L, updateTime);
+            MateEtaRequest mateEtaRequest = dtoGenerator.generateMateEtaRequest(false, origin);
 
             etaService.findAllMateEtas(mateEtaRequest, mate);
 
             BDDMockito.verify(routeservice, Mockito.never()).calculateRouteTime(any(), any());
         }
 
-        @DisplayName("약속 시간 30분에 첫번째 오디세이 호출이 시작된다")
+        @DisplayName("약속 시간 30분 전에 첫번째 오디세이 호출이 시작된다")
         @Test
         void callFistOdsayWhen30minutesAgo() {
             Location origin = Fixture.ORIGIN_LOCATION;
-            Member member = memberRepository.save(Fixture.MEMBER1);
             LocalDateTime thirtyMinutesLater = LocalDateTime.now().plusMinutes(30L);
-            Meeting meeting = new Meeting(
-                    "오디",
-                    thirtyMinutesLater.toLocalDate(),
-                    thirtyMinutesLater.toLocalTime(),
-                    TARGET_LOCATION,
-                    "초대코드"
-            );
-            Meeting thirtyMinutesLaterMeeting = meetingRepository.save(meeting);
+            Meeting meeting = fixtureGenerator.generateMeeting(thirtyMinutesLater);
+            Mate mate = fixtureGenerator.generateMate(meeting, origin);
 
-            Mate mate = mateRepository.save(
-                    new Mate(thirtyMinutesLaterMeeting, member, new Nickname("은별"), origin, 10L)
-            );
-            etaRepository.save(new Eta(mate, 31L));
-            MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+            fixtureGenerator.generateEta(mate, 31L);
+            MateEtaRequest mateEtaRequest = dtoGenerator.generateMateEtaRequest(false, origin);
 
             BDDMockito.when(routeservice.calculateRouteTime(any(), any()))
                     .thenReturn(new RouteTime(31L));
@@ -127,23 +96,13 @@ class EtaServiceTest extends BaseServiceTest {
     @DisplayName("현재 시간 <= 약속 시간 && 직선거리가 300m 이내 일 경우 도착 상태로 업데이트한다.")
     @Test
     void findAllMateEtas() {
-        Location origin = Fixture.ORIGIN_LOCATION;
-        Member member = memberRepository.save(Fixture.MEMBER1);
+        Location target = Fixture.TARGET_LOCATION;
         LocalDateTime now = LocalDateTime.now();
-        Meeting meeting = new Meeting(
-                "오디",
-                now.toLocalDate(),
-                now.toLocalTime(),
-                origin,
-                "초대코드"
-        );
-        Meeting nowMeeting = meetingRepository.save(meeting);
+        Meeting nowMeeting = fixtureGenerator.generateMeeting(now);
+        Mate mate = fixtureGenerator.generateMate(nowMeeting, target);
 
-        Mate mate = mateRepository.save(
-                new Mate(nowMeeting, member, new Nickname("은별"), origin, 0L)
-        );
-        etaRepository.save(new Eta(mate, 30L));
-        MateEtaRequest mateEtaRequest = new MateEtaRequest(false, origin.getLatitude(), origin.getLongitude());
+        fixtureGenerator.generateEta(mate, 30L);
+        MateEtaRequest mateEtaRequest = dtoGenerator.generateMateEtaRequest(false, target);
 
         MateEtaResponsesV2 etas = etaService.findAllMateEtas(mateEtaRequest, mate);
         MateEtaResponseV2 mateEtaResponse = etas.mateEtas().stream()

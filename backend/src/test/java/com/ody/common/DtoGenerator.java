@@ -41,16 +41,15 @@ public class DtoGenerator {
         );
     }
 
-    public MateEtaRequest generateMateRequest() {
-        return generateMateRequest(false, Fixture.ORIGIN_LOCATION);
+    public MateEtaRequest generateMateEtaRequest() {
+        return generateMateEtaRequest(false, Fixture.ORIGIN_LOCATION);
     }
 
-    public MateEtaRequest generateMateRequest(boolean isMissing) {
-        return generateMateRequest(isMissing, Fixture.ORIGIN_LOCATION);
+    public MateEtaRequest generateMateEtaRequest(boolean isMissing) {
+        return generateMateEtaRequest(isMissing, Fixture.ORIGIN_LOCATION);
     }
 
-    public MateEtaRequest generateMateRequest(boolean isMissing, Location location) {
+    public MateEtaRequest generateMateEtaRequest(boolean isMissing, Location location) {
         return new MateEtaRequest(isMissing, location.getLatitude(), location.getLongitude());
     }
-
 }

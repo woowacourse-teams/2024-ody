@@ -126,11 +126,15 @@ public class FixtureGenerator {
     }
 
     public Eta generateEta(Mate mate) {
-        return etaRepository.save(new Eta(mate, 10L));
+        return generateEta(mate, 10L);
     }
 
     public Eta generateEta(Mate mate, long remainMinutes) {
-        return etaRepository.save(new Eta(mate, remainMinutes));
+        return generateEta(mate, remainMinutes, TimeUtil.nowWithTrim());
+    }
+
+    public Eta generateEta(Mate mate, long remainingMinutes, LocalDateTime lastUpdateTime) {
+        return etaRepository.save(new Eta(mate, remainingMinutes, TimeUtil.nowWithTrim(), lastUpdateTime));
     }
 
     public Notification generateNotification(Mate mate, NotificationType type, NotificationStatus status) {
