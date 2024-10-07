@@ -85,25 +85,12 @@ public class FixtureGenerator {
         return memberRepository.save(new Member(providerId, nickname, "imageurl", deviceToken));
     }
 
-    public Member generateMember(RefreshToken refreshToken) {
-        Member member = generateMember();
-        member.updateRefreshToken(refreshToken);
-        return memberRepository.save(member);
-    }
-
     public Member generateUnsavedMember(String providerId, String rawDeviceToken) {
         return new Member(providerId, new Nickname("nickname"), "imageUrl", new DeviceToken(rawDeviceToken));
     }
 
     public Member generateSavedMember(String providerId, String rawDeviceToken) {
         return memberRepository.save(generateUnsavedMember(providerId, rawDeviceToken));
-    }
-
-    public Member generateSavedMember(String providerId, String rawDeviceToken, String rawRefreshToken) {
-        Member member = generateSavedMember(providerId, rawDeviceToken);
-        RefreshToken refreshToken = new RefreshToken(rawRefreshToken);
-        member.updateRefreshToken(refreshToken);
-        return memberRepository.save(member);
     }
 
     public Mate generateMate() {

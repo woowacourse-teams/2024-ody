@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.auth.service.KakaoAuthUnlinkClient;
+import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.eta.repository.EtaRepository;
@@ -114,7 +115,7 @@ class MemberServiceTest extends BaseServiceTest {
         @DisplayName("특정 회원의 리프레시 토큰을 삭제할 수 있다")
         @Test
         void removeMemberRefreshToken() {
-            Member member = fixtureGenerator.generateSavedMember("pid", "deviceToken", "refresh-token=token");
+            Member member = saveMember("pid", "deviceToken", "refresh-token=token");
 
             memberService.updateRefreshToken(member.getId(), null);
 
@@ -124,6 +125,13 @@ class MemberServiceTest extends BaseServiceTest {
 
         private DeviceToken getDeviceTokenByAuthProvider(String providerId) {
             return memberRepository.findByAuthProvider(new AuthProvider(providerId)).get().getDeviceToken();
+        }
+
+        public Member saveMember(String providerId, String rawDeviceToken, String rawRefreshToken) {
+            Member member = fixtureGenerator.generateSavedMember(providerId, rawDeviceToken);
+            RefreshToken refreshToken = new RefreshToken(rawRefreshToken);
+            member.updateRefreshToken(refreshToken);
+            return memberRepository.save(member);
         }
     }
 
