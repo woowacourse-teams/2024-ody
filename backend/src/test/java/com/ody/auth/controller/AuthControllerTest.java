@@ -22,7 +22,7 @@ import org.springframework.http.HttpHeaders;
 class AuthControllerTest extends BaseControllerTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @DisplayName("카카오 로그인 API")
     @Nested
