@@ -6,7 +6,8 @@ import com.ody.notification.domain.Notification;
 
 public record DirectMessage(Message message) {
 
-    public static DirectMessage createMessageToOther(Mate sender, Mate receiver, Notification recipientNotification) {
+    public static DirectMessage createMessageToOther(Mate receiver, Notification recipientNotification) {
+        Mate sender = recipientNotification.getMate();
         Message message = Message.builder()
                 .putData("type", recipientNotification.getType().name())
                 .putData("nickname", sender.getNickname().getValue())

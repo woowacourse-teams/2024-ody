@@ -105,7 +105,7 @@ public class NotificationService {
         Notification nudgeNotification = notificationRepository.save(Notification.createNudge(requestMate));
         fcmPushSender.sendNudgeMessage(
                 nudgeNotification,
-                DirectMessage.createMessageToOther(requestMate, nudgedMate, nudgeNotification)
+                DirectMessage.createMessageToOther(nudgedMate, nudgeNotification)
         );
     }
 
