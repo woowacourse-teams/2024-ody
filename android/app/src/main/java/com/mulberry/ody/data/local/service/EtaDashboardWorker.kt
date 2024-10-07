@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 class EtaDashboardWorker
     @AssistedInject
     constructor(
-        @Assisted context: Context,
+        @Assisted private val context: Context,
         @Assisted workerParameters: WorkerParameters,
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
@@ -31,29 +31,24 @@ class EtaDashboardWorker
         private val geoLocationHelper: LocationHelper,
     ) : CoroutineWorker(context, workerParameters) {
         private val meetingId: Long by lazy {
-            workerParameters.inputData.getLong(
-                MEETING_ID_KEY,
-                MEETING_ID_DEFAULT_VALUE,
-            )
+            workerParameters.inputData.getLong(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
         }
 
-        private val durationTime: Long by lazy {
-            workerParameters.inputData.getLong(
-                DURATION_KEY,
-                DURATION_DEFAULT_VALUE,
-            )
+        private val reserveCount: Int by lazy {
+            workerParameters.inputData.getInt(RESERVE_COUNT_KEY, RESERVE_COUNT_DEFAULT_VALUE)
         }
 
         override suspend fun doWork(): Result {
             if (meetingId == MEETING_ID_DEFAULT_VALUE) return Result.failure()
-            for (i in 0..durationTime step INTERVAL_MILLIS) {
+            if (reserveCount == RESERVE_COUNT_DEFAULT_VALUE) return Result.failure()
+
+            repeat(reserveCount) {
                 val mateEtaInfo = getLocation()
                 if (mateEtaInfo != null) {
-                    val mateEtaInfoEntity =
-                        MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
+                    val mateEtaInfoEntity = MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
                     mateEtaInfoDao.upsert(mateEtaInfoEntity)
                 }
-                delay(INTERVAL_MILLIS)
+                delay(RESERVE_INTERVAL)
             }
             return Result.success()
         }
@@ -81,31 +76,32 @@ class EtaDashboardWorker
 
         companion object {
             private const val TAG = "EtaDashboardWorker"
+            const val RESERVE_INTERVAL = 10 * 1000L
+
             private const val MEETING_ID_KEY = "meeting_id"
-            private const val DURATION_KEY = "duration"
             private const val MEETING_ID_DEFAULT_VALUE = -1L
-            private const val MAX_MINUTE = 10L
-            private const val MILLIS = 1000L
-            private const val INTERVAL_MILLIS = 10 * MILLIS
-            private const val DURATION_DEFAULT_VALUE = MAX_MINUTE * 60 * MILLIS
+
+            private const val RESERVE_COUNT_KEY = "reserve_count"
+            private const val RESERVE_COUNT_DEFAULT_VALUE = -1
+
             private const val DEFAULT_LATITUDE = "0.0"
             private const val DEFAULT_LONGITUDE = "0.0"
 
             fun getWorkRequest(
                 meetingId: Long,
-                duration: Long,
-                initialDelay: Long,
+                delayTime: Long,
+                reserveCount: Int,
             ): OneTimeWorkRequest {
                 val inputData =
                     Data.Builder()
                         .putLong(MEETING_ID_KEY, meetingId)
-                        .putLong(DURATION_KEY, duration)
+                        .putInt(RESERVE_COUNT_KEY, reserveCount)
                         .build()
 
                 return OneTimeWorkRequestBuilder<EtaDashboardWorker>()
                     .setInputData(inputData)
                     .addTag(meetingId.toString())
-                    .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                    .setInitialDelay(delayTime, TimeUnit.MILLISECONDS)
                     .build()
             }
         }

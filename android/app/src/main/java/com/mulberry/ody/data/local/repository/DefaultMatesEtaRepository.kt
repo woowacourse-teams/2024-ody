@@ -2,15 +2,16 @@ package com.mulberry.ody.data.local.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.service.EtaDashboardWorker
+import com.mulberry.ody.domain.common.toMilliSeconds
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
+import java.time.LocalDateTime
 import javax.inject.Inject
-import kotlin.math.min
+import kotlin.math.max
 
 class DefaultMatesEtaRepository
     @Inject
@@ -20,33 +21,18 @@ class DefaultMatesEtaRepository
     ) : MatesEtaRepository {
         override fun reserveEtaFetchingJob(
             meetingId: Long,
-            startMillisecond: Long,
-            endMillisecond: Long,
-            interval: Long,
+            meetingDateTime: LocalDateTime,
         ) {
-            val initialDuration = min(interval, endMillisecond - startMillisecond)
-            val initialRequest = getEtaFetchingRequest(meetingId, initialDuration, startMillisecond)
+            val initialTime = meetingDateTime.minusMinutes(BEFORE_MINUTE).toMilliSeconds()
+            val endTime = meetingDateTime.plusMinutes(AFTER_MINUTE).toMilliSeconds()
+            val nowTime = System.currentTimeMillis()
 
-            var workContnuation = workManager.beginWith(initialRequest)
-            var currentMilliSecond = startMillisecond + interval
-            while (currentMilliSecond < endMillisecond) {
-                val duration = min(interval, endMillisecond - currentMilliSecond)
-                val workRequest = getEtaFetchingRequest(meetingId, duration, currentMilliSecond)
-                workContnuation = workContnuation.then(workRequest)
-                currentMilliSecond += interval
-            }
-            workContnuation.enqueue()
-        }
+            val startTime = max(initialTime, nowTime)
+            val reserveCount = ((endTime - startTime) / EtaDashboardWorker.RESERVE_INTERVAL).toInt()
+            val delayTime = startTime - nowTime
 
-        private fun getEtaFetchingRequest(
-            meetingId: Long,
-            workDuration: Long,
-            targetTimeMillisecond: Long,
-        ): OneTimeWorkRequest {
-            val currentTime = System.currentTimeMillis()
-            val initialDelay = targetTimeMillisecond - currentTime
-
-            return EtaDashboardWorker.getWorkRequest(meetingId, workDuration, initialDelay)
+            val etaDashboardWorker = EtaDashboardWorker.getWorkRequest(meetingId, delayTime, reserveCount)
+            workManager.enqueue(etaDashboardWorker)
         }
 
         override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> =
@@ -58,4 +44,9 @@ class DefaultMatesEtaRepository
         }
 
         private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
+
+        companion object {
+            private const val BEFORE_MINUTE = 30L
+            private const val AFTER_MINUTE = 1L
+        }
     }
