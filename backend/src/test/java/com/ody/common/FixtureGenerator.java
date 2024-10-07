@@ -1,7 +1,6 @@
 package com.ody.common;
 
 import com.ody.auth.JwtTokenProvider;
-import com.ody.auth.token.RefreshToken;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
@@ -72,6 +71,15 @@ public class FixtureGenerator {
         Nickname nickname = new Nickname(rawNickname);
         DeviceToken deviceToken = new DeviceToken(rawDeviceToken);
         return memberRepository.save(new Member(providerId, nickname, "imageurl", deviceToken));
+    }
+
+    public Member generateUnsavedMember(String providerId, String rawDeviceToken) {
+        return new Member(providerId, new Nickname("nickname"), "imageUrl", new DeviceToken(rawDeviceToken));
+    }
+
+    public Member generateSavedMember(String providerId, String rawDeviceToken) {
+        Member member = new Member(providerId, new Nickname("nickname"), "imageUrl", new DeviceToken(rawDeviceToken));
+        return memberRepository.save(member);
     }
 
     public Mate generateMate() {
