@@ -116,10 +116,7 @@ class MemberServiceTest extends BaseServiceTest {
         @DisplayName("특정 회원의 리프레시 토큰을 삭제할 수 있다")
         @Test
         void removeMemberRefreshToken() {
-            Member member = fixtureGenerator.generateSavedMember("pid", "deviceToken");
-            RefreshToken refreshToken = new RefreshToken("refresh-token=token");
-            member.updateRefreshToken(refreshToken);
-            member = memberRepository.save(member);
+            Member member = fixtureGenerator.generateSavedMember("pid", "deviceToken", "refresh-token=token");
 
             memberService.updateRefreshToken(member.getId(), null);
 
