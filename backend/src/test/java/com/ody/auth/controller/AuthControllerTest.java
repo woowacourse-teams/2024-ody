@@ -5,9 +5,6 @@ import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseControllerTest;
 import com.ody.common.TokenFixture;
-import com.ody.mate.domain.Nickname;
-import com.ody.member.domain.AuthProvider;
-import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import io.restassured.RestAssured;
@@ -23,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 class AuthControllerTest extends BaseControllerTest {
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @DisplayName("카카오 로그인 API")
     @Nested
@@ -97,9 +97,9 @@ class AuthControllerTest extends BaseControllerTest {
             expiredRefreshToken = TokenFixture.getExpiredRefreshToken();
             invalidRefreshToken = TokenFixture.getInvalidRefreshToken();
 
-            memberWithValidRefreshToken = fixtureGenerator.generateMember(validRefreshToken);
-            memberWithExpiredRefreshToken = fixtureGenerator.generateMember(expiredRefreshToken);
-            memberWithInvalidRefreshToken = fixtureGenerator.generateMember(invalidRefreshToken);
+            memberWithValidRefreshToken = saveMember(validRefreshToken);
+            memberWithExpiredRefreshToken = saveMember(expiredRefreshToken);
+            memberWithInvalidRefreshToken = saveMember(invalidRefreshToken);
 
         }
 
@@ -181,5 +181,11 @@ class AuthControllerTest extends BaseControllerTest {
 
     private String generateAuthorization(AccessToken accessToken, RefreshToken refreshToken) {
         return "Bearer access-token=" + accessToken.getValue() + " refresh-token=" + refreshToken.getValue();
+    }
+
+    private Member saveMember(RefreshToken refreshToken) {
+        Member member = fixtureGenerator.generateMember();
+        member.updateRefreshToken(refreshToken);
+        return memberRepository.save(member);
     }
 }
