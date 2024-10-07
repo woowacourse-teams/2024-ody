@@ -22,7 +22,7 @@ class NotificationRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("특정 모임의 알림 발송 시간이 지나지 않은 알림을 생성 시간을 기준하여 오름차순으로 반환한다.")
     @Test
-    void findAllMeetingLogsById() {
+    void findAllMeetingLogsBeforeThanEqual() {
         Member member1 = memberRepository.save(Fixture.MEMBER1);
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
         Mate mate1 = fixtureGenerator.generateMate(odyMeeting, member1);
