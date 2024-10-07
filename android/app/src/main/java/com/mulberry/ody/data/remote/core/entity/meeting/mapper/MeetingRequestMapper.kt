@@ -12,8 +12,8 @@ fun MeetingCreationInfo.toMeetingRequest(): MeetingRequest =
         date = dateTime.toLocalDate().toString(),
         time = dateTime.toLocalTime().toString(),
         targetPlaceName = destinationAddress.toAddressString(),
-        targetLatitude = compress(destinationAddress.latitude),
-        targetLongitude = compress(destinationAddress.longitude),
+        targetLatitude = destinationAddress.latitude,
+        targetLongitude = destinationAddress.longitude,
     )
 
 private fun Address.toAddressString(): String {
@@ -26,8 +26,3 @@ fun Nudge.toNudgeRequest(): NudgeRequest =
         requestMateId = requestMateId,
         nudgedMateId = nudgedMateId,
     )
-
-private fun compress(coordinate: String): String {
-    val endIndex = minOf(9, coordinate.length)
-    return coordinate.substring(0, endIndex)
-}

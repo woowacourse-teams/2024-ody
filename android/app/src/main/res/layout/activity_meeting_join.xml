@@ -69,11 +69,22 @@
             android:hint="@string/address_question_hint"
             android:inputType="text"
             android:maxLines="1"
-            android:text="@{vm.departureAddress.detailAddress}"
             android:onClick="@{() -> addressSearchListener.onSearch()}"
+            android:text="@{vm.departureAddress.detailAddress}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_departure_front" />
+
+        <ImageView
+            android:id="@+id/iv_current_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:onClick="@{() -> vm.getDefaultLocation()}"
+            android:src="@drawable/ic_current_location"
+            app:layout_constraintBottom_toBottomOf="@id/et_departure"
+            app:layout_constraintEnd_toEndOf="@id/et_departure"
+            app:layout_constraintTop_toTopOf="@id/et_departure" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_next"

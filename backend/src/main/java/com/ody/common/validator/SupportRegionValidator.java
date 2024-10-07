@@ -13,6 +13,7 @@ public class SupportRegionValidator implements ConstraintValidator<SupportRegion
     private static final BigDecimal MAX_LATITUDE = new BigDecimal("38.3");
     private static final BigDecimal MIN_LONGITUDE = new BigDecimal("125.6");
     private static final BigDecimal MAX_LONGITUDE = new BigDecimal("127.9");
+    private static final BigDecimal MISSING_COORDINATES = new BigDecimal("0.0");
 
     private String latitudeFieldName;
     private String longitudeFieldName;
@@ -41,11 +42,17 @@ public class SupportRegionValidator implements ConstraintValidator<SupportRegion
 
     private boolean isInLatitudeRange(String latitude) {
         BigDecimal latitudeValue = new BigDecimal(latitude);
-        return MIN_LATITUDE.compareTo(latitudeValue) <= 0 && MAX_LATITUDE.compareTo(latitudeValue) >= 0;
+        return isMissingCoordinate(latitudeValue)
+                || (MIN_LATITUDE.compareTo(latitudeValue) <= 0 && MAX_LATITUDE.compareTo(latitudeValue) >= 0);
     }
 
     private boolean isInLongitudeRange(String longitude) {
         BigDecimal longitudeValue = new BigDecimal(longitude);
-        return MIN_LONGITUDE.compareTo(longitudeValue) <= 0 && MAX_LONGITUDE.compareTo(longitudeValue) >= 0;
+        return isMissingCoordinate(longitudeValue)
+                || (MIN_LONGITUDE.compareTo(longitudeValue) <= 0 && MAX_LONGITUDE.compareTo(longitudeValue) >= 0);
+    }
+
+    private boolean isMissingCoordinate(BigDecimal coordinate) {
+        return MISSING_COORDINATES.compareTo(coordinate) == 0;
     }
 }

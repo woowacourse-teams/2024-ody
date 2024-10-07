@@ -8,16 +8,11 @@ fun MeetingJoinInfo.toJoinRequest(): JoinRequest =
     JoinRequest(
         inviteCode = inviteCode,
         originAddress = departureAddress.toAddressString(),
-        originLatitude = compress(departureAddress.latitude),
-        originLongitude = compress(departureAddress.longitude),
+        originLatitude = departureAddress.latitude,
+        originLongitude = departureAddress.longitude,
     )
 
 private fun Address.toAddressString(): String {
     if (placeName.isBlank()) return detailAddress
     return "$detailAddress ($placeName)"
-}
-
-private fun compress(coordinate: String): String {
-    val endIndex = minOf(9, coordinate.length)
-    return coordinate.substring(0, endIndex)
 }

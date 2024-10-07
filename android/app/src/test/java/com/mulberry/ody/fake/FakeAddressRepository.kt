@@ -13,7 +13,7 @@ object FakeAddressRepository : AddressRepository {
         return ApiResult.Success(addresses)
     }
 
-    override suspend fun fetchAddressesByCoord(
+    override suspend fun fetchAddressesByCoordinate(
         x: String,
         y: String,
     ): ApiResult<String?> {
