@@ -74,18 +74,12 @@ class MeetingJoinViewModel
         }
 
         fun joinMeeting(inviteCode: String) {
-            val departureAddress = departureAddress.value ?: return
+            val meetingJoinInfo = createMeetingJoinInfo(inviteCode) ?: return
 
             viewModelScope.launch {
                 startLoading()
-                joinRepository.postMates(
-                    MeetingJoinInfo(
-                        inviteCode,
-                        departureAddress.placeName,
-                        departureAddress.latitude,
-                        departureAddress.longitude,
-                    ),
-                ).onSuccess {
+                joinRepository.postMates(meetingJoinInfo)
+                .onSuccess {
                     reserveEtaFetchingJobs(it.meetingId, it.meetingDateTime)
                     _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
                 }.onFailure { code, errorMessage ->
@@ -99,6 +93,14 @@ class MeetingJoinViewModel
                 stopLoading()
             }
         }
+
+    private fun createMeetingJoinInfo(inviteCode: String): MeetingJoinInfo? {
+        val address = departureAddress.value ?: return null
+        return MeetingJoinInfo(
+            inviteCode = inviteCode,
+            departureAddress = address,
+        )
+    }
 
         private fun isValidDeparturePoint(): Boolean {
             val departureAddress = departureAddress.value ?: return false

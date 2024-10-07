@@ -1,15 +1,21 @@
 package com.mulberry.ody.data.remote.core.entity.join.mapper
 
 import com.mulberry.ody.data.remote.core.entity.join.request.JoinRequest
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 
 fun MeetingJoinInfo.toJoinRequest(): JoinRequest =
     JoinRequest(
         inviteCode = inviteCode,
-        originPlaceName = originPlaceName,
-        originLatitude = compress(originLatitude),
-        originLongitude = compress(originLongitude),
+        originAddress = departureAddress.toAddressString(),
+        originLatitude = compress(departureAddress.latitude),
+        originLongitude = compress(departureAddress.longitude),
     )
+
+private fun Address.toAddressString(): String {
+    if (placeName.isBlank()) return detailAddress
+    return "$detailAddress ($placeName)"
+}
 
 private fun compress(coordinate: String): String {
     val endIndex = minOf(9, coordinate.length)

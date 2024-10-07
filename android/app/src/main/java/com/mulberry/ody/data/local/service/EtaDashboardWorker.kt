@@ -8,9 +8,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.OutOfQuotaPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkInfo
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationServices
@@ -152,7 +149,6 @@ class EtaDashboardWorker
 
                 return OneTimeWorkRequestBuilder<EtaDashboardWorker>()
                     .setInputData(inputData)
-                    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                     .addTag(meetingId.toString())
                     .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                     .build()

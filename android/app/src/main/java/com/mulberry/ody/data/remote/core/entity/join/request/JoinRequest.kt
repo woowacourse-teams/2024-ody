@@ -8,7 +8,7 @@ data class JoinRequest(
     @Json(name = "inviteCode")
     val inviteCode: String,
     @Json(name = "originAddress")
-    val originPlaceName: String,
+    val originAddress: String,
     @Json(name = "originLatitude")
     val originLatitude: String,
     @Json(name = "originLongitude")
