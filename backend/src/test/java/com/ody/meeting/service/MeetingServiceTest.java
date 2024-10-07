@@ -178,7 +178,7 @@ class MeetingServiceTest extends BaseServiceTest {
         LocalDateTime oneMinutesLater = TimeUtil.nowWithTrim().plusMinutes(1L);
         Meeting notOverdueMeeting = fixtureGenerator.generateMeeting(oneMinutesLater);
         Member member = fixtureGenerator.generateMember();
-        MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateRequest(notOverdueMeeting);
+        MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateSaveRequest(notOverdueMeeting);
 
         assertThatCode(() -> meetingService.saveMateAndSendNotifications(mateSaveRequest, member))
                 .doesNotThrowAnyException();
@@ -190,7 +190,7 @@ class MeetingServiceTest extends BaseServiceTest {
         LocalDateTime oneMinutesAgo = TimeUtil.nowWithTrim().minusMinutes(1L);
         Meeting overdueMeeting = fixtureGenerator.generateMeeting(oneMinutesAgo);
         Member member = fixtureGenerator.generateMember();
-        MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateRequest(overdueMeeting);
+        MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateSaveRequest(overdueMeeting);
 
         assertThatThrownBy(() -> meetingService.saveMateAndSendNotifications(mateSaveRequest, member))
                 .isInstanceOf(OdyBadRequestException.class);

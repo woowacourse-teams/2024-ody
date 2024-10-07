@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public class DtoGenerator {
 
-    public MateSaveRequestV2 generateMateRequest(Meeting meeting) {
+    public MateSaveRequestV2 generateMateSaveRequest(Meeting meeting) {
         Location origin = Fixture.ORIGIN_LOCATION;
         return new MateSaveRequestV2(
                 meeting.getInviteCode(),
@@ -39,10 +39,6 @@ public class DtoGenerator {
                 meeting.getTarget().getLatitude(),
                 meeting.getTarget().getLongitude()
         );
-    }
-
-    public MateEtaRequest generateMateRequest(Location location) {
-        return generateMateRequest(false, location);
     }
 
     public MateEtaRequest generateMateRequest() {

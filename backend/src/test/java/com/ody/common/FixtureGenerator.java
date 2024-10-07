@@ -7,6 +7,7 @@ import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.DeviceToken;
@@ -112,6 +113,11 @@ public class FixtureGenerator {
 
     public Mate generateMate(Meeting meeting, Member member) {
         return mateRepository.save(new Mate(meeting, member, Fixture.ORIGIN_LOCATION, 10L));
+    }
+
+    public Mate generateMate(Meeting meeting, Location location) {
+        Member member = generateMember();
+        return mateRepository.save(new Mate(meeting, member, location, 10L));
     }
 
     public Eta generateEta() {
