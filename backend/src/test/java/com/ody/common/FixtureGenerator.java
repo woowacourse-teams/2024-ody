@@ -1,7 +1,6 @@
 package com.ody.common;
 
 import com.ody.auth.JwtTokenProvider;
-import com.ody.auth.token.RefreshToken;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
@@ -111,6 +110,17 @@ public class FixtureGenerator {
                 notificationStatus,
                 new FcmTopic(mate.getMeeting())
         ));
+    }
+
+    public Notification generateNotification(
+            Mate mate,
+            NotificationType type,
+            LocalDateTime sentAt,
+            NotificationStatus status
+    ) {
+        return notificationRepository.save(
+                new Notification(mate, type, sentAt, status, new FcmTopic(mate.getMeeting()))
+        );
     }
 
     public String generateAccessTokenValueByMember(Member member) {

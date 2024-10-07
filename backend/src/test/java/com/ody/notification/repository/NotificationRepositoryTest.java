@@ -30,31 +30,25 @@ class NotificationRepositoryTest extends BaseRepositoryTest {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime afterOneMinutes = now.plusMinutes(1L);
 
-        Notification notification1 = new Notification(
+        Notification entryNotification = fixtureGenerator.generateNotification(
                 mate1,
                 NotificationType.ENTRY,
                 now,
-                NotificationStatus.DONE,
-                new FcmTopic(odyMeeting)
+                NotificationStatus.DONE
         );
-
-        Notification notification2 = new Notification(
+        fixtureGenerator.generateNotification(
                 mate1,
                 NotificationType.DEPARTURE_REMINDER,
                 afterOneMinutes,
-                NotificationStatus.DONE,
-                new FcmTopic(odyMeeting)
+                NotificationStatus.PENDING
         );
-
-        notificationRepository.save(notification1);
-        notificationRepository.save(notification2);
 
         List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(
                 odyMeeting.getId(),
                 LocalDateTime.now()
         );
 
-        assertThat(notifications).containsExactly(notification1);
+        assertThat(notifications).containsExactly(entryNotification);
     }
 
     @DisplayName("현재 시간 이전의 모임 notification만 가져온다")
