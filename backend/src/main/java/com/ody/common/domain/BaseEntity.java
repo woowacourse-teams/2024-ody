@@ -15,11 +15,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 public class BaseEntity {
 
-    @Column(updatable = false)
+    @Column(updatable = false, columnDefinition = "TIMESTAMP(6)")
     @NotNull
-    @CreatedDate
+    @CreatedDate()
     private LocalDateTime createdAt;
 
+    @Column(columnDefinition = "TIMESTAMP(6)")
     @NotNull
     @LastModifiedDate
     private LocalDateTime updatedAt;
