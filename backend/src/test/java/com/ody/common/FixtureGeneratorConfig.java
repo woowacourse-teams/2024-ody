@@ -6,6 +6,7 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.repository.MemberRepository;
 import com.ody.notification.repository.NotificationRepository;
+import com.ody.route.repository.ApiCallRepository;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
@@ -21,6 +22,7 @@ public class FixtureGeneratorConfig {
             MateRepository mateRepository,
             NotificationRepository notificationRepository,
             EtaRepository etaRepository,
+            ApiCallRepository apiCallRepository,
             JwtTokenProvider jwtTokenProvider
     ) {
         return new FixtureGenerator(
@@ -29,6 +31,7 @@ public class FixtureGeneratorConfig {
                 mateRepository,
                 notificationRepository,
                 etaRepository,
+                apiCallRepository,
                 jwtTokenProvider
         );
     }

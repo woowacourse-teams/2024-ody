@@ -22,10 +22,11 @@ public class DatabaseCleaner {
         cleanMate();
         cleanMeeting();
         cleanMember();
+        cleanApiCall();
     }
 
     private void cleanNotification() {
-        entityManager.createNativeQuery("DELETE FROM Notification")
+        entityManager.createNativeQuery("DELETE FROM notification")
                 .executeUpdate();
 
         entityManager.createNativeQuery("ALTER TABLE notification ALTER COLUMN id RESTART WITH 1")
@@ -36,7 +37,7 @@ public class DatabaseCleaner {
     }
 
     private void cleanEta() {
-        entityManager.createNativeQuery("DELETE FROM Eta")
+        entityManager.createNativeQuery("DELETE FROM eta")
                 .executeUpdate();
 
         entityManager.createNativeQuery("ALTER TABLE eta ALTER COLUMN id RESTART WITH 1")
@@ -48,7 +49,7 @@ public class DatabaseCleaner {
 
 
     private void cleanMate() {
-        entityManager.createNativeQuery("DELETE FROM Mate")
+        entityManager.createNativeQuery("DELETE FROM mate")
                 .executeUpdate();
 
         entityManager.createNativeQuery("ALTER TABLE mate ALTER COLUMN id RESTART WITH 1")
@@ -59,7 +60,7 @@ public class DatabaseCleaner {
     }
 
     private void cleanMeeting() {
-        entityManager.createNativeQuery("DELETE FROM Meeting")
+        entityManager.createNativeQuery("DELETE FROM meeting")
                 .executeUpdate();
 
         entityManager.createNativeQuery("ALTER TABLE meeting ALTER COLUMN id RESTART WITH 1")
@@ -70,10 +71,21 @@ public class DatabaseCleaner {
     }
 
     private void cleanMember() {
-        entityManager.createNativeQuery("DELETE FROM Member")
+        entityManager.createNativeQuery("DELETE FROM member")
                 .executeUpdate();
 
         entityManager.createNativeQuery("ALTER TABLE member ALTER COLUMN id RESTART WITH 1")
+                .executeUpdate();
+
+        entityManager.flush();
+        entityManager.clear();
+    }
+
+    private void cleanApiCall() {
+        entityManager.createNativeQuery("DELETE FROM api_call")
+                .executeUpdate();
+
+        entityManager.createNativeQuery("ALTER TABLE api_call ALTER COLUMN id RESTART WITH 1")
                 .executeUpdate();
 
         entityManager.flush();

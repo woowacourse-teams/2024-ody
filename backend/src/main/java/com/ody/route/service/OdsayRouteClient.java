@@ -3,6 +3,7 @@ package com.ody.route.service;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
 import com.ody.route.config.RouteProperties;
+import com.ody.route.domain.ClientType;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.dto.OdsayResponse;
 import com.ody.route.mapper.OdsayResponseMapper;
@@ -60,5 +61,10 @@ public class OdsayRouteClient implements RouteClient {
     private RouteTime responseToRouteTime(OdsayResponse response) {
         long minutes = OdsayResponseMapper.mapMinutes(response);
         return new RouteTime(minutes);
+    }
+
+    @Override
+    public ClientType getClientType() {
+        return ClientType.ODSAY;
     }
 }

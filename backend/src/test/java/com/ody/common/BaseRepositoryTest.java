@@ -6,6 +6,7 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.repository.MemberRepository;
 import com.ody.notification.repository.NotificationRepository;
+import com.ody.route.repository.ApiCallRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -34,6 +35,9 @@ public abstract class BaseRepositoryTest {
 
     @Autowired
     protected EtaRepository etaRepository;
+
+    @Autowired
+    protected ApiCallRepository apiCallRepository;
 
     @Autowired
     protected EntityManager entityManager;
