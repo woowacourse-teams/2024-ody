@@ -46,8 +46,6 @@ class MeetingServiceTest extends BaseServiceTest {
     @Autowired
     private FixtureGenerator fixtureGenerator;
 
-    private DtoGenerator dtoGenerator = new DtoGenerator();
-
     @MockBean
     private TaskScheduler taskScheduler;
 

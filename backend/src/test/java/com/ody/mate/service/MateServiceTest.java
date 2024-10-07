@@ -34,8 +34,6 @@ class MateServiceTest extends BaseServiceTest {
     @Autowired
     private FixtureGenerator fixtureGenerator;
 
-    private DtoGenerator dtoGenerator = new DtoGenerator();
-
     @DisplayName("회원이 참여하고 있는 특정 약속의 참여자 리스트를 조회한다.")
     @Test
     void findAllByMemberAndMeetingIdSuccess() {

@@ -32,8 +32,6 @@ class EtaServiceTest extends BaseServiceTest {
     @Autowired
     private EtaService etaService;
 
-    private DtoGenerator dtoGenerator = new DtoGenerator();
-
     @DisplayName("오디세이 호출 여부 테스트")
     @Nested
     class OdsayCallTest {

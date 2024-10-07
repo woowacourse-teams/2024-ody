@@ -1,5 +1,6 @@
 package com.ody.common;
 
+import com.ody.auth.dto.request.AuthRequest;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.meeting.domain.Location;
@@ -8,6 +9,10 @@ import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import java.time.LocalDateTime;
 
 public class DtoGenerator {
+
+    public AuthRequest generateAuthRequest(String providerId, String deviceToken) {
+        return new AuthRequest(deviceToken, providerId, "nickname", "imageUrl");
+    }
 
     public MateSaveRequestV2 generateMateSaveRequest(Meeting meeting) {
         Location origin = Fixture.ORIGIN_LOCATION;

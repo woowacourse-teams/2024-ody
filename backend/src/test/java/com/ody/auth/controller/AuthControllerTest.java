@@ -24,9 +24,6 @@ import org.springframework.http.HttpHeaders;
 
 class AuthControllerTest extends BaseControllerTest {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
     @DisplayName("카카오 로그인 API")
     @Nested
     class authKakao {
@@ -34,7 +31,7 @@ class AuthControllerTest extends BaseControllerTest {
         @DisplayName("비회원이 로그인하면 200을 반환한다.")
         @Test
         void authKakaoWithNonMember() {
-            AuthRequest authRequest = generateAuthRequest("newPid", "newDeviceToken");
+            AuthRequest authRequest = dtoGenerator.generateAuthRequest("newPid", "newDeviceToken");
 
             RestAssured.given()
                     .contentType(ContentType.JSON)
@@ -48,9 +45,8 @@ class AuthControllerTest extends BaseControllerTest {
         @DisplayName("회원이 로그인하면 200을 반환한다.")
         @Test
         void authKakaoWithMember() {
-            saveMember("pid", "deviceToken");
-
-            AuthRequest authRequest = generateAuthRequest("pid", "deviceToken");
+            fixtureGenerator.generateSavedMember("pid", "deviceToken");
+            AuthRequest authRequest = dtoGenerator.generateAuthRequest("pid", "deviceToken");
 
             RestAssured.given()
                     .contentType(ContentType.JSON)
@@ -82,23 +78,6 @@ class AuthControllerTest extends BaseControllerTest {
                     new AuthRequest("deviceToken", "pId", "nickname", null)
             );
         }
-
-        private Member saveMember(String providerId, String deviceToken) {
-            Member member = new Member(
-                    1L,
-                    new AuthProvider(providerId),
-                    new Nickname("nickname"),
-                    "imageUrl",
-                    new DeviceToken(deviceToken),
-                    new RefreshToken("refresh-token=refreshToken"),
-                    null
-            );
-            return memberRepository.save(member);
-        }
-
-        private AuthRequest generateAuthRequest(String providerId, String deviceToken) {
-            return new AuthRequest(deviceToken, providerId, "nickname", "imageUrl");
-        }
     }
 
     @DisplayName("액세스 토큰 갱신 API")
@@ -118,9 +97,10 @@ class AuthControllerTest extends BaseControllerTest {
             expiredRefreshToken = TokenFixture.getExpiredRefreshToken();
             invalidRefreshToken = TokenFixture.getInvalidRefreshToken();
 
-            memberWithValidRefreshToken = saveMember(validRefreshToken);
-            memberWithExpiredRefreshToken = saveMember(expiredRefreshToken);
-            memberWithInvalidRefreshToken = saveMember(validRefreshToken);
+            memberWithValidRefreshToken = fixtureGenerator.generateMember(validRefreshToken);
+            memberWithExpiredRefreshToken = fixtureGenerator.generateMember(expiredRefreshToken);
+            memberWithInvalidRefreshToken = fixtureGenerator.generateMember(invalidRefreshToken);
+
         }
 
         @DisplayName("만료된 액세스 토큰, 유효한 리프레시 토큰으로 액세스 토큰 갱신하면 200을 반환한다.")
@@ -197,19 +177,6 @@ class AuthControllerTest extends BaseControllerTest {
                     .then()
                     .statusCode(400);
         }
-    }
-
-    private Member saveMember(RefreshToken refreshToken) {
-        Member member = new Member(
-                1L,
-                new AuthProvider("pid"),
-                new Nickname("nickname"),
-                "imageUrl",
-                new DeviceToken("deviceToken"),
-                new RefreshToken("refresh-token=" + refreshToken.getValue()),
-                null
-        );
-        return memberRepository.save(member);
     }
 
     private String generateAuthorization(AccessToken accessToken, RefreshToken refreshToken) {

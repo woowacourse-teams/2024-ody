@@ -5,12 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.auth.service.KakaoAuthUnlinkClient;
-import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
-import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.AuthProvider;

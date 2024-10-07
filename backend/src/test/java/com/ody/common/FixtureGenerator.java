@@ -85,6 +85,12 @@ public class FixtureGenerator {
         return memberRepository.save(new Member(providerId, nickname, "imageurl", deviceToken));
     }
 
+    public Member generateMember(RefreshToken refreshToken) {
+        Member member = generateMember();
+        member.updateRefreshToken(refreshToken);
+        return memberRepository.save(member);
+    }
+
     public Member generateUnsavedMember(String providerId, String rawDeviceToken) {
         return new Member(providerId, new Nickname("nickname"), "imageUrl", new DeviceToken(rawDeviceToken));
     }

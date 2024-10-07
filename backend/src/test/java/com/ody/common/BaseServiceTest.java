@@ -31,6 +31,8 @@ public abstract class BaseServiceTest {
     @Autowired
     protected FixtureGenerator fixtureGenerator;
 
+    protected DtoGenerator dtoGenerator = new DtoGenerator();
+
     @BeforeEach
     void cleanUp() {
         databaseCleaner.cleanUp();
