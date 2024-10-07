@@ -57,6 +57,16 @@ public class FixtureGenerator {
         ));
     }
 
+    public Meeting generateMeeting(LocalDateTime meetingTime) {
+        return meetingRepository.save(new Meeting(
+                "약속",
+                meetingTime.toLocalDate(),
+                meetingTime.toLocalTime(),
+                Fixture.TARGET_LOCATION,
+                InviteCodeGenerator.generate()
+        ));
+    }
+
     public Member generateMember() {
         return generateMember("nickname");
     }
@@ -104,6 +114,10 @@ public class FixtureGenerator {
 
     public Eta generateEta(Mate mate) {
         return etaRepository.save(new Eta(mate, 10L));
+    }
+
+    public Eta generateEta(Mate mate, long remainMinutes) {
+        return etaRepository.save(new Eta(mate, remainMinutes));
     }
 
     public Notification generateNotification(Mate mate) {
