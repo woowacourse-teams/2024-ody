@@ -86,10 +86,6 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.creation.complete.MeetingCompletionActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".presentation.creation.MeetingCreationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

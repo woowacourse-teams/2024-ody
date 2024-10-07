@@ -179,7 +179,8 @@ class MeetingCreationViewModel
         }
 
         override fun onClickCreationMeeting() {
-            _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToCreationComplete)
+            val inviteCode = inviteCode.value ?: return
+            _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToMeetingJoin(inviteCode))
         }
 
         companion object {
