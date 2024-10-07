@@ -80,28 +80,28 @@ class MeetingJoinViewModel
             viewModelScope.launch {
                 startLoading()
                 joinRepository.postMates(meetingJoinInfo)
-                .onSuccess {
-                    reserveEtaFetchingJobs(it.meetingId, it.meetingDateTime)
-                    _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
-                }.onFailure { code, errorMessage ->
-                    handleError()
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    Timber.e("$code $errorMessage")
-                }.onNetworkError {
-                    handleNetworkError()
-                    lastFailedAction = { joinMeeting(inviteCode) }
-                }
+                    .onSuccess {
+                        reserveEtaFetchingJobs(it.meetingId, it.meetingDateTime)
+                        _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { joinMeeting(inviteCode) }
+                    }
                 stopLoading()
             }
         }
 
-    private fun createMeetingJoinInfo(inviteCode: String): MeetingJoinInfo? {
-        val address = departureAddress.value ?: return null
-        return MeetingJoinInfo(
-            inviteCode = inviteCode,
-            departureAddress = address,
-        )
-    }
+        private fun createMeetingJoinInfo(inviteCode: String): MeetingJoinInfo? {
+            val address = departureAddress.value ?: return null
+            return MeetingJoinInfo(
+                inviteCode = inviteCode,
+                departureAddress = address,
+            )
+        }
 
         private fun isValidDeparturePoint(): Boolean {
             val departureAddress = departureAddress.value ?: return false
