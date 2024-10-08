@@ -118,9 +118,9 @@ class AuthControllerTest extends BaseControllerTest {
             expiredRefreshToken = TokenFixture.getExpiredRefreshToken();
             invalidRefreshToken = TokenFixture.getInvalidRefreshToken();
 
-            memberWithValidRefreshToken = saveMember(validRefreshToken);
-            memberWithExpiredRefreshToken = saveMember(expiredRefreshToken);
-            memberWithInvalidRefreshToken = saveMember(validRefreshToken);
+            memberWithValidRefreshToken =  fixtureGenerator.generateMember(validRefreshToken);
+            memberWithExpiredRefreshToken = fixtureGenerator.generateMember(expiredRefreshToken);
+            memberWithInvalidRefreshToken = fixtureGenerator.generateMember(validRefreshToken);
         }
 
         @DisplayName("만료된 액세스 토큰, 유효한 리프레시 토큰으로 액세스 토큰 갱신하면 200을 반환한다.")
@@ -197,19 +197,6 @@ class AuthControllerTest extends BaseControllerTest {
                     .then()
                     .statusCode(400);
         }
-    }
-
-    private Member saveMember(RefreshToken refreshToken) {
-        Member member = new Member(
-                1L,
-                new AuthProvider("pid"),
-                new Nickname("nickname"),
-                "imageUrl",
-                new DeviceToken("deviceToken"),
-                new RefreshToken("refresh-token=" + refreshToken.getValue()),
-                null
-        );
-        return memberRepository.save(member);
     }
 
     private String generateAuthorization(AccessToken accessToken, RefreshToken refreshToken) {
