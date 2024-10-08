@@ -54,6 +54,13 @@ public class FixtureGenerator {
         return memberRepository.save(member);
     }
 
+    public Member saveMember(String providerId, String rawDeviceToken, String rawRefreshToken) {
+        Member member = generateSavedMember(providerId, rawDeviceToken);
+        RefreshToken refreshToken = new RefreshToken(rawRefreshToken);
+        member.updateRefreshToken(refreshToken);
+        return memberRepository.save(member);
+    }
+
     public Meeting generateMeeting() {
         LocalDateTime now = TimeUtil.nowWithTrim();
         return meetingRepository.save(new Meeting(
