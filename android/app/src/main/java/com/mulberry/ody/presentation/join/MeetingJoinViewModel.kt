@@ -132,7 +132,6 @@ class MeetingJoinViewModel
 
         companion object {
             private const val TAG = "MeetingJoinViewModel"
-
             private const val LOCAL_ZONE_ID = "Asia/Seoul"
             private const val MILLI_SECOND_OF_SECOND = 1_000L
             private const val MILLI_SECOND_OF_MINUTE = MILLI_SECOND_OF_SECOND * 60
