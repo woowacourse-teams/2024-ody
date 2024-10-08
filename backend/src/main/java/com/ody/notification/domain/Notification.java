@@ -3,6 +3,7 @@ package com.ody.notification.domain;
 import com.ody.common.domain.BaseEntity;
 import com.ody.mate.domain.Mate;
 import com.ody.util.TimeUtil;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -39,7 +40,7 @@ public class Notification extends BaseEntity {
     @NotNull
     private NotificationType type;
 
-    @NotNull
+    @Column(nullable = false, columnDefinition = "TIMESTAMP(6)")
     private LocalDateTime sendAt;
 
     @Enumerated(value = EnumType.STRING)
