@@ -16,7 +16,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             left join fetch Mate m on noti.mate = m
             left join Meeting meet on m.meeting = meet
             where meet.id = :meetingId and noti.sendAt <= :time
-            order by noti.createdAt asc
+            order by noti.sendAt asc
             """)
     List<Notification> findAllMeetingLogsBeforeThanEqual(Long meetingId, LocalDateTime time);
 
