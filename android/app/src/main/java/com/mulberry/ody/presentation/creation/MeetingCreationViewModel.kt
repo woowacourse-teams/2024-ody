@@ -89,33 +89,37 @@ class MeetingCreationViewModel
         }
 
         fun createMeeting() {
-            val name = meetingName.value ?: return
-            val date = meetingDate.value ?: return
-            val destinationAddress = destinationAddress.value ?: return
+            val meetingCreationInfo = createMeetingCreationInfo() ?: return
 
             viewModelScope.launch {
                 startLoading()
-                meetingRepository.postMeeting(
-                    MeetingCreationInfo(
-                        name,
-                        date.toString(),
-                        LocalTime.of(meetingHour.value ?: 1, meetingMinute.value ?: 0).toString(),
-                        destinationAddress.detailAddress,
-                        destinationAddress.latitude,
-                        destinationAddress.longitude,
-                    ),
-                ).onSuccess {
-                    _inviteCode.value = it
-                }.onFailure { code, errorMessage ->
-                    handleError()
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    Timber.e("$code $errorMessage")
-                }.onNetworkError {
-                    handleNetworkError()
-                    lastFailedAction = { createMeeting() }
-                }
+                meetingRepository.postMeeting(meetingCreationInfo)
+                    .onSuccess {
+                        _inviteCode.value = it
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { createMeeting() }
+                    }
                 stopLoading()
             }
+        }
+
+        private fun createMeetingCreationInfo(): MeetingCreationInfo? {
+            val name = meetingName.value ?: return null
+            val date = meetingDate.value ?: return null
+            val hour = meetingHour.value ?: return null
+            val minute = meetingMinute.value ?: return null
+            val address = destinationAddress.value ?: return null
+
+            return MeetingCreationInfo(
+                name = name,
+                dateTime = LocalDateTime.of(date, LocalTime.of(hour, minute)),
+                destinationAddress = address,
+            )
         }
 
         fun clearMeetingName() {
