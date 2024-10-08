@@ -48,6 +48,12 @@ public class FixtureGenerator {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    public Member saveMember(RefreshToken refreshToken) {
+        Member member = generateMember();
+        member.updateRefreshToken(refreshToken);
+        return memberRepository.save(member);
+    }
+
     public Meeting generateMeeting() {
         LocalDateTime now = TimeUtil.nowWithTrim();
         return meetingRepository.save(new Meeting(

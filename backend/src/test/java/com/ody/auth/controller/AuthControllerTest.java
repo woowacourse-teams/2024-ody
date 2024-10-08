@@ -6,7 +6,6 @@ import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseControllerTest;
 import com.ody.common.TokenFixture;
 import com.ody.member.domain.Member;
-import com.ody.member.repository.MemberRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.stream.Stream;
@@ -16,13 +15,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 class AuthControllerTest extends BaseControllerTest {
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     @DisplayName("카카오 로그인 API")
     @Nested
@@ -97,9 +92,9 @@ class AuthControllerTest extends BaseControllerTest {
             expiredRefreshToken = TokenFixture.getExpiredRefreshToken();
             invalidRefreshToken = TokenFixture.getInvalidRefreshToken();
 
-            memberWithValidRefreshToken = saveMember(validRefreshToken);
-            memberWithExpiredRefreshToken = saveMember(expiredRefreshToken);
-            memberWithInvalidRefreshToken = saveMember(invalidRefreshToken);
+            memberWithValidRefreshToken = fixtureGenerator.saveMember(validRefreshToken);
+            memberWithExpiredRefreshToken = fixtureGenerator.saveMember(expiredRefreshToken);
+            memberWithInvalidRefreshToken = fixtureGenerator.saveMember(invalidRefreshToken);
 
         }
 
@@ -181,11 +176,5 @@ class AuthControllerTest extends BaseControllerTest {
 
     private String generateAuthorization(AccessToken accessToken, RefreshToken refreshToken) {
         return "Bearer access-token=" + accessToken.getValue() + " refresh-token=" + refreshToken.getValue();
-    }
-
-    private Member saveMember(RefreshToken refreshToken) {
-        Member member = fixtureGenerator.generateMember();
-        member.updateRefreshToken(refreshToken);
-        return memberRepository.save(member);
     }
 }
