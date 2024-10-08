@@ -93,7 +93,7 @@ class SettingActivity :
             }
 
             SettingUiModel.LOGOUT -> {
-                viewModel.kakaoLogout()
+                viewModel.logout()
             }
 
             SettingUiModel.WITHDRAW -> {
