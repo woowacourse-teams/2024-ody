@@ -67,25 +67,18 @@ class NotificationServiceTest extends BaseServiceTest {
     @MockBean
     private KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 
-    @DisplayName("알림 생성 시점이 전송 시점보다 늦은 경우 즉시 전송된다")
+    @DisplayName("출발 알림 생성 시점이 알림 전송 시점보다 늦은 경우 즉시 전송된다")
     @Test
     void sendImmediatelyIfDepartureTimeIsPast() {
         Member member = memberRepository.save(Fixture.MEMBER1);
-        Meeting pastMeeting = new Meeting(
-                "오디",
-                LocalDate.now().minusDays(1),
-                LocalTime.parse("14:00"),
-                Fixture.TARGET_LOCATION,
-                InviteCodeGenerator.generate()
-        );
-        Meeting savedPastMeeting = meetingRepository.save(pastMeeting);
-        Mate mate = mateRepository.save(
-                new Mate(savedPastMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 1L)
-        );
-        notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING); // 약속 시간 : now()
+        Mate mate = fixtureGenerator.generateMate(odyMeeting, member); // 소요 시간 : 10분
+
+        // 입장 알림 시간 : now(), 출발 알림 시간 : now().minusMinutes(10분)
+        notificationService.saveAndSendNotifications(odyMeeting, mate, member.getDeviceToken());
 
         Optional<Notification> departureNotification = notificationRepository.findAll().stream()
-                .filter(notification -> notification.isDepartureReminder() && notification.isNow())
+                .filter(Notification::isDepartureReminder)
                 .findAny();
 
         assertThat(departureNotification).isPresent();

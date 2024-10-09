@@ -108,10 +108,6 @@ public class Notification extends BaseEntity {
         return status == NotificationStatus.DISMISSED;
     }
 
-    public boolean isNow() {
-        return this.sendAt.equals(TimeUtil.nowWithTrim());
-    }
-
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
     }
