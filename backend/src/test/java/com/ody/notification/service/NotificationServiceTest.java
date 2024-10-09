@@ -18,7 +18,10 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
+import com.ody.notification.dto.response.NotiLogFindResponse;
+import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
+import com.ody.route.domain.DepartureTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.InviteCodeGenerator;
 import java.time.Instant;
@@ -197,6 +200,22 @@ class NotificationServiceTest extends BaseServiceTest {
                 NotificationStatus.DISMISSED,
                 NotificationStatus.DISMISSED
         );
+    }
+
+    @DisplayName("참여자의 출발 시간이 현재 시간보다 전이라면 입장 알림 - 출발 알림 순으로 로그 목록이 조회된다.")
+    @Test
+    void findAllMeetingLogsOrderOfEntryAndDepartureNotificationWhen() {
+        Member member = memberRepository.save(Fixture.MEMBER1);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING); // 약속 시간 : now()
+        Mate mate = fixtureGenerator.generateMate(odyMeeting, member); // 소요 시간 : 10분
+
+        // 입장 알림 시간 : now(), 출발 알림 시간 : now().minusMinutes(10분)
+        notificationService.saveAndSendNotifications(odyMeeting, mate, member.getDeviceToken());
+
+        NotiLogFindResponses allMeetingLogs = notificationService.findAllMeetingLogs(odyMeeting.getId());
+
+        assertThat(allMeetingLogs.notiLog()).extracting(NotiLogFindResponse::type)
+                .containsExactly(NotificationType.ENTRY.name(), NotificationType.DEPARTURE_REMINDER.name());
     }
 
     @DisplayName("삭제 회원이 포함된 로그 목록을 조회한다.")

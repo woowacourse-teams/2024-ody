@@ -102,11 +102,10 @@ public class FixtureGenerator {
     }
 
     public Notification generateNotification(Mate mate, NotificationStatus notificationStatus) {
-        LocalDateTime now = TimeUtil.nowWithTrim();
         return notificationRepository.save(new Notification(
                 mate,
                 NotificationType.ENTRY,
-                now,
+                LocalDateTime.now(),
                 notificationStatus,
                 new FcmTopic(mate.getMeeting())
         ));
