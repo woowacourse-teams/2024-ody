@@ -31,6 +31,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
@@ -77,11 +78,12 @@ class NotificationServiceTest extends BaseServiceTest {
         // 입장 알림 시간 : now(), 출발 알림 시간 : now().minusMinutes(10분)
         notificationService.saveAndSendNotifications(odyMeeting, mate, member.getDeviceToken());
 
-        Optional<Notification> departureNotification = notificationRepository.findAll().stream()
+        Notification departureReminderNotification = notificationRepository.findAll().stream()
                 .filter(Notification::isDepartureReminder)
-                .findAny();
+                .findAny()
+                .get();
 
-        assertThat(departureNotification).isPresent();
+        assertThat(departureReminderNotification.getSendAt()).isEqualToIgnoringNanos(LocalDateTime.now());
     }
 
     @DisplayName("PENDING 상태의 알림들을 TaskScheduler로 스케줄링 한다.")
