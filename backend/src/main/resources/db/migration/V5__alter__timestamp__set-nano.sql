@@ -8,7 +8,3 @@
 /*!ALTER TABLE notification MODIFY COLUMN send_at timestamp(6);*/
 /*!ALTER TABLE notification MODIFY COLUMN created_at timestamp(6);*/
 /*!ALTER TABLE notification MODIFY COLUMN updated_at timestamp(6);*/
-
-
-
-
