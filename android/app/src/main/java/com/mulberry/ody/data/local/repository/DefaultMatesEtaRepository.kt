@@ -1,10 +1,12 @@
 package com.mulberry.ody.data.local.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.work.WorkManager
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
+import com.mulberry.ody.data.local.service.AlarmManagerHelper
 import com.mulberry.ody.data.local.service.EtaDashboardWorker
 import com.mulberry.ody.domain.common.toMilliSeconds
 import com.mulberry.ody.domain.model.MateEtaInfo
@@ -16,6 +18,7 @@ import kotlin.math.max
 class DefaultMatesEtaRepository
     @Inject
     constructor(
+        private val alarmManagerHelper: AlarmManagerHelper,
         private val workManager: WorkManager,
         private val matesEtaInfoDao: MateEtaInfoDao,
     ) : MatesEtaRepository {
@@ -23,16 +26,22 @@ class DefaultMatesEtaRepository
             meetingId: Long,
             meetingDateTime: LocalDateTime,
         ) {
+            Log.e("TEST", "reserveEtaFetchingJob meetingId $meetingId, meetingDateTime $meetingDateTime")
             val initialTime = meetingDateTime.minusMinutes(BEFORE_MINUTE).toMilliSeconds()
             val endTime = meetingDateTime.plusMinutes(AFTER_MINUTE).toMilliSeconds()
             val nowTime = System.currentTimeMillis()
 
             val startTime = max(initialTime, nowTime)
             val reserveCount = ((endTime - startTime) / EtaDashboardWorker.RESERVE_INTERVAL).toInt()
-            val delayTime = startTime - nowTime
+            if (initialTime != startTime) { // 현재 시간이 약속 시간 30분 이후인 경우 바로 작업을 수행
+                Log.e("TEST", "현재 시간이 약속 시간 30분 이후임! reserveCount $reserveCount")
+                val etaDashboardWorker = EtaDashboardWorker.getWorkRequest(meetingId, reserveCount)
+                workManager.enqueue(etaDashboardWorker)
+                return
+            }
 
-            val etaDashboardWorker = EtaDashboardWorker.getWorkRequest(meetingId, delayTime, reserveCount)
-            workManager.enqueue(etaDashboardWorker)
+            Log.e("TEST", "현재 시간이 약속 시간 30분 이전임! reserveCount $reserveCount")
+            alarmManagerHelper.reserveEtaDashboardOpen(meetingId, startTime, reserveCount)
         }
 
         override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> =

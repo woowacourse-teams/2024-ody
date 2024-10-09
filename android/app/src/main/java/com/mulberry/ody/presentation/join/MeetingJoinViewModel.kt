@@ -23,6 +23,7 @@ import com.mulberry.ody.presentation.join.listener.MeetingJoinListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -84,6 +85,12 @@ class MeetingJoinViewModel
                         departureAddress.longitude,
                     ),
                 ).onSuccess { meeting ->
+//                    repeat(10) {
+//                        matesEtaRepository.reserveEtaFetchingJob(
+//                            it.toLong(),
+//                            LocalDateTime.now().plusMinutes(31),
+//                        )
+//                    }
                     matesEtaRepository.reserveEtaFetchingJob(
                         meeting.meetingId,
                         meeting.meetingDateTime,
