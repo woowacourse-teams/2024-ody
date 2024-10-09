@@ -51,11 +51,11 @@ class EtaDashboardWorker
 
             repeat(reserveCount) {
                 Log.e("TEST", "doWork() for, meetingId: $meetingId reserveCount: $it")
-//                val mateEtaInfo = getLocation()
-//                if (mateEtaInfo != null) {
-//                    val mateEtaInfoEntity = MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
-//                    mateEtaInfoDao.upsert(mateEtaInfoEntity)
-//                }
+                val mateEtaInfo = getLocation()
+                if (mateEtaInfo != null) {
+                    val mateEtaInfoEntity = MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
+                    mateEtaInfoDao.upsert(mateEtaInfoEntity)
+                }
                 delay(RESERVE_INTERVAL)
             }
             return Result.success()

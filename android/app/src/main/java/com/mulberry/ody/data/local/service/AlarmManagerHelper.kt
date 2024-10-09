@@ -5,17 +5,39 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_KEY
+import com.mulberry.ody.domain.common.toMilliSeconds
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import kotlin.math.max
 
 class AlarmManagerHelper(private val context: Context) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
+    fun reserveEtaDashboard(
+        meetingId: Long,
+        meetingDateTime: LocalDateTime,
+    ) {
+        val initialTime = meetingDateTime.minusMinutes(BEFORE_MINUTE).toMilliSeconds()
+        val endTime = meetingDateTime.plusMinutes(AFTER_MINUTE).toMilliSeconds()
+        val nowTime = System.currentTimeMillis()
+        val startTime = max(initialTime, nowTime)
+
+        reserveEtaDashboardOpen(meetingId, startTime)
+        reserveEtaDashboardClose(meetingId, endTime)
+    }
+
     @SuppressLint("ScheduleExactAlarm")
-    fun reserveEtaDashboardOpen(
+    private fun reserveEtaDashboardOpen(
         meetingId: Long,
         reserveMillis: Long,
-        reserveCount: Int,
     ) {
-        val alarmPendingIntent: PendingIntent = createAlarmPendingIntent(meetingId, reserveCount)
+
+        val time = Instant.ofEpochMilli(reserveMillis).atZone(ZoneId.systemDefault()).toLocalDateTime()
+        Log.e("TEST", "reserveEtaDashboardOpen ${time.toString()}")
+        val alarmPendingIntent: PendingIntent = createOpenPendingIntent(meetingId)
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             reserveMillis,
@@ -23,11 +45,10 @@ class AlarmManagerHelper(private val context: Context) {
         )
     }
 
-    private fun createAlarmPendingIntent(meetingId: Long, reserveCount: Int): PendingIntent {
+    private fun createOpenPendingIntent(meetingId: Long): PendingIntent {
         val alarmIntent =
-            Intent(context, EtaDashboardBroadcastReceiver::class.java)
+            Intent(context, EtaDashboardOpenBroadcastReceiver::class.java)
                 .putExtra(MEETING_ID_KEY, meetingId)
-                .putExtra(RESERVE_COUNT_KEY, reserveCount)
 
         return PendingIntent.getBroadcast(
             context,
@@ -37,11 +58,36 @@ class AlarmManagerHelper(private val context: Context) {
         )
     }
 
-    companion object {
-        const val MEETING_ID_KEY = "meeting_id"
-        const val MEETING_ID_DEFAULT_VALUE = -1L
+    @SuppressLint("ScheduleExactAlarm")
+    private fun reserveEtaDashboardClose(
+        meetingId: Long,
+        reserveMillis: Long,
+    ) {
+        val time = Instant.ofEpochMilli(reserveMillis).atZone(ZoneId.systemDefault()).toLocalDateTime()
+        Log.e("TEST", "reserveEtaDashboardClose ${time.toString()}")
+        val alarmPendingIntent: PendingIntent = createClosePendingIntent(meetingId)
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            reserveMillis,
+            alarmPendingIntent
+        )
+    }
 
-        const val RESERVE_COUNT_KEY = "reserve_count"
-        const val RESERVE_COUNT_DEFAULT_VALUE = -1
+    private fun createClosePendingIntent(meetingId: Long): PendingIntent {
+        val intent =
+            Intent(context, EtaDashboardCloseBroadcastReceiver::class.java)
+                .putExtra(MEETING_ID_KEY, meetingId)
+
+        return PendingIntent.getBroadcast(
+            context,
+            meetingId.toInt() * -1,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE,
+        )
+    }
+
+    companion object {
+        private const val BEFORE_MINUTE = 30L
+        private const val AFTER_MINUTE = 1L
     }
 }
