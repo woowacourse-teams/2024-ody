@@ -5,9 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_DEFAULT_VALUE
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_KEY
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class EtaDashboardOpenBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(
         context: Context,
