@@ -1,5 +1,4 @@
 
-
 name: backend-cd-prod
 
 on:
@@ -98,6 +97,7 @@ jobs:
             MAX_RETRIES=5
             RETRY_DELAY=10
             
+            echo "-----헬스 체크 전-----"
             for i in $(seq 1 $MAX_RETRIES)
             do
               response=$(curl -s https://prod.oody.site/actuator/health)
@@ -115,6 +115,7 @@ jobs:
                 sleep $RETRY_DELAY
               fi
             done
+            echo "-----헬스 체크 후------"
         continue-on-error: true
 
       - name: Check Docker Process
