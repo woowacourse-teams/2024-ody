@@ -58,9 +58,9 @@ public class NotificationService {
 
     private LocalDateTime calculateSendAt(DepartureTime departureTime) {
         if (departureTime.isBefore(LocalDateTime.now())) {
-            return TimeUtil.nowWithTrim();
+            return LocalDateTime.now();
         }
-        return TimeUtil.trimSecondsAndNanos(departureTime.getValue());
+        return departureTime.getValue();
     }
 
     private void saveAndSendNotification(Notification notification) {

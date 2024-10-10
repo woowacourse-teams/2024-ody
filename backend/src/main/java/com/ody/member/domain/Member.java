@@ -2,6 +2,7 @@ package com.ody.member.domain;
 
 import com.ody.auth.token.RefreshToken;
 import com.ody.mate.domain.Nickname;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -46,6 +47,7 @@ public class Member {
     @Embedded
     private RefreshToken refreshToken;
 
+    @Column(columnDefinition = "TIMESTAMP(6)")
     private LocalDateTime deletedAt;
 
     public Member(String providerId, Nickname nickname, String imageUrl, DeviceToken deviceToken) {

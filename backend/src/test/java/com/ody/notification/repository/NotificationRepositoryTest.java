@@ -20,38 +20,32 @@ import org.junit.jupiter.api.Test;
 
 class NotificationRepositoryTest extends BaseRepositoryTest {
 
-    @DisplayName("특정 모임의 Notification 반환")
+    @DisplayName("특정 모임의 알림 발송 시간이 지나지 않은 알림 전송 시간을 기준하여 오름차순으로 반환한다.")
     @Test
-    void findAllMeetingLogsById() {
-        Member member1 = memberRepository.save(Fixture.MEMBER1);
-        Member member2 = memberRepository.save(Fixture.MEMBER2);
-
+    void findAllMeetingLogsBeforeThanEqual() {
+        Member member = memberRepository.save(Fixture.MEMBER1);
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING);
+        Mate mate = fixtureGenerator.generateMate(odyMeeting, member);
 
-        Mate mate1 = fixtureGenerator.generateMate(odyMeeting, member1);
-        Mate mate2 = fixtureGenerator.generateMate(odyMeeting, member2);
-
-        Notification notification1 = new Notification(
-                mate1,
+        Notification entryNotification = fixtureGenerator.generateNotification(
+                mate,
+                NotificationType.ENTRY,
+                LocalDateTime.now(),
+                NotificationStatus.DONE
+        );
+        Notification departurnReminderNotification = fixtureGenerator.generateNotification(
+                mate,
                 NotificationType.DEPARTURE_REMINDER,
                 LocalDateTime.now(),
-                NotificationStatus.DONE,
-                new FcmTopic(odyMeeting)
+                NotificationStatus.PENDING
         );
 
-        Notification notification2 = new Notification(
-                mate2,
-                NotificationType.DEPARTURE_REMINDER,
-                LocalDateTime.now(),
-                NotificationStatus.PENDING,
-                new FcmTopic(odyMeeting)
+        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(
+                odyMeeting.getId(),
+                LocalDateTime.now()
         );
-        notificationRepository.save(notification1);
-        notificationRepository.save(notification2);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(odyMeeting.getId(), LocalDateTime.now());
-
-        assertThat(notifications.size()).isEqualTo(2);
+        assertThat(notifications).containsExactly(entryNotification, departurnReminderNotification);
     }
 
     @DisplayName("현재 시간 이전의 모임 notification만 가져온다")
@@ -86,7 +80,8 @@ class NotificationRepositoryTest extends BaseRepositoryTest {
         notificationRepository.save(pastNotification);
         notificationRepository.save(futureNotification);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(odyMeeting.getId(), LocalDateTime.now());
+        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(odyMeeting.getId(),
+                LocalDateTime.now());
 
         assertThat(notifications.size()).isOne();
     }

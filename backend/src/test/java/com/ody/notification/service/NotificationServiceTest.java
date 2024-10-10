@@ -18,7 +18,10 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
+import com.ody.notification.dto.response.NotiLogFindResponse;
+import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
+import com.ody.route.domain.DepartureTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.InviteCodeGenerator;
 import java.time.Instant;
@@ -28,6 +31,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
@@ -64,28 +68,22 @@ class NotificationServiceTest extends BaseServiceTest {
     @MockBean
     private KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 
-    @DisplayName("알림 생성 시점이 전송 시점보다 늦은 경우 즉시 전송된다")
+    @DisplayName("출발 알림 생성 시점이 알림 전송 시점보다 늦은 경우 즉시 전송된다")
     @Test
     void sendImmediatelyIfDepartureTimeIsPast() {
         Member member = memberRepository.save(Fixture.MEMBER1);
-        Meeting pastMeeting = new Meeting(
-                "오디",
-                LocalDate.now().minusDays(1),
-                LocalTime.parse("14:00"),
-                Fixture.TARGET_LOCATION,
-                InviteCodeGenerator.generate()
-        );
-        Meeting savedPastMeeting = meetingRepository.save(pastMeeting);
-        Mate mate = mateRepository.save(
-                new Mate(savedPastMeeting, member, new Nickname("제리"), Fixture.ORIGIN_LOCATION, 1L)
-        );
-        notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING); // 약속 시간 : now()
+        Mate mate = fixtureGenerator.generateMate(odyMeeting, member); // 소요 시간 : 10분
 
-        Optional<Notification> departureNotification = notificationRepository.findAll().stream()
-                .filter(notification -> notification.isDepartureReminder() && notification.isNow())
-                .findAny();
+        // 입장 알림 시간 : now(), 출발 알림 시간 : now().minusMinutes(10분)
+        notificationService.saveAndSendNotifications(odyMeeting, mate, member.getDeviceToken());
 
-        assertThat(departureNotification).isPresent();
+        Notification departureReminderNotification = notificationRepository.findAll().stream()
+                .filter(Notification::isDepartureReminder)
+                .findAny()
+                .get();
+
+        assertThat(departureReminderNotification.getSendAt()).isEqualToIgnoringNanos(LocalDateTime.now());
     }
 
     @DisplayName("PENDING 상태의 알림들을 TaskScheduler로 스케줄링 한다.")
@@ -197,6 +195,22 @@ class NotificationServiceTest extends BaseServiceTest {
                 NotificationStatus.DISMISSED,
                 NotificationStatus.DISMISSED
         );
+    }
+
+    @DisplayName("참여자의 출발 시간이 현재 시간보다 전이라면 입장 알림 - 출발 알림 순으로 로그 목록이 조회된다.")
+    @Test
+    void findAllMeetingLogsOrderOfEntryAndDepartureNotificationWhen() {
+        Member member = memberRepository.save(Fixture.MEMBER1);
+        Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING); // 약속 시간 : now()
+        Mate mate = fixtureGenerator.generateMate(odyMeeting, member); // 소요 시간 : 10분
+
+        // 입장 알림 시간 : now(), 출발 알림 시간 : now().minusMinutes(10분)
+        notificationService.saveAndSendNotifications(odyMeeting, mate, member.getDeviceToken());
+
+        NotiLogFindResponses allMeetingLogs = notificationService.findAllMeetingLogs(odyMeeting.getId());
+
+        assertThat(allMeetingLogs.notiLog()).extracting(NotiLogFindResponse::type)
+                .containsExactly(NotificationType.ENTRY.name(), NotificationType.DEPARTURE_REMINDER.name());
     }
 
     @DisplayName("삭제 회원이 포함된 로그 목록을 조회한다.")
