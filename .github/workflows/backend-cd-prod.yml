@@ -1,10 +1,11 @@
-
 name: backend-cd-prod
 
 on:
-  push:
+  pull_request:
     branches:
-      - feature/646
+      - 'release-be/**'
+    types:
+      - closed
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
@@ -12,7 +13,7 @@ env:
 
 jobs:
   build-and-push:
-#    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     defaults:
@@ -21,8 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-#        with:
-#          ref: main
+        with:
+          ref: main
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -96,8 +97,6 @@ jobs:
           command: |
             MAX_RETRIES=5
             RETRY_DELAY=10
-            
-            echo "-----헬스 체크 전-----"
             for i in $(seq 1 $MAX_RETRIES)
             do
               response=$(curl -s https://prod.oody.site/actuator/health)
@@ -106,7 +105,7 @@ jobs:
                 echo "Status is UP. Continuing..."
                 exit 0
               else
-                echo "Attempt $i: Status is not UP. Current status: $status"
+                echo "Attempt $i: Status is NOT UP. Current status: $status"
                 if [ $i -eq $MAX_RETRIES ]; then
                   echo "Max retries reached. Failing the job."
                   exit 1
@@ -115,7 +114,6 @@ jobs:
                 sleep $RETRY_DELAY
               fi
             done
-            echo "-----헬스 체크 후------"
         continue-on-error: true
 
       - name: Check Docker Process
