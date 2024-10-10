@@ -5,12 +5,12 @@ spring:
   datasource:
     write:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://database-project.cluster-cqsc6pyqhwww.ap-northeast-2.rds.amazonaws.com:3306/ody
+      jdbc-url: jdbc:mysql://database-project.cluster-cqsc6pyqhwww.ap-northeast-2.rds.amazonaws.com:3306/od
       username: ody
       password: ENC(2n3gUzzFjknXpHDYwuF4d5BQw6XqLdsX)
     read:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://database-project.cluster-ro-cqsc6pyqhwww.ap-northeast-2.rds.amazonaws.com:3306/ody
+      jdbc-url: jdbc:mysql://database-project.cluster-ro-cqsc6pyqhwww.ap-northeast-2.rds.amazonaws.com:3306/od
       username: ody
       password: ENC(2n3gUzzFjknXpHDYwuF4d5BQw6XqLdsX)
 
