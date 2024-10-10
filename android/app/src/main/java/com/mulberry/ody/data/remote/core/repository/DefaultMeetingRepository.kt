@@ -44,15 +44,21 @@ class DefaultMeetingRepository
             currentLatitude: String,
             currentLongitude: String,
         ): ApiResult<MateEtaInfo> {
-            return service.patchMatesEta(meetingId, MatesEtaRequest(isMissing, currentLatitude, currentLongitude)).map { it.toMateEtaInfo() }
+            return service.patchMatesEta(
+                meetingId,
+                MatesEtaRequest(isMissing, currentLatitude, currentLongitude),
+            ).map { it.toMateEtaInfo() }
         }
 
-    override suspend fun upsertMateEta(meetingId: Long, mateEtaInfo: MateEtaInfo): ApiResult<Unit> {
-        val mateEtaInfoEntity = MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
-        mateEtaInfoDao.upsert(mateEtaInfoEntity)
-        return ApiResult.Success(Unit)
-    }
+        override suspend fun upsertMateEta(
+            meetingId: Long,
+            mateEtaInfo: MateEtaInfo,
+        ): ApiResult<Unit> {
+            val mateEtaInfoEntity = MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
+            mateEtaInfoDao.upsert(mateEtaInfoEntity)
+            return ApiResult.Success(Unit)
+        }
 
-    override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> =
+        override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> =
             service.fetchMeetingCatalogs().map { it.toMeetingCatalogs() }
     }
