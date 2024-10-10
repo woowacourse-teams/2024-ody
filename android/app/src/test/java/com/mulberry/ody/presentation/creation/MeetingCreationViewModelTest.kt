@@ -158,7 +158,7 @@ class MeetingCreationViewModelTest {
 
         // when
         viewModel.meetingDate.value = LocalDate.of(2023, 7, 28)
-        viewModel.meetingHour.value = 18
+        viewModel.meetingHour.value = 17
         viewModel.meetingMinute.value = 0
 
         // then
