@@ -36,3 +36,7 @@ suspend fun <T, R> ApiResult<T>.map(block: suspend (T) -> R): ApiResult<R> {
         is ApiResult.Unexpected -> ApiResult.Unexpected(this.t)
     }
 }
+
+fun <T> ApiResult<T>.getOrNull(): T? {
+    return if (this is ApiResult.Success) data else null
+}

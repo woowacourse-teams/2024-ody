@@ -1,5 +1,7 @@
 package com.mulberry.ody.data.remote.core.repository
 
+import com.mulberry.ody.data.local.db.MateEtaInfoDao
+import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.remote.core.entity.meeting.mapper.toMateEtaInfo
 import com.mulberry.ody.data.remote.core.entity.meeting.mapper.toMeeting
 import com.mulberry.ody.data.remote.core.entity.meeting.mapper.toMeetingCatalogs
@@ -21,6 +23,7 @@ class DefaultMeetingRepository
     @Inject
     constructor(
         private val service: MeetingService,
+        private val mateEtaInfoDao: MateEtaInfoDao,
     ) : MeetingRepository {
         override suspend fun fetchInviteCodeValidity(inviteCode: String): ApiResult<Unit> {
             return service.fetchInviteCodeValidity(inviteCode)
@@ -40,15 +43,16 @@ class DefaultMeetingRepository
             isMissing: Boolean,
             currentLatitude: String,
             currentLongitude: String,
-        ): Result<MateEtaInfo> {
-            return runCatching {
-                service.patchMatesEta(
-                    meetingId,
-                    MatesEtaRequest(isMissing, currentLatitude, currentLongitude),
-                ).toMateEtaInfo()
-            }
+        ): ApiResult<MateEtaInfo> {
+            return service.patchMatesEta(meetingId, MatesEtaRequest(isMissing, currentLatitude, currentLongitude)).map { it.toMateEtaInfo() }
         }
 
-        override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> =
+    override suspend fun upsertMateEta(meetingId: Long, mateEtaInfo: MateEtaInfo): ApiResult<Unit> {
+        val mateEtaInfoEntity = MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
+        mateEtaInfoDao.upsert(mateEtaInfoEntity)
+        return ApiResult.Success(Unit)
+    }
+
+    override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> =
             service.fetchMeetingCatalogs().map { it.toMeetingCatalogs() }
     }

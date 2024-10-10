@@ -4,8 +4,8 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import com.mulberry.ody.data.local.db.MateEtaInfoDao
-import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
+import com.mulberry.ody.domain.apiresult.getOrNull
+import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
@@ -27,9 +27,6 @@ class EtaDashboardService : Service() {
 
     @Inject
     lateinit var meetingRepository: MeetingRepository
-
-    @Inject
-    lateinit var mateEtaInfoDao: MateEtaInfoDao
 
     @Inject
     lateinit var geoLocationHelper: LocationHelper
@@ -83,8 +80,7 @@ class EtaDashboardService : Service() {
 
     private suspend fun upsertEtaDashboard(meetingId: Long) {
         val mateEtaInfo = getLocation(meetingId) ?: return
-        val mateEtaInfoEntity = MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
-        mateEtaInfoDao.upsert(mateEtaInfoEntity)
+        meetingRepository.upsertMateEta(meetingId, mateEtaInfo)
     }
 
     private suspend fun getLocation(meetingId: Long): MateEtaInfo? {
@@ -110,7 +106,7 @@ class EtaDashboardService : Service() {
         longitude: String = DEFAULT_LONGITUDE,
     ): MateEtaInfo? {
         return meetingRepository.patchMatesEta(meetingId, isMissing, latitude, longitude)
-            .onFailure { analyticsHelper.logNetworkErrorEvent(TAG, it.message) }
+            .onNetworkError { analyticsHelper.logNetworkErrorEvent(TAG, it.message) }
             .getOrNull()
     }
 
