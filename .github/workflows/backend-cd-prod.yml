@@ -1,11 +1,10 @@
+
 name: backend-cd-prod
 
 on:
-  pull_request:
+  push:
     branches:
-      - 'release-be/**'
-    types:
-      - closed
+      - feature/646
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
@@ -69,7 +68,7 @@ jobs:
     strategy:
       max-parallel: 1 # 직렬처리
       matrix:
-        environment: [ prod, prod-a, prod-b ]
+        environment: [ prod-a, prod-b ]
 
     steps:
       - name: Login to Docker Hub
@@ -88,6 +87,15 @@ jobs:
           docker stop $DOCKER_CONTAINER_NAME || true
           docker rm $DOCKER_CONTAINER_NAME || true     
           docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
+
+      - name: Container Health Check
+        uses: stringbean/docker-healthcheck-action@v1
+        with:
+          container: $DOCKER_CONTAINER_NAME
+          wait-time: 50
+          require-status: running
+          require-healthy: true
+        continue-on-error: true
 
       - name: Check Docker Process
         run: docker ps
