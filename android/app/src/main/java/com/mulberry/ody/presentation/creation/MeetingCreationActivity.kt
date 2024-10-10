@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingCreationBinding
 import com.mulberry.ody.domain.model.Address
@@ -21,6 +22,7 @@ import com.mulberry.ody.presentation.creation.name.MeetingNameFragment
 import com.mulberry.ody.presentation.creation.time.MeetingTimeFragment
 import com.mulberry.ody.presentation.join.MeetingJoinActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MeetingCreationActivity :
@@ -65,21 +67,27 @@ class MeetingCreationActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        viewModel.inviteCode.observe(this) {
-            viewModel.onClickCreationMeeting()
+        lifecycleScope.launch {
+            viewModel.inviteCode.collect {
+                viewModel.onClickCreationMeeting()
+            }
         }
-        viewModel.nextPageEvent.observe(this) {
-            handleMeetingInfoNextClick()
+        lifecycleScope.launch {
+            viewModel.nextPageEvent.collect {
+                handleMeetingInfoNextClick()
+            }
         }
-        viewModel.navigateAction.observe(this) {
-            when (it) {
-                MeetingCreationNavigateAction.NavigateToMeetings -> {
-                    finish()
-                }
+        lifecycleScope.launch {
+            viewModel.navigateAction.collect {
+                when (it) {
+                    MeetingCreationNavigateAction.NavigateToMeetings -> {
+                        finish()
+                    }
 
-                is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
-                    startActivity(MeetingJoinActivity.getIntent(it.inviteCode, this))
-                    finish()
+                    is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
+                        startActivity(MeetingJoinActivity.getIntent(it.inviteCode, this@MeetingCreationActivity))
+                        finish()
+                    }
                 }
             }
         }

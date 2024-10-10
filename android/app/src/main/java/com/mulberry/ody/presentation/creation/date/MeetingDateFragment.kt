@@ -3,11 +3,13 @@ package com.mulberry.ody.presentation.creation.date
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDateBinding
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.creation.MeetingCreationInfoType
 import com.mulberry.ody.presentation.creation.MeetingCreationViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class MeetingDateFragment :
@@ -41,14 +43,16 @@ class MeetingDateFragment :
     }
 
     private fun initializeObserve() {
-        viewModel.invalidMeetingDateEvent.observe(viewLifecycleOwner) {
-            showSnackBar(R.string.meeting_date_date_guide)
-            val meetingDate = viewModel.meetingDate.value ?: return@observe
-            binding.dpDate.updateDate(
-                meetingDate.year,
-                meetingDate.monthValue - 1,
-                meetingDate.dayOfMonth,
-            )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.invalidMeetingDateEvent.collect {
+                showSnackBar(R.string.meeting_date_date_guide)
+                val meetingDate = viewModel.meetingDate.value
+                binding.dpDate.updateDate(
+                    meetingDate.year,
+                    meetingDate.monthValue - 1,
+                    meetingDate.dayOfMonth,
+                )
+            }
         }
     }
 

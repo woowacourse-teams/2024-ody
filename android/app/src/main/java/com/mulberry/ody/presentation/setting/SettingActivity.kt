@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
@@ -19,6 +20,7 @@ import com.mulberry.ody.presentation.setting.listener.SettingListener
 import com.mulberry.ody.presentation.setting.model.SettingUiModel
 import com.mulberry.ody.presentation.setting.withdrawal.WithDrawalDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SettingActivity :
@@ -35,14 +37,16 @@ class SettingActivity :
     }
 
     private fun initializeObserve() {
-        viewModel.loginNavigateEvent.observe(this) {
-            when (it) {
-                LoginNavigatedReason.LOGOUT -> {
-                    navigateToLogin()
-                }
+        lifecycleScope.launch {
+            viewModel.loginNavigateEvent.collect {
+                when (it) {
+                    LoginNavigatedReason.LOGOUT -> {
+                        navigateToLogin()
+                    }
 
-                LoginNavigatedReason.WITHDRAWAL -> {
-                    navigateToWithdrawal()
+                    LoginNavigatedReason.WITHDRAWAL -> {
+                        navigateToWithdrawal()
+                    }
                 }
             }
         }

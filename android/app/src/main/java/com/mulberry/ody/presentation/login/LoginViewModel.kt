@@ -8,11 +8,12 @@ import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.repository.ody.LoginRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
-import com.mulberry.ody.presentation.common.MutableSingleLiveData
-import com.mulberry.ody.presentation.common.SingleLiveData
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,17 +25,19 @@ class LoginViewModel
         private val loginRepository: LoginRepository,
         private val savedStateHandle: SavedStateHandle,
     ) : BaseViewModel() {
-        private val _navigatedReason: MutableSingleLiveData<LoginNavigatedReason> =
-            MutableSingleLiveData()
-        val navigatedReason: SingleLiveData<LoginNavigatedReason> get() = _navigatedReason
+        private val _navigatedReason: MutableSharedFlow<LoginNavigatedReason> =
+            MutableSharedFlow()
+        val navigatedReason: SharedFlow<LoginNavigatedReason> get() = _navigatedReason.asSharedFlow()
 
-        private val _navigateAction: MutableSingleLiveData<LoginNavigateAction> =
-            MutableSingleLiveData()
-        val navigateAction: SingleLiveData<LoginNavigateAction> get() = _navigateAction
+        private val _navigateAction: MutableSharedFlow<LoginNavigateAction> =
+            MutableSharedFlow()
+        val navigateAction: SharedFlow<LoginNavigateAction> get() = _navigateAction.asSharedFlow()
 
         fun checkIfNavigated() {
             savedStateHandle.get<LoginNavigatedReason>(NAVIGATED_REASON)?.let { reason ->
-                _navigatedReason.setValue(reason)
+                viewModelScope.launch {
+                    _navigatedReason.emit(reason)
+                }
             }
         }
 
@@ -64,7 +67,9 @@ class LoginViewModel
         }
 
         private fun navigateToMeetings() {
-            _navigateAction.setValue(LoginNavigateAction.NavigateToMeetings)
+            viewModelScope.launch {
+                _navigateAction.emit(LoginNavigateAction.NavigateToMeetings)
+            }
         }
 
         companion object {

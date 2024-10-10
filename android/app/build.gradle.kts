@@ -138,6 +138,7 @@ dependencies {
     implementation(libs.play.services.location)
 
     // coroutines
+    implementation(libs.kotlinx.coroutines.core)
     testImplementation(libs.kotlinx.coroutines.test)
 
     // glide
