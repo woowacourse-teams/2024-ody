@@ -10,7 +10,7 @@ import com.mulberry.ody.domain.common.toMilliSeconds
 import java.time.LocalDateTime
 import kotlin.math.max
 
-class AlarmManagerHelper(private val context: Context) {
+class EtaDashboardAlarm(private val context: Context) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     fun reserveEtaDashboard(

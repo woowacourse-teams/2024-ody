@@ -1,7 +1,7 @@
 package com.mulberry.ody.di
 
 import android.content.Context
-import com.mulberry.ody.data.local.service.AlarmManagerHelper
+import com.mulberry.ody.data.local.service.EtaDashboardAlarm
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.gps.GeoLocationHelper
 import com.mulberry.ody.presentation.common.gps.LocationHelper
@@ -42,9 +42,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAlarmManagerHelper(
+    fun provideEtaDashboardAlarm(
         @ApplicationContext context: Context,
-    ): AlarmManagerHelper {
-        return AlarmManagerHelper(context)
+    ): EtaDashboardAlarm {
+        return EtaDashboardAlarm(context)
     }
 }
