@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.media.RingtoneManager
@@ -168,13 +169,20 @@ class EtaDashboardService : Service() {
         const val MEETING_ID_KEY = "meeting_id"
         const val MEETING_ID_DEFAULT_VALUE = -1L
 
-        const val OPEN = "eta_dashboard_open"
-        const val CLOSE = "eta_dashboard_close"
+        private const val OPEN = "eta_dashboard_open"
+        private const val CLOSE = "eta_dashboard_close"
 
         private const val DEFAULT_LATITUDE = "0.0"
         private const val DEFAULT_LONGITUDE = "0.0"
 
         private const val INTERVAL = 10 * 1000L
         private const val CHANNEL_ID = "channel"
+
+        fun getIntent(context: Context, meetingId: Long, isOpen: Boolean = true): Intent {
+            return Intent(context, EtaDashboardService::class.java).apply {
+                putExtra(MEETING_ID_KEY, meetingId)
+                action = if (isOpen) OPEN else CLOSE
+            }
+        }
     }
 }
