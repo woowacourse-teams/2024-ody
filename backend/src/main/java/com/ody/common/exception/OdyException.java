@@ -8,7 +8,7 @@ public abstract class OdyException extends RuntimeException {
 
     private final HttpStatus httpStatus;
 
-    public OdyException(String message, HttpStatus httpStatus) {
+    protected OdyException(String message, HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
     }

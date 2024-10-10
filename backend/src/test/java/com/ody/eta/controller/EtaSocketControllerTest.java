@@ -8,10 +8,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 
 import com.ody.auth.service.AuthService;
 import com.ody.common.Fixture;
+import com.ody.common.exception.OdyNotFoundException;
 import com.ody.common.websocket.BaseStompTest;
 import com.ody.common.websocket.MessageFrameHandler;
 import com.ody.eta.dto.request.MateEtaRequest;
-import com.ody.eta.service.SocketMessageSender;
 import com.ody.mate.service.MateService;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.service.MeetingService;
@@ -25,13 +25,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 
 class EtaSocketControllerTest extends BaseStompTest {
 
@@ -145,6 +151,42 @@ class EtaSocketControllerTest extends BaseStompTest {
 
         MateEtaResponsesV2 mateEtaResponsesV2 = handler.getCompletableFuture().get(10, TimeUnit.SECONDS);
         assertThat(mateEtaResponsesV2.requesterMateId()).isEqualTo(response.requesterMateId());
+    }
+
+    @DisplayName("controller 진입 후 에러 발생 시 /user/queue/errors 로 에러 메시지를 받는다")
+    @ParameterizedTest
+    @MethodSource("provideExceptionAndExpectedProblemDetail")
+    void exceptionHandling(Throwable exception, ProblemDetail expectedErrorMessage)
+            throws ExecutionException, InterruptedException, TimeoutException {
+        MessageFrameHandler<ProblemDetail> handler = new MessageFrameHandler<>(ProblemDetail.class);
+
+        Mockito.doThrow(exception).when(mateService).findAllMateEtas(any(), any(), any());
+
+        stompSession.subscribe("/user/queue/errors", handler); // 에러 수신용 구독
+        Thread.sleep(3000);
+
+        Mockito.when(timeCache.get(anyLong()))
+                .thenReturn(LocalDateTime.now().plusMinutes(10L)) // meeting 시간 (10분 뒤)
+                .thenReturn(LocalDateTime.now()); //trigger 당긴지 0초 > 새로 예약 x
+
+        sendEtaRequest();
+
+        ProblemDetail actualErrorMessage = handler.getCompletableFuture().get(10, TimeUnit.SECONDS);
+
+        assertThat(actualErrorMessage).isEqualTo(expectedErrorMessage);
+    }
+
+    public static Stream<Arguments> provideExceptionAndExpectedProblemDetail() {
+        return Stream.of(
+                Arguments.of(
+                        new OdyNotFoundException("not found"),
+                        ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "not found")
+                ),
+                Arguments.of(
+                        new RuntimeException(),
+                        ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러")
+                )
+        );
     }
 
     private void sendEtaRequest() throws InterruptedException {

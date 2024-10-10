@@ -24,8 +24,7 @@ public class MessageFrameHandler<T> implements StompFrameHandler {
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        if (completableFuture.complete((T) payload)) {
-        }
+        completableFuture.complete((T) payload);
     }
 
     public CompletableFuture<T> getCompletableFuture() {
