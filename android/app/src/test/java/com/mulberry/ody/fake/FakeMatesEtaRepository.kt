@@ -8,7 +8,10 @@ import com.mulberry.ody.mateEtaInfo
 import java.time.LocalDateTime
 
 object FakeMatesEtaRepository : MatesEtaRepository {
-    override fun reserveEtaFetchingJob(meetingId: Long, meetingDateTime: LocalDateTime) = Unit
+    override fun reserveEtaFetchingJob(
+        meetingId: Long,
+        meetingDateTime: LocalDateTime,
+    ) = Unit
 
     override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> {
         val liveData = MutableLiveData<MateEtaInfo?>()
