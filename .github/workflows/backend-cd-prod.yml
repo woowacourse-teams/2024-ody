@@ -1,4 +1,3 @@
-
 name: backend-cd-prod
 
 on:
@@ -88,17 +87,32 @@ jobs:
           docker rm $DOCKER_CONTAINER_NAME || true     
           docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
 
-      - name: Container Health Check
-        id: ody-prod-app-container
-        uses: stringbean/docker-healthcheck-action@v1
+      - name: Health Check with Retry
+        uses: nick-invision/retry@v2
         with:
-          container: ody-prod-app
-          wait-time: 50
-          require-status: running
-          require-healthy: true
-        continue-on-error: true
-
-      - run: echo "Container is ${{ steps.ody-prod-app-container.outputs.status  }}"
+          timeout_minutes: 1
+          max_attempts: 3
+          command: |
+            MAX_RETRIES=5
+            RETRY_DELAY=10
+            
+            for i in $(seq 1 $MAX_RETRIES)
+            do
+              response=$(curl -s https://prod.oody.site/actuator/health)
+              status=$(echo $response | jq -r '.status')
+              if [ "$status" = "UP" ]; then
+                echo "Status is UP. Continuing..."
+                exit 0
+              else
+                echo "Attempt $i: Status is not UP. Current status: $status"
+                if [ $i -eq $MAX_RETRIES ]; then
+                  echo "Max retries reached. Failing the job."
+                  exit 1
+                fi
+                echo "Retrying in $RETRY_DELAY seconds..."
+                sleep $RETRY_DELAY
+              fi
+            done
 
       - name: Check Docker Process
         run: docker ps
