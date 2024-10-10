@@ -94,6 +94,6 @@ class EtaDashboardAlarm
         companion object {
             private const val CLOSE_PENDING_INTENT_VALUE = -1
             private const val ETA_OPEN_MINUTE = 30L
-            private const val ETA_CLOSE_MINUTE = 1L
+            private const val ETA_CLOSE_MINUTE = 2L
         }
     }
