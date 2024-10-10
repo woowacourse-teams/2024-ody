@@ -5,12 +5,9 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_KEY
 import com.mulberry.ody.domain.common.toMilliSeconds
-import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 import kotlin.math.max
 
 class AlarmManagerHelper(private val context: Context) {
@@ -34,9 +31,6 @@ class AlarmManagerHelper(private val context: Context) {
         meetingId: Long,
         reserveMillis: Long,
     ) {
-
-        val time = Instant.ofEpochMilli(reserveMillis).atZone(ZoneId.systemDefault()).toLocalDateTime()
-        Log.e("TEST", "reserveEtaDashboardOpen ${time.toString()}")
         val alarmPendingIntent: PendingIntent = createOpenPendingIntent(meetingId)
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
@@ -63,8 +57,6 @@ class AlarmManagerHelper(private val context: Context) {
         meetingId: Long,
         reserveMillis: Long,
     ) {
-        val time = Instant.ofEpochMilli(reserveMillis).atZone(ZoneId.systemDefault()).toLocalDateTime()
-        Log.e("TEST", "reserveEtaDashboardClose ${time.toString()}")
         val alarmPendingIntent: PendingIntent = createClosePendingIntent(meetingId)
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,

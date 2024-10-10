@@ -13,7 +13,6 @@ class EtaDashboardCloseBroadcastReceiver : BroadcastReceiver() {
         val meetingId = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
         if (meetingId == MEETING_ID_DEFAULT_VALUE) return
 
-        Log.e("TEST", "close onReceive() meetingId $meetingId")
         val serviceIntent = Intent(context, EtaDashboardService::class.java).apply {
             putExtra(MEETING_ID_KEY, meetingId)
             action = CLOSE

@@ -52,7 +52,6 @@ class EtaDashboardService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.e("TEST", "onStartCommand")
         val meetingId = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
         if (meetingId == MEETING_ID_DEFAULT_VALUE) return super.onStartCommand(
             intent,
@@ -68,7 +67,6 @@ class EtaDashboardService : Service() {
             }
 
             CLOSE -> {
-                Log.e("TEST", "onStartCommand CLOSE")
                 closeEtaDashboard(meetingId)
             }
         }
@@ -98,7 +96,6 @@ class EtaDashboardService : Service() {
         var count = 1
         val job = CoroutineScope(Dispatchers.IO).launch {
             while (isActive) {
-                Log.e("TEST", "upsertEtaDashboard meetingId: $meetingId, ${count++}")
                 upsertEtaDashboard(meetingId)
                 delay(INTERVAL)
             }
@@ -150,7 +147,6 @@ class EtaDashboardService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e("TEST", "service onDestroy")
         meetingJobs.keys.forEach(::closeEtaDashboard)
     }
 
