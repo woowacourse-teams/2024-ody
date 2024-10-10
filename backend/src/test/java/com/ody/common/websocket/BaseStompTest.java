@@ -60,8 +60,7 @@ public class BaseStompTest {
     @BeforeEach
     public void connect() throws ExecutionException, InterruptedException, TimeoutException {
         this.stompSession = this.websocketClient
-                .connect(url + port + ENDPOINT, new StompSessionHandlerAdapter() {
-                })
+                .connect(url + port + ENDPOINT, new StompSessionHandlerAdapter() {})
                 .get(3, TimeUnit.SECONDS);
     }
 

@@ -15,7 +15,8 @@ class WebSocketEndpointTest {
         List<String> expected = List.of(
                 WebSocketEndpoint.ETAS.getEndpoint(),
                 WebSocketEndpoint.LOCATION.getEndpoint(),
-                WebSocketEndpoint.DISCONNECT.getEndpoint()
+                WebSocketEndpoint.DISCONNECT.getEndpoint(),
+                WebSocketEndpoint.ERROR.getEndpoint()
         );
 
         assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
