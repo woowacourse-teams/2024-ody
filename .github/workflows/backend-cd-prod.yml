@@ -1,8 +1,10 @@
+
 name: backend-cd-prod
 
 on:
   push:
-    - feature/646
+    branches:
+      - feature/646
 #  pull_request:
 #    branches:
 #      - 'release-be/**'
