@@ -1,11 +1,15 @@
 package com.mulberry.ody.di
 
+import android.app.AlarmManager
+import android.app.NotificationManager
 import android.content.Context
-import androidx.work.WorkManager
+import android.content.Context.NOTIFICATION_SERVICE
+import com.mulberry.ody.data.local.service.EtaDashboardAlarm
+import com.mulberry.ody.data.local.service.EtaDashboardNotification
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.gps.GeoLocationHelper
 import com.mulberry.ody.presentation.common.gps.LocationHelper
-import com.mulberry.ody.presentation.notification.NotificationHelper
+import com.mulberry.ody.presentation.notification.FCMNotification
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,18 +22,27 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideWorkManager(
+    fun provideFCMNotification(
         @ApplicationContext context: Context,
-    ): WorkManager {
-        return WorkManager.getInstance(context)
+        notificationManager: NotificationManager,
+    ): FCMNotification {
+        return FCMNotification(context, notificationManager)
     }
 
     @Provides
     @Singleton
-    fun provideNotificationHelper(
+    fun provideAlarmManager(
         @ApplicationContext context: Context,
-    ): NotificationHelper {
-        return NotificationHelper(context)
+    ): AlarmManager {
+        return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationManager(
+        @ApplicationContext context: Context,
+    ): NotificationManager {
+        return context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 
     @Provides
@@ -46,5 +59,23 @@ object AppModule {
         @ApplicationContext context: Context,
     ): LocationHelper {
         return GeoLocationHelper(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEtaDashboardAlarm(
+        @ApplicationContext context: Context,
+        alarmManager: AlarmManager,
+    ): EtaDashboardAlarm {
+        return EtaDashboardAlarm(context, alarmManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEtaDashboardNotification(
+        @ApplicationContext context: Context,
+        notificationManager: NotificationManager,
+    ): EtaDashboardNotification {
+        return EtaDashboardNotification(context, notificationManager)
     }
 }
