@@ -13,9 +13,23 @@ import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_NOTIFICATION_LOG
 
-class NotificationHelper(private val context: Context) {
+class FCMNotification(private val context: Context) {
     init {
         createNotificationChannel()
+    }
+
+    private fun createNotificationChannel() {
+        val channel =
+            NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_HIGH,
+            )
+        channel.description = NOTIFICATION_DESCRIPTION
+
+        val notificationManager =
+            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     fun showNotification(
@@ -84,20 +98,6 @@ class NotificationHelper(private val context: Context) {
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         notificationManager.notify(0, mBuilder.build())
-    }
-
-    private fun createNotificationChannel() {
-        val channel =
-            NotificationChannel(
-                NOTIFICATION_CHANNEL_ID,
-                NOTIFICATION_CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_HIGH,
-            )
-        channel.description = NOTIFICATION_DESCRIPTION
-
-        val notificationManager =
-            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
     }
 
     companion object {

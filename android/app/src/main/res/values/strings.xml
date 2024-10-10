@@ -134,6 +134,7 @@
     <string name="nudge_success">%s에게 빨리 오라고 재촉했어요!</string>
     <string name="eta_dashboard_share_description">친구들의 도착 예정 정보를 확인해보세요!</string>
     <string name="eta_dashboard_share_button">확인하러 가기</string>
+    <string name="eta_dashboard_background_location">친구에게 도착 정보를 공유하기 위해 위치를 수집하고 있어요</string>
 
     <!-- activity_eta_dashboard_guide_first.xml -->
     <string name="eta_dashboard_guide_title">성수에서 감자탕 먹기</string>

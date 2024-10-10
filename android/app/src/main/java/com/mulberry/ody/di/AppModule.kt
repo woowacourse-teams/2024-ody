@@ -2,10 +2,11 @@ package com.mulberry.ody.di
 
 import android.content.Context
 import com.mulberry.ody.data.local.service.EtaDashboardAlarm
+import com.mulberry.ody.data.local.service.EtaDashboardNotification
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.gps.GeoLocationHelper
 import com.mulberry.ody.presentation.common.gps.LocationHelper
-import com.mulberry.ody.presentation.notification.NotificationHelper
+import com.mulberry.ody.presentation.notification.FCMNotification
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,10 +19,10 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideNotificationHelper(
+    fun provideFCMNotification(
         @ApplicationContext context: Context,
-    ): NotificationHelper {
-        return NotificationHelper(context)
+    ): FCMNotification {
+        return FCMNotification(context)
     }
 
     @Provides
@@ -46,5 +47,13 @@ object AppModule {
         @ApplicationContext context: Context,
     ): EtaDashboardAlarm {
         return EtaDashboardAlarm(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEtaDashboardNotification(
+        @ApplicationContext context: Context,
+    ): EtaDashboardNotification {
+        return EtaDashboardNotification(context)
     }
 }
