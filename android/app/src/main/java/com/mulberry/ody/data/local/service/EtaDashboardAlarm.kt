@@ -8,11 +8,14 @@ import android.content.Intent
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_KEY
 import com.mulberry.ody.domain.common.toMilliSeconds
 import java.time.LocalDateTime
+import javax.inject.Inject
 import kotlin.math.max
 
-class EtaDashboardAlarm(private val context: Context) {
-    private val alarmManager: AlarmManager by lazy { context.getSystemService(Context.ALARM_SERVICE) as AlarmManager }
-
+class EtaDashboardAlarm
+@Inject constructor(
+    private val context: Context,
+    private val alarmManager: AlarmManager,
+) {
     fun reserveEtaDashboard(
         meetingId: Long,
         meetingDateTime: LocalDateTime,

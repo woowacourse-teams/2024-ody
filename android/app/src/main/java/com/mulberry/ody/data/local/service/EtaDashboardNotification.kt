@@ -4,19 +4,19 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service.NOTIFICATION_SERVICE
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.meetings.MeetingsActivity
+import javax.inject.Inject
 
-class EtaDashboardNotification(private val context: Context) {
-    private val notificationManager: NotificationManager by lazy {
-        context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-    }
-
+class EtaDashboardNotification
+@Inject constructor(
+    private val context: Context,
+    private val notificationManager: NotificationManager,
+) {
     init {
         createNotificationChannel()
     }

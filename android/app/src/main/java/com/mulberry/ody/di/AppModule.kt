@@ -1,6 +1,9 @@
 package com.mulberry.ody.di
 
+import android.app.AlarmManager
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
 import com.mulberry.ody.data.local.service.EtaDashboardAlarm
 import com.mulberry.ody.data.local.service.EtaDashboardNotification
 import com.mulberry.ody.presentation.common.PermissionHelper
@@ -21,8 +24,25 @@ object AppModule {
     @Singleton
     fun provideFCMNotification(
         @ApplicationContext context: Context,
+        notificationManager: NotificationManager,
     ): FCMNotification {
-        return FCMNotification(context)
+        return FCMNotification(context, notificationManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlarmManager(
+        @ApplicationContext context: Context,
+    ): AlarmManager {
+        return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationManager(
+        @ApplicationContext context: Context,
+    ): NotificationManager {
+        return context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 
     @Provides
@@ -45,15 +65,17 @@ object AppModule {
     @Singleton
     fun provideEtaDashboardAlarm(
         @ApplicationContext context: Context,
+        alarmManager: AlarmManager,
     ): EtaDashboardAlarm {
-        return EtaDashboardAlarm(context)
+        return EtaDashboardAlarm(context, alarmManager)
     }
 
     @Provides
     @Singleton
     fun provideEtaDashboardNotification(
         @ApplicationContext context: Context,
+        notificationManager: NotificationManager,
     ): EtaDashboardNotification {
-        return EtaDashboardNotification(context)
+        return EtaDashboardNotification(context, notificationManager)
     }
 }

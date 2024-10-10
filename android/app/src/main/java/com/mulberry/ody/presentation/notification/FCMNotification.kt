@@ -12,12 +12,12 @@ import com.mulberry.ody.domain.model.NotificationType
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_NOTIFICATION_LOG
+import javax.inject.Inject
 
-class FCMNotification(private val context: Context) {
-    private val notificationManager: NotificationManager by lazy {
-        context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-    }
-
+class FCMNotification @Inject constructor(
+    private val context: Context,
+    private val notificationManager: NotificationManager,
+) {
     init {
         createNotificationChannel()
     }
