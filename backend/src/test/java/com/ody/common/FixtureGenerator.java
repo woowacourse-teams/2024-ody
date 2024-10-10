@@ -6,6 +6,7 @@ import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.DeviceToken;
@@ -64,6 +65,16 @@ public class FixtureGenerator {
         ));
     }
 
+    public Meeting generateMeeting(LocalDateTime meetingTime) {
+        return meetingRepository.save(new Meeting(
+                "약속",
+                meetingTime.toLocalDate(),
+                meetingTime.toLocalTime(),
+                Fixture.TARGET_LOCATION,
+                InviteCodeGenerator.generate()
+        ));
+    }
+
     public Member generateMember() {
         return generateMember("nickname");
     }
@@ -78,6 +89,14 @@ public class FixtureGenerator {
         Nickname nickname = new Nickname(rawNickname);
         DeviceToken deviceToken = new DeviceToken(rawDeviceToken);
         return memberRepository.save(new Member(providerId, nickname, "imageurl", deviceToken));
+    }
+
+    public Member generateUnsavedMember(String providerId, String rawDeviceToken) {
+        return new Member(providerId, new Nickname("nickname"), "imageUrl", new DeviceToken(rawDeviceToken));
+    }
+
+    public Member generateSavedMember(String providerId, String rawDeviceToken) {
+        return memberRepository.save(generateUnsavedMember(providerId, rawDeviceToken));
     }
 
     public Mate generateMate() {
@@ -95,13 +114,32 @@ public class FixtureGenerator {
         return mateRepository.save(new Mate(meeting, member, Fixture.ORIGIN_LOCATION, 10L));
     }
 
+    public Mate generateMate(Meeting meeting, Location location) {
+        Member member = generateMember();
+        return mateRepository.save(new Mate(meeting, member, location, 10L));
+    }
+
     public Eta generateEta() {
         Mate mate = generateMate();
         return generateEta(mate);
     }
 
     public Eta generateEta(Mate mate) {
-        return etaRepository.save(new Eta(mate, 10L));
+        return generateEta(mate, 10L);
+    }
+
+    public Eta generateEta(Mate mate, long remainMinutes) {
+        return generateEta(mate, remainMinutes, TimeUtil.nowWithTrim());
+    }
+
+    public Eta generateEta(Mate mate, long remainingMinutes, LocalDateTime lastUpdateTime) {
+        return etaRepository.save(new Eta(mate, remainingMinutes, TimeUtil.nowWithTrim(), lastUpdateTime));
+    }
+
+    public Notification generateNotification(Mate mate, NotificationType type, NotificationStatus status) {
+        FcmTopic fcmTopic = new FcmTopic(mate.getMeeting());
+        Notification notification = new Notification(mate, type, TimeUtil.nowWithTrim(), status, fcmTopic);
+        return notificationRepository.save(notification);
     }
 
     public Notification generateNotification(Mate mate) {
