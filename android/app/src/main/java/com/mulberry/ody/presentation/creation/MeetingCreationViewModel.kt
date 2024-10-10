@@ -1,9 +1,5 @@
 package com.mulberry.ody.presentation.creation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
@@ -13,12 +9,18 @@ import com.mulberry.ody.domain.model.MeetingCreationInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.domain.validator.AddressValidator
 import com.mulberry.ody.presentation.common.BaseViewModel
-import com.mulberry.ody.presentation.common.MutableSingleLiveData
-import com.mulberry.ody.presentation.common.SingleLiveData
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.creation.listener.MeetingCreationListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -33,49 +35,58 @@ class MeetingCreationViewModel
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
     ) : BaseViewModel(), MeetingCreationListener {
-        val meetingCreationInfoType: MutableLiveData<MeetingCreationInfoType> = MutableLiveData()
-        val isValidInfo: MediatorLiveData<Boolean> = MediatorLiveData(false)
+        val meetingCreationInfoType = MutableStateFlow<MeetingCreationInfoType?>(null)
 
-        val meetingName: MutableLiveData<String> = MutableLiveData()
-        val meetingNameLength: LiveData<Int> = meetingName.map { it.length }
+        private val _isValidInfo = MutableStateFlow(false)
+        val isValidInfo: StateFlow<Boolean> = _isValidInfo
 
-        val meetingDate: MutableLiveData<LocalDate> = MutableLiveData(LocalDate.now())
+        val meetingName: MutableStateFlow<String> = MutableStateFlow("")
+        val meetingNameLength: StateFlow<Int> =
+            meetingName.map { it.length }
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
-        private val _invalidMeetingDateEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-        val invalidMeetingDateEvent: SingleLiveData<Unit> get() = _invalidMeetingDateEvent
+        val meetingDate = MutableStateFlow(LocalDate.now())
 
-        val meetingHour: MutableLiveData<Int> = MutableLiveData()
-        val meetingMinute: MutableLiveData<Int> = MutableLiveData()
+        private val _invalidMeetingDateEvent = MutableSharedFlow<Unit>()
+        val invalidMeetingDateEvent: SharedFlow<Unit> = _invalidMeetingDateEvent
 
-        private val _invalidMeetingTimeEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-        val invalidMeetingTimeEvent: SingleLiveData<Unit> get() = _invalidMeetingTimeEvent
+        val meetingHour = MutableStateFlow<Int?>(null)
+        val meetingMinute = MutableStateFlow<Int?>(null)
 
-        val destinationAddress: MutableLiveData<Address> = MutableLiveData()
+        private val _invalidMeetingTimeEvent = MutableSharedFlow<Unit>()
+        val invalidMeetingTimeEvent: SharedFlow<Unit> = _invalidMeetingTimeEvent
 
-        private val _invalidDestinationEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-        val invalidDestinationEvent: SingleLiveData<Unit> get() = _invalidDestinationEvent
+        val destinationAddress = MutableStateFlow<Address?>(null)
 
-        private val _nextPageEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-        val nextPageEvent: SingleLiveData<Unit> = _nextPageEvent
+        private val _invalidDestinationEvent = MutableSharedFlow<Unit>()
+        val invalidDestinationEvent: SharedFlow<Unit> = _invalidDestinationEvent
 
-        private val _navigateAction: MutableSingleLiveData<MeetingCreationNavigateAction> =
-            MutableSingleLiveData()
-        val navigateAction: SingleLiveData<MeetingCreationNavigateAction> get() = _navigateAction
+        private val _nextPageEvent = MutableSharedFlow<Unit>()
+        val nextPageEvent: SharedFlow<Unit> = _nextPageEvent
 
-        private val _inviteCode: MutableLiveData<String> = MutableLiveData()
-        val inviteCode: LiveData<String> get() = _inviteCode
+        private val _navigateAction = MutableSharedFlow<MeetingCreationNavigateAction>()
+        val navigateAction: SharedFlow<MeetingCreationNavigateAction> = _navigateAction
+
+        private val _inviteCode = MutableStateFlow<String?>(null)
+        val inviteCode: StateFlow<String?> = _inviteCode
 
         init {
             initializeIsValidInfo()
         }
 
         private fun initializeIsValidInfo() {
-            with(isValidInfo) {
-                addSource(meetingCreationInfoType) { checkInfoValidity() }
-                addSource(meetingName) { checkInfoValidity() }
-                addSource(destinationAddress) { checkInfoValidity() }
-                addSource(meetingHour) { isValidInfo.value = true }
-                addSource(meetingMinute) { isValidInfo.value = true }
+            viewModelScope.launch {
+                combine(
+                    meetingCreationInfoType,
+                    meetingName,
+                    destinationAddress,
+                    meetingHour,
+                    meetingMinute,
+                ) { _, _, _, _, _ ->
+                    checkInfoValidity()
+                }.collect { isValid ->
+                    _isValidInfo.value = isValid
+                }
             }
         }
 
@@ -109,7 +120,7 @@ class MeetingCreationViewModel
         }
 
         private fun createMeetingCreationInfo(): MeetingCreationInfo? {
-            val name = meetingName.value ?: return null
+            val name = meetingName.value.takeIf { it.isNotEmpty() } ?: return null
             val date = meetingDate.value ?: return null
             val hour = meetingHour.value ?: return null
             val minute = meetingMinute.value ?: return null
@@ -126,21 +137,20 @@ class MeetingCreationViewModel
             meetingName.value = ""
         }
 
-        private fun checkInfoValidity() {
-            val meetingCreationInfoType = meetingCreationInfoType.value ?: return
-            val isValid =
-                when (meetingCreationInfoType) {
-                    MeetingCreationInfoType.NAME -> isValidMeetingName()
-                    MeetingCreationInfoType.DATE -> true
-                    MeetingCreationInfoType.TIME -> isValidMeetingDateTime()
-                    MeetingCreationInfoType.DESTINATION -> isValidDestination()
-                }
-            isValidInfo.value = isValid
+        private fun checkInfoValidity(): Boolean {
+            val meetingCreationInfoType = meetingCreationInfoType.value ?: return false
+
+            return when (meetingCreationInfoType) {
+                MeetingCreationInfoType.NAME -> isValidMeetingName()
+                MeetingCreationInfoType.DATE -> true
+                MeetingCreationInfoType.TIME -> isValidMeetingDateTime()
+                MeetingCreationInfoType.DESTINATION -> isValidDestination()
+            }
         }
 
         private fun isValidMeetingName(): Boolean {
-            val meetingName = meetingName.value ?: return false
-            return (meetingName.isNotEmpty() && meetingName.length <= MEETING_NAME_MAX_LENGTH)
+            val meetingName = meetingName.value
+            return meetingName.isNotEmpty() && meetingName.length <= MEETING_NAME_MAX_LENGTH
         }
 
         private fun isValidMeetingDateTime(): Boolean {
@@ -154,37 +164,44 @@ class MeetingCreationViewModel
         private fun isValidDestination(): Boolean {
             val destinationAddress = destinationAddress.value ?: return false
             return AddressValidator.isValid(destinationAddress.detailAddress).also {
-                if (!it) _invalidDestinationEvent.setValue(Unit)
+                viewModelScope.launch {
+                    if (!it) _invalidDestinationEvent.emit(Unit)
+                }
             }
         }
 
         fun updateMeetingDate(meetingDate: LocalDate) {
             val now = LocalDate.now()
             if (now.isAfter(meetingDate)) {
-                _invalidMeetingDateEvent.setValue(Unit)
+                viewModelScope.launch { _invalidMeetingDateEvent.emit(Unit) }
                 return
             }
             this.meetingDate.value = meetingDate
         }
 
         fun moveOnNextPage() {
-            checkInfoValidity()
-            if (isValidInfo.value == true) {
-                _nextPageEvent.setValue(Unit)
-                return
-            }
-            if (meetingCreationInfoType.value == MeetingCreationInfoType.TIME) {
-                _invalidMeetingTimeEvent.setValue(Unit)
+            viewModelScope.launch {
+                if (_isValidInfo.value) {
+                    _nextPageEvent.emit(Unit)
+                } else if (meetingCreationInfoType.value == MeetingCreationInfoType.TIME) {
+                    _invalidMeetingTimeEvent.emit(Unit)
+                }
             }
         }
 
         fun navigateToIntro() {
-            _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToMeetings)
+            viewModelScope.launch {
+                _navigateAction.emit(MeetingCreationNavigateAction.NavigateToMeetings)
+            }
         }
 
         override fun onClickCreationMeeting() {
-            val inviteCode = inviteCode.value ?: return
-            _navigateAction.setValue(MeetingCreationNavigateAction.NavigateToMeetingJoin(inviteCode))
+            val inviteCode = _inviteCode.value ?: return
+            viewModelScope.launch {
+                _navigateAction.emit(
+                    MeetingCreationNavigateAction.NavigateToMeetingJoin(inviteCode),
+                )
+            }
         }
 
         companion object {
