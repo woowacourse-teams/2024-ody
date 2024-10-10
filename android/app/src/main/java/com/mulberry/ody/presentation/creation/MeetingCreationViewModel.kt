@@ -37,8 +37,7 @@ class MeetingCreationViewModel
     ) : BaseViewModel(), MeetingCreationListener {
         val meetingCreationInfoType = MutableStateFlow<MeetingCreationInfoType?>(null)
 
-        private val _isValidInfo = MutableStateFlow(false)
-        val isValidInfo: StateFlow<Boolean> = _isValidInfo
+        val isValidInfo = MutableStateFlow(false)
 
         val meetingName: MutableStateFlow<String> = MutableStateFlow("")
         val meetingNameLength: StateFlow<Int> =
@@ -85,7 +84,7 @@ class MeetingCreationViewModel
                 ) { _, _, _, _, _ ->
                     checkInfoValidity()
                 }.collect { isValid ->
-                    _isValidInfo.value = isValid
+                    isValidInfo.value = isValid
                 }
             }
         }
@@ -181,7 +180,7 @@ class MeetingCreationViewModel
 
         fun moveOnNextPage() {
             viewModelScope.launch {
-                if (_isValidInfo.value) {
+                if (isValidInfo.value) {
                     _nextPageEvent.emit(Unit)
                 } else if (meetingCreationInfoType.value == MeetingCreationInfoType.TIME) {
                     _invalidMeetingTimeEvent.emit(Unit)

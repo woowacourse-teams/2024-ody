@@ -50,7 +50,7 @@ class AddressSearchViewModel
         val addressUiModels: StateFlow<List<AddressUiModel>> =
             addresses.map { it.toAddressUiModels() }.stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
+                started = SharingStarted.Eagerly,
                 initialValue = emptyList(),
             )
 
@@ -62,7 +62,7 @@ class AddressSearchViewModel
         }
 
         fun searchAddress() {
-            val addressSearchKeyword = addressSearchKeyword.value ?: return
+            val addressSearchKeyword = addressSearchKeyword.value
             if (addressSearchKeyword.isEmpty()) return
 
             viewModelScope.launch {
