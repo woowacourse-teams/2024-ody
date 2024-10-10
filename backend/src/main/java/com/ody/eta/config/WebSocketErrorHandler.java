@@ -1,6 +1,5 @@
 package com.ody.eta.config;
 
-import com.ody.common.exception.OdyException;
 import com.ody.common.exception.OdyWebSocketException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -23,21 +22,14 @@ public class WebSocketErrorHandler extends StompSubProtocolErrorHandler {
             log.warn("message: {}", message);
             return createErrorMessage(message);
         }
-
-        if (cause instanceof OdyException) {
-            log.warn("message: {}", message);
-            return createErrorMessage(message);
-        }
-
-        if (cause instanceof Exception) {
-            log.error("exception: {}", cause);
-            return createErrorMessage("서버 에러");
-        }
         return super.handleClientMessageProcessingError(clientMessage, ex);
     }
 
     private Message<byte[]> createErrorMessage(String exceptionMessage) {
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
+        accessor.setMessage(exceptionMessage);
+        accessor.setLeaveMutable(true);
+
         return MessageBuilder.createMessage(exceptionMessage.getBytes(), accessor.getMessageHeaders());
     }
 }
