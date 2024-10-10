@@ -34,8 +34,7 @@ class EtaDashboardNotification(private val context: Context) {
     }
 
     fun createNotification(meetingId: Long): Notification {
-        val intent = Intent(context, MeetingsActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(context, meetingId.toInt(), intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = createPendingIntent(meetingId)
 
         return NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(context.getString(R.string.app_name))
@@ -44,14 +43,25 @@ class EtaDashboardNotification(private val context: Context) {
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-            .setVibrate(longArrayOf(1, 1000))
+            .setVibrate(VIBRATE_PATTERN)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
+    }
+
+    private fun createPendingIntent(meetingId: Long): PendingIntent {
+        val intent = Intent(context, MeetingsActivity::class.java)
+        return PendingIntent.getActivity(
+            context,
+            meetingId.toInt(),
+            intent,
+            PendingIntent.FLAG_IMMUTABLE,
+        )
     }
 
     companion object {
         private const val CHANNEL_ID = "channel_id"
         private const val CHANNEL_NAME = "channel_name"
         private const val CHANNEL_DESCRIPTION = "channel_description"
+        private val VIBRATE_PATTERN: LongArray = longArrayOf(1, 1000)
     }
 }
