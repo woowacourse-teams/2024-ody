@@ -1,3 +1,4 @@
+
 name: backend-cd-prod
 
 on:
@@ -84,7 +85,10 @@ jobs:
       - name: Set up Container And Run Docker Image
         run: |
           docker stop $DOCKER_CONTAINER_NAME || true
-          docker rm $DOCKER_CONTAINER_NAME || true     
+          docker rm $DOCKER_CONTAINER_NAME || true
+          
+          sleep 20
+          
           docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
 
       - name: Health Check with Retry
