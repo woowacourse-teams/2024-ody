@@ -33,7 +33,10 @@ object FakeMeetingRepository : MeetingRepository {
         return ApiResult.Success(mateEtaInfo)
     }
 
-    override suspend fun upsertMateEta(meetingId: Long, mateEtaInfo: MateEtaInfo): ApiResult<Unit> {
+    override suspend fun upsertMateEta(
+        meetingId: Long,
+        mateEtaInfo: MateEtaInfo,
+    ): ApiResult<Unit> {
         return ApiResult.Success(Unit)
     }
 

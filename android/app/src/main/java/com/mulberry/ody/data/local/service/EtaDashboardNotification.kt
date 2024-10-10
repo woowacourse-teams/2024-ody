@@ -38,9 +38,8 @@ class EtaDashboardNotification
             val pendingIntent = createPendingIntent(meetingId)
 
             return NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle(context.getString(R.string.app_name))
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentText(context.getString(R.string.eta_dashboard_background_location))
+                .setContentTitle(context.getString(R.string.eta_dashboard_background_location))
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
