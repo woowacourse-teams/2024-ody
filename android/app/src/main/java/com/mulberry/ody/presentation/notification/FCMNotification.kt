@@ -14,6 +14,10 @@ import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_NOTIFICATION_LOG
 
 class FCMNotification(private val context: Context) {
+    private val notificationManager: NotificationManager by lazy {
+        context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    }
+
     init {
         createNotificationChannel()
     }
@@ -27,8 +31,6 @@ class FCMNotification(private val context: Context) {
             )
         channel.description = NOTIFICATION_DESCRIPTION
 
-        val notificationManager =
-            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -50,9 +52,13 @@ class FCMNotification(private val context: Context) {
     ): String =
         when (type) {
             NotificationType.ENTRY -> context.getString(R.string.fcm_notification_entry, nickname)
-            NotificationType.DEPARTURE_REMINDER -> context.getString(R.string.fcm_notification_departure_reminder, nickname)
+            NotificationType.DEPARTURE_REMINDER ->
+                context.getString(R.string.fcm_notification_departure_reminder, nickname)
+
             NotificationType.NUDGE -> context.getString(R.string.fcm_notification_nudge, nickname)
-            NotificationType.ETA_NOTICE -> context.getString(R.string.fcm_notification_eta_notice, meetingName)
+            NotificationType.ETA_NOTICE ->
+                context.getString(R.string.fcm_notification_eta_notice, meetingName)
+
             NotificationType.DEFAULT -> ""
         }
 
@@ -62,12 +68,8 @@ class FCMNotification(private val context: Context) {
     ): PendingIntent? {
         val navigationTarget =
             when (type) {
-                NotificationType.ENTRY,
-                NotificationType.DEPARTURE_REMINDER,
-                -> NAVIGATE_TO_NOTIFICATION_LOG
-                NotificationType.NUDGE,
-                NotificationType.ETA_NOTICE,
-                -> NAVIGATE_TO_ETA_DASHBOARD
+                NotificationType.ENTRY, NotificationType.DEPARTURE_REMINDER -> NAVIGATE_TO_NOTIFICATION_LOG
+                NotificationType.NUDGE, NotificationType.ETA_NOTICE -> NAVIGATE_TO_ETA_DASHBOARD
                 NotificationType.DEFAULT -> ""
             }
 
@@ -84,7 +86,7 @@ class FCMNotification(private val context: Context) {
         msg: String?,
         intent: PendingIntent?,
     ) {
-        val mBuilder: NotificationCompat.Builder =
+        val notificationBuilder =
             NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -92,18 +94,17 @@ class FCMNotification(private val context: Context) {
                 .setContentIntent(intent)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setVibrate(longArrayOf(1, 1000))
+                .setVibrate(VIBRATE_PATTERN)
 
-        val notificationManager: NotificationManager =
-            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
-        notificationManager.notify(0, mBuilder.build())
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
     companion object {
+        private const val NOTIFICATION_ID = 0
         private const val NOTIFICATION_CHANNEL_NAME = "notification_channel_name"
         private const val NOTIFICATION_DESCRIPTION = "notification_description_name"
         private const val NOTIFICATION_CHANNEL_ID = "notification_id"
         private const val NOTIFICATION_REQUEST_CODE = 1000
+        private val VIBRATE_PATTERN: LongArray = longArrayOf(1, 1000)
     }
 }

@@ -23,7 +23,10 @@ import com.mulberry.ody.presentation.join.listener.MeetingJoinListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDateTime
+import java.time.ZoneId
 import javax.inject.Inject
+import kotlin.math.max
 
 @HiltViewModel
 class MeetingJoinViewModel
@@ -53,7 +56,7 @@ class MeetingJoinViewModel
                     val longitude = location.longitude.toString()
                     val latitude = location.latitude.toString()
 
-                    addressRepository.fetchAddressesByCoord(longitude, latitude).onSuccess {
+                    addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
                         departureAddress.value =
                             Address(
                                 detailAddress = it ?: "",
@@ -72,33 +75,32 @@ class MeetingJoinViewModel
         }
 
         fun joinMeeting(inviteCode: String) {
-            val departureAddress = departureAddress.value ?: return
+            val meetingJoinInfo = createMeetingJoinInfo(inviteCode) ?: return
 
             viewModelScope.launch {
                 startLoading()
-                joinRepository.postMates(
-                    MeetingJoinInfo(
-                        inviteCode,
-                        departureAddress.detailAddress,
-                        departureAddress.latitude,
-                        departureAddress.longitude,
-                    ),
-                ).onSuccess { meeting ->
-                    matesEtaRepository.reserveEtaFetchingJob(
-                        meeting.meetingId,
-                        meeting.meetingDateTime,
-                    )
-                    _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(meeting.meetingId))
-                }.onFailure { code, errorMessage ->
-                    handleError()
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    Timber.e("$code $errorMessage")
-                }.onNetworkError {
-                    handleNetworkError()
-                    lastFailedAction = { joinMeeting(inviteCode) }
-                }
+                joinRepository.postMates(meetingJoinInfo)
+                    .onSuccess {
+                        matesEtaRepository.reserveEtaFetchingJob(it.meetingId, it.meetingDateTime)
+                        _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { joinMeeting(inviteCode) }
+                    }
                 stopLoading()
             }
+        }
+
+        private fun createMeetingJoinInfo(inviteCode: String): MeetingJoinInfo? {
+            val address = departureAddress.value ?: return null
+            return MeetingJoinInfo(
+                inviteCode = inviteCode,
+                departureAddress = address,
+            )
         }
 
         private fun isValidDeparturePoint(): Boolean {

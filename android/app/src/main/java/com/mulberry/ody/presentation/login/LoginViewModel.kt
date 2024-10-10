@@ -39,10 +39,10 @@ class LoginViewModel
             }
         }
 
-        fun checkIfLogined() {
+        fun checkIfLoggedIn() {
             viewModelScope.launch {
                 authTokenRepository.fetchAuthToken().onSuccess {
-                    if (loginRepository.checkIfLogined() && it.accessToken.isNotEmpty()) {
+                    if (loginRepository.checkIfLoggedIn() && it.accessToken.isNotEmpty()) {
                         navigateToMeetings()
                     }
                 }

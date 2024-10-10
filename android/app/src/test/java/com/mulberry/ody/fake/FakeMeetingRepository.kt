@@ -17,7 +17,7 @@ object FakeMeetingRepository : MeetingRepository {
         if (inviteCode.length <= 8) {
             ApiResult.Success(Unit)
         } else {
-            ApiResult.Failure(400, "")
+            ApiResult.Failure(404, "")
         }
 
     override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String> {

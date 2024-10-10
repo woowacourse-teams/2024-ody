@@ -27,9 +27,13 @@ class InviteCodeActivity : BindingActivity<ActivityInviteCodeBinding>(R.layout.a
     }
 
     private fun initializeObserve() {
+        viewModel.alreadyParticipatedEvent.observe(this) {
+            viewModel.clearInviteCode()
+            showSnackBar(R.string.invite_code_already_participated)
+        }
         viewModel.invalidInviteCodeEvent.observe(this) {
             viewModel.clearInviteCode()
-            showSnackBar(R.string.invalid_invite_code)
+            showSnackBar(R.string.invite_code_invalid_invite_code)
         }
         viewModel.navigateAction.observe(this) {
             navigateToJoinView()

@@ -3,6 +3,7 @@ package com.ody.route.service;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
+import com.ody.route.domain.ClientType;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.dto.DistanceMatrixElementStatus;
 import com.ody.route.dto.DistanceMatrixResponse;
@@ -18,7 +19,6 @@ public class GoogleRouteClient implements RouteClient {
 
     private final String apiKey;
     private final RestClient restClient;
-
 
     public GoogleRouteClient(RestClient.Builder routeRestClientBuilder, String apiKey) {
         this.apiKey = apiKey;
@@ -85,5 +85,10 @@ public class GoogleRouteClient implements RouteClient {
             );
             throw new OdyBadRequestException("Google Maps API 응답 element 에러");
         }
+    }
+
+    @Override
+    public ClientType getClientType() {
+        return ClientType.GOOGLE;
     }
 }

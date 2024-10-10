@@ -11,24 +11,24 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 class DefaultMatesEtaRepository
-    @Inject
-    constructor(
-        private val etaDashboardAlarm: EtaDashboardAlarm,
-        private val matesEtaInfoDao: MateEtaInfoDao,
-    ) : MatesEtaRepository {
-        override fun reserveEtaFetchingJob(
-            meetingId: Long,
-            meetingDateTime: LocalDateTime,
-        ) {
-            etaDashboardAlarm.reserveEtaDashboard(meetingId, meetingDateTime)
-        }
-
-        override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> =
-            matesEtaInfoDao.getMateEtaInfo(meetingId).map { it?.toMateEtaInfo() }
-
-        override suspend fun clearEtaFetchingJob() {
-            matesEtaInfoDao.deleteAll()
-        }
-
-        private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
+@Inject
+constructor(
+    private val etaDashboardAlarm: EtaDashboardAlarm,
+    private val matesEtaInfoDao: MateEtaInfoDao,
+) : MatesEtaRepository {
+    override fun reserveEtaFetchingJob(
+        meetingId: Long,
+        meetingDateTime: LocalDateTime,
+    ) {
+        etaDashboardAlarm.reserveEtaDashboard(meetingId, meetingDateTime)
     }
+
+    override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> =
+        matesEtaInfoDao.getMateEtaInfo(meetingId).map { it?.toMateEtaInfo() }
+
+    override suspend fun clearEtaFetchingJob() {
+        matesEtaInfoDao.deleteAll()
+    }
+
+    private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
+}

@@ -67,9 +67,6 @@
     <string name="meeting_time_separator">:</string>
     <string name="invalid_meeting_time">현재 이후의 시간을 선택해 주세요!</string>
 
-    <!-- activity_meeting_completion.xml -->
-    <string name="meeting_completion_explain">거의 다 왔어요!</string>
-
     <!-- fragment_join_nickname.xml -->
     <string name="nickname_question_front">닉네임</string>
     <string name="nickname_question_back">을 알려주세요!</string>
@@ -87,7 +84,8 @@
     <string name="invite_code_input_front">초대 코드</string>
     <string name="invite_code_input_back">를 입력해 주세요!</string>
     <string name="invite_code_input_hint">초대 코드</string>
-    <string name="invalid_invite_code">초대 코드가 뭔가 이상한데요? 🤔</string>
+    <string name="invite_code_invalid_invite_code">초대 코드가 뭔가 이상한데요? 🤔</string>
+    <string name="invite_code_already_participated">이미 참여한 약속입니다.</string>
 
     <!-- activity_login -->
     <string name="login_logout_success">로그아웃 되었습니다.</string>
