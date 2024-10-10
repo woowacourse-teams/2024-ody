@@ -85,16 +85,10 @@ class MeetingJoinViewModel
                         departureAddress.longitude,
                     ),
                 ).onSuccess { meeting ->
-                    repeat(10) {
-                        matesEtaRepository.reserveEtaFetchingJob(
-                            it.toLong() + 1, // 0으로 하면 foreground service 알림이 안뜨기 때문에 예외 발생
-                            LocalDateTime.now().plusMinutes(45 * (it.toLong() + 1)),
-                        )
-                    }
-//                    matesEtaRepository.reserveEtaFetchingJob(
-//                        meeting.meetingId,
-//                        meeting.meetingDateTime,
-//                    )
+                    matesEtaRepository.reserveEtaFetchingJob(
+                        meeting.meetingId,
+                        meeting.meetingDateTime,
+                    )
                     _navigateAction.setValue(MeetingJoinNavigateAction.JoinNavigateToRoom(meeting.meetingId))
                 }.onFailure { code, errorMessage ->
                     handleError()

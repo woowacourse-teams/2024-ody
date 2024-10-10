@@ -1,7 +1,6 @@
 package com.mulberry.ody.di
 
 import android.content.Context
-import androidx.work.WorkManager
 import com.mulberry.ody.data.local.service.AlarmManagerHelper
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.gps.GeoLocationHelper
@@ -17,14 +16,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    @Provides
-    @Singleton
-    fun provideWorkManager(
-        @ApplicationContext context: Context,
-    ): WorkManager {
-        return WorkManager.getInstance(context)
-    }
-
     @Provides
     @Singleton
     fun provideNotificationHelper(
