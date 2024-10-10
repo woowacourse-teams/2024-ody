@@ -23,7 +23,6 @@ import com.mulberry.ody.presentation.join.listener.MeetingJoinListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel

@@ -43,7 +43,11 @@ class EtaDashboardService : Service() {
         return null
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent,
+        flags: Int,
+        startId: Int,
+    ): Int {
         val meetingId = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
         if (meetingId == MEETING_ID_DEFAULT_VALUE) {
             return super.onStartCommand(intent, flags, startId)
@@ -66,12 +70,13 @@ class EtaDashboardService : Service() {
     private fun openEtaDashboard(meetingId: Long) {
         meetingJobs[meetingId]?.cancel()
 
-        val job = CoroutineScope(Dispatchers.IO).launch {
-            while (isActive) {
-                upsertEtaDashboard(meetingId)
-                delay(POLLING_INTERVAL)
+        val job =
+            CoroutineScope(Dispatchers.IO).launch {
+                while (isActive) {
+                    upsertEtaDashboard(meetingId)
+                    delay(POLLING_INTERVAL)
+                }
             }
-        }
 
         meetingJobs[meetingId] = job
     }
@@ -89,7 +94,7 @@ class EtaDashboardService : Service() {
                     meetingId,
                     isMissing = false,
                     location.latitude.toString(),
-                    location.longitude.toString()
+                    location.longitude.toString(),
                 )
             },
             onFailure = {
@@ -132,7 +137,11 @@ class EtaDashboardService : Service() {
         private const val DEFAULT_LATITUDE = "0.0"
         private const val DEFAULT_LONGITUDE = "0.0"
 
-        fun getIntent(context: Context, meetingId: Long, isOpen: Boolean = true): Intent {
+        fun getIntent(
+            context: Context,
+            meetingId: Long,
+            isOpen: Boolean = true,
+        ): Intent {
             return Intent(context, EtaDashboardService::class.java).apply {
                 putExtra(MEETING_ID_KEY, meetingId)
                 action = if (isOpen) OPEN_ACTION else CLOSE_ACTION

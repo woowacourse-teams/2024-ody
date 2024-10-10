@@ -7,7 +7,10 @@ import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_KEY
 
 class EtaDashboardCloseBroadcastReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
         val meetingId = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
         if (meetingId == MEETING_ID_DEFAULT_VALUE) return
 

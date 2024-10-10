@@ -76,7 +76,10 @@ class EtaDashboardAlarm(private val context: Context) {
     }
 
     @SuppressLint("ScheduleExactAlarm")
-    private fun reserve(triggerAtMillis: Long, pendingIntent: PendingIntent) {
+    private fun reserve(
+        triggerAtMillis: Long,
+        pendingIntent: PendingIntent,
+    ) {
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             triggerAtMillis,

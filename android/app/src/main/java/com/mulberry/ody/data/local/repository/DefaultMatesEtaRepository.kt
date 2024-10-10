@@ -20,7 +20,7 @@ class DefaultMatesEtaRepository
             meetingId: Long,
             meetingDateTime: LocalDateTime,
         ) {
-              etaDashboardAlarm.reserveEtaDashboard(meetingId, meetingDateTime)
+            etaDashboardAlarm.reserveEtaDashboard(meetingId, meetingDateTime)
         }
 
         override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> =
