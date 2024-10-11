@@ -12,7 +12,7 @@ data class MeetingRequest(
     @Json(name = "time")
     val time: String,
     @Json(name = "targetAddress")
-    val targetAddress: String,
+    val targetPlaceName: String,
     @Json(name = "targetLatitude")
     val targetLatitude: String,
     @Json(name = "targetLongitude")

@@ -1,10 +1,9 @@
 package com.mulberry.ody.domain.model
 
+import java.time.LocalDateTime
+
 data class MeetingCreationInfo(
     val name: String,
-    val date: String,
-    val time: String,
-    val targetAddress: String,
-    val targetLatitude: String,
-    val targetLongitude: String,
+    val dateTime: LocalDateTime,
+    val destinationAddress: Address,
 )

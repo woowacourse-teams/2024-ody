@@ -17,7 +17,7 @@ object FakeMeetingRepository : MeetingRepository {
         if (inviteCode.length <= 8) {
             ApiResult.Success(Unit)
         } else {
-            ApiResult.Failure(400, "")
+            ApiResult.Failure(404, "")
         }
 
     override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String> {
@@ -29,8 +29,15 @@ object FakeMeetingRepository : MeetingRepository {
         isMissing: Boolean,
         currentLatitude: String,
         currentLongitude: String,
-    ): Result<MateEtaInfo> {
-        return Result.success(mateEtaInfo)
+    ): ApiResult<MateEtaInfo> {
+        return ApiResult.Success(mateEtaInfo)
+    }
+
+    override suspend fun upsertMateEta(
+        meetingId: Long,
+        mateEtaInfo: MateEtaInfo,
+    ): ApiResult<Unit> {
+        return ApiResult.Success(Unit)
     }
 
     override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> {

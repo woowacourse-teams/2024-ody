@@ -38,7 +38,6 @@ class AddressSearchFragment :
         binding.etAddressSearchKeyword.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 viewModel.searchAddress()
-                true
             }
             false
         }

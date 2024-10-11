@@ -20,9 +20,6 @@ import org.springframework.http.HttpHeaders;
 @Import({FixtureGenerator.class})
 class MemberControllerTest extends BaseControllerTest {
 
-    @Autowired
-    private FixtureGenerator fixtureGenerator;
-
     @MockBean
     protected KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 

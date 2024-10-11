@@ -1,12 +1,9 @@
 package com.mulberry.ody.presentation.creation
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -18,7 +15,6 @@ import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.ViewPagerAdapter
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
-import com.mulberry.ody.presentation.creation.complete.MeetingCompletionActivity
 import com.mulberry.ody.presentation.creation.date.MeetingDateFragment
 import com.mulberry.ody.presentation.creation.destination.MeetingDestinationFragment
 import com.mulberry.ody.presentation.creation.name.MeetingNameFragment
@@ -35,20 +31,11 @@ class MeetingCreationActivity :
     private val fragments: List<Fragment> by lazy {
         listOf(
             MeetingNameFragment(),
+            MeetingDestinationFragment(),
             MeetingDateFragment(),
             MeetingTimeFragment(),
-            MeetingDestinationFragment(),
         )
     }
-    private val meetingCompletionLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode != Activity.RESULT_OK) {
-                return@registerForActivityResult
-            }
-            val inviteCode = viewModel.inviteCode.value ?: return@registerForActivityResult
-            startActivity(MeetingJoinActivity.getIntent(inviteCode, this))
-            finish()
-        }
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -90,8 +77,9 @@ class MeetingCreationActivity :
                     finish()
                 }
 
-                MeetingCreationNavigateAction.NavigateToCreationComplete -> {
-                    meetingCompletionLauncher.launch(Intent(MeetingCompletionActivity.getIntent(this)))
+                is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
+                    startActivity(MeetingJoinActivity.getIntent(it.inviteCode, this))
+                    finish()
                 }
             }
         }

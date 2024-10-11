@@ -18,7 +18,7 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
         super.onCreate(savedInstanceState)
         initializeObserve()
         viewModel.checkIfNavigated()
-        viewModel.checkIfLogined()
+        viewModel.checkIfLoggedIn()
     }
 
     override fun initializeBinding() {

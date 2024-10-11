@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
-import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
 import com.mulberry.ody.domain.repository.ody.LoginRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.MutableSingleLiveData
@@ -22,11 +21,11 @@ class LoginViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val authTokenRepository: AuthTokenRepository,
         private val loginRepository: LoginRepository,
         private val savedStateHandle: SavedStateHandle,
     ) : BaseViewModel() {
-        private val _navigatedReason: MutableSingleLiveData<LoginNavigatedReason> = MutableSingleLiveData()
+        private val _navigatedReason: MutableSingleLiveData<LoginNavigatedReason> =
+            MutableSingleLiveData()
         val navigatedReason: SingleLiveData<LoginNavigatedReason> get() = _navigatedReason
 
         private val _navigateAction: MutableSingleLiveData<LoginNavigateAction> =
@@ -34,17 +33,15 @@ class LoginViewModel
         val navigateAction: SingleLiveData<LoginNavigateAction> get() = _navigateAction
 
         fun checkIfNavigated() {
-            savedStateHandle.get<LoginNavigatedReason>(NAVIGATED_REASON) ?.let { reason ->
+            savedStateHandle.get<LoginNavigatedReason>(NAVIGATED_REASON)?.let { reason ->
                 _navigatedReason.setValue(reason)
             }
         }
 
-        fun checkIfLogined() {
+        fun checkIfLoggedIn() {
             viewModelScope.launch {
-                authTokenRepository.fetchAuthToken().onSuccess {
-                    if (loginRepository.checkIfLogined() && it.accessToken.isNotEmpty()) {
-                        navigateToMeetings()
-                    }
+                if (loginRepository.checkIfLoggedIn()) {
+                    navigateToMeetings()
                 }
             }
         }

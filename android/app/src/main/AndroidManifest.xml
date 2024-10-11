@@ -4,6 +4,9 @@
 
     <uses-configuration android:name="android:permission.POST_NOTIFICATIONS" />
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -37,8 +40,7 @@
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove">
-        </provider>
+            tools:node="remove" />
 
         <activity
             android:name=".presentation.splash.SplashActivity"
@@ -80,19 +82,17 @@
         <activity
             android:name=".presentation.join.MeetingJoinActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".presentation.join.complete.JoinCompleteActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.creation.complete.MeetingCompletionActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".presentation.creation.MeetingCreationActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".presentation.room.MeetingRoomActivity"
             android:exported="false"
@@ -119,6 +119,15 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".data.local.service.EtaDashboardService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
+        <receiver android:name=".data.local.service.EtaDashboardOpenBroadcastReceiver" />
+        <receiver android:name=".data.local.service.EtaDashboardCloseBroadcastReceiver" />
+
     </application>
 
 </manifest>

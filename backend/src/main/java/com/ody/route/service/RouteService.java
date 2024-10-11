@@ -14,11 +14,13 @@ import org.springframework.stereotype.Service;
 public class RouteService {
 
     private final List<RouteClient> routeClients;
+    private final ApiCallService apiCallService;
 
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         for (RouteClient client : routeClients) {
             try {
                 RouteTime routeTime = client.calculateRouteTime(origin, target);
+                apiCallService.increaseCountByRouteClient(client);
                 log.info("{}를 사용한 소요 시간 계산 성공", client.getClass().getSimpleName());
                 return routeTime;
             } catch (Exception exception) {
