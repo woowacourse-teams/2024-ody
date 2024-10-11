@@ -40,7 +40,8 @@ public class Notification extends BaseEntity {
     @NotNull
     private NotificationType type;
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMP(6)")
+    @NotNull
+    @Column(columnDefinition = "TIMESTAMP(6)")
     private LocalDateTime sendAt;
 
     @Enumerated(value = EnumType.STRING)
