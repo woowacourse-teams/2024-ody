@@ -26,7 +26,7 @@ abstract class BindingFragment<T : ViewDataBinding>(
     private var _binding: T? = null
     protected val binding: T
         get() = requireNotNull(_binding)
-    private val analyticsHelper: AnalyticsHelper by lazy {
+    val analyticsHelper: AnalyticsHelper by lazy {
         FirebaseAnalyticsHelper(requireContext())
     }
     private var snackBar: Snackbar? = null
