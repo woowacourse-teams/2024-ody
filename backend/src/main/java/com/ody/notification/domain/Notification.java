@@ -2,7 +2,6 @@ package com.ody.notification.domain;
 
 import com.ody.common.domain.BaseEntity;
 import com.ody.mate.domain.Mate;
-import com.ody.util.TimeUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -116,5 +115,4 @@ public class Notification extends BaseEntity {
     public void updateStatusToDismissed() {
         this.status = NotificationStatus.DISMISSED;
     }
-
 }
