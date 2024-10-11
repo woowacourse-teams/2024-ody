@@ -8,7 +8,6 @@ import static org.mockito.ArgumentMatchers.any;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
-import com.ody.common.FixtureGenerator;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
@@ -18,6 +17,7 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
+import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.util.TimeUtil;
@@ -41,7 +41,7 @@ class MeetingServiceTest extends BaseServiceTest {
     private MeetingService meetingService;
 
     @Autowired
-    private FixtureGenerator fixtureGenerator;
+    private MeetingRepository meetingRepository;
 
     @MockBean
     private TaskScheduler taskScheduler;
@@ -214,14 +214,21 @@ class MeetingServiceTest extends BaseServiceTest {
     @Test
     void scheduleOverdueMeetings() {
         CronExpression expression = CronExpression.parse("0 0 4 * * *");
-        LocalDateTime dateTime = LocalDateTime.of(2024, 10, 11, 3, 59, 59);
+        LocalDateTime dateTime = LocalDateTime.of(2024, 10, 10, 3, 59, 59);
         LocalDateTime nextExecutionTime = expression.next(dateTime);
 
         assertAll(
-                () -> assertThat(LocalDateTime.of(2024, 10, 11, 3, 59, 59)).isNotEqualTo(nextExecutionTime),
-                () -> assertThat(LocalDateTime.of(2024, 10, 11, 4, 0, 1)).isNotEqualTo(nextExecutionTime),
-                () -> assertThat(LocalDateTime.of(2024, 10, 11, 4, 0, 0)).isEqualTo(nextExecutionTime),
-                () -> assertThat(LocalDateTime.of(2024, 10, 12, 4, 0, 0)).isEqualTo(expression.next(nextExecutionTime))
+                () -> assertThat(LocalDateTime.of(2024, 10, 10, 3, 59, 59)).isNotEqualTo(nextExecutionTime),
+                () -> assertThat(LocalDateTime.of(2024, 10, 10, 4, 0, 1)).isNotEqualTo(nextExecutionTime),
+                () -> assertThat(LocalDateTime.of(2024, 10, 10, 4, 0, 0)).isEqualTo(nextExecutionTime),
+                () -> assertThat(LocalDateTime.of(2024, 10, 11, 4, 0, 0)).isEqualTo(expression.next(nextExecutionTime))
         );
+
+        Meeting meeting = fixtureGenerator.generateMeeting(dateTime);
+        meetingService.scheduleOverdueMeetings();
+
+        Meeting findMeeting = meetingRepository.findById(meeting.getId()).get();
+
+        assertThat(findMeeting.isOverdue()).isTrue();
     }
 }
