@@ -93,28 +93,19 @@ jobs:
         uses: nick-invision/retry@v2
         with:
           timeout_minutes: 1
-          max_attempts: 3
+          max_attempts: 5
+          retry_wait_seconds: 6
           command: |
-            MAX_RETRIES=5
-            RETRY_DELAY=10
-            for i in $(seq 1 $MAX_RETRIES)
-            do
-              response=$(curl -s https://prod.oody.site/actuator/health)
-              status=$(echo $response | jq -r '.status')
-              if [ "$status" = "UP" ]; then
-                echo "Status is UP. Continuing..."
-                exit 0
-              else
-                echo "Attempt $i: Status is NOT UP. Current status: $status"
-                if [ $i -eq $MAX_RETRIES ]; then
-                  echo "Max retries reached. Failing the job."
-                  exit 1
-                fi
-                echo "Retrying in $RETRY_DELAY seconds..."
-                sleep $RETRY_DELAY
-              fi
-            done
-        continue-on-error: true
+            response=$(curl -s https://prod.oody.site/actuator/health)
+            status=$(echo $response | jq -r '.status')
+            if [ "$status" = "UP" ]; then
+              echo "Status is UP. Continuing..."
+              exit 0
+            else
+              echo "Status is NOT UP."
+              exit 1
+            fi
+        continue-on-error: true # 실패하면 롤백 필요함 (현재는 다음 작업으로 넘어가게함)
 
       - name: Check Docker Process
         run: docker ps
