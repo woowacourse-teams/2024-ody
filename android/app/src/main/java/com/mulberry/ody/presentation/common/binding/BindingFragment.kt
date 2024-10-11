@@ -19,7 +19,6 @@ import com.mulberry.ody.presentation.common.LoadingDialog
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.FirebaseAnalyticsHelper
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 abstract class BindingFragment<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
