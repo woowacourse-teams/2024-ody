@@ -199,7 +199,7 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @DisplayName("참여자의 출발 시간이 현재 시간보다 전이라면 입장 알림 - 출발 알림 순으로 로그 목록이 조회된다.")
     @Test
-    void findAllMeetingLogsOrderOfEntryAndDepartureNotificationWhen() {
+    void findAllMeetingLogsOrderOfEntryAndDepartureNotification() {
         Member member = memberRepository.save(Fixture.MEMBER1);
         Meeting odyMeeting = meetingRepository.save(Fixture.ODY_MEETING); // 약속 시간 : now()
         Mate mate = fixtureGenerator.generateMate(odyMeeting, member); // 소요 시간 : 10분
