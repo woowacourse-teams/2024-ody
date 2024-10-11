@@ -29,7 +29,7 @@ interface MeetingService {
     suspend fun patchMatesEta(
         @Path(value = "meetingId") meetingId: Long,
         @Body matesEtaRequest: MatesEtaRequest,
-    ): MatesEtaResponse
+    ): ApiResult<MatesEtaResponse>
 
     @GET("/v1/meetings/me")
     suspend fun fetchMeetingCatalogs(): ApiResult<MeetingCatalogsResponse>

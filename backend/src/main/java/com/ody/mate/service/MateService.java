@@ -37,9 +37,7 @@ public class MateService {
             Member member,
             Meeting meeting
     ) {
-        if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
-            throw new OdyBadRequestException("약속에 이미 참여한 회원입니다.");
-        }
+        validateAlreadyAttended(member, meeting);
         if (meeting.isOverdue()) {
             throw new OdyBadRequestException("참여 가능한 시간이 지난 약속에 참여할 수 없습니다.");
         }
@@ -47,6 +45,12 @@ public class MateService {
         Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
         notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken());
         return MateSaveResponseV2.from(meeting);
+    }
+
+    public void validateAlreadyAttended(Member member, Meeting meeting) {
+        if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
+            throw new OdyBadRequestException("약속에 이미 참여한 회원입니다.");
+        }
     }
 
     private Mate saveMateAndEta(MateSaveRequestV2 mateSaveRequest, Member member, Meeting meeting) {

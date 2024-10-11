@@ -5,7 +5,6 @@ import com.ody.route.service.OdsayRouteClient;
 import com.ody.route.service.RouteClient;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.ClientHttpRequestFactories;

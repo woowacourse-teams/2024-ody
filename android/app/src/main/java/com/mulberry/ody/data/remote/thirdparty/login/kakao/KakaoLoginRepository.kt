@@ -1,7 +1,6 @@
 package com.mulberry.ody.data.remote.thirdparty.login.kakao
 
 import android.content.Context
-import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
 import com.mulberry.ody.data.remote.core.entity.login.request.LoginRequest
 import com.mulberry.ody.data.remote.core.service.LoginService
@@ -12,6 +11,7 @@ import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map
 import com.mulberry.ody.domain.common.flatMap
 import com.mulberry.ody.domain.model.AuthToken
+import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
 import com.mulberry.ody.domain.repository.ody.FCMTokenRepository
 import com.mulberry.ody.domain.repository.ody.LoginRepository
 import javax.inject.Inject
@@ -22,12 +22,14 @@ class KakaoLoginRepository
         private val loginService: LoginService,
         private val logoutService: LogoutService,
         private val memberService: MemberService,
-        private val odyDatastore: OdyDatastore,
+        private val authTokenRepository: AuthTokenRepository,
         private val kakaoOAuthLoginService: KakaoOAuthLoginService,
         private val fcmTokenRepository: FCMTokenRepository,
     ) : LoginRepository {
-        override fun checkIfLogined(): Boolean {
-            return kakaoOAuthLoginService.checkIfLogined()
+        override suspend fun checkIfLoggedIn(): Boolean {
+            val isKakaoLoggedIn = kakaoOAuthLoginService.checkIfLoggedIn()
+            val isOdyLoggedIn = authTokenRepository.fetchAuthToken().getOrNull() != null
+            return isKakaoLoggedIn && isOdyLoggedIn
         }
 
         override suspend fun login(context: Context): ApiResult<AuthToken> {
@@ -46,7 +48,7 @@ class KakaoLoginRepository
 
             return loginService.postLoginWithKakao(result).map {
                 val token = it.toAuthToken()
-                odyDatastore.setAuthToken(token)
+                authTokenRepository.setAuthToken(token)
                 token
             }
         }
@@ -54,7 +56,7 @@ class KakaoLoginRepository
         override suspend fun logout(): ApiResult<Unit> {
             val kakaoLogoutRequest = kakaoOAuthLoginService.logout()
             val logoutRequest = logoutService.postLogout()
-            odyDatastore.removeAuthToken()
+            authTokenRepository.removeAuthToken()
 
             if (kakaoLogoutRequest.isFailure) {
                 val exception =
@@ -79,7 +81,7 @@ class KakaoLoginRepository
 
         override suspend fun withdrawAccount(): ApiResult<Unit> {
             return memberService.deleteMember().also {
-                if (it.isSuccess) odyDatastore.removeAuthToken()
+                if (it.isSuccess) authTokenRepository.removeAuthToken()
             }
         }
     }

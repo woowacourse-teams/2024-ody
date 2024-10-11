@@ -2,9 +2,7 @@ name: android cd
 on:
   pull_request:
     branches:
-      - main
-    paths:
-      - android/**
+      - 'release-an/**'
     types:
       - closed
 

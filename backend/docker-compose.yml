@@ -24,7 +24,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ody-dev-logs-vol:/ody-dev-logs
+      - /var/logs/ody-dev-logs:/ody-dev-logs
     platform: linux/arm64
     depends_on:
       db:
@@ -32,4 +32,3 @@ services:
 
 volumes:
   ody-dev-db-vol:
-  ody-dev-logs-vol:

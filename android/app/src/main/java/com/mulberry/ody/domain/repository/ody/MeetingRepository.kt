@@ -17,7 +17,12 @@ interface MeetingRepository {
         isMissing: Boolean,
         currentLatitude: String,
         currentLongitude: String,
-    ): Result<MateEtaInfo>
+    ): ApiResult<MateEtaInfo>
+
+    suspend fun upsertMateEta(
+        meetingId: Long,
+        mateEtaInfo: MateEtaInfo,
+    ): ApiResult<Unit>
 
     suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>>
 

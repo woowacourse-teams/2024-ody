@@ -5,13 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.mateEtaInfo
+import java.time.LocalDateTime
 
 object FakeMatesEtaRepository : MatesEtaRepository {
     override fun reserveEtaFetchingJob(
         meetingId: Long,
-        startMillisecond: Long,
-        endMillisecond: Long,
-        interval: Long,
+        meetingDateTime: LocalDateTime,
     ) = Unit
 
     override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> {

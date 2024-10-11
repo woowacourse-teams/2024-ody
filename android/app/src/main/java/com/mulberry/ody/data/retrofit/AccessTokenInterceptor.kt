@@ -1,6 +1,10 @@
 package com.mulberry.ody.data.retrofit
 
+import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
+import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.domain.apiresult.ApiResult
+import com.mulberry.ody.domain.apiresult.map
+import com.mulberry.ody.domain.apiresult.suspendOnSuccess
 import com.mulberry.ody.domain.model.AuthToken
 import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +17,7 @@ class AccessTokenInterceptor
     @Inject
     constructor(
         private val tokenRepository: AuthTokenRepository,
+        private val refreshTokenService: RefreshTokenService,
     ) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val token =
@@ -47,6 +52,10 @@ class AccessTokenInterceptor
 
         private fun refreshAuthToken(): ApiResult<AuthToken> =
             runBlocking(Dispatchers.IO) {
-                tokenRepository.refreshAuthToken()
+                refreshTokenService.postRefreshToken()
+                    .map { it.toAuthToken() }
+                    .suspendOnSuccess {
+                        tokenRepository.setAuthToken(it)
+                    }
             }
     }

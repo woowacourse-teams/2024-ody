@@ -1,6 +1,7 @@
 package com.mulberry.ody.di
 
 import com.mulberry.ody.BuildConfig
+import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.data.retrofit.AccessTokenInterceptor
 import com.mulberry.ody.data.retrofit.ApiResultCallAdapter
 import com.mulberry.ody.data.retrofit.RefreshTokenInterceptor
@@ -188,8 +189,11 @@ object NetworkModule {
     @Provides
     @Singleton
     @AuthTokenInterceptor
-    fun provideAuthTokenInterceptor(authTokenRepository: AuthTokenRepository): Interceptor {
-        return AccessTokenInterceptor(authTokenRepository)
+    fun provideAuthTokenInterceptor(
+        authTokenRepository: AuthTokenRepository,
+        refreshTokenService: RefreshTokenService,
+    ): Interceptor {
+        return AccessTokenInterceptor(authTokenRepository, refreshTokenService)
     }
 
     @Provides
