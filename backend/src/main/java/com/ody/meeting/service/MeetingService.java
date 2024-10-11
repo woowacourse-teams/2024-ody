@@ -119,6 +119,7 @@ public class MeetingService {
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
     }
 
+    @Transactional
     @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
     public void scheduleOverdueMeetings() {
         meetingRepository.updateAllByNotOverdueMeetings();
