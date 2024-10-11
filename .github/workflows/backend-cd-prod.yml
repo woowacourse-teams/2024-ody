@@ -69,7 +69,7 @@ jobs:
     strategy:
       max-parallel: 1 # 직렬처리
       matrix:
-        environment: [ prod, prod-a, prod-b ]
+        environment: [ prod-a, prod-b ]
 
     steps:
       - name: Login to Docker Hub
@@ -86,8 +86,26 @@ jobs:
       - name: Set up Container And Run Docker Image
         run: |
           docker stop $DOCKER_CONTAINER_NAME || true
-          docker rm $DOCKER_CONTAINER_NAME || true     
+          docker rm $DOCKER_CONTAINER_NAME || true          
           docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
+
+      - name: Health Check with Retry
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 1
+          max_attempts: 5
+          retry_wait_seconds: 6
+          command: |
+            response=$(curl -s https://prod.oody.site/actuator/health)
+            status=$(echo $response | jq -r '.status')
+            if [ "$status" = "UP" ]; then
+              echo "Status is UP. Continuing..."
+              exit 0
+            else
+              echo "Status is NOT UP."
+              exit 1
+            fi
+        continue-on-error: true # 실패하면 롤백 필요함 (현재는 다음 작업으로 넘어가게함)
 
       - name: Check Docker Process
         run: docker ps
