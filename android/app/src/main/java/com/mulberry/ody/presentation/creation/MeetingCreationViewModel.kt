@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -51,32 +53,27 @@ class MeetingCreationViewModel
         val meetingDate = MutableStateFlow(LocalDate.now())
 
         private val _invalidMeetingDateEvent = MutableSharedFlow<Unit>()
-        val invalidMeetingDateEvent: SharedFlow<Unit> = _invalidMeetingDateEvent
+        val invalidMeetingDateEvent: SharedFlow<Unit> = _invalidMeetingDateEvent.asSharedFlow()
 
         val meetingHour = MutableStateFlow(-1)
         val meetingMinute = MutableStateFlow(-1)
 
         private val _invalidMeetingTimeEvent = MutableSharedFlow<Unit>()
-        val invalidMeetingTimeEvent: SharedFlow<Unit> = _invalidMeetingTimeEvent
+        val invalidMeetingTimeEvent: SharedFlow<Unit> = _invalidMeetingTimeEvent.asSharedFlow()
 
         val destinationAddress = MutableStateFlow<Address?>(null)
 
         private val _invalidDestinationEvent = MutableSharedFlow<Unit>()
-        val invalidDestinationEvent: SharedFlow<Unit> = _invalidDestinationEvent
+        val invalidDestinationEvent: SharedFlow<Unit> = _invalidDestinationEvent.asSharedFlow()
 
         private val _nextPageEvent = MutableSharedFlow<Unit>()
-        val nextPageEvent: SharedFlow<Unit> = _nextPageEvent
+        val nextPageEvent: SharedFlow<Unit> = _nextPageEvent.asSharedFlow()
 
         private val _navigateAction = MutableSharedFlow<MeetingCreationNavigateAction>()
-        val navigateAction: SharedFlow<MeetingCreationNavigateAction> = _navigateAction
+        val navigateAction: SharedFlow<MeetingCreationNavigateAction> = _navigateAction.asSharedFlow()
 
         private val _inviteCode = MutableStateFlow("")
-        val inviteCode: StateFlow<String> = _inviteCode
-
-        init {
-            Timber.i("$_inviteCode")
-            Timber.i("$inviteCode")
-        }
+        val inviteCode: StateFlow<String> = _inviteCode.asStateFlow()
 
         init {
             initializeIsValidInfo()
