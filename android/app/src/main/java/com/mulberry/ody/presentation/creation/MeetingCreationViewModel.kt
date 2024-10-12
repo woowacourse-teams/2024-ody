@@ -55,8 +55,8 @@ class MeetingCreationViewModel
         private val _invalidMeetingDateEvent = MutableSharedFlow<Unit>()
         val invalidMeetingDateEvent: SharedFlow<Unit> = _invalidMeetingDateEvent.asSharedFlow()
 
-        val meetingHour = MutableStateFlow(-1)
-        val meetingMinute = MutableStateFlow(-1)
+        val meetingHour = MutableStateFlow(MEETING_HOUR_DEFAULT_VALUE)
+        val meetingMinute = MutableStateFlow(MEETING_MINUTE_DEFAULT_VALUE)
 
         private val _invalidMeetingTimeEvent = MutableSharedFlow<Unit>()
         val invalidMeetingTimeEvent: SharedFlow<Unit> = _invalidMeetingTimeEvent.asSharedFlow()
@@ -96,9 +96,7 @@ class MeetingCreationViewModel
         }
 
         fun initializeMeetingTime() {
-            if (meetingHour.value != -1 || meetingMinute.value != -1) {
-                return
-            }
+            if (meetingHour.value != MEETING_HOUR_DEFAULT_VALUE || meetingMinute.value != MEETING_MINUTE_DEFAULT_VALUE) return
             val now = LocalTime.now()
             meetingHour.value = now.hour
             meetingMinute.value = now.minute
@@ -223,5 +221,7 @@ class MeetingCreationViewModel
             val MEETING_MINUTES = (0..<60).toList()
             const val MEETING_NAME_MAX_LENGTH = 15
             private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
+            private const val MEETING_HOUR_DEFAULT_VALUE = -1
+            private const val MEETING_MINUTE_DEFAULT_VALUE = -1
         }
     }
