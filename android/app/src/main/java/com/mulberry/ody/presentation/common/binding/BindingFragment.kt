@@ -7,12 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.LoadingDialog
+import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
+import com.mulberry.ody.presentation.common.analytics.FirebaseAnalyticsHelper
+import kotlinx.coroutines.launch
 
 abstract class BindingFragment<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
@@ -20,8 +26,19 @@ abstract class BindingFragment<T : ViewDataBinding>(
     private var _binding: T? = null
     protected val binding: T
         get() = requireNotNull(_binding)
+    val analyticsHelper: AnalyticsHelper by lazy {
+        FirebaseAnalyticsHelper(requireContext())
+    }
     private var snackBar: Snackbar? = null
     private var dialog: Dialog? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            val bundle = bundleOf(FirebaseAnalytics.Param.SCREEN_NAME to javaClass.simpleName)
+            analyticsHelper.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,5 +91,8 @@ abstract class BindingFragment<T : ViewDataBinding>(
         _binding = null
         snackBar = null
         dialog = null
+        lifecycleScope.launch {
+            analyticsHelper.logEvent(javaClass.simpleName + " destroyed", bundleOf())
+        }
     }
 }
