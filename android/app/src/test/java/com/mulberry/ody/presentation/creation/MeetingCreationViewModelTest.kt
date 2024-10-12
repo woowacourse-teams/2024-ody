@@ -147,7 +147,7 @@ class MeetingCreationViewModelTest {
 
         // then
         val actual = viewModel.isValidInfo.value
-        assertThat(actual).isTrue()
+        assertThat(actual).isTrue
     }
 
     @Test
