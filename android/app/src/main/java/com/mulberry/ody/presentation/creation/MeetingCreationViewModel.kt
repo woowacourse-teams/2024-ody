@@ -53,8 +53,8 @@ class MeetingCreationViewModel
         private val _invalidMeetingDateEvent = MutableSharedFlow<Unit>()
         val invalidMeetingDateEvent: SharedFlow<Unit> = _invalidMeetingDateEvent
 
-        val meetingHour = MutableStateFlow<Int?>(null)
-        val meetingMinute = MutableStateFlow<Int?>(null)
+        val meetingHour = MutableStateFlow(-1)
+        val meetingMinute = MutableStateFlow(-1)
 
         private val _invalidMeetingTimeEvent = MutableSharedFlow<Unit>()
         val invalidMeetingTimeEvent: SharedFlow<Unit> = _invalidMeetingTimeEvent
@@ -70,8 +70,13 @@ class MeetingCreationViewModel
         private val _navigateAction = MutableSharedFlow<MeetingCreationNavigateAction>()
         val navigateAction: SharedFlow<MeetingCreationNavigateAction> = _navigateAction
 
-        private val _inviteCode = MutableStateFlow<String?>(null)
-        val inviteCode: StateFlow<String?> = _inviteCode
+        private val _inviteCode = MutableStateFlow("")
+        val inviteCode: StateFlow<String> = _inviteCode
+
+        init {
+            Timber.i("$_inviteCode")
+            Timber.i("$inviteCode")
+        }
 
         init {
             initializeIsValidInfo()
@@ -94,7 +99,7 @@ class MeetingCreationViewModel
         }
 
         fun initializeMeetingTime() {
-            if (meetingHour.value != null || meetingMinute.value != null) {
+            if (meetingHour.value != -1 || meetingMinute.value != -1) {
                 return
             }
             val now = LocalTime.now()
@@ -125,8 +130,13 @@ class MeetingCreationViewModel
         private fun createMeetingCreationInfo(): MeetingCreationInfo? {
             val name = meetingName.value.ifBlank { return null }
             val date = meetingDate.value ?: return null
-            val hour = meetingHour.value ?: return null
-            val minute = meetingMinute.value ?: return null
+
+            val hour = meetingHour.value
+            val minute = meetingMinute.value
+
+            if (meetingHour.value == -1) return null
+            if (meetingMinute.value == -1) return null
+
             val address = destinationAddress.value ?: return null
 
             return MeetingCreationInfo(
@@ -199,7 +209,9 @@ class MeetingCreationViewModel
         }
 
         override fun onClickCreationMeeting() {
-            val inviteCode = _inviteCode.value ?: return
+            val inviteCode = _inviteCode.value
+            if (inviteCode.isBlank()) return
+
             viewModelScope.launch {
                 _navigateAction.emit(
                     MeetingCreationNavigateAction.NavigateToMeetingJoin(inviteCode),
