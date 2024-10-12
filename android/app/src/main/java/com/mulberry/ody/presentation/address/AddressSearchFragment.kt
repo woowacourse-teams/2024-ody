@@ -5,6 +5,7 @@ import android.view.KeyEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentAddressSearchBinding
 import com.mulberry.ody.presentation.address.adapter.AddressesAdapter
@@ -12,6 +13,7 @@ import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.common.listener.BackListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AddressSearchFragment :
@@ -69,16 +71,24 @@ class AddressSearchFragment :
             showRetrySnackBar { viewModel.retryLastAction() }
         }
 
-        viewModel.addressUiModels.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.addressUiModels.collect {
+                adapter.submitList(it)
+            }
         }
-        viewModel.addressSelectEvent.observe(viewLifecycleOwner) {
-            (parentFragment as? AddressSearchListener)?.onReceive(it)
-            (activity as? AddressSearchListener)?.onReceive(it)
-            onBack()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.addressSelectEvent.collect {
+                (parentFragment as? AddressSearchListener)?.onReceive(it)
+                (activity as? AddressSearchListener)?.onReceive(it)
+                onBack()
+            }
         }
-        viewModel.addressSearchKeyword.observe(viewLifecycleOwner) {
-            if (it.isEmpty()) viewModel.clearAddresses()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.addressSearchKeyword.collect {
+                if (it.isEmpty()) viewModel.clearAddresses()
+            }
         }
     }
 

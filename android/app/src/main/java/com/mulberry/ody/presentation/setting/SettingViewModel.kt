@@ -3,16 +3,17 @@ package com.mulberry.ody.presentation.setting
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
-import com.mulberry.ody.domain.apiresult.onSuccess
+import com.mulberry.ody.domain.apiresult.suspendOnSuccess
 import com.mulberry.ody.domain.repository.ody.LoginRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
-import com.mulberry.ody.presentation.common.MutableSingleLiveData
-import com.mulberry.ody.presentation.common.SingleLiveData
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.login.LoginNavigatedReason
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -25,14 +26,14 @@ class SettingViewModel
         private val loginRepository: LoginRepository,
         private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel() {
-        private val _loginNavigateEvent: MutableSingleLiveData<LoginNavigatedReason> =
-            MutableSingleLiveData()
-        val loginNavigateEvent: SingleLiveData<LoginNavigatedReason> get() = _loginNavigateEvent
+        private val _loginNavigateEvent: MutableSharedFlow<LoginNavigatedReason> =
+            MutableSharedFlow()
+        val loginNavigateEvent: SharedFlow<LoginNavigatedReason> get() = _loginNavigateEvent.asSharedFlow()
 
         fun logout() {
             viewModelScope.launch {
                 loginRepository.logout()
-                _loginNavigateEvent.setValue(LoginNavigatedReason.LOGOUT)
+                _loginNavigateEvent.emit(LoginNavigatedReason.LOGOUT)
             }
         }
 
@@ -40,8 +41,8 @@ class SettingViewModel
             viewModelScope.launch {
                 startLoading()
                 loginRepository.withdrawAccount()
-                    .onSuccess {
-                        _loginNavigateEvent.setValue(LoginNavigatedReason.WITHDRAWAL)
+                    .suspendOnSuccess {
+                        _loginNavigateEvent.emit(LoginNavigatedReason.WITHDRAWAL)
                         clearEtaFetchingJob()
                     }.onFailure { code, errorMessage ->
                         handleError()

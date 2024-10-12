@@ -6,8 +6,8 @@ import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.presentation.address.model.toAddressUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
-import com.mulberry.ody.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,15 +29,17 @@ class AddressSearchViewModelTest {
     }
 
     @Test
-    fun `주소에 대한 위경도를 받아온다`() {
-        // given
-        viewModel.addressSearchKeyword.value = "사당역"
+    fun `주소에 대한 위경도를 받아온다`() =
+        runTest {
+            // given
+            viewModel.addressSearchKeyword.value = "사당역"
 
-        // when
-        viewModel.searchAddress()
+            // when
+            viewModel.searchAddress()
 
-        // then
-        val actual = viewModel.addressUiModels.getOrAwaitValue()
-        assertThat(actual).isEqualTo(addresses.toAddressUiModels())
-    }
+            // then
+            val actual = viewModel.addressUiModels.value
+
+            assertThat(actual).isEqualTo(addresses.toAddressUiModels())
+        }
 }

@@ -7,7 +7,6 @@ import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.inviteCode
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
-import com.mulberry.ody.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -40,8 +39,8 @@ class MeetingCreationViewModelTest {
         viewModel.initializeMeetingTime()
 
         // then
-        val hour = viewModel.meetingHour.getOrAwaitValue()
-        val minute = viewModel.meetingMinute.getOrAwaitValue()
+        val hour = viewModel.meetingHour.value
+        val minute = viewModel.meetingMinute.value
         assertThat(hour).isEqualTo(nowTime.hour)
         assertThat(minute).isEqualTo(nowTime.minute)
     }
@@ -55,7 +54,7 @@ class MeetingCreationViewModelTest {
         viewModel.createMeeting()
 
         // then
-        val actual = viewModel.inviteCode.getOrAwaitValue()
+        val actual = viewModel.inviteCode.value
         assertThat(actual).isEqualTo(inviteCode)
     }
 
@@ -65,7 +64,7 @@ class MeetingCreationViewModelTest {
         viewModel.createMeeting()
 
         // then
-        assertThat(viewModel.inviteCode.isInitialized).isFalse
+        assertThat(viewModel.inviteCode.value)
     }
 
     @Test
@@ -78,7 +77,7 @@ class MeetingCreationViewModelTest {
         viewModel.meetingName.value = "카키와 술 먹기"
 
         // then
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        val actual = viewModel.isValidInfo.value
         assertThat(actual).isTrue
     }
 
@@ -92,7 +91,7 @@ class MeetingCreationViewModelTest {
         viewModel.meetingName.value = "카키와 술 먹기 카키와 술 먹기 카키와 술 먹기"
 
         // then
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        val actual = viewModel.isValidInfo.value
         assertThat(actual).isFalse
     }
 
@@ -105,7 +104,7 @@ class MeetingCreationViewModelTest {
         viewModel.updateMeetingDate(meetingDate)
 
         // then
-        val actual = viewModel.invalidMeetingDateEvent.getValue()
+        val actual = viewModel.invalidMeetingDateEvent
         assertThat(actual).isNotNull
     }
 
@@ -118,7 +117,7 @@ class MeetingCreationViewModelTest {
         viewModel.updateMeetingDate(meetingDate)
 
         // then
-        val actual = viewModel.meetingDate.getOrAwaitValue()
+        val actual = viewModel.meetingDate.value
         assertThat(actual).isEqualTo(LocalDate.now())
     }
 
@@ -131,7 +130,7 @@ class MeetingCreationViewModelTest {
         viewModel.updateMeetingDate(meetingDate)
 
         // then
-        val actual = viewModel.meetingDate.getOrAwaitValue()
+        val actual = viewModel.meetingDate.value
         assertThat(actual).isEqualTo(LocalDate.of(2030, 7, 28))
     }
 
@@ -147,7 +146,7 @@ class MeetingCreationViewModelTest {
         viewModel.meetingMinute.value = 0
 
         // then
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        val actual = viewModel.isValidInfo.value
         assertThat(actual).isTrue
     }
 
@@ -159,11 +158,11 @@ class MeetingCreationViewModelTest {
 
         // when
         viewModel.meetingDate.value = LocalDate.of(2023, 7, 28)
-        viewModel.meetingHour.value = 18
+        viewModel.meetingHour.value = 17
         viewModel.meetingMinute.value = 0
 
         // then
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        val actual = viewModel.isValidInfo.value
         assertThat(actual).isFalse
     }
 
@@ -177,7 +176,7 @@ class MeetingCreationViewModelTest {
         viewModel.destinationAddress.value = Address(0, "인천광역시 남동구")
 
         // then
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        val actual = viewModel.isValidInfo.value
         assertThat(actual).isTrue
     }
 
@@ -191,7 +190,7 @@ class MeetingCreationViewModelTest {
         viewModel.destinationAddress.value = Address(0, "부산광역시 동구")
 
         // then
-        val actual = viewModel.isValidInfo.getOrAwaitValue()
+        val actual = viewModel.isValidInfo.value
         assertThat(actual).isFalse
     }
 
