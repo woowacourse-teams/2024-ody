@@ -119,7 +119,7 @@ class MeetingCreationViewModel
         }
 
         private fun createMeetingCreationInfo(): MeetingCreationInfo? {
-            val name = meetingName.value.takeIf { it.isNotEmpty() } ?: return null
+            val name = meetingName.value.ifBlank { return null }
             val date = meetingDate.value ?: return null
             val hour = meetingHour.value ?: return null
             val minute = meetingMinute.value ?: return null
