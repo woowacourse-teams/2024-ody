@@ -36,7 +36,7 @@ class AddressSearchViewModel
         val hasAddressSearchKeyword: StateFlow<Boolean> =
             addressSearchKeyword.map { it.isNotEmpty() }.stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
+                started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
                 initialValue = false,
             )
 
@@ -44,7 +44,7 @@ class AddressSearchViewModel
         val isEmptyAddresses: StateFlow<Boolean> =
             addresses.map { it.isEmpty() }.stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
+                started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
                 initialValue = true,
             )
         val addressUiModels: StateFlow<List<AddressUiModel>> =
@@ -94,6 +94,8 @@ class AddressSearchViewModel
 
         companion object {
             private const val TAG = "AddressSearchViewModel"
+
             private const val PAGE_SIZE = 10
+            private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
         }
     }

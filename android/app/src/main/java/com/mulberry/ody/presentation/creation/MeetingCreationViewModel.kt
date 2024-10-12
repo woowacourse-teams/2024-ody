@@ -42,7 +42,11 @@ class MeetingCreationViewModel
         val meetingName: MutableStateFlow<String> = MutableStateFlow("")
         val meetingNameLength: StateFlow<Int> =
             meetingName.map { it.length }
-                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
+                .stateIn(
+                    viewModelScope,
+                    SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
+                    0,
+                )
 
         val meetingDate = MutableStateFlow(LocalDate.now())
 
@@ -209,5 +213,6 @@ class MeetingCreationViewModel
             val MEETING_HOURS = (0..<24).toList()
             val MEETING_MINUTES = (0..<60).toList()
             const val MEETING_NAME_MAX_LENGTH = 15
+            private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
         }
     }
