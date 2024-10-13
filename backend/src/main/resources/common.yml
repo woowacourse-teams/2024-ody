@@ -51,3 +51,6 @@ management:
   health:
     db:
       enabled: false
+
+allowed-origins:
+  api-call: http://localhost:8080, https://dev.oody.site, https://prod.oody.site
