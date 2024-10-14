@@ -36,8 +36,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        Arrays.stream(allowedOrigins)
-                        .forEach(System.out::println);
         registry.addMapping("/admin/api-call/**")
                 .allowedOrigins(allowedOrigins)
                 .allowedMethods("GET", "POST");
