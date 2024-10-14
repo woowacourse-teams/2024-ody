@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="pretendard_bold_56">
+        <item name="android:textSize">56dp</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
     <style name="pretendard_bold_28">
         <item name="android:textSize">28dp</item>
         <item name="android:textColor">@color/gray_800</item>
