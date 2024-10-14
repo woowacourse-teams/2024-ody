@@ -1,7 +1,5 @@
 package com.mulberry.ody.presentation.join
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
@@ -15,8 +13,6 @@ import com.mulberry.ody.domain.repository.ody.JoinRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.domain.validator.AddressValidator
 import com.mulberry.ody.presentation.common.BaseViewModel
-import com.mulberry.ody.presentation.common.MutableSingleLiveData
-import com.mulberry.ody.presentation.common.SingleLiveData
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.common.gps.LocationHelper
@@ -36,100 +32,100 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MeetingJoinViewModel
-@Inject
-constructor(
-    private val analyticsHelper: AnalyticsHelper,
-    private val joinRepository: JoinRepository,
-    private val matesEtaRepository: MatesEtaRepository,
-    private val addressRepository: AddressRepository,
-    private val geoLocationHelper: LocationHelper,
-) : BaseViewModel(), MeetingJoinListener {
-    val departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
+    @Inject
+    constructor(
+        private val analyticsHelper: AnalyticsHelper,
+        private val joinRepository: JoinRepository,
+        private val matesEtaRepository: MatesEtaRepository,
+        private val addressRepository: AddressRepository,
+        private val geoLocationHelper: LocationHelper,
+    ) : BaseViewModel(), MeetingJoinListener {
+        val departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
 
-    private val _invalidDepartureEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-    val invalidDepartureEvent: SharedFlow<Unit> get() = _invalidDepartureEvent.asSharedFlow()
+        private val _invalidDepartureEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val invalidDepartureEvent: SharedFlow<Unit> get() = _invalidDepartureEvent.asSharedFlow()
 
-    val isValidDeparture: StateFlow<Boolean> =
-        departureAddress.map { isValidDeparturePoint() }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                initialValue = false,
-            )
+        val isValidDeparture: StateFlow<Boolean> =
+            departureAddress.map { isValidDeparturePoint() }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
+                    initialValue = false,
+                )
 
-    private val _navigateAction: MutableSharedFlow<MeetingJoinNavigateAction> = MutableSharedFlow()
-    val navigateAction: SharedFlow<MeetingJoinNavigateAction> get() = _navigateAction.asSharedFlow()
+        private val _navigateAction: MutableSharedFlow<MeetingJoinNavigateAction> = MutableSharedFlow()
+        val navigateAction: SharedFlow<MeetingJoinNavigateAction> get() = _navigateAction.asSharedFlow()
 
-    fun getDefaultLocation() {
-        viewModelScope.launch {
-            startLoading()
+        fun getDefaultLocation() {
+            viewModelScope.launch {
+                startLoading()
 
-            geoLocationHelper.getCurrentCoordinate().onSuccess { location ->
-                val longitude = location.longitude.toString()
-                val latitude = location.latitude.toString()
+                geoLocationHelper.getCurrentCoordinate().onSuccess { location ->
+                    val longitude = location.longitude.toString()
+                    val latitude = location.latitude.toString()
 
-                addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
-                    departureAddress.value =
-                        Address(
-                            detailAddress = it ?: "",
-                            longitude = longitude,
-                            latitude = latitude,
-                        )
-                }.onFailure { code, errorMessage ->
-                    handleError()
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                }.onNetworkError {
-                    handleNetworkError()
+                    addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+                        departureAddress.value =
+                            Address(
+                                detailAddress = it ?: "",
+                                longitude = longitude,
+                                latitude = latitude,
+                            )
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                    }
                 }
+                stopLoading()
             }
-            stopLoading()
+        }
+
+        fun joinMeeting(inviteCode: String) {
+            val meetingJoinInfo = createMeetingJoinInfo(inviteCode) ?: return
+
+            viewModelScope.launch {
+                startLoading()
+                joinRepository.postMates(meetingJoinInfo)
+                    .suspendOnSuccess {
+                        matesEtaRepository.reserveEtaFetchingJob(it.meetingId, it.meetingDateTime)
+                        _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { joinMeeting(inviteCode) }
+                    }
+                stopLoading()
+            }
+        }
+
+        private fun createMeetingJoinInfo(inviteCode: String): MeetingJoinInfo? {
+            val address = departureAddress.value ?: return null
+            return MeetingJoinInfo(
+                inviteCode = inviteCode,
+                departureAddress = address,
+            )
+        }
+
+        private suspend fun isValidDeparturePoint(): Boolean {
+            val departureAddress = departureAddress.value ?: return false
+            return AddressValidator.isValid(departureAddress.detailAddress).also {
+                if (!it) _invalidDepartureEvent.emit(Unit)
+            }
+        }
+
+        override fun onClickMeetingJoin() {
+            viewModelScope.launch {
+                _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
+            }
+        }
+
+        companion object {
+            private const val TAG = "MeetingJoinViewModel"
+            private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
         }
     }
-
-    fun joinMeeting(inviteCode: String) {
-        val meetingJoinInfo = createMeetingJoinInfo(inviteCode) ?: return
-
-        viewModelScope.launch {
-            startLoading()
-            joinRepository.postMates(meetingJoinInfo)
-                .suspendOnSuccess {
-                    matesEtaRepository.reserveEtaFetchingJob(it.meetingId, it.meetingDateTime)
-                    _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
-                }.onFailure { code, errorMessage ->
-                    handleError()
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    Timber.e("$code $errorMessage")
-                }.onNetworkError {
-                    handleNetworkError()
-                    lastFailedAction = { joinMeeting(inviteCode) }
-                }
-            stopLoading()
-        }
-    }
-
-    private fun createMeetingJoinInfo(inviteCode: String): MeetingJoinInfo? {
-        val address = departureAddress.value ?: return null
-        return MeetingJoinInfo(
-            inviteCode = inviteCode,
-            departureAddress = address,
-        )
-    }
-
-    private suspend fun isValidDeparturePoint(): Boolean {
-        val departureAddress = departureAddress.value ?: return false
-        return AddressValidator.isValid(departureAddress.detailAddress).also {
-            if (!it) _invalidDepartureEvent.emit(Unit)
-        }
-    }
-
-    override fun onClickMeetingJoin() {
-        viewModelScope.launch {
-            _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
-        }
-    }
-
-    companion object {
-        private const val TAG = "MeetingJoinViewModel"
-        private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
-    }
-}

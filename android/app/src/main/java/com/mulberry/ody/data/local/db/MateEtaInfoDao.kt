@@ -1,12 +1,10 @@
 package com.mulberry.ody.data.local.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface MateEtaInfoDao {
