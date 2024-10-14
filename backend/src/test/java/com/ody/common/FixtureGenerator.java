@@ -110,6 +110,11 @@ public class FixtureGenerator {
         return generateMate(meeting, member);
     }
 
+    public Mate generateMate(Member member) {
+        Meeting meeting = generateMeeting();
+        return generateMate(meeting, member);
+    }
+
     public Mate generateMate(Meeting meeting, Member member) {
         return mateRepository.save(new Mate(meeting, member, Fixture.ORIGIN_LOCATION, 10L));
     }

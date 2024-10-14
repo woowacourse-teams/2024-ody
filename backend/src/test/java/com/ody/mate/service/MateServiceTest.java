@@ -16,7 +16,9 @@ import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.meeting.domain.Meeting;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
+import com.ody.notification.domain.FcmTopic;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -171,5 +173,32 @@ class MateServiceTest extends BaseServiceTest {
             assertThatThrownBy(() -> mateService.saveAndSendNotifications(mateSaveRequest, member, meeting))
                     .isInstanceOf(OdyBadRequestException.class);
         }
+    }
+
+    @DisplayName("참여자 삭제 시, 구독하고 있는 fcmTopic 취소힌다.")
+    @Test
+    void unSubscribeTopicWhenDeleteMate() {
+        Mate mate = fixtureGenerator.generateMate();
+        FcmTopic fcmTopic = new FcmTopic(mate.getMeeting());
+        DeviceToken deviceToken = mate.getMember().getDeviceToken();
+
+        mateService.delete(mate);
+
+        Mockito.verify(fcmSubscriber, Mockito.times(1)).unSubscribeTopic(fcmTopic, deviceToken);
+    }
+
+    @DisplayName("회원 삭제 시, 구독하고 있는 모든 fcmTopic을 취소한다.")
+    @Test
+    void unSubscribeAllTopicsWhenDeleteMember() {
+        Member jojo = fixtureGenerator.generateMember("jojo");
+        Member olive = fixtureGenerator.generateMember("olive");
+
+        fixtureGenerator.generateMate(jojo);
+        fixtureGenerator.generateMate(jojo);
+        fixtureGenerator.generateMate(olive);
+
+        mateService.deleteAllByMember(jojo);
+
+        Mockito.verify(fcmSubscriber, Mockito.times(2)).unSubscribeTopic(any(), any());
     }
 }
