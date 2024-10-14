@@ -127,12 +127,6 @@ class MeetingsActivity :
     }
 
     private fun navigateToEtaDashboard(meetingId: Long) {
-        lifecycleScope.launch {
-//            analyticsHelper.logButtonClicked(
-//                eventName = "eta_button_from_meetings",
-//                location = TAG,
-//            )
-        }
         val intent =
             MeetingRoomActivity.getIntent(
                 this,

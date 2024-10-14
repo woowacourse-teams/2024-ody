@@ -7,14 +7,19 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingRoomBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
+import com.mulberry.ody.presentation.meetings.MeetingsNavigateAction
 import com.mulberry.ody.presentation.room.etadashboard.EtaDashboardFragment
 import com.mulberry.ody.presentation.room.log.NotificationLogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -54,9 +59,14 @@ class MeetingRoomActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-
-        viewModel.navigateToEtaDashboardEvent.observe(this) {
-            addFragment(EtaDashboardFragment())
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.navigateToEtaDashboardEvent.collect {
+                        addFragment(EtaDashboardFragment())
+                    }
+                }
+            }
         }
         viewModel.networkErrorEvent.observe(this) {
             showRetrySnackBar { viewModel.retryLastAction() }

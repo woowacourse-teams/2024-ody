@@ -12,7 +12,9 @@ import android.widget.PopupWindow
 import androidx.annotation.StringRes
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.databinding.FragmentEtaDashboardBinding
@@ -81,11 +83,19 @@ class EtaDashboardFragment :
     }
 
     private fun initializeObserve() {
-        viewModel.mateEtaUiModels.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
-        viewModel.nudgeSuccessMate.observe(viewLifecycleOwner) { nickName ->
-            showSnackBar(getString(R.string.nudge_success, nickName))
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.mateEtaUiModels.collect {
+                        adapter.submitList(it)
+                    }
+                }
+                launch {
+                    viewModel.nudgeSuccessMate.collect { nickName ->
+                        showSnackBar(getString(R.string.nudge_success, nickName))
+                    }
+                }
+            }
         }
     }
 

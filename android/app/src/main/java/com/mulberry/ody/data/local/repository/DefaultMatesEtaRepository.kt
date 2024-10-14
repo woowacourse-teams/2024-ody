@@ -7,6 +7,9 @@ import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.service.EtaDashboardAlarm
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -23,7 +26,7 @@ class DefaultMatesEtaRepository
             etaDashboardAlarm.reserveEtaDashboard(meetingId, meetingDateTime)
         }
 
-        override fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?> =
+        override fun fetchMatesEta(meetingId: Long): Flow<MateEtaInfo?> =
             matesEtaInfoDao.getMateEtaInfo(meetingId).map { it?.toMateEtaInfo() }
 
         override suspend fun clearEtaFetchingJob() {

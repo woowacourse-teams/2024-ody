@@ -13,6 +13,7 @@ import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
+import com.mulberry.ody.domain.apiresult.suspendOnSuccess
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Nudge
 import com.mulberry.ody.domain.repository.image.ImageStorage
@@ -39,6 +40,16 @@ import com.mulberry.ody.presentation.room.log.model.toNotificationUiModels
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
@@ -54,31 +65,33 @@ class MeetingRoomViewModel
         private val imageStorage: ImageStorage,
         private val imageShareHelper: ImageShareHelper,
     ) : BaseViewModel(), NudgeListener {
-        private val matesEta: LiveData<MateEtaInfo?> =
+        private val matesEta: Flow<MateEtaInfo?> =
             matesEtaRepository.fetchMatesEta(meetingId = meetingId)
 
-        val mateEtaUiModels: LiveData<List<MateEtaUiModel>?> =
+        val mateEtaUiModels: StateFlow<List<MateEtaUiModel>?> =
             matesEta.map {
                 val mateEtaInfo = it ?: return@map null
                 mateEtaInfo.toMateEtaUiModels()
-            }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
+                initialValue = null,
+            )
 
-        private val _meeting: MutableLiveData<MeetingDetailUiModel> =
-            MutableLiveData(MeetingDetailUiModel())
-        val meeting: LiveData<MeetingDetailUiModel> = _meeting
+        private val _meeting: MutableStateFlow<MeetingDetailUiModel> = MutableStateFlow(MeetingDetailUiModel())
+        val meeting: StateFlow<MeetingDetailUiModel> = _meeting.asStateFlow()
 
-        private val _mates: MutableLiveData<List<MateUiModel>> = MutableLiveData()
-        val mates: LiveData<List<MateUiModel>> = _mates
+        private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
+        val mates: StateFlow<List<MateUiModel>> = _mates.asStateFlow()
 
-        private val _notificationLogs = MutableLiveData<List<NotificationLogUiModel>>()
-        val notificationLogs: LiveData<List<NotificationLogUiModel>> = _notificationLogs
+        private val _notificationLogs = MutableStateFlow<List<NotificationLogUiModel>>(listOf())
+        val notificationLogs: StateFlow<List<NotificationLogUiModel>> = _notificationLogs.asStateFlow()
 
-        private val _navigateToEtaDashboardEvent: MutableSingleLiveData<Unit> =
-            MutableSingleLiveData<Unit>()
-        val navigateToEtaDashboardEvent: SingleLiveData<Unit> get() = _navigateToEtaDashboardEvent
+        private val _navigateToEtaDashboardEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val navigateToEtaDashboardEvent: SharedFlow<Unit> get() = _navigateToEtaDashboardEvent.asSharedFlow()
 
-        private val _nudgeSuccessMate: MutableSingleLiveData<String> = MutableSingleLiveData()
-        val nudgeSuccessMate: SingleLiveData<String> get() = _nudgeSuccessMate
+        private val _nudgeSuccessMate: MutableSharedFlow<String> = MutableSharedFlow()
+        val nudgeSuccessMate: SharedFlow<String> get() = _nudgeSuccessMate.asSharedFlow()
 
         init {
             fetchMeeting()
@@ -90,11 +103,11 @@ class MeetingRoomViewModel
         ) {
             viewModelScope.launch {
                 meetingRepository.postNudge(Nudge(nudgeId, mateId))
-                    .onSuccess {
-                        val mateNickname =
-                            matesEta.value?.mateEtas?.find { it.mateId == mateId }?.nickname
-                                ?: return@onSuccess
-                        _nudgeSuccessMate.postValue(mateNickname)
+                    .suspendOnSuccess {
+                        matesEta.collect { mateEta ->
+                            val mateNickname = mateEta?.mateEtas?.find { it.mateId == mateId }?.nickname ?: return@collect
+                            _nudgeSuccessMate.emit(mateNickname)
+                        }
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
@@ -150,8 +163,8 @@ class MeetingRoomViewModel
                     eventName = "eta_button_from_notification_log",
                     location = TAG,
                 )
+                _navigateToEtaDashboardEvent.emit(Unit)
             }
-            _navigateToEtaDashboardEvent.setValue(Unit)
         }
 
         fun shareEtaDashboard(
@@ -229,6 +242,7 @@ class MeetingRoomViewModel
 
         companion object {
             private const val TAG = "MeetingRoomViewModel"
+            private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
 
             fun provideFactory(
                 assistedFactory: MeetingViewModelFactory,
