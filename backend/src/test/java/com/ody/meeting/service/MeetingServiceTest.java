@@ -19,6 +19,8 @@ import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
+import com.ody.notification.domain.NotificationStatus;
+import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
@@ -204,7 +206,7 @@ class MeetingServiceTest extends BaseServiceTest {
     void validateInviteCodeFailWhenAlreadyAttendedMeetingInviteCode() {
         Member member = fixtureGenerator.generateMember();
         Meeting meeting = fixtureGenerator.generateMeeting();
-        Mate mate = fixtureGenerator.generateMate(meeting, member);
+        fixtureGenerator.generateMate(meeting, member);
 
         assertThatThrownBy(() -> meetingService.validateInviteCode(member, meeting.getInviteCode()))
                 .isInstanceOf(OdyBadRequestException.class);
@@ -219,16 +221,21 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertAll(
                 () -> assertThat(LocalDateTime.of(2024, 10, 10, 3, 59, 59)).isNotEqualTo(nextExecutionTime),
-                () -> assertThat(LocalDateTime.of(2024, 10, 10, 4, 0, 1)).isNotEqualTo(nextExecutionTime),
                 () -> assertThat(LocalDateTime.of(2024, 10, 10, 4, 0, 0)).isEqualTo(nextExecutionTime),
+                () -> assertThat(LocalDateTime.of(2024, 10, 10, 4, 0, 1)).isNotEqualTo(nextExecutionTime),
                 () -> assertThat(LocalDateTime.of(2024, 10, 11, 4, 0, 0)).isEqualTo(expression.next(nextExecutionTime))
         );
 
         Meeting meeting = fixtureGenerator.generateMeeting(dateTime);
+        Mate mate = fixtureGenerator.generateMate(meeting);
+        fixtureGenerator.generateNotification(mate, NotificationType.DEPARTURE_REMINDER, NotificationStatus.DONE);
         meetingService.scheduleOverdueMeetings();
 
         Meeting findMeeting = meetingRepository.findById(meeting.getId()).get();
 
-        assertThat(findMeeting.isOverdue()).isTrue();
+        assertAll(
+                () -> Mockito.verify(fcmSubscriber).unSubscribeTopic(any(), any()),
+                () -> assertThat(findMeeting.isOverdue()).isTrue()
+        );
     }
 }
