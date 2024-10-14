@@ -70,7 +70,7 @@
             app:layout_constraintTop_toBottomOf="@id/login_welcome_prefix"/>
 
         <ImageView
-            android:layout_width="318dp"
+            android:layout_width="477dp"
             android:layout_height="0dp"
             android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="24dp"
