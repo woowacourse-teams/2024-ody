@@ -51,17 +51,21 @@ class InviteCodeActivity : BindingActivity<ActivityInviteCodeBinding>(R.layout.a
                         finish()
                     }
                 }
+                launch {
+                    viewModel.networkErrorEvent.collect {
+                        showRetrySnackBar { viewModel.retryLastAction() }
+                    }
+                }
+                launch {
+                    viewModel.isLoading.collect { isLoading ->
+                        if (isLoading) {
+                            showLoadingDialog()
+                            return@collect
+                        }
+                        hideLoadingDialog()
+                    }
+                }
             }
-        }
-        viewModel.networkErrorEvent.observe(this) {
-            showRetrySnackBar { viewModel.retryLastAction() }
-        }
-        viewModel.isLoading.observe(this) { isLoading ->
-            if (isLoading) {
-                showLoadingDialog()
-                return@observe
-            }
-            hideLoadingDialog()
         }
     }
 

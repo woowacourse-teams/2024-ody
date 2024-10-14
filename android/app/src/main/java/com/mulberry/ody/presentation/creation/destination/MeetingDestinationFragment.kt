@@ -3,7 +3,9 @@ package com.mulberry.ody.presentation.creation.destination
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDestinationBinding
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
@@ -33,9 +35,13 @@ class MeetingDestinationFragment :
     }
 
     private fun initializeObserve() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.invalidDestinationEvent.collect {
-                showSnackBar(R.string.invalid_address)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.invalidDestinationEvent.collect {
+                        showSnackBar(R.string.invalid_address)
+                    }
+                }
             }
         }
     }

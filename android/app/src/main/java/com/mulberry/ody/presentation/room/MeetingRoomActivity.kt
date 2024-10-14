@@ -65,20 +65,26 @@ class MeetingRoomActivity :
                         addFragment(EtaDashboardFragment())
                     }
                 }
+                launch {
+                    viewModel.networkErrorEvent.collect {
+                        showRetrySnackBar { viewModel.retryLastAction() }
+                    }
+                }
+                launch {
+                    viewModel.errorEvent.collect {
+                        showSnackBar(R.string.error_guide)
+                    }
+                }
+                launch {
+                    viewModel.isLoading.collect { isLoading ->
+                        if (isLoading) {
+                            showLoadingDialog()
+                            return@collect
+                        }
+                        hideLoadingDialog()
+                    }
+                }
             }
-        }
-        viewModel.networkErrorEvent.observe(this) {
-            showRetrySnackBar { viewModel.retryLastAction() }
-        }
-        viewModel.errorEvent.observe(this) {
-            showSnackBar(R.string.error_guide)
-        }
-        viewModel.isLoading.observe(this) { isLoading ->
-            if (isLoading) {
-                showLoadingDialog()
-                return@observe
-            }
-            hideLoadingDialog()
         }
     }
 
