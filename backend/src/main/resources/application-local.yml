@@ -12,7 +12,7 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
       dialect: org.hibernate.dialect.MySQLDialect
   sql:
     init:
