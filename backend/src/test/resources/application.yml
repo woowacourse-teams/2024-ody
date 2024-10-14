@@ -29,3 +29,6 @@ odsay:
 google:
   maps:
     api-key: testApiKey
+
+allowed-origins:
+  api-call: http://localhost:8080, https://dev.oody.site, https://prod.oody.site
