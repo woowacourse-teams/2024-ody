@@ -41,11 +41,11 @@
         <TextView
             android:id="@+id/login_welcome_ody"
             style="@style/pretendard_bold_56"
-            android:textColor="@color/purple_800"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_welcome_ody"
             android:layout_marginStart="10dp"
+            android:text="@string/login_welcome_ody"
+            android:textColor="@color/purple_800"
             app:layout_constraintStart_toEndOf="@id/login_welcome_prefix"
             app:layout_constraintTop_toBottomOf="@id/login_welcome_prefix"
             app:layout_constraintTop_toTopOf="@id/login_welcome_prefix" />
@@ -67,7 +67,7 @@
             android:src="@drawable/ic_happy_ody"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/login_welcome_prefix"/>
+            app:layout_constraintTop_toBottomOf="@id/login_welcome_prefix" />
 
         <ImageView
             android:layout_width="318dp"
@@ -76,11 +76,10 @@
             android:layout_marginBottom="24dp"
             android:onClick="@{() -> vm.loginWithKakao(context)}"
             android:src="@drawable/img_kakao_login"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="477:72"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
