@@ -29,3 +29,6 @@ odsay:
 google:
   maps:
     api-key: testApiKey
+
+allowed-origins:
+  api-call: testOrigin
