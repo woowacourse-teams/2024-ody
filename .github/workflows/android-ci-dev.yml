@@ -56,7 +56,10 @@ jobs:
 
       - name: Check ktLint
         run: ./gradlew ktlintCheck
-
+        
+      - name: Clean Bulid
+        run: ./gradlew clean
+        
       - name: Build with Gradle
         run: ./gradlew build
 
