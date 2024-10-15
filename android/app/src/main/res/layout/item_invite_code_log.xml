@@ -32,10 +32,10 @@
             android:layout_height="40dp"
             android:layout_marginEnd="25dp"
             android:background="@drawable/rectangle_radius_20"
-            android:backgroundTint="@color/purple_800"
+            android:backgroundTint="@color/secondary"
             android:gravity="center"
             android:text="@string/item_invite_code_copy"
-            android:textColor="@color/white"
+            android:textColor="@color/secondaryVariant"
             app:layout_constraintBottom_toBottomOf="@id/tv_invite_code_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_invite_code_top" />
