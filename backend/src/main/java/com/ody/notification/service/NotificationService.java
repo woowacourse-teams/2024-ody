@@ -124,6 +124,11 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
+    public void unSubscribeTopic(Meeting meeting, DeviceToken deviceToken) {
+        FcmTopic fcmTopic = new FcmTopic(meeting);
+        fcmSubscriber.unSubscribeTopic(fcmTopic, deviceToken);
+    }
+
     public void unSubscribeTopic(List<Meeting> meetings) {
         for (Meeting meeting : meetings) {
             notificationRepository.findAllMeetingIdAndType(meeting.getId(), NotificationType.DEPARTURE_REMINDER)

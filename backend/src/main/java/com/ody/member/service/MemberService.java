@@ -60,7 +60,7 @@ public class MemberService {
     public void delete(Member member) {
         socialAuthUnlinkClient.unlink(member.getAuthProvider().getProviderId());
 
-        mateService.deleteByMemberId(member.getId());
+        mateService.deleteAllByMember(member);
         memberRepository.delete(member);
     }
 }
