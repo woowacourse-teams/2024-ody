@@ -59,31 +59,27 @@ class MeetingRoomActivity :
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.navigateToEtaDashboardEvent.collect {
-                        addFragment(EtaDashboardFragment())
-                    }
+            viewModel.navigateToEtaDashboardEvent.collect {
+                addFragment(EtaDashboardFragment())
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.networkErrorEvent.collect {
+                showRetrySnackBar { viewModel.retryLastAction() }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.errorEvent.collect {
+                showSnackBar(R.string.error_guide)
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.isLoading.collect { isLoading ->
+                if (isLoading) {
+                    showLoadingDialog()
+                    return@collect
                 }
-                launch {
-                    viewModel.networkErrorEvent.collect {
-                        showRetrySnackBar { viewModel.retryLastAction() }
-                    }
-                }
-                launch {
-                    viewModel.errorEvent.collect {
-                        showSnackBar(R.string.error_guide)
-                    }
-                }
-                launch {
-                    viewModel.isLoading.collect { isLoading ->
-                        if (isLoading) {
-                            showLoadingDialog()
-                            return@collect
-                        }
-                        hideLoadingDialog()
-                    }
-                }
+                hideLoadingDialog()
             }
         }
     }
