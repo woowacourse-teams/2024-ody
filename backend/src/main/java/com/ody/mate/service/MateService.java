@@ -10,6 +10,7 @@ import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
@@ -54,13 +55,20 @@ public class MateService {
     }
 
     private Mate saveMateAndEta(MateSaveRequestV2 mateSaveRequest, Member member, Meeting meeting) {
-        RouteTime routeTime = routeService.calculateRouteTime(
-                mateSaveRequest.toOriginCoordinates(),
-                meeting.getTargetCoordinates()
-        );
-        Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, routeTime.getMinutes()));
-        etaService.saveFirstEtaOfMate(mate, routeTime);
+        RouteTime firstRouteTime = calcaulteFirstRouteTime(mateSaveRequest, meeting);
+        Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, firstRouteTime.getMinutes()));
+        etaService.saveFirstEtaOfMate(mate, firstRouteTime);
         return mate;
+    }
+
+    private RouteTime calcaulteFirstRouteTime(MateSaveRequestV2 mateSaveRequest, Meeting meeting) {
+        Coordinates originCoordinates = mateSaveRequest.toOriginCoordinates();
+        Coordinates targetCoordinates = meeting.getTargetCoordinates();
+        RouteTime routeTime = routeService.calculateRouteTime(originCoordinates, targetCoordinates);
+        if (routeTime.isZero()) {
+            return routeTime.addMinutes(10L);
+        }
+        return routeTime;
     }
 
     public List<Mate> findAllByMeetingIdIfMate(Member member, long meetingId) {
