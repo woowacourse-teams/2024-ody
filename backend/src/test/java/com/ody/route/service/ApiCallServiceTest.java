@@ -63,17 +63,18 @@ class ApiCallServiceTest extends BaseServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("오늘 처음 Google API 호출이면 count=1 저장한다.")
+    @DisplayName("이번 달 처음 Google API 호출이면 count=1 저장한다.")
     @Test
     void firstIncreaseCountByRouteClient() {
-        LocalDate now = LocalDate.now();
-        LocalDate yesterday = now.minusDays(1);
-        fixtureGenerator.generateApiCall(ClientType.GOOGLE, 100, yesterday);
-        fixtureGenerator.generateApiCall(ClientType.ODSAY, 3, now);
+        LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
+        fixtureGenerator.generateApiCall(ClientType.GOOGLE, 100, firstDayOfMonth.minusDays(1));
+        fixtureGenerator.generateApiCall(ClientType.ODSAY, 3, firstDayOfMonth);
 
-        ApiCall actual = apiCallService.increaseCountByRouteClient(new StubGoogleRouteClient());
+        ClientType clientType = new StubGoogleRouteClient().getClientType();
+        apiCallService.increaseCountByClientType(clientType);
 
-        assertThat(actual.getCount()).isEqualTo(1);
+        int actual = apiCallService.countGoogleApiCall().count();
+        assertThat(actual).isEqualTo(1);
     }
 
     @DisplayName("오늘 처음 Odsay API 호출이 아니면 count+1 한다.")
@@ -83,8 +84,10 @@ class ApiCallServiceTest extends BaseServiceTest {
         fixtureGenerator.generateApiCall(ClientType.GOOGLE, 100, now);
         fixtureGenerator.generateApiCall(ClientType.ODSAY, 3, now);
 
-        ApiCall actual = apiCallService.increaseCountByRouteClient(new StubOdsayRouteClient());
+        ClientType clientType = new StubOdsayRouteClient().getClientType();
+        apiCallService.increaseCountByClientType(clientType);
 
-        assertThat(actual.getCount()).isEqualTo(4);
+        int actual = apiCallService.countOdsayApiCall().count();
+        assertThat(actual).isEqualTo(4);
     }
 }

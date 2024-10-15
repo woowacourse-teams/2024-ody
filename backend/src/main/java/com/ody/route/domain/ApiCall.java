@@ -41,15 +41,28 @@ public class ApiCall {
     @NotNull
     private LocalDate date;
 
+    private Boolean state;
+
     public ApiCall(ClientType clientType) {
-        this(null, clientType, 1, LocalDate.now());
+        this(null, clientType, 0, LocalDate.now(), null);
     }
 
     public ApiCall(ClientType clientType, Integer count, LocalDate date) {
-        this(null, clientType, count, date);
+        this(null, clientType, count, date, null);
     }
 
     public void increaseCount() {
         count++;
+    }
+
+    public void updateState() {
+        if (state == null) {
+            state = true;
+        }
+        state = !state;
+    }
+
+    public boolean isState() {
+        return state == null || state;
     }
 }

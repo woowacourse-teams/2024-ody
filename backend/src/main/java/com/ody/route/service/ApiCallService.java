@@ -21,12 +21,8 @@ public class ApiCallService {
     private final ApiCallRepository apiCallRepository;
 
     public ApiCallCountResponse countOdsayApiCall() {
-        Optional<ApiCall> apiCall = apiCallRepository.findFirstByDateAndClientType(
-                LocalDate.now(),
-                ClientType.ODSAY
-        );
-        return apiCall.map(call -> new ApiCallCountResponse(call.getCount()))
-                .orElseGet(() -> new ApiCallCountResponse(0));
+        ApiCall apiCall = findOrSaveFirstByDateAndClientType(ClientType.ODSAY);
+        return new ApiCallCountResponse(apiCall.getCount());
     }
 
     public ApiCallCountResponse countGoogleApiCall() {
@@ -43,19 +39,24 @@ public class ApiCallService {
     }
 
     @Transactional
-    public ApiCall increaseCountByRouteClient(RouteClient routeClient) {
-        ClientType clientType = routeClient.getClientType();
-        return apiCallRepository.findFirstByDateAndClientType(LocalDate.now(), clientType)
-                .map(this::updateCount)
-                .orElseGet(() -> saveInitialCount(clientType));
-    }
-
-    private ApiCall updateCount(ApiCall apiCall) {
+    public void increaseCountByClientType(ClientType clientType) {
+        ApiCall apiCall = findOrSaveFirstByDateAndClientType(clientType);
         apiCall.increaseCount();
-        return apiCall;
     }
 
-    private ApiCall saveInitialCount(ClientType clientType) {
-        return apiCallRepository.save(new ApiCall(clientType));
+    public boolean findStateByClientType(ClientType clientType) {
+        ApiCall apiCall = findOrSaveFirstByDateAndClientType(clientType);
+        return apiCall.isState();
+    }
+
+    @Transactional
+    public void toggleStateByClientType(ClientType clientType) {
+        ApiCall apiCall = findOrSaveFirstByDateAndClientType(clientType);
+        apiCall.updateState();
+    }
+
+    private ApiCall findOrSaveFirstByDateAndClientType(ClientType clientType) {
+        Optional<ApiCall> apiCall = apiCallRepository.findFirstByDateAndClientType(LocalDate.now(), clientType);
+        return apiCall.orElseGet(() -> apiCallRepository.save(new ApiCall(clientType)));
     }
 }

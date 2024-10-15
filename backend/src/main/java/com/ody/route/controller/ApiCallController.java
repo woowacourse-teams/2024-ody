@@ -1,12 +1,13 @@
 package com.ody.route.controller;
 
 import com.ody.route.dto.ApiCallCountResponse;
-import com.ody.route.dto.ApiCallToggleResponse;
+import com.ody.route.dto.ApiCallStateResponse;
+import com.ody.route.mapper.RouteClientMapper;
 import com.ody.route.service.ApiCallService;
-import com.ody.route.service.RouteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiCallController {
 
     private final ApiCallService apiCallService;
-    private final RouteService routeService;
 
     @GetMapping("/admin/api-call/count/odsay")
     public ResponseEntity<ApiCallCountResponse> countOdsayApiCall() {
@@ -29,15 +29,15 @@ public class ApiCallController {
         return ResponseEntity.ok(apiCallCountResponse);
     }
 
-    @PostMapping("/admin/api-call/toggle/odsay")
-    public ResponseEntity<ApiCallToggleResponse> toggleOdsayApiCall() {
-        ApiCallToggleResponse apiCallToggleResponse = routeService.toggleOdsayApiCall();
-        return ResponseEntity.ok(apiCallToggleResponse);
+    @PostMapping("/admin/api-call/toggle/{clientName}")
+    public ResponseEntity<Void> toggleApiCallState(@PathVariable String clientName) {
+        apiCallService.toggleStateByClientType(RouteClientMapper.from(clientName));
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/admin/api-call/toggle/google")
-    public ResponseEntity<ApiCallToggleResponse> toggleGoogleApiCall() {
-        ApiCallToggleResponse apiCallToggleResponse = routeService.toggleGoogleApiCall();
-        return ResponseEntity.ok(apiCallToggleResponse);
+    @GetMapping("/admin/api-call/state/{clientName}")
+    public ResponseEntity<ApiCallStateResponse> getApiCallState(@PathVariable String clientName) {
+        boolean state = apiCallService.findStateByClientType(RouteClientMapper.from(clientName));
+        return ResponseEntity.ok(new ApiCallStateResponse(state));
     }
 }

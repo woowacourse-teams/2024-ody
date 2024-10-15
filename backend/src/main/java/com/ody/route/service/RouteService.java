@@ -2,12 +2,8 @@ package com.ody.route.service;
 
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
-import com.ody.route.domain.ClientType;
 import com.ody.route.domain.RouteTime;
-import com.ody.route.dto.ApiCallToggleResponse;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +13,10 @@ public class RouteService {
 
     private final List<RouteClient> routeClients;
     private final ApiCallService apiCallService;
-    private final Map<ClientType, Boolean> routeClientsEnabled;
 
     public RouteService(List<RouteClient> routeClients, ApiCallService apiCallService) {
         this.routeClients = routeClients;
         this.apiCallService = apiCallService;
-        this.routeClientsEnabled = routeClients.stream()
-                .collect(Collectors.toMap(RouteClient::getClientType, routeClient -> true));
     }
 
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
@@ -35,7 +28,7 @@ public class RouteService {
 
             try {
                 RouteTime routeTime = client.calculateRouteTime(origin, target);
-                apiCallService.increaseCountByRouteClient(client);
+                apiCallService.increaseCountByClientType(client.getClientType());
                 log.info("{}를 사용한 소요 시간 계산 성공", client.getClass().getSimpleName());
                 return routeTime;
             } catch (Exception exception) {
@@ -47,20 +40,6 @@ public class RouteService {
     }
 
     private boolean isDisabled(RouteClient client) {
-        return Boolean.FALSE.equals(routeClientsEnabled.getOrDefault(client.getClientType(), true));
-    }
-
-    public ApiCallToggleResponse toggleOdsayApiCall() {
-        return toggleApiCall(ClientType.ODSAY);
-    }
-
-    public ApiCallToggleResponse toggleGoogleApiCall() {
-        return toggleApiCall(ClientType.GOOGLE);
-    }
-
-    private ApiCallToggleResponse toggleApiCall(ClientType clientType) {
-        boolean previousEnabled = routeClientsEnabled.get(clientType);
-        routeClientsEnabled.put(clientType, !previousEnabled);
-        return new ApiCallToggleResponse(routeClientsEnabled.get(clientType));
+        return Boolean.FALSE.equals(apiCallService.findStateByClientType(client.getClientType()));
     }
 }
