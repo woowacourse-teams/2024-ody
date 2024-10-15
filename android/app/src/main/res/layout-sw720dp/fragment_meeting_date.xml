@@ -40,10 +40,11 @@
             android:scaleX="1.5"
             android:scaleY="1.5"
             android:layout_marginHorizontal="@dimen/page_horizontal_margin"
-            android:layout_marginTop="128dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_meet" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
