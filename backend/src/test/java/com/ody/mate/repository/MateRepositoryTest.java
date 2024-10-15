@@ -83,20 +83,18 @@ class MateRepositoryTest extends BaseRepositoryTest {
         assertThat(actual.get().getDeletedAt()).isNotNull();
     }
 
+    @DisplayName("멤버가 참여하고 있는 모든 mate를 찾는다.")
     @Test
-    void existsByMeetingIdAndMemberId() {
+    void findFetchedAllByMemberId() {
+        Member jojo = fixtureGenerator.generateMember("jojo");
+        Member jerry = fixtureGenerator.generateMember("jerry");
 
-        Member member1 = memberRepository.save(Fixture.MEMBER1);
-        Member member2 = memberRepository.save(Fixture.MEMBER2);
-        Member member3 = memberRepository.save(Fixture.MEMBER3);
-        Meeting meeting = meetingRepository.save(Fixture.ODY_MEETING);
+        Mate mate1 = fixtureGenerator.generateMate(jojo);
+        Mate mate2 = fixtureGenerator.generateMate(jojo);
+        Mate mate3 = fixtureGenerator.generateMate(jerry);
 
-        Mate expectedMate = mateRepository.save(
-                new Mate(meeting, member1, new Nickname("콜리"), Fixture.ORIGIN_LOCATION, 10L)
-        );
-        mateRepository.save(new Mate(meeting, member2, new Nickname("조조"), Fixture.ORIGIN_LOCATION, 10L));
-        mateRepository.save(new Mate(meeting, member3, new Nickname("카키"), Fixture.ORIGIN_LOCATION, 10L));
+        List<Mate> matesByJojo = mateRepository.findFetchedAllByMemberId(jojo.getId());
 
-        mateRepository.countByMeetingId(meeting.getId());
+        assertThat(matesByJojo).containsExactly(mate1, mate2);
     }
 }

@@ -1,7 +1,7 @@
 package com.ody.common;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.ody.notification.config.FcmConfig;
-import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.FcmSubscriber;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public abstract class BaseServiceTest {
     private FcmConfig fcmConfig;
 
     @MockBean
-    protected FcmPushSender fcmPushSender;
+    protected FirebaseMessaging firebaseMessaging;
 
     @MockBean
     protected FcmSubscriber fcmSubscriber;
