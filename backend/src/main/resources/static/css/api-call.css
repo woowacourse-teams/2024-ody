@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.data-table th, .data-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.data-table th {
+    background-color: #f2f2f2;
+}
+
+/*.blue-button {*/
+/*    background-color: blue;*/
+/*    color: white;*/
+/*}*/
+
+/*.red-button {*/
+/*    background-color: red;*/
+/*    color: white;*/
+/*}*/
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.blue-button {
+    background-color: #a8d8ff;
+    color: #2c3e50;
+}
+
+.red-button {
+    background-color: #ffb3ba;
+    color: #2c3e50;
+}
+
+.blue-button:hover {
+    background-color: #7fc6ff;
+}
+
+.red-button:hover {
+    background-color: #ff9aa2;
+}
+
+.button:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}

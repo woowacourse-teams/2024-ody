@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ody Admin Page</title>
+    <link rel="stylesheet" type="text/css" href="css/api-call.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>오디 어드민 페이지</h1>
+
+    <br>
+    <h2>외부 API 호출 횟수 조회하기</h2>
+    <table class="data-table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Odsay API</th>
+            <th>Google API</th>
+        </tr>
+        </thead>
+        <tbody id="countTable">
+        <tr>
+            <td>Dev</td>
+            <td id="devOdsayCount">0</td>
+            <td id="devGoogleCount">0</td>
+        </tr>
+        <tr>
+            <td>Prod</td>
+            <td id="prodOdsayCount">0</td>
+            <td id="prodGoogleCount">0</td>
+        </tr>
+        <tr>
+            <td>Total</td>
+            <td id="totalOdsayCount">0</td>
+            <td id="totalGoogleCount">0</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <br>
+    <h2>외부 API 호출 제어하기</h2>
+    <table class="data-table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Odsay API</th>
+            <th>Google API</th>
+        </tr>
+        </thead>
+        <tbody id="toggleTable">
+        <tr>
+            <td>Dev</td>
+            <td>
+                <button id="toggleButton1" th:text="${enabled1 ? 'enabled' : 'disabled'}"
+                        th:class="${enabled1 ? 'blue-button' : 'red-button'}"
+                        th:attr="data-enabled=${enabled1}">
+                </button>
+            </td>
+            <td>
+                <button id="toggleButton2" th:text="${enabled2 ? 'enabled' : 'disabled'}"
+                        th:class="${enabled2 ? 'blue-button' : 'red-button'}"
+                        th:attr="data-enabled=${enabled2}">
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>Prod</td>
+            <td>
+                <button id="toggleButton3" th:text="${enabled3 ? 'enabled' : 'disabled'}"
+                        th:class="${enabled3 ? 'blue-button' : 'red-button'}"
+                        th:attr="data-enabled=${enabled3}">
+                </button>
+            </td>
+            <td>
+                <button id="toggleButton4" th:text="${enabled4 ? 'enabled' : 'disabled'}"
+                        th:class="${enabled4 ? 'blue-button' : 'red-button'}"
+                        th:attr="data-enabled=${enabled4}">
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="/js/api-call.js"></script>
+</body>
+</html>
