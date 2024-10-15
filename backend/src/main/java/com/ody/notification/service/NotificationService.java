@@ -9,7 +9,6 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.message.DirectMessage;
-import com.ody.notification.dto.request.FcmGroupSendRequest;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
@@ -65,17 +64,16 @@ public class NotificationService {
 
     private void saveAndSendNotification(Notification notification) {
         Notification savedNotification = notificationRepository.save(notification);
-        FcmGroupSendRequest fcmGroupSendRequest = new FcmGroupSendRequest(savedNotification);
-        scheduleNotification(fcmGroupSendRequest);
+        scheduleNotification(savedNotification);
     }
 
-    public void scheduleNotification(FcmGroupSendRequest fcmGroupSendRequest) {
-        Instant startTime = fcmGroupSendRequest.notification().getSendAt().toInstant(TimeUtil.KST_OFFSET);
-        taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(fcmGroupSendRequest), startTime);
+    public void scheduleNotification(Notification notification) {
+        Instant startTime = notification.getSendAt().toInstant(TimeUtil.KST_OFFSET);
+        taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(notification), startTime);
         log.info(
                 "{} 타입 {} 상태 알림 {}에 스케줄링 예약",
-                fcmGroupSendRequest.notification().getType(),
-                fcmGroupSendRequest.notification().getStatus(),
+                notification.getType(),
+                notification.getStatus(),
                 startTime.atZone(TimeUtil.KST_OFFSET)
         );
     }
@@ -87,7 +85,7 @@ public class NotificationService {
                 NotificationType.DEPARTURE_REMINDER,
                 NotificationStatus.PENDING
         );
-        notifications.forEach(notification -> scheduleNotification(new FcmGroupSendRequest(notification)));
+        notifications.forEach(this::scheduleNotification);
         log.info("애플리케이션 시작 - PENDING 상태 출발 알림 {}개 스케줄링", notifications.size());
     }
 

@@ -141,6 +141,10 @@ public class FixtureGenerator {
         return etaRepository.save(new Eta(mate, remainingMinutes, TimeUtil.nowWithTrim(), lastUpdateTime));
     }
 
+    public Notification generateNotification(NotificationType type, NotificationStatus status) {
+        return generateNotification(generateMate(), type, status);
+    }
+
     public Notification generateNotification(Mate mate, NotificationType type, NotificationStatus status) {
         FcmTopic fcmTopic = new FcmTopic(mate.getMeeting());
         Notification notification = new Notification(mate, type, TimeUtil.nowWithTrim(), status, fcmTopic);
