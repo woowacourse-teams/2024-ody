@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.join
 
+import android.util.Log
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
@@ -46,7 +47,9 @@ class MeetingJoinViewModel
         val invalidDepartureEvent: SharedFlow<Unit> get() = _invalidDepartureEvent.asSharedFlow()
 
         val isValidDeparture: StateFlow<Boolean> =
-            departureAddress.map { isValidDeparturePoint() }
+            departureAddress.map {
+                println("TEST")
+                isValidDeparturePoint() }
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
@@ -112,8 +115,11 @@ class MeetingJoinViewModel
         }
 
         private suspend fun isValidDeparturePoint(): Boolean {
+            println("isValidDeparturePoint")
             val departureAddress = departureAddress.value ?: return false
+            println("isValidDeparturePoint 2 $departureAddress")
             return AddressValidator.isValid(departureAddress.detailAddress).also {
+                println("isValidDeparturePoint 2 $it")
                 if (!it) _invalidDepartureEvent.emit(Unit)
             }
         }

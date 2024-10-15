@@ -4,8 +4,9 @@ import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
-import com.mulberry.ody.util.getOrAwaitValue
+import com.mulberry.ody.util.valueOnAction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -30,29 +31,33 @@ class InviteCodeViewModelTest {
 
     @Test
     fun `초대 코드가 올바른 형식일 때 초대 코드를 체크하면 약속 참여 화면으로 이동한다`() {
-        // given
-        viewModel.inviteCode.value = "abcd1234"
+        runTest {
+            // given
+            viewModel.inviteCode.value = "abcd1234"
 
-        // when
-        viewModel.checkInviteCode()
+            // when
+            val actual = viewModel.navigateAction.valueOnAction {
+                viewModel.checkInviteCode()
+            }
 
-        // then
-        assertThat(
-            viewModel.navigateAction.getOrAwaitValue(),
-        ).isInstanceOf(InviteCodeNavigateAction.CodeNavigateToJoin::class.java)
+            // then
+            assertThat(actual).isInstanceOf(InviteCodeNavigateAction.CodeNavigateToJoin::class.java)
+        }
     }
 
     @Test
     fun `초대 코드가 올바르지 않은 형식일 때 에러 이벤트를 발생시킨다`() {
-        // given
-        viewModel.inviteCode.value = "qwerty1234532143214321"
+        runTest {
+            // given
+            viewModel.inviteCode.value = "qwerty1234532143214321"
 
-        // when
-        viewModel.checkInviteCode()
+            // when
+            val actual = viewModel.invalidInviteCodeEvent.valueOnAction {
+                viewModel.checkInviteCode()
+            }
 
-        // then
-        assertThat(
-            viewModel.invalidInviteCodeEvent.getOrAwaitValue(),
-        ).isInstanceOf(Unit::class.java)
+            // then
+            assertThat(actual).isInstanceOf(Unit::class.java)
+        }
     }
 }
