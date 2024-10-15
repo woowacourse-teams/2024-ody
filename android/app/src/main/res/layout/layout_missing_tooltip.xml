@@ -14,7 +14,7 @@
         android:background="@drawable/rectangle_tooltip"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
-        android:textColor="@color/white"
+        android:textColor="@color/secondaryVariant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

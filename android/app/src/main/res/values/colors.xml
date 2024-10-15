@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primary">@color/cream</color>
+    <color name="primaryVariant">@color/purple_300</color>
+    <color name="secondary">@color/purple_800</color>
+    <color name="secondaryVariant">@color/white</color>
+
     <color name="cream">#FFFFFFF6</color>
     <color name="purple_300">#FFB8A7FF</color>
     <color name="purple_800">#FF5C47AE</color>
@@ -19,7 +24,7 @@
     <color name="gray_900">#FF1C1C1E</color>
     <color name="gray_900_50">#801C1C1E</color>
 
-    <drawable name="drawable_purple_800">#FF5C47AE</drawable>
+    <drawable name="drawable_purple_800">@color/secondary</drawable>
     <drawable name="drawable_gray_350">#FFD6D6D6</drawable>
 
     <color name="blue">#FF5B89FF</color>

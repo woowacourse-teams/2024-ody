@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/cream">
+        android:background="@color/primary">
 
         <include
             android:id="@+id/tb_eta_dashboard_guide"
@@ -56,7 +56,7 @@
                 android:backgroundTint="@color/green"
                 android:gravity="center"
                 android:text="@string/badge_arrival_soon"
-                android:textColor="@color/white"
+                android:textColor="@color/secondaryVariant"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -106,7 +106,7 @@
                 android:backgroundTint="@color/yellow"
                 android:gravity="center"
                 android:text="@string/badge_late_warning"
-                android:textColor="@color/white"
+                android:textColor="@color/secondaryVariant"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -156,7 +156,7 @@
                 android:backgroundTint="@color/blue"
                 android:gravity="center"
                 android:text="@string/badge_arrived"
-                android:textColor="@color/white"
+                android:textColor="@color/secondaryVariant"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -205,7 +205,7 @@
                 android:backgroundTint="@color/blue"
                 android:gravity="center"
                 android:text="@string/badge_arrived"
-                android:textColor="@color/white"
+                android:textColor="@color/secondaryVariant"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -237,7 +237,7 @@
             android:layout_marginHorizontal="18dp"
             android:layout_marginVertical="11dp"
             android:background="@drawable/rectangle_radius_20"
-            android:backgroundTint="@color/cream"
+            android:backgroundTint="@color/primary"
             app:layout_constraintBottom_toTopOf="@id/item_eta_dashboard_guide_3"
             app:layout_constraintTop_toBottomOf="@id/item_eta_dashboard_guide_1" />
 
@@ -271,7 +271,7 @@
                 android:backgroundTint="@color/yellow"
                 android:gravity="center"
                 android:text="@string/badge_late_warning"
-                android:textColor="@color/white"
+                android:textColor="@color/secondaryVariant"
                 app:etaBadgeAnimation="@{true}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -310,7 +310,7 @@
             android:layout_marginTop="6dp"
             android:gravity="center"
             android:text="@string/eta_dashboard_guide_late_warning_nudge"
-            android:textColor="@color/white"
+            android:textColor="@color/secondaryVariant"
             app:layout_constraintBottom_toTopOf="@id/tv_eta_dashboard_guide_before_meeting_time"
             app:layout_constraintTop_toBottomOf="@id/iv_eta_dashboard_guide_diagonal_line" />
 
@@ -322,7 +322,7 @@
             android:layout_marginTop="110dp"
             android:gravity="center"
             android:text="@string/eta_dashboard_guide_before_meeting_time"
-            android:textColor="@color/white"
+            android:textColor="@color/secondaryVariant"
             app:layout_constraintTop_toBottomOf="@id/tv_eta_dashboard_guide_late_warning_nudge" />
 
         <LinearLayout
@@ -347,7 +347,7 @@
                 android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:text="@string/next_button"
-                android:textColor="@color/white" />
+                android:textColor="@color/secondaryVariant" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
