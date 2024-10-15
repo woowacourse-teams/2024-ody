@@ -23,7 +23,7 @@
             style="@style/pretendard_bold_56"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="46dp"
+            android:layout_marginStart="112dp"
             android:layout_marginTop="240dp"
             android:text="@string/login_welcome_top"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,9 +61,9 @@
 
 
         <ImageView
-            android:layout_width="160dp"
-            android:layout_height="220dp"
-            android:layout_marginTop="56dp"
+            android:layout_width="200dp"
+            android:layout_height="265dp"
+            android:layout_marginTop="64dp"
             android:src="@drawable/ic_happy_ody"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
