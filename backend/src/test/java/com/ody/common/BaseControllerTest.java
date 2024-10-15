@@ -1,9 +1,8 @@
 package com.ody.common;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.ody.auth.JwtTokenProvider;
 import com.ody.notification.config.FcmConfig;
-import com.ody.notification.service.FcmPushSender;
-import com.ody.notification.service.FcmSubscriber;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +22,7 @@ public abstract class BaseControllerTest {
     private FcmConfig fcmConfig;
 
     @MockBean
-    protected FcmSubscriber fcmSubscriber;
-
-    @MockBean
-    protected FcmPushSender fcmPushSender;
+    protected FirebaseMessaging firebaseMessaging;
 
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;
