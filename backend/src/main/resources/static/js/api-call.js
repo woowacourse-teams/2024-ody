@@ -51,31 +51,6 @@ async function fetchApiCallCount(url, endpoint) {
     }
 }
 
-async function handleApiCallToggle(env, client) {
-    const TOGGLE_URL = '/admin/api-call/toggle';
-    const server = env === 'dev' ? DEV_SERVER : PROD_SERVER;
-
-    try {
-        const response = await axios.post(server + TOGGLE_URL + client);
-
-        if (response.data && response.data.enabled !== undefined) {
-            const buttonId = `${env}${api.charAt(0).toUpperCase() + api.slice(1)}Toggle`;
-            const button = document.getElementById(buttonId);
-            const statusId = `${env}${api.charAt(0).toUpperCase() + api.slice(1)}Status`;
-
-            if (response.data.enabled) {
-                button.innerText = 'Disable'; // Change the text to Disable if enabled
-                document.getElementById(statusId).innerText = '1'; // or the actual count based on your logic
-            } else {
-                button.innerText = 'Enable'; // Change the text to Enable if disabled
-                document.getElementById(statusId).innerText = '0'; // or the actual count based on your logic
-            }
-        }
-    } catch (error) {
-        console.error(`Error toggling ${api} for ${env}:`, error);
-    }
-}
-
 async function initializeButtons() {
     const buttonConfig = [
         { id: 'toggleButton1', server: DEV_SERVER, clientType: ODSAY },
