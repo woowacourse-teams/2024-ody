@@ -36,9 +36,10 @@ class InviteCodeViewModelTest {
             viewModel.inviteCode.value = "abcd1234"
 
             // when
-            val actual = viewModel.navigateAction.valueOnAction {
-                viewModel.checkInviteCode()
-            }
+            val actual =
+                viewModel.navigateAction.valueOnAction {
+                    viewModel.checkInviteCode()
+                }
 
             // then
             assertThat(actual).isInstanceOf(InviteCodeNavigateAction.CodeNavigateToJoin::class.java)
@@ -52,9 +53,10 @@ class InviteCodeViewModelTest {
             viewModel.inviteCode.value = "qwerty1234532143214321"
 
             // when
-            val actual = viewModel.invalidInviteCodeEvent.valueOnAction {
-                viewModel.checkInviteCode()
-            }
+            val actual =
+                viewModel.invalidInviteCodeEvent.valueOnAction {
+                    viewModel.checkInviteCode()
+                }
 
             // then
             assertThat(actual).isInstanceOf(Unit::class.java)

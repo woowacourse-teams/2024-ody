@@ -52,9 +52,10 @@ class MeetingsViewModelTest {
             val meetingId = 1L
 
             // when
-            val actual = viewModel.navigateAction.valueOnAction {
-                viewModel.navigateToNotificationLog(meetingId)
-            }
+            val actual =
+                viewModel.navigateAction.valueOnAction {
+                    viewModel.navigateToNotificationLog(meetingId)
+                }
 
             // then
             val expected = MeetingsNavigateAction.NavigateToNotificationLog(meetingId)
@@ -69,9 +70,10 @@ class MeetingsViewModelTest {
             val meetingId = 1L
 
             // when
-            val actual = viewModel.navigateAction.valueOnAction {
-                viewModel.navigateToEtaDashboard(meetingId)
-            }
+            val actual =
+                viewModel.navigateAction.valueOnAction {
+                    viewModel.navigateToEtaDashboard(meetingId)
+                }
 
             // then
             val expected = MeetingsNavigateAction.NavigateToEtaDashboard(meetingId)

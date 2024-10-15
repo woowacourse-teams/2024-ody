@@ -43,9 +43,10 @@ class MeetingJoinViewModelTest {
             setUpInitializeInfo()
 
             // when
-            val actual = viewModel.navigateAction.valueOnAction {
-                viewModel.joinMeeting("abc123")
-            }
+            val actual =
+                viewModel.navigateAction.valueOnAction {
+                    viewModel.joinMeeting("abc123")
+                }
 
             // then
             assertThat(actual).isEqualTo(MeetingJoinNavigateAction.JoinNavigateToRoom(meetingId))

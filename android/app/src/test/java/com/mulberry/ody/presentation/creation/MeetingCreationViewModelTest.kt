@@ -109,9 +109,10 @@ class MeetingCreationViewModelTest {
             val meetingDate = LocalDate.of(2023, 7, 28)
 
             // when
-            val actual = viewModel.invalidMeetingDateEvent.valueOnAction {
-                viewModel.updateMeetingDate(meetingDate)
-            }
+            val actual =
+                viewModel.invalidMeetingDateEvent.valueOnAction {
+                    viewModel.updateMeetingDate(meetingDate)
+                }
 
             // then
             assertThat(actual).isNotNull

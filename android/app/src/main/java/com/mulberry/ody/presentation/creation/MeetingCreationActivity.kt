@@ -23,7 +23,6 @@ import com.mulberry.ody.presentation.creation.destination.MeetingDestinationFrag
 import com.mulberry.ody.presentation.creation.name.MeetingNameFragment
 import com.mulberry.ody.presentation.creation.time.MeetingTimeFragment
 import com.mulberry.ody.presentation.join.MeetingJoinActivity
-import com.mulberry.ody.presentation.login.LoginNavigatedReason
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
