@@ -2,9 +2,7 @@ name: android cd
 on:
   pull_request:
     branches:
-      - main
-    paths:
-      - android/**
+      - 'release-an/**'
     types:
       - closed
 
@@ -73,5 +71,5 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.mulberry.ody
           releaseFiles: /home/runner/work/2024-ody/2024-ody/android/app/build/outputs/bundle/release/app-release.aab
-          track: internal
-          status: draft
+          track: production
+          status: completed

@@ -1,3 +1,6 @@
+server:
+  shutdown: graceful
+
 spring:
   jpa:
     open-in-view: false
@@ -30,7 +33,7 @@ auth:
   access-key: ENC(jp1TJCM6l22zIzInTUvt9VXrb1WhNm1zY3dFgTSj6ad3585f5K7Q8A==)
   access-expiration: ENC(RA/POzGT/Baq/ba9MxmMAQ==)
   refresh-key: ENC(5uLKuwtNdyXnr61LRqQJ6Q2sfbhjW5vxgLADB4Na8YgoIkLvcmJk+A==)
-  refresh-expiration: ENC(LUMzldRJndHMoxKs+pyCF5J0MrT94NY+)
+  refresh-expiration: ENC(GU+tXC1UeXlXFBe9y6IOwnZFtwmRj/a2)
 
 fcm:
   config:

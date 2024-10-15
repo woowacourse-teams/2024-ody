@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp">
+
+        <TextView
+            android:id="@+id/tv_invite_code_top"
+            style="@style/pretendard_medium_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="26dp"
+            android:text="@string/item_invite_code_top"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_invite_code_bottom"
+            style="@style/pretendard_medium_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/item_invite_code_bottom"
+            app:layout_constraintStart_toStartOf="@id/tv_invite_code_top"
+            app:layout_constraintTop_toBottomOf="@id/tv_invite_code_top" />
+
+        <TextView
+            style="@style/pretendard_bold_16"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="25dp"
+            android:background="@drawable/rectangle_radius_20"
+            android:backgroundTint="@color/purple_800"
+            android:gravity="center"
+            android:text="@string/item_invite_code_copy"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/tv_invite_code_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_invite_code_top" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/gray_350"
+            app:layout_constraintTop_toBottomOf="@id/tv_invite_code_bottom" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

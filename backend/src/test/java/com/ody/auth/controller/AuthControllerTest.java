@@ -5,9 +5,6 @@ import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseControllerTest;
 import com.ody.common.TokenFixture;
-import com.ody.mate.domain.Nickname;
-import com.ody.member.domain.AuthProvider;
-import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import io.restassured.RestAssured;
@@ -34,7 +31,7 @@ class AuthControllerTest extends BaseControllerTest {
         @DisplayName("비회원이 로그인하면 200을 반환한다.")
         @Test
         void authKakaoWithNonMember() {
-            AuthRequest authRequest = generateAuthRequest("newPid", "newDeviceToken");
+            AuthRequest authRequest = dtoGenerator.generateAuthRequest("newPid", "newDeviceToken");
 
             RestAssured.given()
                     .contentType(ContentType.JSON)
@@ -48,9 +45,8 @@ class AuthControllerTest extends BaseControllerTest {
         @DisplayName("회원이 로그인하면 200을 반환한다.")
         @Test
         void authKakaoWithMember() {
-            saveMember("pid", "deviceToken");
-
-            AuthRequest authRequest = generateAuthRequest("pid", "deviceToken");
+            fixtureGenerator.generateSavedMember("pid", "deviceToken");
+            AuthRequest authRequest = dtoGenerator.generateAuthRequest("pid", "deviceToken");
 
             RestAssured.given()
                     .contentType(ContentType.JSON)
@@ -82,23 +78,6 @@ class AuthControllerTest extends BaseControllerTest {
                     new AuthRequest("deviceToken", "pId", "nickname", null)
             );
         }
-
-        private Member saveMember(String providerId, String deviceToken) {
-            Member member = new Member(
-                    1L,
-                    new AuthProvider(providerId),
-                    new Nickname("nickname"),
-                    "imageUrl",
-                    new DeviceToken(deviceToken),
-                    new RefreshToken("refresh-token=refreshToken"),
-                    null
-            );
-            return memberRepository.save(member);
-        }
-
-        private AuthRequest generateAuthRequest(String providerId, String deviceToken) {
-            return new AuthRequest(deviceToken, providerId, "nickname", "imageUrl");
-        }
     }
 
     @DisplayName("액세스 토큰 갱신 API")
@@ -120,7 +99,8 @@ class AuthControllerTest extends BaseControllerTest {
 
             memberWithValidRefreshToken = saveMember(validRefreshToken);
             memberWithExpiredRefreshToken = saveMember(expiredRefreshToken);
-            memberWithInvalidRefreshToken = saveMember(validRefreshToken);
+            memberWithInvalidRefreshToken = saveMember(invalidRefreshToken);
+
         }
 
         @DisplayName("만료된 액세스 토큰, 유효한 리프레시 토큰으로 액세스 토큰 갱신하면 200을 반환한다.")
@@ -199,20 +179,13 @@ class AuthControllerTest extends BaseControllerTest {
         }
     }
 
-    private Member saveMember(RefreshToken refreshToken) {
-        Member member = new Member(
-                1L,
-                new AuthProvider("pid"),
-                new Nickname("nickname"),
-                "imageUrl",
-                new DeviceToken("deviceToken"),
-                new RefreshToken("refresh-token=" + refreshToken.getValue()),
-                null
-        );
-        return memberRepository.save(member);
-    }
-
     private String generateAuthorization(AccessToken accessToken, RefreshToken refreshToken) {
         return "Bearer access-token=" + accessToken.getValue() + " refresh-token=" + refreshToken.getValue();
+    }
+
+    private Member saveMember(RefreshToken refreshToken) {
+        Member member = fixtureGenerator.generateMember();
+        member.updateRefreshToken(refreshToken);
+        return memberRepository.save(member);
     }
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="setting"
+            type="com.mulberry.ody.presentation.setting.model.SettingUiModel" />
+
+        <variable
+            name="settingListener"
+            type="com.mulberry.ody.presentation.setting.listener.SettingListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> settingListener.onClickSettingItem(setting)}"
+        android:paddingVertical="24dp">
+
+        <ImageView
+            android:id="@+id/ic_setting"
+            imageRes="@{setting.icon}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_user_info" />
+
+        <TextView
+            style="@style/pretendard_medium_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@{setting.description}"
+            app:layout_constraintBottom_toBottomOf="@id/ic_setting"
+            app:layout_constraintStart_toEndOf="@id/ic_setting"
+            app:layout_constraintTop_toTopOf="@+id/ic_setting"
+            tools:text="개인정보 처리 방침" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

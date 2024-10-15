@@ -1,6 +1,7 @@
 package com.ody.route.service;
 
 import com.ody.meeting.domain.Coordinates;
+import com.ody.route.domain.ClientType;
 import com.ody.route.domain.RouteTime;
 
 public class StubGoogleRouteClient implements RouteClient {
@@ -11,5 +12,10 @@ public class StubGoogleRouteClient implements RouteClient {
             return RouteTime.ZERO;
         }
         return new RouteTime(18);
+    }
+
+    @Override
+    public ClientType getClientType() {
+        return ClientType.GOOGLE;
     }
 }

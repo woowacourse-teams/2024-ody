@@ -37,6 +37,8 @@ public abstract class BaseControllerTest {
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
+    protected DtoGenerator dtoGenerator = new DtoGenerator();
+
     @BeforeEach
     void databaseCleanUp() {
         databaseCleaner.cleanUp();
