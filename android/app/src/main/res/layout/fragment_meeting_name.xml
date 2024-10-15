@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/meeting_name_question_middle"
-            android:textColor="@color/purple_800"
+            android:textColor="@color/secondary"
             app:layout_constraintEnd_toStartOf="@id/tv_meeting_name_back"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/tv_meeting_name_front"

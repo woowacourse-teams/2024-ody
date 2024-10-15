@@ -66,7 +66,7 @@
     <!-- Background -->
     <item>
         <shape>
-            <solid android:color="@color/cream" />
+            <solid android:color="@color/primary" />
             <corners
                 android:bottomLeftRadius="@dimen/rectangle_radius_30"
                 android:bottomRightRadius="@dimen/rectangle_radius_30" />
