@@ -17,29 +17,28 @@
         <thead>
         <tr>
             <th></th>
-            <th>Odsay API</th>
-            <th>Google API</th>
+            <th>Odsay API (일별)</th>
+            <th>Google API (월별)</th>
         </tr>
         </thead>
         <tbody id="countTable">
         <tr>
             <td>Dev</td>
-            <td id="devOdsayCount">0</td>
-            <td id="devGoogleCount">0</td>
+            <td id="odsayDevCount">0</td>
+            <td id="googleDevCount">0</td>
         </tr>
         <tr>
             <td>Prod</td>
-            <td id="prodOdsayCount">0</td>
-            <td id="prodGoogleCount">0</td>
+            <td id="odsayProdCount">0</td>
+            <td id="googleProdCount">0</td>
         </tr>
         <tr>
             <td>Total</td>
-            <td id="totalOdsayCount">0</td>
-            <td id="totalGoogleCount">0</td>
+            <td id="odsayTotalCount">0</td>
+            <td id="googleTotalCount">0</td>
         </tr>
         </tbody>
     </table>
-
 
     <br>
     <h2>외부 API 호출 제어하기</h2>
@@ -47,38 +46,30 @@
         <thead>
         <tr>
             <th></th>
-            <th>Odsay API</th>
-            <th>Google API</th>
+            <th>Odsay API (일별)</th>
+            <th>Google API (월별)</th>
         </tr>
         </thead>
         <tbody id="toggleTable">
         <tr>
             <td>Dev</td>
             <td>
-                <button id="toggleButton1" th:text="${enabled1 ? 'enabled' : 'disabled'}"
-                        th:class="${enabled1 ? 'blue-button' : 'red-button'}"
-                        th:attr="data-enabled=${enabled1}">
+                <button id="odsayDevToggleButton" th:text="unknown" th:class="unknown-button">
                 </button>
             </td>
             <td>
-                <button id="toggleButton2" th:text="${enabled2 ? 'enabled' : 'disabled'}"
-                        th:class="${enabled2 ? 'blue-button' : 'red-button'}"
-                        th:attr="data-enabled=${enabled2}">
+                <button id="googleDevToggleButton" th:text="unknown" th:class="unknown-button">
                 </button>
             </td>
         </tr>
         <tr>
             <td>Prod</td>
             <td>
-                <button id="toggleButton3" th:text="${enabled3 ? 'enabled' : 'disabled'}"
-                        th:class="${enabled3 ? 'blue-button' : 'red-button'}"
-                        th:attr="data-enabled=${enabled3}">
+                <button id="odsayProdToggleButton" th:text="unknown" th:class="unknown-button">
                 </button>
             </td>
             <td>
-                <button id="toggleButton4" th:text="${enabled4 ? 'enabled' : 'disabled'}"
-                        th:class="${enabled4 ? 'blue-button' : 'red-button'}"
-                        th:attr="data-enabled=${enabled4}">
+                <button id="googleProdToggleButton" th:text="unknown" th:class="unknown-button">
                 </button>
             </td>
         </tr>

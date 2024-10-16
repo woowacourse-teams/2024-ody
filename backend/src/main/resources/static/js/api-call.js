@@ -3,12 +3,12 @@ const PROD_SERVER = 'https://prod.oody.site';
 const ODSAY = '/odsay';
 const GOOGLE = '/google';
 
-const devOdsayStatus = true;
+const COUNT_URL = '/admin/api-call/count';
+const TOGGLE_URL = '/admin/api-call/toggle';
+const ENABLED_URL = '/admin/api-call/enabled';
 
-async function fetchApiCallCounts() {
+async function initializeApiCallCounts() {
     try {
-        const COUNT_URL = '/admin/api-call/count';
-
         const [odsayDevCount, googleDevCount, odsayProdCount, googleProdCount] = await Promise.all([
             fetchApiCallCount(DEV_SERVER, COUNT_URL + ODSAY),
             fetchApiCallCount(DEV_SERVER, COUNT_URL + GOOGLE),
@@ -36,66 +36,71 @@ async function fetchApiCallCounts() {
             </tr>
         `;
     } catch (error) {
-        console.error('Error fetching API call counts:', error);
+        console.error('Error fetching api call count:', error);
     }
 }
 
 async function fetchApiCallCount(url, endpoint) {
     try {
-        // const response = await axios.get(url + endpoint);
-        const response = null;
+        const response = await fetch(url + endpoint);
         return response.data.count;
     } catch (error) {
-        console.error(`Error fetching ${endpoint} from ${url}:`, error);
+        console.warn(`Error fetching ${endpoint} from ${url}:`, error);
         return 'loading..';
     }
 }
 
-async function initializeButtons() {
-    const buttonConfig = [
-        { id: 'toggleButton1', server: DEV_SERVER, clientType: ODSAY },
-        { id: 'toggleButton2', server: DEV_SERVER, clientType: GOOGLE },
-        { id: 'toggleButton3', server: PROD_SERVER, clientType: ODSAY },
-        { id: 'toggleButton4', server: PROD_SERVER, clientType: GOOGLE }
+async function initializeApiCallEnabledButtons() {
+    const configs = [
+        {id: 'odsayDevToggleButton', server: DEV_SERVER, clientType: ODSAY},
+        {id: 'googleDevToggleButton', server: DEV_SERVER, clientType: GOOGLE},
+        {id: 'odsayProdToggleButton', server: PROD_SERVER, clientType: ODSAY},
+        {id: 'googleProdToggleButton', server: PROD_SERVER, clientType: GOOGLE}
     ];
 
-    buttonConfig.forEach(config => {
+    for (const config of configs) {
         const button = document.getElementById(config.id);
-        button.addEventListener('click', (event) => handleButtonClick(event, config.server, config.clientType));
-    });
+        await fetchApiCallEnabled(button, config.server, config.clientType);
+        button.addEventListener('click', (event) => handleButtonClick(event.target, config.server, config.clientType));
+    }
 }
 
-async function handleButtonClick(event, server, clientType) {
-    const TOGGLE_URL = '/admin/api-call/toggle/';
-    const button = event.target;
-
+async function handleButtonClick(button, server, clientType) {
     try {
-        const response = await fetch(server + TOGGLE_URL + clientType, {
+        const toggleResponse = await fetch(server + TOGGLE_URL + clientType, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             }
         });
-
-        if (!response.ok) {
+        if (!toggleResponse.ok) {
             throw new Error('Network response was not ok');
         }
 
-        const data = await response.json();
-
-        updateButtonState(button, data.enabled);
+        await fetchApiCallEnabled(button, server, clientType);
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error toggling enabled button:', error);
     }
 }
 
-function updateButtonState(button, enabled) {
+async function fetchApiCallEnabled(button, server, clientType) {
+    try {
+        const response = await fetch(server + ENABLED_URL + clientType);
+        const data = await response.json();
+        updateButton(button, data.enabled);
+    } catch (error) {
+        console.warn('Error fetching api call enabled:', error);
+        button.textContent = 'unknown';
+        button.className = 'unknown-button';
+    }
+}
+
+function updateButton(button, enabled) {
     button.textContent = enabled ? 'enabled' : 'disabled';
     button.className = enabled ? 'blue-button' : 'red-button';
-    button.dataset.enabled = enabled;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    fetchApiCallCounts();
-    initializeButtons();
+    initializeApiCallCounts();
+    initializeApiCallEnabledButtons();
 });

@@ -59,12 +59,21 @@ h1 {
     color: #2c3e50;
 }
 
+.unknown-button {
+    background-color: gray;
+    color: white;
+}
+
 .blue-button:hover {
     background-color: #7fc6ff;
 }
 
 .red-button:hover {
     background-color: #ff9aa2;
+}
+
+.unknown-button:hover {
+    background-color: #555555;
 }
 
 .button:active {
