@@ -41,7 +41,7 @@ public class ApiCall {
     @NotNull
     private LocalDate date;
 
-    private Boolean state;
+    private Boolean enabled;
 
     public ApiCall(ClientType clientType) {
         this(null, clientType, 0, LocalDate.now(), null);
@@ -55,14 +55,14 @@ public class ApiCall {
         count++;
     }
 
-    public void updateState() {
-        if (state == null) {
-            state = true;
+    public void updateEnabled() {
+        if (enabled == null) {
+            enabled = true;
         }
-        state = !state;
+        enabled = !enabled;
     }
 
-    public boolean isState() {
-        return state == null || state;
+    public boolean getEnabled() {
+        return enabled == null || enabled;
     }
 }

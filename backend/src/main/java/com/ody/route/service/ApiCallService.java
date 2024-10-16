@@ -3,6 +3,7 @@ package com.ody.route.service;
 import com.ody.route.domain.ApiCall;
 import com.ody.route.domain.ClientType;
 import com.ody.route.dto.ApiCallCountResponse;
+import com.ody.route.dto.ApiCallEnabledResponse;
 import com.ody.route.repository.ApiCallRepository;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,18 +21,11 @@ public class ApiCallService {
 
     private final ApiCallRepository apiCallRepository;
 
-    public ApiCallCountResponse countOdsayApiCall() {
-        ApiCall apiCall = findOrSaveFirstByDateAndClientType(ClientType.ODSAY);
-        return new ApiCallCountResponse(apiCall.getCount());
-    }
+    public ApiCallCountResponse countApiCall(ClientType clientType) {
+        LocalDate end = LocalDate.now();
+        LocalDate start = clientType.determineResetDate(end);
+        List<ApiCall> apiCalls = apiCallRepository.findAllByClientTypeAndDateBetween(clientType, start, end);
 
-    public ApiCallCountResponse countGoogleApiCall() {
-        LocalDate now = LocalDate.now();
-        List<ApiCall> apiCalls = apiCallRepository.findAllByClientTypeAndDateBetween(
-                ClientType.GOOGLE,
-                now.withDayOfMonth(1),
-                now
-        );
         int totalCount = apiCalls.stream()
                 .mapToInt(ApiCall::getCount)
                 .sum();
@@ -40,23 +34,35 @@ public class ApiCallService {
 
     @Transactional
     public void increaseCountByClientType(ClientType clientType) {
-        ApiCall apiCall = findOrSaveFirstByDateAndClientType(clientType);
+        ApiCall apiCall = findOrSaveFirstByClientTypeAndDate(clientType);
         apiCall.increaseCount();
     }
 
-    public boolean findStateByClientType(ClientType clientType) {
-        ApiCall apiCall = findOrSaveFirstByDateAndClientType(clientType);
-        return apiCall.isState();
+    private ApiCall findOrSaveFirstByClientTypeAndDate(ClientType clientType) {
+        Optional<ApiCall> apiCall = apiCallRepository.findFirstByClientTypeAndDate(clientType, LocalDate.now());
+        return apiCall.orElseGet(() -> apiCallRepository.save(new ApiCall(clientType)));
+    }
+
+    public ApiCallEnabledResponse getApiCallEnabled(ClientType clientType) {
+        boolean enabled = getEnabledByClientType(clientType);
+        return new ApiCallEnabledResponse(enabled);
+    }
+
+    public boolean getEnabledByClientType(ClientType clientType) {
+        ApiCall apiCall = findOrSaveFirstByClientTypeAndDateBetween(clientType);
+        return apiCall.getEnabled();
     }
 
     @Transactional
-    public void toggleStateByClientType(ClientType clientType) {
-        ApiCall apiCall = findOrSaveFirstByDateAndClientType(clientType);
-        apiCall.updateState();
+    public void toggleApiCallEnabled(ClientType clientType) {
+        ApiCall apiCall = findOrSaveFirstByClientTypeAndDateBetween(clientType);
+        apiCall.updateEnabled();
     }
 
-    private ApiCall findOrSaveFirstByDateAndClientType(ClientType clientType) {
-        Optional<ApiCall> apiCall = apiCallRepository.findFirstByDateAndClientType(LocalDate.now(), clientType);
+    private ApiCall findOrSaveFirstByClientTypeAndDateBetween(ClientType clientType) {
+        LocalDate end = LocalDate.now();
+        LocalDate start = clientType.determineResetDate(end);
+        Optional<ApiCall> apiCall = apiCallRepository.findFirstByClientTypeAndDateBetween(clientType, start, end);
         return apiCall.orElseGet(() -> apiCallRepository.save(new ApiCall(clientType)));
     }
 }

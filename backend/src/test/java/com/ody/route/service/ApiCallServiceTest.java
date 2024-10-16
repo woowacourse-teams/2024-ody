@@ -23,7 +23,7 @@ class ApiCallServiceTest extends BaseServiceTest {
         fixtureGenerator.generateApiCall(ClientType.ODSAY, 2, now);
         fixtureGenerator.generateApiCall(ClientType.GOOGLE, 3, now);
 
-        ApiCallCountResponse actual = apiCallService.countOdsayApiCall();
+        ApiCallCountResponse actual = apiCallService.countApiCall(ClientType.ODSAY);
         ApiCallCountResponse expected = new ApiCallCountResponse(2);
 
         assertThat(actual).isEqualTo(expected);
@@ -32,7 +32,7 @@ class ApiCallServiceTest extends BaseServiceTest {
     @DisplayName("오늘 Odsay API 호출 횟수가 없으면 0을 반환한다.")
     @Test
     void countOdsayApiCallFailure() {
-        ApiCallCountResponse actual = apiCallService.countOdsayApiCall();
+        ApiCallCountResponse actual = apiCallService.countApiCall(ClientType.ODSAY);
         ApiCallCountResponse expected = new ApiCallCountResponse(0);
 
         assertThat(actual).isEqualTo(expected);
@@ -48,7 +48,7 @@ class ApiCallServiceTest extends BaseServiceTest {
         fixtureGenerator.generateApiCall(ClientType.GOOGLE, 3, now);
         fixtureGenerator.generateApiCall(ClientType.ODSAY, 2, now);
 
-        ApiCallCountResponse actual = apiCallService.countGoogleApiCall();
+        ApiCallCountResponse actual = apiCallService.countApiCall(ClientType.GOOGLE);
         ApiCallCountResponse expected = new ApiCallCountResponse(3);
 
         assertThat(actual).isEqualTo(expected);
@@ -57,7 +57,7 @@ class ApiCallServiceTest extends BaseServiceTest {
     @DisplayName("이번달 Odsay API 호출 횟수가 없으면 0을 반환한다.")
     @Test
     void countGoogleApiCallFailure() {
-        ApiCallCountResponse actual = apiCallService.countOdsayApiCall();
+        ApiCallCountResponse actual = apiCallService.countApiCall(ClientType.GOOGLE);
         ApiCallCountResponse expected = new ApiCallCountResponse(0);
 
         assertThat(actual).isEqualTo(expected);
@@ -73,7 +73,7 @@ class ApiCallServiceTest extends BaseServiceTest {
         ClientType clientType = new StubGoogleRouteClient().getClientType();
         apiCallService.increaseCountByClientType(clientType);
 
-        int actual = apiCallService.countGoogleApiCall().count();
+        int actual = apiCallService.countApiCall(ClientType.GOOGLE).count();
         assertThat(actual).isEqualTo(1);
     }
 
@@ -87,7 +87,7 @@ class ApiCallServiceTest extends BaseServiceTest {
         ClientType clientType = new StubOdsayRouteClient().getClientType();
         apiCallService.increaseCountByClientType(clientType);
 
-        int actual = apiCallService.countOdsayApiCall().count();
+        int actual = apiCallService.countApiCall(ClientType.ODSAY).count();
         assertThat(actual).isEqualTo(4);
     }
 }

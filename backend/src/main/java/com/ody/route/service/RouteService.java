@@ -40,6 +40,6 @@ public class RouteService {
     }
 
     private boolean isDisabled(RouteClient client) {
-        return Boolean.FALSE.equals(apiCallService.findStateByClientType(client.getClientType()));
+        return Boolean.FALSE.equals(apiCallService.getEnabledByClientType(client.getClientType()));
     }
 }

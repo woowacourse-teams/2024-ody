@@ -96,7 +96,7 @@ class RouteServiceTest extends BaseServiceTest {
     void disableOdsayApiCall() {
         when(googleRouteClient.calculateRouteTime(origin, target)).thenReturn(new RouteTime(18));
 
-        apiCallService.toggleStateByClientType(odsayRouteClient.getClientType());
+        apiCallService.toggleApiCallEnabled(odsayRouteClient.getClientType());
 
         routeService.calculateRouteTime(origin, target);
         assertAll(
@@ -112,8 +112,8 @@ class RouteServiceTest extends BaseServiceTest {
         when(odsayRouteClient.calculateRouteTime(origin, target)).thenReturn(odsayRouteTime);
         when(googleRouteClient.calculateRouteTime(origin, target)).thenReturn(new RouteTime(18));
 
-        apiCallService.toggleStateByClientType(odsayRouteClient.getClientType());
-        apiCallService.toggleStateByClientType(odsayRouteClient.getClientType());
+        apiCallService.toggleApiCallEnabled(odsayRouteClient.getClientType());
+        apiCallService.toggleApiCallEnabled(odsayRouteClient.getClientType());
 
         routeService.calculateRouteTime(origin, target);
         assertAll(
