@@ -10,8 +10,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-#    env:
-#      TZ: 'Asia/Seoul'
+    env:
+      TZ: 'Asia/Seoul'
 
     defaults:
       run:

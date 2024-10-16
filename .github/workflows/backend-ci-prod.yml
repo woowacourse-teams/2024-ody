@@ -1,4 +1,4 @@
-name: backend-ci-dev
+name: backend-ci-prod
 
 on:
   pull_request:
@@ -9,8 +9,9 @@ on:
 
 jobs:
   build-and-push:
-
     runs-on: ubuntu-latest
+    env:
+      TZ: 'Asia/Seoul'
 
     defaults:
       run:
