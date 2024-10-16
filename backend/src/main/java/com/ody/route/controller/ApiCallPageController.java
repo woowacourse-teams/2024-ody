@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class ApiCallPageController {
 
-    @GetMapping("/api-call")
+    @GetMapping("${api-call.page}")
     public String apiCallPage() {
         return "api-call";
     }

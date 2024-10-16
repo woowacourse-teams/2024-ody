@@ -51,3 +51,6 @@ management:
   health:
     db:
       enabled: false
+
+api-call:
+  page: ENC(Tmip6pkMmuStDTjkRyspLm2PSd5/ov+T9Gzu2XZJKTjmLsrx4dplPIt/8CarbG2B)
