@@ -61,6 +61,8 @@ jobs:
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
           
+          docker inspect ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous
+          
           docker ps
           
           docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev -f Dockerfile . --push
