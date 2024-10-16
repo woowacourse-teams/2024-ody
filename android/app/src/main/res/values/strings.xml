@@ -11,7 +11,7 @@
     <string name="item_notification_entry">(이)가 들어왔어요.</string>
     <string name="item_notification_departure_reminder">(이)가 출발할 시간이에요!</string>
     <string name="item_notification_departure">(이)가 출발했어요.</string>
-    <string name="item_notification_nudge">"(이)가 재촉해요. \uD83D\uDC40"</string>
+    <string name="item_notification_nudge">"(이)가 재촉 받았어요. \uD83D\uDC40"</string>
     <string name="item_notification_member_deletion">(이)가 오디를 떠났어요.</string>
     <string name="item_notification_default"> </string>
 
