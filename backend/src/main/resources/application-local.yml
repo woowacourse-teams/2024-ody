@@ -11,7 +11,8 @@ spring:
     connect-retries: 30
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
+
 log:
   file:
     path: ./ody-local-logs
