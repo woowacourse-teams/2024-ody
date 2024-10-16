@@ -3,10 +3,9 @@ name: backend-cd-dev
 on:
   push:
     branches:
-      - feature/652
-#      - develop
-#    paths:
-#      - backend/**
+      - develop
+    paths:
+      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
@@ -20,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feature/652
+          ref: develop
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -60,10 +59,6 @@ jobs:
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest || true
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
-          
-          docker inspect ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous
-          
-          docker ps
           
           docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev -f Dockerfile . --push
 
@@ -107,13 +102,12 @@ jobs:
               echo "Status is NOT UP."
               exit 1
             fi
-          continue-on-error: true
 
       - name: Rollback if Health Check fails
         if: failure()
         run: |
-          docker stop $DOCKER_CONTAINER_NAME || true 
-          docker rm $DOCKER_CONTAINER_NAME || true
+          docker compose down || true
+          docker rmi $(docker images -q) -f || true
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous
           
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
@@ -130,4 +124,5 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
 
       - name: Check Docker Process
+        if: always()
         run: docker ps
