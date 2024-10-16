@@ -25,6 +25,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Check system timezone
+        run: |
+          echo "System timezone: $(cat /etc/timezone)"
+          echo "Current date and time: $(date)"
+          echo "TZ environment variable: $TZ"
+
+      - name: Check Java timezone
+        run: |
+          echo "Java timezone: $(java -XshowSettings:properties -version 2>&1 | grep timezone)"
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
