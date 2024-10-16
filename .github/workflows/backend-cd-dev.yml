@@ -114,6 +114,10 @@ jobs:
           docker rm $DOCKER_CONTAINER_NAME || true
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous
           
+          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+          export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
+          export DEV_MYSQL_PASSWORD=${{ secrets.DEV_MYSQL_PASSWORD }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
           export TAG=previous
           docker compose up -d
 
