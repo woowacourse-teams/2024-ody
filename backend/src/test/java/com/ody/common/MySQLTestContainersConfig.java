@@ -16,9 +16,7 @@ public class MySQLTestContainersConfig {
     @Container
     private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0.35")
             .withInitScript("mysql-container-init.sql")
-            .withDatabaseName("ody")
-            .withCommand("--default-time-zone=+09:00")
-            .withCommand("--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-time-zone=+09:00");
+            .withDatabaseName("ody");
 
     static {
         mysqlContainer.start();
