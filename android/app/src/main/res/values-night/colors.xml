@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">@color/black</color>
+    <color name="primaryVariant">@color/purple_800</color>
+    <color name="secondary">@color/purple_300</color>
+    <color name="secondaryVariant">@color/white</color>
+    <color name="tertiary">@color/cream</color>
+    <color name="quarternary">@color/cream</color>
+    <color name="quinary">@color/cream</color>
+    <color name="senary">@color/gray_500</color>
+    <color name="septenary">@color/gray_900</color>
+
+    <color name="black">#FF000000</color>
+    <color name="cream">#FFFFFFF6</color>
+    <color name="purple_300">#FFB8A7FF</color>
+    <color name="purple_800">#FF5C47AE</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="gray_100">#FFF9F9F8</color>
+    <color name="gray_200">#FFF2F2F6</color>
+    <color name="gray_300">#FFE4E4EA</color>
+    <color name="gray_350">#FFD6D6D6</color>
+    <color name="gray_400">#FFB1B1BB</color>
+    <color name="gray_400_70">#B3B1B1BB</color>
+    <color name="gray_500">#FF8E8E93</color>
+    <color name="gray_600">#FF636366</color>
+    <color name="gray_700">#FF48484A</color>
+    <color name="gray_800">#FF3A3A3C</color>
+    <color name="gray_800_20">#332F2F2F</color>
+    <color name="gray_900">#FF1C1C1E</color>
+    <color name="gray_900_50">#801C1C1E</color>
+
+    <drawable name="drawable_purple_800">@color/secondary</drawable>
+    <drawable name="drawable_gray_350">#FFD6D6D6</drawable>
+
+    <color name="blue">#FF5B89FF</color>
+    <color name="red">#FFFF5B5B</color>
+    <color name="green">#FF70BE69</color>
+    <color name="yellow">#FFF0C65B</color>
+</resources>
