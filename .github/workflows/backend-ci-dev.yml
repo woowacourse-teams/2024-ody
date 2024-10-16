@@ -10,8 +10,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    env:
-      TZ: 'Asia/Seoul'
+#    env:
+#      TZ: 'Asia/Seoul'
 
     defaults:
       run:
@@ -28,7 +28,6 @@ jobs:
 
       - name: Check system timezone
         run: |
-          echo "System timezone: $(cat /etc/timezone)"
           echo "Current date and time: $(date)"
           echo "TZ environment variable: $TZ"
 
