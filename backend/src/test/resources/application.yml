@@ -1,4 +1,9 @@
 spring:
+  datasource:
+    url: jdbc:h2:mem:database;MODE=MYSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
   jpa:
     show-sql: true
     hibernate:
@@ -6,6 +11,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  flyway:
+    enabled: false
 
 odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT

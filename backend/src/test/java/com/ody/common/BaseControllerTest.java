@@ -14,7 +14,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-@Import({TestRouteConfig.class, TestAuthConfig.class, FixtureGeneratorConfig.class, MySQLTestContainersConfig.class})
+@Import({TestRouteConfig.class, TestAuthConfig.class, FixtureGeneratorConfig.class})
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class BaseControllerTest {
