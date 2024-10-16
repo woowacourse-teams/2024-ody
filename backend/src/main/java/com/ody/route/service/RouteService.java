@@ -4,20 +4,17 @@ import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
 import com.ody.route.domain.RouteTime;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RouteService {
 
     private final List<RouteClient> routeClients;
     private final ApiCallService apiCallService;
-
-    public RouteService(List<RouteClient> routeClients, ApiCallService apiCallService) {
-        this.routeClients = routeClients;
-        this.apiCallService = apiCallService;
-    }
 
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         for (RouteClient client : routeClients) {
