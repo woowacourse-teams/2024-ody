@@ -147,24 +147,14 @@ public class FixtureGenerator {
     }
 
     public Notification generateNotification(Mate mate, NotificationStatus notificationStatus) {
+        LocalDateTime now = TimeUtil.nowWithTrim();
         return notificationRepository.save(new Notification(
                 mate,
                 NotificationType.ENTRY,
-                LocalDateTime.now(),
+                now,
                 notificationStatus,
                 new FcmTopic(mate.getMeeting())
         ));
-    }
-
-    public Notification generateNotification(
-            Mate mate,
-            NotificationType type,
-            LocalDateTime sentAt,
-            NotificationStatus status
-    ) {
-        return notificationRepository.save(
-                new Notification(mate, type, sentAt, status, new FcmTopic(mate.getMeeting()))
-        );
     }
 
     public String generateAccessTokenValueByMember(Member member) {

@@ -48,12 +48,11 @@ public class Eta {
 
     @Column(updatable = false)
     @NotNull
-    private LocalDateTime firstApiCallAt;
+    private LocalDateTime createdAt;
 
     @NotNull
-    private LocalDateTime lastApiCallAt;
+    private LocalDateTime updatedAt;
 
-    @Column(columnDefinition = "TIMESTAMP(6)")
     private LocalDateTime deletedAt;
 
     public Eta(Mate mate, Long remainingMinutes) {
@@ -70,17 +69,17 @@ public class Eta {
     }
 
     // TODO: 테스트에서만 쓰이는 생성자
-    public Eta(Mate mate, long remainingMinutes, LocalDateTime firstApiCallAt, LocalDateTime lastApiCallAt) {
-        this(null, mate, remainingMinutes, false, false, firstApiCallAt, lastApiCallAt, null);
+    public Eta(Mate mate, long remainingMinutes, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this(null, mate, remainingMinutes, false, false, createdAt, updatedAt, null);
     }
 
     public boolean isModified() {
-        return !firstApiCallAt.isEqual(lastApiCallAt);
+        return !createdAt.isEqual(updatedAt);
     }
 
     public long countDownMinutes() {
         LocalDateTime now = TimeUtil.nowWithTrim();
-        long minutesDifference = Duration.between(lastApiCallAt, now).toMinutes();
+        long minutesDifference = Duration.between(updatedAt, now).toMinutes();
         return Math.max(remainingMinutes - minutesDifference, 0);
     }
 
@@ -91,11 +90,11 @@ public class Eta {
     }
 
     public long differenceMinutesFromLastUpdated() {
-        return Duration.between(lastApiCallAt, TimeUtil.nowWithTrim()).toMinutes();
+        return Duration.between(updatedAt, TimeUtil.nowWithTrim()).toMinutes();
     }
 
     public void updateRemainingMinutes(long remainingMinutes) {
-        this.lastApiCallAt = TimeUtil.nowWithTrim();
+        this.updatedAt = TimeUtil.nowWithTrim();
         this.remainingMinutes = remainingMinutes;
     }
 
