@@ -9,3 +9,4 @@ services:
       MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: ody
+      TZ: Asia/seoul
