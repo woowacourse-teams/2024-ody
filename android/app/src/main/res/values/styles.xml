@@ -94,7 +94,7 @@
     <style name="toolbar_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/toolbar_height</item>
-        <item name="android:background">@color/cream</item>
+        <item name="android:background">@color/primary</item>
         <item name="contentInsetStart">0dp</item>
     </style>
 
@@ -115,7 +115,7 @@
         <item name="android:background">@drawable/rectangle_radius_0</item>
         <item name="android:backgroundTint">@drawable/selector_button_color</item>
         <item name="android:textSize">16dp</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/secondaryVariant</item>
         <item name="android:fontFamily">@font/pretendard_bold</item>
     </style>
 
@@ -124,7 +124,7 @@
         <item name="android:fontFamily">@font/pretendard_bold</item>
         <item name="android:textColor">@color/gray_350</item>
         <item name="android:textColorPrimary">@color/gray_800</item>
-        <item name="colorControlNormal">@color/purple_300</item>
+        <item name="colorControlNormal">@color/primaryVariant</item>
     </style>
 
     <style name="floating_button_style">

@@ -51,3 +51,6 @@ management:
   health:
     db:
       enabled: false
+
+allowed-origins:
+  api-call: ENC(GwAP/KfLoZ6IqqnMPFpqqmg11CXjh1Al6oMlwB+YTekyHGFuRPn1789uAwyJKx2mPX5BRS4I/CoBn6HgnTJwjPL2hm/eHn7VHACtur1NdVc=)

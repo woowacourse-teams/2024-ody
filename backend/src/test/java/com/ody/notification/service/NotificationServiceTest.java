@@ -62,7 +62,8 @@ class NotificationServiceTest extends BaseServiceTest {
         Member member = fixtureGenerator.generateMember();
         Meeting savedPastMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusDays(1));
         Mate mate = fixtureGenerator.generateMate(savedPastMeeting, member); // 소요 시간 : 10분
-      
+
+        LocalDateTime expect = LocalDateTime.now();
         notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
 
         Notification departureReminderNotification = notificationRepository.findAll().stream()
@@ -70,7 +71,7 @@ class NotificationServiceTest extends BaseServiceTest {
                 .findAny()
                 .get();
 
-        assertThat(departureReminderNotification.getSendAt()).isEqualToIgnoringNanos(LocalDateTime.now());
+        assertThat(departureReminderNotification.getSendAt()).isEqualToIgnoringNanos(expect);
     }
 
     @DisplayName("PENDING 상태의 알림들을 TaskScheduler로 스케줄링 한다.")
