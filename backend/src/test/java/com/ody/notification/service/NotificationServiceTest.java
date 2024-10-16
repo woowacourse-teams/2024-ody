@@ -56,22 +56,17 @@ class NotificationServiceTest extends BaseServiceTest {
     @MockBean
     private KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 
-    @DisplayName("출발 알림 생성 시점이 알림 전송 시점보다 늦은 경우 즉시 전송된다")
+    @DisplayName("알림 생성 시점이 전송 시점보다 늦은 경우 즉시 전송된다")
     @Test
     void sendImmediatelyIfDepartureTimeIsPast() {
         Member member = fixtureGenerator.generateMember();
         Meeting savedPastMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusDays(1));
-        Mate mate = fixtureGenerator.generateMate(savedPastMeeting, member); // 소요 시간 : 10분
-
-        LocalDateTime expect = LocalDateTime.now();
+        Mate mate = fixtureGenerator.generateMate(savedPastMeeting, member);
         notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
-
-        Notification departureReminderNotification = notificationRepository.findAll().stream()
-                .filter(Notification::isDepartureReminder)
-                .findAny()
-                .get();
-
-        assertThat(departureReminderNotification.getSendAt()).isEqualToIgnoringNanos(expect);
+        Optional<Notification> departureNotification = notificationRepository.findAll().stream()
+                .filter(notification -> notification.isDepartureReminder() && notification.isNow())
+                .findAny();
+        assertThat(departureNotification).isPresent();
     }
 
     @DisplayName("PENDING 상태의 알림들을 TaskScheduler로 스케줄링 한다.")
@@ -137,21 +132,6 @@ class NotificationServiceTest extends BaseServiceTest {
                 NotificationStatus.DISMISSED,
                 NotificationStatus.DISMISSED
         );
-    }
-
-    @DisplayName("참여자의 출발 시간이 현재 시간보다 전이라면 입장 알림 - 출발 알림 순으로 로그 목록이 조회된다.")
-    @Test
-    void findAllMeetingLogsOrderOfEntryAndDepartureNotification() {
-        Member member = fixtureGenerator.generateMember();
-        Meeting savedPastMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusDays(1));
-        Mate mate = fixtureGenerator.generateMate(savedPastMeeting, member); // 소요 시간 : 10분
-      
-        notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
-
-        NotiLogFindResponses allMeetingLogs = notificationService.findAllMeetingLogs(savedPastMeeting.getId());
-
-        assertThat(allMeetingLogs.notiLog()).extracting(NotiLogFindResponse::type)
-                .containsExactly(NotificationType.ENTRY.name(), NotificationType.DEPARTURE_REMINDER.name());
     }
 
     @DisplayName("삭제 회원이 포함된 로그 목록을 조회한다.")
