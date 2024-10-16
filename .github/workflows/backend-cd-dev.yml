@@ -3,9 +3,10 @@ name: backend-cd-dev
 on:
   push:
     branches:
-      - develop
-    paths:
-      - backend/**
+      - feature/652
+#      - develop
+#    paths:
+#      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
@@ -55,7 +56,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Docker Image Build And Push
-        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev -f Dockerfile . --push
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest || true
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
+          
+          docker ps
+          
+          docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev -f Dockerfile . --push
 
   pull-and-deploy:
     needs: build-and-push
@@ -78,7 +86,7 @@ jobs:
           export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
           export DEV_MYSQL_PASSWORD=${{ secrets.DEV_MYSQL_PASSWORD }}
           export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
-          export GIT_SHA=${{ github.sha }}
+          export TAG=${{ github.sha }}-dev
           docker compose up -d
 
       - name: Health Check with Retry
@@ -97,7 +105,23 @@ jobs:
               echo "Status is NOT UP."
               exit 1
             fi
-          continue-on-error: true # 실패하면 롤백 필요함 (현재는 다음 작업으로 넘어가게함)
+          continue-on-error: true
+
+      - name: Rollback if Health Check fails
+        if: failure()
+        run: |
+          docker stop $DOCKER_CONTAINER_NAME || true 
+          docker rm $DOCKER_CONTAINER_NAME || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous
+          
+          export TAG=previous
+          docker compose up -d
+
+      - name: Tag successful deployment as latest
+        if: success()
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
 
       - name: Check Docker Process
         run: docker ps
