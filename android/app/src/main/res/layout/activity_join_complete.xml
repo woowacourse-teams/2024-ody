@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
         android:gravity="center"
-        android:textColor="@color/purple_800"
+        android:textColor="@color/secondary"
         tools:text="우테코 회식 모임" />
 
     <TextView

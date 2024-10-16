@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cream"
+        android:background="@color/primary"
         android:onClick="@{() -> addressListener.onClickAddressItem(address.id)}"
         android:paddingVertical="18dp">
 
@@ -42,7 +42,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:text="@{address.placeName}"
-            android:textColor="@color/purple_800"
+            android:textColor="@color/secondary"
             app:layout_constraintBottom_toTopOf="@id/tv_address_search_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_address_search_location"
