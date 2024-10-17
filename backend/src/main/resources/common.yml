@@ -1,5 +1,10 @@
 server:
   shutdown: graceful
+  tomcat:
+    max-connections: ${TOMCAT_MAX_CONNECTIONS} # 서버가 수락하고 처리할 수 있는 최대 연결수
+    accept-count: ${TOMCAT_ACCEPT_COUNT} # maxConnections 이상의 요청이 들어왔을때 대기하는 대기열(Queue)의 길이
+    threads:
+      max: ${TOMCAT_THREADS_MAX} # 생성할수있는 최대 thread 개수(= 트랜잭션 수, active user 수)
 
 spring:
   jpa:
@@ -8,6 +13,11 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+  datasource:
+    hikari:
+      maximum-pool-size: ${HIKARI_MAXIMUM_POOL_SIZE} # 커넥션 풀의 최대 크기
+      minimum-idle: ${HIKARI_MAXIMUM_POOL_SIZE} # 최소 Idle 커넥션 수 (= 커넥션 풀의 최대 크기 추천)
+      max-lifetime: ${HIKARI_MAX_LIFETIME} # 커넥션 최대 생존 시간 (밀리초 단위)
 
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
