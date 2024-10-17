@@ -46,6 +46,7 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
                 viewModel.navigateAction.collect {
                     val intent = MeetingsActivity.getIntent(this@LoginActivity)
                     startActivity(intent)
+                    finish()
                 }
             }
             launch {
