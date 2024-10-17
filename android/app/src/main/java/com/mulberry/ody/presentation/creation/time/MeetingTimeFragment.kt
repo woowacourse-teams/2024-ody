@@ -31,7 +31,7 @@ class MeetingTimeFragment : BindingFragment<FragmentMeetingTimeBinding>(R.layout
     }
 
     private fun initializeObserve() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.invalidMeetingTimeEvent.collect {

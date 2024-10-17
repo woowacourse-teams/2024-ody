@@ -35,7 +35,7 @@ class MeetingDestinationFragment :
     }
 
     private fun initializeObserve() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.invalidDestinationEvent.collect {

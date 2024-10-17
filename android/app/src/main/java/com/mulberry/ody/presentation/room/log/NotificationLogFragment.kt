@@ -45,7 +45,7 @@ class NotificationLogFragment :
     }
 
     private fun initializeObserve() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.notificationLogs.collect {

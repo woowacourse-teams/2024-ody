@@ -62,7 +62,7 @@ class AddressSearchFragment :
             onBackPressedCallback,
         )
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.isLoading.collect { isLoading ->
