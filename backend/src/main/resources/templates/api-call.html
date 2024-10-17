@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ody Admin Page</title>
+    <link rel="stylesheet" type="text/css" href="css/api-call.css">
+</head>
+<body>
+<div class="container">
+    <h1>오디 어드민 페이지</h1>
+
+    <br>
+    <h2>외부 API 호출 횟수 조회하기</h2>
+    <table class="data-table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Odsay API (일별)</th>
+            <th>Google API (월별)</th>
+        </tr>
+        </thead>
+        <tbody id="countTable">
+        <tr>
+            <td>Dev</td>
+            <td id="odsayDevCount">0</td>
+            <td id="googleDevCount">0</td>
+        </tr>
+        <tr>
+            <td>Prod</td>
+            <td id="odsayProdCount">0</td>
+            <td id="googleProdCount">0</td>
+        </tr>
+        <tr>
+            <td>Total</td>
+            <td id="odsayTotalCount">0</td>
+            <td id="googleTotalCount">0</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <h2>외부 API 호출 제어하기</h2>
+    <table class="data-table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Odsay API (일별)</th>
+            <th>Google API (월별)</th>
+        </tr>
+        </thead>
+        <tbody id="toggleTable">
+        <tr>
+            <td>Dev</td>
+            <td>
+                <button id="odsayDevToggleButton" th:text="unknown" th:class="unknown-button">
+                </button>
+            </td>
+            <td>
+                <button id="googleDevToggleButton" th:text="unknown" th:class="unknown-button">
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>Prod</td>
+            <td>
+                <button id="odsayProdToggleButton" th:text="unknown" th:class="unknown-button">
+                </button>
+            </td>
+            <td>
+                <button id="googleProdToggleButton" th:text="unknown" th:class="unknown-button">
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="/js/api-call.js"></script>
+</body>
+</html>
