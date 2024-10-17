@@ -7,9 +7,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingCreationBinding
 import com.mulberry.ody.domain.model.Address
@@ -23,6 +20,7 @@ import com.mulberry.ody.presentation.creation.destination.MeetingDestinationFrag
 import com.mulberry.ody.presentation.creation.name.MeetingNameFragment
 import com.mulberry.ody.presentation.creation.time.MeetingTimeFragment
 import com.mulberry.ody.presentation.join.MeetingJoinActivity
+import com.mulberry.ody.presentation.launchWhenStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -69,50 +67,53 @@ class MeetingCreationActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.inviteCode.collect {
-                        viewModel.onClickCreationMeeting()
-                    }
+        launchWhenStarted {
+            launch {
+                viewModel.inviteCode.collect {
+                    viewModel.onClickCreationMeeting()
                 }
-                launch {
-                    viewModel.nextPageEvent.collect {
-                        handleMeetingInfoNextClick()
-                    }
+            }
+            launch {
+                viewModel.nextPageEvent.collect {
+                    handleMeetingInfoNextClick()
                 }
-                launch {
-                    viewModel.navigateAction.collect {
-                        when (it) {
-                            MeetingCreationNavigateAction.NavigateToMeetings -> {
-                                finish()
-                            }
+            }
+            launch {
+                viewModel.navigateAction.collect {
+                    when (it) {
+                        MeetingCreationNavigateAction.NavigateToMeetings -> {
+                            finish()
+                        }
 
-                            is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
-                                startActivity(MeetingJoinActivity.getIntent(it.inviteCode, this@MeetingCreationActivity))
-                                finish()
-                            }
+                        is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
+                            startActivity(
+                                MeetingJoinActivity.getIntent(
+                                    it.inviteCode,
+                                    this@MeetingCreationActivity,
+                                ),
+                            )
+                            finish()
                         }
                     }
                 }
-                launch {
-                    viewModel.networkErrorEvent.collect {
-                        showRetrySnackBar { viewModel.retryLastAction() }
-                    }
+            }
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
                 }
-                launch {
-                    viewModel.errorEvent.collect {
-                        showSnackBar(R.string.error_guide)
-                    }
+            }
+            launch {
+                viewModel.errorEvent.collect {
+                    showSnackBar(R.string.error_guide)
                 }
-                launch {
-                    viewModel.isLoading.collect { isLoading ->
-                        if (isLoading) {
-                            showLoadingDialog()
-                            return@collect
-                        }
-                        hideLoadingDialog()
+            }
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
                     }
+                    hideLoadingDialog()
                 }
             }
         }

@@ -5,15 +5,13 @@ import android.view.KeyEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentAddressSearchBinding
 import com.mulberry.ody.presentation.address.adapter.AddressesAdapter
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.common.listener.BackListener
+import com.mulberry.ody.presentation.launchWhenStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -62,38 +60,36 @@ class AddressSearchFragment :
             onBackPressedCallback,
         )
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.isLoading.collect { isLoading ->
-                        if (isLoading) {
-                            showLoadingDialog()
-                            return@collect
-                        }
-                        hideLoadingDialog()
+        launchWhenStarted {
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
                     }
+                    hideLoadingDialog()
                 }
-                launch {
-                    viewModel.networkErrorEvent.collect {
-                        showRetrySnackBar { viewModel.retryLastAction() }
-                    }
+            }
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
                 }
-                launch {
-                    viewModel.addressUiModels.collect {
-                        adapter.submitList(it)
-                    }
+            }
+            launch {
+                viewModel.addressUiModels.collect {
+                    adapter.submitList(it)
                 }
-                launch {
-                    viewModel.addressSelectEvent.collect {
-                        (parentFragment as? AddressSearchListener)?.onReceive(it)
-                        (activity as? AddressSearchListener)?.onReceive(it)
-                        onBack()
-                    }
+            }
+            launch {
+                viewModel.addressSelectEvent.collect {
+                    (parentFragment as? AddressSearchListener)?.onReceive(it)
+                    (activity as? AddressSearchListener)?.onReceive(it)
+                    onBack()
                 }
-                launch {
-                    viewModel.addressSearchKeyword.collect {
-                        if (it.isEmpty()) viewModel.clearAddresses()
-                    }
+            }
+            launch {
+                viewModel.addressSearchKeyword.collect {
+                    if (it.isEmpty()) viewModel.clearAddresses()
                 }
             }
         }

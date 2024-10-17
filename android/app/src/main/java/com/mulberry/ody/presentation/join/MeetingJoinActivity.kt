@@ -6,9 +6,6 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingJoinBinding
 import com.mulberry.ody.domain.model.Address
@@ -19,6 +16,7 @@ import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.listener.NextListener
 import com.mulberry.ody.presentation.join.complete.JoinCompleteActivity
+import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -56,44 +54,42 @@ class MeetingJoinActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.invalidDepartureEvent.collect {
-                        showSnackBar(R.string.invalid_address)
-                    }
+        launchWhenStarted {
+            launch {
+                viewModel.invalidDepartureEvent.collect {
+                    showSnackBar(R.string.invalid_address)
                 }
-                launch {
-                    viewModel.navigateAction.collect {
-                        when (it) {
-                            is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
-                                navigateToNotificationRoom(it.meetingId)
-                            }
+            }
+            launch {
+                viewModel.navigateAction.collect {
+                    when (it) {
+                        is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
+                            navigateToNotificationRoom(it.meetingId)
+                        }
 
-                            MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
-                                startActivity(JoinCompleteActivity.getIntent(this@MeetingJoinActivity))
-                            }
+                        MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
+                            startActivity(JoinCompleteActivity.getIntent(this@MeetingJoinActivity))
                         }
                     }
                 }
-                launch {
-                    viewModel.networkErrorEvent.collect {
-                        showRetrySnackBar { viewModel.retryLastAction() }
-                    }
+            }
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
                 }
-                launch {
-                    viewModel.errorEvent.collect {
-                        showSnackBar(R.string.error_guide)
-                    }
+            }
+            launch {
+                viewModel.errorEvent.collect {
+                    showSnackBar(R.string.error_guide)
                 }
-                launch {
-                    viewModel.isLoading.collect { isLoading ->
-                        if (isLoading) {
-                            showLoadingDialog()
-                            return@collect
-                        }
-                        hideLoadingDialog()
+            }
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
                     }
+                    hideLoadingDialog()
                 }
             }
         }

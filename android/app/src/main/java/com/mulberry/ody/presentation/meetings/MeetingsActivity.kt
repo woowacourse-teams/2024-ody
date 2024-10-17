@@ -8,15 +8,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingsBinding
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.creation.MeetingCreationActivity
 import com.mulberry.ody.presentation.invitecode.InviteCodeActivity
+import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.mulberry.ody.presentation.meetings.listener.MeetingsListener
@@ -65,40 +63,46 @@ class MeetingsActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback())
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.meetingCatalogs.collect {
-                        adapter.submitList(it)
+        launchWhenStarted {
+            launch {
+                viewModel.meetingCatalogs.collect {
+                    adapter.submitList(it)
+                }
+            }
+            launch {
+                viewModel.navigateAction.collect {
+                    when (it) {
+                        is MeetingsNavigateAction.NavigateToEtaDashboard ->
+                            navigateToEtaDashboard(
+                                it.meetingId,
+                            )
+
+                        is MeetingsNavigateAction.NavigateToNotificationLog ->
+                            navigateToNotificationLog(
+                                it.meetingId,
+                            )
+
+                        is MeetingsNavigateAction.NavigateToLogin -> navigateToLogin()
                     }
                 }
-                launch {
-                    viewModel.navigateAction.collect {
-                        when (it) {
-                            is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
-                            is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
-                            is MeetingsNavigateAction.NavigateToLogin -> navigateToLogin()
-                        }
-                    }
+            }
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
                 }
-                launch {
-                    viewModel.networkErrorEvent.collect {
-                        showRetrySnackBar { viewModel.retryLastAction() }
-                    }
+            }
+            launch {
+                viewModel.errorEvent.collect {
+                    showSnackBar(R.string.error_guide)
                 }
-                launch {
-                    viewModel.errorEvent.collect {
-                        showSnackBar(R.string.error_guide)
+            }
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
                     }
-                }
-                launch {
-                    viewModel.isLoading.collect { isLoading ->
-                        if (isLoading) {
-                            showLoadingDialog()
-                            return@collect
-                        }
-                        hideLoadingDialog()
-                    }
+                    hideLoadingDialog()
                 }
             }
         }

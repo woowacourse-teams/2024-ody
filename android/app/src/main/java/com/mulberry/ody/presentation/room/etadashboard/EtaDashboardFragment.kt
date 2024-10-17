@@ -12,9 +12,7 @@ import android.widget.PopupWindow
 import androidx.annotation.StringRes
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.databinding.FragmentEtaDashboardBinding
@@ -22,6 +20,7 @@ import com.mulberry.ody.databinding.LayoutMissingTooltipBinding
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.common.image.getBitmap
 import com.mulberry.ody.presentation.common.image.toByteArray
+import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
@@ -41,7 +40,8 @@ class EtaDashboardFragment :
     private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this, viewModel) }
     private val parentActivity: Activity by lazy { requireActivity() }
 
-    @Inject lateinit var odyDatastore: OdyDatastore
+    @Inject
+    lateinit var odyDatastore: OdyDatastore
 
     override fun onViewCreated(
         view: View,
@@ -83,17 +83,15 @@ class EtaDashboardFragment :
     }
 
     private fun initializeObserve() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.mateEtaUiModels.collect {
-                        adapter.submitList(it)
-                    }
+        launchWhenStarted {
+            launch {
+                viewModel.mateEtaUiModels.collect {
+                    adapter.submitList(it)
                 }
-                launch {
-                    viewModel.nudgeSuccessMate.collect { nickName ->
-                        showSnackBar(getString(R.string.nudge_success, nickName))
-                    }
+            }
+            launch {
+                viewModel.nudgeSuccessMate.collect { nickName ->
+                    showSnackBar(getString(R.string.nudge_success, nickName))
                 }
             }
         }

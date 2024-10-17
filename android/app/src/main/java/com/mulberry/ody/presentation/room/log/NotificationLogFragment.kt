@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentNotificationLogBinding
 import com.mulberry.ody.presentation.common.binding.BindingFragment
+import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.log.adapter.MatesAdapter
@@ -45,17 +43,15 @@ class NotificationLogFragment :
     }
 
     private fun initializeObserve() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.notificationLogs.collect {
-                        notificationLogsAdapter.submitList(it)
-                    }
+        launchWhenStarted {
+            launch {
+                viewModel.notificationLogs.collect {
+                    notificationLogsAdapter.submitList(it)
                 }
-                launch {
-                    viewModel.mates.collect {
-                        matesAdapter.submitList(it)
-                    }
+            }
+            launch {
+                viewModel.mates.collect {
+                    matesAdapter.submitList(it)
                 }
             }
         }

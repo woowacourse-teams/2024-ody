@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityLoginBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
+import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.meetings.MeetingsActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -30,45 +28,43 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
     }
 
     private fun initializeObserve() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.navigatedReason.collect {
-                        when (it) {
-                            LoginNavigatedReason.LOGOUT -> {
-                                showSnackBar(R.string.login_logout_success)
-                            }
+        launchWhenStarted {
+            launch {
+                viewModel.navigatedReason.collect {
+                    when (it) {
+                        LoginNavigatedReason.LOGOUT -> {
+                            showSnackBar(R.string.login_logout_success)
+                        }
 
-                            LoginNavigatedReason.WITHDRAWAL -> {
-                                showSnackBar(R.string.login_withdrawal_success)
-                            }
+                        LoginNavigatedReason.WITHDRAWAL -> {
+                            showSnackBar(R.string.login_withdrawal_success)
                         }
                     }
                 }
-                launch {
-                    viewModel.navigateAction.collect {
-                        val intent = MeetingsActivity.getIntent(this@LoginActivity)
-                        startActivity(intent)
-                    }
+            }
+            launch {
+                viewModel.navigateAction.collect {
+                    val intent = MeetingsActivity.getIntent(this@LoginActivity)
+                    startActivity(intent)
                 }
-                launch {
-                    viewModel.networkErrorEvent.collect {
-                        showRetrySnackBar { viewModel.retryLastAction() }
-                    }
+            }
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
                 }
-                launch {
-                    viewModel.errorEvent.collect {
-                        showSnackBar(R.string.error_guide)
-                    }
+            }
+            launch {
+                viewModel.errorEvent.collect {
+                    showSnackBar(R.string.error_guide)
                 }
-                launch {
-                    viewModel.isLoading.collect { isLoading ->
-                        if (isLoading) {
-                            showLoadingDialog()
-                            return@collect
-                        }
-                        hideLoadingDialog()
+            }
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
                     }
+                    hideLoadingDialog()
                 }
             }
         }

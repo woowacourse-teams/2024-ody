@@ -6,15 +6,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
+import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.login.LoginNavigatedReason
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
@@ -39,39 +37,37 @@ class SettingActivity :
     }
 
     private fun initializeObserve() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.loginNavigateEvent.collect {
-                        when (it) {
-                            LoginNavigatedReason.LOGOUT -> {
-                                navigateToLogin()
-                            }
+        launchWhenStarted {
+            launch {
+                viewModel.loginNavigateEvent.collect {
+                    when (it) {
+                        LoginNavigatedReason.LOGOUT -> {
+                            navigateToLogin()
+                        }
 
-                            LoginNavigatedReason.WITHDRAWAL -> {
-                                navigateToWithdrawal()
-                            }
+                        LoginNavigatedReason.WITHDRAWAL -> {
+                            navigateToWithdrawal()
                         }
                     }
                 }
-                launch {
-                    viewModel.isLoading.collect { isLoading ->
-                        if (isLoading) {
-                            showLoadingDialog()
-                            return@collect
-                        }
-                        hideLoadingDialog()
+            }
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
                     }
+                    hideLoadingDialog()
                 }
-                launch {
-                    viewModel.networkErrorEvent.collect {
-                        showRetrySnackBar { viewModel.retryLastAction() }
-                    }
+            }
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
                 }
-                launch {
-                    viewModel.errorEvent.collect {
-                        showSnackBar(R.string.error_guide)
-                    }
+            }
+            launch {
+                viewModel.errorEvent.collect {
+                    showSnackBar(R.string.error_guide)
                 }
             }
         }
