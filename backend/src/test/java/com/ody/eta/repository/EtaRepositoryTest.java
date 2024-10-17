@@ -41,12 +41,12 @@ class EtaRepositoryTest extends BaseRepositoryTest {
         etaRepository.save(new Eta(odyMate2, 15L));
         etaRepository.save(new Eta(sojuMate, 20L));
 
-        List<Eta> sojuMeetingEtas = etaRepository.findAllByMeetingId(sojuMeeting.getId());
         List<Eta> odyMeetingEtas = etaRepository.findAllByMeetingId(odyMeeting.getId());
+        List<Eta> sojuMeetingEtas = etaRepository.findAllByMeetingId(sojuMeeting.getId());
 
         assertAll(
-                () -> assertThat(sojuMeetingEtas).hasSize(1),
-                () -> assertThat(odyMeetingEtas).hasSize(2)
+                () -> assertThat(odyMeetingEtas).hasSize(2),
+                () -> assertThat(sojuMeetingEtas).hasSize(1)
         );
     }
 
@@ -57,7 +57,7 @@ class EtaRepositoryTest extends BaseRepositoryTest {
 
         etaRepository.delete(eta);
 
-        Eta actual = (Eta) entityManager.createNativeQuery("select * from Eta where id = ?", Eta.class)
+        Eta actual = (Eta) entityManager.createNativeQuery("select * from eta where id = ?", Eta.class)
                 .setParameter(1, eta.getId())
                 .getSingleResult();
         assertThat(actual.getDeletedAt()).isNotNull();

@@ -1,11 +1,8 @@
 package com.ody.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseRepositoryTest;
-import com.ody.common.Fixture;
-import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
