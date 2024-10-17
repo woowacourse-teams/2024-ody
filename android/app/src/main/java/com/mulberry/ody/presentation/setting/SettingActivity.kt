@@ -6,13 +6,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
+import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.login.LoginNavigatedReason
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
@@ -37,32 +37,39 @@ class SettingActivity :
     }
 
     private fun initializeObserve() {
-        lifecycleScope.launch {
-            viewModel.loginNavigateEvent.collect {
-                when (it) {
-                    LoginNavigatedReason.LOGOUT -> {
-                        navigateToLogin()
-                    }
+        launchWhenStarted {
+            launch {
+                viewModel.loginNavigateEvent.collect {
+                    when (it) {
+                        LoginNavigatedReason.LOGOUT -> {
+                            navigateToLogin()
+                        }
 
-                    LoginNavigatedReason.WITHDRAWAL -> {
-                        navigateToWithdrawal()
+                        LoginNavigatedReason.WITHDRAWAL -> {
+                            navigateToWithdrawal()
+                        }
                     }
                 }
             }
-        }
-
-        viewModel.isLoading.observe(this) { isLoading ->
-            if (isLoading) {
-                showLoadingDialog()
-                return@observe
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
+                    }
+                    hideLoadingDialog()
+                }
             }
-            hideLoadingDialog()
-        }
-        viewModel.networkErrorEvent.observe(this) {
-            showRetrySnackBar { viewModel.retryLastAction() }
-        }
-        viewModel.errorEvent.observe(this) {
-            showSnackBar(R.string.error_guide)
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
+                }
+            }
+            launch {
+                viewModel.errorEvent.collect {
+                    showSnackBar(R.string.error_guide)
+                }
+            }
         }
     }
 

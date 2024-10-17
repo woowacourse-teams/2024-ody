@@ -37,9 +37,9 @@ class MeetingCreationViewModel
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
     ) : BaseViewModel(), MeetingCreationListener {
-        val meetingCreationInfoType = MutableStateFlow<MeetingCreationInfoType?>(null)
+        val meetingCreationInfoType: MutableStateFlow<MeetingCreationInfoType?> = MutableStateFlow(null)
 
-        val isValidInfo = MutableStateFlow(false)
+        val isValidInfo: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
         val meetingName: MutableStateFlow<String> = MutableStateFlow("")
         val meetingNameLength: StateFlow<Int> =

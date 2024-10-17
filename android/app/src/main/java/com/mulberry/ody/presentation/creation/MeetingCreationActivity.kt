@@ -7,7 +7,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingCreationBinding
 import com.mulberry.ody.domain.model.Address
@@ -21,6 +20,7 @@ import com.mulberry.ody.presentation.creation.destination.MeetingDestinationFrag
 import com.mulberry.ody.presentation.creation.name.MeetingNameFragment
 import com.mulberry.ody.presentation.creation.time.MeetingTimeFragment
 import com.mulberry.ody.presentation.join.MeetingJoinActivity
+import com.mulberry.ody.presentation.launchWhenStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -67,42 +67,55 @@ class MeetingCreationActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        lifecycleScope.launch {
-            viewModel.inviteCode.collect {
-                viewModel.onClickCreationMeeting()
+        launchWhenStarted {
+            launch {
+                viewModel.inviteCode.collect {
+                    viewModel.onClickCreationMeeting()
+                }
             }
-        }
-        lifecycleScope.launch {
-            viewModel.nextPageEvent.collect {
-                handleMeetingInfoNextClick()
+            launch {
+                viewModel.nextPageEvent.collect {
+                    handleMeetingInfoNextClick()
+                }
             }
-        }
-        lifecycleScope.launch {
-            viewModel.navigateAction.collect {
-                when (it) {
-                    MeetingCreationNavigateAction.NavigateToMeetings -> {
-                        finish()
-                    }
+            launch {
+                viewModel.navigateAction.collect {
+                    when (it) {
+                        MeetingCreationNavigateAction.NavigateToMeetings -> {
+                            finish()
+                        }
 
-                    is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
-                        startActivity(MeetingJoinActivity.getIntent(it.inviteCode, this@MeetingCreationActivity))
-                        finish()
+                        is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
+                            startActivity(
+                                MeetingJoinActivity.getIntent(
+                                    it.inviteCode,
+                                    this@MeetingCreationActivity,
+                                ),
+                            )
+                            finish()
+                        }
                     }
                 }
             }
-        }
-        viewModel.networkErrorEvent.observe(this) {
-            showRetrySnackBar { viewModel.retryLastAction() }
-        }
-        viewModel.errorEvent.observe(this) {
-            showSnackBar(R.string.error_guide)
-        }
-        viewModel.isLoading.observe(this) { isLoading ->
-            if (isLoading) {
-                showLoadingDialog()
-                return@observe
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
+                }
             }
-            hideLoadingDialog()
+            launch {
+                viewModel.errorEvent.collect {
+                    showSnackBar(R.string.error_guide)
+                }
+            }
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
+                    }
+                    hideLoadingDialog()
+                }
+            }
         }
     }
 
