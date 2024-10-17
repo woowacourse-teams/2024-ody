@@ -8,7 +8,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.shaded.com.google.common.base.CaseFormat;
+import com.google.common.base.CaseFormat;
 
 @Component
 public class DatabaseCleaner {
