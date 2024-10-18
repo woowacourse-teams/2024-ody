@@ -82,7 +82,7 @@ public class MeetingService {
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 초대코드입니다."));
     }
 
-    public Meeting findById(Long meetingId) {
+    public Meeting findByIdAndOverdueFalse(Long meetingId) {
         return meetingRepository.findByIdAndOverdueFalse(meetingId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 약속입니다."));
     }
@@ -105,7 +105,7 @@ public class MeetingService {
     }
 
     public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {
-        Meeting meeting = findById(meetingId);
+        Meeting meeting = findByIdAndOverdueFalse(meetingId);
         List<Mate> mates = mateService.findAllByMeetingIdIfMate(member, meeting.getId());
         return MeetingWithMatesResponse.of(meeting, mates);
     }
@@ -119,6 +119,7 @@ public class MeetingService {
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
     }
 
+    @Transactional
     @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
     public void scheduleOverdueMeetings() {
         meetingRepository.updateAllByNotOverdueMeetings();
