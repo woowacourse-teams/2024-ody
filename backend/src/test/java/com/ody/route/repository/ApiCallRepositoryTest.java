@@ -16,7 +16,7 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("특정 날짜와 ClientType이 일치하는 데이터를 조회한다")
     @Test
-    void findFirstByDateAndClientType() {
+    void findFirstByClientTypeAndDate() {
         // given
         LocalDate now = LocalDate.now();
         ApiCall yesterdayOdsayApiCall = new ApiCall(ClientType.ODSAY, 1, now.minusDays(1));
@@ -27,11 +27,30 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
         apiCallRepository.save(todayGoogleApiCall);
 
         // when
-        Optional<ApiCall> actual = apiCallRepository.findFirstByDateAndClientType(now, ClientType.ODSAY);
+        Optional<ApiCall> actual = apiCallRepository.findFirstByClientTypeAndDate(ClientType.ODSAY, now);
 
         // then
         assertThat(actual).isPresent()
                 .get().extracting(ApiCall::getCount).isEqualTo(2);
+    }
+
+    @DisplayName("특정 ClientType과 날짜 기간 내에서 가장 빠른 데이터를 조회한다.")
+    @Test
+    void findFirstByClientTypeAndDateBetween() {
+        ClientType clientType = ClientType.GOOGLE;
+        LocalDate now = LocalDate.now();
+        LocalDate firstDay = now.withDayOfMonth(1);
+        ApiCall secondApiCall = new ApiCall(clientType, 1, firstDay.plusDays(5));
+        ApiCall thirdApiCall = new ApiCall(clientType, 2, firstDay.plusDays(10));
+        ApiCall firstApiCall = new ApiCall(clientType, 3, firstDay.plusDays(3));
+        apiCallRepository.save(secondApiCall);
+        apiCallRepository.save(thirdApiCall);
+        apiCallRepository.save(firstApiCall);
+
+        Optional<ApiCall> actual = apiCallRepository.findFirstByClientTypeAndDateBetween(clientType, firstDay, now);
+
+        assertThat(actual).isPresent()
+                .get().extracting(ApiCall::getDate).isEqualTo(firstApiCall.getDate());
     }
 
     @DisplayName("특정 ClientType과 날짜 기간이 일치하는 모든 데이터를 조회한다")
@@ -48,11 +67,7 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
         apiCallRepository.save(todayOdsayApiCall);
 
         // when
-        List<ApiCall> actual = apiCallRepository.findAllByClientTypeAndDateBetween(
-                ClientType.GOOGLE,
-                yesterday,
-                now
-        );
+        List<ApiCall> actual = apiCallRepository.findAllByClientTypeAndDateBetween(ClientType.GOOGLE, yesterday, now);
 
         // then
         assertAll(
