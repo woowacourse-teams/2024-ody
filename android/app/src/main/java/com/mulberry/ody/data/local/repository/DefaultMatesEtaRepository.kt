@@ -71,6 +71,18 @@ constructor(
         }
     }
 
+    override suspend fun reserveAllEtaReservation() {
+        val etaReserveEntities = etaReserveDao.fetchAll()
+        etaReserveEntities.forEach { etaReserveEntity ->
+            etaDashboardAlarm.reserveEtaDashboard(
+                etaReserveEntity.meetingId,
+                etaReserveEntity.reserveMillis,
+                etaReserveEntity.isOpen,
+                etaReserveEntity.id,
+            )
+        }
+    }
+
     private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
 
     companion object {

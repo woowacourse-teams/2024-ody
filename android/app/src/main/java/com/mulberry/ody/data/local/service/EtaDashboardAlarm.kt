@@ -73,6 +73,16 @@ constructor(
         alarmManager.cancel(pendingIntent)
     }
 
+    fun reserveEtaDashboard(
+        meetingId: Long,
+        etaReservationId: Long,
+        isOpen: Boolean,
+        reserveMillis: Long,
+    ) {
+        val pendingIntent = createEtaDashboardPendingIntent(meetingId, etaReservationId, isOpen)
+        reserve(reserveMillis, pendingIntent)
+    }
+
     companion object {
         const val ETA_RESERVATION_ID_KEY = "eta_reserve_id"
         const val ETA_RESERVATION_ID_DEFAULT_VALUE = -1L
