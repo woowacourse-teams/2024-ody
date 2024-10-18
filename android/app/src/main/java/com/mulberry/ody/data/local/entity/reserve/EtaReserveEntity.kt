@@ -11,5 +11,5 @@ data class EtaReserveEntity(
     val reserveMillis: Long,
     val isOpen: Boolean,
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 1L
+    val id: Long = 1L,
 )

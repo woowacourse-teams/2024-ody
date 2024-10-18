@@ -25,7 +25,6 @@ class EtaDashboardCloseBroadcastReceiver : BroadcastReceiver() {
         val meetingId = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
         if (meetingId == MEETING_ID_DEFAULT_VALUE) return
 
-
         val etaReservationId = intent.getLongExtra(ETA_RESERVATION_ID_KEY, ETA_RESERVATION_ID_DEFAULT_VALUE)
         if (etaReservationId == ETA_RESERVATION_ID_DEFAULT_VALUE) return
 

@@ -3,7 +3,6 @@ package com.mulberry.ody.data.local.service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.mulberry.ody.data.local.db.EtaReserveDao
 import com.mulberry.ody.data.local.service.EtaDashboardAlarm.Companion.ETA_RESERVATION_ID_DEFAULT_VALUE
 import com.mulberry.ody.data.local.service.EtaDashboardAlarm.Companion.ETA_RESERVATION_ID_KEY
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_DEFAULT_VALUE
