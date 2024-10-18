@@ -1,27 +1,54 @@
 package com.mulberry.ody.data.local.repository
 
+import com.mulberry.ody.data.local.db.EtaReserveDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
+import com.mulberry.ody.data.local.entity.reserve.EtaReserveEntity
 import com.mulberry.ody.data.local.service.EtaDashboardAlarm
+import com.mulberry.ody.domain.common.toMilliSeconds
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
 import javax.inject.Inject
+import kotlin.math.max
 
 class DefaultMatesEtaRepository
     @Inject
     constructor(
         private val etaDashboardAlarm: EtaDashboardAlarm,
         private val matesEtaInfoDao: MateEtaInfoDao,
+        private val etaReserveDao: EtaReserveDao,
     ) : MatesEtaRepository {
         override suspend fun reserveEtaFetchingJob(
             meetingId: Long,
             meetingDateTime: LocalDateTime,
         ) {
-            etaDashboardAlarm.reserveEtaDashboard(meetingId, meetingDateTime)
+            val openMillis = meetingDateTime.etaDashboardOpenMillis()
+            val openReserveId = saveEtaReservation(meetingId, openMillis)
+            etaDashboardAlarm.reserveEtaDashboardOpen(meetingId, openMillis, openReserveId.toInt())
+
+            val closeMillis = meetingDateTime.etaDashboardCloseMillis()
+            val closeReserveId = saveEtaReservation(meetingId, openMillis)
+            etaDashboardAlarm.reserveEtaDashboardClose(meetingId, closeMillis, closeReserveId.toInt())
         }
+    
+    private suspend fun saveEtaReservation(meetingId: Long, reserveMillis: Long): Long {
+        val entity = EtaReserveEntity(meetingId, reserveMillis)
+        return etaReserveDao.save(entity)
+    }
+
+    private fun LocalDateTime.etaDashboardOpenMillis(): Long {
+        val openMillis = minusMinutes(ETA_OPEN_MINUTE).toMilliSeconds()
+        val nowMillis = System.currentTimeMillis()
+        return max(openMillis, nowMillis)
+    }
+
+
+    private fun LocalDateTime.etaDashboardCloseMillis(): Long {
+        return plusMinutes(ETA_CLOSE_MINUTE).toMilliSeconds()
+    }
 
         override fun fetchMatesEta(meetingId: Long): Flow<MateEtaInfo?> =
             matesEtaInfoDao.getMateEtaInfo(meetingId).map { it?.toMateEtaInfo() }
@@ -31,4 +58,9 @@ class DefaultMatesEtaRepository
         }
 
         private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
+
+    companion object {
+        private const val ETA_OPEN_MINUTE = 30L
+        private const val ETA_CLOSE_MINUTE = 2L
+    }
     }

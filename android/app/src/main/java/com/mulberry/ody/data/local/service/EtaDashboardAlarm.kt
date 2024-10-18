@@ -18,30 +18,14 @@ class EtaDashboardAlarm
     constructor(
         private val context: Context,
         private val alarmManager: AlarmManager,
-        private val etaReserveDao: EtaReserveDao,
     ) {
-        suspend fun reserveEtaDashboard(
+         fun reserveEtaDashboardOpen(
             meetingId: Long,
-            meetingDateTime: LocalDateTime,
+            reserveMillis: Long,
+            requestCode: Int
         ) {
-            reserveEtaDashboardOpen(meetingId, meetingDateTime)
-            reserveEtaDashboardClose(meetingId, meetingDateTime)
-        }
-
-        private suspend fun reserveEtaDashboardOpen(
-            meetingId: Long,
-            meetingDateTime: LocalDateTime,
-        ) {
-            val reserveMillis = meetingDateTime.etaDashboardOpenMillis()
-            val reserveId = etaReserveDao.save(EtaReserveEntity(meetingId, reserveMillis))
-            val pendingIntent = createOpenPendingIntent(meetingId, reserveId.toInt())
-            reserve(reserveMillis, pendingIntent)
-        }
-
-        private fun LocalDateTime.etaDashboardOpenMillis(): Long {
-            val openMillis = minusMinutes(ETA_OPEN_MINUTE).toMilliSeconds()
-            val nowMillis = System.currentTimeMillis()
-            return max(openMillis, nowMillis)
+             val pendingIntent = createOpenPendingIntent(meetingId, requestCode)
+             reserve(reserveMillis, pendingIntent)
         }
 
         private fun createOpenPendingIntent(
@@ -60,18 +44,13 @@ class EtaDashboardAlarm
             )
         }
 
-        private suspend fun reserveEtaDashboardClose(
+          fun reserveEtaDashboardClose(
             meetingId: Long,
-            meetingDateTime: LocalDateTime,
+            reserveMillis: Long,
+            requestCode: Int,
         ) {
-            val reserveMillis = meetingDateTime.etaDashboardCloseMillis()
-            val reserveId = etaReserveDao.save(EtaReserveEntity(meetingId, reserveMillis))
-            val pendingIntent = createClosePendingIntent(meetingId, reserveId.toInt())
+            val pendingIntent = createClosePendingIntent(meetingId, requestCode)
             reserve(reserveMillis, pendingIntent)
-        }
-
-        private fun LocalDateTime.etaDashboardCloseMillis(): Long {
-            return plusMinutes(ETA_CLOSE_MINUTE).toMilliSeconds()
         }
 
         private fun createClosePendingIntent(meetingId: Long, requestCode: Int): PendingIntent {
@@ -97,10 +76,5 @@ class EtaDashboardAlarm
                 triggerAtMillis,
                 pendingIntent,
             )
-        }
-
-        companion object {
-            private const val ETA_OPEN_MINUTE = 30L
-            private const val ETA_CLOSE_MINUTE = 2L
         }
     }
