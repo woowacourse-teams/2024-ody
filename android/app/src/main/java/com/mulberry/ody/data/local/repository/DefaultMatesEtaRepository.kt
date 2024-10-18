@@ -26,16 +26,16 @@ constructor(
         meetingDateTime: LocalDateTime,
     ) {
         val openMillis = meetingDateTime.etaDashboardOpenMillis()
-        val openReserveId = saveEtaReservation(meetingId, openMillis)
-        etaDashboardAlarm.reserveEtaDashboardOpen(meetingId, openMillis, openReserveId.toInt())
+        val openReserveId = saveEtaReservation(meetingId, openMillis, isOpen = true)
+        etaDashboardAlarm.reserveEtaDashboardOpen(meetingId, openMillis, openReserveId)
 
         val closeMillis = meetingDateTime.etaDashboardCloseMillis()
-        val closeReserveId = saveEtaReservation(meetingId, openMillis)
-        etaDashboardAlarm.reserveEtaDashboardClose(meetingId, closeMillis, closeReserveId.toInt())
+        val closeReserveId = saveEtaReservation(meetingId, openMillis, isOpen = false)
+        etaDashboardAlarm.reserveEtaDashboardClose(meetingId, closeMillis, closeReserveId)
     }
 
-    private suspend fun saveEtaReservation(meetingId: Long, reserveMillis: Long): Long {
-        val entity = EtaReserveEntity(meetingId, reserveMillis)
+    private suspend fun saveEtaReservation(meetingId: Long, reserveMillis: Long, isOpen: Boolean): Long {
+        val entity = EtaReserveEntity(meetingId, reserveMillis, isOpen)
         return etaReserveDao.save(entity)
     }
 
@@ -58,6 +58,17 @@ constructor(
 
     override suspend fun deleteEtaReservation(reserveId: Long) {
         etaReserveDao.delete(reserveId)
+    }
+
+    override suspend fun clearEtaReservation() {
+        val etaReserveEntities = etaReserveDao.fetchAll()
+        etaReserveEntities.forEach { etaReserveEntity ->
+            etaDashboardAlarm.cancelEtaDashboard(
+                etaReserveEntity.meetingId,
+                etaReserveEntity.id,
+                etaReserveEntity.isOpen,
+            )
+        }
     }
 
     private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)

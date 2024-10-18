@@ -9,6 +9,7 @@ import com.squareup.moshi.JsonClass
 data class EtaReserveEntity(
     val meetingId: Long,
     val reserveMillis: Long,
+    val isOpen: Boolean,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 1L
 )

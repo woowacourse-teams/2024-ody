@@ -5,13 +5,8 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.mulberry.ody.data.local.db.EtaReserveDao
-import com.mulberry.ody.data.local.entity.reserve.EtaReserveEntity
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_KEY
-import com.mulberry.ody.domain.common.toMilliSeconds
-import java.time.LocalDateTime
 import javax.inject.Inject
-import kotlin.math.max
 
 class EtaDashboardAlarm
 @Inject
@@ -22,48 +17,19 @@ constructor(
     fun reserveEtaDashboardOpen(
         meetingId: Long,
         reserveMillis: Long,
-        requestCode: Int
+        etaReservationId: Long,
     ) {
-        val pendingIntent = createOpenPendingIntent(meetingId, requestCode)
+        val pendingIntent = createEtaDashboardPendingIntent(meetingId, etaReservationId, isOpen = true)
         reserve(reserveMillis, pendingIntent)
-    }
-
-    private fun createOpenPendingIntent(
-        meetingId: Long,
-        requestCode: Int,
-    ): PendingIntent {
-        val alarmIntent =
-            Intent(context, EtaDashboardOpenBroadcastReceiver::class.java)
-                .putExtra(MEETING_ID_KEY, meetingId)
-
-        return PendingIntent.getBroadcast(
-            context,
-            requestCode,
-            alarmIntent,
-            PendingIntent.FLAG_IMMUTABLE,
-        )
     }
 
     fun reserveEtaDashboardClose(
         meetingId: Long,
         reserveMillis: Long,
-        requestCode: Int,
+        etaReservationId: Long,
     ) {
-        val pendingIntent = createClosePendingIntent(meetingId, requestCode)
+        val pendingIntent = createEtaDashboardPendingIntent(meetingId, etaReservationId, isOpen = false)
         reserve(reserveMillis, pendingIntent)
-    }
-
-    private fun createClosePendingIntent(meetingId: Long, requestCode: Int): PendingIntent {
-        val intent =
-            Intent(context, EtaDashboardCloseBroadcastReceiver::class.java)
-                .putExtra(MEETING_ID_KEY, meetingId)
-
-        return PendingIntent.getBroadcast(
-            context,
-            requestCode,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE,
-        )
     }
 
     @SuppressLint("ScheduleExactAlarm")
@@ -76,6 +42,35 @@ constructor(
             triggerAtMillis,
             pendingIntent,
         )
+    }
+
+    private fun createEtaDashboardPendingIntent(
+        meetingId: Long,
+        etaReservationId: Long,
+        isOpen: Boolean,
+    ): PendingIntent {
+        val intentClass =
+            if (isOpen) EtaDashboardOpenBroadcastReceiver::class else EtaDashboardCloseBroadcastReceiver::class
+        val intent =
+            Intent(context, intentClass.java)
+                .putExtra(MEETING_ID_KEY, meetingId)
+                .putExtra(ETA_RESERVATION_ID_KEY, etaReservationId)
+
+        return PendingIntent.getBroadcast(
+            context,
+            etaReservationId.toInt(),
+            intent,
+            PendingIntent.FLAG_IMMUTABLE,
+        )
+    }
+
+    fun cancelEtaDashboard(
+        meetingId: Long,
+        etaReservationId: Long,
+        isOpen: Boolean
+    ) {
+        val pendingIntent = createEtaDashboardPendingIntent(meetingId, etaReservationId, isOpen)
+        alarmManager.cancel(pendingIntent)
     }
 
     companion object {
