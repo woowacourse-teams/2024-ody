@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestClient;
 
 @Slf4j
@@ -18,6 +19,8 @@ public class OdsayRouteClient implements RouteClient {
 
     private final RouteProperties routeProperties;
     private final RestClient restClient;
+    @Value("${sleep.time}")
+    private String sleepTime;
 
     public OdsayRouteClient(
             RouteProperties routeProperties,
@@ -29,8 +32,18 @@ public class OdsayRouteClient implements RouteClient {
 
     @Override
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
-        OdsayResponse response = getOdsayResponse(origin, target);
-        return responseToRouteTime(response);
+        if ("0".equals(sleepTime)) {
+            OdsayResponse response = getOdsayResponse(origin, target);
+            return responseToRouteTime(response);
+        }
+        try {
+            log.info("-- 가짜 오디세이 호출 --");
+            Thread.sleep(Long.parseLong(this.sleepTime)); // sleepTime 만큼 슬립
+            log.info("-- 가짜 오디세이 호출 --");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new RouteTime(30);
     }
 
     private OdsayResponse getOdsayResponse(Coordinates origin, Coordinates target) {

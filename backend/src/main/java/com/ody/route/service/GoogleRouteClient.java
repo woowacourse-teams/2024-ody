@@ -11,6 +11,7 @@ import com.ody.route.dto.DistanceMatrixResponse.DistanceMatrixElement;
 import com.ody.route.dto.DistanceMatrixStatus;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -19,17 +20,32 @@ public class GoogleRouteClient implements RouteClient {
 
     private final String apiKey;
     private final RestClient restClient;
+    @Value("${sleep.time}")
+    private String sleepTime;
 
-    public GoogleRouteClient(RestClient.Builder routeRestClientBuilder, String apiKey) {
+    public GoogleRouteClient(
+            RestClient.Builder routeRestClientBuilder,
+            String apiKey
+    ) {
         this.apiKey = apiKey;
         this.restClient = routeRestClientBuilder.baseUrl("https://maps.googleapis.com").build();
     }
 
     @Override
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
-        DistanceMatrixResponse response = getDistanceMatrixResponse(origin, target);
-        validateGoogleServerStatus(response);
-        return convertToRouteTime(response);
+        if ("0".equals(sleepTime)) {
+            DistanceMatrixResponse response = getDistanceMatrixResponse(origin, target);
+            validateGoogleServerStatus(response);
+            return convertToRouteTime(response);
+        }
+        try {
+            log.info("-- 가짜 구글 호출 --");
+            Thread.sleep(Long.parseLong(this.sleepTime)); // sleepTime 만큼 슬립
+            log.info("-- 가짜 구글 호출 --");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new RouteTime(30);
     }
 
     private DistanceMatrixResponse getDistanceMatrixResponse(Coordinates origin, Coordinates target) {

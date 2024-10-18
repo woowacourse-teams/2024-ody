@@ -19,6 +19,13 @@ spring:
       minimum-idle: ${HIKARI_MAXIMUM_POOL_SIZE} # 최소 Idle 커넥션 수 (= 커넥션 풀의 최대 크기 추천)
       max-lifetime: ${HIKARI_MAX_LIFETIME} # 커넥션 최대 생존 시간 (밀리초 단위)
 
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG
+
+sleep:
+  time: ${SLEEP_TIME}
+
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
