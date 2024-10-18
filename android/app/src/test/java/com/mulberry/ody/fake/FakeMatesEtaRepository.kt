@@ -8,14 +8,20 @@ import kotlinx.coroutines.flow.flow
 import java.time.LocalDateTime
 
 object FakeMatesEtaRepository : MatesEtaRepository {
-    override fun reserveEtaFetchingJob(
+    override suspend fun reserveEtaFetchingJob(
         meetingId: Long,
         meetingDateTime: LocalDateTime,
     ) = Unit
 
-    override fun fetchMatesEta(meetingId: Long): Flow<MateEtaInfo?> {
+    override fun fetchMatesEtaInfo(meetingId: Long): Flow<MateEtaInfo?> {
         return flow { emit(mateEtaInfo) }
     }
 
     override suspend fun clearEtaFetchingJob() = Unit
+
+    override suspend fun deleteEtaReservation(reserveId: Long) = Unit
+
+    override suspend fun clearEtaReservation() = Unit
+
+    override suspend fun reserveAllEtaReservation() = Unit
 }
