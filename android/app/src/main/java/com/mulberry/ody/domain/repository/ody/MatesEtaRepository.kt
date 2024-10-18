@@ -10,7 +10,9 @@ interface MatesEtaRepository {
         meetingDateTime: LocalDateTime,
     )
 
-    fun fetchMatesEta(meetingId: Long): Flow<MateEtaInfo?>
+    fun fetchMatesEtaInfo(meetingId: Long): Flow<MateEtaInfo?>
 
     suspend fun clearEtaFetchingJob()
+
+    suspend fun deleteEtaReservation(reserveId: Long)
 }

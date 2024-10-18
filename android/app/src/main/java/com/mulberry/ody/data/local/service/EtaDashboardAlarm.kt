@@ -14,67 +14,72 @@ import javax.inject.Inject
 import kotlin.math.max
 
 class EtaDashboardAlarm
-    @Inject
-    constructor(
-        private val context: Context,
-        private val alarmManager: AlarmManager,
+@Inject
+constructor(
+    private val context: Context,
+    private val alarmManager: AlarmManager,
+) {
+    fun reserveEtaDashboardOpen(
+        meetingId: Long,
+        reserveMillis: Long,
+        requestCode: Int
     ) {
-         fun reserveEtaDashboardOpen(
-            meetingId: Long,
-            reserveMillis: Long,
-            requestCode: Int
-        ) {
-             val pendingIntent = createOpenPendingIntent(meetingId, requestCode)
-             reserve(reserveMillis, pendingIntent)
-        }
-
-        private fun createOpenPendingIntent(
-            meetingId: Long,
-            requestCode: Int,
-            ): PendingIntent {
-            val alarmIntent =
-                Intent(context, EtaDashboardOpenBroadcastReceiver::class.java)
-                    .putExtra(MEETING_ID_KEY, meetingId)
-
-            return PendingIntent.getBroadcast(
-                context,
-                requestCode,
-                alarmIntent,
-                PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
-
-          fun reserveEtaDashboardClose(
-            meetingId: Long,
-            reserveMillis: Long,
-            requestCode: Int,
-        ) {
-            val pendingIntent = createClosePendingIntent(meetingId, requestCode)
-            reserve(reserveMillis, pendingIntent)
-        }
-
-        private fun createClosePendingIntent(meetingId: Long, requestCode: Int): PendingIntent {
-            val intent =
-                Intent(context, EtaDashboardCloseBroadcastReceiver::class.java)
-                    .putExtra(MEETING_ID_KEY, meetingId)
-
-            return PendingIntent.getBroadcast(
-                context,
-                requestCode,
-                intent,
-                PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
-
-        @SuppressLint("ScheduleExactAlarm")
-        private fun reserve(
-            triggerAtMillis: Long,
-            pendingIntent: PendingIntent,
-        ) {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                triggerAtMillis,
-                pendingIntent,
-            )
-        }
+        val pendingIntent = createOpenPendingIntent(meetingId, requestCode)
+        reserve(reserveMillis, pendingIntent)
     }
+
+    private fun createOpenPendingIntent(
+        meetingId: Long,
+        requestCode: Int,
+    ): PendingIntent {
+        val alarmIntent =
+            Intent(context, EtaDashboardOpenBroadcastReceiver::class.java)
+                .putExtra(MEETING_ID_KEY, meetingId)
+
+        return PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            alarmIntent,
+            PendingIntent.FLAG_IMMUTABLE,
+        )
+    }
+
+    fun reserveEtaDashboardClose(
+        meetingId: Long,
+        reserveMillis: Long,
+        requestCode: Int,
+    ) {
+        val pendingIntent = createClosePendingIntent(meetingId, requestCode)
+        reserve(reserveMillis, pendingIntent)
+    }
+
+    private fun createClosePendingIntent(meetingId: Long, requestCode: Int): PendingIntent {
+        val intent =
+            Intent(context, EtaDashboardCloseBroadcastReceiver::class.java)
+                .putExtra(MEETING_ID_KEY, meetingId)
+
+        return PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE,
+        )
+    }
+
+    @SuppressLint("ScheduleExactAlarm")
+    private fun reserve(
+        triggerAtMillis: Long,
+        pendingIntent: PendingIntent,
+    ) {
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            triggerAtMillis,
+            pendingIntent,
+        )
+    }
+
+    companion object {
+        const val ETA_RESERVATION_ID_KEY = "eta_reserve_id"
+        const val ETA_RESERVATION_ID_DEFAULT_VALUE = -1L
+    }
+}

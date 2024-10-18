@@ -15,25 +15,25 @@ import javax.inject.Inject
 import kotlin.math.max
 
 class DefaultMatesEtaRepository
-    @Inject
-    constructor(
-        private val etaDashboardAlarm: EtaDashboardAlarm,
-        private val matesEtaInfoDao: MateEtaInfoDao,
-        private val etaReserveDao: EtaReserveDao,
-    ) : MatesEtaRepository {
-        override suspend fun reserveEtaFetchingJob(
-            meetingId: Long,
-            meetingDateTime: LocalDateTime,
-        ) {
-            val openMillis = meetingDateTime.etaDashboardOpenMillis()
-            val openReserveId = saveEtaReservation(meetingId, openMillis)
-            etaDashboardAlarm.reserveEtaDashboardOpen(meetingId, openMillis, openReserveId.toInt())
+@Inject
+constructor(
+    private val etaDashboardAlarm: EtaDashboardAlarm,
+    private val matesEtaInfoDao: MateEtaInfoDao,
+    private val etaReserveDao: EtaReserveDao,
+) : MatesEtaRepository {
+    override suspend fun reserveEtaFetchingJob(
+        meetingId: Long,
+        meetingDateTime: LocalDateTime,
+    ) {
+        val openMillis = meetingDateTime.etaDashboardOpenMillis()
+        val openReserveId = saveEtaReservation(meetingId, openMillis)
+        etaDashboardAlarm.reserveEtaDashboardOpen(meetingId, openMillis, openReserveId.toInt())
 
-            val closeMillis = meetingDateTime.etaDashboardCloseMillis()
-            val closeReserveId = saveEtaReservation(meetingId, openMillis)
-            etaDashboardAlarm.reserveEtaDashboardClose(meetingId, closeMillis, closeReserveId.toInt())
-        }
-    
+        val closeMillis = meetingDateTime.etaDashboardCloseMillis()
+        val closeReserveId = saveEtaReservation(meetingId, openMillis)
+        etaDashboardAlarm.reserveEtaDashboardClose(meetingId, closeMillis, closeReserveId.toInt())
+    }
+
     private suspend fun saveEtaReservation(meetingId: Long, reserveMillis: Long): Long {
         val entity = EtaReserveEntity(meetingId, reserveMillis)
         return etaReserveDao.save(entity)
@@ -45,22 +45,25 @@ class DefaultMatesEtaRepository
         return max(openMillis, nowMillis)
     }
 
-
     private fun LocalDateTime.etaDashboardCloseMillis(): Long {
         return plusMinutes(ETA_CLOSE_MINUTE).toMilliSeconds()
     }
 
-        override fun fetchMatesEta(meetingId: Long): Flow<MateEtaInfo?> =
-            matesEtaInfoDao.getMateEtaInfo(meetingId).map { it?.toMateEtaInfo() }
+    override fun fetchMatesEtaInfo(meetingId: Long): Flow<MateEtaInfo?> =
+        matesEtaInfoDao.getMateEtaInfo(meetingId).map { it?.toMateEtaInfo() }
 
-        override suspend fun clearEtaFetchingJob() {
-            matesEtaInfoDao.deleteAll()
-        }
+    override suspend fun clearEtaFetchingJob() {
+        matesEtaInfoDao.deleteAll()
+    }
 
-        private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
+    override suspend fun deleteEtaReservation(reserveId: Long) {
+        etaReserveDao.delete(reserveId)
+    }
+
+    private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
 
     companion object {
         private const val ETA_OPEN_MINUTE = 30L
         private const val ETA_CLOSE_MINUTE = 2L
     }
-    }
+}
