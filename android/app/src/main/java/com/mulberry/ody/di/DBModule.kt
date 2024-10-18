@@ -2,6 +2,8 @@ package com.mulberry.ody.di
 
 import android.content.Context
 import androidx.room.Room
+import com.mulberry.ody.data.local.db.EtaReserveDao
+import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.db.OdyDatabase
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
@@ -19,7 +21,7 @@ import javax.inject.Singleton
 object DBModule {
     @Provides
     @Singleton
-    fun provideMoshi() = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+    fun provideMoshi(): Moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
 
     @Provides
     @Singleton
@@ -43,5 +45,8 @@ object DBModule {
         .build()
 
     @Provides
-    fun providesMateEtaInfoDao(appDatabase: OdyDatabase) = appDatabase.mateEtaInfoDao()
+    fun provideMateEtaInfoDao(appDatabase: OdyDatabase): MateEtaInfoDao = appDatabase.mateEtaInfoDao()
+
+    @Provides
+    fun provideEtaReserveDao(appDatabase: OdyDatabase): EtaReserveDao = appDatabase.etaReserveDao()
 }

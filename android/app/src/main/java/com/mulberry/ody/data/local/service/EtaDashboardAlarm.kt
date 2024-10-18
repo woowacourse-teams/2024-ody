@@ -5,6 +5,8 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import com.mulberry.ody.data.local.db.EtaReserveDao
+import com.mulberry.ody.data.local.entity.reserve.EtaReserveEntity
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_KEY
 import com.mulberry.ody.domain.common.toMilliSeconds
 import java.time.LocalDateTime
@@ -16,8 +18,9 @@ class EtaDashboardAlarm
     constructor(
         private val context: Context,
         private val alarmManager: AlarmManager,
+        private val etaReserveDao: EtaReserveDao,
     ) {
-        fun reserveEtaDashboard(
+        suspend fun reserveEtaDashboard(
             meetingId: Long,
             meetingDateTime: LocalDateTime,
         ) {
@@ -25,12 +28,13 @@ class EtaDashboardAlarm
             reserveEtaDashboardClose(meetingId, meetingDateTime)
         }
 
-        private fun reserveEtaDashboardOpen(
+        private suspend fun reserveEtaDashboardOpen(
             meetingId: Long,
             meetingDateTime: LocalDateTime,
         ) {
             val reserveMillis = meetingDateTime.etaDashboardOpenMillis()
-            val pendingIntent = createOpenPendingIntent(meetingId)
+            val reserveId = etaReserveDao.save(EtaReserveEntity(meetingId, reserveMillis))
+            val pendingIntent = createOpenPendingIntent(meetingId, reserveId.toInt())
             reserve(reserveMillis, pendingIntent)
         }
 
@@ -40,25 +44,29 @@ class EtaDashboardAlarm
             return max(openMillis, nowMillis)
         }
 
-        private fun createOpenPendingIntent(meetingId: Long): PendingIntent {
+        private fun createOpenPendingIntent(
+            meetingId: Long,
+            requestCode: Int,
+            ): PendingIntent {
             val alarmIntent =
                 Intent(context, EtaDashboardOpenBroadcastReceiver::class.java)
                     .putExtra(MEETING_ID_KEY, meetingId)
 
             return PendingIntent.getBroadcast(
                 context,
-                meetingId.toInt(),
+                requestCode,
                 alarmIntent,
                 PendingIntent.FLAG_IMMUTABLE,
             )
         }
 
-        private fun reserveEtaDashboardClose(
+        private suspend fun reserveEtaDashboardClose(
             meetingId: Long,
             meetingDateTime: LocalDateTime,
         ) {
             val reserveMillis = meetingDateTime.etaDashboardCloseMillis()
-            val pendingIntent = createClosePendingIntent(meetingId)
+            val reserveId = etaReserveDao.save(EtaReserveEntity(meetingId, reserveMillis))
+            val pendingIntent = createClosePendingIntent(meetingId, reserveId.toInt())
             reserve(reserveMillis, pendingIntent)
         }
 
@@ -66,14 +74,14 @@ class EtaDashboardAlarm
             return plusMinutes(ETA_CLOSE_MINUTE).toMilliSeconds()
         }
 
-        private fun createClosePendingIntent(meetingId: Long): PendingIntent {
+        private fun createClosePendingIntent(meetingId: Long, requestCode: Int): PendingIntent {
             val intent =
                 Intent(context, EtaDashboardCloseBroadcastReceiver::class.java)
                     .putExtra(MEETING_ID_KEY, meetingId)
 
             return PendingIntent.getBroadcast(
                 context,
-                meetingId.toInt() * CLOSE_PENDING_INTENT_VALUE,
+                requestCode,
                 intent,
                 PendingIntent.FLAG_IMMUTABLE,
             )
@@ -92,7 +100,6 @@ class EtaDashboardAlarm
         }
 
         companion object {
-            private const val CLOSE_PENDING_INTENT_VALUE = -1
             private const val ETA_OPEN_MINUTE = 30L
             private const val ETA_CLOSE_MINUTE = 2L
         }

@@ -1,6 +1,5 @@
 package com.mulberry.ody.data.local.repository
 
-import androidx.lifecycle.map
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.service.EtaDashboardAlarm
@@ -17,7 +16,7 @@ class DefaultMatesEtaRepository
         private val etaDashboardAlarm: EtaDashboardAlarm,
         private val matesEtaInfoDao: MateEtaInfoDao,
     ) : MatesEtaRepository {
-        override fun reserveEtaFetchingJob(
+        override suspend fun reserveEtaFetchingJob(
             meetingId: Long,
             meetingDateTime: LocalDateTime,
         ) {
