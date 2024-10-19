@@ -2,7 +2,7 @@ package com.mulberry.ody.di
 
 import android.content.Context
 import androidx.room.Room
-import com.mulberry.ody.data.local.db.EtaReserveDao
+import com.mulberry.ody.data.local.db.EtaReservationDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.db.OdyDatabase
 import com.mulberry.ody.data.local.db.OdyDatabase.Companion.MIGRATION_3_4
@@ -48,5 +48,5 @@ object DBModule {
     fun provideMateEtaInfoDao(appDatabase: OdyDatabase): MateEtaInfoDao = appDatabase.mateEtaInfoDao()
 
     @Provides
-    fun provideEtaReserveDao(appDatabase: OdyDatabase): EtaReserveDao = appDatabase.etaReserveDao()
+    fun provideEtaReserveDao(appDatabase: OdyDatabase): EtaReservationDao = appDatabase.etaReservationDao()
 }

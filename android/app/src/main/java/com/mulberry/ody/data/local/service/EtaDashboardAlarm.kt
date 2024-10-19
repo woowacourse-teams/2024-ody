@@ -16,26 +16,37 @@ class EtaDashboardAlarm
     ) {
         private val pendingIntents: MutableList<PendingIntent> = mutableListOf()
 
-        fun reserveEtaDashboardOpen(
+        fun reserve(
             meetingId: Long,
             reserveMillis: Long,
-            etaReservationId: Long,
+            isOpen: Boolean,
+            reservationId: Long,
         ) {
-            val pendingIntent = createEtaDashboardPendingIntent(meetingId, etaReservationId, isOpen = true)
-            reserve(reserveMillis, pendingIntent)
+            val pendingIntent = createPendingIntent(meetingId, isOpen, reservationId)
+            reserveAlarm(reserveMillis, pendingIntent)
         }
 
-        fun reserveEtaDashboardClose(
+        private fun createPendingIntent(
             meetingId: Long,
-            reserveMillis: Long,
-            etaReservationId: Long,
-        ) {
-            val pendingIntent = createEtaDashboardPendingIntent(meetingId, etaReservationId, isOpen = false)
-            reserve(reserveMillis, pendingIntent)
+            isOpen: Boolean,
+            reservationId: Long,
+        ): PendingIntent {
+            val intentClass =
+                if (isOpen) EtaDashboardOpenBroadcastReceiver::class else EtaDashboardCloseBroadcastReceiver::class
+            val intent =
+                Intent(context, intentClass.java)
+                    .putExtra(MEETING_ID_KEY, meetingId)
+
+            return PendingIntent.getBroadcast(
+                context,
+                reservationId.toInt(),
+                intent,
+                PendingIntent.FLAG_IMMUTABLE,
+            )
         }
 
         @SuppressLint("ScheduleExactAlarm")
-        private fun reserve(
+        private fun reserveAlarm(
             triggerAtMillis: Long,
             pendingIntent: PendingIntent,
         ) {
@@ -47,39 +58,10 @@ class EtaDashboardAlarm
             )
         }
 
-        private fun createEtaDashboardPendingIntent(
-            meetingId: Long,
-            etaReservationId: Long,
-            isOpen: Boolean,
-        ): PendingIntent {
-            val intentClass =
-                if (isOpen) EtaDashboardOpenBroadcastReceiver::class else EtaDashboardCloseBroadcastReceiver::class
-            val intent =
-                Intent(context, intentClass.java)
-                    .putExtra(MEETING_ID_KEY, meetingId)
-
-            return PendingIntent.getBroadcast(
-                context,
-                etaReservationId.toInt(),
-                intent,
-                PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
-
         fun cancelAll() {
             pendingIntents.forEach {
                 alarmManager.cancel(it)
             }
             pendingIntents.clear()
-        }
-
-        fun reserveEtaDashboard(
-            meetingId: Long,
-            reserveMillis: Long,
-            isOpen: Boolean,
-            etaReservationId: Long,
-        ) {
-            val pendingIntent = createEtaDashboardPendingIntent(meetingId, etaReservationId, isOpen)
-            reserve(reserveMillis, pendingIntent)
         }
     }

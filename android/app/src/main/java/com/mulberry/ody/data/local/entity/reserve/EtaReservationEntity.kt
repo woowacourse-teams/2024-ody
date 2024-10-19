@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
 
-@Entity(tableName = "eta_reserve")
+@Entity(tableName = "eta_reservation")
 @JsonClass(generateAdapter = true)
-data class EtaReserveEntity(
+data class EtaReservationEntity(
     val meetingId: Long,
     val reserveMillis: Long,
     val isOpen: Boolean,

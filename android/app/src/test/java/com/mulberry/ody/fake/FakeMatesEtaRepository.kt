@@ -19,9 +19,9 @@ object FakeMatesEtaRepository : MatesEtaRepository {
 
     override suspend fun clearEtaFetchingJob() = Unit
 
-    override suspend fun deleteEtaReservation(reserveId: Long) = Unit
+    override suspend fun deleteEtaReservation(reservationId: Long) = Unit
 
-    override suspend fun clearEtaReservation() = Unit
+    override suspend fun clearEtaReservation(isReservationPending: Boolean) = Unit
 
     override suspend fun reserveAllEtaReservation() = Unit
 }

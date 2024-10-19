@@ -2,10 +2,10 @@ package com.mulberry.ody.data.local.repository
 
 import android.content.Context
 import android.content.Intent
-import com.mulberry.ody.data.local.db.EtaReserveDao
+import com.mulberry.ody.data.local.db.EtaReservationDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
-import com.mulberry.ody.data.local.entity.reserve.EtaReserveEntity
+import com.mulberry.ody.data.local.entity.reserve.EtaReservationEntity
 import com.mulberry.ody.data.local.service.EtaDashboardAlarm
 import com.mulberry.ody.data.local.service.EtaDashboardService
 import com.mulberry.ody.domain.common.toMilliSeconds
@@ -24,19 +24,19 @@ class DefaultMatesEtaRepository
         @ApplicationContext private val context: Context,
         private val etaDashboardAlarm: EtaDashboardAlarm,
         private val matesEtaInfoDao: MateEtaInfoDao,
-        private val etaReserveDao: EtaReserveDao,
+        private val etaReservationDao: EtaReservationDao,
     ) : MatesEtaRepository {
         override suspend fun reserveEtaFetchingJob(
             meetingId: Long,
             meetingDateTime: LocalDateTime,
         ) {
             val openMillis = meetingDateTime.etaDashboardOpenMillis()
-            val openReserveId = saveEtaReservation(meetingId, openMillis, isOpen = true)
-            etaDashboardAlarm.reserveEtaDashboardOpen(meetingId, openMillis, openReserveId)
+            val openReservationId = saveEtaReservation(meetingId, openMillis, isOpen = true)
+            etaDashboardAlarm.reserve(meetingId, openMillis, true, openReservationId)
 
             val closeMillis = meetingDateTime.etaDashboardCloseMillis()
-            val closeReserveId = saveEtaReservation(meetingId, closeMillis, isOpen = false)
-            etaDashboardAlarm.reserveEtaDashboardClose(meetingId, closeMillis, closeReserveId)
+            val closeReservationId = saveEtaReservation(meetingId, closeMillis, isOpen = false)
+            etaDashboardAlarm.reserve(meetingId, closeMillis, false, closeReservationId)
         }
 
         private suspend fun saveEtaReservation(
@@ -44,8 +44,8 @@ class DefaultMatesEtaRepository
             reserveMillis: Long,
             isOpen: Boolean,
         ): Long {
-            val entity = EtaReserveEntity(meetingId, reserveMillis, isOpen)
-            return etaReserveDao.save(entity)
+            val entity = EtaReservationEntity(meetingId, reserveMillis, isOpen)
+            return etaReservationDao.save(entity)
         }
 
         private fun LocalDateTime.etaDashboardOpenMillis(): Long {
@@ -65,27 +65,27 @@ class DefaultMatesEtaRepository
             matesEtaInfoDao.deleteAll()
         }
 
-        override suspend fun deleteEtaReservation(reserveId: Long) {
-            etaReserveDao.delete(reserveId)
+        override suspend fun deleteEtaReservation(reservationId: Long) {
+            etaReservationDao.delete(reservationId)
         }
 
         override suspend fun clearEtaReservation(isReservationPending: Boolean) {
             etaDashboardAlarm.cancelAll()
             if (!isReservationPending) {
-                etaReserveDao.deleteAll()
+                etaReservationDao.deleteAll()
             }
             val serviceIntent = Intent(context, EtaDashboardService::class.java)
             context.stopService(serviceIntent)
         }
 
         override suspend fun reserveAllEtaReservation() {
-            val etaReserveEntities = etaReserveDao.fetchAll()
-            etaReserveEntities.forEach { etaReserveEntity ->
-                etaDashboardAlarm.reserveEtaDashboard(
-                    etaReserveEntity.meetingId,
-                    max(etaReserveEntity.reserveMillis, System.currentTimeMillis()),
-                    etaReserveEntity.isOpen,
-                    etaReserveEntity.id,
+            val entities = etaReservationDao.fetchAll()
+            entities.forEach { entity ->
+                etaDashboardAlarm.reserve(
+                    entity.meetingId,
+                    max(entity.reserveMillis, System.currentTimeMillis()),
+                    entity.isOpen,
+                    entity.id,
                 )
             }
         }

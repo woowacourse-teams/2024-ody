@@ -14,7 +14,7 @@ interface MatesEtaRepository {
 
     suspend fun clearEtaFetchingJob()
 
-    suspend fun deleteEtaReservation(reserveId: Long)
+    suspend fun deleteEtaReservation(reservationId: Long)
 
     suspend fun clearEtaReservation(isReservationPending: Boolean)
 
