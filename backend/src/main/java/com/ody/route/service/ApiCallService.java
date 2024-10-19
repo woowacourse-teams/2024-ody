@@ -49,17 +49,17 @@ public class ApiCallService {
     }
 
     public boolean getEnabledByClientType(ClientType clientType) {
-        ApiCall apiCall = findOrSaveFirstByClientTypeAndDateBetween(clientType);
+        ApiCall apiCall = findOrSaveApiCallForToggleByClientType(clientType);
         return apiCall.getEnabled();
     }
 
     @Transactional
     public void toggleApiCallEnabled(ClientType clientType) {
-        ApiCall apiCall = findOrSaveFirstByClientTypeAndDateBetween(clientType);
+        ApiCall apiCall = findOrSaveApiCallForToggleByClientType(clientType);
         apiCall.updateEnabled();
     }
 
-    private ApiCall findOrSaveFirstByClientTypeAndDateBetween(ClientType clientType) {
+    private ApiCall findOrSaveApiCallForToggleByClientType(ClientType clientType) {
         LocalDate end = LocalDate.now();
         LocalDate start = clientType.determineResetDate(end);
         Optional<ApiCall> apiCall = apiCallRepository.findFirstByDateBetweenAndClientType(start, end, clientType);
