@@ -1,7 +1,7 @@
 package com.ody.route.domain;
 
 import java.time.LocalDate;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public enum ClientType {
 
@@ -9,13 +9,13 @@ public enum ClientType {
     GOOGLE(date -> date.withDayOfMonth(1)),
     ;
 
-    private final Function<LocalDate, LocalDate> resetStrategy;
+    private final UnaryOperator<LocalDate> resetDateOperation;
 
-    ClientType(Function<LocalDate, LocalDate> resetStrategy) {
-        this.resetStrategy = resetStrategy;
+    ClientType(UnaryOperator<LocalDate> resetDateOperation) {
+        this.resetDateOperation = resetDateOperation;
     }
 
     public LocalDate determineResetDate(LocalDate date) {
-        return resetStrategy.apply(date);
+        return resetDateOperation.apply(date);
     }
 }
