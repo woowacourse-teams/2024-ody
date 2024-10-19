@@ -7,6 +7,7 @@ import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.suspendOnSuccess
+import com.mulberry.ody.domain.apiresult.suspendOnUnexpected
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
@@ -60,13 +61,18 @@ class MeetingJoinViewModel
         private val _navigateAction: MutableSharedFlow<MeetingJoinNavigateAction> = MutableSharedFlow()
         val navigateAction: SharedFlow<MeetingJoinNavigateAction> get() = _navigateAction.asSharedFlow()
 
-        fun getDefaultLocation() {
+        private val _defaultLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val defaultLocationError: SharedFlow<Unit> get() = _defaultLocationError.asSharedFlow()
+
+    fun getDefaultLocation() {
             viewModelScope.launch {
                 startLoading()
-
                 geoLocationHelper.getCurrentCoordinate()
                     .suspendOnSuccess { location ->
                         fetchAddressesByCoordinate(location)
+                    }
+                    .suspendOnUnexpected {
+                        _defaultLocationError.emit(Unit)
                     }
                 stopLoading()
             }
@@ -86,6 +92,8 @@ class MeetingJoinViewModel
         }.onFailure { code, errorMessage ->
             handleError()
             analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+        }.suspendOnUnexpected {
+            _defaultLocationError.emit(Unit)
         }.onNetworkError {
             handleNetworkError()
         }
