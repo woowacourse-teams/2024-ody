@@ -43,7 +43,7 @@ class MeetingCreationViewModel
         private val meetingRepository: MeetingRepository,
         private val addressRepository: AddressRepository,
         private val locationHelper: LocationHelper,
-        ) : BaseViewModel(), MeetingCreationListener {
+    ) : BaseViewModel(), MeetingCreationListener {
         val meetingCreationInfoType: MutableStateFlow<MeetingCreationInfoType?> = MutableStateFlow(null)
 
         val isValidInfo: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -82,10 +82,10 @@ class MeetingCreationViewModel
         private val _inviteCode = MutableStateFlow("")
         val inviteCode: StateFlow<String> = _inviteCode.asStateFlow()
 
-    private val _defaultLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
-    val defaultLocationError: SharedFlow<Unit> get() = _defaultLocationError.asSharedFlow()
+        private val _defaultLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val defaultLocationError: SharedFlow<Unit> get() = _defaultLocationError.asSharedFlow()
 
-    init {
+        init {
             initializeIsValidInfo()
         }
 
@@ -112,41 +112,40 @@ class MeetingCreationViewModel
             meetingMinute.value = now.minute
         }
 
-    fun getDefaultLocation() {
-        viewModelScope.launch {
-            startLoading()
-            locationHelper.getCurrentCoordinate()
-                .suspendOnSuccess { location ->
-                    fetchAddressesByCoordinate(location)
-                }
-                .suspendOnUnexpected {
-                    _defaultLocationError.emit(Unit)
-                }
-            stopLoading()
+        fun getDefaultLocation() {
+            viewModelScope.launch {
+                startLoading()
+                locationHelper.getCurrentCoordinate()
+                    .suspendOnSuccess { location ->
+                        fetchAddressesByCoordinate(location)
+                    }
+                    .suspendOnUnexpected {
+                        _defaultLocationError.emit(Unit)
+                    }
+                stopLoading()
+            }
         }
-    }
 
+        private suspend fun fetchAddressesByCoordinate(location: Location) {
+            val longitude = location.longitude.toString()
+            val latitude = location.latitude.toString()
 
-    private suspend fun fetchAddressesByCoordinate(location: Location) {
-        val longitude = location.longitude.toString()
-        val latitude = location.latitude.toString()
-
-        addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
-            destinationAddress.value =
-                Address(
-                    detailAddress = it ?: "",
-                    longitude = longitude,
-                    latitude = latitude,
-                )
-        }.onFailure { code, errorMessage ->
-            handleError()
-            analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-        }.suspendOnUnexpected {
-            _defaultLocationError.emit(Unit)
-        }.onNetworkError {
-            handleNetworkError()
+            addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+                destinationAddress.value =
+                    Address(
+                        detailAddress = it ?: "",
+                        longitude = longitude,
+                        latitude = latitude,
+                    )
+            }.onFailure { code, errorMessage ->
+                handleError()
+                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+            }.suspendOnUnexpected {
+                _defaultLocationError.emit(Unit)
+            }.onNetworkError {
+                handleNetworkError()
+            }
         }
-    }
 
         fun createMeeting() {
             val meetingCreationInfo = createMeetingCreationInfo() ?: return

@@ -33,10 +33,11 @@ class GeoLocationHelper(
     @SuppressLint("MissingPermission")
     private suspend fun getCurrentLocation(currentLocationRequest: CurrentLocationRequest): Location {
         return withTimeout(LOCATION_TIME_OUT_MILLIS) {
-            val location = fusedLocationProviderClient.getCurrentLocation(
-                currentLocationRequest,
-                CancellationTokenSource().token,
-            ).await()
+            val location =
+                fusedLocationProviderClient.getCurrentLocation(
+                    currentLocationRequest,
+                    CancellationTokenSource().token,
+                ).await()
 
             location ?: throw IllegalArgumentException(LOCATION_EXCEPTION_MESSAGE)
         }

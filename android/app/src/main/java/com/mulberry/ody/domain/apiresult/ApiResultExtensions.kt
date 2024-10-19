@@ -72,7 +72,7 @@ fun <T> ApiResult<T>.getOrNull(): T? {
 fun <T> Result<T>.toApiResult(): ApiResult<T> {
     return fold(
         onSuccess = { data -> ApiResult.Success(data) },
-        onFailure = { t -> ApiResult.Unexpected(t) }
+        onFailure = { t -> ApiResult.Unexpected(t) },
     )
 }
 
@@ -88,7 +88,7 @@ fun <T> ApiResult<T>.exceptionOrNull(): Throwable? {
 
 suspend fun <R, T> ApiResult<T>.suspendFold(
     onSuccess: suspend (data: T) -> R,
-    onFailure: suspend (t: Throwable) -> R
+    onFailure: suspend (t: Throwable) -> R,
 ): R {
     return when (val exception = exceptionOrNull()) {
         null -> onSuccess(this.getOrNull() as T)

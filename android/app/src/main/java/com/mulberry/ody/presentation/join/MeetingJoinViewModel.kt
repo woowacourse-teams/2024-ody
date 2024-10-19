@@ -64,7 +64,7 @@ class MeetingJoinViewModel
         private val _defaultLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
         val defaultLocationError: SharedFlow<Unit> get() = _defaultLocationError.asSharedFlow()
 
-    fun getDefaultLocation() {
+        fun getDefaultLocation() {
             viewModelScope.launch {
                 startLoading()
                 locationHelper.getCurrentCoordinate()
@@ -78,26 +78,26 @@ class MeetingJoinViewModel
             }
         }
 
-    private suspend fun fetchAddressesByCoordinate(location: Location) {
-        val longitude = location.longitude.toString()
-        val latitude = location.latitude.toString()
+        private suspend fun fetchAddressesByCoordinate(location: Location) {
+            val longitude = location.longitude.toString()
+            val latitude = location.latitude.toString()
 
-        addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
-            departureAddress.value =
-                Address(
-                    detailAddress = it ?: "",
-                    longitude = longitude,
-                    latitude = latitude,
-                )
-        }.onFailure { code, errorMessage ->
-            handleError()
-            analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-        }.suspendOnUnexpected {
-            _defaultLocationError.emit(Unit)
-        }.onNetworkError {
-            handleNetworkError()
+            addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+                departureAddress.value =
+                    Address(
+                        detailAddress = it ?: "",
+                        longitude = longitude,
+                        latitude = latitude,
+                    )
+            }.onFailure { code, errorMessage ->
+                handleError()
+                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+            }.suspendOnUnexpected {
+                _defaultLocationError.emit(Unit)
+            }.onNetworkError {
+                handleNetworkError()
+            }
         }
-    }
 
         fun joinMeeting(inviteCode: String) {
             val meetingJoinInfo = createMeetingJoinInfo(inviteCode) ?: return
