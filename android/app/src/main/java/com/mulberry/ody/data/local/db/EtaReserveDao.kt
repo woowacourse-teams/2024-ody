@@ -14,6 +14,9 @@ interface EtaReserveDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(etaReserveEntity: EtaReserveEntity): Long
 
-    @Query("DELETE FROM eta_reserve WHERE id = :id")
-    suspend fun delete(id: Long)
+    @Query("DELETE FROM eta_reserve WHERE meetingId = :meetingId")
+    suspend fun delete(meetingId: Long)
+
+    @Query("DELETE FROM eta_reserve")
+    suspend fun deleteAll()
 }

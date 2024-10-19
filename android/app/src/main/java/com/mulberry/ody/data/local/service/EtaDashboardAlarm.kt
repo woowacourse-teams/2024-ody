@@ -14,6 +14,8 @@ class EtaDashboardAlarm
         private val context: Context,
         private val alarmManager: AlarmManager,
     ) {
+        private val pendingIntents: MutableList<PendingIntent> = mutableListOf()
+
         fun reserveEtaDashboardOpen(
             meetingId: Long,
             reserveMillis: Long,
@@ -37,6 +39,7 @@ class EtaDashboardAlarm
             triggerAtMillis: Long,
             pendingIntent: PendingIntent,
         ) {
+            pendingIntents.add(pendingIntent)
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerAtMillis,
@@ -54,7 +57,6 @@ class EtaDashboardAlarm
             val intent =
                 Intent(context, intentClass.java)
                     .putExtra(MEETING_ID_KEY, meetingId)
-                    .putExtra(ETA_RESERVATION_ID_KEY, etaReservationId)
 
             return PendingIntent.getBroadcast(
                 context,
@@ -64,27 +66,20 @@ class EtaDashboardAlarm
             )
         }
 
-        fun cancelEtaDashboard(
-            meetingId: Long,
-            etaReservationId: Long,
-            isOpen: Boolean,
-        ) {
-            val pendingIntent = createEtaDashboardPendingIntent(meetingId, etaReservationId, isOpen)
-            alarmManager.cancel(pendingIntent)
+        fun cancelAll() {
+            pendingIntents.forEach {
+                alarmManager.cancel(it)
+            }
+            pendingIntents.clear()
         }
 
         fun reserveEtaDashboard(
             meetingId: Long,
-            etaReservationId: Long,
-            isOpen: Boolean,
             reserveMillis: Long,
+            isOpen: Boolean,
+            etaReservationId: Long,
         ) {
             val pendingIntent = createEtaDashboardPendingIntent(meetingId, etaReservationId, isOpen)
             reserve(reserveMillis, pendingIntent)
-        }
-
-        companion object {
-            const val ETA_RESERVATION_ID_KEY = "eta_reserve_id"
-            const val ETA_RESERVATION_ID_DEFAULT_VALUE = -1L
         }
     }

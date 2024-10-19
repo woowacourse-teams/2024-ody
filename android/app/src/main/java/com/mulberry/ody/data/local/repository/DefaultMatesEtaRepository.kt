@@ -1,13 +1,17 @@
 package com.mulberry.ody.data.local.repository
 
+import android.content.Context
+import android.content.Intent
 import com.mulberry.ody.data.local.db.EtaReserveDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.entity.reserve.EtaReserveEntity
 import com.mulberry.ody.data.local.service.EtaDashboardAlarm
+import com.mulberry.ody.data.local.service.EtaDashboardService
 import com.mulberry.ody.domain.common.toMilliSeconds
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
@@ -17,6 +21,7 @@ import kotlin.math.max
 class DefaultMatesEtaRepository
     @Inject
     constructor(
+        @ApplicationContext private val context: Context,
         private val etaDashboardAlarm: EtaDashboardAlarm,
         private val matesEtaInfoDao: MateEtaInfoDao,
         private val etaReserveDao: EtaReserveDao,
@@ -30,7 +35,7 @@ class DefaultMatesEtaRepository
             etaDashboardAlarm.reserveEtaDashboardOpen(meetingId, openMillis, openReserveId)
 
             val closeMillis = meetingDateTime.etaDashboardCloseMillis()
-            val closeReserveId = saveEtaReservation(meetingId, openMillis, isOpen = false)
+            val closeReserveId = saveEtaReservation(meetingId, closeMillis, isOpen = false)
             etaDashboardAlarm.reserveEtaDashboardClose(meetingId, closeMillis, closeReserveId)
         }
 
@@ -64,15 +69,13 @@ class DefaultMatesEtaRepository
             etaReserveDao.delete(reserveId)
         }
 
-        override suspend fun clearEtaReservation() {
-            val etaReserveEntities = etaReserveDao.fetchAll()
-            etaReserveEntities.forEach { etaReserveEntity ->
-                etaDashboardAlarm.cancelEtaDashboard(
-                    etaReserveEntity.meetingId,
-                    etaReserveEntity.id,
-                    etaReserveEntity.isOpen,
-                )
+        override suspend fun clearEtaReservation(isReservationPending: Boolean) {
+            etaDashboardAlarm.cancelAll()
+            if (!isReservationPending) {
+                etaReserveDao.deleteAll()
             }
+            val serviceIntent = Intent(context, EtaDashboardService::class.java)
+            context.stopService(serviceIntent)
         }
 
         override suspend fun reserveAllEtaReservation() {
@@ -80,7 +83,7 @@ class DefaultMatesEtaRepository
             etaReserveEntities.forEach { etaReserveEntity ->
                 etaDashboardAlarm.reserveEtaDashboard(
                     etaReserveEntity.meetingId,
-                    etaReserveEntity.reserveMillis,
+                    max(etaReserveEntity.reserveMillis, System.currentTimeMillis()),
                     etaReserveEntity.isOpen,
                     etaReserveEntity.id,
                 )
