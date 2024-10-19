@@ -34,14 +34,15 @@ public class GoogleRouteClient implements RouteClient {
     @Override
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         if ("0".equals(sleepTime)) {
+            log.info("~~~ 구글 실제 호출 ~~");
             DistanceMatrixResponse response = getDistanceMatrixResponse(origin, target);
             validateGoogleServerStatus(response);
             return convertToRouteTime(response);
         }
         try {
-            log.info("-- 가짜 구글 호출 --");
+            log.info("-- 구글 가짜 호출 --");
             Thread.sleep(Long.parseLong(this.sleepTime)); // sleepTime 만큼 슬립
-            log.info("-- 가짜 구글 호출 --");
+            log.info("-- 구글 가짜 호출 --");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

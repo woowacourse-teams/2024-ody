@@ -33,13 +33,14 @@ public class OdsayRouteClient implements RouteClient {
     @Override
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         if ("0".equals(sleepTime)) {
+            log.info("~~~ 오디세이 진짜 호출 ~~~");
             OdsayResponse response = getOdsayResponse(origin, target);
             return responseToRouteTime(response);
         }
         try {
-            log.info("-- 가짜 오디세이 호출 --");
+            log.info("-- 오디세이 가짜 호출 --");
             Thread.sleep(Long.parseLong(this.sleepTime)); // sleepTime 만큼 슬립
-            log.info("-- 가짜 오디세이 호출 --");
+            log.info("-- 오디세이 가짜 호출 --");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
