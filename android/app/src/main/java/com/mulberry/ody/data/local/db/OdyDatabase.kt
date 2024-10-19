@@ -20,19 +20,20 @@ abstract class OdyDatabase : RoomDatabase() {
     abstract fun etaReserveDao(): EtaReserveDao
 
     companion object {
-        val MIGRATION_3_4 = object : Migration(3, 4) {
-            override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL(
-                    """
-            CREATE TABLE IF NOT EXISTS `eta_reserve` (
-                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                `meetingId` INTEGER NOT NULL,
-                `reserveMillis` INTEGER NOT NULL,
-                `isOpen` INTEGER NOT NULL
-            )
-            """.trimIndent()
-                )
+        val MIGRATION_3_4 =
+            object : Migration(3, 4) {
+                override fun migrate(db: SupportSQLiteDatabase) {
+                    db.execSQL(
+                        """
+                        CREATE TABLE IF NOT EXISTS `eta_reserve` (
+                            `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                            `meetingId` INTEGER NOT NULL,
+                            `reserveMillis` INTEGER NOT NULL,
+                            `isOpen` INTEGER NOT NULL
+                        )
+                        """.trimIndent(),
+                    )
+                }
             }
-        }
     }
 }

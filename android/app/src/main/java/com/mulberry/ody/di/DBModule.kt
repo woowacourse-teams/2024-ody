@@ -45,8 +45,7 @@ object DBModule {
     }
 
     @Provides
-    fun provideMateEtaInfoDao(appDatabase: OdyDatabase): MateEtaInfoDao =
-        appDatabase.mateEtaInfoDao()
+    fun provideMateEtaInfoDao(appDatabase: OdyDatabase): MateEtaInfoDao = appDatabase.mateEtaInfoDao()
 
     @Provides
     fun provideEtaReserveDao(appDatabase: OdyDatabase): EtaReserveDao = appDatabase.etaReserveDao()
