@@ -15,6 +15,6 @@ class EtaDashboardCloseBroadcastReceiver : BroadcastReceiver() {
         if (meetingId == MEETING_ID_DEFAULT_VALUE) return
 
         val serviceIntent = EtaDashboardService.getIntent(context, meetingId, isOpen = false)
-        context.stopService(serviceIntent)
+        context.startForegroundService(serviceIntent)
     }
 }
