@@ -40,7 +40,7 @@ class MeetingJoinViewModel
         private val joinRepository: JoinRepository,
         private val matesEtaRepository: MatesEtaRepository,
         private val addressRepository: AddressRepository,
-        private val geoLocationHelper: LocationHelper,
+        private val locationHelper: LocationHelper,
     ) : BaseViewModel(), MeetingJoinListener {
         val departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
 
@@ -67,7 +67,7 @@ class MeetingJoinViewModel
     fun getDefaultLocation() {
             viewModelScope.launch {
                 startLoading()
-                geoLocationHelper.getCurrentCoordinate()
+                locationHelper.getCurrentCoordinate()
                     .suspendOnSuccess { location ->
                         fetchAddressesByCoordinate(location)
                     }

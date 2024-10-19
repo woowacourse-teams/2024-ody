@@ -1,16 +1,21 @@
 package com.mulberry.ody.presentation.creation
 
+import android.location.Location
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
+import com.mulberry.ody.domain.apiresult.suspendOnSuccess
+import com.mulberry.ody.domain.apiresult.suspendOnUnexpected
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingCreationInfo
+import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.domain.validator.AddressValidator
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
+import com.mulberry.ody.presentation.common.gps.LocationHelper
 import com.mulberry.ody.presentation.creation.listener.MeetingCreationListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -36,7 +41,9 @@ class MeetingCreationViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
-    ) : BaseViewModel(), MeetingCreationListener {
+        private val addressRepository: AddressRepository,
+        private val locationHelper: LocationHelper,
+        ) : BaseViewModel(), MeetingCreationListener {
         val meetingCreationInfoType: MutableStateFlow<MeetingCreationInfoType?> = MutableStateFlow(null)
 
         val isValidInfo: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -75,7 +82,10 @@ class MeetingCreationViewModel
         private val _inviteCode = MutableStateFlow("")
         val inviteCode: StateFlow<String> = _inviteCode.asStateFlow()
 
-        init {
+    private val _defaultLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
+    val defaultLocationError: SharedFlow<Unit> get() = _defaultLocationError.asSharedFlow()
+
+    init {
             initializeIsValidInfo()
         }
 
@@ -101,6 +111,42 @@ class MeetingCreationViewModel
             meetingHour.value = now.hour
             meetingMinute.value = now.minute
         }
+
+    fun getDefaultLocation() {
+        viewModelScope.launch {
+            startLoading()
+            locationHelper.getCurrentCoordinate()
+                .suspendOnSuccess { location ->
+                    fetchAddressesByCoordinate(location)
+                }
+                .suspendOnUnexpected {
+                    _defaultLocationError.emit(Unit)
+                }
+            stopLoading()
+        }
+    }
+
+
+    private suspend fun fetchAddressesByCoordinate(location: Location) {
+        val longitude = location.longitude.toString()
+        val latitude = location.latitude.toString()
+
+        addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+            destinationAddress.value =
+                Address(
+                    detailAddress = it ?: "",
+                    longitude = longitude,
+                    latitude = latitude,
+                )
+        }.onFailure { code, errorMessage ->
+            handleError()
+            analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+        }.suspendOnUnexpected {
+            _defaultLocationError.emit(Unit)
+        }.onNetworkError {
+            handleNetworkError()
+        }
+    }
 
         fun createMeeting() {
             val meetingCreationInfo = createMeetingCreationInfo() ?: return
