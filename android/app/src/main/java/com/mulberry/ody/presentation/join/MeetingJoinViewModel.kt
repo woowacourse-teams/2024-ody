@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.join
 
+import android.location.Location
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
@@ -63,27 +64,32 @@ class MeetingJoinViewModel
             viewModelScope.launch {
                 startLoading()
 
-                geoLocationHelper.getCurrentCoordinate().onSuccess { location ->
-                    val longitude = location.longitude.toString()
-                    val latitude = location.latitude.toString()
-
-                    addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
-                        departureAddress.value =
-                            Address(
-                                detailAddress = it ?: "",
-                                longitude = longitude,
-                                latitude = latitude,
-                            )
-                    }.onFailure { code, errorMessage ->
-                        handleError()
-                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    }.onNetworkError {
-                        handleNetworkError()
+                geoLocationHelper.getCurrentCoordinate()
+                    .suspendOnSuccess { location ->
+                        fetchAddressesByCoordinate(location)
                     }
-                }
                 stopLoading()
             }
         }
+
+    private suspend fun fetchAddressesByCoordinate(location: Location) {
+        val longitude = location.longitude.toString()
+        val latitude = location.latitude.toString()
+
+        addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+            departureAddress.value =
+                Address(
+                    detailAddress = it ?: "",
+                    longitude = longitude,
+                    latitude = latitude,
+                )
+        }.onFailure { code, errorMessage ->
+            handleError()
+            analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+        }.onNetworkError {
+            handleNetworkError()
+        }
+    }
 
         fun joinMeeting(inviteCode: String) {
             val meetingJoinInfo = createMeetingJoinInfo(inviteCode) ?: return
