@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.mulberry.ody.data.local.db.EtaReserveDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.db.OdyDatabase
+import com.mulberry.ody.data.local.db.OdyDatabase.Companion.MIGRATION_3_4
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
 import com.squareup.moshi.Moshi
@@ -36,16 +37,16 @@ object DBModule {
     fun provideOdyDatabase(
         @ApplicationContext context: Context,
         moshi: Moshi,
-    ) = Room.databaseBuilder(
-        context,
-        OdyDatabase::class.java,
-        "ody_db",
-    ).fallbackToDestructiveMigration()
-        .addTypeConverter(MateEtaListTypeConverter(moshi))
-        .build()
+    ): OdyDatabase {
+        return Room.databaseBuilder(context, OdyDatabase::class.java, "ody_db")
+            .addMigrations(MIGRATION_3_4)
+            .addTypeConverter(MateEtaListTypeConverter(moshi))
+            .build()
+    }
 
     @Provides
-    fun provideMateEtaInfoDao(appDatabase: OdyDatabase): MateEtaInfoDao = appDatabase.mateEtaInfoDao()
+    fun provideMateEtaInfoDao(appDatabase: OdyDatabase): MateEtaInfoDao =
+        appDatabase.mateEtaInfoDao()
 
     @Provides
     fun provideEtaReserveDao(appDatabase: OdyDatabase): EtaReserveDao = appDatabase.etaReserveDao()
