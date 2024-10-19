@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ApiCallRepository extends JpaRepository<ApiCall, Long> {
 
-    Optional<ApiCall> findFirstByClientTypeAndDate(ClientType clientType, LocalDate date);
+    Optional<ApiCall> findFirstByDateAndClientType(LocalDate date, ClientType clientType);
 
-    Optional<ApiCall> findFirstByClientTypeAndDateBetween(ClientType clientType, LocalDate start, LocalDate end);
+    Optional<ApiCall> findFirstByDateBetweenAndClientType(LocalDate start, LocalDate end, ClientType clientType);
 
-    List<ApiCall> findAllByClientTypeAndDateBetween(ClientType clientType, LocalDate start, LocalDate end);
+    List<ApiCall> findAllByDateBetweenAndClientType(LocalDate start, LocalDate end, ClientType clientType);
 }

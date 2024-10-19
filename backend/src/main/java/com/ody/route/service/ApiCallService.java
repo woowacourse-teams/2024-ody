@@ -24,7 +24,7 @@ public class ApiCallService {
     public ApiCallCountResponse countApiCall(ClientType clientType) {
         LocalDate end = LocalDate.now();
         LocalDate start = clientType.determineResetDate(end);
-        List<ApiCall> apiCalls = apiCallRepository.findAllByClientTypeAndDateBetween(clientType, start, end);
+        List<ApiCall> apiCalls = apiCallRepository.findAllByDateBetweenAndClientType(start, end, clientType);
 
         int totalCount = apiCalls.stream()
                 .mapToInt(ApiCall::getCount)
@@ -39,7 +39,7 @@ public class ApiCallService {
     }
 
     private ApiCall findOrSaveFirstByClientTypeAndDate(ClientType clientType) {
-        Optional<ApiCall> apiCall = apiCallRepository.findFirstByClientTypeAndDate(clientType, LocalDate.now());
+        Optional<ApiCall> apiCall = apiCallRepository.findFirstByDateAndClientType(LocalDate.now(), clientType);
         return apiCall.orElseGet(() -> apiCallRepository.save(new ApiCall(clientType)));
     }
 
@@ -62,7 +62,7 @@ public class ApiCallService {
     private ApiCall findOrSaveFirstByClientTypeAndDateBetween(ClientType clientType) {
         LocalDate end = LocalDate.now();
         LocalDate start = clientType.determineResetDate(end);
-        Optional<ApiCall> apiCall = apiCallRepository.findFirstByClientTypeAndDateBetween(clientType, start, end);
+        Optional<ApiCall> apiCall = apiCallRepository.findFirstByDateBetweenAndClientType(start, end, clientType);
         return apiCall.orElseGet(() -> apiCallRepository.save(new ApiCall(clientType)));
     }
 }
