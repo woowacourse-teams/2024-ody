@@ -18,9 +18,9 @@ public enum RouteClientMapper {
         this.type = type;
     }
 
-    public static ClientType from(String otherName) {
+    public static ClientType from(String targetName) {
         return Arrays.stream(values())
-                .filter(name -> name.name.equals(otherName.toLowerCase()))
+                .filter(routeClient -> routeClient.name.equals(targetName.toLowerCase()))
                 .findAny()
                 .map(pathVariable -> pathVariable.type)
                 .orElseThrow(() -> new OdyNotFoundException("조회할 수 없는 RouteClient입니다."));
