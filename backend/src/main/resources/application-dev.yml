@@ -4,11 +4,11 @@ spring:
       ddl-auto: validate
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://ody-dev-db:53306/ody
+    url: jdbc:mysql://ody-dev-db:3306/ody
     username: ody
     password: 1234
   flyway:
-    url: jdbc:mysql://localhost:53306/ody
+    url: jdbc:mysql://ody-dev-db:3306/ody
     user: ody
     password: 1234
     connect-retries: 30
