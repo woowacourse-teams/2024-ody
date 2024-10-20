@@ -1,10 +1,4 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: true
   datasource:
     url: jdbc:h2:mem:database;MODE=MYSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
     username: sa
@@ -14,13 +8,11 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
-      dialect: org.hibernate.dialect.MySQLDialect
     properties:
       hibernate:
         format_sql: true
-  sql:
-    init:
-      schema-locations:
+  flyway:
+    enabled: false
 
 odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT
@@ -29,3 +21,6 @@ odsay:
 google:
   maps:
     api-key: testApiKey
+
+allowed-origins:
+  api-call: testOrigin
