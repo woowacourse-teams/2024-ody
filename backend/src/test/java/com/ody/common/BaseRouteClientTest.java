@@ -3,6 +3,7 @@ package com.ody.common;
 import com.ody.route.config.RouteClientProperties;
 import com.ody.route.config.RouteClientProperty;
 import com.ody.route.service.RouteClient;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -30,6 +31,11 @@ public abstract class BaseRouteClientTest {
         this.mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
         this.property = getProperty();
         this.routeClient = createRouteClient();
+    }
+
+    @AfterEach
+    void resetMockServer() {
+        mockServer.reset();
     }
 
     protected abstract RouteClientProperty getProperty();
