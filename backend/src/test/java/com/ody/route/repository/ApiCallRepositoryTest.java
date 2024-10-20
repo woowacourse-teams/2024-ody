@@ -40,17 +40,17 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
         ClientType clientType = ClientType.GOOGLE;
         LocalDate now = LocalDate.now();
         LocalDate firstDay = now.withDayOfMonth(1);
-        ApiCall secondApiCall = new ApiCall(clientType, 1, firstDay.plusDays(5));
-        ApiCall thirdApiCall = new ApiCall(clientType, 2, firstDay.plusDays(10));
-        ApiCall firstApiCall = new ApiCall(clientType, 3, firstDay.plusDays(3));
-        apiCallRepository.save(secondApiCall);
-        apiCallRepository.save(thirdApiCall);
-        apiCallRepository.save(firstApiCall);
+        ApiCall thirdDateApiCall = new ApiCall(clientType, 2, firstDay.plusDays(10));
+        ApiCall secondDateApiCall = new ApiCall(clientType, 1, firstDay.plusDays(5));
+        ApiCall firstDateApiCall = new ApiCall(clientType, 3, firstDay.plusDays(3));
+        apiCallRepository.save(thirdDateApiCall);
+        apiCallRepository.save(secondDateApiCall);
+        apiCallRepository.save(firstDateApiCall);
 
         Optional<ApiCall> actual = apiCallRepository.findFirstByDateBetweenAndClientType(firstDay, now, clientType);
 
         assertThat(actual).isPresent()
-                .get().extracting(ApiCall::getDate).isEqualTo(firstApiCall.getDate());
+                .get().extracting(ApiCall::getDate).isEqualTo(firstDateApiCall.getDate());
     }
 
     @DisplayName("특정 기간 내의 ClientType인 모든 ApiCall을 조회한다.")
