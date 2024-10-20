@@ -11,7 +11,7 @@
     <string name="item_notification_entry">(이)가 들어왔어요.</string>
     <string name="item_notification_departure_reminder">(이)가 출발할 시간이에요!</string>
     <string name="item_notification_departure">(이)가 출발했어요.</string>
-    <string name="item_notification_nudge">"(이)가 재촉해요. \uD83D\uDC40"</string>
+    <string name="item_notification_nudge">"(이)가 재촉 받았어요. \uD83D\uDC40"</string>
     <string name="item_notification_member_deletion">(이)가 오디를 떠났어요.</string>
     <string name="item_notification_default"> </string>
 
@@ -88,6 +88,10 @@
     <string name="invite_code_already_participated">이미 참여한 약속입니다.</string>
 
     <!-- activity_login -->
+    <string name="login_welcome_top">카카오톡으로</string>
+    <string name="login_welcome_prefix">간편하게</string>
+    <string name="login_welcome_ody">오디</string>
+    <string name="login_welcome_postfix">시작하기</string>
     <string name="login_logout_success">로그아웃 되었습니다.</string>
     <string name="login_withdrawal_success">회원 탈퇴 되었습니다.</string>
 

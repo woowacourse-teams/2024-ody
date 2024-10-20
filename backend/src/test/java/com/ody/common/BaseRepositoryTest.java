@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 @Import({JpaAuditingConfig.class, FixtureGeneratorConfig.class, TestAuthConfig.class})
-@ActiveProfiles("test")
 @DataJpaTest
+@ActiveProfiles("test")
 public abstract class BaseRepositoryTest {
 
     @Autowired

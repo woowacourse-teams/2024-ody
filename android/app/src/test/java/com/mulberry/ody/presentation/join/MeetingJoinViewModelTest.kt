@@ -9,8 +9,10 @@ import com.mulberry.ody.fake.FakeMatesEtaRepository
 import com.mulberry.ody.meetingId
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
-import com.mulberry.ody.util.getOrAwaitValue
+import com.mulberry.ody.util.valueOnAction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,52 +38,59 @@ class MeetingJoinViewModelTest {
 
     @Test
     fun `약속 참여에 성공하면 약속 방 화면으로 이동한다`() {
-        // given
-        setUpInitializeInfo()
+        runTest {
+            // given
+            setUpInitializeInfo()
 
-        // when
-        viewModel.joinMeeting("abc123")
+            // when
+            val actual =
+                viewModel.navigateAction.valueOnAction {
+                    viewModel.joinMeeting("abc123")
+                }
 
-        // then
-        val actual = viewModel.navigateAction.getValue()
-        assertThat(actual).isNotNull
-        assertThat(actual).isEqualTo(MeetingJoinNavigateAction.JoinNavigateToRoom(meetingId))
+            // then
+            assertThat(actual).isEqualTo(MeetingJoinNavigateAction.JoinNavigateToRoom(meetingId))
+        }
     }
 
     @Test
     fun `입력하지 않은 값이 있는 경우 약속 참여할 수 없다`() {
-        // when
-        viewModel.joinMeeting("abc123")
+        runTest {
+            // when
+            viewModel.joinMeeting("abc123")
 
-        // then
-        val actual = viewModel.navigateAction.getValue()
-        assertThat(actual).isNull()
+            // then
+            val actual = viewModel.navigateAction.valueOnAction {}
+            assertThat(actual).isNull()
+        }
     }
 
     @Test
     fun `출발지 주소가 수도권이라면 유효하다`() {
-        // given
-        setUpInitializeInfo()
+        runTest {
+            // given
+            setUpInitializeInfo()
 
-        // when
-        viewModel.departureAddress.value = Address(0, "인천광역시 남동구")
+            // when
+            viewModel.departureAddress.value = Address(0, "인천광역시 남동구")
 
-        // then
-        val actual = viewModel.isValidDeparture.getOrAwaitValue()
-        assertThat(actual).isTrue
+            // then
+            assertThat(viewModel.isValidDeparture.first()).isTrue
+        }
     }
 
     @Test
     fun `출발지 주소가 수도권이 아니라면 유효하지 않다`() {
-        // given
-        setUpInitializeInfo()
+        runTest {
+            // given
+            setUpInitializeInfo()
 
-        // when
-        viewModel.departureAddress.value = Address(0, "부산광역시 동구")
+            // when
+            viewModel.departureAddress.value = Address(0, "부산광역시 동구")
 
-        // then
-        val actual = viewModel.isValidDeparture.getOrAwaitValue()
-        assertThat(actual).isFalse
+            // then
+            assertThat(viewModel.isValidDeparture.first()).isFalse
+        }
     }
 
     private fun setUpInitializeInfo() {

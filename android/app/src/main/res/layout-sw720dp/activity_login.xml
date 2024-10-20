@@ -20,18 +20,18 @@
 
         <TextView
             android:id="@+id/login_welcome_top"
-            style="@style/pretendard_bold_24"
+            style="@style/pretendard_bold_56"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="46dp"
-            android:layout_marginTop="173dp"
+            android:layout_marginStart="112dp"
+            android:layout_marginTop="240dp"
             android:text="@string/login_welcome_top"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/login_welcome_prefix"
-            style="@style/pretendard_bold_24"
+            style="@style/pretendard_bold_56"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_welcome_prefix"
@@ -40,10 +40,10 @@
 
         <TextView
             android:id="@+id/login_welcome_ody"
-            style="@style/pretendard_bold_24"
+            style="@style/pretendard_bold_56"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="10dp"
             android:text="@string/login_welcome_ody"
             android:textColor="@color/purple_800"
             app:layout_constraintStart_toEndOf="@id/login_welcome_prefix"
@@ -51,26 +51,26 @@
             app:layout_constraintTop_toTopOf="@id/login_welcome_prefix" />
 
         <TextView
-            style="@style/pretendard_bold_24"
+            style="@style/pretendard_bold_56"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="10dp"
             android:text="@string/login_welcome_postfix"
             app:layout_constraintStart_toEndOf="@id/login_welcome_ody"
             app:layout_constraintTop_toTopOf="@id/login_welcome_prefix" />
 
 
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="110dp"
-            android:layout_marginTop="39dp"
+            android:layout_width="200dp"
+            android:layout_height="265dp"
+            android:layout_marginTop="64dp"
             android:src="@drawable/ic_happy_ody"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/login_welcome_prefix" />
 
         <ImageView
-            android:layout_width="0dp"
+            android:layout_width="318dp"
             android:layout_height="0dp"
             android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="24dp"
