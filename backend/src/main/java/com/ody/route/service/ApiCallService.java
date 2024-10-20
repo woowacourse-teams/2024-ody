@@ -39,8 +39,8 @@ public class ApiCallService {
     }
 
     private ApiCall findOrSaveFirstByClientTypeAndDate(ClientType clientType) {
-        Optional<ApiCall> apiCall = apiCallRepository.findFirstByDateAndClientType(LocalDate.now(), clientType);
-        return apiCall.orElseGet(() -> apiCallRepository.save(new ApiCall(clientType)));
+        return apiCallRepository.findFirstByDateAndClientType(LocalDate.now(), clientType)
+                .orElseGet(() -> apiCallRepository.save(new ApiCall(clientType)));
     }
 
     public ApiCallEnabledResponse getApiCallEnabled(ClientType clientType) {
