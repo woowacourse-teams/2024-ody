@@ -82,7 +82,7 @@
             android:layout_marginBottom="18dp"
             android:background="@drawable/rectangle_radius_15"
             android:backgroundTint="@color/primaryVariant"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/fab_meetings_navigator"
             app:layout_constraintEnd_toEndOf="@id/fab_meetings_navigator">
 
