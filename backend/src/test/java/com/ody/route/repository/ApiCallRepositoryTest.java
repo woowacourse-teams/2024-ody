@@ -34,7 +34,7 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
                 .get().extracting(ApiCall::getCount).isEqualTo(2);
     }
 
-    @DisplayName("특정 ClientType과 날짜 기간 내에서 가장 빠른 데이터를 조회한다.")
+    @DisplayName("특정 기간 내의 ClientType인 가장 이른 ApiCall을 조회한다.")
     @Test
     void findFirstByDateBetweenAndClientType() {
         ClientType clientType = ClientType.GOOGLE;
@@ -53,7 +53,7 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
                 .get().extracting(ApiCall::getDate).isEqualTo(firstApiCall.getDate());
     }
 
-    @DisplayName("특정 ClientType과 날짜 기간이 일치하는 모든 데이터를 조회한다")
+    @DisplayName("특정 기간 내의 ClientType인 모든 ApiCall을 조회한다.")
     @Test
     void findAllByDateBetweenAndClientType() {
         // given
