@@ -17,6 +17,7 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
+import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
