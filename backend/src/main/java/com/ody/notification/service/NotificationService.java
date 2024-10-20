@@ -12,7 +12,7 @@ import com.ody.notification.domain.message.DirectMessage;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.domain.DepartureTime;
-import com.ody.util.TimeUtil;
+import com.ody.util.InstantConverter;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -68,13 +68,13 @@ public class NotificationService {
     }
 
     public void scheduleNotification(Notification notification) {
-        Instant startTime = notification.getSendAt().toInstant(TimeUtil.KST_OFFSET);
+        Instant startTime = InstantConverter.kstToInstant(notification.getSendAt());
         taskScheduler.schedule(() -> fcmPushSender.sendPushNotification(notification), startTime);
         log.info(
                 "{} 타입 {} 상태 알림 {}에 스케줄링 예약",
                 notification.getType(),
                 notification.getStatus(),
-                startTime.atZone(TimeUtil.KST_OFFSET)
+                InstantConverter.instantToKst(startTime)
         );
     }
 
