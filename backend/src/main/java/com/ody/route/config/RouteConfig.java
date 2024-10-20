@@ -1,5 +1,6 @@
 package com.ody.route.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ody.route.service.GoogleRouteClient;
 import com.ody.route.service.OdsayRouteClient;
 import com.ody.route.service.RouteClient;
@@ -26,6 +27,7 @@ public class RouteConfig {
     private static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(30);
 
     private final RouteClientProperties properties;
+    private final ObjectMapper objectMapper;
 
     @Bean
     @Order(1)
@@ -44,7 +46,8 @@ public class RouteConfig {
     @Bean
     public RestClient.Builder builder() {
         return RestClient.builder()
-                .requestFactory(new BufferingClientHttpRequestFactory(clientHttpRequestFactory()));
+                .requestFactory(new BufferingClientHttpRequestFactory(clientHttpRequestFactory()))
+                .requestInterceptor(new RouteClientLoggingInterceptor(objectMapper));
     }
 
     private ClientHttpRequestFactory clientHttpRequestFactory() {
