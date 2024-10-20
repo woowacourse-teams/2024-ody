@@ -47,7 +47,8 @@ public class RouteConfig {
     public RestClient.Builder builder() {
         return RestClient.builder()
                 .requestFactory(new BufferingClientHttpRequestFactory(clientHttpRequestFactory()))
-                .requestInterceptor(new RouteClientLoggingInterceptor(objectMapper));
+                .requestInterceptor(new RouteClientLoggingInterceptor(objectMapper))
+                .requestInterceptor(new RouteClientTimeoutInterceptor());
     }
 
     private ClientHttpRequestFactory clientHttpRequestFactory() {
