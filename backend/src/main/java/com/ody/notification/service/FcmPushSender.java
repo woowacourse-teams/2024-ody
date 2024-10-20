@@ -26,7 +26,7 @@ public class FcmPushSender {
     @Transactional
     public void sendPushNotification(Notification notification) {
         Notification savedNotification = notificationRepository.findById(notification.getId())
-                .orElse(notification); // noti 저장과 같은 트랜잭션에서 실행되는 경우, 즉시 findById 할 수 없어 기존 noti 사용
+                .orElse(notification); // noti 생성과 동시에 실행되는 경우, 다른 트랜잭션이므로 즉시 findById 할 수 없어 기존 noti 사용
 
         if (savedNotification.isStatusDismissed()) {
             log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", savedNotification);
