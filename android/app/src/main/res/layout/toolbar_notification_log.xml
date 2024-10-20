@@ -41,20 +41,29 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_title"
-                style="@style/pretendard_bold_24"
+            <HorizontalScrollView
+                android:id="@+id/hsv_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="14dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@{title}"
+                android:fadingEdgeLength="30dp"
+                android:overScrollMode="never"
+                android:requiresFadingEdge="horizontal"
+                android:scrollbars="none"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/tv_mate_count"
                 app:layout_constraintStart_toEndOf="@id/iv_back"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="아주긴모임이름아주긴모임이름" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    style="@style/pretendard_bold_24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@{title}"
+                    tools:text="아주긴모임이름아주긴모임이름아주긴모임이름아" />
+            </HorizontalScrollView>
 
             <TextView
                 android:id="@+id/tv_mate_count"
@@ -65,7 +74,7 @@
                 android:textColor="@color/gray_500"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_menu"
-                app:layout_constraintStart_toEndOf="@id/tv_title"
+                app:layout_constraintStart_toEndOf="@id/hsv_title"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="3명" />
 
