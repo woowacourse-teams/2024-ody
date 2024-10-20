@@ -21,7 +21,7 @@ public class RouteService {
             try {
                 RouteTime routeTime = client.calculateRouteTime(origin, target);
                 apiCallService.increaseCountByRouteClient(client);
-                log.info("{}를 사용한 소요 시간 계산 성공", client.getClass().getSimpleName());
+                log.info("{}를 사용한 소요 시간 계산 성공 - {}분", client.getClass().getSimpleName(), routeTime.getMinutes());
                 return routeTime;
             } catch (Exception exception) {
                 log.warn("Route Client 에러 : {} ", client.getClass().getSimpleName(), exception);
