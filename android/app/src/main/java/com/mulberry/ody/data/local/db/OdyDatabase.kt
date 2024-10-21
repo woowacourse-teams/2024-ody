@@ -42,11 +42,10 @@ abstract class OdyDatabase : RoomDatabase() {
 
         fun create(
             context: Context,
-            moshi: Moshi,
         ): OdyDatabase {
             return Room.databaseBuilder(context, OdyDatabase::class.java, DATABASE_NAME)
                 .addMigrations(MIGRATION_3_TO_4)
-                .addTypeConverter(MateEtaListTypeConverter(moshi))
+                .addTypeConverter(MateEtaListTypeConverter())
                 .build()
         }
     }
