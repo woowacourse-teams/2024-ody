@@ -139,13 +139,14 @@ class EtaDashboardService : Service() {
 
         fun getIntent(
             context: Context,
-            meetingId: Long,
-            isOpen: Boolean = true,
+            meetingId: Long? = null,
+            isOpen: Boolean? = null,
         ): Intent {
-            return Intent(context, EtaDashboardService::class.java).apply {
-                putExtra(MEETING_ID_KEY, meetingId)
-                action = if (isOpen) OPEN_ACTION else CLOSE_ACTION
-            }
+            val intent = Intent(context, EtaDashboardService::class.java)
+            if (meetingId != null) intent.putExtra(MEETING_ID_KEY, meetingId)
+            if (isOpen != null) intent.action = if (isOpen) OPEN_ACTION else CLOSE_ACTION
+
+            return intent
         }
     }
 }
