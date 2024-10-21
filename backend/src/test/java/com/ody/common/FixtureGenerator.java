@@ -165,6 +165,16 @@ public class FixtureGenerator {
         ));
     }
 
+    public Notification generateNotification(Mate mate, LocalDateTime sendAt, NotificationStatus notificationStatus) {
+        return notificationRepository.save(new Notification(
+                mate,
+                NotificationType.ENTRY,
+                sendAt,
+                notificationStatus,
+                new FcmTopic(mate.getMeeting())
+        ));
+    }
+
     public Notification generateNotification(
             Mate mate,
             NotificationType type,

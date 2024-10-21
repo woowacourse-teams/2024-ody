@@ -161,4 +161,19 @@ class NotificationServiceTest extends BaseServiceTest {
 
         assertThat(logCountAfterDelete).isEqualTo(logCountBeforeDelete + 1);
     }
+
+
+    @DisplayName("DISMISSED 상태의 알림은 조회되지 않는다.")
+    @Test
+    void findAllMeetingLogsExcludingDisMissedStatus() {
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Mate mate = fixtureGenerator.generateMate(meeting);
+        fixtureGenerator.generateNotification(mate, NotificationStatus.PENDING);
+        fixtureGenerator.generateNotification(mate, NotificationStatus.DONE);
+        fixtureGenerator.generateNotification(mate, NotificationStatus.DISMISSED);
+
+        List<NotiLogFindResponse> notiLogFindResponses = notificationService.findAllNotiLogs(meeting.getId()).notiLog();
+
+        assertThat(notiLogFindResponses).hasSize(2);
+    }
 }

@@ -16,10 +16,13 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             from Notification noti
             left join fetch Mate m on noti.mate = m
             left join Meeting meet on m.meeting = meet
-            where meet.id = :meetingId and noti.sendAt <= :time
+            where meet.id = :meetingId and noti.sendAt < :dateTime and noti.status != "DISMISSED"
             order by noti.sendAt asc
             """)
-    List<Notification> findAllMeetingLogsBeforeThanEqual(Long meetingId, LocalDateTime time);
+    List<Notification> findAllByMeetingIdAndSentAtBeforeDateTimeAndStatusIsNotDismissed(
+            Long meetingId,
+            LocalDateTime dateTime
+    );
 
     @Query("""
             select noti
