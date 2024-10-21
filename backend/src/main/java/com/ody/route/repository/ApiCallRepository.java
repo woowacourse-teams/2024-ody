@@ -11,5 +11,7 @@ public interface ApiCallRepository extends JpaRepository<ApiCall, Long> {
 
     Optional<ApiCall> findFirstByDateAndClientType(LocalDate date, ClientType clientType);
 
-    List<ApiCall> findAllByClientTypeAndDateBetween(ClientType clientType, LocalDate start, LocalDate end);
+    Optional<ApiCall> findFirstByDateBetweenAndClientType(LocalDate start, LocalDate end, ClientType clientType);
+
+    List<ApiCall> findAllByDateBetweenAndClientType(LocalDate start, LocalDate end, ClientType clientType);
 }
