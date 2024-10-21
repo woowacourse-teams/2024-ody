@@ -109,7 +109,7 @@ public class NotificationService {
 
     @Transactional
     public void updateAllStatusToDismissByMateIdAndSendAtAfterNow(long mateId) {
-        notificationRepository.updateAllStatusToDismissedByMateIdAndSendAtAfter(mateId, LocalDateTime.now());
+        notificationRepository.updateAllStatusToDismissedByMateIdAndSendAtAfterDateTime(mateId, LocalDateTime.now());
     }
 
     @Transactional

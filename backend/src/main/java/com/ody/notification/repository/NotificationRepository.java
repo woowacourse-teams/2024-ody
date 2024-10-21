@@ -45,5 +45,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     @Modifying(clearAutomatically = true)
     @Query("update Notification n set n.status = 'DISMISSED' where n.mate.id = :mateId and n.sendAt > :dateTime")
-    void updateAllStatusToDismissedByMateIdAndSendAtAfter(long mateId, LocalDateTime dateTime);
+    void updateAllStatusToDismissedByMateIdAndSendAtAfterDateTime(long mateId, LocalDateTime dateTime);
 }
