@@ -32,7 +32,7 @@ class MeetingJoinViewModelTest {
                 joinRepository = FakeJoinRepository(meetingId = meetingId),
                 matesEtaRepository = FakeMatesEtaRepository,
                 addressRepository = FakeAddressRepository,
-                geoLocationHelper = FakeLocationHelper,
+                locationHelper = FakeLocationHelper,
             )
     }
 
