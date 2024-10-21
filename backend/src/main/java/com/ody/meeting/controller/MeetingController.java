@@ -10,11 +10,9 @@ import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
-import com.ody.notification.domain.Notification;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -68,7 +66,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @PathVariable Long meetingId
     ) {
-        NotiLogFindResponses response = notificationService.findAllMeetingLogs(meetingId);
+        NotiLogFindResponses response = notificationService.findAllNotiLogs(meetingId);
         return ResponseEntity.ok(response);
     }
 

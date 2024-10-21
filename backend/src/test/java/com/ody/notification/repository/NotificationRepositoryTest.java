@@ -40,7 +40,7 @@ class NotificationRepositoryTest extends BaseRepositoryTest {
                 NotificationStatus.PENDING
         );
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(
+        List<Notification> notifications = notificationRepository.findAllByMeetingIdAndSentAtBeforeDateTimeAndStatusIsNotDismissed(
                 odyMeeting.getId(),
                 LocalDateTime.now()
         );
@@ -80,8 +80,10 @@ class NotificationRepositoryTest extends BaseRepositoryTest {
         notificationRepository.save(pastNotification);
         notificationRepository.save(futureNotification);
 
-        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(odyMeeting.getId(),
-                LocalDateTime.now());
+        List<Notification> notifications = notificationRepository.findAllByMeetingIdAndSentAtBeforeDateTimeAndStatusIsNotDismissed(
+                odyMeeting.getId(),
+                LocalDateTime.now()
+        );
 
         assertThat(notifications.size()).isOne();
     }
