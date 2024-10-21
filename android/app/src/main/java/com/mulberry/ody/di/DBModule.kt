@@ -1,13 +1,10 @@
 package com.mulberry.ody.di
 
 import android.content.Context
-import androidx.room.Room
 import com.mulberry.ody.data.local.db.EtaReservationDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.db.OdyDatabase
-import com.mulberry.ody.data.local.db.OdyDatabase.Companion.MIGRATION_3_4
 import com.mulberry.ody.data.local.db.OdyDatastore
-import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -38,10 +35,7 @@ object DBModule {
         @ApplicationContext context: Context,
         moshi: Moshi,
     ): OdyDatabase {
-        return Room.databaseBuilder(context, OdyDatabase::class.java, "ody_db")
-            .addMigrations(MIGRATION_3_4)
-            .addTypeConverter(MateEtaListTypeConverter(moshi))
-            .build()
+        return OdyDatabase.create(context, moshi)
     }
 
     @Provides

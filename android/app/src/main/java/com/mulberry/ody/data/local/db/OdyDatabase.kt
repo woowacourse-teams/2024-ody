@@ -1,6 +1,8 @@
 package com.mulberry.ody.data.local.db
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
@@ -8,6 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
 import com.mulberry.ody.data.local.entity.reserve.EtaReservationEntity
+import com.squareup.moshi.Moshi
 
 @Database(
     entities = [MateEtaInfoEntity::class, EtaReservationEntity::class],
@@ -20,7 +23,8 @@ abstract class OdyDatabase : RoomDatabase() {
     abstract fun etaReservationDao(): EtaReservationDao
 
     companion object {
-        val MIGRATION_3_4 =
+        private const val DATABASE_NAME = "ody_db"
+        private val MIGRATION_3_TO_4 =
             object : Migration(3, 4) {
                 override fun migrate(db: SupportSQLiteDatabase) {
                     db.execSQL(
@@ -35,5 +39,15 @@ abstract class OdyDatabase : RoomDatabase() {
                     )
                 }
             }
+
+        fun create(
+            context: Context,
+            moshi: Moshi,
+        ): OdyDatabase {
+            return Room.databaseBuilder(context, OdyDatabase::class.java, DATABASE_NAME)
+                .addMigrations(MIGRATION_3_TO_4)
+                .addTypeConverter(MateEtaListTypeConverter(moshi))
+                .build()
+        }
     }
 }
