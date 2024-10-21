@@ -16,6 +16,8 @@ import com.ody.member.domain.Member;
 import com.ody.notification.service.NotificationService;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
+import com.ody.util.TimeUtil;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MateService {
+
+    private static final long AVAILABLE_NUDGE_DURATION = 30L;
 
     private final MateRepository mateRepository;
     private final EtaService etaService;
@@ -72,12 +76,32 @@ public class MateService {
     public void nudge(NudgeRequest nudgeRequest) {
         Mate requestMate = findFetchedMate(nudgeRequest.requestMateId());
         Mate nudgedMate = findFetchedMate(nudgeRequest.nudgedMateId());
+        validateNudgeCondition(requestMate, nudgedMate);
+        notificationService.sendNudgeMessage(requestMate, nudgedMate);
+    }
 
-        if (requestMate.isAttended(nudgedMate.getMeeting()) && canNudge(nudgedMate)) {
-            notificationService.sendNudgeMessage(requestMate, nudgedMate);
-            return;
+    private void validateNudgeCondition(Mate requestMate, Mate nudgedMate) {
+        if (!requestMate.isAttended(nudgedMate.getMeeting())) {
+            throw new OdyBadRequestException("재촉한 참여자가 같은 약속 참여자가 아닙니다");
         }
-        throw new OdyBadRequestException("재촉한 참여자가 같은 약속 참여자가 아니거나 지각/지각위기가 아닙니다");
+
+        if (!canNudgedStatus(nudgedMate)) {
+            throw new OdyBadRequestException("재촉한 참여자가 지각/지각위기가 아닙니다");
+        }
+
+        if (!isWithinNudgeTime(nudgedMate.getMeeting())) {
+            throw new OdyBadRequestException("재촉할 수 있는 시간이 지난 요청입니다");
+        }
+    }
+
+    private boolean isWithinNudgeTime(Meeting meeting) {
+        LocalDateTime nudgeEndTime = meeting.getMeetingTime().plusMinutes(AVAILABLE_NUDGE_DURATION);
+        return !TimeUtil.nowWithTrim().isAfter(nudgeEndTime);
+    }
+
+    private boolean canNudgedStatus(Mate mate) {
+        EtaStatus etaStatus = etaService.findEtaStatus(mate);
+        return etaStatus == EtaStatus.LATE_WARNING || etaStatus == EtaStatus.LATE;
     }
 
     private Mate findFetchedMate(Long mateId) {
@@ -87,11 +111,6 @@ public class MateService {
             throw new OdyBadRequestException("기한이 지난 약속입니다.");
         }
         return mate;
-    }
-
-    private boolean canNudge(Mate mate) {
-        EtaStatus etaStatus = etaService.findEtaStatus(mate);
-        return etaStatus == EtaStatus.LATE_WARNING || etaStatus == EtaStatus.LATE;
     }
 
     @Transactional
