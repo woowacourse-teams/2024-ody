@@ -11,6 +11,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,5 +40,12 @@ public class MateController implements MateControllerSwagger {
     public ResponseEntity<Void> nudgeMate(@RequestBody @Valid NudgeRequest nudgeRequest) {
         mateService.nudge(nudgeRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    @DeleteMapping("/mates/{meetingId}/leave")
+    public ResponseEntity<Void> leave(@AuthMember Member member, @PathVariable Long meetingId) {
+        mateService.deleteMateByMeetingIdAndMemberId(meetingId, member.getId());
+        return ResponseEntity.noContent().build();
     }
 }

@@ -119,4 +119,10 @@ public class MateService {
         etaService.deleteByMateId(mate.getId());
         mateRepository.deleteById(mate.getId());
     }
+
+    @Transactional
+    public void deleteMateByMeetingIdAndMemberId(Long meetingId, Long memberId) {
+        Mate mate = findByMeetingIdAndMemberId(meetingId, memberId);
+        mateRepository.deleteById(mate.getId());
+    }
 }

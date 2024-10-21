@@ -51,4 +51,18 @@ public interface MateControllerSwagger {
     @ErrorCode401
     @ErrorCode500
     ResponseEntity<Void> nudgeMate(NudgeRequest nudgeRequest);
+
+    @Operation(
+            summary = "참여자 약속 방 나가기",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "참여자 약속 방 나가기 성공"
+                    )
+            }
+    )
+    @ErrorCode401
+    @ErrorCode404(description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우")
+    @ErrorCode500
+    ResponseEntity<Void> leave(@Parameter(hidden = true) Member member, Long meetingId);
 }
