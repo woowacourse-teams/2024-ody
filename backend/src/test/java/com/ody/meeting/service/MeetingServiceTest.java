@@ -22,6 +22,7 @@ import com.ody.member.domain.Member;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.message.GroupMessage;
+import com.ody.notification.service.FcmPushSender;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -47,6 +48,9 @@ class MeetingServiceTest extends BaseServiceTest {
 
     @MockBean
     private TaskScheduler taskScheduler;
+
+    @MockBean
+    protected FcmPushSender fcmPushSender;
 
     @DisplayName("내 약속 목록 조회 시 오름차순 정렬한다.")
     @Test

@@ -60,6 +60,9 @@ class EtaDashboardService : Service() {
 
             CLOSE_ACTION -> {
                 closeEtaDashboard(meetingId)
+                if (meetingJobs.isEmpty()) {
+                    stopSelf()
+                }
             }
         }
         return START_REDELIVER_INTENT
@@ -112,8 +115,8 @@ class EtaDashboardService : Service() {
     }
 
     private fun closeEtaDashboard(meetingId: Long) {
-        val job = meetingJobs.remove(meetingId) ?: return
-        job.cancel()
+        val job = meetingJobs.remove(meetingId)
+        job?.cancel()
     }
 
     override fun onDestroy() {
