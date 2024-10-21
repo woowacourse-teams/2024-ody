@@ -6,10 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_KEY
-import com.mulberry.ody.domain.common.toMilliSeconds
-import java.time.LocalDateTime
 import javax.inject.Inject
-import kotlin.math.max
 
 class EtaDashboardAlarm
     @Inject
@@ -17,73 +14,43 @@ class EtaDashboardAlarm
         private val context: Context,
         private val alarmManager: AlarmManager,
     ) {
-        fun reserveEtaDashboard(
+        private val pendingIntents: MutableList<PendingIntent> = mutableListOf()
+
+        fun reserve(
             meetingId: Long,
-            meetingDateTime: LocalDateTime,
+            reserveMillis: Long,
+            isOpen: Boolean,
+            reservationId: Long,
         ) {
-            reserveEtaDashboardOpen(meetingId, meetingDateTime)
-            reserveEtaDashboardClose(meetingId, meetingDateTime)
+            val pendingIntent = createPendingIntent(meetingId, isOpen, reservationId)
+            reserveAlarm(reserveMillis, pendingIntent)
         }
 
-        private fun reserveEtaDashboardOpen(
+        private fun createPendingIntent(
             meetingId: Long,
-            meetingDateTime: LocalDateTime,
-        ) {
-            val reserveMillis = meetingDateTime.etaDashboardOpenMillis()
-            val pendingIntent = createOpenPendingIntent(meetingId)
-            reserve(reserveMillis, pendingIntent)
-        }
-
-        private fun LocalDateTime.etaDashboardOpenMillis(): Long {
-            val openMillis = minusMinutes(ETA_OPEN_MINUTE).toMilliSeconds()
-            val nowMillis = System.currentTimeMillis()
-            return max(openMillis, nowMillis)
-        }
-
-        private fun createOpenPendingIntent(meetingId: Long): PendingIntent {
-            val alarmIntent =
-                Intent(context, EtaDashboardOpenBroadcastReceiver::class.java)
-                    .putExtra(MEETING_ID_KEY, meetingId)
-
-            return PendingIntent.getBroadcast(
-                context,
-                meetingId.toInt(),
-                alarmIntent,
-                PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
-
-        private fun reserveEtaDashboardClose(
-            meetingId: Long,
-            meetingDateTime: LocalDateTime,
-        ) {
-            val reserveMillis = meetingDateTime.etaDashboardCloseMillis()
-            val pendingIntent = createClosePendingIntent(meetingId)
-            reserve(reserveMillis, pendingIntent)
-        }
-
-        private fun LocalDateTime.etaDashboardCloseMillis(): Long {
-            return plusMinutes(ETA_CLOSE_MINUTE).toMilliSeconds()
-        }
-
-        private fun createClosePendingIntent(meetingId: Long): PendingIntent {
+            isOpen: Boolean,
+            reservationId: Long,
+        ): PendingIntent {
+            val intentClass =
+                if (isOpen) EtaDashboardOpenBroadcastReceiver::class else EtaDashboardCloseBroadcastReceiver::class
             val intent =
-                Intent(context, EtaDashboardCloseBroadcastReceiver::class.java)
+                Intent(context, intentClass.java)
                     .putExtra(MEETING_ID_KEY, meetingId)
 
             return PendingIntent.getBroadcast(
                 context,
-                meetingId.toInt() * CLOSE_PENDING_INTENT_VALUE,
+                reservationId.toInt(),
                 intent,
                 PendingIntent.FLAG_IMMUTABLE,
             )
         }
 
         @SuppressLint("ScheduleExactAlarm")
-        private fun reserve(
+        private fun reserveAlarm(
             triggerAtMillis: Long,
             pendingIntent: PendingIntent,
         ) {
+            pendingIntents.add(pendingIntent)
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerAtMillis,
@@ -91,9 +58,10 @@ class EtaDashboardAlarm
             )
         }
 
-        companion object {
-            private const val CLOSE_PENDING_INTENT_VALUE = -1
-            private const val ETA_OPEN_MINUTE = 30L
-            private const val ETA_CLOSE_MINUTE = 2L
+        fun cancelAll() {
+            pendingIntents.forEach {
+                alarmManager.cancel(it)
+            }
+            pendingIntents.clear()
         }
     }
