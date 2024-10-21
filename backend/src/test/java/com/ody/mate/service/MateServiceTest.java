@@ -145,7 +145,7 @@ class MateServiceTest extends BaseServiceTest {
                     .isInstanceOf(OdyBadRequestException.class);
         }
 
-        @DisplayName("약속 이후 30분 까지 mate를 재촉할 수 있다")
+        @DisplayName("약속 30분 이후 이전까지 mate를 재촉할 수 있다")
         @Test
         void nudgeSuccessWhenTimeWithInNudgeAvailableTime() {
             Meeting availableNudgeMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusMinutes(30L));
@@ -159,7 +159,7 @@ class MateServiceTest extends BaseServiceTest {
             Mockito.verify(fcmPushSender, times(1)).sendNudgeMessage(any(Notification.class), any(DirectMessage.class));
         }
 
-        @DisplayName("약속 이후 30분 이후에는 mate를 재촉할 수 없다")
+        @DisplayName("약속 30분 이후에는 mate를 재촉할 수 없다")
         @Test
         void nudgeFailWhenTimeIsNotWithInNudgeAvailableTime() {
             Meeting notAvailableNudgeMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusMinutes(31L));
