@@ -132,6 +132,7 @@ class MeetingsActivity :
                 MeetingRoomActivity.NAVIGATE_TO_NOTIFICATION_LOG,
             )
         startActivity(intent)
+        finish()
     }
 
     private fun navigateToEtaDashboard(meetingId: Long) {
@@ -142,6 +143,7 @@ class MeetingsActivity :
                 MeetingRoomActivity.NAVIGATE_TO_ETA_DASHBOARD,
             )
         startActivity(intent)
+        finish()
     }
 
     private fun navigateToLogin() {
