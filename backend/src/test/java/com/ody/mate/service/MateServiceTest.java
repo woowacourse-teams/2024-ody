@@ -145,7 +145,7 @@ class MateServiceTest extends BaseServiceTest {
                     .isInstanceOf(OdyBadRequestException.class);
         }
 
-        @DisplayName("약속 30분 이후 이전까지 mate를 재촉할 수 있다")
+        @DisplayName("약속 30분 이후까지 mate를 재촉할 수 있다")
         @Test
         void nudgeSuccessWhenTimeWithInNudgeAvailableTime() {
             Meeting availableNudgeMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusMinutes(30L));
