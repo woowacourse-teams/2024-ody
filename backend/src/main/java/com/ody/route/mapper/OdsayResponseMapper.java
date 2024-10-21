@@ -15,7 +15,7 @@ public class OdsayResponseMapper {
     private static final String CLOSE_LOCATION_CODE = "-98"; //출발지-도착지가 700m 이내일 때
     private static final String ODSAY_SERVER_ERROR = "500";
     private static final String EMPTY_MESSAGE = "";
-    private static final long ZERO_TIME = 0L;
+    private static final long CLOSE_LOCATION_MINUTES = -1L;
 
     public static long mapMinutes(OdsayResponse response) {
         if (response == null) {
@@ -23,7 +23,7 @@ public class OdsayResponseMapper {
         }
 
         if (isCloseLocation(response)) {
-            return ZERO_TIME;
+            return CLOSE_LOCATION_MINUTES;
         }
 
         if (response.code().isPresent()) {
