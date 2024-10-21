@@ -55,20 +55,12 @@ public class MateService {
     }
 
     private Mate saveMateAndEta(MateSaveRequestV2 mateSaveRequest, Member member, Meeting meeting) {
-        RouteTime firstRouteTime = calcaulteFirstRouteTime(mateSaveRequest, meeting);
-        Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, firstRouteTime.getMinutes()));
-        etaService.saveFirstEtaOfMate(mate, firstRouteTime);
-        return mate;
-    }
-
-    private RouteTime calcaulteFirstRouteTime(MateSaveRequestV2 mateSaveRequest, Meeting meeting) {
         Coordinates originCoordinates = mateSaveRequest.toOriginCoordinates();
         Coordinates targetCoordinates = meeting.getTargetCoordinates();
         RouteTime routeTime = routeService.calculateRouteTime(originCoordinates, targetCoordinates);
-        if (routeTime.isZero()) {
-            return routeTime.addMinutes(10L);
-        }
-        return routeTime;
+        Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, routeTime.getMinutes()));
+        etaService.saveFirstEtaOfMate(mate, routeTime);
+        return mate;
     }
 
     public List<Mate> findAllByMeetingIdIfMate(Member member, long meetingId) {
