@@ -21,7 +21,7 @@
     <!-- item_invite_code_log.xml -->
     <string name="item_invite_code_top">초대 코드를 복사해</string>
     <string name="item_invite_code_bottom">친구에게 전달해 보세요!</string>
-    <string name="item_invite_code_copy">클립보드 복사</string>"
+    <string name="item_invite_code_copy">복사하기</string>"
 
     <!-- fragment_destination.xml -->
     <string name="destination_question_front">오디</string>
