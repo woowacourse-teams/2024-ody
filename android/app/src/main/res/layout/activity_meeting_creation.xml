@@ -32,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
+            app:dotsClickable="false"
             app:dotsColor="@color/gray_350"
             app:dotsCornerRadius="50dp"
             app:dotsSize="10dp"
