@@ -208,4 +208,17 @@ class MateServiceTest extends BaseServiceTest {
 
         Mockito.verify(fcmSubscriber, Mockito.times(2)).unSubscribeTopic(any(FcmTopic.class), any(DeviceToken.class));
     }
+
+    @DisplayName("약속에 참여하고 있는 mate를 약속 방에서 삭제한다.")
+    @Test
+    void deleteMateByMeetingIdAndMemberId() {
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Member kaki = fixtureGenerator.generateMember("kaki");
+        fixtureGenerator.generateMate(meeting, kaki);
+
+        mateService.deleteMateByMeetingIdAndMemberId(meeting.getId(), kaki.getId());
+
+        assertThatThrownBy(() -> mateService.findAllByMeetingIdIfMate(kaki, meeting.getId()))
+                .isInstanceOf(OdyNotFoundException.class);
+    }
 }
