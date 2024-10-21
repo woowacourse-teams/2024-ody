@@ -90,8 +90,8 @@ public class NotificationService {
     }
 
     @DisabledDeletedFilter
-    public NotiLogFindResponses findAllMeetingLogs(Long meetingId) {
-        List<Notification> notifications = notificationRepository.findAllMeetingLogsBeforeThanEqual(
+    public NotiLogFindResponses findAllNotiLogs(Long meetingId) {
+        List<Notification> notifications = notificationRepository.findAllByMeetingIdAndSentAtBeforeDateTimeAndStatusIsNotDismissed(
                 meetingId,
                 LocalDateTime.now()
         );
@@ -108,12 +108,8 @@ public class NotificationService {
     }
 
     @Transactional
-    public void updateAllStatusPendingToDismissedByMateId(long mateId) {
-        List<Notification> notifications = notificationRepository.findAllByMateIdAndStatus(
-                mateId,
-                NotificationStatus.PENDING
-        );
-        notifications.forEach(Notification::updateStatusToDismissed);
+    public void updateAllStatusToDismissByMateIdAndSendAtAfterNow(long mateId) {
+        notificationRepository.updateAllStatusToDismissedByMateIdAndSendAtAfter(mateId, LocalDateTime.now());
     }
 
     @Transactional

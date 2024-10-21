@@ -6,6 +6,7 @@ import com.ody.notification.domain.NotificationType;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
@@ -39,5 +40,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             """)
     List<Notification> findAllMeetingIdAndType(Long meetingId, NotificationType type);
 
-    List<Notification> findAllByMateIdAndStatus(long mateId, NotificationStatus status);
+    @Modifying(clearAutomatically = true)
+    @Query("update Notification n set n.status = 'DISMISSED' where n.mate.id = :mateId and n.sendAt > :dateTime")
+    void updateAllStatusToDismissedByMateIdAndSendAtAfter(long mateId, LocalDateTime dateTime);
 }
