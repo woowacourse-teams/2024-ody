@@ -1,7 +1,6 @@
 package com.mulberry.ody.data.local.repository
 
 import android.content.Context
-import android.content.Intent
 import com.mulberry.ody.data.local.db.EtaReservationDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
