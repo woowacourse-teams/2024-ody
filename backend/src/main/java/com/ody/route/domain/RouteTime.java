@@ -12,12 +12,8 @@ public class RouteTime {
 
     private final long minutes;
 
-    public boolean isZero() {
-        return this.equals(ZERO);
-    }
-
-    public RouteTime addMinutes(long minutes) {
-        return new RouteTime(minutes + this.minutes);
+    public boolean isSame(long minutes) {
+        return this.minutes == minutes;
     }
 
     @Override

@@ -13,13 +13,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RouteService {
 
+    private static final long CLOSEST_LOCATION_DURATION = 10L;
+
     private final List<RouteClient> routeClients;
     private final ApiCallService apiCallService;
 
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         for (RouteClient client : routeClients) {
             try {
-                RouteTime routeTime = client.calculateRouteTime(origin, target);
+                RouteTime routeTime = calculateTime(client, origin, target);
                 apiCallService.increaseCountByRouteClient(client);
                 log.info("{}를 사용한 소요 시간 계산 성공", client.getClass().getSimpleName());
                 return routeTime;
@@ -29,5 +31,13 @@ public class RouteService {
         }
         log.error("모든 소요시간 계산 API 사용 불가");
         throw new OdyServerErrorException("서버에 장애가 발생했습니다.");
+    }
+
+    private RouteTime calculateTime(RouteClient client, Coordinates origin, Coordinates target) {
+        RouteTime calculatedRouteTime = client.calculateRouteTime(origin, target);
+        if (calculatedRouteTime.isSame(-1L)) {
+            return new RouteTime(CLOSEST_LOCATION_DURATION);
+        }
+        return calculatedRouteTime;
     }
 }

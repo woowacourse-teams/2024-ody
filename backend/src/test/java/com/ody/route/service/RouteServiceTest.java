@@ -50,7 +50,30 @@ class RouteServiceTest extends BaseServiceTest {
                 () -> Mockito.verifyNoInteractions(googleRouteClient),
                 () -> Mockito.verify(apiCallService, Mockito.times(1)).increaseCountByRouteClient(odsayRouteClient),
                 () -> Mockito.verify(apiCallService, Mockito.never()).increaseCountByRouteClient(googleRouteClient)
+        );
+    }
 
+    @DisplayName("OdsayRouteClient에서 700m 이내라 소요시간 -1을 반환하면 10분으로 소요시간이 전환된다")
+    @Test
+    void calculateClosestDurationRouteTimeByOdsayRouteClient() {
+        Coordinates origin = new Coordinates("37.505419", "127.050817");
+        Coordinates target = new Coordinates("37.515253", "127.102895");
+
+        Mockito.when(odsayRouteClient.calculateRouteTime(origin, target))
+                .thenReturn(new RouteTime(-1));
+
+        Mockito.when(googleRouteClient.calculateRouteTime(origin, target))
+                .thenReturn(new RouteTime(18));
+
+        RouteTime result = routeService.calculateRouteTime(origin, target);
+        RouteTime expectRouteTime = new RouteTime(10);
+
+        assertAll(
+                () -> assertThat(result).isEqualTo(expectRouteTime),
+                () -> Mockito.verify(odsayRouteClient, Mockito.times(1)).calculateRouteTime(origin, target),
+                () -> Mockito.verifyNoInteractions(googleRouteClient),
+                () -> Mockito.verify(apiCallService, Mockito.times(1)).increaseCountByRouteClient(odsayRouteClient),
+                () -> Mockito.verify(apiCallService, Mockito.never()).increaseCountByRouteClient(googleRouteClient)
         );
     }
 
