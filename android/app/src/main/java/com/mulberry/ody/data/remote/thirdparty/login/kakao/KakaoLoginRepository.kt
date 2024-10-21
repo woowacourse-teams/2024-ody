@@ -6,9 +6,11 @@ import com.mulberry.ody.data.remote.core.entity.login.request.LoginRequest
 import com.mulberry.ody.data.remote.core.service.LoginService
 import com.mulberry.ody.data.remote.core.service.LogoutService
 import com.mulberry.ody.data.remote.core.service.MemberService
+import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.data.remote.thirdparty.login.entity.UserProfile
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map
+import com.mulberry.ody.domain.apiresult.suspendOnSuccess
 import com.mulberry.ody.domain.common.flatMap
 import com.mulberry.ody.domain.model.AuthToken
 import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
@@ -22,15 +24,26 @@ class KakaoLoginRepository
         private val loginService: LoginService,
         private val logoutService: LogoutService,
         private val memberService: MemberService,
+        private val refreshTokenService: RefreshTokenService,
         private val authTokenRepository: AuthTokenRepository,
         private val kakaoOAuthLoginService: KakaoOAuthLoginService,
         private val fcmTokenRepository: FCMTokenRepository,
     ) : LoginRepository {
         override suspend fun checkIfLoggedIn(): Boolean {
             val isKakaoLoggedIn = kakaoOAuthLoginService.checkIfLoggedIn()
-            val isOdyLoggedIn = authTokenRepository.fetchAuthToken().getOrNull() != null
+            val isOdyLoggedIn =
+                authTokenRepository.fetchAuthToken().getOrNull() != null &&
+                    refreshAuthToken().isSuccess
+
             return isKakaoLoggedIn && isOdyLoggedIn
         }
+
+        private suspend fun refreshAuthToken(): ApiResult<AuthToken> =
+            refreshTokenService.postRefreshToken()
+                .map { it.toAuthToken() }
+                .suspendOnSuccess {
+                    authTokenRepository.setAuthToken(it)
+                }
 
         override suspend fun login(context: Context): ApiResult<AuthToken> {
             val loginRequest = kakaoOAuthLoginService.login(context).flatMap { buildLoginRequest(it) }
