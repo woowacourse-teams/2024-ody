@@ -158,7 +158,7 @@ class MeetingCreationViewModel
 
         private fun isValidMeetingName(): Boolean {
             val meetingName = meetingName.value
-            return meetingName.isNotEmpty() && meetingName.length <= MEETING_NAME_MAX_LENGTH
+            return meetingName.isNotBlank() && meetingName.length <= MEETING_NAME_MAX_LENGTH
         }
 
         private fun isValidMeetingDateTime(): Boolean {
