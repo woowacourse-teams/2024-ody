@@ -74,7 +74,7 @@ class DefaultMatesEtaRepository
             if (!isReservationPending) {
                 etaReservationDao.deleteAll()
             }
-            val serviceIntent = Intent(context, EtaDashboardService::class.java)
+            val serviceIntent = EtaDashboardService.getIntent(context)
             context.stopService(serviceIntent)
         }
 
