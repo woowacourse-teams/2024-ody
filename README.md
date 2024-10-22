@@ -20,3 +20,7 @@
 더 이상 "너 어디야?"라고 물어보지 마세요.  
 약속을 더욱 즐겁고 편안하게,  
 여러분의 우정을 더욱 돈독하게 만들어 드릴게요.
+
+### Google Play 
+
+[오디 다운받기](http://play.google.com/store/apps/details?id=com.mulberry.ody/)
