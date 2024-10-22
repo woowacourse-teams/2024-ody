@@ -21,6 +21,14 @@
 약속을 더욱 즐겁고 편안하게,  
 여러분의 우정을 더욱 돈독하게 만들어 드릴게요.
 
-### Google Play 
+## **Google Play** 
 
 [오디 다운받기](http://play.google.com/store/apps/details?id=com.mulberry.ody/)
+
+<br/>
+
+## **커밋 컨벤션** 📜
+
+[오디 팀 커밋 컨벤션](https://sly-face-106.notion.site/6497236e4e8b449ebf132b1b329882e1?pvs=4)
+
+<br/>
