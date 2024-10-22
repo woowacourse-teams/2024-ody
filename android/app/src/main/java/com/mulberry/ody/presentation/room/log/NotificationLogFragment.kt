@@ -12,15 +12,14 @@ import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.log.adapter.MatesAdapter
 import com.mulberry.ody.presentation.room.log.adapter.NotificationLogsAdapter
-import com.mulberry.ody.presentation.room.log.listener.InviteCodeCopyListener
+import com.mulberry.ody.presentation.room.log.listener.NotificationLogListener
 import com.mulberry.ody.presentation.room.log.listener.MenuListener
-import com.mulberry.ody.presentation.room.log.model.MateUiModel
 import kotlinx.coroutines.launch
 
 class NotificationLogFragment :
     BindingFragment<FragmentNotificationLogBinding>(R.layout.fragment_notification_log),
     MenuListener,
-    InviteCodeCopyListener {
+    NotificationLogListener {
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
     private val notificationLogsAdapter: NotificationLogsAdapter by lazy { NotificationLogsAdapter() }
     private val matesAdapter: MatesAdapter by lazy { MatesAdapter() }
@@ -38,7 +37,7 @@ class NotificationLogFragment :
         binding.vm = viewModel
         binding.backListener = requireActivity() as MeetingRoomActivity
         binding.menuListener = this
-        binding.inviteCodeCopyListener = this
+        binding.notificationLogListener = this
         binding.rvNotificationLog.adapter = notificationLogsAdapter
         binding.rvMates.adapter = matesAdapter
     }
@@ -63,7 +62,7 @@ class NotificationLogFragment :
     }
 
     override fun onCopyInviteCode() {
-        val inviteCode = viewModel.meeting.value?.inviteCode
+        val inviteCode = viewModel.meeting.value.inviteCode
         viewModel.shareInviteCode(
             title = getString(R.string.invite_code_share_title),
             description = getString(R.string.invite_code_share_description, inviteCode),
@@ -72,7 +71,12 @@ class NotificationLogFragment :
         )
     }
 
+    override fun onExitMeetingRoom() {
+        ExitRoomDialog().show(parentFragmentManager, EXIT_ROOM_DIALOG_TAG)
+    }
+
     companion object {
+        private const val EXIT_ROOM_DIALOG_TAG = "exitRoomDialog"
         private const val INVITE_CODE_SHARE_IMAGE_URL =
             "https://firebasestorage.googleapis.com/" +
                 "v0/b/oddy-4482e.appspot.com/o/odyimage.png?alt=media&token=b3e1db2f-3eb6-46b9-b431-9ac9b6f182a6"

@@ -43,4 +43,9 @@ interface MeetingService {
     suspend fun postNudge(
         @Body nudgeRequest: NudgeRequest,
     ): ApiResult<Unit>
+
+    @POST("/mates/{meetingId}/leave")
+    suspend fun exitMeeting(
+        @Path(value = "meetingId") meetingId: Long,
+    ): ApiResult<Unit>
 }
