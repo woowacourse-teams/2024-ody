@@ -47,3 +47,320 @@
 [오디 팀 커밋 컨벤션](https://sly-face-106.notion.site/6497236e4e8b449ebf132b1b329882e1?pvs=4)
 
 <br/>
+
+## **폴더 구조** 📁
+
+<details>
+  <summary>안드로이드 폴더 구조</summary>
+  
+```
+android
+├─ app
+│  └─ src
+│     ├─ main
+│     │  ├─ java
+│     │  │  └─ com
+│     │  │     └─ mulberry
+│     │  │        └─ ody
+│     │  │           ├─ OdyApplication.kt
+│     │  │           ├─ data
+│     │  │           │  ├─ local
+│     │  │           │  │  ├─ db
+│     │  │           │  │  │  ├─ EtaReservationDao.kt
+│     │  │           │  │  │  ├─ MateEtaInfoDao.kt
+│     │  │           │  │  │  ├─ OdyDatabase.kt
+│     │  │           │  │  │  └─ OdyDatastore.kt
+│     │  │           │  │  ├─ entity
+│     │  │           │  │  │  ├─ eta
+│     │  │           │  │  │  │  ├─ MateEtaInfoEntity.kt
+│     │  │           │  │  │  │  └─ MateEtaListTypeConverter.kt
+│     │  │           │  │  │  └─ reserve
+│     │  │           │  │  │     └─ EtaReservationEntity.kt
+│     │  │           │  │  ├─ repository
+│     │  │           │  │  │  ├─ DefaultAuthTokenRepository.kt
+│     │  │           │  │  │  └─ DefaultMatesEtaRepository.kt
+│     │  │           │  │  └─ service
+│     │  │           │  │     ├─ EtaDashboardAlarm.kt
+│     │  │           │  │     ├─ EtaDashboardCloseBroadcastReceiver.kt
+│     │  │           │  │     ├─ EtaDashboardNotification.kt
+│     │  │           │  │     ├─ EtaDashboardOpenBroadcastReceiver.kt
+│     │  │           │  │     └─ EtaDashboardService.kt
+│     │  │           │  ├─ remote
+│     │  │           │  │  ├─ core
+│     │  │           │  │  │  ├─ entity
+│     │  │           │  │  │  │  ├─ join
+│     │  │           │  │  │  │  │  ├─ mapper
+│     │  │           │  │  │  │  │  │  ├─ JoinRequestMapper.kt
+│     │  │           │  │  │  │  │  │  └─ JoinResponseMapper.kt
+│     │  │           │  │  │  │  │  ├─ request
+│     │  │           │  │  │  │  │  │  └─ JoinRequest.kt
+│     │  │           │  │  │  │  │  └─ response
+│     │  │           │  │  │  │  │     └─ JoinResponse.kt
+│     │  │           │  │  │  │  ├─ login
+│     │  │           │  │  │  │  │  ├─ mapper
+│     │  │           │  │  │  │  │  │  └─ LoginResponseMapper.kt
+│     │  │           │  │  │  │  │  ├─ request
+│     │  │           │  │  │  │  │  │  └─ LoginRequest.kt
+│     │  │           │  │  │  │  │  └─ response
+│     │  │           │  │  │  │  │     └─ LoginResponse.kt
+│     │  │           │  │  │  │  ├─ meeting
+│     │  │           │  │  │  │  │  ├─ mapper
+│     │  │           │  │  │  │  │  │  ├─ MatesEtaResponseMapper.kt
+│     │  │           │  │  │  │  │  │  ├─ MeetingCatalogMapper.kt
+│     │  │           │  │  │  │  │  │  ├─ MeetingRequestMapper.kt
+│     │  │           │  │  │  │  │  │  └─ MeetingResponseMapper.kt
+│     │  │           │  │  │  │  │  ├─ request
+│     │  │           │  │  │  │  │  │  ├─ MatesEtaRequest.kt
+│     │  │           │  │  │  │  │  │  ├─ MeetingRequest.kt
+│     │  │           │  │  │  │  │  │  └─ NudgeRequest.kt
+│     │  │           │  │  │  │  │  └─ response
+│     │  │           │  │  │  │  │     ├─ MateEtaResponse.kt
+│     │  │           │  │  │  │  │     ├─ MateResponse.kt
+│     │  │           │  │  │  │  │     ├─ MatesEtaResponse.kt
+│     │  │           │  │  │  │  │     ├─ MeetingCatalogResponse.kt
+│     │  │           │  │  │  │  │     ├─ MeetingCatalogsResponse.kt
+│     │  │           │  │  │  │  │     ├─ MeetingCreationResponse.kt
+│     │  │           │  │  │  │  │     ├─ MeetingResponse.kt
+│     │  │           │  │  │  │  │     └─ MeetingsResponse.kt
+│     │  │           │  │  │  │  └─ notification
+│     │  │           │  │  │  │     ├─ mapper
+│     │  │           │  │  │  │     │  └─ NotificationLogsResponseMapper.kt
+│     │  │           │  │  │  │     └─ response
+│     │  │           │  │  │  │        ├─ NotificationLogResponse.kt
+│     │  │           │  │  │  │        └─ NotificationLogsResponse.kt
+│     │  │           │  │  │  ├─ repository
+│     │  │           │  │  │  │  ├─ DefaultFCMTokenRepository.kt
+│     │  │           │  │  │  │  ├─ DefaultJoinRepository.kt
+│     │  │           │  │  │  │  ├─ DefaultMeetingRepository.kt
+│     │  │           │  │  │  │  └─ DefaultNotificationLogRepository.kt
+│     │  │           │  │  │  └─ service
+│     │  │           │  │  │     ├─ JoinService.kt
+│     │  │           │  │  │     ├─ LoginService.kt
+│     │  │           │  │  │     ├─ LogoutService.kt
+│     │  │           │  │  │     ├─ MeetingService.kt
+│     │  │           │  │  │     ├─ MemberService.kt
+│     │  │           │  │  │     ├─ NotificationService.kt
+│     │  │           │  │  │     └─ RefreshTokenService.kt
+│     │  │           │  │  └─ thirdparty
+│     │  │           │  │     ├─ address
+│     │  │           │  │     │  ├─ KakaoAddressRepository.kt
+│     │  │           │  │     │  ├─ KakaoAddressService.kt
+│     │  │           │  │     │  └─ response
+│     │  │           │  │     │     ├─ AddressResponse.kt
+│     │  │           │  │     │     ├─ AddressResponseMapper.kt
+│     │  │           │  │     │     ├─ Document.kt
+│     │  │           │  │     │     ├─ Meta.kt
+│     │  │           │  │     │     ├─ SameName.kt
+│     │  │           │  │     │     └─ coord
+│     │  │           │  │     │        ├─ Address.kt
+│     │  │           │  │     │        ├─ AddressByCoordinateResponse.kt
+│     │  │           │  │     │        ├─ Document.kt
+│     │  │           │  │     │        ├─ Meta.kt
+│     │  │           │  │     │        └─ RoadAddress.kt
+│     │  │           │  │     ├─ fcm
+│     │  │           │  │     │  └─ service
+│     │  │           │  │     │     └─ FCMService.kt
+│     │  │           │  │     ├─ image
+│     │  │           │  │     │  └─ FirebaseImageStorage.kt
+│     │  │           │  │     └─ login
+│     │  │           │  │        ├─ entity
+│     │  │           │  │        │  └─ UserProfile.kt
+│     │  │           │  │        └─ kakao
+│     │  │           │  │           ├─ KakaoLoginMapper.kt
+│     │  │           │  │           ├─ KakaoLoginRepository.kt
+│     │  │           │  │           └─ KakaoOAuthLoginService.kt
+│     │  │           │  └─ retrofit
+│     │  │           │     ├─ AccessTokenInterceptor.kt
+│     │  │           │     ├─ ApiResultCall.kt
+│     │  │           │     ├─ ApiResultCallAdapter.kt
+│     │  │           │     └─ RefreshTokenInterceptor.kt
+│     │  │           ├─ di
+│     │  │           │  ├─ ActivityModule.kt
+│     │  │           │  ├─ AppModule.kt
+│     │  │           │  ├─ DBModule.kt
+│     │  │           │  ├─ FirebaseModule.kt
+│     │  │           │  ├─ NetworkModule.kt
+│     │  │           │  ├─ RepositoryModule.kt
+│     │  │           │  └─ ServiceModule.kt
+│     │  │           ├─ domain
+│     │  │           │  ├─ apiresult
+│     │  │           │  │  ├─ ApiResult.kt
+│     │  │           │  │  └─ ApiResultExtensions.kt
+│     │  │           │  ├─ common
+│     │  │           │  │  ├─ LocalDateTimeExtensions.kt
+│     │  │           │  │  └─ ResultExtensions.kt
+│     │  │           │  ├─ model
+│     │  │           │  │  ├─ Address.kt
+│     │  │           │  │  ├─ AuthToken.kt
+│     │  │           │  │  ├─ EtaType.kt
+│     │  │           │  │  ├─ LogType.kt
+│     │  │           │  │  ├─ Mate.kt
+│     │  │           │  │  ├─ MateEta.kt
+│     │  │           │  │  ├─ MateEtaInfo.kt
+│     │  │           │  │  ├─ Meeting.kt
+│     │  │           │  │  ├─ MeetingCatalog.kt
+│     │  │           │  │  ├─ MeetingCreationInfo.kt
+│     │  │           │  │  ├─ MeetingJoinInfo.kt
+│     │  │           │  │  ├─ NotificationLog.kt
+│     │  │           │  │  ├─ NotificationType.kt
+│     │  │           │  │  ├─ Nudge.kt
+│     │  │           │  │  └─ ReserveInfo.kt
+│     │  │           │  ├─ repository
+│     │  │           │  │  ├─ image
+│     │  │           │  │  │  └─ ImageStorage.kt
+│     │  │           │  │  ├─ location
+│     │  │           │  │  │  └─ AddressRepository.kt
+│     │  │           │  │  └─ ody
+│     │  │           │  │     ├─ AuthTokenRepository.kt
+│     │  │           │  │     ├─ FCMTokenRepository.kt
+│     │  │           │  │     ├─ JoinRepository.kt
+│     │  │           │  │     ├─ LoginRepository.kt
+│     │  │           │  │     ├─ MatesEtaRepository.kt
+│     │  │           │  │     ├─ MeetingRepository.kt
+│     │  │           │  │     └─ NotificationLogRepository.kt
+│     │  │           │  └─ validator
+│     │  │           │     └─ AddressValidator.kt
+│     │  │           └─ presentation
+│     │  │              ├─ LifecycleExtensions.kt
+│     │  │              ├─ address
+│     │  │              │  ├─ AddressSearchFragment.kt
+│     │  │              │  ├─ AddressSearchViewModel.kt
+│     │  │              │  ├─ adapter
+│     │  │              │  │  └─ AddressesAdapter.kt
+│     │  │              │  ├─ listener
+│     │  │              │  │  ├─ AddressListener.kt
+│     │  │              │  │  ├─ AddressSearchListener.kt
+│     │  │              │  │  └─ AddressViewHolder.kt
+│     │  │              │  └─ model
+│     │  │              │     ├─ AddressUiModel.kt
+│     │  │              │     └─ AddressUiModelMapper.kt
+│     │  │              ├─ common
+│     │  │              │  ├─ BaseViewModel.kt
+│     │  │              │  ├─ CommonBindingAdapter.kt
+│     │  │              │  ├─ DimensionExtensions.kt
+│     │  │              │  ├─ LoadingDialog.kt
+│     │  │              │  ├─ PermissionHelper.kt
+│     │  │              │  ├─ ViewPagerAdapter.kt
+│     │  │              │  ├─ analytics
+│     │  │              │  │  ├─ AnalyticsExtension.kt
+│     │  │              │  │  ├─ AnalyticsHelper.kt
+│     │  │              │  │  └─ FirebaseAnalyticsHelper.kt
+│     │  │              │  ├─ binding
+│     │  │              │  │  ├─ BindingActivity.kt
+│     │  │              │  │  └─ BindingFragment.kt
+│     │  │              │  ├─ gps
+│     │  │              │  │  ├─ GeoLocationHelper.kt
+│     │  │              │  │  └─ LocationHelper.kt
+│     │  │              │  ├─ image
+│     │  │              │  │  ├─ CaptureExtensions.kt
+│     │  │              │  │  ├─ ImageShareContent.kt
+│     │  │              │  │  ├─ ImageShareHelper.kt
+│     │  │              │  │  └─ KakaoImageShareHelper.kt
+│     │  │              │  └─ listener
+│     │  │              │     ├─ BackListener.kt
+│     │  │              │     └─ NextListener.kt
+│     │  │              ├─ creation
+│     │  │              │  ├─ MeetingCreationActivity.kt
+│     │  │              │  ├─ MeetingCreationInfoType.kt
+│     │  │              │  ├─ MeetingCreationNavigateAction.kt
+│     │  │              │  ├─ MeetingCreationViewModel.kt
+│     │  │              │  ├─ date
+│     │  │              │  │  └─ MeetingDateFragment.kt
+│     │  │              │  ├─ destination
+│     │  │              │  │  └─ MeetingDestinationFragment.kt
+│     │  │              │  ├─ listener
+│     │  │              │  │  └─ MeetingCreationListener.kt
+│     │  │              │  ├─ name
+│     │  │              │  │  └─ MeetingNameFragment.kt
+│     │  │              │  └─ time
+│     │  │              │     ├─ MeetingTimeFragment.kt
+│     │  │              │     └─ adapter
+│     │  │              │        └─ MeetingTimeBindingAdapter.kt
+│     │  │              ├─ invitecode
+│     │  │              │  ├─ InviteCodeActivity.kt
+│     │  │              │  ├─ InviteCodeNavigateAction.kt
+│     │  │              │  └─ InviteCodeViewModel.kt
+│     │  │              ├─ join
+│     │  │              │  ├─ MeetingJoinActivity.kt
+│     │  │              │  ├─ MeetingJoinNavigateAction.kt
+│     │  │              │  ├─ MeetingJoinViewModel.kt
+│     │  │              │  ├─ complete
+│     │  │              │  │  └─ JoinCompleteActivity.kt
+│     │  │              │  └─ listener
+│     │  │              │     └─ MeetingJoinListener.kt
+│     │  │              ├─ login
+│     │  │              │  ├─ LoginActivity.kt
+│     │  │              │  ├─ LoginNavigateAction.kt
+│     │  │              │  ├─ LoginNavigatedReason.kt
+│     │  │              │  └─ LoginViewModel.kt
+│     │  │              ├─ meetings
+│     │  │              │  ├─ MeetingsActivity.kt
+│     │  │              │  ├─ MeetingsBindingAdapter.kt
+│     │  │              │  ├─ MeetingsNavigateAction.kt
+│     │  │              │  ├─ MeetingsViewModel.kt
+│     │  │              │  ├─ adapter
+│     │  │              │  │  ├─ MeetingsAdapter.kt
+│     │  │              │  │  └─ MeetingsViewHolder.kt
+│     │  │              │  ├─ listener
+│     │  │              │  │  ├─ MeetingsItemListener.kt
+│     │  │              │  │  └─ MeetingsListener.kt
+│     │  │              │  └─ model
+│     │  │              │     ├─ MeetingUiModel.kt
+│     │  │              │     └─ MeetingUiModelMapper.kt
+│     │  │              ├─ notification
+│     │  │              │  └─ FCMNotification.kt
+│     │  │              ├─ room
+│     │  │              │  ├─ MeetingRoomActivity.kt
+│     │  │              │  ├─ MeetingRoomViewModel.kt
+│     │  │              │  ├─ etadashboard
+│     │  │              │  │  ├─ EtaDashboardBindingAdapter.kt
+│     │  │              │  │  ├─ EtaDashboardFragment.kt
+│     │  │              │  │  ├─ EtaDashboardGuideFirstFragment.kt
+│     │  │              │  │  ├─ EtaDashboardGuideSecondFragment.kt
+│     │  │              │  │  ├─ adapter
+│     │  │              │  │  │  ├─ MateEtaViewHolder.kt
+│     │  │              │  │  │  └─ MateEtasAdapter.kt
+│     │  │              │  │  ├─ listener
+│     │  │              │  │  │  ├─ MissingToolTipListener.kt
+│     │  │              │  │  │  ├─ NudgeListener.kt
+│     │  │              │  │  │  └─ ShareListener.kt
+│     │  │              │  │  └─ model
+│     │  │              │  │     ├─ EtaDurationMinuteTypeUiModel.kt
+│     │  │              │  │     ├─ EtaTypeUiModel.kt
+│     │  │              │  │     ├─ EtaTypeUiModelMapper.kt
+│     │  │              │  │     ├─ MateEtaUiModel.kt
+│     │  │              │  │     └─ MateEtaUiModelMapper.kt
+│     │  │              │  └─ log
+│     │  │              │     ├─ NotificationLogBindingAdapter.kt
+│     │  │              │     ├─ NotificationLogFragment.kt
+│     │  │              │     ├─ adapter
+│     │  │              │     │  ├─ MateViewHolder.kt
+│     │  │              │     │  ├─ MatesAdapter.kt
+│     │  │              │     │  ├─ NotificationLogViewHolder.kt
+│     │  │              │     │  └─ NotificationLogsAdapter.kt
+│     │  │              │     ├─ listener
+│     │  │              │     │  ├─ InviteCodeCopyListener.kt
+│     │  │              │     │  └─ MenuListener.kt
+│     │  │              │     └─ model
+│     │  │              │        ├─ MateUiModel.kt
+│     │  │              │        ├─ MateUiModelMapper.kt
+│     │  │              │        ├─ MeetingDetailUiModel.kt
+│     │  │              │        ├─ MeetingDetailUiModelMapper.kt
+│     │  │              │        ├─ NotificationLogUiModel.kt
+│     │  │              │        └─ NotificationUiModelMapper.kt
+│     │  │              ├─ setting
+│     │  │              │  ├─ SettingActivity.kt
+│     │  │              │  ├─ SettingViewModel.kt
+│     │  │              │  ├─ adapter
+│     │  │              │  │  ├─ SettingsAdapter.kt
+│     │  │              │  │  └─ SettingsViewHolder.kt
+│     │  │              │  ├─ listener
+│     │  │              │  │  └─ SettingListener.kt
+│     │  │              │  ├─ model
+│     │  │              │  │  └─ SettingUiModel.kt
+│     │  │              │  └─ withdrawal
+│     │  │              │     └─ WithDrawalDialog.kt
+│     │  │              └─ splash
+│     │  │                 └─ SplashActivity.kt
+```
+</details>
