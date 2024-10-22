@@ -1,31 +1,41 @@
 package com.mulberry.ody.presentation.common
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
-    private val _networkErrorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val networkErrorEvent: SingleLiveData<Unit> get() = _networkErrorEvent
+    private val _networkErrorEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+    val networkErrorEvent: SharedFlow<Unit> get() = _networkErrorEvent.asSharedFlow()
 
-    private val _errorEvent: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val errorEvent: SingleLiveData<Unit> get() = _errorEvent
+    private val _errorEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+    val errorEvent: SharedFlow<Unit> get() = _errorEvent.asSharedFlow()
 
     protected var lastFailedAction: (() -> Unit)? = null
 
-    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
-    val isLoading: LiveData<Boolean> get() = _isLoading
+    private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> get() = _isLoading.asStateFlow()
 
     fun retryLastAction() {
         lastFailedAction?.invoke()
     }
 
     fun handleNetworkError() {
-        _networkErrorEvent.setValue(Unit)
+        viewModelScope.launch {
+            _networkErrorEvent.emit(Unit)
+        }
     }
 
     fun handleError() {
-        _errorEvent.setValue(Unit)
+        viewModelScope.launch {
+            _errorEvent.emit(Unit)
+        }
     }
 
     fun startLoading() {

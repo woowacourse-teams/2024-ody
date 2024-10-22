@@ -3,13 +3,13 @@ package com.mulberry.ody.presentation.creation.destination
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDestinationBinding
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.creation.MeetingCreationInfoType
 import com.mulberry.ody.presentation.creation.MeetingCreationViewModel
+import com.mulberry.ody.presentation.launchWhenStarted
 import kotlinx.coroutines.launch
 
 class MeetingDestinationFragment :
@@ -33,9 +33,16 @@ class MeetingDestinationFragment :
     }
 
     private fun initializeObserve() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.invalidDestinationEvent.collect {
-                showSnackBar(R.string.invalid_address)
+        launchWhenStarted {
+            launch {
+                viewModel.invalidDestinationEvent.collect {
+                    showSnackBar(R.string.invalid_address)
+                }
+            }
+            launch {
+                viewModel.defaultLocationError.collect {
+                    showSnackBar(R.string.default_location_error_guide)
+                }
             }
         }
     }

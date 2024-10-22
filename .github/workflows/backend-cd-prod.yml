@@ -15,6 +15,8 @@ jobs:
   build-and-push:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    env:
+      TZ: 'Asia/Seoul'
 
     defaults:
       run:
@@ -30,6 +32,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Check system timezone
+        run: |
+          echo "Current date and time: $(date)"
+          echo "TZ environment variable: $TZ"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3

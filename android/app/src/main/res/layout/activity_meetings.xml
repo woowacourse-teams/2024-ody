@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="18dp"
             android:background="@drawable/rectangle_radius_15"
-            android:backgroundTint="@color/purple_300"
+            android:backgroundTint="@color/primaryVariant"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/fab_meetings_navigator"
             app:layout_constraintEnd_toEndOf="@id/fab_meetings_navigator">
@@ -91,12 +91,13 @@
                 style="@style/pretendard_medium_18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="18dp"
-                android:layout_marginEnd="57dp"
                 android:onClick="@{() -> listener.onCreateMeeting()}"
+                android:paddingStart="18dp"
+                android:paddingTop="18dp"
+                android:paddingEnd="57dp"
+                android:paddingBottom="15dp"
                 android:text="약속 개설하기"
-                android:textColor="@color/white"
+                android:textColor="@color/secondaryVariant"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -106,11 +107,13 @@
                 style="@style/pretendard_medium_18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="29dp"
-                android:layout_marginBottom="18dp"
                 android:onClick="@{() -> listener.onJoinMeeting()}"
+                android:paddingStart="18dp"
+                android:paddingTop="15dp"
+                android:paddingEnd="57dp"
+                android:paddingBottom="18dp"
                 android:text="약속 참여하기"
-                android:textColor="@color/white"
+                android:textColor="@color/secondaryVariant"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_create_meeting"
                 app:layout_constraintTop_toBottomOf="@id/tv_create_meeting" />
@@ -123,13 +126,13 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="32dp"
-            android:backgroundTint="@color/purple_300"
+            android:backgroundTint="@color/primaryVariant"
             android:onClick="@{() -> listener.onFab()}"
             android:src="@drawable/selector_floating_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:shapeAppearance="@style/floating_button_style"
-            app:tint="@color/white" />
+            app:tint="@color/secondaryVariant" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

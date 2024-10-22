@@ -1,22 +1,17 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: true
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:database?serverTimezone=Asia/Seoul;MODE=MYSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:53306/ody
+    username: root
+    password: 1234
+  flyway:
+    url: jdbc:mysql://localhost:53306/ody
+    user: root
+    password: 1234
+    connect-retries: 30
   jpa:
     hibernate:
       ddl-auto: validate
-      dialect: org.hibernate.dialect.MySQLDialect
-  sql:
-    init:
-      mode: always
 
 log:
   file:

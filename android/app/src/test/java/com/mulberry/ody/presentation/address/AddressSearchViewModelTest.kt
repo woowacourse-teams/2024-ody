@@ -7,6 +7,7 @@ import com.mulberry.ody.presentation.address.model.toAddressUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -29,7 +30,7 @@ class AddressSearchViewModelTest {
     }
 
     @Test
-    fun `주소에 대한 위경도를 받아온다`() =
+    fun `주소에 대한 위경도를 받아온다`() {
         runTest {
             // given
             viewModel.addressSearchKeyword.value = "사당역"
@@ -38,8 +39,8 @@ class AddressSearchViewModelTest {
             viewModel.searchAddress()
 
             // then
-            val actual = viewModel.addressUiModels.value
-
+            val actual = viewModel.addressUiModels.first()
             assertThat(actual).isEqualTo(addresses.toAddressUiModels())
         }
+    }
 }

@@ -7,23 +7,22 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 
 import com.ody.common.BaseServiceTest;
-import com.ody.common.DtoGenerator;
 import com.ody.common.Fixture;
-import com.ody.common.FixtureGenerator;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.response.MateResponse;
-import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponse;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
-import com.ody.member.repository.MemberRepository;
+import com.ody.notification.domain.NotificationStatus;
+import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.message.GroupMessage;
+import com.ody.notification.service.FcmPushSender;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -37,6 +36,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.support.CronExpression;
 
 class MeetingServiceTest extends BaseServiceTest {
 
@@ -44,10 +44,13 @@ class MeetingServiceTest extends BaseServiceTest {
     private MeetingService meetingService;
 
     @Autowired
-    private FixtureGenerator fixtureGenerator;
+    private MeetingRepository meetingRepository;
 
     @MockBean
     private TaskScheduler taskScheduler;
+
+    @MockBean
+    protected FcmPushSender fcmPushSender;
 
     @DisplayName("내 약속 목록 조회 시 오름차순 정렬한다.")
     @Test
@@ -207,9 +210,36 @@ class MeetingServiceTest extends BaseServiceTest {
     void validateInviteCodeFailWhenAlreadyAttendedMeetingInviteCode() {
         Member member = fixtureGenerator.generateMember();
         Meeting meeting = fixtureGenerator.generateMeeting();
-        Mate mate = fixtureGenerator.generateMate(meeting, member);
+        fixtureGenerator.generateMate(meeting, member);
 
         assertThatThrownBy(() -> meetingService.validateInviteCode(member, meeting.getInviteCode()))
                 .isInstanceOf(OdyBadRequestException.class);
+    }
+
+    @DisplayName("오전 4시 마다 약속 시간이 지난 약속들의 상태를 기간 지남으로 변경하고 구독한 topic을 취소한다.")
+    @Test
+    void scheduleOverdueMeetings() {
+        CronExpression expression = CronExpression.parse("0 0 4 * * *");
+        LocalDateTime dateTime = LocalDateTime.of(2024, 10, 10, 3, 59, 59);
+        LocalDateTime nextExecutionTime = expression.next(dateTime);
+
+        assertAll(
+                () -> assertThat(LocalDateTime.of(2024, 10, 10, 3, 59, 59)).isNotEqualTo(nextExecutionTime),
+                () -> assertThat(LocalDateTime.of(2024, 10, 10, 4, 0, 0)).isEqualTo(nextExecutionTime),
+                () -> assertThat(LocalDateTime.of(2024, 10, 10, 4, 0, 1)).isNotEqualTo(nextExecutionTime),
+                () -> assertThat(LocalDateTime.of(2024, 10, 11, 4, 0, 0)).isEqualTo(expression.next(nextExecutionTime))
+        );
+
+        Meeting meeting = fixtureGenerator.generateMeeting(dateTime);
+        Mate mate = fixtureGenerator.generateMate(meeting);
+        fixtureGenerator.generateNotification(mate, NotificationType.DEPARTURE_REMINDER, NotificationStatus.DONE);
+        meetingService.scheduleOverdueMeetings();
+
+        Meeting findMeeting = meetingRepository.findById(meeting.getId()).get();
+
+        assertAll(
+                () -> Mockito.verify(fcmSubscriber).unSubscribeTopic(any(), any()),
+                () -> assertThat(findMeeting.isOverdue()).isTrue()
+        );
     }
 }
