@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.Duration
 import java.time.LocalDateTime
 
 class MeetingRoomViewModel
@@ -73,7 +74,8 @@ class MeetingRoomViewModel
                 initialValue = null,
             )
 
-        private val _meeting: MutableStateFlow<MeetingDetailUiModel> = MutableStateFlow(MeetingDetailUiModel())
+        private val _meeting: MutableStateFlow<MeetingDetailUiModel> =
+            MutableStateFlow(MeetingDetailUiModel())
         val meeting: StateFlow<MeetingDetailUiModel> = _meeting.asStateFlow()
 
         private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
@@ -88,6 +90,11 @@ class MeetingRoomViewModel
         private val _nudgeSuccessMate: MutableSharedFlow<String> = MutableSharedFlow()
         val nudgeSuccessMate: SharedFlow<String> get() = _nudgeSuccessMate.asSharedFlow()
 
+        private val _nudgeFailMate: MutableSharedFlow<String> = MutableSharedFlow()
+        val nudgeFailMate: SharedFlow<String> get() = _nudgeFailMate.asSharedFlow()
+
+        private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
+
         init {
             fetchMeeting()
         }
@@ -97,21 +104,49 @@ class MeetingRoomViewModel
             mateId: Long,
         ) {
             viewModelScope.launch {
-                meetingRepository.postNudge(Nudge(nudgeId, mateId))
-                    .suspendOnSuccess {
-                        matesEta.collect { mateEta ->
-                            val mateNickname = mateEta?.mateEtas?.find { it.mateId == mateId }?.nickname ?: return@collect
-                            _nudgeSuccessMate.emit(mateNickname)
-                        }
-                    }.onFailure { code, errorMessage ->
-                        handleError()
-                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                        Timber.e("$code $errorMessage")
-                    }.onNetworkError {
-                        handleNetworkError()
-                        lastFailedAction = { nudgeMate(nudgeId, mateId) }
-                    }
+                matesEta.collect { mateEta ->
+                    val mateEtas = mateEta?.mateEtas ?: return@collect
+                    val targetMate = mateEtas.find { it.mateId == mateId } ?: return@collect
+
+                    handleNudgeAction(nudgeId, mateId, targetMate.nickname)
+                }
             }
+        }
+
+        private suspend fun handleNudgeAction(
+            nudgeId: Long,
+            mateId: Long,
+            mateNickname: String,
+        ) {
+            val recentNudgeTime = matesNudgeTimes[mateId]
+            val currentTime = LocalDateTime.now()
+
+            if (recentNudgeTime == null || recentNudgeTime.plusSeconds(NUDGE_DELAY_SECONDS) <= currentTime) {
+                matesNudgeTimes[mateId] = currentTime
+                performNudge(nudgeId, mateId, mateNickname)
+            } else {
+                val remainingCooldown =
+                    NUDGE_DELAY_SECONDS + Duration.between(currentTime, recentNudgeTime).seconds
+                _nudgeFailMate.emit(if (remainingCooldown == 0L) "$NUDGE_MINIMUM_DELAY_SECOND" else "$remainingCooldown")
+            }
+        }
+
+        private suspend fun performNudge(
+            nudgeId: Long,
+            mateId: Long,
+            mateNickname: String,
+        ) {
+            meetingRepository.postNudge(Nudge(nudgeId, mateId))
+                .suspendOnSuccess {
+                    _nudgeSuccessMate.emit(mateNickname)
+                }.onFailure { code, errorMessage ->
+                    handleError()
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    Timber.e("$code $errorMessage")
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = { nudgeMate(nudgeId, mateId) }
+                }
         }
 
         private fun fetchNotificationLogs() {
@@ -238,6 +273,8 @@ class MeetingRoomViewModel
         companion object {
             private const val TAG = "MeetingRoomViewModel"
             private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
+            private const val NUDGE_DELAY_SECONDS = 10L
+            private const val NUDGE_MINIMUM_DELAY_SECOND = 1
 
             fun provideFactory(
                 assistedFactory: MeetingViewModelFactory,
