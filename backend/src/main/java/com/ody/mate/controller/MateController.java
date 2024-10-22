@@ -45,7 +45,7 @@ public class MateController implements MateControllerSwagger {
     @Override
     @DeleteMapping("/meetings/{meetingId}/mate")
     public ResponseEntity<Void> leave(@AuthMember Member member, @PathVariable Long meetingId) {
-        mateService.deleteMateByMeetingIdAndMemberId(meetingId, member.getId());
+        mateService.leaveByMeetingIdAndMemberId(meetingId, member.getId());
         return ResponseEntity.noContent().build();
     }
 }

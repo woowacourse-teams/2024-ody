@@ -189,7 +189,7 @@ class MateServiceTest extends BaseServiceTest {
         FcmTopic fcmTopic = new FcmTopic(mate.getMeeting());
         DeviceToken deviceToken = mate.getMember().getDeviceToken();
 
-        mateService.delete(mate);
+        mateService.withdraw(mate);
 
         Mockito.verify(fcmSubscriber, Mockito.times(1)).unSubscribeTopic(fcmTopic, deviceToken);
     }
@@ -216,7 +216,7 @@ class MateServiceTest extends BaseServiceTest {
         Member kaki = fixtureGenerator.generateMember("kaki");
         fixtureGenerator.generateMate(meeting, kaki);
 
-        mateService.deleteMateByMeetingIdAndMemberId(meeting.getId(), kaki.getId());
+        mateService.leaveByMeetingIdAndMemberId(meeting.getId(), kaki.getId());
 
         assertThatThrownBy(() -> mateService.findAllByMeetingIdIfMate(kaki, meeting.getId()))
                 .isInstanceOf(OdyNotFoundException.class);
