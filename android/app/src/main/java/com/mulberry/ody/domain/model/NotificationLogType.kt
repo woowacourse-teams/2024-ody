@@ -1,6 +1,6 @@
 package com.mulberry.ody.domain.model
 
-enum class LogType {
+enum class NotificationLogType {
     ENTRY,
     DEPARTURE_REMINDER,
     DEPARTURE,

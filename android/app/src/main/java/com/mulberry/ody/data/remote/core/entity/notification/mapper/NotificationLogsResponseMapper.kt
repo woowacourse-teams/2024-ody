@@ -1,14 +1,14 @@
 package com.mulberry.ody.data.remote.core.entity.notification.mapper
 
 import com.mulberry.ody.data.remote.core.entity.notification.response.NotificationLogsResponse
-import com.mulberry.ody.domain.model.LogType
-import com.mulberry.ody.domain.model.LogType.DEFAULT
-import com.mulberry.ody.domain.model.LogType.DEPARTURE
-import com.mulberry.ody.domain.model.LogType.DEPARTURE_REMINDER
-import com.mulberry.ody.domain.model.LogType.ENTRY
-import com.mulberry.ody.domain.model.LogType.MEMBER_DELETION
-import com.mulberry.ody.domain.model.LogType.MEMBER_EXIT
-import com.mulberry.ody.domain.model.LogType.NUDGE
+import com.mulberry.ody.domain.model.NotificationLogType
+import com.mulberry.ody.domain.model.NotificationLogType.DEFAULT
+import com.mulberry.ody.domain.model.NotificationLogType.DEPARTURE
+import com.mulberry.ody.domain.model.NotificationLogType.DEPARTURE_REMINDER
+import com.mulberry.ody.domain.model.NotificationLogType.ENTRY
+import com.mulberry.ody.domain.model.NotificationLogType.MEMBER_DELETION
+import com.mulberry.ody.domain.model.NotificationLogType.MEMBER_EXIT
+import com.mulberry.ody.domain.model.NotificationLogType.NUDGE
 import com.mulberry.ody.domain.model.NotificationLog
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -16,14 +16,14 @@ import java.time.format.DateTimeFormatter
 fun NotificationLogsResponse.toNotificationList(): List<NotificationLog> =
     this.logList.map {
         NotificationLog(
-            type = it.type.toLogType(),
+            type = it.type.toNotificationLogType(),
             nickname = it.nickname,
             createdAt = it.createdAt.parseToLocalDateTime(),
             imageUrl = it.imageUrl,
         )
     }
 
-private fun String.toLogType(): LogType {
+private fun String.toNotificationLogType(): NotificationLogType {
     return when (this) {
         "ENTRY" -> ENTRY
         "DEPARTURE_REMINDER" -> DEPARTURE_REMINDER
