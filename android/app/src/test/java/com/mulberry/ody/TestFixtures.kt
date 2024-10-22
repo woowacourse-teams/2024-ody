@@ -2,13 +2,13 @@ package com.mulberry.ody
 
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.EtaType
-import com.mulberry.ody.domain.model.NotificationLogType
 import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.MateEta
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
 import com.mulberry.ody.domain.model.MeetingCatalog
 import com.mulberry.ody.domain.model.NotificationLog
+import com.mulberry.ody.domain.model.NotificationLogType
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime

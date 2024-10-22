@@ -8,5 +8,4 @@ enum class NotificationLogType {
     MEMBER_DELETION,
     MEMBER_EXIT,
     DEFAULT,
-    ;
 }

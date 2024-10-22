@@ -1,6 +1,7 @@
 package com.mulberry.ody.data.remote.core.entity.notification.mapper
 
 import com.mulberry.ody.data.remote.core.entity.notification.response.NotificationLogsResponse
+import com.mulberry.ody.domain.model.NotificationLog
 import com.mulberry.ody.domain.model.NotificationLogType
 import com.mulberry.ody.domain.model.NotificationLogType.DEFAULT
 import com.mulberry.ody.domain.model.NotificationLogType.DEPARTURE
@@ -9,7 +10,6 @@ import com.mulberry.ody.domain.model.NotificationLogType.ENTRY
 import com.mulberry.ody.domain.model.NotificationLogType.MEMBER_DELETION
 import com.mulberry.ody.domain.model.NotificationLogType.MEMBER_EXIT
 import com.mulberry.ody.domain.model.NotificationLogType.NUDGE
-import com.mulberry.ody.domain.model.NotificationLog
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
