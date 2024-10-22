@@ -12,8 +12,8 @@ import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.log.adapter.MatesAdapter
 import com.mulberry.ody.presentation.room.log.adapter.NotificationLogsAdapter
-import com.mulberry.ody.presentation.room.log.listener.NotificationLogListener
 import com.mulberry.ody.presentation.room.log.listener.MenuListener
+import com.mulberry.ody.presentation.room.log.listener.NotificationLogListener
 import kotlinx.coroutines.launch
 
 class NotificationLogFragment :
