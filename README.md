@@ -21,7 +21,22 @@
 약속을 더욱 즐겁고 편안하게,  
 여러분의 우정을 더욱 돈독하게 만들어 드릴게요.
 
-## **Google Play** 
+## **Contributors** 🟣
+|AN 차람|AN 해음|AN 올리브|
+|:-:|:-:|:-:|
+|<img src="https://github.com/user-attachments/assets/6743a06e-785c-4fd1-98d6-69d3fde4ca6f" width=200 height=200>|<img src="https://github.com/user-attachments/assets/a7b12121-a193-4d12-ac86-c3fd383b0125" width=200 height=200>|<img src="https://github.com/user-attachments/assets/f460ff99-ee73-4440-ac53-8428dc0ac940" width=200 height=200>|
+|[@aprilgom](https://github.com/aprilgom)|[@haeum808](https://github.com/haeum808)|[@kimhm0728](https://github.com/kimhm0728)|
+
+<br/>
+
+|BE 카키|BE 조조|BE 콜리|BE 제리|
+|:-:|:-:|:-:|:-:|
+|<img src="https://github.com/user-attachments/assets/715866d0-6e23-4326-922b-f20d8c34b5fc" width=200 height=200>|<img src="https://github.com/user-attachments/assets/e5ddea0b-3d1d-4767-85e7-058642dbfa1b" width=200 height=200>|<img src="https://github.com/user-attachments/assets/bb0859db-39e5-4102-ae50-19db20fc9d16" width=200 height=200>|<img src="https://github.com/user-attachments/assets/59cf618a-e2dd-4391-aa25-fe882f6b62e0" width=200 height=200>|
+|[@hyeon0208](https://github.com/hyeon0208)|[@eun-byeol](https://github.com/eun-byeol)|[@coli-geonwoo](https://github.com/coli-geonwoo)|[@mzeong](https://github.com/mzeong)|
+
+<br/>
+
+## **Google Play** 🌎
 
 [오디 다운받기](http://play.google.com/store/apps/details?id=com.mulberry.ody/)
 
