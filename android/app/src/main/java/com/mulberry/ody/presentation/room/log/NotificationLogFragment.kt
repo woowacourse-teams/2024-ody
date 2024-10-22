@@ -72,11 +72,11 @@ class NotificationLogFragment :
     }
 
     override fun onExitMeetingRoom() {
-        ExitRoomDialog().show(parentFragmentManager, EXIT_ROOM_DIALOG_TAG)
+        ExitMeetingRoomDialog().show(parentFragmentManager, EXIT_MEETING_ROOM_DIALOG_TAG)
     }
 
     companion object {
-        private const val EXIT_ROOM_DIALOG_TAG = "exitRoomDialog"
+        private const val EXIT_MEETING_ROOM_DIALOG_TAG = "exitMeetingRoomDialog"
         private const val INVITE_CODE_SHARE_IMAGE_URL =
             "https://firebasestorage.googleapis.com/" +
                 "v0/b/oddy-4482e.appspot.com/o/odyimage.png?alt=media&token=b3e1db2f-3eb6-46b9-b431-9ac9b6f182a6"

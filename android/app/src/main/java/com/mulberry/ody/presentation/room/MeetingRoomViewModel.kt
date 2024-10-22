@@ -89,8 +89,8 @@ class MeetingRoomViewModel
         private val _nudgeSuccessMate: MutableSharedFlow<String> = MutableSharedFlow()
         val nudgeSuccessMate: SharedFlow<String> get() = _nudgeSuccessMate.asSharedFlow()
 
-        private val _exitMeetingEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val exitMeetingEvent: SharedFlow<Unit> get() = _exitMeetingEvent.asSharedFlow()
+        private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
 
         init {
             fetchMeeting()
@@ -236,7 +236,7 @@ class MeetingRoomViewModel
             }
         }
 
-        fun exitRoom() {
+        fun exitMeetingRoom() {
             viewModelScope.launch {
                 if (_meeting.value.isDefault()) {
                     handleError()
@@ -246,14 +246,14 @@ class MeetingRoomViewModel
                 startLoading()
                 meetingRepository.exitMeeting(_meeting.value.id)
                     .suspendOnSuccess {
-                        _exitMeetingEvent.emit(Unit)
+                        _exitMeetingRoomEvent.emit(Unit)
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                         Timber.e("$code $errorMessage")
                     }.onNetworkError {
                         handleNetworkError()
-                        lastFailedAction = { exitRoom() }
+                        lastFailedAction = { exitMeetingRoom() }
                     }
                 stopLoading()
             }

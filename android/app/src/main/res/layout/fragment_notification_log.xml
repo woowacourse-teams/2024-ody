@@ -224,14 +224,14 @@
                     android:paddingVertical="18dp"
                     app:itemAnimator="@{null}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toTopOf="@id/iv_exit_room"
+                    app:layout_constraintBottom_toTopOf="@id/iv_exit_meeting_room"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/guide_line"
                     tools:listitem="@layout/item_mate" />
 
                 <ImageView
-                    android:id="@+id/iv_exit_room"
+                    android:id="@+id/iv_exit_meeting_room"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> notificationLogListener.onExitMeetingRoom()}"

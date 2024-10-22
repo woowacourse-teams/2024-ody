@@ -8,14 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import com.mulberry.ody.databinding.DialogExitRoomBinding
+import com.mulberry.ody.databinding.DialogExitMeetingRoomBinding
 import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
-import com.mulberry.ody.presentation.room.log.listener.ExitRoomListener
+import com.mulberry.ody.presentation.room.log.listener.ExitMeetingRoomListener
 import kotlinx.coroutines.launch
 
-class ExitRoomDialog : DialogFragment(), ExitRoomListener {
-    private var _binding: DialogExitRoomBinding? = null
+class ExitMeetingRoomDialog : DialogFragment(), ExitMeetingRoomListener {
+    private var _binding: DialogExitMeetingRoomBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: MeetingRoomViewModel by activityViewModels()
@@ -25,7 +25,7 @@ class ExitRoomDialog : DialogFragment(), ExitRoomListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = DialogExitRoomBinding.inflate(inflater, container, false)
+        _binding = DialogExitMeetingRoomBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -48,7 +48,7 @@ class ExitRoomDialog : DialogFragment(), ExitRoomListener {
 
     private fun initializeBinding() {
         binding.lifecycleOwner = this
-        binding.exitRoomListener = this
+        binding.exitMeetingRoomListener = this
     }
 
     private fun initializeObserve() {
@@ -59,7 +59,7 @@ class ExitRoomDialog : DialogFragment(), ExitRoomListener {
                 }
             }
             launch {
-                viewModel.exitMeetingEvent.collect {
+                viewModel.exitMeetingRoomEvent.collect {
                     requireActivity().finish()
                 }
             }
@@ -76,6 +76,6 @@ class ExitRoomDialog : DialogFragment(), ExitRoomListener {
     }
 
     override fun onExit() {
-        viewModel.exitRoom()
+        viewModel.exitMeetingRoom()
     }
 }
