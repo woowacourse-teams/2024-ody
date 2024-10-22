@@ -12,7 +12,10 @@ sealed class EtaStatusUiModel {
     @get:StringRes
     abstract val badgeMessageId: Int
 
-    protected fun etaDurationMinutesMessage(context: Context, durationMinutes: Int): String {
+    protected fun etaDurationMinutesMessage(
+        context: Context,
+        durationMinutes: Int,
+    ): String {
         if (durationMinutes in ARRIVAL_SOON_VALUE_RANGE) {
             return context.getString(R.string.status_arrival_soon)
         }
