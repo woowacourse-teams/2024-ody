@@ -38,6 +38,9 @@ class NotificationServiceTest extends BaseServiceTest {
     @MockBean
     private TaskScheduler taskScheduler;
 
+    @MockBean
+    protected FcmPushSender fcmPushSender;
+
     @Autowired
     private NotificationRepository notificationRepository;
 

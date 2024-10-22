@@ -7,7 +7,7 @@ import com.ody.common.exception.OdyServerErrorException;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.message.DirectMessage;
 import com.ody.notification.domain.message.GroupMessage;
-import com.ody.notification.dto.request.FcmGroupSendRequest;
+import com.ody.notification.repository.NotificationRepository;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +20,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FcmPushSender {
 
+    private final NotificationRepository notificationRepository;
+    private final FirebaseMessaging firebaseMessaging;
+
     @Transactional
-    public void sendPushNotification(FcmGroupSendRequest fcmGroupSendRequest) {
-        Notification notification = fcmGroupSendRequest.notification();
-        if (notification.isStatusDismissed()) {
+    public void sendPushNotification(Notification notification) {
+        Notification savedNotification = notificationRepository.findById(notification.getId())
+                .orElse(notification); // noti 생성과 동시에 실행되는 경우, 다른 트랜잭션이므로 즉시 findById 할 수 없어 기존 noti 사용
+
+        if (savedNotification.isStatusDismissed()) {
+            log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", savedNotification);
             return;
         }
-        GroupMessage groupMessage = GroupMessage.from(notification);
-        sendGeneralMessage(groupMessage.message(), notification);
+        GroupMessage groupMessage = GroupMessage.from(savedNotification);
+        sendGeneralMessage(groupMessage.message(), savedNotification);
     }
 
     public void sendNudgeMessage(Notification notification, DirectMessage directMessage) {
@@ -36,7 +42,7 @@ public class FcmPushSender {
 
     private void sendGeneralMessage(Message message, Notification notification) {
         try {
-            FirebaseMessaging.getInstance().send(message);
+            firebaseMessaging.send(message);
             updateDepartureReminderToDone(notification);
         } catch (FirebaseMessagingException exception) {
             log.error("FCM 알림(ID : {}) 전송 실패 : {}", notification.getId(), exception.getMessage());
@@ -53,7 +59,7 @@ public class FcmPushSender {
 
     public void sendNoticeMessage(GroupMessage groupMessage) {
         try {
-            FirebaseMessaging.getInstance().send(groupMessage.message());
+            firebaseMessaging.send(groupMessage.message());
             log.info("공지 알림 전송 | 전송 시간 : {}", Instant.now().atZone(TimeUtil.KST_OFFSET));
         } catch (FirebaseMessagingException exception) {
             log.error("FCM 공지 전송 실패 : {}", exception.getMessage());

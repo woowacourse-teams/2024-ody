@@ -54,6 +54,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.flywaydb:flyway-mysql'
     implementation 'org.flywaydb:flyway-core'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     runtimeOnly 'com.mysql:mysql-connector-j:8.4.0'
 
