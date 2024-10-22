@@ -14,6 +14,7 @@ fun TextView.setTextNotificationType(logType: LogType) {
             LogType.DEPARTURE -> R.string.item_notification_departure
             LogType.NUDGE -> R.string.item_notification_nudge
             LogType.MEMBER_DELETION -> R.string.item_notification_member_deletion
+            LogType.MEMBER_EXIT -> R.string.item_notification_member_exit
             LogType.DEFAULT -> R.string.item_notification_default
         }
     text = context.getString(stringRes)

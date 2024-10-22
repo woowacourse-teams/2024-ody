@@ -6,6 +6,7 @@ enum class LogType {
     DEPARTURE,
     NUDGE,
     MEMBER_DELETION,
+    MEMBER_EXIT,
     DEFAULT,
     ;
 
@@ -16,6 +17,7 @@ enum class LogType {
                 "DEPARTURE_REMINDER" -> DEPARTURE_REMINDER
                 "DEPARTURE" -> DEPARTURE
                 "MEMBER_DELETION" -> MEMBER_DELETION
+                "MEMBER_EXIT" -> MEMBER_EXIT
                 "NUDGE" -> NUDGE
                 else -> DEFAULT
             }
