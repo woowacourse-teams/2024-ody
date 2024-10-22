@@ -93,6 +93,11 @@ class MeetingJoinActivity :
                     hideLoadingDialog()
                 }
             }
+            launch {
+                viewModel.defaultLocationError.collect {
+                    showSnackBar(R.string.default_location_error_guide)
+                }
+            }
         }
     }
 

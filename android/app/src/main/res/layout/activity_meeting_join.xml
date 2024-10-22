@@ -79,13 +79,13 @@
             android:id="@+id/iv_current_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            app:visibility="@{vm.departureAddress == null}"
             android:onClick="@{() -> vm.getDefaultLocation()}"
+            android:padding="10dp"
             android:src="@drawable/ic_current_location"
             app:layout_constraintBottom_toBottomOf="@id/et_departure"
             app:layout_constraintEnd_toEndOf="@id/et_departure"
-            app:layout_constraintTop_toTopOf="@id/et_departure" />
+            app:layout_constraintTop_toTopOf="@id/et_departure"
+            app:visibility="@{vm.departureAddress == null}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_next"

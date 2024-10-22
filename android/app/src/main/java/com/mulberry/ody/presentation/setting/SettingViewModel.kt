@@ -34,6 +34,7 @@ class SettingViewModel
             viewModelScope.launch {
                 loginRepository.logout()
                 _loginNavigateEvent.emit(LoginNavigatedReason.LOGOUT)
+                matesEtaRepository.clearEtaReservation(isReservationPending = true)
             }
         }
 
@@ -43,7 +44,8 @@ class SettingViewModel
                 loginRepository.withdrawAccount()
                     .suspendOnSuccess {
                         _loginNavigateEvent.emit(LoginNavigatedReason.WITHDRAWAL)
-                        clearEtaFetchingJob()
+                        matesEtaRepository.clearEtaFetchingJob()
+                        matesEtaRepository.clearEtaReservation(isReservationPending = false)
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
@@ -55,11 +57,6 @@ class SettingViewModel
                 stopLoading()
             }
         }
-
-        private fun clearEtaFetchingJob() =
-            viewModelScope.launch {
-                matesEtaRepository.clearEtaFetchingJob()
-            }
 
         companion object {
             private const val TAG = "SettingViewModel"

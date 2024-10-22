@@ -35,9 +35,16 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             """)
     Optional<Mate> findByMeetingIdAndMemberId(Long meetingId, Long memberId);
 
+    @Query("""
+            select mate
+            from Mate mate
+            join fetch mate.meeting
+            join fetch mate.member
+            where mate.member.id = :memberId
+            """)
+    List<Mate> findFetchedAllByMemberId(long memberId);
+
     boolean existsByMeetingIdAndMemberId(Long meetingId, Long memberId);
 
     int countByMeetingId(Long meetingId);
-
-    List<Mate> findAllByMemberId(long memberId);
 }

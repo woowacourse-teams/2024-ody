@@ -106,15 +106,16 @@ public class MateService {
     }
 
     @Transactional
-    public void deleteByMemberId(long memberId) {
-        mateRepository.findAllByMemberId(memberId)
+    public void deleteAllByMember(Member member) {
+        mateRepository.findFetchedAllByMemberId(member.getId())
                 .forEach(this::delete);
     }
 
-    private void delete(Mate mate) {
-        notificationService.saveMemberDeletionNotification(mate);
-
+    @Transactional
+    public void delete(Mate mate) {
+        notificationService.saveMemberDeletionNotification(mate); // TODO: noti 상위 서비스로 묶기
         notificationService.updateAllStatusPendingToDismissedByMateId(mate.getId());
+        notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken());
         etaService.deleteByMateId(mate.getId());
         mateRepository.deleteById(mate.getId());
     }
