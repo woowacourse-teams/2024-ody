@@ -51,5 +51,8 @@ management:
     db:
       enabled: false
 
+api-call:
+  page: ENC(Tmip6pkMmuStDTjkRyspLm2PSd5/ov+T9Gzu2XZJKTjmLsrx4dplPIt/8CarbG2B)
+
 allowed-origins:
   api-call: ENC(GwAP/KfLoZ6IqqnMPFpqqmg11CXjh1Al6oMlwB+YTekyHGFuRPn1789uAwyJKx2mPX5BRS4I/CoBn6HgnTJwjPL2hm/eHn7VHACtur1NdVc=)
