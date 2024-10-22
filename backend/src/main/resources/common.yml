@@ -23,7 +23,6 @@ springdoc:
 odsay:
   url: https://api.odsay.com/v1/api/searchPubTransPathT
   api-key: ENC(4+ag02XbL8zS6rWoWHh7WzhKqBj5kaBwBcg04MpLr8nLJefO2PRY8E5o0WpRd3oRtvFv1s9lnWI=)
-  # TODO: 임시로 개인 api-key 추가 -> 팀 key로 변경 필요
 
 google:
   maps:
@@ -51,3 +50,9 @@ management:
   health:
     db:
       enabled: false
+
+api-call:
+  page: ENC(Tmip6pkMmuStDTjkRyspLm2PSd5/ov+T9Gzu2XZJKTjmLsrx4dplPIt/8CarbG2B)
+
+allowed-origins:
+  api-call: ENC(GwAP/KfLoZ6IqqnMPFpqqmg11CXjh1Al6oMlwB+YTekyHGFuRPn1789uAwyJKx2mPX5BRS4I/CoBn6HgnTJwjPL2hm/eHn7VHACtur1NdVc=)

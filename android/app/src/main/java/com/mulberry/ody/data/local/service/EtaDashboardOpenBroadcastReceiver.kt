@@ -14,7 +14,7 @@ class EtaDashboardOpenBroadcastReceiver : BroadcastReceiver() {
         val meetingId = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
         if (meetingId == MEETING_ID_DEFAULT_VALUE) return
 
-        val serviceIntent = EtaDashboardService.getIntent(context, meetingId)
+        val serviceIntent = EtaDashboardService.getIntent(context, meetingId, isOpen = true)
         context.startForegroundService(serviceIntent)
     }
 }

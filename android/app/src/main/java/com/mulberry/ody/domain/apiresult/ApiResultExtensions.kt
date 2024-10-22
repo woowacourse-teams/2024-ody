@@ -68,3 +68,30 @@ suspend fun <T, R> ApiResult<T>.map(block: suspend (T) -> R): ApiResult<R> {
 fun <T> ApiResult<T>.getOrNull(): T? {
     return if (this is ApiResult.Success) data else null
 }
+
+fun <T> Result<T>.toApiResult(): ApiResult<T> {
+    return fold(
+        onSuccess = { data -> ApiResult.Success(data) },
+        onFailure = { t -> ApiResult.Unexpected(t) },
+    )
+}
+
+fun <T> ApiResult<T>.exceptionOrNull(): Throwable? {
+    var exception: Throwable? = null
+    onUnexpected {
+        exception = it
+    }.onNetworkError {
+        exception = it
+    }
+    return exception
+}
+
+suspend fun <R, T> ApiResult<T>.suspendFold(
+    onSuccess: suspend (data: T) -> R,
+    onFailure: suspend (t: Throwable) -> R,
+): R {
+    return when (val exception = exceptionOrNull()) {
+        null -> onSuccess(this.getOrNull() as T)
+        else -> onFailure(exception)
+    }
+}

@@ -4,6 +4,7 @@ import com.ody.meeting.domain.Meeting;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,5 +32,22 @@ public class FcmTopic {
         return meeting.getId().toString()
                 + TOPIC_NAME_DELIMITER
                 + meeting.getCreatedAt().format(MEETING_CREATE_AT_FORMAT);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        FcmTopic fcmTopic = (FcmTopic) o;
+        return Objects.equals(getValue(), fcmTopic.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getValue());
     }
 }

@@ -30,7 +30,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/cream"
             tools:context=".presentation.room.log.NotificationLogFragment">
 
             <include
@@ -132,7 +131,7 @@
                 android:layout_marginEnd="18dp"
                 android:layout_marginBottom="18dp"
                 android:background="@drawable/rectangle_radius_15"
-                android:backgroundTint="@color/purple_800"
+                android:backgroundTint="@color/secondary"
                 android:onClick="@{() -> vm.navigateToEtaDashboard()}"
                 android:orientation="horizontal"
                 android:padding="10dp"
@@ -151,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:text="@string/meeting_room_dashboard_button"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/secondaryVariant" />
 
             </LinearLayout>
 
@@ -159,6 +158,7 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nv_notification_log"
+            android:background="@color/septenary"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end">
@@ -195,7 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
                     android:background="@drawable/rectangle_radius_20"
-                    android:backgroundTint="@color/purple_800"
+                    android:backgroundTint="@color/secondary"
                     android:gravity="center"
                     android:onClick="@{() -> inviteCodeCopyListener.onCopyInviteCode()}"
                     android:paddingHorizontal="22dp"
