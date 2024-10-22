@@ -158,10 +158,10 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nv_notification_log"
-            android:background="@color/septenary"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="end">
+            android:layout_gravity="end"
+            android:background="@color/septenary">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -218,16 +218,27 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_mates"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:clipToPadding="false"
                     android:overScrollMode="never"
                     android:paddingVertical="18dp"
                     app:itemAnimator="@{null}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toTopOf="@id/iv_exit_room"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/guide_line"
                     tools:listitem="@layout/item_mate" />
+
+                <ImageView
+                    android:id="@+id/iv_exit_room"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="18dp"
+                    android:src="@drawable/ic_exit"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_mates" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
