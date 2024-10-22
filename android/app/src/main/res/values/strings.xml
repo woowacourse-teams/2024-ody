@@ -44,6 +44,8 @@
     <string name="meetings_location_permission_required">위치 권한을 거절하면 내 위치를 친구에게 공유할 수 없어요</string>
     <string name="meetings_entrance_unavailable_guide">아직 친구들의 위치를 확인할 수 없어요</string>
     <string name="meetings_back_pressed_guide">"앱을 종료하려면 뒤로 가기를 한 번 더 눌려주세요."</string>
+    <string name="meetings_create_meeting">약속 만들기</string>
+    <string name="meetings_join_meeting">약속 참여하기</string>
 
     <!-- fragment_meeting_destination.xml -->
     <string name="meeting_destination_question_front">오디</string>
