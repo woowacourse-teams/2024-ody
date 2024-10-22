@@ -4,7 +4,14 @@
     <color name="primaryVariant">@color/purple_300</color>
     <color name="secondary">@color/purple_800</color>
     <color name="secondaryVariant">@color/white</color>
+    <color name="tertiary">@color/black</color>
+    <color name="quarternary">@color/gray_500</color>
+    <color name="quinary">@color/gray_800</color>
+    <color name="senary">@color/gray_350</color>
+    <color name="septenary">@color/cream</color>
+    <color name="octonary">@color/white</color>
 
+    <color name="black">#FF000000</color>
     <color name="cream">#FFFFFFF6</color>
     <color name="purple_300">#FFB8A7FF</color>
     <color name="purple_800">#FF5C47AE</color>

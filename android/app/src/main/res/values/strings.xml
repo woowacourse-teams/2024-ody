@@ -88,6 +88,10 @@
     <string name="invite_code_already_participated">이미 참여한 약속입니다.</string>
 
     <!-- activity_login -->
+    <string name="login_welcome_top">카카오톡으로</string>
+    <string name="login_welcome_prefix">간편하게</string>
+    <string name="login_welcome_ody">오디</string>
+    <string name="login_welcome_postfix">시작하기</string>
     <string name="login_logout_success">로그아웃 되었습니다.</string>
     <string name="login_withdrawal_success">회원 탈퇴 되었습니다.</string>
 
@@ -156,6 +160,7 @@
     <string name="address_question_hint">주소를 찾아보세요</string>
     <string name="address_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
     <string name="invalid_address">지원하지 않는 지역이에요. 다시 선택해 주세요.</string>
+    <string name="default_location_error_guide">현재 위치를 가져올 수 없어요. 잠시 후 다시 시도해 주세요.</string>
     <string name="error_guide">오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</string>
     <string name="network_error_guide">네트워크 연결 확인 후 다시 시도해 주세요.</string>
     <string name="retry_button">재시도</string>

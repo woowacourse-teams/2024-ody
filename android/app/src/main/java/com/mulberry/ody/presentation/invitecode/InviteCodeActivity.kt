@@ -9,10 +9,13 @@ import com.mulberry.ody.databinding.ActivityInviteCodeBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.join.MeetingJoinActivity
+import com.mulberry.ody.presentation.launchWhenStarted
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class InviteCodeActivity : BindingActivity<ActivityInviteCodeBinding>(R.layout.activity_invite_code), BackListener {
+class InviteCodeActivity :
+    BindingActivity<ActivityInviteCodeBinding>(R.layout.activity_invite_code), BackListener {
     private val viewModel: InviteCodeViewModel by viewModels<InviteCodeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,27 +30,39 @@ class InviteCodeActivity : BindingActivity<ActivityInviteCodeBinding>(R.layout.a
     }
 
     private fun initializeObserve() {
-        viewModel.alreadyParticipatedEvent.observe(this) {
-            viewModel.clearInviteCode()
-            showSnackBar(R.string.invite_code_already_participated)
-        }
-        viewModel.invalidInviteCodeEvent.observe(this) {
-            viewModel.clearInviteCode()
-            showSnackBar(R.string.invite_code_invalid_invite_code)
-        }
-        viewModel.navigateAction.observe(this) {
-            navigateToJoinView()
-            finish()
-        }
-        viewModel.networkErrorEvent.observe(this) {
-            showRetrySnackBar { viewModel.retryLastAction() }
-        }
-        viewModel.isLoading.observe(this) { isLoading ->
-            if (isLoading) {
-                showLoadingDialog()
-                return@observe
+        launchWhenStarted {
+            launch {
+                viewModel.alreadyParticipatedEvent.collect {
+                    viewModel.clearInviteCode()
+                    showSnackBar(R.string.invite_code_already_participated)
+                }
             }
-            hideLoadingDialog()
+            launch {
+                viewModel.invalidInviteCodeEvent.collect {
+                    viewModel.clearInviteCode()
+                    showSnackBar(R.string.invite_code_invalid_invite_code)
+                }
+            }
+            launch {
+                viewModel.navigateAction.collect {
+                    navigateToJoinView()
+                    finish()
+                }
+            }
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
+                }
+            }
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
+                    }
+                    hideLoadingDialog()
+                }
+            }
         }
     }
 
