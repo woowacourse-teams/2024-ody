@@ -9,12 +9,10 @@ const ENABLED_URL = '/admin/api-call/enabled';
 
 async function initializeApiCallCounts() {
     try {
-        const [odsayDevCount, googleDevCount, odsayProdCount, googleProdCount] = await Promise.all([
-            fetchApiCallCount(DEV_SERVER, COUNT_URL + ODSAY),
-            fetchApiCallCount(DEV_SERVER, COUNT_URL + GOOGLE),
-            fetchApiCallCount(PROD_SERVER, COUNT_URL + ODSAY),
-            fetchApiCallCount(PROD_SERVER, COUNT_URL + GOOGLE)
-        ]);
+        const odsayDevCount = await fetchApiCallCount(DEV_SERVER, COUNT_URL + ODSAY);
+        const googleDevCount = await fetchApiCallCount(DEV_SERVER, COUNT_URL + GOOGLE);
+        const odsayProdCount = await fetchApiCallCount(PROD_SERVER, COUNT_URL + ODSAY);
+        const googleProdCount = await fetchApiCallCount(PROD_SERVER, COUNT_URL + GOOGLE);
         const odsayTotalCount = (typeof odsayDevCount !== 'number' || typeof odsayProdCount !== 'number' ? odsayDevCount : odsayDevCount + odsayProdCount);
         const googleTotalCount = (typeof googleDevCount !== 'number' || typeof googleProdCount !== 'number' ? googleDevCount : googleDevCount + googleProdCount);
 
@@ -42,11 +40,17 @@ async function initializeApiCallCounts() {
 
 async function fetchApiCallCount(url, endpoint) {
     try {
-        const response = await fetch(url + endpoint);
-        return response.data.count;
+        const response = await fetch(url + endpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        const data = await response.json();
+        return data.count;
     } catch (error) {
         console.warn(`Error fetching ${endpoint} from ${url}:`, error);
-        return 'loading..';
+        return '-';
     }
 }
 
