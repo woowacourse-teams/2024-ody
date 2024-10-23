@@ -92,7 +92,7 @@ class MeetingRoomViewModel
 
         private val _expiredNudgeTimeLimit: MutableSharedFlow<Unit> = MutableSharedFlow()
         val expiredNudgeTimeLimit: SharedFlow<Unit> get() = _expiredNudgeTimeLimit.asSharedFlow()
-       
+
         private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
         val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
 
