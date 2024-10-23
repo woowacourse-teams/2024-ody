@@ -1,5 +1,6 @@
 package com.mulberry.ody.data.local.entity.eta
 
+import android.util.Log
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.mulberry.ody.domain.model.EtaStatus
@@ -8,7 +9,7 @@ import com.mulberry.ody.domain.model.MateEta
 @ProvidedTypeConverter
 class MateEtaListTypeConverter {
     @TypeConverter
-    fun fromString(value: String): List<MateEta>? {
+    fun fromString(value: String): List<MateEta> {
         return value.split(";").map { fromJson(it) }
     }
 
@@ -17,7 +18,7 @@ class MateEtaListTypeConverter {
         return type.joinToString(";") { toJson(it) }
     }
 
-    private fun toJson(mateEta: MateEta): String {
+    fun toJson(mateEta: MateEta): String {
         val etaStatusString =
             when (mateEta.etaStatus) {
                 is EtaStatus.Arrived -> """{type:"Arrived"}"""
@@ -27,7 +28,9 @@ class MateEtaListTypeConverter {
                 is EtaStatus.Missing -> """{"type":"Missing"}"""
             }
 
-        return """{"mateId":${mateEta.mateId},"nickname":"${mateEta.nickname}","etaStatus":$etaStatusString}"""
+        return """{"mateId":${mateEta.mateId},"nickname":"${mateEta.nickname}","etaStatus":$etaStatusString}""".also {
+            Log.e("TEST", "$it")
+        }
     }
 
     private fun fromJson(json: String): MateEta {
@@ -38,7 +41,7 @@ class MateEtaListTypeConverter {
                     val (key, value) =
                         it.split(":", limit = 2)
                             .map { it.trim().removeSurrounding("\"") }
-                    key to value
+                    (key to value).also { Log.e("TEST", "${it.first} ${it.second}")}
                 }
 
         val mateId = jsonObject["mateId"]!!.toLong()
