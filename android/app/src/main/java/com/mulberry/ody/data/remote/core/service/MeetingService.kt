@@ -9,6 +9,7 @@ import com.mulberry.ody.data.remote.core.entity.meeting.response.MeetingCreation
 import com.mulberry.ody.data.remote.core.entity.meeting.response.MeetingResponse
 import com.mulberry.ody.domain.apiresult.ApiResult
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -42,5 +43,10 @@ interface MeetingService {
     @POST("/v1/mates/nudge")
     suspend fun postNudge(
         @Body nudgeRequest: NudgeRequest,
+    ): ApiResult<Unit>
+
+    @DELETE("/meetings/{meetingId}/mate")
+    suspend fun exitMeeting(
+        @Path(value = "meetingId") meetingId: Long,
     ): ApiResult<Unit>
 }

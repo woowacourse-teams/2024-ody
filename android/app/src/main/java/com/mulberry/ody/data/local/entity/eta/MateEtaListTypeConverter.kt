@@ -8,7 +8,7 @@ import com.mulberry.ody.domain.model.MateEta
 @ProvidedTypeConverter
 class MateEtaListTypeConverter {
     @TypeConverter
-    fun fromString(value: String): List<MateEta>? {
+    fun fromString(value: String): List<MateEta> {
         return value.split(";").map { fromJson(it) }
     }
 
@@ -17,7 +17,7 @@ class MateEtaListTypeConverter {
         return type.joinToString(";") { toJson(it) }
     }
 
-    private fun toJson(mateEta: MateEta): String {
+    fun toJson(mateEta: MateEta): String {
         val etaStatusString =
             when (mateEta.etaStatus) {
                 is EtaStatus.Arrived -> """{type:"Arrived"}"""
@@ -38,7 +38,7 @@ class MateEtaListTypeConverter {
                     val (key, value) =
                         it.split(":", limit = 2)
                             .map { it.trim().removeSurrounding("\"") }
-                    key to value
+                    (key to value)
                 }
 
         val mateId = jsonObject["mateId"]!!.toLong()
