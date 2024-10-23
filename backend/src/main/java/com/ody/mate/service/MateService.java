@@ -55,9 +55,9 @@ public class MateService {
     }
 
     private Mate saveMateAndEta(MateSaveRequestV2 mateSaveRequest, Member member, Meeting meeting) {
-        Coordinates originCoordinates = mateSaveRequest.toOriginCoordinates();
-        Coordinates targetCoordinates = meeting.getTargetCoordinates();
-        RouteTime routeTime = routeService.calculateRouteTime(originCoordinates, targetCoordinates);
+        Coordinates origin = mateSaveRequest.toOriginCoordinates();
+        Coordinates target = meeting.getTargetCoordinates();
+        RouteTime routeTime = routeService.calculateRouteTime(origin, target);
         Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, routeTime.getMinutes()));
         etaService.saveFirstEtaOfMate(mate, routeTime);
         return mate;

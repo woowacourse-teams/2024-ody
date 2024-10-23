@@ -8,13 +8,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class RouteTime {
 
+    public static final RouteTime CLOSEST_EXCEPTION_TIME = new RouteTime(-1L);
     public static final RouteTime ZERO = new RouteTime(0L);
 
     private final long minutes;
-
-    public boolean isSame(long minutes) {
-        return this.minutes == minutes;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -35,7 +35,7 @@ public class RouteService {
 
     private RouteTime calculateTime(RouteClient client, Coordinates origin, Coordinates target) {
         RouteTime calculatedRouteTime = client.calculateRouteTime(origin, target);
-        if (calculatedRouteTime.isSame(-1L)) {
+        if (calculatedRouteTime.equals(RouteTime.CLOSEST_EXCEPTION_TIME)) {
             return new RouteTime(CLOSEST_LOCATION_DURATION);
         }
         return calculatedRouteTime;

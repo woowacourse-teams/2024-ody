@@ -2,6 +2,7 @@ package com.ody.route.mapper;
 
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
+import com.ody.route.domain.RouteTime;
 import com.ody.route.dto.OdsayResponse;
 import java.util.Optional;
 import lombok.AccessLevel;
@@ -15,7 +16,6 @@ public class OdsayResponseMapper {
     private static final String CLOSE_LOCATION_CODE = "-98"; //출발지-도착지가 700m 이내일 때
     private static final String ODSAY_SERVER_ERROR = "500";
     private static final String EMPTY_MESSAGE = "";
-    private static final long CLOSE_LOCATION_MINUTES = -1L;
 
     public static long mapMinutes(OdsayResponse response) {
         if (response == null) {
@@ -23,7 +23,7 @@ public class OdsayResponseMapper {
         }
 
         if (isCloseLocation(response)) {
-            return CLOSE_LOCATION_MINUTES;
+            return RouteTime.CLOSEST_EXCEPTION_TIME.getMinutes();
         }
 
         if (response.code().isPresent()) {
