@@ -48,7 +48,7 @@
 
 <br/>
 
-## **아키텍쳐 구조* 🏛️
+## **아키텍쳐 구조** 🏛️
 
 ![image](https://github.com/user-attachments/assets/21921fa5-14b8-42c8-b056-87f2109ac160)
 
