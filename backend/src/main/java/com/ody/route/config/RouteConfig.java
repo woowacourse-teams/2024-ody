@@ -27,24 +27,23 @@ public class RouteConfig {
     private static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(30);
 
     private final RouteClientProperties properties;
-    private final ObjectMapper objectMapper;
 
     @Bean
     @Order(1)
-    public RouteClient odysayRouteClient() {
+    public RouteClient odysayRouteClient(ObjectMapper objectMapper) {
         RouteClientProperty property = properties.getProperty("odsay");
-        return new OdsayRouteClient(property, builder());
+        return new OdsayRouteClient(property, builder(objectMapper));
     }
 
     @Bean
     @Order(2)
-    public RouteClient googleRouteClient() {
+    public RouteClient googleRouteClient(ObjectMapper objectMapper) {
         RouteClientProperty property = properties.getProperty("google");
-        return new GoogleRouteClient(property, builder());
+        return new GoogleRouteClient(property, builder(objectMapper));
     }
 
     @Bean
-    public RestClient.Builder builder() {
+    public RestClient.Builder builder(ObjectMapper objectMapper) {
         return RestClient.builder()
                 .requestFactory(new BufferingClientHttpRequestFactory(clientHttpRequestFactory()))
                 .requestInterceptor(new RouteClientLoggingInterceptor(objectMapper));
