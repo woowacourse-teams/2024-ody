@@ -1,6 +1,5 @@
 package com.mulberry.ody.data.local.entity.eta
 
-import android.util.Log
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.mulberry.ody.domain.model.EtaStatus
@@ -28,9 +27,7 @@ class MateEtaListTypeConverter {
                 is EtaStatus.Missing -> """{"type":"Missing"}"""
             }
 
-        return """{"mateId":${mateEta.mateId},"nickname":"${mateEta.nickname}","etaStatus":$etaStatusString}""".also {
-            Log.e("TEST", "$it")
-        }
+        return """{"mateId":${mateEta.mateId},"nickname":"${mateEta.nickname}","etaStatus":$etaStatusString}"""
     }
 
     private fun fromJson(json: String): MateEta {
@@ -41,7 +38,7 @@ class MateEtaListTypeConverter {
                     val (key, value) =
                         it.split(":", limit = 2)
                             .map { it.trim().removeSurrounding("\"") }
-                    (key to value).also { Log.e("TEST", "${it.first} ${it.second}")}
+                    (key to value)
                 }
 
         val mateId = jsonObject["mateId"]!!.toLong()

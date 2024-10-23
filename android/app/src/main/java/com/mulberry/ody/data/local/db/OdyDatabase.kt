@@ -40,7 +40,7 @@ abstract class OdyDatabase : RoomDatabase() {
                              `isOpen` INTEGER NOT NULL
                         )
                         """.trimIndent(),
-                        )
+                    )
                     db.execSQL(
                         """
                         CREATE TABLE IF NOT EXISTS `eta_info_temp` (
