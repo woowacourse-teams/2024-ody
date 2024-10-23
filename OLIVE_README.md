@@ -30,14 +30,14 @@
 | Architecture  | MVVM, Clean Architecture                                       |
 | Network       | Retrofit, OkHttp                                               |
 | Serialization | Moshi                                                          |
-| Async         | Coroutines                                                     |
+| Async         | Coroutines, Flow                                               |
 | Jetpack       | ViewModel, DataBinding, ViewPager2, SplashScreen, AlarmManager |
 | Local DB      | Room, DataStore                                                |
 | DI            | Hilt                                                           |
 | Firebase      | FCM, Analytics, Crashlytics, Storage                           |
 | Test          | Junit5, Junit4, Espresso, AssertJ                              |
 | Third-Party   | dotsindicator, Timber                                          |
-| Kakao Sdk     | Login, Message                                                 |
+| Kakao         | Login, Message, Address                                        |
 | GPS           | Google Service                                                 |
 | CI/CD         | Github Actions                                                 |
 
