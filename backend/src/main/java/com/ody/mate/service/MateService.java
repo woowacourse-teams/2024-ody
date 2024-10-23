@@ -10,12 +10,15 @@ import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
 import com.ody.notification.service.NotificationService;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
+import com.ody.util.TimeUtil;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MateService {
+
+    private static final long AVAILABLE_NUDGE_DURATION = 30L;
 
     private final MateRepository mateRepository;
     private final EtaService etaService;
@@ -54,10 +59,9 @@ public class MateService {
     }
 
     private Mate saveMateAndEta(MateSaveRequestV2 mateSaveRequest, Member member, Meeting meeting) {
-        RouteTime routeTime = routeService.calculateRouteTime(
-                mateSaveRequest.toOriginCoordinates(),
-                meeting.getTargetCoordinates()
-        );
+        Coordinates origin = mateSaveRequest.toOriginCoordinates();
+        Coordinates target = meeting.getTargetCoordinates();
+        RouteTime routeTime = routeService.calculateRouteTime(origin, target);
         Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, routeTime.getMinutes()));
         etaService.saveFirstEtaOfMate(mate, routeTime);
         return mate;
@@ -72,12 +76,32 @@ public class MateService {
     public void nudge(NudgeRequest nudgeRequest) {
         Mate requestMate = findFetchedMate(nudgeRequest.requestMateId());
         Mate nudgedMate = findFetchedMate(nudgeRequest.nudgedMateId());
+        validateNudgeCondition(requestMate, nudgedMate);
+        notificationService.sendNudgeMessage(requestMate, nudgedMate);
+    }
 
-        if (requestMate.isAttended(nudgedMate.getMeeting()) && canNudge(nudgedMate)) {
-            notificationService.sendNudgeMessage(requestMate, nudgedMate);
-            return;
+    private void validateNudgeCondition(Mate requestMate, Mate nudgedMate) {
+        if (!requestMate.isAttended(nudgedMate.getMeeting())) {
+            throw new OdyBadRequestException("재촉한 참여자가 같은 약속 참여자가 아닙니다");
         }
-        throw new OdyBadRequestException("재촉한 참여자가 같은 약속 참여자가 아니거나 지각/지각위기가 아닙니다");
+
+        if (!canNudgedStatus(nudgedMate)) {
+            throw new OdyBadRequestException("재촉한 참여자가 지각/지각위기가 아닙니다");
+        }
+
+        if (!isWithinNudgeTime(nudgedMate.getMeeting())) {
+            throw new OdyBadRequestException("재촉할 수 있는 시간이 지난 요청입니다");
+        }
+    }
+
+    private boolean isWithinNudgeTime(Meeting meeting) {
+        LocalDateTime nudgeEndTime = meeting.getMeetingTime().plusMinutes(AVAILABLE_NUDGE_DURATION);
+        return !TimeUtil.nowWithTrim().isAfter(nudgeEndTime);
+    }
+
+    private boolean canNudgedStatus(Mate mate) {
+        EtaStatus etaStatus = etaService.findEtaStatus(mate);
+        return etaStatus == EtaStatus.LATE_WARNING || etaStatus == EtaStatus.LATE;
     }
 
     private Mate findFetchedMate(Long mateId) {
@@ -87,11 +111,6 @@ public class MateService {
             throw new OdyBadRequestException("기한이 지난 약속입니다.");
         }
         return mate;
-    }
-
-    private boolean canNudge(Mate mate) {
-        EtaStatus etaStatus = etaService.findEtaStatus(mate);
-        return etaStatus == EtaStatus.LATE_WARNING || etaStatus == EtaStatus.LATE;
     }
 
     @Transactional
@@ -108,13 +127,25 @@ public class MateService {
     @Transactional
     public void deleteAllByMember(Member member) {
         mateRepository.findFetchedAllByMemberId(member.getId())
-                .forEach(this::delete);
+                .forEach(this::withdraw);
+    }
+
+    @Transactional
+    public void withdraw(Mate mate) {
+        notificationService.saveMemberDeletionNotification(mate);
+        delete(mate);
+    }
+
+    @Transactional
+    public void leaveByMeetingIdAndMemberId(Long meetingId, Long memberId) {
+        Mate mate = findByMeetingIdAndMemberId(meetingId, memberId);
+        notificationService.saveMateLeaveNotification(mate);
+        delete(mate);
     }
 
     @Transactional
     public void delete(Mate mate) {
-        notificationService.saveMemberDeletionNotification(mate); // TODO: noti 상위 서비스로 묶기
-        notificationService.updateAllStatusPendingToDismissedByMateId(mate.getId());
+        notificationService.updateAllStatusToDismissByMateIdAndSendAtAfterNow(mate.getId());
         notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken());
         etaService.deleteByMateId(mate.getId());
         mateRepository.deleteById(mate.getId());

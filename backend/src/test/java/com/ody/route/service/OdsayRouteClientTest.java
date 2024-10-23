@@ -10,6 +10,7 @@ import com.ody.common.BaseRouteClientTest;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
+import com.ody.route.config.RouteClientProperty;
 import com.ody.route.domain.RouteTime;
 import java.io.IOException;
 import java.net.URI;
@@ -39,7 +40,7 @@ class OdsayRouteClientTest extends BaseRouteClientTest {
         mockServer.verify();
     }
 
-    @DisplayName("도착지와 출발지가 700m 이내일 때, 소요시간 0분을 반환한다")
+    @DisplayName("도착지와 출발지가 700m 이내일 때, 소요시간 -1분을 반환한다")
     @Test
     void calculateRouteTimeWithDistanceWithIn700m() throws IOException {
         Coordinates origin = new Coordinates("37.505419", "127.050817");
@@ -49,7 +50,7 @@ class OdsayRouteClientTest extends BaseRouteClientTest {
 
         RouteTime routeTime = routeClient.calculateRouteTime(origin, target);
 
-        assertThat(routeTime.getMinutes()).isZero();
+        assertThat(routeTime.getMinutes()).isEqualTo(-1L);
         mockServer.verify();
     }
 
@@ -91,12 +92,12 @@ class OdsayRouteClientTest extends BaseRouteClientTest {
     }
 
     private URI makeUri(Coordinates origin, Coordinates target) {
-        String uri = routeProperties.getUrl()
+        String uri = property.baseUrl()
                 + "?SX=" + origin.getLongitude()
                 + "&SY=" + origin.getLatitude()
                 + "&EX=" + target.getLongitude()
                 + "&EY=" + target.getLatitude()
-                + "&apiKey=" + routeProperties.getApiKey();
+                + "&apiKey=" + property.apiKey();
 
         try {
             return new URI(uri);
@@ -112,7 +113,12 @@ class OdsayRouteClientTest extends BaseRouteClientTest {
     }
 
     @Override
+    protected RouteClientProperty getProperty() {
+        return properties.getProperty("odsay");
+    }
+
+    @Override
     protected RouteClient createRouteClient() {
-        return new OdsayRouteClient(routeProperties, restClientBuilder);
+        return new OdsayRouteClient(property, restClientBuilder);
     }
 }

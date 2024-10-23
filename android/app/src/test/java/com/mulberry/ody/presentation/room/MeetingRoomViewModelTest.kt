@@ -7,7 +7,6 @@ import com.mulberry.ody.fake.FakeImageStorage
 import com.mulberry.ody.fake.FakeMatesEtaRepository
 import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.fake.FakeNotificationLogRepository
-import com.mulberry.ody.mateEtaDurationMinutes
 import com.mulberry.ody.mateEtaInfo
 import com.mulberry.ody.meeting
 import com.mulberry.ody.meetingId
@@ -58,15 +57,6 @@ class MeetingRoomViewModelTest {
             val expected = mateEtaInfo.toMateEtaUiModels()
             assertThat(actual).isNotNull
             assertThat(actual).isEqualTo(expected)
-        }
-    }
-
-    @Test
-    fun `친구들과 나의 남은 시간을 볼 수 있다`() {
-        runTest {
-            // then
-            val durationMinute = viewModel.mateEtaUiModels.first()?.map { it.durationMinute }
-            assertThat(durationMinute).isEqualTo(mateEtaDurationMinutes)
         }
     }
 

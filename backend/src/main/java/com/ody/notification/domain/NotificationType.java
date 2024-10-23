@@ -5,6 +5,7 @@ public enum NotificationType {
     ENTRY,
     DEPARTURE_REMINDER,
     NUDGE,
+    LEAVE,
     MEMBER_DELETION,
     ETA_NOTICE,
     ;

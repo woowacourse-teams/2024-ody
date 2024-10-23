@@ -64,8 +64,9 @@ class DefaultMatesEtaRepository
             matesEtaInfoDao.deleteAll()
         }
 
-        override suspend fun deleteEtaReservation(reservationId: Long) {
-            etaReservationDao.delete(reservationId)
+        override suspend fun deleteEtaReservation(meetingId: Long) {
+            etaDashboardAlarm.cancelByMeetingId(meetingId)
+            etaReservationDao.delete(meetingId)
         }
 
         override suspend fun clearEtaReservation(isReservationPending: Boolean) {
@@ -82,7 +83,7 @@ class DefaultMatesEtaRepository
             entities.forEach { entity ->
                 etaDashboardAlarm.reserve(
                     entity.meetingId,
-                    max(entity.reserveMillis, System.currentTimeMillis()),
+                    max(entity.reserveMillis, System.currentTimeMillis() + ETA_RESERVE_MILLIS_DELAY),
                     entity.isOpen,
                     entity.id,
                 )
@@ -92,6 +93,7 @@ class DefaultMatesEtaRepository
         private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
 
         companion object {
+            private const val ETA_RESERVE_MILLIS_DELAY = 3 * 1000
             private const val ETA_OPEN_MINUTE = 30L
             private const val ETA_CLOSE_MINUTE = 2L
         }

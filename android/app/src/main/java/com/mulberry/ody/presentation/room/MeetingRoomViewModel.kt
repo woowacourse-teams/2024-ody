@@ -92,7 +92,10 @@ class MeetingRoomViewModel
 
         private val _nudgeFailMate: MutableSharedFlow<Int> = MutableSharedFlow()
         val nudgeFailMate: SharedFlow<Int> get() = _nudgeFailMate.asSharedFlow()
-
+        
+        private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
+        
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
         init {
@@ -125,6 +128,22 @@ class MeetingRoomViewModel
             } else {
                 val remainingCooldown = NUDGE_DELAY_SECONDS - elapsedSeconds
                 _nudgeFailMate.emit(remainingCooldown.toInt())
+                meetingRepository.postNudge(Nudge(nudgeId, mateId))
+                    .suspendOnSuccess {
+                        matesEta.collect { mateEta ->
+                            val mateNickname =
+                                mateEta?.mateEtas?.find { it.mateId == mateId }?.nickname
+                                    ?: return@collect
+                            _nudgeSuccessMate.emit(mateNickname)
+                        }
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { nudgeMate(nudgeId, mateId) }
+                    }
             }
         }
 
@@ -259,6 +278,30 @@ class MeetingRoomViewModel
                     .onUnexpected {
                         handleError()
                     }
+            }
+        }
+
+        fun exitMeetingRoom() {
+            viewModelScope.launch {
+                if (_meeting.value.isDefault()) {
+                    handleError()
+                    return@launch
+                }
+
+                startLoading()
+                meetingRepository.exitMeeting(_meeting.value.id)
+                    .suspendOnSuccess {
+                        matesEtaRepository.deleteEtaReservation(meetingId)
+                        _exitMeetingRoomEvent.emit(Unit)
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { exitMeetingRoom() }
+                    }
+                stopLoading()
             }
         }
 

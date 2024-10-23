@@ -64,7 +64,30 @@ class RouteServiceTest extends BaseServiceTest {
                 () -> verify(apiCallService, times(1)).increaseCountByClientType(odsayRouteClient.getClientType()),
                 () -> verify(apiCallService, Mockito.never()).increaseCountByClientType(
                         googleRouteClient.getClientType())
+        );
+    }
 
+    @DisplayName("OdsayRouteClient에서 700m 이내라 소요시간 -1을 반환하면 10분으로 소요시간이 전환된다")
+    @Test
+    void calculateClosestDurationRouteTimeByOdsayRouteClient() {
+        Coordinates origin = new Coordinates("37.505419", "127.050817");
+        Coordinates target = new Coordinates("37.515253", "127.102895");
+
+        Mockito.when(odsayRouteClient.calculateRouteTime(origin, target))
+                .thenReturn(new RouteTime(-1));
+
+        Mockito.when(googleRouteClient.calculateRouteTime(origin, target))
+                .thenReturn(new RouteTime(18));
+
+        RouteTime result = routeService.calculateRouteTime(origin, target);
+        RouteTime expectRouteTime = new RouteTime(10);
+
+        assertAll(
+                () -> assertThat(result).isEqualTo(expectRouteTime),
+                () -> Mockito.verify(odsayRouteClient, Mockito.times(1)).calculateRouteTime(origin, target),
+                () -> Mockito.verifyNoInteractions(googleRouteClient),
+                () -> Mockito.verify(apiCallService, Mockito.times(1)).increaseCountByClientType(odsayRouteClient.getClientType()),
+                () -> Mockito.verify(apiCallService, Mockito.never()).increaseCountByClientType(googleRouteClient.getClientType())
         );
     }
 
@@ -85,8 +108,7 @@ class RouteServiceTest extends BaseServiceTest {
                 () -> assertThat(result).isEqualTo(expectRouteTime.getMinutes()),
                 () -> verify(odsayRouteClient, times(1)).calculateRouteTime(origin, target),
                 () -> verify(googleRouteClient, times(1)).calculateRouteTime(origin, target),
-                () -> verify(apiCallService, Mockito.never()).increaseCountByClientType(
-                        odsayRouteClient.getClientType()),
+                () -> verify(apiCallService, Mockito.never()).increaseCountByClientType(odsayRouteClient.getClientType()),
                 () -> verify(apiCallService, times(1)).increaseCountByClientType(googleRouteClient.getClientType())
         );
     }
