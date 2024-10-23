@@ -117,13 +117,20 @@ class MeetingRoomViewModel
             val recentNudgeTime = matesNudgeTimes[mateId]
             val currentTime = LocalDateTime.now()
 
-            if (recentNudgeTime == null || recentNudgeTime.plusSeconds(NUDGE_DELAY_SECONDS) <= currentTime) {
+            if (recentNudgeTime == null) {
+                matesNudgeTimes[mateId] = currentTime
+                performNudge(nudgeId, mateId, mateNickname)
+                return
+            }
+
+            val elapsedSeconds = Duration.between(recentNudgeTime, currentTime).seconds
+
+            if (elapsedSeconds >= NUDGE_DELAY_SECONDS) {
                 matesNudgeTimes[mateId] = currentTime
                 performNudge(nudgeId, mateId, mateNickname)
             } else {
-                val remainingCooldown =
-                    NUDGE_DELAY_SECONDS + Duration.between(currentTime, recentNudgeTime).seconds
-                _nudgeFailMate.emit(if (remainingCooldown == 0L) NUDGE_MINIMUM_DELAY_SECOND else remainingCooldown.toInt())
+                val remainingCooldown = NUDGE_DELAY_SECONDS - elapsedSeconds
+                _nudgeFailMate.emit(remainingCooldown.toInt())
             }
         }
 
