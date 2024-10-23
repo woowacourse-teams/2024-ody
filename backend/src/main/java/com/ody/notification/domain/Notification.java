@@ -2,7 +2,7 @@ package com.ody.notification.domain;
 
 import com.ody.common.domain.BaseEntity;
 import com.ody.mate.domain.Mate;
-import com.ody.util.TimeUtil;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,6 +40,7 @@ public class Notification extends BaseEntity {
     private NotificationType type;
 
     @NotNull
+    @Column(columnDefinition = "TIMESTAMP(6)")
     private LocalDateTime sendAt;
 
     @Enumerated(value = EnumType.STRING)
@@ -107,10 +108,6 @@ public class Notification extends BaseEntity {
         return status == NotificationStatus.DISMISSED;
     }
 
-    public boolean isNow() {
-        return this.sendAt.equals(TimeUtil.nowWithTrim());
-    }
-
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
     }
@@ -118,5 +115,4 @@ public class Notification extends BaseEntity {
     public void updateStatusToDismissed() {
         this.status = NotificationStatus.DISMISSED;
     }
-
 }

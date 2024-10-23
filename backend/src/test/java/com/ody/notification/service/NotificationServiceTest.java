@@ -5,30 +5,21 @@ import static org.mockito.ArgumentMatchers.any;
 
 import com.ody.auth.service.KakaoAuthUnlinkClient;
 import com.ody.common.BaseServiceTest;
-import com.ody.common.Fixture;
 import com.ody.mate.domain.Mate;
-import com.ody.mate.domain.Nickname;
-import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
-import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
-import com.ody.member.repository.MemberRepository;
 import com.ody.member.service.MemberService;
-import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.dto.response.NotiLogFindResponse;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
-import com.ody.route.domain.DepartureTime;
 import com.ody.route.service.RouteService;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
@@ -47,6 +38,9 @@ class NotificationServiceTest extends BaseServiceTest {
     @MockBean
     private TaskScheduler taskScheduler;
 
+    @MockBean
+    protected FcmPushSender fcmPushSender;
+
     @Autowired
     private NotificationRepository notificationRepository;
 
@@ -56,17 +50,22 @@ class NotificationServiceTest extends BaseServiceTest {
     @MockBean
     private KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 
-    @DisplayName("알림 생성 시점이 전송 시점보다 늦은 경우 즉시 전송된다")
+    @DisplayName("출발 알림 생성 시점이 알림 전송 시점보다 늦은 경우 즉시 전송된다")
     @Test
     void sendImmediatelyIfDepartureTimeIsPast() {
         Member member = fixtureGenerator.generateMember();
         Meeting savedPastMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusDays(1));
-        Mate mate = fixtureGenerator.generateMate(savedPastMeeting, member);
+        Mate mate = fixtureGenerator.generateMate(savedPastMeeting, member); // 소요 시간 : 10분
+
+        LocalDateTime expect = LocalDateTime.now();
         notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
-        Optional<Notification> departureNotification = notificationRepository.findAll().stream()
-                .filter(notification -> notification.isDepartureReminder() && notification.isNow())
-                .findAny();
-        assertThat(departureNotification).isPresent();
+
+        Notification departureReminderNotification = notificationRepository.findAll().stream()
+                .filter(Notification::isDepartureReminder)
+                .findAny()
+                .get();
+
+        assertThat(departureReminderNotification.getSendAt()).isEqualToIgnoringNanos(expect);
     }
 
     @DisplayName("PENDING 상태의 알림들을 TaskScheduler로 스케줄링 한다.")
@@ -132,6 +131,21 @@ class NotificationServiceTest extends BaseServiceTest {
                 NotificationStatus.DISMISSED,
                 NotificationStatus.DISMISSED
         );
+    }
+
+    @DisplayName("참여자의 출발 시간이 현재 시간보다 전이라면 입장 알림 - 출발 알림 순으로 로그 목록이 조회된다.")
+    @Test
+    void findAllMeetingLogsOrderOfEntryAndDepartureNotification() {
+        Member member = fixtureGenerator.generateMember();
+        Meeting savedPastMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusDays(1));
+        Mate mate = fixtureGenerator.generateMate(savedPastMeeting, member); // 소요 시간 : 10분
+
+        notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
+
+        NotiLogFindResponses allMeetingLogs = notificationService.findAllMeetingLogs(savedPastMeeting.getId());
+
+        assertThat(allMeetingLogs.notiLog()).extracting(NotiLogFindResponse::type)
+                .containsExactly(NotificationType.ENTRY.name(), NotificationType.DEPARTURE_REMINDER.name());
     }
 
     @DisplayName("삭제 회원이 포함된 로그 목록을 조회한다.")

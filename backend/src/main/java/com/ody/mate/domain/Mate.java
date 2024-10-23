@@ -3,6 +3,7 @@ package com.ody.mate.domain;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.Member;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -63,6 +64,7 @@ public class Mate {
     @NotNull
     private long estimatedMinutes;
 
+    @Column(columnDefinition = "TIMESTAMP(6)")
     private LocalDateTime deletedAt;
 
     public Mate(Meeting meeting, Member member, Nickname nickname, Location origin, long estimatedMinutes) {

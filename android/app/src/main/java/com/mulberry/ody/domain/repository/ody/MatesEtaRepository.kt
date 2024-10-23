@@ -1,16 +1,22 @@
 package com.mulberry.ody.domain.repository.ody
 
-import androidx.lifecycle.LiveData
 import com.mulberry.ody.domain.model.MateEtaInfo
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 interface MatesEtaRepository {
-    fun reserveEtaFetchingJob(
+    suspend fun reserveEtaFetchingJob(
         meetingId: Long,
         meetingDateTime: LocalDateTime,
     )
 
-    fun fetchMatesEta(meetingId: Long): LiveData<MateEtaInfo?>
+    fun fetchMatesEtaInfo(meetingId: Long): Flow<MateEtaInfo?>
 
     suspend fun clearEtaFetchingJob()
+
+    suspend fun deleteEtaReservation(reservationId: Long)
+
+    suspend fun clearEtaReservation(isReservationPending: Boolean)
+
+    suspend fun reserveAllEtaReservation()
 }

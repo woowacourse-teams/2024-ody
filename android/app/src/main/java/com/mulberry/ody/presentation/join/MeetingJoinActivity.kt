@@ -16,8 +16,11 @@ import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.listener.NextListener
 import com.mulberry.ody.presentation.join.complete.JoinCompleteActivity
+import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -52,32 +55,49 @@ class MeetingJoinActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        viewModel.invalidDepartureEvent.observe(this) {
-            showSnackBar(R.string.invalid_address)
-        }
-        viewModel.navigateAction.observe(this) {
-            when (it) {
-                is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
-                    navigateToNotificationRoom(it.meetingId)
+        launchWhenStarted {
+            launch {
+                viewModel.invalidDepartureEvent.collect {
+                    showSnackBar(R.string.invalid_address)
                 }
+            }
+            launch {
+                viewModel.navigateAction.conflate().collect {
+                    when (it) {
+                        is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
+                            navigateToNotificationRoom(it.meetingId)
+                        }
 
-                MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
-                    startActivity(JoinCompleteActivity.getIntent(this))
+                        MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
+                            startActivity(JoinCompleteActivity.getIntent(this@MeetingJoinActivity))
+                        }
+                    }
                 }
             }
-        }
-        viewModel.networkErrorEvent.observe(this) {
-            showRetrySnackBar { viewModel.retryLastAction() }
-        }
-        viewModel.errorEvent.observe(this) {
-            showSnackBar(R.string.error_guide)
-        }
-        viewModel.isLoading.observe(this) { isLoading ->
-            if (isLoading) {
-                showLoadingDialog()
-                return@observe
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
+                }
             }
-            hideLoadingDialog()
+            launch {
+                viewModel.errorEvent.collect {
+                    showSnackBar(R.string.error_guide)
+                }
+            }
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
+                    }
+                    hideLoadingDialog()
+                }
+            }
+            launch {
+                viewModel.defaultLocationError.collect {
+                    showSnackBar(R.string.default_location_error_guide)
+                }
+            }
         }
     }
 

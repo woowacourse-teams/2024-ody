@@ -20,6 +20,7 @@ import com.mulberry.ody.databinding.LayoutMissingTooltipBinding
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.common.image.getBitmap
 import com.mulberry.ody.presentation.common.image.toByteArray
+import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
@@ -39,7 +40,8 @@ class EtaDashboardFragment :
     private val adapter: MateEtasAdapter by lazy { MateEtasAdapter(this, viewModel) }
     private val parentActivity: Activity by lazy { requireActivity() }
 
-    @Inject lateinit var odyDatastore: OdyDatastore
+    @Inject
+    lateinit var odyDatastore: OdyDatastore
 
     override fun onViewCreated(
         view: View,
@@ -81,11 +83,17 @@ class EtaDashboardFragment :
     }
 
     private fun initializeObserve() {
-        viewModel.mateEtaUiModels.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
-        viewModel.nudgeSuccessMate.observe(viewLifecycleOwner) { nickName ->
-            showSnackBar(getString(R.string.nudge_success, nickName))
+        launchWhenStarted {
+            launch {
+                viewModel.mateEtaUiModels.collect {
+                    adapter.submitList(it)
+                }
+            }
+            launch {
+                viewModel.nudgeSuccessMate.collect { nickName ->
+                    showSnackBar(getString(R.string.nudge_success, nickName))
+                }
+            }
         }
     }
 

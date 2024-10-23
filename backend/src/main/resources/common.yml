@@ -20,13 +20,14 @@ springdoc:
     operations-sorter: alpha
     enabled: true
 
-odsay:
-  url: https://api.odsay.com/v1/api/searchPubTransPathT
-  api-key: ENC(Z0SkQdUTiXWp8kW04EzhajqDndy+TNM/XrQME13n9A9Eog/fxwvICKif2DiiT/8D)
-
-google:
-  maps:
-    api-key: ENC(w8KL2jxe1qHrRbQlJcAEybhzDsXoPcNsCpmfChkA251h8oZc5nVjoHta6lIbO6la5novNfz4bpFu3YtDo/X1Z/tKewk3PJhXm8SF3JBRt50=)
+route:
+  vendors:
+    - name: odsay
+      base-url: https://api.odsay.com/v1/api/searchPubTransPathT
+      api-key: ENC(Z0SkQdUTiXWp8kW04EzhajqDndy+TNM/XrQME13n9A9Eog/fxwvICKif2DiiT/8D)
+    - name: google
+      base-url: https://maps.googleapis.com/maps/api/distancematrix/json
+      api-key: ENC(w8KL2jxe1qHrRbQlJcAEybhzDsXoPcNsCpmfChkA251h8oZc5nVjoHta6lIbO6la5novNfz4bpFu3YtDo/X1Z/tKewk3PJhXm8SF3JBRt50=)
 
 auth:
   access-key: ENC(Ve3QKOE7PzbTOpQ6b58Oyi1Qrr9DojPgUA+jCwYcmDdSVdP34Z2eKw==)
@@ -50,6 +51,9 @@ management:
   health:
     db:
       enabled: false
+
+api-call:
+  page: ENC(Tmip6pkMmuStDTjkRyspLm2PSd5/ov+T9Gzu2XZJKTjmLsrx4dplPIt/8CarbG2B)
 
 allowed-origins:
   api-call: ENC(QicQ16sDQJlHTuf3E/wIS+VBG0UVfQ62HDBXQbtfM8pmnYsBAH8xmACD7PBVgpLjWAHdJXN6bOKv/Z8BZFFbFyfp5x5f7dNCgok83Cn6jSE=)

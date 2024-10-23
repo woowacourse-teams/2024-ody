@@ -13,7 +13,9 @@ spring:
       jdbc-url: ENC(Ho2WMst/QlNJngqZ1nnRiQIaytH55rjohNVg/5W14vhcd88rAhk16y1yO3zzorKNGSsYV95t/lChWuFA5ivEz4Rh5NaZHjxddhvs1T7HHltl/eC5V1bhPh3+ck98Lk2iil0+RljDy+I=)
       username: ENC(Pjtz7HDMEVm9ScNAjaDEqA==)
       password: ENC(9yYOk4n/7co8h0HDfOA20tduvw3htCFa)
-
+  flyway:
+    baseline-version: 2
+    
 log:
   file:
     path: /ody-prod-logs

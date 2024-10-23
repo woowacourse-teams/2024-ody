@@ -2,7 +2,7 @@ package com.mulberry.ody.data.remote.core.entity.meeting.mapper
 
 import com.mulberry.ody.data.remote.core.entity.meeting.response.MateEtaResponse
 import com.mulberry.ody.data.remote.core.entity.meeting.response.MatesEtaResponse
-import com.mulberry.ody.domain.model.EtaType
+import com.mulberry.ody.domain.model.EtaStatus
 import com.mulberry.ody.domain.model.MateEta
 import com.mulberry.ody.domain.model.MateEtaInfo
 
@@ -18,18 +18,17 @@ private fun MateEtaResponse.toMateEta(): MateEta {
     return MateEta(
         mateId = mateId,
         nickname = nickname,
-        etaType = status.toEtaType(),
-        durationMinute = durationMinutes.toInt(),
+        etaStatus = status.toEtaStatus(durationMinutes),
     )
 }
 
-private fun String.toEtaType(): EtaType {
+private fun String.toEtaStatus(durationMinutes: Long): EtaStatus {
     return when (this) {
-        "LATE_WARNING" -> EtaType.LATE_WARNING
-        "ARRIVAL_SOON" -> EtaType.ARRIVAL_SOON
-        "ARRIVED" -> EtaType.ARRIVED
-        "LATE" -> EtaType.LATE
-        "MISSING" -> EtaType.MISSING
+        "ARRIVED" -> EtaStatus.Arrived
+        "ARRIVAL_SOON" -> EtaStatus.ArrivalSoon(durationMinutes = durationMinutes.toInt())
+        "LATE_WARNING" -> EtaStatus.LateWarning(durationMinutes = durationMinutes.toInt())
+        "LATE" -> EtaStatus.Late(durationMinutes = durationMinutes.toInt())
+        "MISSING" -> EtaStatus.Missing
         else -> throw IllegalArgumentException("존재하지 않는 Eta Type 입니다.")
     }
 }
