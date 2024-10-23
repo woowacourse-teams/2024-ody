@@ -51,245 +51,241 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 class MeetingRoomViewModel
-    @AssistedInject
-    constructor(
-        private val analyticsHelper: AnalyticsHelper,
-        @Assisted private val meetingId: Long,
-        private val matesEtaRepository: MatesEtaRepository,
-        private val notificationLogRepository: NotificationLogRepository,
-        private val meetingRepository: MeetingRepository,
-        private val imageStorage: ImageStorage,
-        private val imageShareHelper: ImageShareHelper,
-    ) : BaseViewModel(), NudgeListener {
-        private val matesEta: Flow<MateEtaInfo?> =
-            matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
+@AssistedInject
+constructor(
+    private val analyticsHelper: AnalyticsHelper,
+    @Assisted private val meetingId: Long,
+    private val matesEtaRepository: MatesEtaRepository,
+    private val notificationLogRepository: NotificationLogRepository,
+    private val meetingRepository: MeetingRepository,
+    private val imageStorage: ImageStorage,
+    private val imageShareHelper: ImageShareHelper,
+) : BaseViewModel(), NudgeListener {
+    private val matesEta: Flow<MateEtaInfo?> =
+        matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
 
-        val mateEtaUiModels: StateFlow<List<MateEtaUiModel>?> =
-            matesEta.map {
-                val mateEtaInfo = it ?: return@map null
-                mateEtaInfo.toMateEtaUiModels()
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                initialValue = null,
-            )
+    val mateEtaUiModels: StateFlow<List<MateEtaUiModel>?> =
+        matesEta.map {
+            val mateEtaInfo = it ?: return@map null
+            mateEtaInfo.toMateEtaUiModels()
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
+            initialValue = null,
+        )
 
-        private val _meeting: MutableStateFlow<MeetingDetailUiModel> =
-            MutableStateFlow(MeetingDetailUiModel())
-        val meeting: StateFlow<MeetingDetailUiModel> = _meeting.asStateFlow()
+    private val _meeting: MutableStateFlow<MeetingDetailUiModel> =
+        MutableStateFlow(MeetingDetailUiModel())
+    val meeting: StateFlow<MeetingDetailUiModel> = _meeting.asStateFlow()
 
-        private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
-        val mates: StateFlow<List<MateUiModel>> = _mates.asStateFlow()
+    private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
+    val mates: StateFlow<List<MateUiModel>> = _mates.asStateFlow()
 
-        private val _notificationLogs = MutableStateFlow<List<NotificationLogUiModel>>(listOf())
-        val notificationLogs: StateFlow<List<NotificationLogUiModel>> = _notificationLogs.asStateFlow()
+    private val _notificationLogs = MutableStateFlow<List<NotificationLogUiModel>>(listOf())
+    val notificationLogs: StateFlow<List<NotificationLogUiModel>> = _notificationLogs.asStateFlow()
 
-        private val _navigateToEtaDashboardEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val navigateToEtaDashboardEvent: SharedFlow<Unit> get() = _navigateToEtaDashboardEvent.asSharedFlow()
+    private val _navigateToEtaDashboardEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+    val navigateToEtaDashboardEvent: SharedFlow<Unit> get() = _navigateToEtaDashboardEvent.asSharedFlow()
 
-        private val _nudgeSuccessMate: MutableSharedFlow<String> = MutableSharedFlow()
-        val nudgeSuccessMate: SharedFlow<String> get() = _nudgeSuccessMate.asSharedFlow()
+    private val _nudgeSuccessMate: MutableSharedFlow<String> = MutableSharedFlow()
+    val nudgeSuccessMate: SharedFlow<String> get() = _nudgeSuccessMate.asSharedFlow()
 
-        private val _nudgeFailMate: MutableSharedFlow<String> = MutableSharedFlow()
-        val nudgeFailMate: SharedFlow<String> get() = _nudgeFailMate.asSharedFlow()
+    private val _nudgeFailMate: MutableSharedFlow<String> = MutableSharedFlow()
+    val nudgeFailMate: SharedFlow<String> get() = _nudgeFailMate.asSharedFlow()
 
-        private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
+    private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
-        init {
-            fetchMeeting()
+    init {
+        fetchMeeting()
+    }
+
+    override fun nudgeMate(
+        nudgeId: Long,
+        mateId: Long,
+    ) {
+        viewModelScope.launch {
+            val targetMate = mateEtaUiModels.value?.find { it.mateId == mateId } ?: return@launch
+            handleNudgeAction(nudgeId, mateId, targetMate.nickname)
         }
+    }
 
-        override fun nudgeMate(
-            nudgeId: Long,
-            mateId: Long,
-        ) {
-            viewModelScope.launch {
-                matesEta.collect { mateEta ->
-                    val mateEtas = mateEta?.mateEtas ?: return@collect
-                    val targetMate = mateEtas.find { it.mateId == mateId } ?: return@collect
+    private suspend fun handleNudgeAction(
+        nudgeId: Long,
+        mateId: Long,
+        mateNickname: String,
+    ) {
+        val recentNudgeTime = matesNudgeTimes[mateId]
+        val currentTime = LocalDateTime.now()
 
-                    handleNudgeAction(nudgeId, mateId, targetMate.nickname)
-                }
+        if (recentNudgeTime == null || recentNudgeTime.plusSeconds(NUDGE_DELAY_SECONDS) <= currentTime) {
+            matesNudgeTimes[mateId] = currentTime
+            performNudge(nudgeId, mateId, mateNickname)
+        } else {
+            val remainingCooldown =
+                NUDGE_DELAY_SECONDS + Duration.between(currentTime, recentNudgeTime).seconds
+            _nudgeFailMate.emit(if (remainingCooldown == 0L) "$NUDGE_MINIMUM_DELAY_SECOND" else "$remainingCooldown")
+        }
+    }
+
+    private suspend fun performNudge(
+        nudgeId: Long,
+        mateId: Long,
+        mateNickname: String,
+    ) {
+        meetingRepository.postNudge(Nudge(nudgeId, mateId))
+            .suspendOnSuccess {
+                _nudgeSuccessMate.emit(mateNickname)
+            }.onFailure { code, errorMessage ->
+                handleError()
+                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                Timber.e("$code $errorMessage")
+            }.onNetworkError {
+                handleNetworkError()
+                lastFailedAction = { nudgeMate(nudgeId, mateId) }
             }
-        }
+    }
 
-        private suspend fun handleNudgeAction(
-            nudgeId: Long,
-            mateId: Long,
-            mateNickname: String,
-        ) {
-            val recentNudgeTime = matesNudgeTimes[mateId]
-            val currentTime = LocalDateTime.now()
-
-            if (recentNudgeTime == null || recentNudgeTime.plusSeconds(NUDGE_DELAY_SECONDS) <= currentTime) {
-                matesNudgeTimes[mateId] = currentTime
-                performNudge(nudgeId, mateId, mateNickname)
-            } else {
-                val remainingCooldown =
-                    NUDGE_DELAY_SECONDS + Duration.between(currentTime, recentNudgeTime).seconds
-                _nudgeFailMate.emit(if (remainingCooldown == 0L) "$NUDGE_MINIMUM_DELAY_SECOND" else "$remainingCooldown")
-            }
-        }
-
-        private suspend fun performNudge(
-            nudgeId: Long,
-            mateId: Long,
-            mateNickname: String,
-        ) {
-            meetingRepository.postNudge(Nudge(nudgeId, mateId))
-                .suspendOnSuccess {
-                    _nudgeSuccessMate.emit(mateNickname)
+    private fun fetchNotificationLogs() {
+        viewModelScope.launch {
+            startLoading()
+            notificationLogRepository.fetchNotificationLogs(meetingId)
+                .onSuccess {
+                    _notificationLogs.value = it.toNotificationUiModels()
                 }.onFailure { code, errorMessage ->
                     handleError()
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                     Timber.e("$code $errorMessage")
                 }.onNetworkError {
                     handleNetworkError()
-                    lastFailedAction = { nudgeMate(nudgeId, mateId) }
+                    lastFailedAction = { fetchNotificationLogs() }
                 }
-        }
-
-        private fun fetchNotificationLogs() {
-            viewModelScope.launch {
-                startLoading()
-                notificationLogRepository.fetchNotificationLogs(meetingId)
-                    .onSuccess {
-                        _notificationLogs.value = it.toNotificationUiModels()
-                    }.onFailure { code, errorMessage ->
-                        handleError()
-                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                        Timber.e("$code $errorMessage")
-                    }.onNetworkError {
-                        handleNetworkError()
-                        lastFailedAction = { fetchNotificationLogs() }
-                    }
-                stopLoading()
-            }
-        }
-
-        private fun fetchMeeting() {
-            viewModelScope.launch {
-                startLoading()
-                meetingRepository.fetchMeeting(meetingId)
-                    .onSuccess {
-                        _meeting.value = it.toMeetingUiModel()
-                        _mates.value = it.toMateUiModels()
-                        fetchNotificationLogs()
-                    }.onFailure { code, errorMessage ->
-                        handleError()
-                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                        Timber.e("$code $errorMessage")
-                    }.onNetworkError {
-                        handleNetworkError()
-                        lastFailedAction = { fetchMeeting() }
-                    }
-                stopLoading()
-            }
-        }
-
-        fun navigateToEtaDashboard() {
-            viewModelScope.launch {
-                analyticsHelper.logButtonClicked(
-                    eventName = "eta_button_from_notification_log",
-                    location = TAG,
-                )
-                _navigateToEtaDashboardEvent.emit(Unit)
-            }
-        }
-
-        fun shareEtaDashboard(
-            title: String,
-            buttonTitle: String,
-            imageByteArray: ByteArray,
-            imageWidthPixel: Int,
-            imageHeightPixel: Int,
-        ) {
-            viewModelScope.launch {
-                startLoading()
-                imageStorage.upload(
-                    byteArray = imageByteArray,
-                    fileName = LocalDateTime.now().toString(),
-                )
-                    .onSuccess {
-                        val imageShareContent =
-                            ImageShareContent(
-                                title = title,
-                                buttonTitle = buttonTitle,
-                                imageUrl = it,
-                                imageWidthPixel = imageWidthPixel,
-                                imageHeightPixel = imageHeightPixel,
-                                link = "https://github.com/woowacourse-teams/2024-ody",
-                            )
-                        shareImage(imageShareContent)
-                    }.onNetworkError {
-                        handleNetworkError()
-                        lastFailedAction = {
-                            shareEtaDashboard(
-                                title,
-                                buttonTitle,
-                                imageByteArray,
-                                imageWidthPixel,
-                                imageHeightPixel,
-                            )
-                        }
-                    }
-                stopLoading()
-            }
-        }
-
-        fun shareInviteCode(
-            title: String,
-            description: String,
-            buttonTitle: String,
-            imageUrl: String,
-        ) {
-            startLoading()
-            val imageShareContent =
-                ImageShareContent(
-                    title = title,
-                    description = description,
-                    buttonTitle = buttonTitle,
-                    imageUrl = imageUrl,
-                    link = "https://github.com/woowacourse-teams/2024-ody",
-                )
-            shareImage(imageShareContent)
             stopLoading()
         }
+    }
 
-        private fun shareImage(imageShareContent: ImageShareContent) {
-            viewModelScope.launch {
-                imageShareHelper.share(imageShareContent)
-                    .onUnexpected {
-                        handleError()
-                    }
-            }
+    private fun fetchMeeting() {
+        viewModelScope.launch {
+            startLoading()
+            meetingRepository.fetchMeeting(meetingId)
+                .onSuccess {
+                    _meeting.value = it.toMeetingUiModel()
+                    _mates.value = it.toMateUiModels()
+                    fetchNotificationLogs()
+                }.onFailure { code, errorMessage ->
+                    handleError()
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                    Timber.e("$code $errorMessage")
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = { fetchMeeting() }
+                }
+            stopLoading()
         }
+    }
 
-        @AssistedFactory
-        interface MeetingViewModelFactory {
-            fun create(meetingId: Long): MeetingRoomViewModel
+    fun navigateToEtaDashboard() {
+        viewModelScope.launch {
+            analyticsHelper.logButtonClicked(
+                eventName = "eta_button_from_notification_log",
+                location = TAG,
+            )
+            _navigateToEtaDashboardEvent.emit(Unit)
         }
+    }
 
-        companion object {
-            private const val TAG = "MeetingRoomViewModel"
-            private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
-            private const val NUDGE_DELAY_SECONDS = 10L
-            private const val NUDGE_MINIMUM_DELAY_SECOND = 1
-
-            fun provideFactory(
-                assistedFactory: MeetingViewModelFactory,
-                owner: SavedStateRegistryOwner,
-                defaultArgs: Bundle? = null,
-                meetingId: Long,
-            ): AbstractSavedStateViewModelFactory =
-                object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
-                    override fun <T : ViewModel> create(
-                        key: String,
-                        modelClass: Class<T>,
-                        handle: SavedStateHandle,
-                    ): T {
-                        return assistedFactory.create(meetingId) as T
+    fun shareEtaDashboard(
+        title: String,
+        buttonTitle: String,
+        imageByteArray: ByteArray,
+        imageWidthPixel: Int,
+        imageHeightPixel: Int,
+    ) {
+        viewModelScope.launch {
+            startLoading()
+            imageStorage.upload(
+                byteArray = imageByteArray,
+                fileName = LocalDateTime.now().toString(),
+            )
+                .onSuccess {
+                    val imageShareContent =
+                        ImageShareContent(
+                            title = title,
+                            buttonTitle = buttonTitle,
+                            imageUrl = it,
+                            imageWidthPixel = imageWidthPixel,
+                            imageHeightPixel = imageHeightPixel,
+                            link = "https://github.com/woowacourse-teams/2024-ody",
+                        )
+                    shareImage(imageShareContent)
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = {
+                        shareEtaDashboard(
+                            title,
+                            buttonTitle,
+                            imageByteArray,
+                            imageWidthPixel,
+                            imageHeightPixel,
+                        )
                     }
+                }
+            stopLoading()
+        }
+    }
+
+    fun shareInviteCode(
+        title: String,
+        description: String,
+        buttonTitle: String,
+        imageUrl: String,
+    ) {
+        startLoading()
+        val imageShareContent =
+            ImageShareContent(
+                title = title,
+                description = description,
+                buttonTitle = buttonTitle,
+                imageUrl = imageUrl,
+                link = "https://github.com/woowacourse-teams/2024-ody",
+            )
+        shareImage(imageShareContent)
+        stopLoading()
+    }
+
+    private fun shareImage(imageShareContent: ImageShareContent) {
+        viewModelScope.launch {
+            imageShareHelper.share(imageShareContent)
+                .onUnexpected {
+                    handleError()
                 }
         }
     }
+
+    @AssistedFactory
+    interface MeetingViewModelFactory {
+        fun create(meetingId: Long): MeetingRoomViewModel
+    }
+
+    companion object {
+        private const val TAG = "MeetingRoomViewModel"
+        private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
+        private const val NUDGE_DELAY_SECONDS = 10L
+        private const val NUDGE_MINIMUM_DELAY_SECOND = 1
+
+        fun provideFactory(
+            assistedFactory: MeetingViewModelFactory,
+            owner: SavedStateRegistryOwner,
+            defaultArgs: Bundle? = null,
+            meetingId: Long,
+        ): AbstractSavedStateViewModelFactory =
+            object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+                override fun <T : ViewModel> create(
+                    key: String,
+                    modelClass: Class<T>,
+                    handle: SavedStateHandle,
+                ): T {
+                    return assistedFactory.create(meetingId) as T
+                }
+            }
+    }
+}
