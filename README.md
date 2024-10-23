@@ -24,7 +24,7 @@
 ## **Contributors** 🟣
 |AN 차람|AN 해음|AN 올리브|
 |:-:|:-:|:-:|
-|<img src="https://github.com/user-attachments/assets/6743a06e-785c-4fd1-98d6-69d3fde4ca6f" width=200 height=200>|<img src="https://github.com/user-attachments/assets/a7b12121-a193-4d12-ac86-c3fd383b0125" width=200 height=200>|<img src="https://github.com/user-attachments/assets/f460ff99-ee73-4440-ac53-8428dc0ac940" width=200 height=200>|
+|<img src="https://github.com/user-attachments/assets/6743a06e-785c-4fd1-98d6-69d3fde4ca6f" width=200 height=200>|<img src="https://github.com/user-attachments/assets/a7b12121-a193-4d12-ac86-c3fd383b0125" width=200 height=200>|<img src="https://github.com/user-attachments/assets/ee524838-09af-4241-bf64-aa227510c0b1" width=200 height=200>|
 |[@aprilgom](https://github.com/aprilgom)|[@haeum808](https://github.com/haeum808)|[@kimhm0728](https://github.com/kimhm0728)|
 
 <br/>
