@@ -53,7 +53,7 @@ management:
       enabled: false
 
 api-call:
-  page: ENC(Tmip6pkMmuStDTjkRyspLm2PSd5/ov+T9Gzu2XZJKTjmLsrx4dplPIt/8CarbG2B)
+  page: ENC(bDtVlLbmI0dmF9v3SFpquBZiPStB9d13/2invvZIxOcs+UdEvexTOpTl+jtHzxjY)
 
 allowed-origins:
   api-call: ENC(QicQ16sDQJlHTuf3E/wIS+VBG0UVfQ62HDBXQbtfM8pmnYsBAH8xmACD7PBVgpLjWAHdJXN6bOKv/Z8BZFFbFyfp5x5f7dNCgok83Cn6jSE=)
