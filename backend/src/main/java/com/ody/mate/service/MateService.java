@@ -127,12 +127,23 @@ public class MateService {
     @Transactional
     public void deleteAllByMember(Member member) {
         mateRepository.findFetchedAllByMemberId(member.getId())
-                .forEach(this::delete);
+                .forEach(this::withdraw);
     }
 
     @Transactional
-    public void delete(Mate mate) {
-        notificationService.saveMemberDeletionNotification(mate); // TODO: noti 상위 서비스로 묶기
+    public void withdraw(Mate mate) {
+        notificationService.saveMemberDeletionNotification(mate);
+        delete(mate);
+    }
+
+    @Transactional
+    public void leaveByMeetingIdAndMemberId(Long meetingId, Long memberId) {
+        Mate mate = findByMeetingIdAndMemberId(meetingId, memberId);
+        notificationService.saveMateLeaveNotification(mate);
+        delete(mate);
+    }
+
+    private void delete(Mate mate) {
         notificationService.updateAllStatusPendingToDismissedByMateId(mate.getId());
         notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken());
         etaService.deleteByMateId(mate.getId());

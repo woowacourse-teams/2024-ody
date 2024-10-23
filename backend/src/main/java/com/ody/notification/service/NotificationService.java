@@ -122,6 +122,12 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
+    @Transactional
+    public void saveMateLeaveNotification(Mate mate) {
+        Notification notification = Notification.createMateLeave(mate);
+        notificationRepository.save(notification);
+    }
+
     public void unSubscribeTopic(Meeting meeting, DeviceToken deviceToken) {
         FcmTopic fcmTopic = new FcmTopic(meeting);
         fcmSubscriber.unSubscribeTopic(fcmTopic, deviceToken);
