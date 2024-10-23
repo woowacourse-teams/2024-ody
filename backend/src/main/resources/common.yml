@@ -20,13 +20,14 @@ springdoc:
     operations-sorter: alpha
     enabled: true
 
-odsay:
-  url: https://api.odsay.com/v1/api/searchPubTransPathT
-  api-key: ENC(4+ag02XbL8zS6rWoWHh7WzhKqBj5kaBwBcg04MpLr8nLJefO2PRY8E5o0WpRd3oRtvFv1s9lnWI=)
-
-google:
-  maps:
-    api-key: ENC(ISqnJHlmWWslx8mw0KghjXcJsTcxZ97AoylekuQiZN3RGyolV7oejAM3ejRtUllp)
+route:
+  vendors:
+    - name: odsay
+      base-url: https://api.odsay.com/v1/api/searchPubTransPathT
+      api-key: ENC(4+ag02XbL8zS6rWoWHh7WzhKqBj5kaBwBcg04MpLr8nLJefO2PRY8E5o0WpRd3oRtvFv1s9lnWI=)
+    - name: google
+      base-url: https://maps.googleapis.com/maps/api/distancematrix/json
+      api-key: ENC(ISqnJHlmWWslx8mw0KghjXcJsTcxZ97AoylekuQiZN3RGyolV7oejAM3ejRtUllp)
 
 auth:
   access-key: ENC(jp1TJCM6l22zIzInTUvt9VXrb1WhNm1zY3dFgTSj6ad3585f5K7Q8A==)
