@@ -9,69 +9,69 @@ import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING
 import javax.inject.Inject
 
 class EtaDashboardAlarm
-    @Inject
-    constructor(
-        private val context: Context,
-        private val alarmManager: AlarmManager,
+@Inject
+constructor(
+    private val context: Context,
+    private val alarmManager: AlarmManager,
+) {
+    private val pendingIntents: MutableMap<AlarmId, PendingIntent> = mutableMapOf()
+
+    fun reserve(
+        meetingId: Long,
+        reserveMillis: Long,
+        isOpen: Boolean,
+        reservationId: Long,
     ) {
-        private val pendingIntents: MutableMap<AlarmId, PendingIntent> = mutableMapOf()
+        val alarmId = AlarmId(meetingId, reservationId)
+        val pendingIntent = createPendingIntent(meetingId, isOpen, reservationId)
+        reserveAlarm(alarmId, pendingIntent, reserveMillis)
+    }
 
-        fun reserve(
-            meetingId: Long,
-            reserveMillis: Long,
-            isOpen: Boolean,
-            reservationId: Long,
-        ) {
-            val alarmId = AlarmId(meetingId, reservationId)
-            val pendingIntent = createPendingIntent(meetingId, isOpen, reservationId)
-            reserveAlarm(alarmId, pendingIntent, reserveMillis)
-        }
+    private fun createPendingIntent(
+        meetingId: Long,
+        isOpen: Boolean,
+        reservationId: Long,
+    ): PendingIntent {
+        val intentClass =
+            if (isOpen) EtaDashboardOpenBroadcastReceiver::class else EtaDashboardCloseBroadcastReceiver::class
+        val intent =
+            Intent(context, intentClass.java)
+                .putExtra(MEETING_ID_KEY, meetingId)
 
-        private fun createPendingIntent(
-            meetingId: Long,
-            isOpen: Boolean,
-            reservationId: Long,
-        ): PendingIntent {
-            val intentClass =
-                if (isOpen) EtaDashboardOpenBroadcastReceiver::class else EtaDashboardCloseBroadcastReceiver::class
-            val intent =
-                Intent(context, intentClass.java)
-                    .putExtra(MEETING_ID_KEY, meetingId)
+        return PendingIntent.getBroadcast(
+            context,
+            reservationId.toInt(),
+            intent,
+            PendingIntent.FLAG_IMMUTABLE,
+        )
+    }
 
-            return PendingIntent.getBroadcast(
-                context,
-                reservationId.toInt(),
-                intent,
-                PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
+    @SuppressLint("ScheduleExactAlarm")
+    private fun reserveAlarm(
+        alarmId: AlarmId,
+        pendingIntent: PendingIntent,
+        triggerAtMillis: Long,
+    ) {
+        pendingIntents[alarmId] = pendingIntent
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            triggerAtMillis,
+            pendingIntent,
+        )
+    }
 
-        @SuppressLint("ScheduleExactAlarm")
-        private fun reserveAlarm(
-            alarmId: AlarmId,
-            pendingIntent: PendingIntent,
-            triggerAtMillis: Long,
-        ) {
-            pendingIntents[alarmId] = pendingIntent
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                triggerAtMillis,
-                pendingIntent,
-            )
-        }
-
-        fun cancelByMeetingId(meetingId: Long) {
-            val removePendingIntent = pendingIntents.filter { it.key.meetingId == meetingId }
-            removePendingIntent.forEach {
-                pendingIntents.remove(it.key)
-                alarmManager.cancel(it.value)
-            }
-        }
-
-        fun cancelAll() {
-            pendingIntents.values.forEach { alarmManager.cancel(it) }
-            pendingIntents.clear()
+    fun cancelByMeetingId(meetingId: Long) {
+        val removePendingIntent = pendingIntents.filter { it.key.meetingId == meetingId }
+        removePendingIntent.forEach {
+            pendingIntents.remove(it.key)
+            alarmManager.cancel(it.value)
         }
     }
+
+    fun cancelAll() {
+        pendingIntents.values.forEach { alarmManager.cancel(it) }
+        pendingIntents.clear()
+    }
+}
 
 private data class AlarmId(val meetingId: Long, val reservationId: Long)
