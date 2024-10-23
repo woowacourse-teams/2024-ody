@@ -92,10 +92,10 @@ class MeetingRoomViewModel
 
         private val _nudgeFailMate: MutableSharedFlow<Int> = MutableSharedFlow()
         val nudgeFailMate: SharedFlow<Int> get() = _nudgeFailMate.asSharedFlow()
-        
+
         private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
         val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
-        
+
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
         init {
