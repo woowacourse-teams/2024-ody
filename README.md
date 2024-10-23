@@ -15,7 +15,7 @@
 
 ## **Google Play** 🌎
 
-[오디 다운받기](http://play.google.com/store/apps/details?id=com.mulberry.ody/)
+[오디 다운받기](http://play.google.com/store/apps/details?id=com.mulberry.ody)
 
 <br>
 
