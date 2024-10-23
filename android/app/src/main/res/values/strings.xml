@@ -13,6 +13,7 @@
     <string name="item_notification_departure">(이)가 출발했어요.</string>
     <string name="item_notification_nudge">"(이)가 재촉 받았어요. \uD83D\uDC40"</string>
     <string name="item_notification_member_deletion">(이)가 오디를 떠났어요.</string>
+    <string name="item_notification_member_exit">(이)가 나갔어요.</string>
     <string name="item_notification_default"> </string>
 
     <!-- activity_meeting_room.xml -->
@@ -153,6 +154,10 @@
     <string name="address_search_toolbar_title">장소 찾기</string>
     <string name="address_search_hint">주소나 상호명을 검색해 보세요</string>
     <string name="address_search_empty">검색 결과가\n존재하지 않아요.</string>
+
+    <!-- dialog_exit_room.xml -->
+    <string name="exit_meeting_room_title">약속을 정말 나가실 건가요?</string>
+    <string name="exit_meeting_room">나가기</string>
 
     <!-- all -->
     <string name="next_button">다음</string>

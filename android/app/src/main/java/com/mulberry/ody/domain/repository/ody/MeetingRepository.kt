@@ -29,4 +29,6 @@ interface MeetingRepository {
     suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting>
 
     suspend fun postNudge(nudge: Nudge): ApiResult<Unit>
+
+    suspend fun exitMeeting(meetingId: Long): ApiResult<Unit>
 }

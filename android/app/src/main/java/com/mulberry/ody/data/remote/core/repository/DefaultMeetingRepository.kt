@@ -54,11 +54,16 @@ class DefaultMeetingRepository
             meetingId: Long,
             mateEtaInfo: MateEtaInfo,
         ): ApiResult<Unit> {
-            val mateEtaInfoEntity = MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
+            val mateEtaInfoEntity =
+                MateEtaInfoEntity(meetingId, mateEtaInfo.userId, mateEtaInfo.mateEtas)
             mateEtaInfoDao.upsert(mateEtaInfoEntity)
             return ApiResult.Success(Unit)
         }
 
         override suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>> =
             service.fetchMeetingCatalogs().map { it.toMeetingCatalogs() }
+
+        override suspend fun exitMeeting(meetingId: Long): ApiResult<Unit> {
+            return service.exitMeeting(meetingId)
+        }
     }
