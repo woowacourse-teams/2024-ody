@@ -111,24 +111,20 @@ class NotificationServiceTest extends BaseServiceTest {
         Mockito.verify(fcmPushSender, Mockito.times(1)).sendNudgeMessage(any(), any());
     }
 
-    @DisplayName("특정 참여자의 PENDING 상태인 알람을 모두 DISMISSED 상태로 변경한다.")
+    @DisplayName("특정 참여자의 전송 전 알람을 모두 DISMISSED 상태로 변경한다.")
     @Test
     void updateAllStatusPendingToDismissedByMateId() {
         Mate mate = fixtureGenerator.generateMate();
-        fixtureGenerator.generateNotification(mate, NotificationStatus.PENDING);
-        fixtureGenerator.generateNotification(mate, NotificationStatus.DONE);
-        fixtureGenerator.generateNotification(mate, NotificationStatus.DISMISSED);
-        fixtureGenerator.generateNotification(mate, NotificationStatus.PENDING);
+        LocalDateTime now = LocalDateTime.now();
+        fixtureGenerator.generateNotification(mate, now.minusSeconds(1), NotificationStatus.DONE);
+        fixtureGenerator.generateNotification(mate, now.minusSeconds(1), NotificationStatus.PENDING);
+        fixtureGenerator.generateNotification(mate, now.plusSeconds(1), NotificationStatus.PENDING);
 
-        notificationService.updateAllStatusPendingToDismissedByMateId(mate.getId());
-        List<NotificationStatus> actual = notificationRepository.findAll().stream()
-                .map(Notification::getStatus)
-                .toList();
+        notificationService.updateAllStatusToDismissByMateIdAndSendAtAfterNow(mate.getId());
 
-        assertThat(actual).containsExactly(
-                NotificationStatus.DISMISSED,
+        assertThat(notificationRepository.findAll()).extracting(Notification::getStatus).containsExactly(
                 NotificationStatus.DONE,
-                NotificationStatus.DISMISSED,
+                NotificationStatus.PENDING,
                 NotificationStatus.DISMISSED
         );
     }
@@ -142,7 +138,7 @@ class NotificationServiceTest extends BaseServiceTest {
 
         notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
 
-        NotiLogFindResponses allMeetingLogs = notificationService.findAllMeetingLogs(savedPastMeeting.getId());
+        NotiLogFindResponses allMeetingLogs = notificationService.findAllNotiLogs(savedPastMeeting.getId());
 
         assertThat(allMeetingLogs.notiLog()).extracting(NotiLogFindResponse::type)
                 .containsExactly(NotificationType.ENTRY.name(), NotificationType.DEPARTURE_REMINDER.name());
@@ -157,10 +153,25 @@ class NotificationServiceTest extends BaseServiceTest {
         fixtureGenerator.generateNotification(deleteMate);
         fixtureGenerator.generateNotification(mate);
 
-        int logCountBeforeDelete = notificationService.findAllMeetingLogs(meeting.getId()).notiLog().size();
+        int logCountBeforeDelete = notificationService.findAllNotiLogs(meeting.getId()).notiLog().size();
         memberService.delete(deleteMate.getMember());
-        int logCountAfterDelete = notificationService.findAllMeetingLogs(meeting.getId()).notiLog().size();
+        int logCountAfterDelete = notificationService.findAllNotiLogs(meeting.getId()).notiLog().size();
 
         assertThat(logCountAfterDelete).isEqualTo(logCountBeforeDelete + 1);
+    }
+
+
+    @DisplayName("DISMISSED 상태의 알림은 조회되지 않는다.")
+    @Test
+    void findAllMeetingLogsExcludingDisMissedStatus() {
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Mate mate = fixtureGenerator.generateMate(meeting);
+        fixtureGenerator.generateNotification(mate, NotificationStatus.PENDING);
+        fixtureGenerator.generateNotification(mate, NotificationStatus.DONE);
+        fixtureGenerator.generateNotification(mate, NotificationStatus.DISMISSED);
+
+        List<NotiLogFindResponse> notiLogFindResponses = notificationService.findAllNotiLogs(meeting.getId()).notiLog();
+
+        assertThat(notiLogFindResponses).hasSize(2);
     }
 }
