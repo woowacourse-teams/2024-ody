@@ -27,6 +27,7 @@ import com.mulberry.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
 import com.mulberry.ody.presentation.room.etadashboard.listener.MissingToolTipListener
 import com.mulberry.ody.presentation.room.etadashboard.listener.ShareListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -92,6 +93,11 @@ class EtaDashboardFragment :
             launch {
                 viewModel.nudgeSuccessMate.collect { nickName ->
                     showSnackBar(getString(R.string.nudge_success, nickName))
+                }
+            }
+            launch {
+                viewModel.nudgeFailMate.collect { second ->
+                    showSnackBar(getString(R.string.nudge_failure, second))
                 }
             }
         }

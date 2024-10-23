@@ -76,10 +76,8 @@ class MeetingRoomViewModelTest {
     fun `친구 재촉을 하면 친구 재촉이 성공한다`() {
         runTest {
             // when
-            val actual =
-                viewModel.nudgeSuccessMate.valueOnAction {
-                    viewModel.nudgeMate(1, 0)
-                }
+            viewModel.mateEtaUiModels.first()
+            val actual = viewModel.nudgeSuccessMate.valueOnAction { viewModel.nudgeMate(1, 0) }
 
             // then
             assertThat(actual).isEqualTo("콜리")
