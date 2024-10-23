@@ -50,7 +50,7 @@
 
 ## **아키텍쳐 구조** 🏛️
 
-![image](https://github.com/user-attachments/assets/21921fa5-14b8-42c8-b056-87f2109ac160)
+![Group 352](https://github.com/user-attachments/assets/3d60e4b4-95cc-4ae4-b32e-0756bdc0abe8)
 
 <br>
 
