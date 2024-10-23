@@ -114,18 +114,12 @@ class MeetingRoomViewModel
             mateId: Long,
             mateNickname: String,
         ) {
-            val recentNudgeTime = matesNudgeTimes[mateId]
+            val recentNudgeTime = matesNudgeTimes.getOrDefault(mateId, DEFAULT_NUDGE_TIME)
             val currentTime = LocalDateTime.now()
-
-            if (recentNudgeTime == null) {
-                matesNudgeTimes[mateId] = currentTime
-                performNudge(nudgeId, mateId, mateNickname)
-                return
-            }
 
             val elapsedSeconds = Duration.between(recentNudgeTime, currentTime).seconds
 
-            if (elapsedSeconds >= NUDGE_DELAY_SECONDS) {
+            if (recentNudgeTime == DEFAULT_NUDGE_TIME || elapsedSeconds >= NUDGE_DELAY_SECONDS) {
                 matesNudgeTimes[mateId] = currentTime
                 performNudge(nudgeId, mateId, mateNickname)
             } else {
@@ -277,7 +271,7 @@ class MeetingRoomViewModel
             private const val TAG = "MeetingRoomViewModel"
             private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
             private const val NUDGE_DELAY_SECONDS = 10L
-            private const val NUDGE_MINIMUM_DELAY_SECOND = 1
+            private val DEFAULT_NUDGE_TIME = LocalDateTime.of(2000, 1, 1, 1, 1)
 
             fun provideFactory(
                 assistedFactory: MeetingViewModelFactory,
