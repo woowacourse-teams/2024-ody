@@ -144,7 +144,7 @@ public class MateService {
     }
 
     private void delete(Mate mate) {
-        notificationService.updateAllStatusPendingToDismissedByMateId(mate.getId());
+        notificationService.updateAllStatusToDismissByMateIdAndSendAtAfterNow(mate.getId());
         notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken());
         etaService.deleteByMateId(mate.getId());
         mateRepository.deleteById(mate.getId());
