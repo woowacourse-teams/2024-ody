@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/cream"
+        android:background="@color/primary"
         android:gravity="center"
         android:orientation="vertical"
         tools:context=".presentation.login.LoginActivity">
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="@string/login_welcome_ody"
-            android:textColor="@color/purple_800"
+            android:textColor="@color/secondary"
             app:layout_constraintStart_toEndOf="@id/login_welcome_prefix"
             app:layout_constraintTop_toBottomOf="@id/login_welcome_prefix"
             app:layout_constraintTop_toTopOf="@id/login_welcome_prefix" />

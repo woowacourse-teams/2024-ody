@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.IBinder
 import com.mulberry.ody.domain.apiresult.getOrNull
 import com.mulberry.ody.domain.apiresult.onNetworkError
+import com.mulberry.ody.domain.apiresult.suspendFold
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
@@ -59,6 +60,9 @@ class EtaDashboardService : Service() {
 
             CLOSE_ACTION -> {
                 closeEtaDashboard(meetingId)
+                if (meetingJobs.isEmpty()) {
+                    stopSelf()
+                }
             }
         }
         return START_REDELIVER_INTENT
@@ -84,7 +88,7 @@ class EtaDashboardService : Service() {
     }
 
     private suspend fun getLocation(meetingId: Long): MateEtaInfo? {
-        return geoLocationHelper.getCurrentCoordinate().fold(
+        return geoLocationHelper.getCurrentCoordinate().suspendFold(
             onSuccess = { location ->
                 updateMatesEta(
                     meetingId,
@@ -111,8 +115,8 @@ class EtaDashboardService : Service() {
     }
 
     private fun closeEtaDashboard(meetingId: Long) {
-        val job = meetingJobs.remove(meetingId) ?: return
-        job.cancel()
+        val job = meetingJobs.remove(meetingId)
+        job?.cancel()
     }
 
     override fun onDestroy() {
@@ -135,13 +139,14 @@ class EtaDashboardService : Service() {
 
         fun getIntent(
             context: Context,
-            meetingId: Long,
-            isOpen: Boolean = true,
+            meetingId: Long? = null,
+            isOpen: Boolean? = null,
         ): Intent {
-            return Intent(context, EtaDashboardService::class.java).apply {
-                putExtra(MEETING_ID_KEY, meetingId)
-                action = if (isOpen) OPEN_ACTION else CLOSE_ACTION
-            }
+            val intent = Intent(context, EtaDashboardService::class.java)
+            if (meetingId != null) intent.putExtra(MEETING_ID_KEY, meetingId)
+            if (isOpen != null) intent.action = if (isOpen) OPEN_ACTION else CLOSE_ACTION
+
+            return intent
         }
     }
 }

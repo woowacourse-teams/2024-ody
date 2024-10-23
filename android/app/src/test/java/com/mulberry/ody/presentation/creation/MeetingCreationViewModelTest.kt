@@ -1,7 +1,9 @@
 package com.mulberry.ody.presentation.creation
 
 import com.mulberry.ody.Address
+import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.fake.FakeAnalyticsHelper
+import com.mulberry.ody.fake.FakeLocationHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.inviteCode
 import com.mulberry.ody.util.CoroutinesTestExtension
@@ -29,6 +31,8 @@ class MeetingCreationViewModelTest {
             MeetingCreationViewModel(
                 analyticsHelper = FakeAnalyticsHelper,
                 meetingRepository = FakeMeetingRepository,
+                addressRepository = FakeAddressRepository,
+                locationHelper = FakeLocationHelper,
             )
     }
 

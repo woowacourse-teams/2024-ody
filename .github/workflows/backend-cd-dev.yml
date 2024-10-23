@@ -62,6 +62,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: Back Up Image For Rollback
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest || true
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
+
       - name: Docker Image Build And Push
         run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev -f Dockerfile . --push
 
@@ -86,8 +92,46 @@ jobs:
           export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
           export DEV_MYSQL_PASSWORD=${{ secrets.DEV_MYSQL_PASSWORD }}
           export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
-          export GIT_SHA=${{ github.sha }}
+          export TAG=${{ github.sha }}-dev
           docker compose up -d
 
+      - name: Health Check with Retry
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 1
+          max_attempts: 5
+          retry_wait_seconds: 6
+          command: |
+            response=$(curl -s https://dev.oody.site/actuator/health)
+            status=$(echo $response | jq -r '.status')
+            if [ "$status" = "UP" ]; then
+              echo "Status is UP. Continuing..."
+              exit 0
+            else
+              echo "Status is NOT UP."
+              exit 1
+            fi
+
+      - name: Rollback if Health Check fails
+        if: failure()
+        run: |
+          docker compose down || true
+          docker rmi $(docker images -q) -f || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous
+          
+          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+          export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
+          export DEV_MYSQL_PASSWORD=${{ secrets.DEV_MYSQL_PASSWORD }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
+          export TAG=previous
+          docker compose up -d
+
+      - name: Tag successful deployment as latest
+        if: success()
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
+
       - name: Check Docker Process
+        if: always()
         run: docker ps

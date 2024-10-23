@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
 import com.mulberry.ody.domain.apiresult.onFailure
@@ -62,7 +61,7 @@ class MeetingRoomViewModel
         private val imageShareHelper: ImageShareHelper,
     ) : BaseViewModel(), NudgeListener {
         private val matesEta: Flow<MateEtaInfo?> =
-            matesEtaRepository.fetchMatesEta(meetingId = meetingId)
+            matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
 
         val mateEtaUiModels: StateFlow<List<MateEtaUiModel>?> =
             matesEta.map {

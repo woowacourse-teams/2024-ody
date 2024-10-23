@@ -5,12 +5,18 @@ import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 interface MatesEtaRepository {
-    fun reserveEtaFetchingJob(
+    suspend fun reserveEtaFetchingJob(
         meetingId: Long,
         meetingDateTime: LocalDateTime,
     )
 
-    fun fetchMatesEta(meetingId: Long): Flow<MateEtaInfo?>
+    fun fetchMatesEtaInfo(meetingId: Long): Flow<MateEtaInfo?>
 
     suspend fun clearEtaFetchingJob()
+
+    suspend fun deleteEtaReservation(reservationId: Long)
+
+    suspend fun clearEtaReservation(isReservationPending: Boolean)
+
+    suspend fun reserveAllEtaReservation()
 }
