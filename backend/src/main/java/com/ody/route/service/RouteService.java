@@ -51,6 +51,7 @@ public class RouteService {
             return new RouteTime(CLOSEST_LOCATION_DURATION);
         }
         return calculatedRouteTime;
+    }
 
     private boolean isDisabled(RouteClient client) {
         return Boolean.FALSE.equals(apiCallService.getEnabledByClientType(client.getClientType()));
