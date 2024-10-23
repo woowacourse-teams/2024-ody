@@ -64,8 +64,9 @@ class DefaultMatesEtaRepository
             matesEtaInfoDao.deleteAll()
         }
 
-        override suspend fun deleteEtaReservation(reservationId: Long) {
-            etaReservationDao.delete(reservationId)
+        override suspend fun deleteEtaReservation(meetingId: Long) {
+            etaDashboardAlarm.cancelByMeetingId(meetingId)
+            etaReservationDao.delete(meetingId)
         }
 
         override suspend fun clearEtaReservation(isReservationPending: Boolean) {
