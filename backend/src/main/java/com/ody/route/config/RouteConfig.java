@@ -1,6 +1,5 @@
 package com.ody.route.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ody.route.service.GoogleRouteClient;
 import com.ody.route.service.OdsayRouteClient;
 import com.ody.route.service.RouteClient;
@@ -30,23 +29,22 @@ public class RouteConfig {
 
     @Bean
     @Order(1)
-    public RouteClient odysayRouteClient(ObjectMapper objectMapper) {
+    public RouteClient odysayRouteClient() {
         RouteClientProperty property = properties.getProperty("odsay");
-        return new OdsayRouteClient(property, builder(objectMapper));
+        return new OdsayRouteClient(property, builder());
     }
 
     @Bean
     @Order(2)
-    public RouteClient googleRouteClient(ObjectMapper objectMapper) {
+    public RouteClient googleRouteClient() {
         RouteClientProperty property = properties.getProperty("google");
-        return new GoogleRouteClient(property, builder(objectMapper));
+        return new GoogleRouteClient(property, builder());
     }
 
     @Bean
-    public RestClient.Builder builder(ObjectMapper objectMapper) {
+    public RestClient.Builder builder() {
         return RestClient.builder()
-                .requestFactory(new BufferingClientHttpRequestFactory(clientHttpRequestFactory()))
-                .requestInterceptor(new RouteClientLoggingInterceptor(objectMapper));
+                .requestFactory(new BufferingClientHttpRequestFactory(clientHttpRequestFactory()));
     }
 
     private ClientHttpRequestFactory clientHttpRequestFactory() {

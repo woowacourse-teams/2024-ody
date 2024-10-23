@@ -6,7 +6,6 @@ import com.ody.route.domain.RouteTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -30,12 +29,7 @@ public class RouteService {
 
                 RouteTime routeTime = calculateTime(client, origin, target);
                 apiCallService.increaseCountByClientType(client.getClientType());
-                log.info(
-                        "mateId : {}, {} API 사용한 소요 시간 계산 : {}분",
-                        MDC.get("mateId"),
-                        client.getClientType(),
-                        routeTime.getMinutes()
-                );
+                log.info("{}를 사용한 소요 시간 계산 성공", client.getClass().getSimpleName());
                 return routeTime;
             } catch (Exception exception) {
                 log.warn("Route Client 에러 : {} ", client.getClass().getSimpleName(), exception);

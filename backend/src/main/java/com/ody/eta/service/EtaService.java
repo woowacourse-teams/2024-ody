@@ -15,7 +15,6 @@ import com.ody.route.service.RouteService;
 import com.ody.util.DistanceCalculator;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +60,6 @@ public class EtaService {
         }
 
         if (isRouteClientCallTime(mateEta)) {
-            MDC.put("mateId", mateEta.getMate().getId().toString());
             RouteTime routeTime = routeService.calculateRouteTime(
                     mateEtaRequest.toCoordinates(),
                     meeting.getTargetCoordinates()
