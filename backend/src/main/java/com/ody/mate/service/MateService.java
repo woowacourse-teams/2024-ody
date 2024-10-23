@@ -143,7 +143,8 @@ public class MateService {
         delete(mate);
     }
 
-    private void delete(Mate mate) {
+    @Transactional
+    public void delete(Mate mate) {
         notificationService.updateAllStatusToDismissByMateIdAndSendAtAfterNow(mate.getId());
         notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken());
         etaService.deleteByMateId(mate.getId());

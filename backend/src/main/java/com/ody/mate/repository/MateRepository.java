@@ -30,6 +30,7 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             select mate
             from Mate mate
             join fetch mate.meeting
+            join fetch mate.member
             where mate.meeting.id = :meetingId
             and mate.member.id = :memberId
             """)
