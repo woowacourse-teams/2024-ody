@@ -39,6 +39,11 @@ class MeetingDestinationFragment :
                     showSnackBar(R.string.invalid_address)
                 }
             }
+            launch {
+                viewModel.defaultLocationError.collect {
+                    showSnackBar(R.string.default_location_error_guide)
+                }
+            }
         }
     }
 

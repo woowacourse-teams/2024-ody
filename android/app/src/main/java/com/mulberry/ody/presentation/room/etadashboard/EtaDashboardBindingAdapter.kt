@@ -9,29 +9,18 @@ import androidx.databinding.BindingAdapter
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.room.etadashboard.listener.MissingToolTipListener
 import com.mulberry.ody.presentation.room.etadashboard.listener.NudgeListener
-import com.mulberry.ody.presentation.room.etadashboard.model.EtaDurationMinuteTypeUiModel
-import com.mulberry.ody.presentation.room.etadashboard.model.EtaTypeUiModel
+import com.mulberry.ody.presentation.room.etadashboard.model.EtaStatusUiModel
 import com.mulberry.ody.presentation.room.etadashboard.model.MateEtaUiModel
 
 @BindingAdapter("etaType")
-fun TextView.setBadgeByEtaType(etaTypeUiModel: EtaTypeUiModel) {
-    text = context.getString(etaTypeUiModel.messageId)
-    backgroundTintList = ContextCompat.getColorStateList(context, etaTypeUiModel.colorId)
+fun TextView.setBadgeByEtaType(etaStatusUiModel: EtaStatusUiModel) {
+    text = context.getString(etaStatusUiModel.badgeMessageId)
+    backgroundTintList = ContextCompat.getColorStateList(context, etaStatusUiModel.badgeColorId)
 }
 
 @BindingAdapter("etaStatus")
-fun TextView.setEtaStatusText(mateEtaUiModel: MateEtaUiModel) {
-    text =
-        when (mateEtaUiModel.getEtaDurationMinuteTypeUiModel()) {
-            EtaDurationMinuteTypeUiModel.ARRIVED -> context.getString(R.string.status_arrived)
-            EtaDurationMinuteTypeUiModel.MISSING -> context.getString(R.string.status_missing)
-            EtaDurationMinuteTypeUiModel.ARRIVAL_SOON -> context.getString(R.string.status_arrival_soon)
-            EtaDurationMinuteTypeUiModel.ARRIVAL_REMAIN_TIME ->
-                context.getString(
-                    R.string.status_arrival_remain_time,
-                    mateEtaUiModel.durationMinute,
-                )
-        }
+fun TextView.setEtaStatusText(etaStatusUiModel: EtaStatusUiModel) {
+    text = etaStatusUiModel.etaStatusMessage(context)
 }
 
 @BindingAdapter("isUserSelf", "missingToolTipListener")
@@ -46,19 +35,16 @@ fun TextView.setOnClickMissingTooltip(
 }
 
 @BindingAdapter("etaBadgeAnimation")
-fun TextView.setEtaBadgeAnimation(etaTypeUiModel: EtaTypeUiModel) {
-    if (
-        etaTypeUiModel == EtaTypeUiModel.LATE ||
-        etaTypeUiModel == EtaTypeUiModel.LATE_WARNING
-    ) {
+fun TextView.setEtaBadgeAnimation(etaStatusUiModel: EtaStatusUiModel) {
+    if (etaStatusUiModel.canNudge()) {
         val animation = AnimationUtils.loadAnimation(context, R.anim.bounce_duration_500)
         this.startAnimation(animation)
     }
 }
 
 @BindingAdapter("etaBadgeAnimation")
-fun TextView.setEtaBadgeAnimation(isPossibleNudge: Boolean) {
-    if (isPossibleNudge) {
+fun TextView.setEtaBadgeAnimation(canNudge: Boolean) {
+    if (canNudge) {
         val animation = AnimationUtils.loadAnimation(context, R.anim.bounce_duration_500)
         this.startAnimation(animation)
     }
@@ -70,10 +56,7 @@ fun TextView.setOnClickNudge(
     nudgeListener: NudgeListener,
 ) {
     setOnClickListener {
-        if (
-            mateEtaUiModel.isUserSelf.not() &&
-            (mateEtaUiModel.etaTypeUiModel == EtaTypeUiModel.LATE || mateEtaUiModel.etaTypeUiModel == EtaTypeUiModel.LATE_WARNING)
-        ) {
+        if (mateEtaUiModel.isUserSelf.not() && mateEtaUiModel.etaStatusUiModel.canNudge()) {
             nudgeListener.nudgeMate(
                 nudgeId = mateEtaUiModel.userId,
                 mateId = mateEtaUiModel.mateId,

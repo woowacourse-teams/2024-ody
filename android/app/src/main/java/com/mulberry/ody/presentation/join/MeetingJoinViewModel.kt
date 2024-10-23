@@ -1,11 +1,12 @@
 package com.mulberry.ody.presentation.join
 
-import androidx.lifecycle.map
+import android.location.Location
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.suspendOnSuccess
+import com.mulberry.ody.domain.apiresult.suspendOnUnexpected
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
@@ -38,7 +39,7 @@ class MeetingJoinViewModel
         private val joinRepository: JoinRepository,
         private val matesEtaRepository: MatesEtaRepository,
         private val addressRepository: AddressRepository,
-        private val geoLocationHelper: LocationHelper,
+        private val locationHelper: LocationHelper,
     ) : BaseViewModel(), MeetingJoinListener {
         val departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
 
@@ -46,10 +47,7 @@ class MeetingJoinViewModel
         val invalidDepartureEvent: SharedFlow<Unit> get() = _invalidDepartureEvent.asSharedFlow()
 
         val isValidDeparture: StateFlow<Boolean> =
-            departureAddress.map {
-                println("TEST")
-                isValidDeparturePoint()
-            }
+            departureAddress.map { isValidDeparturePoint() }
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
@@ -59,29 +57,41 @@ class MeetingJoinViewModel
         private val _navigateAction: MutableSharedFlow<MeetingJoinNavigateAction> = MutableSharedFlow()
         val navigateAction: SharedFlow<MeetingJoinNavigateAction> get() = _navigateAction.asSharedFlow()
 
+        private val _defaultLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val defaultLocationError: SharedFlow<Unit> get() = _defaultLocationError.asSharedFlow()
+
         fun getDefaultLocation() {
             viewModelScope.launch {
                 startLoading()
-
-                geoLocationHelper.getCurrentCoordinate().onSuccess { location ->
-                    val longitude = location.longitude.toString()
-                    val latitude = location.latitude.toString()
-
-                    addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
-                        departureAddress.value =
-                            Address(
-                                detailAddress = it ?: "",
-                                longitude = longitude,
-                                latitude = latitude,
-                            )
-                    }.onFailure { code, errorMessage ->
-                        handleError()
-                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    }.onNetworkError {
-                        handleNetworkError()
+                locationHelper.getCurrentCoordinate()
+                    .suspendOnSuccess { location ->
+                        fetchAddressesByCoordinate(location)
                     }
-                }
+                    .suspendOnUnexpected {
+                        _defaultLocationError.emit(Unit)
+                    }
                 stopLoading()
+            }
+        }
+
+        private suspend fun fetchAddressesByCoordinate(location: Location) {
+            val longitude = location.longitude.toString()
+            val latitude = location.latitude.toString()
+
+            addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+                departureAddress.value =
+                    Address(
+                        detailAddress = it ?: "",
+                        longitude = longitude,
+                        latitude = latitude,
+                    )
+            }.onFailure { code, errorMessage ->
+                handleError()
+                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+            }.suspendOnUnexpected {
+                _defaultLocationError.emit(Unit)
+            }.onNetworkError {
+                handleNetworkError()
             }
         }
 
@@ -115,11 +125,8 @@ class MeetingJoinViewModel
         }
 
         private suspend fun isValidDeparturePoint(): Boolean {
-            println("isValidDeparturePoint")
             val departureAddress = departureAddress.value ?: return false
-            println("isValidDeparturePoint 2 $departureAddress")
             return AddressValidator.isValid(departureAddress.detailAddress).also {
-                println("isValidDeparturePoint 2 $it")
                 if (!it) _invalidDepartureEvent.emit(Unit)
             }
         }

@@ -1,13 +1,13 @@
 package com.mulberry.ody.presentation.room.etadashboard.model
 
-import com.mulberry.ody.domain.model.EtaType
+import com.mulberry.ody.domain.model.EtaStatus
 
-fun EtaType.toEtaTypeUiModel(): EtaTypeUiModel {
+fun EtaStatus.toEtaStatusUiModel(): EtaStatusUiModel {
     return when (this) {
-        EtaType.LATE_WARNING -> EtaTypeUiModel.LATE_WARNING
-        EtaType.ARRIVAL_SOON -> EtaTypeUiModel.ARRIVAL_SOON
-        EtaType.ARRIVED -> EtaTypeUiModel.ARRIVED
-        EtaType.LATE -> EtaTypeUiModel.LATE
-        EtaType.MISSING -> EtaTypeUiModel.MISSING
+        EtaStatus.Arrived -> EtaStatusUiModel.Arrived
+        is EtaStatus.ArrivalSoon -> EtaStatusUiModel.ArrivalSoon(durationMinutes)
+        is EtaStatus.LateWarning -> EtaStatusUiModel.LateWarning(durationMinutes)
+        is EtaStatus.Late -> EtaStatusUiModel.Late(durationMinutes)
+        EtaStatus.Missing -> EtaStatusUiModel.Missing
     }
 }

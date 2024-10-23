@@ -76,7 +76,6 @@ kapt {
 
 dependencies {
     // androidx
-    implementation(libs.androidx.webkit)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.hilt.work)

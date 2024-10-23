@@ -100,6 +100,16 @@ public class Notification extends BaseEntity {
         );
     }
 
+    public static Notification createMateLeave(Mate mate) {
+        return new Notification(
+                mate,
+                NotificationType.LEAVE,
+                LocalDateTime.now(),
+                NotificationStatus.DONE,
+                null
+        );
+    }
+
     public boolean isDepartureReminder() {
         return this.type.isDepartureReminder();
     }
