@@ -39,7 +39,7 @@ class OdsayRouteClientTest extends BaseRouteClientTest {
         mockServer.verify();
     }
 
-    @DisplayName("도착지와 출발지가 700m 이내일 때, 소요시간 0분을 반환한다")
+    @DisplayName("도착지와 출발지가 700m 이내일 때, 소요시간 -1분을 반환한다")
     @Test
     void calculateRouteTimeWithDistanceWithIn700m() throws IOException {
         Coordinates origin = new Coordinates("37.505419", "127.050817");
@@ -49,7 +49,7 @@ class OdsayRouteClientTest extends BaseRouteClientTest {
 
         RouteTime routeTime = routeClient.calculateRouteTime(origin, target);
 
-        assertThat(routeTime.getMinutes()).isZero();
+        assertThat(routeTime.getMinutes()).isEqualTo(-1L);
         mockServer.verify();
     }
 

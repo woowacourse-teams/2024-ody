@@ -96,6 +96,7 @@
         <activity
             android:name=".presentation.room.MeetingRoomActivity"
             android:exported="false"
+            android:parentActivityName=".presentation.meetings.MeetingsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"

@@ -10,6 +10,7 @@ import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.mate.repository.MateRepository;
+import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
@@ -54,10 +55,9 @@ public class MateService {
     }
 
     private Mate saveMateAndEta(MateSaveRequestV2 mateSaveRequest, Member member, Meeting meeting) {
-        RouteTime routeTime = routeService.calculateRouteTime(
-                mateSaveRequest.toOriginCoordinates(),
-                meeting.getTargetCoordinates()
-        );
+        Coordinates origin = mateSaveRequest.toOriginCoordinates();
+        Coordinates target = meeting.getTargetCoordinates();
+        RouteTime routeTime = routeService.calculateRouteTime(origin, target);
         Mate mate = mateRepository.save(mateSaveRequest.toMate(meeting, member, routeTime.getMinutes()));
         etaService.saveFirstEtaOfMate(mate, routeTime);
         return mate;
@@ -108,13 +108,25 @@ public class MateService {
     @Transactional
     public void deleteAllByMember(Member member) {
         mateRepository.findFetchedAllByMemberId(member.getId())
-                .forEach(this::delete);
+                .forEach(this::withdraw);
+    }
+
+    @Transactional
+    public void withdraw(Mate mate) {
+        notificationService.saveMemberDeletionNotification(mate);
+        delete(mate);
+    }
+
+    @Transactional
+    public void leaveByMeetingIdAndMemberId(Long meetingId, Long memberId) {
+        Mate mate = findByMeetingIdAndMemberId(meetingId, memberId);
+        notificationService.saveMateLeaveNotification(mate);
+        delete(mate);
     }
 
     @Transactional
     public void delete(Mate mate) {
-        notificationService.saveMemberDeletionNotification(mate); // TODO: noti 상위 서비스로 묶기
-        notificationService.updateAllStatusPendingToDismissedByMateId(mate.getId());
+        notificationService.updateAllStatusToDismissByMateIdAndSendAtAfterNow(mate.getId());
         notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken());
         etaService.deleteByMateId(mate.getId());
         mateRepository.deleteById(mate.getId());

@@ -95,7 +95,17 @@ public class Notification extends BaseEntity {
                 mate,
                 NotificationType.MEMBER_DELETION,
                 LocalDateTime.now(),
-                NotificationStatus.DISMISSED,
+                NotificationStatus.DONE,
+                null
+        );
+    }
+
+    public static Notification createMateLeave(Mate mate) {
+        return new Notification(
+                mate,
+                NotificationType.LEAVE,
+                LocalDateTime.now(),
+                NotificationStatus.DONE,
                 null
         );
     }
@@ -110,9 +120,5 @@ public class Notification extends BaseEntity {
 
     public void updateStatusToDone() {
         this.status = NotificationStatus.DONE;
-    }
-
-    public void updateStatusToDismissed() {
-        this.status = NotificationStatus.DISMISSED;
     }
 }

@@ -4,9 +4,9 @@ spring:
       ddl-auto: validate
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(KUJNgDMlvi/imeVHjCO2QekgI4DNxZT9IrW0QlVVkJXJUUQ2DAUOqI91FVH7aFhXVCsfXtf0EUmF/JqN3GpXa/mVj3o4BNbqS3QsU50BgwEEodko+VwHY2ebDHUxlKA1/FXBSmu6p+Rd3rcNEzoBIA==)
-    username: ENC(jNYhZN6xMCmPQ7GZM+Hu3A==)
-    password: ENC(VRtr3RjM+XnPvRdLjrPMHyTSzDlEjR7o)
+    url: ENC(EbLprih9CBRFwayAtzOuQgmLIi1yhY0XKl7h7Ol8ioyJdMtwwHN6caPxplZ7UXUCSCTYfUZ9MgMZ+BLdP2rka97Bx/vmtXo5ysJzdYLLzywI0XTylX4o5N8RQlk1Tx2s7vRI2khoJZ5p6zCdIBaJWw==)
+    username: ENC(Wd8cwBhFGAJp/RMvZzrOzw==)
+    password: ENC(X2Gk3hAja3lLSUyJLewcdVWZh3hTJDiJ)
   flyway:
     baseline-version: 2
 

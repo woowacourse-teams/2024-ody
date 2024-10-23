@@ -26,7 +26,7 @@ class OdsayResponseMapperTest {
                 .isEqualTo(3L);
     }
 
-    @DisplayName("출, 도착지가 700m 이내일 때 0분을 반환한다")
+    @DisplayName("출, 도착지가 700m 이내일 때 -1분을 반환한다")
     @Test
     void mapZeroMinutesWhenCloseLocation() {
         OdsayResponse closeLocationResponse = new OdsayResponse(
@@ -36,7 +36,7 @@ class OdsayResponseMapperTest {
         );
 
         assertThat(OdsayResponseMapper.mapMinutes(closeLocationResponse))
-                .isEqualTo(0L);
+                .isEqualTo(-1L);
     }
 
     @DisplayName("예외 응답 : 500 에러 코드는 OdyServerErrorException을 던진다")
