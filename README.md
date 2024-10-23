@@ -77,10 +77,10 @@
 
 <br>
 
-### **폴더 구조** 📁
+### **패키지 구조** 📁
 
 <details>
-  <summary>안드로이드 폴더 구조</summary>
+  <summary>안드로이드 패키지 구조</summary>
   
 ```
 android
