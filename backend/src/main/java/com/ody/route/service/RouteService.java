@@ -28,7 +28,7 @@ public class RouteService {
 
             try {
 
-                RouteTime routeTime = client.calculateRouteTime(origin, target);
+                RouteTime routeTime = calculateTime(client, origin, target);
                 apiCallService.increaseCountByClientType(client.getClientType());
                 log.info(
                         "mateId : {}, {} API 사용한 소요 시간 계산 : {}분",
