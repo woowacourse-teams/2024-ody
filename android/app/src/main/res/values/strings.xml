@@ -136,7 +136,7 @@
     <string name="location_permission_self_guide">위치 권한을 켜서 오디인지 공유해 보세요.</string>
     <string name="location_permission_friend_guide">친구의 위치 권한이 꺼져있어요.</string>
     <string name="nudge_success">%s에게 빨리 오라고 재촉했어요!</string>
-    <string name="nudge_time_limit_expired">약속 시간 30분이 이후에는 재촉할 수 없어요</string>
+    <string name="nudge_time_limit_expired">약속 시간 30분 이후에는 재촉할 수 없어요</string>
     <string name="eta_dashboard_share_description">친구들의 도착 예정 정보를 확인해보세요!</string>
     <string name="eta_dashboard_share_button">확인하러 가기</string>
     <string name="eta_dashboard_background_location">친구와 도착 정보를 공유하고 있어요.</string>
