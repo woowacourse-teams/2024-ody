@@ -1,0 +1,12 @@
+services:
+  db:
+    image: mysql:8.0.35
+    container_name: mysql-local-db
+    restart: always
+    ports:
+      - "53306:3306"
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: ody
+      TZ: Asia/seoul

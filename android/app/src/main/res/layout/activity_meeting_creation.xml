@@ -32,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
+            app:dotsClickable="false"
             app:dotsColor="@color/gray_350"
             app:dotsCornerRadius="50dp"
             app:dotsSize="10dp"
@@ -40,7 +41,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_meeting_info"
-            app:selectedDotColor="@color/purple_800" />
+            app:selectedDotColor="@color/secondary" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_meeting_info"

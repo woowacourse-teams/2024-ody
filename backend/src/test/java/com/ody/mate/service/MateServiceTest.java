@@ -2,6 +2,7 @@ package com.ody.mate.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
@@ -16,7 +17,12 @@ import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.meeting.domain.Meeting;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
+import com.ody.notification.domain.FcmTopic;
+import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.message.DirectMessage;
+import com.ody.notification.service.FcmPushSender;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +30,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 class MateServiceTest extends BaseServiceTest {
 
@@ -32,6 +39,9 @@ class MateServiceTest extends BaseServiceTest {
 
     @Autowired
     private FixtureGenerator fixtureGenerator;
+
+    @MockBean
+    protected FcmPushSender fcmPushSender;
 
     @DisplayName("회원이 참여하고 있는 특정 약속의 참여자 리스트를 조회한다.")
     @Test
@@ -76,7 +86,7 @@ class MateServiceTest extends BaseServiceTest {
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
             mateService.nudge(nudgeRequest);
 
-            Mockito.verify(fcmPushSender, times(1)).sendNudgeMessage(any(), any());
+            Mockito.verify(fcmPushSender, times(1)).sendNudgeMessage(any(Notification.class), any(DirectMessage.class));
         }
 
         @DisplayName("약속이 지금이고 소요시간이 2분으로 Eta상태가 지각인 mate를 재촉할 수 있다")
@@ -90,7 +100,7 @@ class MateServiceTest extends BaseServiceTest {
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateMate.getId());
             mateService.nudge(nudgeRequest);
 
-            Mockito.verify(fcmPushSender, times(1)).sendNudgeMessage(any(), any());
+            Mockito.verify(fcmPushSender, times(1)).sendNudgeMessage(any(Notification.class), any(DirectMessage.class));
         }
 
         @DisplayName("같은 약속 참여자가 아니라면 재촉할 수 없다")
@@ -134,6 +144,37 @@ class MateServiceTest extends BaseServiceTest {
             assertThatThrownBy(() -> mateService.nudge(nudgeRequest))
                     .isInstanceOf(OdyBadRequestException.class);
         }
+
+        @DisplayName("약속 30분 이후까지 mate를 재촉할 수 있다")
+        @Test
+        void nudgeSuccessWhenTimeWithInNudgeAvailableTime() {
+            Meeting availableNudgeMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusMinutes(30L));
+            Mate requestMate = fixtureGenerator.generateMate(availableNudgeMeeting);
+            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(availableNudgeMeeting);
+            Eta lateWarningEta = fixtureGenerator.generateEta(nudgedLateWarningMate, 2L);
+
+            NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
+            mateService.nudge(nudgeRequest);
+
+            Mockito.verify(fcmPushSender, times(1)).sendNudgeMessage(any(Notification.class), any(DirectMessage.class));
+        }
+
+        @DisplayName("약속 30분 이후에는 mate를 재촉할 수 없다")
+        @Test
+        void nudgeFailWhenTimeIsNotWithInNudgeAvailableTime() {
+            Meeting notAvailableNudgeMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusMinutes(31L));
+            Mate requestMate = fixtureGenerator.generateMate(notAvailableNudgeMeeting);
+            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(notAvailableNudgeMeeting);
+            Eta lateWarningEta = fixtureGenerator.generateEta(nudgedLateWarningMate, 2L);
+
+            NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
+
+            assertAll(
+                    () -> assertThatThrownBy(() -> mateService.nudge(nudgeRequest))
+                            .isInstanceOf(OdyBadRequestException.class),
+                    () -> Mockito.verifyNoInteractions(fcmPushSender)
+            );
+        }
     }
 
     @DisplayName("참여자 생성")
@@ -171,5 +212,32 @@ class MateServiceTest extends BaseServiceTest {
             assertThatThrownBy(() -> mateService.saveAndSendNotifications(mateSaveRequest, member, meeting))
                     .isInstanceOf(OdyBadRequestException.class);
         }
+    }
+
+    @DisplayName("참여자 삭제 시, 구독하고 있는 fcmTopic 취소힌다.")
+    @Test
+    void unSubscribeTopicWhenDeleteMate() {
+        Mate mate = fixtureGenerator.generateMate();
+        FcmTopic fcmTopic = new FcmTopic(mate.getMeeting());
+        DeviceToken deviceToken = mate.getMember().getDeviceToken();
+
+        mateService.delete(mate);
+
+        Mockito.verify(fcmSubscriber, Mockito.times(1)).unSubscribeTopic(fcmTopic, deviceToken);
+    }
+
+    @DisplayName("회원 삭제 시, 구독하고 있는 모든 fcmTopic을 취소한다.")
+    @Test
+    void unSubscribeAllTopicsWhenDeleteMember() {
+        Member jojo = fixtureGenerator.generateMember("jojo");
+        Member olive = fixtureGenerator.generateMember("olive");
+
+        fixtureGenerator.generateMate(jojo);
+        fixtureGenerator.generateMate(jojo);
+        fixtureGenerator.generateMate(olive);
+
+        mateService.deleteAllByMember(jojo);
+
+        Mockito.verify(fcmSubscriber, Mockito.times(2)).unSubscribeTopic(any(FcmTopic.class), any(DeviceToken.class));
     }
 }

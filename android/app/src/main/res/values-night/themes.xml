@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Base.Theme.Ody" parent="Theme.Material3.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/cream</item>
-        <item name="android:windowBackground">@color/cream</item>
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:windowBackground">@color/primary</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 

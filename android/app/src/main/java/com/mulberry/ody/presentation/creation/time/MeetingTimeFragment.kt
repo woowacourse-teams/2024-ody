@@ -3,15 +3,16 @@ package com.mulberry.ody.presentation.creation.time
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingTimeBinding
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.creation.MeetingCreationInfoType
 import com.mulberry.ody.presentation.creation.MeetingCreationViewModel
+import com.mulberry.ody.presentation.launchWhenStarted
 import kotlinx.coroutines.launch
 
-class MeetingTimeFragment : BindingFragment<FragmentMeetingTimeBinding>(R.layout.fragment_meeting_time) {
+class MeetingTimeFragment :
+    BindingFragment<FragmentMeetingTimeBinding>(R.layout.fragment_meeting_time) {
     private val viewModel: MeetingCreationViewModel by activityViewModels<MeetingCreationViewModel>()
 
     override fun onViewCreated(
@@ -29,9 +30,11 @@ class MeetingTimeFragment : BindingFragment<FragmentMeetingTimeBinding>(R.layout
     }
 
     private fun initializeObserve() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.invalidMeetingTimeEvent.collect {
-                showSnackBar(R.string.invalid_meeting_time)
+        launchWhenStarted {
+            launch {
+                viewModel.invalidMeetingTimeEvent.collect {
+                    showSnackBar(R.string.invalid_meeting_time)
+                }
             }
         }
     }

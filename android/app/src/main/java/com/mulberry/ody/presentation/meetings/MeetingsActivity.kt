@@ -8,13 +8,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingsBinding
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.creation.MeetingCreationActivity
 import com.mulberry.ody.presentation.invitecode.InviteCodeActivity
+import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.mulberry.ody.presentation.meetings.listener.MeetingsListener
@@ -63,28 +63,48 @@ class MeetingsActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback())
-        viewModel.meetingCatalogs.observe(this) {
-            adapter.submitList(it)
-        }
-        viewModel.navigateAction.observe(this) {
-            when (it) {
-                is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
-                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
-                is MeetingsNavigateAction.NavigateToLogin -> navigateToLogin()
+        launchWhenStarted {
+            launch {
+                viewModel.meetingCatalogs.collect {
+                    adapter.submitList(it)
+                }
             }
-        }
-        viewModel.networkErrorEvent.observe(this) {
-            showRetrySnackBar { viewModel.retryLastAction() }
-        }
-        viewModel.errorEvent.observe(this) {
-            showSnackBar(R.string.error_guide)
-        }
-        viewModel.isLoading.observe(this) { isLoading ->
-            if (isLoading) {
-                showLoadingDialog()
-                return@observe
+            launch {
+                viewModel.navigateAction.collect {
+                    when (it) {
+                        is MeetingsNavigateAction.NavigateToEtaDashboard ->
+                            navigateToEtaDashboard(
+                                it.meetingId,
+                            )
+
+                        is MeetingsNavigateAction.NavigateToNotificationLog ->
+                            navigateToNotificationLog(
+                                it.meetingId,
+                            )
+
+                        is MeetingsNavigateAction.NavigateToLogin -> navigateToLogin()
+                    }
+                }
             }
-            hideLoadingDialog()
+            launch {
+                viewModel.networkErrorEvent.collect {
+                    showRetrySnackBar { viewModel.retryLastAction() }
+                }
+            }
+            launch {
+                viewModel.errorEvent.collect {
+                    showSnackBar(R.string.error_guide)
+                }
+            }
+            launch {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        showLoadingDialog()
+                        return@collect
+                    }
+                    hideLoadingDialog()
+                }
+            }
         }
     }
 
@@ -115,12 +135,6 @@ class MeetingsActivity :
     }
 
     private fun navigateToEtaDashboard(meetingId: Long) {
-        lifecycleScope.launch {
-//            analyticsHelper.logButtonClicked(
-//                eventName = "eta_button_from_meetings",
-//                location = TAG,
-//            )
-        }
         val intent =
             MeetingRoomActivity.getIntent(
                 this,

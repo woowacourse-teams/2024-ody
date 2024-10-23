@@ -19,8 +19,8 @@ import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.NotificationService;
+import com.ody.util.InstantConverter;
 import com.ody.util.InviteCodeGenerator;
-import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -59,9 +59,9 @@ public class MeetingService {
     private void scheduleEtaNotice(Meeting meeting) {
         GroupMessage noticeMessage = GroupMessage.createMeetingNotice(meeting, NotificationType.ETA_NOTICE);
         LocalDateTime etaNoticeTime = meeting.getMeetingTime().minusMinutes(ETA_NOTICE_TIME_DEFER);
-        Instant startTime = etaNoticeTime.toInstant(TimeUtil.KST_OFFSET);
+        Instant startTime = InstantConverter.kstToInstant(etaNoticeTime);
         taskScheduler.schedule(() -> fcmPushSender.sendNoticeMessage(noticeMessage), startTime);
-        log.info("{} 타입 알림 {}에 스케줄링 예약", NotificationType.ETA_NOTICE, startTime.atZone(TimeUtil.KST_OFFSET));
+        log.info("{} 타입 알림 {}에 스케줄링 예약", NotificationType.ETA_NOTICE, InstantConverter.instantToKst(startTime));
     }
 
     private String generateUniqueInviteCode() {
@@ -82,7 +82,7 @@ public class MeetingService {
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 초대코드입니다."));
     }
 
-    public Meeting findById(Long meetingId) {
+    public Meeting findByIdAndOverdueFalse(Long meetingId) {
         return meetingRepository.findByIdAndOverdueFalse(meetingId)
                 .orElseThrow(() -> new OdyNotFoundException("존재하지 않는 약속입니다."));
     }
@@ -105,7 +105,7 @@ public class MeetingService {
     }
 
     public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {
-        Meeting meeting = findById(meetingId);
+        Meeting meeting = findByIdAndOverdueFalse(meetingId);
         List<Mate> mates = mateService.findAllByMeetingIdIfMate(member, meeting.getId());
         return MeetingWithMatesResponse.of(meeting, mates);
     }
@@ -119,6 +119,7 @@ public class MeetingService {
         return mateService.saveAndSendNotifications(mateSaveRequest, member, meeting);
     }
 
+    @Transactional
     @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
     public void scheduleOverdueMeetings() {
         meetingRepository.updateAllByNotOverdueMeetings();

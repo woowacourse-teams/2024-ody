@@ -3,6 +3,6 @@
     <item
         android:width="100dp"
         android:height="100dp"
-        android:drawable="@mipmap/ic_launcher"
+        android:drawable="@drawable/ic_splash_logo"
         android:gravity="center" />
 </layer-list>

@@ -4,7 +4,7 @@
 
     <uses-configuration android:name="android:permission.POST_NOTIFICATIONS" />
 
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -96,6 +96,7 @@
         <activity
             android:name=".presentation.room.MeetingRoomActivity"
             android:exported="false"
+            android:parentActivityName=".presentation.meetings.MeetingsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
