@@ -10,6 +10,7 @@ import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
+import com.mulberry.ody.domain.apiresult.suspendOnFailure
 import com.mulberry.ody.domain.apiresult.suspendOnSuccess
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Nudge
@@ -90,6 +91,9 @@ class MeetingRoomViewModel
         private val _nudgeSuccessMate: MutableSharedFlow<String> = MutableSharedFlow()
         val nudgeSuccessMate: SharedFlow<String> get() = _nudgeSuccessMate.asSharedFlow()
 
+        private val _expiredNudgeTimeLimit: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val expiredNudgeTimeLimit: SharedFlow<Unit> get() = _expiredNudgeTimeLimit.asSharedFlow()
+
         private val _nudgeFailMate: MutableSharedFlow<Int> = MutableSharedFlow()
         val nudgeFailMate: SharedFlow<Int> get() = _nudgeFailMate.asSharedFlow()
 
@@ -136,8 +140,11 @@ class MeetingRoomViewModel
                                     ?: return@collect
                             _nudgeSuccessMate.emit(mateNickname)
                         }
-                    }.onFailure { code, errorMessage ->
-                        handleError()
+                    }.suspendOnFailure { code, errorMessage ->
+                        when (code) {
+                            400 -> _expiredNudgeTimeLimit.emit(Unit)
+                            else -> handleError()
+                        }
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                         Timber.e("$code $errorMessage")
                     }.onNetworkError {

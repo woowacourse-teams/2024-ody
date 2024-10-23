@@ -72,6 +72,11 @@ class MeetingRoomActivity :
             }
         }
         lifecycleScope.launch {
+            viewModel.expiredNudgeTimeLimit.collect {
+                showSnackBar(R.string.nudge_time_limit_expired)
+            }
+        }
+        lifecycleScope.launch {
             viewModel.isLoading.collect { isLoading ->
                 if (isLoading) {
                     showLoadingDialog()
