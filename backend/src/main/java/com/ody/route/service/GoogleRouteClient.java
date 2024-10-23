@@ -3,7 +3,6 @@ package com.ody.route.service;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
-import com.ody.route.config.RouteClientProperty;
 import com.ody.route.domain.ClientType;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.dto.DistanceMatrixElementStatus;
@@ -11,20 +10,19 @@ import com.ody.route.dto.DistanceMatrixResponse;
 import com.ody.route.dto.DistanceMatrixResponse.DistanceMatrixElement;
 import com.ody.route.dto.DistanceMatrixStatus;
 import java.time.Duration;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
-@RequiredArgsConstructor
 public class GoogleRouteClient implements RouteClient {
 
-    private final RouteClientProperty property;
+    private final String apiKey;
     private final RestClient restClient;
 
-    public GoogleRouteClient(RouteClientProperty property, RestClient.Builder builder) {
-        this(property, builder.build());
+    public GoogleRouteClient(RestClient.Builder routeRestClientBuilder, String apiKey) {
+        this.apiKey = apiKey;
+        this.restClient = routeRestClientBuilder.baseUrl("https://maps.googleapis.com").build();
     }
 
     @Override
@@ -35,12 +33,12 @@ public class GoogleRouteClient implements RouteClient {
     }
 
     private DistanceMatrixResponse getDistanceMatrixResponse(Coordinates origin, Coordinates target) {
-        String url = UriComponentsBuilder.fromHttpUrl(property.baseUrl())
+        String url = UriComponentsBuilder.fromPath("/maps/api/distancematrix/json")
                 .queryParam("destinations", mapCoordinatesToUrl(target))
                 .queryParam("origins", mapCoordinatesToUrl(origin))
                 .queryParam("mode", "transit")
                 .queryParam("transit_mode", "bus|subway")
-                .queryParam("key", property.apiKey())
+                .queryParam("key", apiKey)
                 .build(false)
                 .toUriString();
 
