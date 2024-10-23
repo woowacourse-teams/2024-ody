@@ -10,6 +10,7 @@ fun Meeting.toMeetingUiModel(): MeetingDetailUiModel {
     val meetingDateTime = LocalDateTime.of(meetingDate, meetingTime)
 
     return MeetingDetailUiModel(
+        id,
         name,
         targetPosition,
         toMeetingDateTime(meetingDate, meetingTime),

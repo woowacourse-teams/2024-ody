@@ -92,6 +92,9 @@ class MeetingRoomViewModel
 
         private val _expiredNudgeTimeLimit: MutableSharedFlow<Unit> = MutableSharedFlow()
         val expiredNudgeTimeLimit: SharedFlow<Unit> get() = _expiredNudgeTimeLimit.asSharedFlow()
+       
+        private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
 
         init {
             fetchMeeting()
@@ -237,6 +240,30 @@ class MeetingRoomViewModel
                     .onUnexpected {
                         handleError()
                     }
+            }
+        }
+
+        fun exitMeetingRoom() {
+            viewModelScope.launch {
+                if (_meeting.value.isDefault()) {
+                    handleError()
+                    return@launch
+                }
+
+                startLoading()
+                meetingRepository.exitMeeting(_meeting.value.id)
+                    .suspendOnSuccess {
+                        matesEtaRepository.deleteEtaReservation(meetingId)
+                        _exitMeetingRoomEvent.emit(Unit)
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { exitMeetingRoom() }
+                    }
+                stopLoading()
             }
         }
 

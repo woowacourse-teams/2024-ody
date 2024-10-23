@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="meetingName"
+            type="String" />
+
+        <variable
+            name="exitMeetingRoomListener"
+            type="com.mulberry.ody.presentation.room.log.listener.ExitMeetingRoomListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="22dp"
+            android:backgroundTint="@color/primary"
+            app:cardCornerRadius="@dimen/rectangle_radius_20"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/cream">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_exit_meeting_room"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="32dp"
+                    android:src="@drawable/ic_sad_ody"
+                    app:layout_constraintBottom_toTopOf="@id/tv_exit_room_meeting_name"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_exit_room_meeting_name"
+                    style="@style/pretendard_bold_24"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:text="@{meetingName}"
+                    android:textColor="@color/secondary"
+                    app:layout_constraintBottom_toTopOf="@id/tv_exit_meeting_room_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_exit_meeting_room"
+                    tools:text="약속이름약속이름약속이름약속이름약속이름약속이름" />
+
+                <TextView
+                    android:id="@+id/tv_exit_meeting_room_title"
+                    style="@style/pretendard_bold_18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/exit_meeting_room_title"
+                    app:layout_constraintBottom_toTopOf="@id/guide_line_1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_exit_room_meeting_name" />
+
+                <View
+                    android:id="@+id/guide_line_1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@color/gray_350"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_exit_meeting_room_cancel"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_exit_meeting_room_title" />
+
+                <TextView
+                    android:id="@+id/tv_exit_meeting_room_cancel"
+                    style="@style/pretendard_medium_18"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:onClick="@{() -> exitMeetingRoomListener.onCancel()}"
+                    android:paddingVertical="22dp"
+                    android:text="@string/cancel_button"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/guide_line_2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/guide_line_1" />
+
+                <View
+                    android:id="@+id/guide_line_2"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@color/gray_350"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tv_exit_meeting_room"
+                    app:layout_constraintStart_toEndOf="@id/tv_exit_meeting_room_cancel"
+                    app:layout_constraintTop_toBottomOf="@id/guide_line_1" />
+
+                <TextView
+                    android:id="@+id/tv_exit_meeting_room"
+                    style="@style/pretendard_medium_18"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:onClick="@{() -> exitMeetingRoomListener.onExit()}"
+                    android:paddingVertical="22dp"
+                    android:text="@string/exit_meeting_room"
+                    android:textColor="@color/red"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/guide_line_2"
+                    app:layout_constraintTop_toBottomOf="@id/guide_line_1" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

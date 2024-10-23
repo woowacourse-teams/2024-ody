@@ -14,7 +14,7 @@ class EtaDashboardAlarm
         private val context: Context,
         private val alarmManager: AlarmManager,
     ) {
-        private val pendingIntents: MutableList<PendingIntent> = mutableListOf()
+        private val pendingIntents: MutableMap<AlarmId, PendingIntent> = mutableMapOf()
 
         fun reserve(
             meetingId: Long,
@@ -22,8 +22,9 @@ class EtaDashboardAlarm
             isOpen: Boolean,
             reservationId: Long,
         ) {
+            val alarmId = AlarmId(meetingId, reservationId)
             val pendingIntent = createPendingIntent(meetingId, isOpen, reservationId)
-            reserveAlarm(reserveMillis, pendingIntent)
+            reserveAlarm(alarmId, pendingIntent, reserveMillis)
         }
 
         private fun createPendingIntent(
@@ -47,10 +48,11 @@ class EtaDashboardAlarm
 
         @SuppressLint("ScheduleExactAlarm")
         private fun reserveAlarm(
-            triggerAtMillis: Long,
+            alarmId: AlarmId,
             pendingIntent: PendingIntent,
+            triggerAtMillis: Long,
         ) {
-            pendingIntents.add(pendingIntent)
+            pendingIntents[alarmId] = pendingIntent
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerAtMillis,
@@ -58,10 +60,18 @@ class EtaDashboardAlarm
             )
         }
 
-        fun cancelAll() {
-            pendingIntents.forEach {
-                alarmManager.cancel(it)
+        fun cancelByMeetingId(meetingId: Long) {
+            val removePendingIntent = pendingIntents.filter { it.key.meetingId == meetingId }
+            removePendingIntent.forEach {
+                pendingIntents.remove(it.key)
+                alarmManager.cancel(it.value)
             }
+        }
+
+        fun cancelAll() {
+            pendingIntents.values.forEach { alarmManager.cancel(it) }
             pendingIntents.clear()
         }
     }
+
+private data class AlarmId(val meetingId: Long, val reservationId: Long)

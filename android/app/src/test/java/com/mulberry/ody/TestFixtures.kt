@@ -2,13 +2,13 @@ package com.mulberry.ody
 
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.EtaStatus
-import com.mulberry.ody.domain.model.LogType
 import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.MateEta
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
 import com.mulberry.ody.domain.model.MeetingCatalog
 import com.mulberry.ody.domain.model.NotificationLog
+import com.mulberry.ody.domain.model.NotificationLogType
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -27,6 +27,8 @@ val meeting: Meeting =
         listOf(Mate("A", ""), Mate("B", ""), Mate("C", "")),
         inviteCode,
     )
+
+val meetings: List<Meeting> = listOf(meeting)
 
 val meetingCatalog =
     MeetingCatalog(
@@ -47,55 +49,55 @@ val meetingCatalogs: List<MeetingCatalog> =
 val notificationLogs: List<NotificationLog> =
     listOf(
         NotificationLog(
-            LogType.ENTRY,
+            NotificationLogType.ENTRY,
             "A",
             LocalDateTime.of(2024, 7, 7, 14, 30),
             "",
         ),
         NotificationLog(
-            LogType.ENTRY,
+            NotificationLogType.ENTRY,
             "B",
             LocalDateTime.of(2024, 7, 7, 14, 31),
             "",
         ),
         NotificationLog(
-            LogType.ENTRY,
+            NotificationLogType.ENTRY,
             "C",
             LocalDateTime.of(2024, 7, 7, 14, 32),
             "",
         ),
         NotificationLog(
-            LogType.DEPARTURE_REMINDER,
+            NotificationLogType.DEPARTURE_REMINDER,
             "A",
             LocalDateTime.of(2024, 7, 7, 14, 33),
             "",
         ),
         NotificationLog(
-            LogType.DEPARTURE_REMINDER,
+            NotificationLogType.DEPARTURE_REMINDER,
             "B",
             LocalDateTime.of(2024, 7, 7, 14, 34),
             "",
         ),
         NotificationLog(
-            LogType.DEPARTURE_REMINDER,
+            NotificationLogType.DEPARTURE_REMINDER,
             "C",
             LocalDateTime.of(2024, 7, 7, 14, 35),
             "",
         ),
         NotificationLog(
-            LogType.DEPARTURE,
+            NotificationLogType.DEPARTURE,
             "A",
             LocalDateTime.of(2024, 7, 7, 14, 36),
             "",
         ),
         NotificationLog(
-            LogType.DEPARTURE,
+            NotificationLogType.DEPARTURE,
             "B",
             LocalDateTime.of(2024, 7, 7, 14, 37),
             "",
         ),
         NotificationLog(
-            LogType.DEPARTURE,
+            NotificationLogType.DEPARTURE,
             "C",
             LocalDateTime.of(2024, 7, 7, 14, 38),
             "",
