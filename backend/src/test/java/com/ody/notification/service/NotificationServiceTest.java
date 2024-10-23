@@ -117,20 +117,14 @@ class NotificationServiceTest extends BaseServiceTest {
         Mate mate = fixtureGenerator.generateMate();
         LocalDateTime now = LocalDateTime.now();
         fixtureGenerator.generateNotification(mate, now.minusSeconds(1), NotificationStatus.DONE);
+        fixtureGenerator.generateNotification(mate, now.minusSeconds(1), NotificationStatus.PENDING);
         fixtureGenerator.generateNotification(mate, now.plusSeconds(1), NotificationStatus.PENDING);
-        fixtureGenerator.generateNotification(mate, now.plusSeconds(2), NotificationStatus.PENDING);
-
-        assertThat(notificationRepository.findAll()).extracting(Notification::getStatus).containsExactly(
-                NotificationStatus.DONE,
-                NotificationStatus.PENDING,
-                NotificationStatus.PENDING
-        );
 
         notificationService.updateAllStatusToDismissByMateIdAndSendAtAfterNow(mate.getId());
 
         assertThat(notificationRepository.findAll()).extracting(Notification::getStatus).containsExactly(
                 NotificationStatus.DONE,
-                NotificationStatus.DISMISSED,
+                NotificationStatus.PENDING,
                 NotificationStatus.DISMISSED
         );
     }
