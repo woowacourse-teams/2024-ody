@@ -6,8 +6,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
+import androidx.core.app.TaskStackBuilder
 import com.mulberry.ody.R
 import com.mulberry.ody.domain.model.NotificationType
+import com.mulberry.ody.presentation.meetings.MeetingsActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_NOTIFICATION_LOG
@@ -74,11 +76,15 @@ class FCMNotification
                     NotificationType.DEFAULT -> ""
                 }
 
-            val intent = MeetingRoomActivity.getIntent(context, meetingId.toLong(), navigationTarget)
-            return PendingIntent.getActivity(
-                context,
+            val stackBuilder = TaskStackBuilder.create(context)
+            val parentIntent = MeetingsActivity.getIntent(context)
+            stackBuilder.addNextIntent(parentIntent)
+
+            val meetingRoomIntent = MeetingRoomActivity.getIntent(context, meetingId.toLong(), navigationTarget)
+            stackBuilder.addNextIntent(meetingRoomIntent)
+
+            return stackBuilder.getPendingIntent(
                 NOTIFICATION_REQUEST_CODE,
-                intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
             )
         }

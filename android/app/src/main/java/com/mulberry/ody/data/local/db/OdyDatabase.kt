@@ -10,7 +10,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
 import com.mulberry.ody.data.local.entity.reserve.EtaReservationEntity
-import com.squareup.moshi.Moshi
 
 @Database(
     entities = [MateEtaInfoEntity::class, EtaReservationEntity::class],
@@ -40,13 +39,10 @@ abstract class OdyDatabase : RoomDatabase() {
                 }
             }
 
-        fun create(
-            context: Context,
-            moshi: Moshi,
-        ): OdyDatabase {
+        fun create(context: Context): OdyDatabase {
             return Room.databaseBuilder(context, OdyDatabase::class.java, DATABASE_NAME)
                 .addMigrations(MIGRATION_3_TO_4)
-                .addTypeConverter(MateEtaListTypeConverter(moshi))
+                .addTypeConverter(MateEtaListTypeConverter())
                 .build()
         }
     }

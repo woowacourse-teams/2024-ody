@@ -1,7 +1,7 @@
 package com.mulberry.ody
 
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.domain.model.EtaType
+import com.mulberry.ody.domain.model.EtaStatus
 import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.MateEta
 import com.mulberry.ody.domain.model.MateEtaInfo
@@ -105,15 +105,14 @@ val notificationLogs: List<NotificationLog> =
     )
 
 private val nicknames = listOf("콜리", "올리브", "카키", "해음")
-private val mateEtaTypes =
-    listOf(EtaType.LATE_WARNING, EtaType.ARRIVAL_SOON, EtaType.ARRIVED, EtaType.MISSING)
-val mateEtaDurationMinutes = listOf(83, 10, 0, -1)
+private val mateEtaStatuses =
+    listOf(EtaStatus.LateWarning(15), EtaStatus.ArrivalSoon(5), EtaStatus.Arrived, EtaStatus.Missing)
 
 val mateEtaInfo =
     MateEtaInfo(
         userId = 3L,
         nicknames.mapIndexed { idx, nickname ->
-            MateEta(idx.toLong(), nickname, mateEtaTypes[idx], mateEtaDurationMinutes[idx])
+            MateEta(idx.toLong(), nickname, mateEtaStatuses[idx])
         },
     )
 
