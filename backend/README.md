@@ -22,6 +22,7 @@
 
 ## **ERD** 📈
 
+![image](https://github.com/user-attachments/assets/032e659e-bfc5-4477-b343-22ecc25df2b9)
 
 
 <br>
