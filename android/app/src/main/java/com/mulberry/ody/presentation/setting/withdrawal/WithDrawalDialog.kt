@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.databinding.DialogWithdrawalBinding
+import com.mulberry.ody.presentation.common.listener.setOnSingleClickListener
 import com.mulberry.ody.presentation.setting.SettingViewModel
 
 class WithDrawalDialog : DialogFragment() {
@@ -35,11 +36,11 @@ class WithDrawalDialog : DialogFragment() {
     }
 
     private fun initializeView() {
-        binding.tvWithdrawal.setOnClickListener {
+        binding.tvWithdrawal.setOnSingleClickListener {
             viewModel.withdrawAccount()
             dismiss()
         }
-        binding.tvWithdrawalCancel.setOnClickListener { dismiss() }
+        binding.tvWithdrawalCancel.setOnSingleClickListener { dismiss() }
         dialog?.window?.apply {
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

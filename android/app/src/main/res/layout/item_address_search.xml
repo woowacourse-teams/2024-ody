@@ -18,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary"
-        android:onClick="@{() -> addressListener.onClickAddressItem(address.id)}"
-        android:paddingVertical="18dp">
+        android:paddingVertical="18dp"
+        app:onSingleClick="@{() -> addressListener.onClickAddressItem(address.id)}">
 
         <ImageView
             android:id="@+id/iv_address_search_location"

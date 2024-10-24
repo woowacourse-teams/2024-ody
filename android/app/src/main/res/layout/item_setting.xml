@@ -17,8 +17,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> settingListener.onClickSettingItem(setting)}"
-        android:paddingVertical="24dp">
+        android:paddingVertical="24dp"
+        app:onSingleClick="@{() -> settingListener.onClickSettingItem(setting)}">
 
         <ImageView
             android:id="@+id/ic_setting"

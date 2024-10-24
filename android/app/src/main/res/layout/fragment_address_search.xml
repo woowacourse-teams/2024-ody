@@ -58,12 +58,12 @@
             android:id="@+id/iv_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> vm.clearAddressSearchKeyword()}"
             android:src="@drawable/ic_round_cancel"
             app:layout_constraintBottom_toBottomOf="@id/et_address_search_keyword_form"
             app:layout_constraintEnd_toEndOf="@id/et_address_search_keyword_form"
             app:layout_constraintStart_toEndOf="@id/et_address_search_keyword"
             app:layout_constraintTop_toTopOf="@id/et_address_search_keyword_form"
+            app:onSingleClick="@{() -> vm.clearAddressSearchKeyword()}"
             app:visibility="@{vm.hasAddressSearchKeyword}" />
 
         <TextView
