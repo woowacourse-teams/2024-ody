@@ -13,13 +13,13 @@
 
 ## **기술 스택** ⚙️
 
-
+![image](https://github.com/user-attachments/assets/1dfc2d88-b059-4d69-b38f-d7679d39befc)
 
 <br>
 
 ## **아키텍처 구조**
 
-
+![image](https://github.com/user-attachments/assets/aa50092b-1616-4ce0-a712-d21989914aea)
 
 <br>
 
