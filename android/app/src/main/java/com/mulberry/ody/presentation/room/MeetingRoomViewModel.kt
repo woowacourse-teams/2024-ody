@@ -27,6 +27,7 @@ import com.mulberry.ody.presentation.common.image.ImageShareHelper
 import com.mulberry.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.mulberry.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.room.etadashboard.model.toMateEtaUiModels
+import com.mulberry.ody.presentation.room.log.model.InviteCodeCopyInfo
 import com.mulberry.ody.presentation.room.log.model.MateUiModel
 import com.mulberry.ody.presentation.room.log.model.MeetingDetailUiModel
 import com.mulberry.ody.presentation.room.log.model.NotificationLogUiModel
@@ -76,7 +77,7 @@ class MeetingRoomViewModel
             )
 
         private val _meeting: MutableStateFlow<MeetingDetailUiModel> =
-            MutableStateFlow(MeetingDetailUiModel())
+            MutableStateFlow(MeetingDetailUiModel.DEFAULT)
         val meeting: StateFlow<MeetingDetailUiModel> = _meeting.asStateFlow()
 
         private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
@@ -102,8 +103,8 @@ class MeetingRoomViewModel
 
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
-        private val _copyInviteCodeEvent: MutableSharedFlow<String> = MutableSharedFlow()
-        val copyInviteCodeEvent: SharedFlow<String> get() = _copyInviteCodeEvent.asSharedFlow()
+        private val _copyInviteCodeEvent: MutableSharedFlow<InviteCodeCopyInfo> = MutableSharedFlow()
+        val copyInviteCodeEvent: SharedFlow<InviteCodeCopyInfo> get() = _copyInviteCodeEvent.asSharedFlow()
 
         init {
             fetchMeeting()
@@ -264,11 +265,12 @@ class MeetingRoomViewModel
         }
 
         fun copyInviteCode() {
-            val inviteCode = meeting.value.inviteCode
-            if (inviteCode.isBlank()) return
+            val meeting = meeting.value
+            if (meeting.isDefault()) return
+            val inviteCodeCopyInfo = InviteCodeCopyInfo(meeting.name, meeting.inviteCode)
 
             viewModelScope.launch {
-                _copyInviteCodeEvent.emit(inviteCode)
+                _copyInviteCodeEvent.emit(inviteCodeCopyInfo)
             }
         }
 
