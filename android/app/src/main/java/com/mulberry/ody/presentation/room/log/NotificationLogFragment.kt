@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.room.log
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.GravityCompat
@@ -56,7 +57,14 @@ class NotificationLogFragment :
             }
             launch {
                 viewModel.copyInviteCodeEvent.collect {
+                    val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
+                    intent.type = "text/plain"
 
+                    val shareMessage = getString(R.string.invite_code_share, it.meetingName, it.inviteCode)
+                    intent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+
+                    val chooserTitle = "친구에게 공유하기"
+                    startActivity(Intent.createChooser(intent, chooserTitle))
                 }
             }
         }
