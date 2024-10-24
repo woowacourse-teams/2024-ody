@@ -54,6 +54,11 @@ class NotificationLogFragment :
                     matesAdapter.submitList(it)
                 }
             }
+            launch {
+                viewModel.copyInviteCodeEvent.collect {
+
+                }
+            }
         }
     }
 
@@ -62,13 +67,7 @@ class NotificationLogFragment :
     }
 
     override fun onCopyInviteCode() {
-        val inviteCode = viewModel.meeting.value.inviteCode
-        viewModel.shareInviteCode(
-            title = getString(R.string.invite_code_share_title),
-            description = getString(R.string.invite_code_share_description, inviteCode),
-            buttonTitle = getString(R.string.invite_code_share_button),
-            imageUrl = INVITE_CODE_SHARE_IMAGE_URL,
-        )
+        viewModel.copyInviteCode()
     }
 
     override fun onExitMeetingRoom() {
@@ -77,8 +76,5 @@ class NotificationLogFragment :
 
     companion object {
         private const val EXIT_MEETING_ROOM_DIALOG_TAG = "exitMeetingRoomDialog"
-        private const val INVITE_CODE_SHARE_IMAGE_URL =
-            "https://firebasestorage.googleapis.com/" +
-                "v0/b/oddy-4482e.appspot.com/o/odyimage.png?alt=media&token=b3e1db2f-3eb6-46b9-b431-9ac9b6f182a6"
     }
 }

@@ -6,7 +6,7 @@ data class MeetingDetailUiModel(
     val targetPosition: String = "-",
     val meetingTime: String = "-",
     val mates: List<String> = listOf("-"),
-    val inviteCode: String = "-",
+    val inviteCode: String = "",
     val isEtaAccessible: Boolean = false,
 ) {
     fun isDefault(): Boolean = id == ID_DEFAULT_VALUE

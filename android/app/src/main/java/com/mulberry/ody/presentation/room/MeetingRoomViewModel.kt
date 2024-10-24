@@ -102,6 +102,9 @@ class MeetingRoomViewModel
 
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
+        private val _copyInviteCodeEvent: MutableSharedFlow<String> = MutableSharedFlow()
+        val copyInviteCodeEvent: SharedFlow<String> get() = _copyInviteCodeEvent.asSharedFlow()
+
         init {
             fetchMeeting()
         }
@@ -260,23 +263,13 @@ class MeetingRoomViewModel
             }
         }
 
-        fun shareInviteCode(
-            title: String,
-            description: String,
-            buttonTitle: String,
-            imageUrl: String,
-        ) {
-            startLoading()
-            val imageShareContent =
-                ImageShareContent(
-                    title = title,
-                    description = description,
-                    buttonTitle = buttonTitle,
-                    imageUrl = imageUrl,
-                    link = "https://github.com/woowacourse-teams/2024-ody",
-                )
-            shareImage(imageShareContent)
-            stopLoading()
+        fun copyInviteCode() {
+            val inviteCode = meeting.value.inviteCode
+            if (inviteCode.isBlank()) return
+
+            viewModelScope.launch {
+                _copyInviteCodeEvent.emit(inviteCode)
+            }
         }
 
         private fun shareImage(imageShareContent: ImageShareContent) {
