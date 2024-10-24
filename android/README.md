@@ -78,7 +78,7 @@ android
 <br>
 
 ## 코드 컨벤션 ⌨️
-- [코드 컨벤션 보러가기](https://sly-face-106.notion.site/180abc739e634b42ad33381f2780c8e0)
+- [코드 컨벤션 보러가기](https://sly-face-106.notion.site/180abc739e634b42ad33381f2780c8e0?pvs=4)
 
 <br>
 
