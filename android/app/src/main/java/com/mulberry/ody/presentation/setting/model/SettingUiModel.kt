@@ -1,15 +1,34 @@
 package com.mulberry.ody.presentation.setting.model
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.mulberry.ody.R
+import com.mulberry.ody.presentation.setting.model.SettingUiModel.Companion.SETTING_DIVIDER_VIEW_TYPE
+import com.mulberry.ody.presentation.setting.model.SettingUiModel.Companion.SETTING_HEADER_VIEW_TYPE
+import com.mulberry.ody.presentation.setting.model.SettingUiModel.Companion.SETTING_ITEM_VIEW_TYPE
 
-enum class SettingUiModel(
-    @DrawableRes val icon: Int,
-    @StringRes val description: Int,
-) {
-    PRIVACY_POLICY(R.drawable.ic_user_info, R.string.item_privacy_policy),
-    TERM(R.drawable.ic_comment_info, R.string.item_term),
-    LOGOUT(R.drawable.ic_logout, R.string.item_logout),
-    WITHDRAW(R.drawable.ic_user_close, R.string.item_withdraw),
+sealed interface SettingUiModel {
+    val viewType: Int
+
+    companion object {
+        const val SETTING_HEADER_VIEW_TYPE = 0
+        const val SETTING_ITEM_VIEW_TYPE = 1
+        const val SETTING_DIVIDER_VIEW_TYPE = 2
+    }
 }
+
+class SettingHeader(
+    @StringRes val message: Int,
+) : SettingUiModel {
+    override val viewType: Int = SETTING_HEADER_VIEW_TYPE
+}
+
+class SettingItem(
+    val type: SettingItemType,
+    val isEnd: Boolean = false,
+) : SettingUiModel {
+    override val viewType: Int = SETTING_ITEM_VIEW_TYPE
+}
+
+class SettingDivider : SettingUiModel {
+    override val viewType: Int = SETTING_DIVIDER_VIEW_TYPE
+}
+

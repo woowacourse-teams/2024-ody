@@ -19,6 +19,10 @@ import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.login.LoginNavigatedReason
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
 import com.mulberry.ody.presentation.setting.listener.SettingListener
+import com.mulberry.ody.presentation.setting.model.SettingDivider
+import com.mulberry.ody.presentation.setting.model.SettingHeader
+import com.mulberry.ody.presentation.setting.model.SettingItem
+import com.mulberry.ody.presentation.setting.model.SettingItemType
 import com.mulberry.ody.presentation.setting.model.SettingUiModel
 import com.mulberry.ody.presentation.setting.withdrawal.WithDrawalDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +33,7 @@ class SettingActivity :
     BindingActivity<ActivitySettingBinding>(R.layout.activity_setting),
     BackListener,
     SettingListener {
-    private val adapter by lazy { SettingsAdapter(this) }
+    private val adapter by lazy { SettingsAdapter(SETTINGS, this) }
     private val viewModel by viewModels<SettingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,43 +81,47 @@ class SettingActivity :
 
     override fun initializeBinding() {
         binding.backListener = this
-        binding.rvSetting.adapter = adapter
     }
 
     private fun initializeSettingAdapter() {
-        val horizontalMarginPixel = SETTING_ITEM_HORIZONTAL_MARGIN_DP.toPixel(this)
-        val dividerItemDecoration =
-            MaterialDividerItemDecoration(this, LinearLayout.VERTICAL).apply {
-                isLastItemDecorated = false
-                dividerColor = ContextCompat.getColor(this@SettingActivity, R.color.gray_350)
-                dividerInsetStart = horizontalMarginPixel
-                dividerInsetEnd = horizontalMarginPixel
-            }
-        binding.rvSetting.addItemDecoration(dividerItemDecoration)
-        adapter.submitList(SettingUiModel.entries)
+        binding.rvSetting.adapter = adapter
     }
 
     override fun onBack() = finish()
 
-    override fun onClickSettingItem(settingUiModel: SettingUiModel) {
-        when (settingUiModel) {
-            SettingUiModel.PRIVACY_POLICY -> {
+    override fun onClickSettingItem(settingItemType: SettingItemType) {
+        when (settingItemType) {
+            SettingItemType.PRIVACY_POLICY -> {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_POLICY_URI))
                 startActivity(intent)
             }
 
-            SettingUiModel.TERM -> {
+            SettingItemType.TERM -> {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.TERM_URI))
                 startActivity(intent)
             }
 
-            SettingUiModel.LOGOUT -> {
+            SettingItemType.LOGOUT -> {
                 viewModel.logout()
             }
 
-            SettingUiModel.WITHDRAW -> {
+            SettingItemType.WITHDRAW -> {
                 WithDrawalDialog().show(supportFragmentManager, WITHDRAWAL_DIALOG_TAG)
             }
+
+            SettingItemType.NOTIFICATION_DEPARTURE, SettingItemType.NOTIFICATION_ENTRY -> {}
+        }
+    }
+
+    override fun onChangeSettingSwitchItem(settingItemType: SettingItemType, isChecked: Boolean) {
+        when (settingItemType) {
+            SettingItemType.NOTIFICATION_DEPARTURE -> {
+
+            }
+            SettingItemType.NOTIFICATION_ENTRY -> {
+
+            }
+            SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> {}
         }
     }
 
@@ -136,6 +144,19 @@ class SettingActivity :
     }
 
     companion object {
+        private val SETTINGS: List<SettingUiModel> =
+            listOf(
+                SettingHeader(R.string.setting_header_notification),
+                SettingItem(SettingItemType.NOTIFICATION_DEPARTURE),
+                SettingItem(SettingItemType.NOTIFICATION_ENTRY, isEnd = true),
+                SettingDivider(),
+                SettingHeader(R.string.setting_header_service),
+                SettingItem(SettingItemType.PRIVACY_POLICY),
+                SettingItem(SettingItemType.TERM),
+                SettingItem(SettingItemType.LOGOUT),
+                SettingItem(SettingItemType.WITHDRAW, isEnd = true),
+            )
+
         private const val NAVIGATED_REASON = "NAVIGATED_REASON"
         private const val SETTING_ITEM_HORIZONTAL_MARGIN_DP = 26
         private const val WITHDRAWAL_DIALOG_TAG = "withdrawal_dialog"

@@ -5,11 +5,12 @@
     <color name="secondary">@color/purple_300</color>
     <color name="secondaryVariant">@color/white</color>
     <color name="tertiary">@color/cream</color>
-    <color name="quarternary">@color/cream</color>
+    <color name="quarternary">@color/gray_350</color>
     <color name="quinary">@color/cream</color>
     <color name="senary">@color/gray_500</color>
     <color name="septenary">@color/gray_900</color>
     <color name="octonary">@color/black</color>
+    <color name="nonary">@color/gray_500</color>
 
     <color name="black">#FF000000</color>
     <color name="cream">#FFFFFFF6</color>

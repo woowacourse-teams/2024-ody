@@ -1,7 +1,12 @@
 package com.mulberry.ody.presentation.setting.listener
 
-import com.mulberry.ody.presentation.setting.model.SettingUiModel
+import com.mulberry.ody.presentation.setting.model.SettingItemType
 
 interface SettingListener {
-    fun onClickSettingItem(settingUiModel: SettingUiModel)
+    fun onClickSettingItem(settingItemType: SettingItemType)
+
+    fun onChangeSettingSwitchItem(
+        settingItemType: SettingItemType,
+        isChecked: Boolean,
+    )
 }
