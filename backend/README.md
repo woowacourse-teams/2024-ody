@@ -13,11 +13,11 @@
 
 ## **기술 스택** ⚙️
 
-![image](https://github.com/user-attachments/assets/1dfc2d88-b059-4d69-b38f-d7679d39befc)
+<img src="https://github.com/user-attachments/assets/1dfc2d88-b059-4d69-b38f-d7679d39befc" width="800" height="500">
 
 <br>
 
-## **아키텍처 구조**
+## **아키텍처 구조** 🏗️
 
 ![image](https://github.com/user-attachments/assets/aa50092b-1616-4ce0-a712-d21989914aea)
 
@@ -109,5 +109,5 @@ backend
 
 <br>
 
-## **코드 컨벤션**
+## **코드 컨벤션** 📃
 - [코드 컨벤션 보러가기](https://sly-face-106.notion.site/0bd7a08f43fa4cb7821bd3392ec3ce5b?pvs=73)
