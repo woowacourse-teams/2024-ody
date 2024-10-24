@@ -35,11 +35,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
-                android:onClick="@{() -> backListener.onBack()}"
                 android:src="@drawable/ic_arrow_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:onSingleClick="@{() -> backListener.onBack()}" />
 
             <HorizontalScrollView
                 android:id="@+id/hsv_title"
@@ -83,12 +83,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="14dp"
-                android:onClick="@{() -> menuListener.onClickMenu()}"
                 android:src="@drawable/ic_menu"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_mate_count"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:onSingleClick="@{() -> menuListener.onClickMenu()}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
