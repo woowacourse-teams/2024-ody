@@ -41,7 +41,10 @@ class SettingsAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: SettingViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: SettingViewHolder,
+        position: Int,
+    ) {
         when (holder) {
             is SettingDividerViewHolder -> holder.bind()
             is SettingHeaderViewHolder -> holder.bind(settings[position] as SettingHeader)

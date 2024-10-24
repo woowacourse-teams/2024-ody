@@ -2,24 +2,17 @@ package com.mulberry.ody.presentation.setting
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.widget.LinearLayout
-import android.widget.Switch
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContextCompat
-import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
-import com.mulberry.ody.presentation.common.toPixel
 import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.login.LoginNavigatedReason
@@ -126,27 +119,26 @@ class SettingActivity :
     override fun onChangeSettingSwitchItem(
         switch: SwitchCompat,
         settingItemType: SettingItemType,
-        isChecked: Boolean
+        isChecked: Boolean,
     ) {
         if (isChecked && !permissionHelper.hasNotificationPermission()) {
             switch.isChecked = false
             showSnackBar(
                 R.string.setting_notification_permission_denied,
-                R.string.setting_notification_permission_guide
+                R.string.setting_notification_permission_guide,
             ) {
-                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                    .putExtra(Settings.EXTRA_APP_PACKAGE, this@SettingActivity.packageName)
+                val intent =
+                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, this@SettingActivity.packageName)
                 startActivity(intent)
             }
             return
         }
         when (settingItemType) {
             SettingItemType.NOTIFICATION_DEPARTURE -> {
-
             }
 
             SettingItemType.NOTIFICATION_ENTRY -> {
-
             }
 
             SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> {}

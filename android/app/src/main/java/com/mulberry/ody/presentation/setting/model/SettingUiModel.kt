@@ -31,4 +31,3 @@ class SettingItem(
 class SettingDivider : SettingUiModel {
     override val viewType: Int = SETTING_DIVIDER_VIEW_TYPE
 }
-

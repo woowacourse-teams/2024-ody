@@ -2,7 +2,6 @@ package com.mulberry.ody.presentation.common.binding
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
