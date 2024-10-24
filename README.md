@@ -61,9 +61,11 @@
 <br>
 
 ## 안드로이드 🤖
-[안드로이드 팀 소개 보러가기](https://github.com/woowacourse-teams/2024-ody/blob/feature/808/android/README.md)
+[안드로이드 팀 소개 보러가기](https://github.com/woowacourse-teams/2024-ody/blob/develop/android/README.md)
 
 <br>
 
-## 백엔드  
-백엔드 팀 소개 보러가기
+## 백엔드 🛠️
+[백엔드 팀 소개 보러가기](https://github.com/woowacourse-teams/2024-ody/blob/develop/backend/README.md)
+
+
