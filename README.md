@@ -1,14 +1,24 @@
-# 🍇오디🍇 - 여러분이 언제, 어디서, 무엇을 하든 지각하지 않게 도와드려요. 
+# 🍇오디🍇
+> 여러분이 언제, 어디서, 무엇을 하든 지각하지 않게 도와드려요. 
 <img src="https://github.com/user-attachments/assets/dab4f935-2c6a-4c36-95e4-a678cdf9b57d" width="960"/>
 
 <br>
 <br>
 
 ## 핵심 기능 💫
-<img src="https://github.com/user-attachments/assets/a72736bc-2e50-427d-861b-fe22a3dfebf4" width="240"/>
-<img src="https://github.com/user-attachments/assets/cd869d4c-4764-41e9-ad8b-3f1567223aa9" width="240"/>
-<img src="https://github.com/user-attachments/assets/d87d1bec-51e7-406f-b659-1abb05d471ed" width="240"/>
-<img src="https://github.com/user-attachments/assets/3a65ed17-36fb-429a-bd31-4a7f68fbe4ac" width="240"/>
+<img src="https://github.com/user-attachments/assets/a72736bc-2e50-427d-861b-fe22a3dfebf4" width="300"/>
+<img src="https://github.com/user-attachments/assets/cd869d4c-4764-41e9-ad8b-3f1567223aa9" width="300"/>
+
+- **약속 일정을 한눈에** : 얼마나 걸리지? 언제, 어디서 만나기로 했지? 복잡한 약속 일정을 관리해 보세요!
+- **언제 출발해야 할까요?** : 미리 알아보고 찾아보지 마세요. 지금은 진짜 출발해야 해요! 언제 출발할지 오디가 알려드릴게요!
+
+<br>
+
+<img src="https://github.com/user-attachments/assets/d87d1bec-51e7-406f-b659-1abb05d471ed" width="300"/>
+<img src="https://github.com/user-attachments/assets/3a65ed17-36fb-429a-bd31-4a7f68fbe4ac" width="300"/>
+
+- **친구는 언제 도착할까요?** : 너 진짜 오디야? 얼마나 더 기다려야 할까요? 친구가 언제 도착할지 알 수 있어요!
+- **늦은 친구를 재촉해 봐요** : 콜리야 빨리와~ 귀찮게 연락해서 재촉해야 할까요? 늦은 친구들에게 재촉 메시지를 보낼 수 있어요!
 
 <br>
 <br>
@@ -76,11 +86,12 @@
 <img src="https://github.com/user-attachments/assets/3d60e4b4-95cc-4ae4-b32e-0756bdc0abe8" width="860"/>
 
 <br>
+<br>
 
 ### **패키지 구조** 📁
 
 <details>
-  <summary>안드로이드 패키지 구조</summary>
+  <summary>패키지 구조 자세히 보기</summary>
   
 ```
 android
@@ -129,6 +140,6 @@ android
 
 <br>
 
-### 역할 분담 🧩
-- [역할 분담 보러가기](https://sly-face-106.notion.site/0d91aa0c3c6b4fb68a158c2c3840e1f6)
+### 개발 기여 현황 🧩
+- [개발 기여 현황 보러가기](https://sly-face-106.notion.site/0d91aa0c3c6b4fb68a158c2c3840e1f6)
 
