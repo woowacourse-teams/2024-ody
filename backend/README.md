@@ -13,7 +13,7 @@
 
 ## **기술 스택** ⚙️
 
-<img src="https://github.com/user-attachments/assets/1dfc2d88-b059-4d69-b38f-d7679d39befc" width="800" height="500">
+<img src="https://github.com/user-attachments/assets/1dfc2d88-b059-4d69-b38f-d7679d39befc" width="800" height="auto">
 
 > #### [기술 스택 선정 이유 보러가기](https://sly-face-106.notion.site/26c77083f28a4634a88ef3f4e9dbcea0?pvs=4)
 
