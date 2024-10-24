@@ -4,16 +4,25 @@
 
 ## **Contributors** 🙋🏻‍
 
-|BE 카키|BE 조조|BE 콜리|BE 제리|
-|:-:|:-:|:-:|:-:|
-|<img src="https://github.com/user-attachments/assets/715866d0-6e23-4326-922b-f20d8c34b5fc" width=200 height=200>|<img src="https://github.com/user-attachments/assets/e5ddea0b-3d1d-4767-85e7-058642dbfa1b" width=200 height=200>|<img src="https://github.com/user-attachments/assets/bb0859db-39e5-4102-ae50-19db20fc9d16" width=200 height=200>|<img src="https://github.com/user-attachments/assets/59cf618a-e2dd-4391-aa25-fe882f6b62e0" width=200 height=200>|
-|[@hyeon0208](https://github.com/hyeon0208)|[@eun-byeol](https://github.com/eun-byeol)|[@coli-geonwoo](https://github.com/coli-geonwoo)|[@mzeong](https://github.com/mzeong)|
+|                                                     카키(서현준)                                                      |                                                     조조(조은별)                                                      |                                                     콜리(김건우)                                                      |                                                     제리(김민정)                                                      |
+|:----------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------:|
+| <img src="https://github.com/user-attachments/assets/715866d0-6e23-4326-922b-f20d8c34b5fc" width=200 height=200> | <img src="https://github.com/user-attachments/assets/e5ddea0b-3d1d-4767-85e7-058642dbfa1b" width=200 height=200> | <img src="https://github.com/user-attachments/assets/bb0859db-39e5-4102-ae50-19db20fc9d16" width=200 height=200> | <img src="https://github.com/user-attachments/assets/59cf618a-e2dd-4391-aa25-fe882f6b62e0" width=200 height=200> |
+|                                    [@hyeon0208](https://github.com/hyeon0208)                                    |                                    [@eun-byeol](https://github.com/eun-byeol)                                    |                                 [@coli-geonwoo](https://github.com/coli-geonwoo)                                 |                                       [@mzeong](https://github.com/mzeong)                                       |
 
 <br>
 
 ## **기술 스택** ⚙️
 
 <img src="https://github.com/user-attachments/assets/1dfc2d88-b059-4d69-b38f-d7679d39befc" width="800" height="500">
+
+> #### [기술 스택 선정 이유 보러가기](https://sly-face-106.notion.site/26c77083f28a4634a88ef3f4e9dbcea0?pvs=4)
+
+
+<br>
+
+## **ERD** 📈
+
+
 
 <br>
 
@@ -23,7 +32,11 @@
 
 <br>
 
-## **패키지 구조** 🗂
+## 패키지 구조 🗂
+<details>
+<summary> 펼치기 </summary>
+<div markdown="1">
+
 ```angular2html
 backend
 ├── java
@@ -106,6 +119,9 @@ backend
     │   └── js
     └── templates
 ```
+
+</div>
+</details>
 
 <br>
 
