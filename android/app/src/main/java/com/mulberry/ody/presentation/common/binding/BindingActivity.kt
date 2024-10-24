@@ -2,6 +2,7 @@ package com.mulberry.ody.presentation.common.binding
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -29,10 +30,14 @@ abstract class BindingActivity<T : ViewDataBinding>(
 
     protected fun showSnackBar(
         @StringRes messageId: Int,
-        action: Snackbar.() -> Unit = {},
+        @StringRes actionMessageId: Int? = null,
+        action: () -> Unit = {},
     ) {
         snackBar?.dismiss()
-        snackBar = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).apply { action() }
+        snackBar = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
+        actionMessageId?.let {
+            snackBar?.setAction(actionMessageId) { action() }
+        }
         snackBar?.show()
     }
 

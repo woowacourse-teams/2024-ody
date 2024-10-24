@@ -2,15 +2,21 @@ package com.mulberry.ody.presentation.setting
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.widget.LinearLayout
+import android.widget.Switch
 import androidx.activity.viewModels
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivitySettingBinding
+import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.toPixel
@@ -27,6 +33,7 @@ import com.mulberry.ody.presentation.setting.model.SettingUiModel
 import com.mulberry.ody.presentation.setting.withdrawal.WithDrawalDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingActivity :
@@ -35,6 +42,9 @@ class SettingActivity :
     SettingListener {
     private val adapter by lazy { SettingsAdapter(SETTINGS, this) }
     private val viewModel by viewModels<SettingViewModel>()
+
+    @Inject
+    lateinit var permissionHelper: PermissionHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,14 +123,32 @@ class SettingActivity :
         }
     }
 
-    override fun onChangeSettingSwitchItem(settingItemType: SettingItemType, isChecked: Boolean) {
+    override fun onChangeSettingSwitchItem(
+        switch: SwitchCompat,
+        settingItemType: SettingItemType,
+        isChecked: Boolean
+    ) {
+        if (isChecked && !permissionHelper.hasNotificationPermission()) {
+            switch.isChecked = false
+            showSnackBar(
+                R.string.setting_notification_permission_denied,
+                R.string.setting_notification_permission_guide
+            ) {
+                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, this@SettingActivity.packageName)
+                startActivity(intent)
+            }
+            return
+        }
         when (settingItemType) {
             SettingItemType.NOTIFICATION_DEPARTURE -> {
 
             }
+
             SettingItemType.NOTIFICATION_ENTRY -> {
 
             }
+
             SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> {}
         }
     }

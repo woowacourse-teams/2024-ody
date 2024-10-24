@@ -105,6 +105,8 @@
     <string name="setting_withdrawal_title_back">를 떠나시겠어요?</string>
     <string name="setting_withdrawal_subtitle">참여한 약속들이 모두 사라져요.</string>
     <string name="setting_withdrawal_button">탈퇴</string>
+    <string name="setting_notification_permission_denied">알림 권한이 꺼져있어요.</string>
+    <string name="setting_notification_permission_guide">권한 허용하러 가기</string>
 
     <!-- item_setting -->
     <string name="setting_header_notification">알림</string>
