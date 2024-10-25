@@ -70,11 +70,37 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
+    suspend fun setIsNotificationDepartureOn(isNotificationDepartureOn: Boolean) {
+        context.dataStore.edit {
+            it[IS_NOTIFICATION_DEPARTURE_ON] = isNotificationDepartureOn
+        }
+    }
+
+    fun getIsNotificationDepartureOn(): Flow<Boolean> {
+        return context.dataStore.data.map { preferences ->
+            preferences[IS_NOTIFICATION_DEPARTURE_ON] ?: true
+        }
+    }
+
+    suspend fun setIsNotificationEntryOn(isNotificationEntryOn: Boolean) {
+        context.dataStore.edit {
+            it[IS_NOTIFICATION_ENTRY_ON] = isNotificationEntryOn
+        }
+    }
+
+    fun getIsNotificationEntryOn(): Flow<Boolean> {
+        return context.dataStore.data.map { preferences ->
+            preferences[IS_NOTIFICATION_ENTRY_ON] ?: true
+        }
+    }
+
     companion object {
         private const val ODY_KEY = "ody_key"
         private val FCM_TOKEN = stringPreferencesKey("fcmToken")
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val IS_FIRST_SEEN_ETA_DASHBOARD = booleanPreferencesKey("is_first_seen_eta_dashboard")
+        private val IS_NOTIFICATION_DEPARTURE_ON = booleanPreferencesKey("is_notification_departure_on")
+        private val IS_NOTIFICATION_ENTRY_ON = booleanPreferencesKey("is_notification_entry_on")
     }
 }

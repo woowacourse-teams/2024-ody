@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
+import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
@@ -25,6 +27,7 @@ import com.mulberry.ody.presentation.setting.model.SettingItemType
 import com.mulberry.ody.presentation.setting.model.SettingUiModel
 import com.mulberry.ody.presentation.setting.withdrawal.WithDrawalDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,6 +41,9 @@ class SettingActivity :
 
     @Inject
     lateinit var permissionHelper: PermissionHelper
+
+    @Inject
+    lateinit var odyDatastore: OdyDatastore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +122,26 @@ class SettingActivity :
         }
     }
 
+    override fun onInitializeSettingSwitchItem(
+        switch: SwitchCompat,
+        settingItemType: SettingItemType
+    ) {
+        if (!permissionHelper.hasNotificationPermission()) {
+            switch.isChecked = false
+            return
+        }
+
+        val isNotificationOn =
+            when (settingItemType) {
+                SettingItemType.NOTIFICATION_DEPARTURE -> odyDatastore.getIsNotificationDepartureOn()
+                SettingItemType.NOTIFICATION_ENTRY -> odyDatastore.getIsNotificationEntryOn()
+                SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> return
+            }
+        lifecycleScope.launch {
+            switch.isChecked = isNotificationOn.first()
+        }
+    }
+
     override fun onChangeSettingSwitchItem(
         switch: SwitchCompat,
         settingItemType: SettingItemType,
@@ -136,9 +162,15 @@ class SettingActivity :
         }
         when (settingItemType) {
             SettingItemType.NOTIFICATION_DEPARTURE -> {
+                lifecycleScope.launch {
+                    odyDatastore.setIsNotificationDepartureOn(isChecked)
+                }
             }
 
             SettingItemType.NOTIFICATION_ENTRY -> {
+                lifecycleScope.launch {
+                    odyDatastore.setIsNotificationEntryOn(isChecked)
+                }
             }
 
             SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> {}
@@ -178,7 +210,6 @@ class SettingActivity :
             )
 
         private const val NAVIGATED_REASON = "NAVIGATED_REASON"
-        private const val SETTING_ITEM_HORIZONTAL_MARGIN_DP = 26
         private const val WITHDRAWAL_DIALOG_TAG = "withdrawal_dialog"
 
         fun getIntent(context: Context): Intent = Intent(context, SettingActivity::class.java)

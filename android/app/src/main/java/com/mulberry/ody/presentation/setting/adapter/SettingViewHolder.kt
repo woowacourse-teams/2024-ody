@@ -24,6 +24,7 @@ class SettingItemViewHolder(private val binding: ItemSettingBinding) :
         item: SettingItem,
         settingListener: SettingListener,
     ) {
+        settingListener.onInitializeSettingSwitchItem(binding.switchSetting, item.type)
         binding.setting = item
         binding.settingListener = settingListener
     }

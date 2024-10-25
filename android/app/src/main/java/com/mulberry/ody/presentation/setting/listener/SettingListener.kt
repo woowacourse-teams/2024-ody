@@ -6,6 +6,11 @@ import com.mulberry.ody.presentation.setting.model.SettingItemType
 interface SettingListener {
     fun onClickSettingItem(settingItemType: SettingItemType)
 
+    fun onInitializeSettingSwitchItem(
+        switch: SwitchCompat,
+        settingItemType: SettingItemType,
+    )
+
     fun onChangeSettingSwitchItem(
         switch: SwitchCompat,
         settingItemType: SettingItemType,
