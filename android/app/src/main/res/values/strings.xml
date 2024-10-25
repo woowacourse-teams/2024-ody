@@ -119,9 +119,8 @@
 
     <!-- fragment_notification_log -->
     <string name="notification_log_mate_count">%d명</string>
-    <string name="invite_code_share_title">친구가 약속에 초대했어요!</string>
-    <string name="invite_code_share_description">초대 코드: %s</string>
-    <string name="invite_code_share_button">참여하러 가기</string>
+    <string name="invite_code_copy_title">초대 코드 공유하기</string>
+    <string name="invite_code_copy">%s 약속에 초대했어요. 오디 앱에서 함께해 보세요.\n초대 코드: %s</string>
 
     <!-- item_eta_dashboard.xml -->
     <string name="badge_arrived">도착</string>
