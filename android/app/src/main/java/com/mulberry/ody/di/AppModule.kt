@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
+import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.local.service.EtaDashboardAlarm
 import com.mulberry.ody.data.local.service.EtaDashboardNotification
 import com.mulberry.ody.presentation.common.PermissionHelper
@@ -24,9 +25,10 @@ object AppModule {
     @Singleton
     fun provideFCMNotification(
         @ApplicationContext context: Context,
+        odyDatastore: OdyDatastore,
         notificationManager: NotificationManager,
     ): FCMNotification {
-        return FCMNotification(context, notificationManager)
+        return FCMNotification(context, odyDatastore, notificationManager)
     }
 
     @Provides

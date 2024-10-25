@@ -8,17 +8,27 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import com.mulberry.ody.R
+import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.domain.model.NotificationType
 import com.mulberry.ody.presentation.meetings.MeetingsActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_NOTIFICATION_LOG
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 class FCMNotification
     @Inject
     constructor(
         private val context: Context,
+        private val odyDatastore: OdyDatastore,
         private val notificationManager: NotificationManager,
     ) {
         init {
@@ -43,10 +53,27 @@ class FCMNotification
             meetingId: String,
             meetingName: String,
         ) {
-            val message = getNotificationMessage(type, nickname, meetingName)
-            val pendingIntent = getPendingIntent(type, meetingId)
-            showNotification(message, pendingIntent)
+            CoroutineScope(Dispatchers.Default).launch {
+                if (type == NotificationType.DEPARTURE_REMINDER && isNotificationDepartureBlock()) {
+                    return@launch
+                }
+                if (type == NotificationType.ENTRY && isNotificationEntryBlock()) {
+                    return@launch
+                }
+
+                val message = getNotificationMessage(type, nickname, meetingName)
+                val pendingIntent = getPendingIntent(type, meetingId)
+                showNotification(message, pendingIntent)
+            }
         }
+
+    private suspend fun isNotificationDepartureBlock(): Boolean {
+        return !odyDatastore.getIsNotificationDepartureOn().first()
+    }
+
+    private suspend fun isNotificationEntryBlock(): Boolean {
+        return !odyDatastore.getIsNotificationEntryOn().first()
+    }
 
         private fun getNotificationMessage(
             type: NotificationType,
