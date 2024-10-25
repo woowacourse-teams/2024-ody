@@ -16,13 +16,9 @@ import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_NOTIFICATION_LOG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 class FCMNotification
     @Inject
@@ -67,13 +63,13 @@ class FCMNotification
             }
         }
 
-    private suspend fun isNotificationDepartureBlock(): Boolean {
-        return !odyDatastore.getIsNotificationDepartureOn().first()
-    }
+        private suspend fun isNotificationDepartureBlock(): Boolean {
+            return !odyDatastore.getIsNotificationDepartureOn().first()
+        }
 
-    private suspend fun isNotificationEntryBlock(): Boolean {
-        return !odyDatastore.getIsNotificationEntryOn().first()
-    }
+        private suspend fun isNotificationEntryBlock(): Boolean {
+            return !odyDatastore.getIsNotificationEntryOn().first()
+        }
 
         private fun getNotificationMessage(
             type: NotificationType,

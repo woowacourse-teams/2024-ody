@@ -124,7 +124,7 @@ class SettingActivity :
 
     override fun onInitializeSettingSwitchItem(
         switch: SwitchCompat,
-        settingItemType: SettingItemType
+        settingItemType: SettingItemType,
     ) {
         if (!permissionHelper.hasNotificationPermission()) {
             switch.isChecked = false
