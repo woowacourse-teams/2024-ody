@@ -51,6 +51,10 @@ class SettingActivity :
         initializeObserve()
     }
 
+    override fun initializeBinding() {
+        binding.backListener = this
+    }
+
     private fun initializeObserve() {
         launchWhenStarted {
             launch {
@@ -88,8 +92,22 @@ class SettingActivity :
         }
     }
 
-    override fun initializeBinding() {
-        binding.backListener = this
+    private fun navigateToLogin() {
+        val intent =
+            LoginActivity.getIntent(this).apply {
+                putExtra(NAVIGATED_REASON, LoginNavigatedReason.LOGOUT)
+            }
+        startActivity(intent)
+        finishAffinity()
+    }
+
+    private fun navigateToWithdrawal() {
+        val intent =
+            LoginActivity.getIntent(this).apply {
+                putExtra(NAVIGATED_REASON, LoginNavigatedReason.WITHDRAWAL)
+            }
+        startActivity(intent)
+        finishAffinity()
     }
 
     private fun initializeSettingAdapter() {
@@ -149,15 +167,7 @@ class SettingActivity :
     ) {
         if (isChecked && !permissionHelper.hasNotificationPermission()) {
             switch.isChecked = false
-            showSnackBar(
-                R.string.setting_notification_permission_denied,
-                R.string.setting_notification_permission_guide,
-            ) {
-                val intent =
-                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                        .putExtra(Settings.EXTRA_APP_PACKAGE, this@SettingActivity.packageName)
-                startActivity(intent)
-            }
+            showSnackBarNotificationSettingAction()
             return
         }
         when (settingItemType) {
@@ -177,22 +187,16 @@ class SettingActivity :
         }
     }
 
-    private fun navigateToLogin() {
-        val intent =
-            LoginActivity.getIntent(this).apply {
-                putExtra(NAVIGATED_REASON, LoginNavigatedReason.LOGOUT)
-            }
-        startActivity(intent)
-        finishAffinity()
-    }
-
-    private fun navigateToWithdrawal() {
-        val intent =
-            LoginActivity.getIntent(this).apply {
-                putExtra(NAVIGATED_REASON, LoginNavigatedReason.WITHDRAWAL)
-            }
-        startActivity(intent)
-        finishAffinity()
+    private fun showSnackBarNotificationSettingAction() {
+        showSnackBar(
+            R.string.setting_notification_permission_denied,
+            R.string.setting_notification_permission_guide,
+        ) {
+            val intent =
+                Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, this@SettingActivity.packageName)
+            startActivity(intent)
+        }
     }
 
     companion object {
