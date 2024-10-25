@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.mulberry.ody.presentation.common.listener.SingleClickListener
 
 @BindingAdapter("visibility")
 fun View.setVisibility(isVisible: Boolean?) {
@@ -31,4 +32,10 @@ fun ImageView.setImageRes(
     @DrawableRes iconRes: Int,
 ) {
     setImageResource(iconRes)
+}
+
+@BindingAdapter("onSingleClick")
+fun View.setOnSingleClickListener(onSingleClick: View.OnClickListener) {
+    val singleClickListener = SingleClickListener { onSingleClick.onClick(this) }
+    setOnClickListener(singleClickListener)
 }

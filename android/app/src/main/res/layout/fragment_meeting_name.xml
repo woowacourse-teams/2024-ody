@@ -118,12 +118,12 @@
             android:id="@+id/iv_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> vm.clearMeetingName()}"
             android:src="@drawable/ic_round_cancel"
             app:layout_constraintBottom_toBottomOf="@id/et_meeting_name_form"
             app:layout_constraintEnd_toEndOf="@id/et_meeting_name_form"
             app:layout_constraintStart_toEndOf="@id/tv_meeting_name_max_length"
             app:layout_constraintTop_toTopOf="@id/et_meeting_name_form"
+            app:onSingleClick="@{() -> vm.clearMeetingName()}"
             app:visibility="@{vm.isValidInfo}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

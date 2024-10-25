@@ -69,33 +69,33 @@
             android:hint="@string/address_question_hint"
             android:inputType="text"
             android:maxLines="1"
-            android:onClick="@{() -> addressSearchListener.onSearch()}"
             android:text="@{vm.departureAddress.detailAddress}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_departure_front" />
+            app:layout_constraintTop_toBottomOf="@id/tv_departure_front"
+            app:onSingleClick="@{() -> addressSearchListener.onSearch()}" />
 
         <ImageView
             android:id="@+id/iv_current_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> vm.getDefaultLocation()}"
             android:padding="10dp"
             android:src="@drawable/ic_current_location"
             app:layout_constraintBottom_toBottomOf="@id/et_departure"
             app:layout_constraintEnd_toEndOf="@id/et_departure"
             app:layout_constraintTop_toTopOf="@id/et_departure"
+            app:onSingleClick="@{() -> vm.getDefaultLocation()}"
             app:visibility="@{vm.departureAddress == null}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_next"
             style="@style/bottom_button_style"
             android:enabled="@{vm.isValidDeparture}"
-            android:onClick="@{() -> nextListener.onNext()}"
             android:text="@string/next_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:onSingleClick="@{() -> nextListener.onNext()}" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fcv_join"

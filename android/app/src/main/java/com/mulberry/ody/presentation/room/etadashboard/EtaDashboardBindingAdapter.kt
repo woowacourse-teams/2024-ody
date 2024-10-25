@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.listener.setOnSingleClickListener
 import com.mulberry.ody.presentation.room.etadashboard.listener.MissingToolTipListener
 import com.mulberry.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.mulberry.ody.presentation.room.etadashboard.model.EtaStatusUiModel
@@ -28,7 +29,7 @@ fun TextView.setOnClickMissingTooltip(
     isUserSelf: Boolean,
     missingToolTipListener: MissingToolTipListener,
 ) {
-    setOnClickListener {
+    setOnSingleClickListener {
         val point = this.getPointOnScreen()
         missingToolTipListener.onClickMissingToolTipListener(point, isUserSelf)
     }
@@ -55,7 +56,7 @@ fun TextView.setOnClickNudge(
     mateEtaUiModel: MateEtaUiModel,
     nudgeListener: NudgeListener,
 ) {
-    setOnClickListener {
+    setOnSingleClickListener {
         if (mateEtaUiModel.isUserSelf.not() && mateEtaUiModel.etaStatusUiModel.canNudge()) {
             nudgeListener.nudgeMate(
                 nudgeId = mateEtaUiModel.userId,
