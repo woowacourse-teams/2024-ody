@@ -18,6 +18,7 @@ spring:
       maximum-pool-size: ${HIKARI_MAXIMUM_POOL_SIZE} # 커넥션 풀의 최대 크기
       minimum-idle: ${HIKARI_MAXIMUM_POOL_SIZE} # 최소 Idle 커넥션 수 (= 커넥션 풀의 최대 크기 추천)
       max-lifetime: ${HIKARI_MAX_LIFETIME} # 커넥션 최대 생존 시간 (밀리초 단위)
+      connection-timeout: ${HIKARI_CONNECTION_TIMEOUT} # 커넥션 풀에서 커넥션을 구하기 위해 대기하는 시간
 
 logging:
   level:
