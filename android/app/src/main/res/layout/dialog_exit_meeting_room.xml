@@ -93,13 +93,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:onClick="@{() -> exitMeetingRoomListener.onCancel()}"
                     android:paddingVertical="22dp"
                     android:text="@string/cancel_button"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/guide_line_2"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/guide_line_1" />
+                    app:layout_constraintTop_toBottomOf="@id/guide_line_1"
+                    app:onSingleClick="@{() -> exitMeetingRoomListener.onCancel()}" />
 
                 <View
                     android:id="@+id/guide_line_2"
@@ -118,14 +118,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:onClick="@{() -> exitMeetingRoomListener.onExit()}"
                     android:paddingVertical="22dp"
                     android:text="@string/exit_meeting_room"
                     android:textColor="@color/red"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/guide_line_2"
-                    app:layout_constraintTop_toBottomOf="@id/guide_line_1" />
+                    app:layout_constraintTop_toBottomOf="@id/guide_line_1"
+                    app:onSingleClick="@{() -> exitMeetingRoomListener.onExit()}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

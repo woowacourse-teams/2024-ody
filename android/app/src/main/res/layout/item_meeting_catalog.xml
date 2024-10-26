@@ -27,7 +27,7 @@
         android:background="@drawable/rectangle_white_radius_15"
         android:clickable="true"
         android:elevation="4dp"
-        android:onClick="@{() -> meetingsItemListener.navigateToNotificationLog(meeting.id)}">
+        app:onSingleClick="@{() -> meetingsItemListener.navigateToNotificationLog(meeting.id)}">
 
         <TextView
             android:id="@+id/tv_meeting_title_expanded"
@@ -49,9 +49,9 @@
             android:id="@+id/iv_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> meetingsItemListener.toggleFold(meeting.position)}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:onSingleClick="@{() -> meetingsItemListener.toggleFold(meeting.position)}">
 
             <ImageView
                 android:layout_width="wrap_content"

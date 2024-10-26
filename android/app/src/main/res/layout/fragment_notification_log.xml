@@ -132,11 +132,11 @@
                 android:layout_marginBottom="18dp"
                 android:background="@drawable/rectangle_radius_15"
                 android:backgroundTint="@color/secondary"
-                android:onClick="@{() -> vm.navigateToEtaDashboard()}"
                 android:orientation="horizontal"
                 android:padding="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:onSingleClick="@{() -> vm.navigateToEtaDashboard()}"
                 app:visibility="@{vm.meeting.etaAccessible}">
 
                 <ImageView
@@ -197,14 +197,14 @@
                     android:background="@drawable/rectangle_radius_20"
                     android:backgroundTint="@color/secondary"
                     android:gravity="center"
-                    android:onClick="@{() -> notificationLogListener.onCopyInviteCode()}"
                     android:paddingHorizontal="22dp"
                     android:paddingVertical="12dp"
                     android:text="@string/item_invite_code_copy"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="@id/tv_invite_code_bottom"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_invite_code_top" />
+                    app:layout_constraintTop_toTopOf="@id/tv_invite_code_top"
+                    app:onSingleClick="@{() -> notificationLogListener.onCopyInviteCode()}" />
 
                 <View
                     android:id="@+id/guide_line"
@@ -234,12 +234,12 @@
                     android:id="@+id/iv_exit_meeting_room"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:onClick="@{() -> notificationLogListener.onExitMeetingRoom()}"
                     android:padding="18dp"
                     android:src="@drawable/ic_exit"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_mates" />
+                    app:layout_constraintTop_toBottomOf="@id/rv_mates"
+                    app:onSingleClick="@{() -> notificationLogListener.onExitMeetingRoom()}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

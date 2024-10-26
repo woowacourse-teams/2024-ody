@@ -50,22 +50,22 @@
             android:hint="@string/address_question_hint"
             android:inputType="text"
             android:maxLines="1"
-            android:onClick="@{() -> addressSearchListener.onSearch()}"
             android:text="@{vm.destinationAddress.detailAddress}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_destination_front" />
+            app:layout_constraintTop_toBottomOf="@id/tv_destination_front"
+            app:onSingleClick="@{() -> addressSearchListener.onSearch()}" />
 
         <ImageView
             android:id="@+id/iv_current_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> vm.getDefaultLocation()}"
             android:padding="10dp"
             android:src="@drawable/ic_current_location"
             app:layout_constraintBottom_toBottomOf="@id/et_destination"
             app:layout_constraintEnd_toEndOf="@id/et_destination"
             app:layout_constraintTop_toTopOf="@id/et_destination"
+            app:onSingleClick="@{() -> vm.getDefaultLocation()}"
             app:visibility="@{vm.destinationAddress == null}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
