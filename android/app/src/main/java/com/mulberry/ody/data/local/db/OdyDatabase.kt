@@ -25,7 +25,7 @@ abstract class OdyDatabase : RoomDatabase() {
 
         fun create(context: Context): OdyDatabase {
             return Room.databaseBuilder(context, OdyDatabase::class.java, DATABASE_NAME)
-                .addMigrations(OdyDatabaseMigration(4, 5))
+                .addMigrations(OdyDatabaseMigration(3, 4))
                 .addTypeConverter(MateEtaListTypeConverter())
                 .build()
         }
