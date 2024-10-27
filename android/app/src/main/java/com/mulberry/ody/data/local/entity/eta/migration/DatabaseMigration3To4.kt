@@ -42,13 +42,13 @@ class DatabaseMigration3To4 : Migration(3, 4) {
                 mateId = oldMateEta.mateId,
                 nickname = oldMateEta.nickname,
                 etaStatus =
-                when (oldMateEta.etaType) {
-                    EtaType.ARRIVED -> EtaStatus.Arrived
-                    EtaType.ARRIVAL_SOON -> EtaStatus.ArrivalSoon(oldMateEta.durationMinute)
-                    EtaType.LATE_WARNING -> EtaStatus.LateWarning(oldMateEta.durationMinute)
-                    EtaType.LATE -> EtaStatus.Late(oldMateEta.durationMinute)
-                    EtaType.MISSING -> EtaStatus.Missing
-                },
+                    when (oldMateEta.etaType) {
+                        EtaType.ARRIVED -> EtaStatus.Arrived
+                        EtaType.ARRIVAL_SOON -> EtaStatus.ArrivalSoon(oldMateEta.durationMinute)
+                        EtaType.LATE_WARNING -> EtaStatus.LateWarning(oldMateEta.durationMinute)
+                        EtaType.LATE -> EtaStatus.Late(oldMateEta.durationMinute)
+                        EtaType.MISSING -> EtaStatus.Missing
+                    },
             )
         }
     }
