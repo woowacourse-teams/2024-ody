@@ -32,5 +32,5 @@ class SettingItemViewHolder(private val binding: ItemSettingBinding) :
 
 class SettingDividerViewHolder(private val binding: ItemSettingDividerBinding) :
     SettingViewHolder(binding.root) {
-    fun bind() {}
+    fun bind() = Unit
 }

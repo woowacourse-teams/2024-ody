@@ -137,7 +137,7 @@ class SettingActivity :
                 WithDrawalDialog().show(supportFragmentManager, WITHDRAWAL_DIALOG_TAG)
             }
 
-            SettingItemType.NOTIFICATION_DEPARTURE, SettingItemType.NOTIFICATION_ENTRY -> {}
+            SettingItemType.NOTIFICATION_DEPARTURE, SettingItemType.NOTIFICATION_ENTRY -> return
         }
     }
 
@@ -184,7 +184,7 @@ class SettingActivity :
                 }
             }
 
-            SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> {}
+            SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> return
         }
     }
 
