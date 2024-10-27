@@ -5,8 +5,6 @@ import com.mulberry.ody.data.local.db.EtaReservationDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.db.OdyDatabase
 import com.mulberry.ody.data.local.db.OdyDatastore
-import com.mulberry.ody.data.local.entity.eta.migration.OldMateEtaListTypeConverter
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,9 +36,4 @@ object DBModule {
 
     @Provides
     fun provideEtaReserveDao(appDatabase: OdyDatabase): EtaReservationDao = appDatabase.etaReservationDao()
-
-    @Provides
-    fun provideOldMateEtaListTypeConverter(moshi: Moshi): OldMateEtaListTypeConverter {
-        return OldMateEtaListTypeConverter(moshi)
-    }
 }

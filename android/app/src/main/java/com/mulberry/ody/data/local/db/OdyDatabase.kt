@@ -22,6 +22,7 @@ abstract class OdyDatabase : RoomDatabase() {
 
     companion object {
         private const val DATABASE_NAME = "ody_db"
+
         fun create(context: Context): OdyDatabase {
             return Room.databaseBuilder(context, OdyDatabase::class.java, DATABASE_NAME)
                 .addMigrations(DatabaseMigration3To4())

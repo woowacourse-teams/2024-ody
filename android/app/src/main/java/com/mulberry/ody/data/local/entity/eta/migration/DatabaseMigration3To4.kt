@@ -5,12 +5,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
 import com.mulberry.ody.domain.model.EtaStatus
 import com.mulberry.ody.domain.model.MateEta
-import javax.inject.Inject
 
 class DatabaseMigration3To4 : Migration(3, 4) {
-    @Inject
-    lateinit var oldMateEtaListTypeConverter: OldMateEtaListTypeConverter
-
     override fun migrate(db: SupportSQLiteDatabase) {
         db.migrateEtaInfo()
         db.migrateEtaReservation()
@@ -27,7 +23,7 @@ class DatabaseMigration3To4 : Migration(3, 4) {
                 val mateEtasJson = cursor.getString(cursor.getColumnIndexOrThrow("mateEtas"))
 
                 val oldMateEtas: List<OldMateEta> =
-                    oldMateEtaListTypeConverter.fromString(mateEtasJson) ?: emptyList()
+                    OldMateEtaListTypeConverter().fromString(mateEtasJson) ?: emptyList()
                 val newMateEtas = oldMateEtas.toMateEtas()
                 val newMateEtasJson = MateEtaListTypeConverter().fromMateEta(newMateEtas)
 
