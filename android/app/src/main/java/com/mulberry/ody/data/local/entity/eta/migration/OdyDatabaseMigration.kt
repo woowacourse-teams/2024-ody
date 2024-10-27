@@ -23,7 +23,7 @@ class OdyDatabaseMigration(startVersion: Int, endVersion: Int) : Migration(start
                 val mateEtasJson = cursor.getString(cursor.getColumnIndexOrThrow("mateEtas"))
 
                 val oldMateEtas: List<OldMateEta> =
-                    OldMateEtaListTypeConverter().fromString(mateEtasJson) ?: emptyList()
+                    OldMateEtaListTypeConverter().fromJson(mateEtasJson) ?: emptyList()
                 val newMateEtas = oldMateEtas.toMateEtas()
                 val newMateEtasJson = MateEtaListTypeConverter().fromMateEta(newMateEtas)
 
