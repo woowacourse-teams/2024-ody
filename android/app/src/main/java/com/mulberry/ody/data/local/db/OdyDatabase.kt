@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
-import com.mulberry.ody.data.local.entity.eta.migration.DatabaseMigration3To4
+import com.mulberry.ody.data.local.entity.eta.migration.OdyDatabaseMigration
 import com.mulberry.ody.data.local.entity.reserve.EtaReservationEntity
 
 @Database(
@@ -25,7 +25,7 @@ abstract class OdyDatabase : RoomDatabase() {
 
         fun create(context: Context): OdyDatabase {
             return Room.databaseBuilder(context, OdyDatabase::class.java, DATABASE_NAME)
-                .addMigrations(DatabaseMigration3To4())
+                .addMigrations(OdyDatabaseMigration(4, 5))
                 .addTypeConverter(MateEtaListTypeConverter())
                 .build()
         }

@@ -6,7 +6,7 @@ import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
 import com.mulberry.ody.domain.model.EtaStatus
 import com.mulberry.ody.domain.model.MateEta
 
-class DatabaseMigration3To4 : Migration(3, 4) {
+class OdyDatabaseMigration(startVersion: Int, endVersion: Int) : Migration(startVersion, endVersion) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.migrateEtaInfo()
         db.migrateEtaReservation()
