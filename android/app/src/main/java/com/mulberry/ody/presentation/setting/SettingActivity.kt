@@ -12,6 +12,7 @@ import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.R
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.databinding.ActivitySettingBinding
+import com.mulberry.ody.domain.model.NotificationType
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
@@ -151,8 +152,8 @@ class SettingActivity :
 
         val isNotificationOn =
             when (settingItemType) {
-                SettingItemType.NOTIFICATION_DEPARTURE -> odyDatastore.getIsNotificationDepartureOn()
-                SettingItemType.NOTIFICATION_ENTRY -> odyDatastore.getIsNotificationEntryOn()
+                SettingItemType.NOTIFICATION_DEPARTURE -> odyDatastore.getIsNotificationOn(NotificationType.DEPARTURE_REMINDER)
+                SettingItemType.NOTIFICATION_ENTRY -> odyDatastore.getIsNotificationOn(NotificationType.ENTRY)
                 SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> return
             }
         lifecycleScope.launch {
@@ -173,13 +174,13 @@ class SettingActivity :
         when (settingItemType) {
             SettingItemType.NOTIFICATION_DEPARTURE -> {
                 lifecycleScope.launch {
-                    odyDatastore.setIsNotificationDepartureOn(isChecked)
+                    odyDatastore.setIsNotificationOn(NotificationType.DEPARTURE_REMINDER, isChecked)
                 }
             }
 
             SettingItemType.NOTIFICATION_ENTRY -> {
                 lifecycleScope.launch {
-                    odyDatastore.setIsNotificationEntryOn(isChecked)
+                    odyDatastore.setIsNotificationOn(NotificationType.ENTRY, isChecked)
                 }
             }
 

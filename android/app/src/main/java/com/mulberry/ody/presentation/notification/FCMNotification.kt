@@ -61,10 +61,10 @@ class FCMNotification
         }
 
         private suspend fun isNotificationBlock(type: NotificationType): Boolean {
-            if (type == NotificationType.DEPARTURE_REMINDER && !odyDatastore.getIsNotificationDepartureOn().first()) {
+            if (type == NotificationType.DEPARTURE_REMINDER && !odyDatastore.getIsNotificationOn(type).first()) {
                 return true
             }
-            if (type == NotificationType.ENTRY && !odyDatastore.getIsNotificationEntryOn().first()) {
+            if (type == NotificationType.ENTRY && !odyDatastore.getIsNotificationOn(type).first()) {
                 return true
             }
             return false

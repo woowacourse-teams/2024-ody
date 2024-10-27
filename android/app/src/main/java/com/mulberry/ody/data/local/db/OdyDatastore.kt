@@ -8,7 +8,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mulberry.ody.domain.model.AuthToken
+import com.mulberry.ody.domain.model.NotificationType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class OdyDatastore(private val context: Context) {
@@ -70,27 +72,28 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
-    suspend fun setIsNotificationDepartureOn(isNotificationDepartureOn: Boolean) {
+    suspend fun setIsNotificationOn(
+        notificationType: NotificationType,
+        isNotificationOn: Boolean,
+    ) {
+        val preferencesKey = notificationType.toPreferencesKey() ?: return
         context.dataStore.edit {
-            it[IS_NOTIFICATION_DEPARTURE_ON] = isNotificationDepartureOn
+            it[preferencesKey] = isNotificationOn
         }
     }
 
-    fun getIsNotificationDepartureOn(): Flow<Boolean> {
+    fun getIsNotificationOn(notificationType: NotificationType): Flow<Boolean> {
+        val preferencesKey = notificationType.toPreferencesKey() ?: return flow { emit(false) }
         return context.dataStore.data.map { preferences ->
-            preferences[IS_NOTIFICATION_DEPARTURE_ON] ?: true
+            preferences[preferencesKey] ?: true
         }
     }
 
-    suspend fun setIsNotificationEntryOn(isNotificationEntryOn: Boolean) {
-        context.dataStore.edit {
-            it[IS_NOTIFICATION_ENTRY_ON] = isNotificationEntryOn
-        }
-    }
-
-    fun getIsNotificationEntryOn(): Flow<Boolean> {
-        return context.dataStore.data.map { preferences ->
-            preferences[IS_NOTIFICATION_ENTRY_ON] ?: true
+    private fun NotificationType.toPreferencesKey(): Preferences.Key<Boolean>? {
+        return when (this) {
+            NotificationType.ENTRY -> IS_NOTIFICATION_ENTRY_ON
+            NotificationType.DEPARTURE_REMINDER -> IS_NOTIFICATION_DEPARTURE_ON
+            NotificationType.NUDGE, NotificationType.ETA_NOTICE, NotificationType.DEFAULT -> null
         }
     }
 
