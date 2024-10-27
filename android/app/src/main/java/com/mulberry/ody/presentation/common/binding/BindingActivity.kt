@@ -29,10 +29,14 @@ abstract class BindingActivity<T : ViewDataBinding>(
 
     protected fun showSnackBar(
         @StringRes messageId: Int,
-        action: Snackbar.() -> Unit = {},
+        @StringRes actionMessageId: Int? = null,
+        action: () -> Unit = {},
     ) {
         snackBar?.dismiss()
-        snackBar = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).apply { action() }
+        snackBar = Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT)
+        actionMessageId?.let {
+            snackBar?.setAction(actionMessageId) { action() }
+        }
         snackBar?.show()
     }
 

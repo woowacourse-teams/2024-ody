@@ -105,12 +105,18 @@
     <string name="setting_withdrawal_title_back">를 떠나시겠어요?</string>
     <string name="setting_withdrawal_subtitle">참여한 약속들이 모두 사라져요.</string>
     <string name="setting_withdrawal_button">탈퇴</string>
+    <string name="setting_notification_permission_denied">알림 권한이 꺼져있어요.</string>
+    <string name="setting_notification_permission_guide">권한 허용하러 가기</string>
 
     <!-- item_setting -->
-    <string name="item_privacy_policy">개인정보 처리 방침</string>
-    <string name="item_term">서비스 이용 약관</string>
-    <string name="item_logout">로그아웃</string>
-    <string name="item_withdraw">회원 탈퇴</string>
+    <string name="setting_header_notification">알림</string>
+    <string name="setting_item_notification_departure">출발 시간 푸시 알림</string>
+    <string name="setting_item_notification_entry">약속 참여 푸시 알림</string>
+    <string name="setting_header_service">서비스 이용</string>
+    <string name="setting_item_privacy_policy">개인정보 처리 방침</string>
+    <string name="setting_item_term">서비스 이용 약관</string>
+    <string name="setting_item_logout">로그아웃</string>
+    <string name="setting_item_withdraw">회원 탈퇴</string>
 
     <!-- request_background_permission_dialog -->
     <string name="request_background_permission_dialog_title">백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.</string>
