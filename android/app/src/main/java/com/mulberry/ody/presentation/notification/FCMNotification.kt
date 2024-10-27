@@ -50,10 +50,7 @@ class FCMNotification
             meetingName: String,
         ) {
             CoroutineScope(Dispatchers.Default).launch {
-                if (isNotificationDepartureBlock(type)) {
-                    return@launch
-                }
-                if (isNotificationEntryBlock(type)) {
+                if (isNotificationBlock(type)) {
                     return@launch
                 }
 
@@ -63,12 +60,14 @@ class FCMNotification
             }
         }
 
-        private suspend fun isNotificationDepartureBlock(type: NotificationType): Boolean {
-            return type == NotificationType.DEPARTURE_REMINDER && !odyDatastore.getIsNotificationDepartureOn().first()
-        }
-
-        private suspend fun isNotificationEntryBlock(type: NotificationType): Boolean {
-            return type == NotificationType.ENTRY && !odyDatastore.getIsNotificationEntryOn().first()
+        private suspend fun isNotificationBlock(type: NotificationType): Boolean {
+            if (type == NotificationType.DEPARTURE_REMINDER && !odyDatastore.getIsNotificationDepartureOn().first()) {
+                return true
+            }
+            if (type == NotificationType.ENTRY && !odyDatastore.getIsNotificationEntryOn().first()) {
+                return true
+            }
+            return false
         }
 
         private fun getNotificationMessage(
