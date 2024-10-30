@@ -8,17 +8,23 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import com.mulberry.ody.R
+import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.domain.model.NotificationType
 import com.mulberry.ody.presentation.meetings.MeetingsActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_NOTIFICATION_LOG
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FCMNotification
     @Inject
     constructor(
         private val context: Context,
+        private val odyDatastore: OdyDatastore,
         private val notificationManager: NotificationManager,
     ) {
         init {
@@ -43,9 +49,25 @@ class FCMNotification
             meetingId: String,
             meetingName: String,
         ) {
-            val message = getNotificationMessage(type, nickname, meetingName)
-            val pendingIntent = getPendingIntent(type, meetingId)
-            showNotification(message, pendingIntent)
+            CoroutineScope(Dispatchers.Default).launch {
+                if (isNotificationBlock(type)) {
+                    return@launch
+                }
+
+                val message = getNotificationMessage(type, nickname, meetingName)
+                val pendingIntent = getPendingIntent(type, meetingId)
+                showNotification(message, pendingIntent)
+            }
+        }
+
+        private suspend fun isNotificationBlock(type: NotificationType): Boolean {
+            if (type == NotificationType.DEPARTURE_REMINDER && !odyDatastore.getIsNotificationOn(type).first()) {
+                return true
+            }
+            if (type == NotificationType.ENTRY && !odyDatastore.getIsNotificationOn(type).first()) {
+                return true
+            }
+            return false
         }
 
         private fun getNotificationMessage(

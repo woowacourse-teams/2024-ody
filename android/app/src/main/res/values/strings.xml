@@ -2,18 +2,18 @@
     <string name="app_name">오디</string>
 
     <!-- fcm_notification -->
-    <string name="fcm_notification_entry">%s (이)가 들어왔어요.</string>
-    <string name="fcm_notification_departure_reminder">%s (이)가 출발할 시간이에요!</string>
-    <string name="fcm_notification_nudge">"\uD83D\uDC40 %s(이)가 재촉해요."</string>
+    <string name="fcm_notification_entry">%s님이 들어왔어요.</string>
+    <string name="fcm_notification_departure_reminder">%s님이 출발할 시간이에요!</string>
+    <string name="fcm_notification_nudge">\uD83D\uDC40 %s님이 재촉해요.</string>
     <string name="fcm_notification_eta_notice">"%s 약속에 참여한 친구 위치를 확인해 보세요!"</string>
 
     <!-- item_notification_log.xml -->
-    <string name="item_notification_entry">(이)가 들어왔어요.</string>
-    <string name="item_notification_departure_reminder">(이)가 출발할 시간이에요!</string>
-    <string name="item_notification_departure">(이)가 출발했어요.</string>
-    <string name="item_notification_nudge">"(이)가 재촉 받았어요. \uD83D\uDC40"</string>
-    <string name="item_notification_member_deletion">(이)가 오디를 떠났어요.</string>
-    <string name="item_notification_member_exit">(이)가 나갔어요.</string>
+    <string name="item_notification_entry">님이 들어왔어요.</string>
+    <string name="item_notification_departure_reminder">님이 출발할 시간이에요!</string>
+    <string name="item_notification_departure">님이 출발했어요.</string>
+    <string name="item_notification_nudge">님이 재촉 받았어요. \uD83D\uDC40</string>
+    <string name="item_notification_member_deletion">님이 오디를 떠났어요.</string>
+    <string name="item_notification_member_exit">님이 나갔어요.</string>
     <string name="item_notification_default"> </string>
 
     <!-- activity_meeting_room.xml -->
@@ -105,12 +105,18 @@
     <string name="setting_withdrawal_title_back">를 떠나시겠어요?</string>
     <string name="setting_withdrawal_subtitle">참여한 약속들이 모두 사라져요.</string>
     <string name="setting_withdrawal_button">탈퇴</string>
+    <string name="setting_notification_permission_denied">알림 권한이 꺼져있어요.</string>
+    <string name="setting_notification_permission_guide">권한 허용하러 가기</string>
 
     <!-- item_setting -->
-    <string name="item_privacy_policy">개인정보 처리 방침</string>
-    <string name="item_term">서비스 이용 약관</string>
-    <string name="item_logout">로그아웃</string>
-    <string name="item_withdraw">회원 탈퇴</string>
+    <string name="setting_header_notification">알림</string>
+    <string name="setting_item_notification_departure">출발 시간 푸시 알림</string>
+    <string name="setting_item_notification_entry">약속 참여 푸시 알림</string>
+    <string name="setting_header_service">서비스 이용</string>
+    <string name="setting_item_privacy_policy">개인정보 처리 방침</string>
+    <string name="setting_item_term">서비스 이용 약관</string>
+    <string name="setting_item_logout">로그아웃</string>
+    <string name="setting_item_withdraw">회원 탈퇴</string>
 
     <!-- request_background_permission_dialog -->
     <string name="request_background_permission_dialog_title">백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.</string>
@@ -119,9 +125,8 @@
 
     <!-- fragment_notification_log -->
     <string name="notification_log_mate_count">%d명</string>
-    <string name="invite_code_share_title">친구가 약속에 초대했어요!</string>
-    <string name="invite_code_share_description">초대 코드: %s</string>
-    <string name="invite_code_share_button">참여하러 가기</string>
+    <string name="invite_code_copy_title">초대 코드 공유하기</string>
+    <string name="invite_code_copy">%s 약속에 초대했어요. 오디 앱에서 함께해 보세요.\n초대 코드: %s</string>
 
     <!-- item_eta_dashboard.xml -->
     <string name="badge_arrived">도착</string>

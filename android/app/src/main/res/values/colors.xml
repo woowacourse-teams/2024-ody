@@ -10,6 +10,7 @@
     <color name="senary">@color/gray_350</color>
     <color name="septenary">@color/cream</color>
     <color name="octonary">@color/white</color>
+    <color name="nonary">@color/gray_600</color>
 
     <color name="black">#FF000000</color>
     <color name="cream">#FFFFFFF6</color>

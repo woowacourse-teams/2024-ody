@@ -8,7 +8,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mulberry.ody.domain.model.AuthToken
+import com.mulberry.ody.domain.model.NotificationType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class OdyDatastore(private val context: Context) {
@@ -70,11 +72,38 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
+    suspend fun setIsNotificationOn(
+        notificationType: NotificationType,
+        isNotificationOn: Boolean,
+    ) {
+        val preferencesKey = notificationType.toPreferencesKey() ?: return
+        context.dataStore.edit {
+            it[preferencesKey] = isNotificationOn
+        }
+    }
+
+    fun getIsNotificationOn(notificationType: NotificationType): Flow<Boolean> {
+        val preferencesKey = notificationType.toPreferencesKey() ?: return flow { emit(false) }
+        return context.dataStore.data.map { preferences ->
+            preferences[preferencesKey] ?: true
+        }
+    }
+
+    private fun NotificationType.toPreferencesKey(): Preferences.Key<Boolean>? {
+        return when (this) {
+            NotificationType.ENTRY -> IS_NOTIFICATION_ENTRY_ON
+            NotificationType.DEPARTURE_REMINDER -> IS_NOTIFICATION_DEPARTURE_ON
+            NotificationType.NUDGE, NotificationType.ETA_NOTICE, NotificationType.DEFAULT -> null
+        }
+    }
+
     companion object {
         private const val ODY_KEY = "ody_key"
         private val FCM_TOKEN = stringPreferencesKey("fcmToken")
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val IS_FIRST_SEEN_ETA_DASHBOARD = booleanPreferencesKey("is_first_seen_eta_dashboard")
+        private val IS_NOTIFICATION_DEPARTURE_ON = booleanPreferencesKey("is_notification_departure_on")
+        private val IS_NOTIFICATION_ENTRY_ON = booleanPreferencesKey("is_notification_entry_on")
     }
 }

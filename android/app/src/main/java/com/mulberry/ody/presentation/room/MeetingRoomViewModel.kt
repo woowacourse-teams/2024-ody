@@ -27,6 +27,7 @@ import com.mulberry.ody.presentation.common.image.ImageShareHelper
 import com.mulberry.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.mulberry.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.room.etadashboard.model.toMateEtaUiModels
+import com.mulberry.ody.presentation.room.log.model.InviteCodeCopyInfo
 import com.mulberry.ody.presentation.room.log.model.MateUiModel
 import com.mulberry.ody.presentation.room.log.model.MeetingDetailUiModel
 import com.mulberry.ody.presentation.room.log.model.NotificationLogUiModel
@@ -76,7 +77,7 @@ class MeetingRoomViewModel
             )
 
         private val _meeting: MutableStateFlow<MeetingDetailUiModel> =
-            MutableStateFlow(MeetingDetailUiModel())
+            MutableStateFlow(MeetingDetailUiModel.DEFAULT)
         val meeting: StateFlow<MeetingDetailUiModel> = _meeting.asStateFlow()
 
         private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
@@ -101,6 +102,9 @@ class MeetingRoomViewModel
         val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
 
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
+
+        private val _copyInviteCodeEvent: MutableSharedFlow<InviteCodeCopyInfo> = MutableSharedFlow()
+        val copyInviteCodeEvent: SharedFlow<InviteCodeCopyInfo> get() = _copyInviteCodeEvent.asSharedFlow()
 
         init {
             fetchMeeting()
@@ -260,23 +264,14 @@ class MeetingRoomViewModel
             }
         }
 
-        fun shareInviteCode(
-            title: String,
-            description: String,
-            buttonTitle: String,
-            imageUrl: String,
-        ) {
-            startLoading()
-            val imageShareContent =
-                ImageShareContent(
-                    title = title,
-                    description = description,
-                    buttonTitle = buttonTitle,
-                    imageUrl = imageUrl,
-                    link = "https://github.com/woowacourse-teams/2024-ody",
-                )
-            shareImage(imageShareContent)
-            stopLoading()
+        fun copyInviteCode() {
+            val meeting = meeting.value
+            if (meeting.isDefault()) return
+            val inviteCodeCopyInfo = InviteCodeCopyInfo(meeting.name, meeting.inviteCode)
+
+            viewModelScope.launch {
+                _copyInviteCodeEvent.emit(inviteCodeCopyInfo)
+            }
         }
 
         private fun shareImage(imageShareContent: ImageShareContent) {

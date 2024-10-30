@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.room.log
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.GravityCompat
@@ -54,6 +55,18 @@ class NotificationLogFragment :
                     matesAdapter.submitList(it)
                 }
             }
+            launch {
+                viewModel.copyInviteCodeEvent.collect {
+                    val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
+                    intent.type = "text/plain"
+
+                    val shareMessage = getString(R.string.invite_code_copy, it.meetingName, it.inviteCode)
+                    intent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+
+                    val chooserTitle = getString(R.string.invite_code_copy_title)
+                    startActivity(Intent.createChooser(intent, chooserTitle))
+                }
+            }
         }
     }
 
@@ -62,13 +75,7 @@ class NotificationLogFragment :
     }
 
     override fun onCopyInviteCode() {
-        val inviteCode = viewModel.meeting.value.inviteCode
-        viewModel.shareInviteCode(
-            title = getString(R.string.invite_code_share_title),
-            description = getString(R.string.invite_code_share_description, inviteCode),
-            buttonTitle = getString(R.string.invite_code_share_button),
-            imageUrl = INVITE_CODE_SHARE_IMAGE_URL,
-        )
+        viewModel.copyInviteCode()
     }
 
     override fun onExitMeetingRoom() {
@@ -77,8 +84,5 @@ class NotificationLogFragment :
 
     companion object {
         private const val EXIT_MEETING_ROOM_DIALOG_TAG = "exitMeetingRoomDialog"
-        private const val INVITE_CODE_SHARE_IMAGE_URL =
-            "https://firebasestorage.googleapis.com/" +
-                "v0/b/oddy-4482e.appspot.com/o/odyimage.png?alt=media&token=b3e1db2f-3eb6-46b9-b431-9ac9b6f182a6"
     }
 }
