@@ -49,7 +49,7 @@ jobs:
           KAKAO_API_KEY: ${{secrets.KAKAO_API_KEY}}
           KAKAO_NATIVE_KEY: ${{secrets.KAKAO_NATIVE_KEY}}
           TERM_URI: ${{secrets.TERM_URI}}
-          PRIVACY_POLICY_URL: ${{secrets.PRIVACY_POLICY_URI}}
+          PRIVACY_POLICY_URI: ${{secrets.PRIVACY_POLICY_URI}}
         run: |
           echo "BASE_DEV_URL=\"$BASE_DEV_URL\"" >> ./local.properties
           echo "BASE_PROD_URL=\"$BASE_PROD_URL\"" >> ./local.properties
