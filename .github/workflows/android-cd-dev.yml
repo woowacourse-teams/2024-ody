@@ -56,7 +56,7 @@ jobs:
           echo "KAKAO_API_KEY=\"$KAKAO_API_KEY\"" >> ./local.properties
           echo "KAKAO_NATIVE_KEY=\"$KAKAO_NATIVE_KEY\"" >> ./local.properties
           echo "TERM_URI=\"$TERM_URI\"" >> ./local.properties
-          echo "PRIVACY_POLICY_URL=\"$PRIVACY_POLICY_URI\"" >> ./local.properties
+          echo "PRIVACY_POLICY_URI=\"$PRIVACY_POLICY_URI\"" >> ./local.properties
 
       - name: Change gradlew permissions
         run: chmod +x ./gradlew
