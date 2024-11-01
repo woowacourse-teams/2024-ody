@@ -19,7 +19,6 @@ import com.mulberry.ody.presentation.join.complete.JoinCompleteActivity
 import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
