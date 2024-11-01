@@ -96,6 +96,10 @@ class MeetingJoinViewModel
             }
         }
 
+        override fun onClickMeetingJoin(inviteCode: String) {
+            joinMeeting(inviteCode)
+        }
+
         private fun joinMeeting(inviteCode: String) {
             val meetingJoinInfo = createMeetingJoinInfo(inviteCode) ?: return
 
@@ -131,10 +135,6 @@ class MeetingJoinViewModel
             return AddressValidator.isValid(departureAddress.detailAddress).also {
                 if (!it) _invalidDepartureEvent.emit(Unit)
             }
-        }
-
-        override fun onClickMeetingJoin(inviteCode: String) {
-            joinMeeting(inviteCode)
         }
 
         companion object {
