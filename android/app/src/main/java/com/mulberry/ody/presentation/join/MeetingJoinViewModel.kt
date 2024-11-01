@@ -54,7 +54,7 @@ class MeetingJoinViewModel
                     initialValue = false,
                 )
 
-        private val _navigateAction: MutableSharedFlow<MeetingJoinNavigateAction> = MutableSharedFlow()
+        private val _navigateAction: MutableSharedFlow<MeetingJoinNavigateAction> = MutableSharedFlow(replay = 1)
         val navigateAction: SharedFlow<MeetingJoinNavigateAction> get() = _navigateAction.asSharedFlow()
 
         private val _defaultLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()

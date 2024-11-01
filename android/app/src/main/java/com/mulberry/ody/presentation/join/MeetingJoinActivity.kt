@@ -62,7 +62,7 @@ class MeetingJoinActivity :
                 }
             }
             launch {
-                viewModel.navigateAction.conflate().collect {
+                viewModel.navigateAction.collect {
                     when (it) {
                         is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
                             navigateToNotificationRoom(it.meetingId)
