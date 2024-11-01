@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RefreshToken {
+public class RefreshToken implements Token {
 
     public static final String REFRESH_TOKEN_PREFIX = "refresh-token=";
 

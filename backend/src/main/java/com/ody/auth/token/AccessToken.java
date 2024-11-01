@@ -8,7 +8,7 @@ import java.util.Date;
 import lombok.Getter;
 
 @Getter
-public class AccessToken {
+public class AccessToken implements Token {
 
     private static final String ACCESS_TOKEN_PREFIX = "Bearer access-token=";
     public static final String DELIMITER = " ";
