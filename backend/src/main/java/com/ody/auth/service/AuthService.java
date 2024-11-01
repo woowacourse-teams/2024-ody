@@ -2,6 +2,7 @@ package com.ody.auth.service;
 
 import com.ody.auth.JwtTokenProvider;
 import com.ody.auth.domain.AuthorizationHeader;
+import com.ody.auth.domain.Authorizer;
 import com.ody.auth.dto.request.AuthRequest;
 import com.ody.auth.dto.response.AuthResponse;
 import com.ody.auth.token.AccessToken;
@@ -9,18 +10,20 @@ import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.member.domain.Member;
 import com.ody.member.service.MemberService;
-import lombok.AllArgsConstructor;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
+    private final Authorizer authorizer;
 
     public Member parseAccessToken(String rawAccessToken) {
         AccessToken accessToken = new AccessToken(rawAccessToken);
@@ -34,6 +37,17 @@ public class AuthService {
         Member member = memberService.save(authRequest.toMember());
         return issueNewTokens(member.getId());
     }
+
+    @Transactional
+    public AuthResponse issueTokens2(AuthRequest authRequest) {
+        Member requestMember = authRequest.toMember();
+        Optional<Member> sameDeviceMember = memberService.findByDeviceToken(requestMember.getDeviceToken());
+        Optional<Member> samePidMember = memberService.findByAuthProvider(requestMember.getAuthProvider());
+        Member authorizedMember = authorizer.authorize(sameDeviceMember, samePidMember, requestMember);
+        Member member = memberService.save(authorizedMember) ;
+        return issueNewTokens(member.getId());
+    }
+
 
     @Transactional
     public AuthResponse renewTokens(String rawAuthorizationHeader) {

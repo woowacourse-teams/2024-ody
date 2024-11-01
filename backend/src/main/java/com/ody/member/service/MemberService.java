@@ -4,6 +4,8 @@ import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.mate.service.MateService;
+import com.ody.member.domain.AuthProvider;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import java.util.Optional;
@@ -34,6 +36,11 @@ public class MemberService {
         return saveOrUpdateByAuthProvider(requestMember);
     }
 
+    @Transactional
+    public Member save2(Member member) {
+        return memberRepository.save(member);
+    }
+
     private Member saveOrUpdateByAuthProvider(Member requestMember) {
         Optional<Member> findMember = memberRepository.findByAuthProvider(requestMember.getAuthProvider());
         if (findMember.isPresent()) {
@@ -48,6 +55,14 @@ public class MemberService {
         return memberRepository.findById(memberId)
                 .filter(member -> member.getDeletedAt() == null)
                 .orElseThrow(() -> new OdyUnauthorizedException("존재하지 않는 회원입니다."));
+    }
+
+    public Optional<Member> findByDeviceToken(DeviceToken deviceToken) {
+        return memberRepository.findByDeviceToken(deviceToken);
+    }
+
+    public Optional<Member> findByAuthProvider(AuthProvider authProvider) {
+        return memberRepository.findByAuthProvider(authProvider);
     }
 
     @Transactional

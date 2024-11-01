@@ -62,6 +62,10 @@ public class Member {
         return this.authProvider.equals(otherAuthProvider);
     }
 
+    public boolean isSame2(Member otherMember) {
+        return this.authProvider.equals(otherMember.getAuthProvider());
+    }
+
     public void updateRefreshToken(RefreshToken refreshToken) {
         this.refreshToken = refreshToken;
     }
