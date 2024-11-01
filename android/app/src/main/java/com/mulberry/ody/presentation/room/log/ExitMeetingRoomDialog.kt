@@ -9,10 +9,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.databinding.DialogExitMeetingRoomBinding
-import com.mulberry.ody.presentation.launchWhenStarted
+import com.mulberry.ody.presentation.collectLifecycleFlow
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.log.listener.ExitMeetingRoomListener
-import kotlinx.coroutines.launch
 
 class ExitMeetingRoomDialog : DialogFragment(), ExitMeetingRoomListener {
     private var _binding: DialogExitMeetingRoomBinding? = null
@@ -52,17 +51,11 @@ class ExitMeetingRoomDialog : DialogFragment(), ExitMeetingRoomListener {
     }
 
     private fun initializeObserve() {
-        launchWhenStarted {
-            launch {
-                viewModel.meeting.collect {
-                    binding.meetingName = it.name
-                }
-            }
-            launch {
-                viewModel.exitMeetingRoomEvent.collect {
-                    requireActivity().finish()
-                }
-            }
+        collectLifecycleFlow(viewModel.meeting) {
+            binding.meetingName = it.name
+        }
+        collectLifecycleFlow(viewModel.exitMeetingRoomEvent) {
+            requireActivity().finish()
         }
     }
 

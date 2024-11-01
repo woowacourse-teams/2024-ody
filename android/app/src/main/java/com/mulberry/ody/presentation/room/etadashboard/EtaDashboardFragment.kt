@@ -17,17 +17,16 @@ import com.mulberry.ody.R
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.databinding.FragmentEtaDashboardBinding
 import com.mulberry.ody.databinding.LayoutMissingTooltipBinding
+import com.mulberry.ody.presentation.collectLifecycleFlow
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.common.image.getBitmap
 import com.mulberry.ody.presentation.common.image.toByteArray
-import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.etadashboard.adapter.MateEtasAdapter
 import com.mulberry.ody.presentation.room.etadashboard.listener.MissingToolTipListener
 import com.mulberry.ody.presentation.room.etadashboard.listener.ShareListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -84,22 +83,14 @@ class EtaDashboardFragment :
     }
 
     private fun initializeObserve() {
-        launchWhenStarted {
-            launch {
-                viewModel.mateEtaUiModels.collect {
-                    adapter.submitList(it)
-                }
-            }
-            launch {
-                viewModel.nudgeSuccessMate.collect { nickName ->
-                    showSnackBar(getString(R.string.nudge_success, nickName))
-                }
-            }
-            launch {
-                viewModel.nudgeFailMate.collect { second ->
-                    showSnackBar(getString(R.string.nudge_failure, second))
-                }
-            }
+        collectLifecycleFlow(viewModel.mateEtaUiModels) {
+            adapter.submitList(it)
+        }
+        collectLifecycleFlow(viewModel.nudgeSuccessMate) { nickname ->
+            showSnackBar(getString(R.string.nudge_success, nickname))
+        }
+        collectLifecycleFlow(viewModel.nudgeFailMate) { second ->
+            showSnackBar(getString(R.string.nudge_failure, second))
         }
     }
 
