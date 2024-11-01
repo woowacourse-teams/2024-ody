@@ -112,8 +112,7 @@ class MeetingJoinActivity :
     }
 
     override fun onNext() {
-        viewModel.joinMeeting(getInviteCode())
-        viewModel.onClickMeetingJoin()
+        viewModel.onClickMeetingJoin(getInviteCode())
     }
 
     override fun onBack() = finish()
