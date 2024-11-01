@@ -11,7 +11,6 @@ import lombok.Getter;
 public class AccessToken implements Token {
 
     private static final String ACCESS_TOKEN_PREFIX = "Bearer access-token=";
-    public static final String DELIMITER = " ";
 
     private final String value;
 
