@@ -45,7 +45,7 @@ class MeetingJoinViewModelTest {
             // when
             val actual =
                 viewModel.navigateAction.valueOnAction {
-                    viewModel.joinMeeting("abc123")
+                    viewModel.onClickMeetingJoin("abc123")
                 }
 
             // then
@@ -57,7 +57,7 @@ class MeetingJoinViewModelTest {
     fun `입력하지 않은 값이 있는 경우 약속 참여할 수 없다`() {
         runTest {
             // when
-            viewModel.joinMeeting("abc123")
+            viewModel.onClickMeetingJoin("abc123")
 
             // then
             val actual = viewModel.navigateAction.valueOnAction {}

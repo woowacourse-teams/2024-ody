@@ -19,7 +19,6 @@ import com.mulberry.ody.presentation.join.complete.JoinCompleteActivity
 import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -62,7 +61,7 @@ class MeetingJoinActivity :
                 }
             }
             launch {
-                viewModel.navigateAction.conflate().collect {
+                viewModel.navigateAction.collect {
                     when (it) {
                         is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
                             navigateToNotificationRoom(it.meetingId)
@@ -113,8 +112,7 @@ class MeetingJoinActivity :
     }
 
     override fun onNext() {
-        viewModel.joinMeeting(getInviteCode())
-        viewModel.onClickMeetingJoin()
+        viewModel.onClickMeetingJoin(getInviteCode())
     }
 
     override fun onBack() = finish()
