@@ -23,32 +23,8 @@ public class MemberService {
     private final SocialAuthUnlinkClient socialAuthUnlinkClient;
 
     @Transactional
-    public Member save(Member requestMember) {
-        Optional<Member> findMember = memberRepository.findByDeviceToken(requestMember.getDeviceToken());
-
-        if (findMember.isPresent()) {
-            Member sameDeviceTokenMember = findMember.get();
-            if (sameDeviceTokenMember.isSame(requestMember.getAuthProvider())) {
-                return sameDeviceTokenMember;
-            }
-            sameDeviceTokenMember.updateDeviceTokenNull();
-        }
-        return saveOrUpdateByAuthProvider(requestMember);
-    }
-
-    @Transactional
-    public Member save2(Member member) {
+    public Member save(Member member) {
         return memberRepository.save(member);
-    }
-
-    private Member saveOrUpdateByAuthProvider(Member requestMember) {
-        Optional<Member> findMember = memberRepository.findByAuthProvider(requestMember.getAuthProvider());
-        if (findMember.isPresent()) {
-            Member sameAuthProviderMember = findMember.get();
-            sameAuthProviderMember.updateDeviceToken(requestMember.getDeviceToken());
-            return sameAuthProviderMember;
-        }
-        return memberRepository.save(requestMember);
     }
 
     public Member findById(Long memberId) {

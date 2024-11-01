@@ -134,6 +134,7 @@ class JwtTokenProviderTest extends BaseServiceTest {
         @DisplayName("만료된 리프레시 토큰이면 False를 반환한다.")
         @Test
         void checkRefreshTokenExpired() {
+
             assertThat(jwtTokenProvider.isUnexpired(expiredRefreshToken)).isFalse();
         }
 

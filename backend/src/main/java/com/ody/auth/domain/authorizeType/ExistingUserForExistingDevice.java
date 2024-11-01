@@ -11,7 +11,7 @@ public class ExistingUserForExistingDevice implements AuthorizationType {
     public boolean match(Optional<Member> sameDeviceMember, Optional<Member> samePidMember, Member requestMember) {
         return sameDeviceMember.isPresent()
                 && samePidMember.isPresent()
-                && requestMember.isSame2(samePidMember.get());
+                && requestMember.isSame(sameDeviceMember.get());
     }
 
     @Override

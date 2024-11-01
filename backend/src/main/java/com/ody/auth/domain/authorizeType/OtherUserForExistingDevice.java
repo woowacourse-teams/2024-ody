@@ -15,7 +15,7 @@ public class OtherUserForExistingDevice implements AuthorizationType {
     ) {
         return sameDeviceMember.isPresent()
                 && samePidMember.isPresent()
-                && !requestMember.isSame2(samePidMember.get());
+                && !requestMember.isSame(sameDeviceMember.get());
     }
 
     @Override

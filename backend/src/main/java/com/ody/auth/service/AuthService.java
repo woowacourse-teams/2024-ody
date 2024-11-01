@@ -34,20 +34,17 @@ public class AuthService {
 
     @Transactional
     public AuthResponse issueTokens(AuthRequest authRequest) {
-        Member member = memberService.save(authRequest.toMember());
-        return issueNewTokens(member.getId());
+        Member requestMember = authRequest.toMember();
+        Member authorizedMember = findAuthroizedMember(requestMember);
+        Member savedAuthorizedMember = memberService.save(authorizedMember) ;
+        return issueNewTokens(savedAuthorizedMember.getId());
     }
 
-    @Transactional
-    public AuthResponse issueTokens2(AuthRequest authRequest) {
-        Member requestMember = authRequest.toMember();
+    private Member findAuthroizedMember(Member requestMember) {
         Optional<Member> sameDeviceMember = memberService.findByDeviceToken(requestMember.getDeviceToken());
         Optional<Member> samePidMember = memberService.findByAuthProvider(requestMember.getAuthProvider());
-        Member authorizedMember = authorizer.authorize(sameDeviceMember, samePidMember, requestMember);
-        Member member = memberService.save(authorizedMember) ;
-        return issueNewTokens(member.getId());
+        return authorizer.authorize(sameDeviceMember, samePidMember, requestMember);
     }
-
 
     @Transactional
     public AuthResponse renewTokens(String rawAuthorizationHeader) {
