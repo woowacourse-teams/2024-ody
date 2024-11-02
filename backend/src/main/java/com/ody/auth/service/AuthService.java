@@ -80,7 +80,6 @@ public class AuthService {
     public void logout(String rawAccessTokenValue) {
         AccessToken accessToken = new AccessToken(rawAccessTokenValue);
         jwtTokenProvider.validate(accessToken);
-
         long memberId = jwtTokenProvider.parseAccessToken(accessToken);
         memberService.updateRefreshToken(memberId, null);
     }

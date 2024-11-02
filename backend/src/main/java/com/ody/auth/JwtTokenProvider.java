@@ -2,6 +2,7 @@ package com.ody.auth;
 
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
+import com.ody.auth.token.Token;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyUnauthorizedException;
 import io.jsonwebtoken.Claims;
@@ -43,35 +44,16 @@ public class JwtTokenProvider {
         }
     }
 
-    public void validate(RefreshToken token){
-        if(!isUnexpired(token)){
+    public void validate(Token token) {
+        if (!isUnexpired(token)) {
             throw new OdyUnauthorizedException("만료된 토큰입니다.");
         }
     }
 
-    public void validate(AccessToken token){
-        if(!isUnexpired(token)){
-            throw new OdyUnauthorizedException("만료된 토큰입니다.");
-        }
-    }
-
-    public boolean isUnexpired(AccessToken token) {
+    public boolean isUnexpired(Token token) {
         try {
             Jwts.parser()
-                    .setSigningKey(authProperties.getAccessKey())
-                    .parseClaimsJws(token.getValue());
-            return true;
-        } catch (ExpiredJwtException exception) {
-            return false;
-        } catch (JwtException exception) {
-            throw new OdyBadRequestException(exception.getMessage());
-        }
-    }
-
-    public boolean isUnexpired(RefreshToken token) {
-        try {
-            Jwts.parser()
-                    .setSigningKey(authProperties.getRefreshKey())
+                    .setSigningKey(token.getSecretKey(authProperties))
                     .parseClaimsJws(token.getValue());
             return true;
         } catch (ExpiredJwtException exception) {

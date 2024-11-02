@@ -37,4 +37,9 @@ public class AccessToken implements Token {
     private String parseAccessToken(String rawValue) {
         return rawValue.substring(ACCESS_TOKEN_PREFIX.length()).trim();
     }
+
+    @Override
+    public String getSecretKey(AuthProperties authProperties) {
+        return authProperties.getAccessKey();
+    }
 }

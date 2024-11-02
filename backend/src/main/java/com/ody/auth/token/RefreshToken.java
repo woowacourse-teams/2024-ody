@@ -46,6 +46,11 @@ public class RefreshToken implements Token {
     }
 
     @Override
+    public String getSecretKey(AuthProperties authProperties) {
+        return authProperties.getRefreshKey();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
