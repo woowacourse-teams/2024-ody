@@ -51,7 +51,7 @@ backend
 │           │   │   ├── request
 │           │   │   └── response
 │           │   ├── service
-│           │   └── token
+│           │   └── jwtToken
 │           ├── common
 │           │   ├── annotation
 │           │   ├── aop

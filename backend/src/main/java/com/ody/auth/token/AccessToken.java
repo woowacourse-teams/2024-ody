@@ -8,7 +8,7 @@ import java.util.Date;
 import lombok.Getter;
 
 @Getter
-public class AccessToken implements Token {
+public class AccessToken implements JwtToken {
 
     private static final String ACCESS_TOKEN_PREFIX = "Bearer access-token=";
 

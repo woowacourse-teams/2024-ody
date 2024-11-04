@@ -1,8 +1,8 @@
 package com.ody.auth;
 
 import com.ody.auth.token.AccessToken;
+import com.ody.auth.token.JwtToken;
 import com.ody.auth.token.RefreshToken;
-import com.ody.auth.token.Token;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyUnauthorizedException;
 import io.jsonwebtoken.Claims;
@@ -44,17 +44,17 @@ public class JwtTokenProvider {
         }
     }
 
-    public void validate(Token token) {
-        if (!isUnexpired(token)) {
+    public void validate(JwtToken jwtToken) {
+        if (!isUnexpired(jwtToken)) {
             throw new OdyUnauthorizedException("만료된 토큰입니다.");
         }
     }
 
-    public boolean isUnexpired(Token token) {
+    public boolean isUnexpired(JwtToken jwtToken) {
         try {
             Jwts.parser()
-                    .setSigningKey(token.getSecretKey(authProperties))
-                    .parseClaimsJws(token.getValue());
+                    .setSigningKey(jwtToken.getSecretKey(authProperties))
+                    .parseClaimsJws(jwtToken.getValue());
             return true;
         } catch (ExpiredJwtException exception) {
             return false;
