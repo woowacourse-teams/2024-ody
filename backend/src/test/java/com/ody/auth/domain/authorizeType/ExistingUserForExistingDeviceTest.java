@@ -2,6 +2,7 @@ package com.ody.auth.domain.authorizeType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ody.auth.domain.authpolicy.ExistingUserForExistingDevice;
 import com.ody.mate.domain.Nickname;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;

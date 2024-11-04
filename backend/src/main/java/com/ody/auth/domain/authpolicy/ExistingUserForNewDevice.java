@@ -1,11 +1,11 @@
-package com.ody.auth.domain.authorizeType;
+package com.ody.auth.domain.authpolicy;
 
 import com.ody.member.domain.Member;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ExistingUserForNewDevice implements AuthorizationType {
+public class ExistingUserForNewDevice implements AuthPolicy {
 
     @Override
     public boolean match(

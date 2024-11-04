@@ -1,9 +1,9 @@
-package com.ody.auth.domain.authorizeType;
+package com.ody.auth.domain.authpolicy;
 
 import com.ody.member.domain.Member;
 import java.util.Optional;
 
-public interface AuthorizationType {
+public interface AuthPolicy {
 
     boolean match(
             Optional<Member> sameDeviceMember,

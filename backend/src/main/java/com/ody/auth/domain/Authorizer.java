@@ -1,6 +1,6 @@
 package com.ody.auth.domain;
 
-import com.ody.auth.domain.authorizeType.AuthorizationType;
+import com.ody.auth.domain.authpolicy.AuthPolicy;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.member.domain.Member;
 import java.util.List;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class Authorizer {
 
-    private final List<AuthorizationType> authorizationTypes;
+    private final List<AuthPolicy> authPolicies;
 
     public Member authorize(
             Optional<Member> sameDeviceMember,
             Optional<Member> samePidMember,
             Member requestMember
     ) {
-        return authorizationTypes.stream()
+        return authPolicies.stream()
                 .filter(type -> type.match(sameDeviceMember, samePidMember, requestMember))
                 .findAny()
                 .orElseThrow(() -> new OdyUnauthorizedException("잘못된 인증 요청입니다."))

@@ -3,6 +3,7 @@ package com.ody.auth.domain.authorizeType;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ody.auth.domain.authpolicy.ExistingUserForNewDevice;
 import com.ody.mate.domain.Nickname;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;

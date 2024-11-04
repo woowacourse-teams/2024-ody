@@ -1,11 +1,11 @@
-package com.ody.auth.domain.authorizeType;
+package com.ody.auth.domain.authpolicy;
 
 import com.ody.member.domain.Member;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OtherUserForExistingDevice implements AuthorizationType {
+public class NewUserForNewDevice implements AuthPolicy {
 
     @Override
     public boolean match(
@@ -13,9 +13,8 @@ public class OtherUserForExistingDevice implements AuthorizationType {
             Optional<Member> samePidMember,
             Member requestMember
     ) {
-        return sameDeviceMember.isPresent()
-                && samePidMember.isPresent()
-                && !requestMember.isSame(sameDeviceMember.get());
+        return sameDeviceMember.isEmpty()
+                && samePidMember.isEmpty();
     }
 
     @Override
@@ -24,8 +23,6 @@ public class OtherUserForExistingDevice implements AuthorizationType {
             Optional<Member> samePidMember,
             Member requestMember
     ) {
-        sameDeviceMember.get().updateDeviceTokenNull();
-        samePidMember.get().updateDeviceToken(requestMember.getDeviceToken());
-        return samePidMember.get();
+        return requestMember;
     }
 }
