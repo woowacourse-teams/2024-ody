@@ -38,7 +38,6 @@ class ExistingUserForNewDeviceTest {
                 () -> assertThat(authorizedMember.getDeviceToken().getValue()).isEqualTo("other_dt"),
                 () -> assertThat(authorizedMember)
                         .usingRecursiveComparison()
-                        .ignoringFields("deviceToken")
                         .isEqualTo(requestMember)
         );
     }
