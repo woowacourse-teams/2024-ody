@@ -28,7 +28,6 @@ class AuthServiceTest extends BaseServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-
     @DisplayName("멤버 인증 테스트")
     @Nested
     class AuthTest {
