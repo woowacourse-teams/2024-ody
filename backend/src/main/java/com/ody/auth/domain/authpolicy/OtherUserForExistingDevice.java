@@ -10,22 +10,22 @@ public class OtherUserForExistingDevice implements AuthPolicy {
     @Override
     public boolean match(
             Optional<Member> sameDeviceMember,
-            Optional<Member> samePidMember,
+            Optional<Member> sameProviderIdMember,
             Member requestMember
     ) {
         return sameDeviceMember.isPresent()
-                && samePidMember.isPresent()
+                && sameProviderIdMember.isPresent()
                 && !requestMember.isSame(sameDeviceMember.get());
     }
 
     @Override
     public Member authorize(
             Optional<Member> sameDeviceMember,
-            Optional<Member> samePidMember,
+            Optional<Member> sameProviderIdMember,
             Member requestMember
     ) {
         sameDeviceMember.get().updateDeviceTokenNull();
-        samePidMember.get().updateDeviceToken(requestMember.getDeviceToken());
-        return samePidMember.get();
+        sameProviderIdMember.get().updateDeviceToken(requestMember.getDeviceToken());
+        return sameProviderIdMember.get();
     }
 }

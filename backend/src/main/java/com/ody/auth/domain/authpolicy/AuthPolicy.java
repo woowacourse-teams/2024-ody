@@ -7,13 +7,13 @@ public interface AuthPolicy {
 
     boolean match(
             Optional<Member> sameDeviceMember,
-            Optional<Member> samePidMember,
+            Optional<Member> sameProviderIdMember,
             Member requestMember
     );
 
     Member authorize(
             Optional<Member> sameDeviceMember,
-            Optional<Member> samePidMember,
+            Optional<Member> sameProviderIdMember,
             Member requestMember
     );
 }

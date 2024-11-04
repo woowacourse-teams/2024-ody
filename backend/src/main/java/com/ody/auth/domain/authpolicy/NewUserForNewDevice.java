@@ -10,17 +10,17 @@ public class NewUserForNewDevice implements AuthPolicy {
     @Override
     public boolean match(
             Optional<Member> sameDeviceMember,
-            Optional<Member> samePidMember,
+            Optional<Member> sameProviderIdMember,
             Member requestMember
     ) {
         return sameDeviceMember.isEmpty()
-                && samePidMember.isEmpty();
+                && sameProviderIdMember.isEmpty();
     }
 
     @Override
     public Member authorize(
             Optional<Member> sameDeviceMember,
-            Optional<Member> samePidMember,
+            Optional<Member> sameProviderIdMember,
             Member requestMember
     ) {
         return requestMember;
