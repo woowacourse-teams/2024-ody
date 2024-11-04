@@ -6,7 +6,7 @@ import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDestinationBinding
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.creation.MeetingCreationInfoType
 import com.mulberry.ody.presentation.creation.MeetingCreationViewModel
@@ -32,10 +32,10 @@ class MeetingDestinationFragment :
     }
 
     private fun initializeObserve() {
-        collectLifecycleFlow(viewModel.invalidDestinationEvent) {
+        collectWhenStarted(viewModel.invalidDestinationEvent) {
             showSnackBar(R.string.invalid_address)
         }
-        collectLifecycleFlow(viewModel.defaultLocationError) {
+        collectWhenStarted(viewModel.defaultLocationError) {
             showSnackBar(R.string.default_location_error_guide)
         }
     }

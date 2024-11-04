@@ -17,7 +17,7 @@ import com.mulberry.ody.R
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.databinding.FragmentEtaDashboardBinding
 import com.mulberry.ody.databinding.LayoutMissingTooltipBinding
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.common.image.getBitmap
 import com.mulberry.ody.presentation.common.image.toByteArray
@@ -83,13 +83,13 @@ class EtaDashboardFragment :
     }
 
     private fun initializeObserve() {
-        collectLifecycleFlow(viewModel.mateEtaUiModels) {
+        collectWhenStarted(viewModel.mateEtaUiModels) {
             adapter.submitList(it)
         }
-        collectLifecycleFlow(viewModel.nudgeSuccessMate) { nickname ->
+        collectWhenStarted(viewModel.nudgeSuccessMate) { nickname ->
             showSnackBar(getString(R.string.nudge_success, nickname))
         }
-        collectLifecycleFlow(viewModel.nudgeFailMate) { second ->
+        collectWhenStarted(viewModel.nudgeFailMate) { second ->
             showSnackBar(getString(R.string.nudge_failure, second))
         }
     }

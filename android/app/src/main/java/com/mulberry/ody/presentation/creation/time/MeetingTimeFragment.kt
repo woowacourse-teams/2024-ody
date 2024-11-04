@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingTimeBinding
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.creation.MeetingCreationInfoType
 import com.mulberry.ody.presentation.creation.MeetingCreationViewModel
@@ -29,7 +29,7 @@ class MeetingTimeFragment :
     }
 
     private fun initializeObserve() {
-        collectLifecycleFlow(viewModel.invalidMeetingTimeEvent) {
+        collectWhenStarted(viewModel.invalidMeetingTimeEvent) {
             showSnackBar(R.string.invalid_meeting_time)
         }
     }

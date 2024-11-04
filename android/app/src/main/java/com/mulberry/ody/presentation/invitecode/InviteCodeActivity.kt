@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityInviteCodeBinding
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.join.MeetingJoinActivity
@@ -29,27 +29,27 @@ class InviteCodeActivity :
     }
 
     private fun initializeObserve() {
-        collectLifecycleFlow(viewModel.alreadyParticipatedEvent) {
+        collectWhenStarted(viewModel.alreadyParticipatedEvent) {
             viewModel.clearInviteCode()
             showSnackBar(R.string.invite_code_already_participated)
         }
-        collectLifecycleFlow(viewModel.invalidInviteCodeEvent) {
+        collectWhenStarted(viewModel.invalidInviteCodeEvent) {
             viewModel.clearInviteCode()
             showSnackBar(R.string.invite_code_invalid_invite_code)
         }
-        collectLifecycleFlow(viewModel.navigateAction) {
+        collectWhenStarted(viewModel.navigateAction) {
             navigateToJoinView()
             finish()
         }
-        collectLifecycleFlow(viewModel.networkErrorEvent) {
+        collectWhenStarted(viewModel.networkErrorEvent) {
             showRetrySnackBar {
                 viewModel.retryLastAction()
             }
         }
-        collectLifecycleFlow(viewModel.isLoading) { isLoading ->
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
             if (isLoading) {
                 showLoadingDialog()
-                return@collectLifecycleFlow
+                return@collectWhenStarted
             }
             hideLoadingDialog()
         }

@@ -10,7 +10,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingsBinding
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.creation.MeetingCreationActivity
@@ -62,10 +62,10 @@ class MeetingsActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback())
-        collectLifecycleFlow(viewModel.meetingCatalogs) {
+        collectWhenStarted(viewModel.meetingCatalogs) {
             adapter.submitList(it)
         }
-        collectLifecycleFlow(viewModel.navigateAction) {
+        collectWhenStarted(viewModel.navigateAction) {
             when (it) {
                 is MeetingsNavigateAction.NavigateToEtaDashboard ->
                     navigateToEtaDashboard(
@@ -80,16 +80,16 @@ class MeetingsActivity :
                 is MeetingsNavigateAction.NavigateToLogin -> navigateToLogin()
             }
         }
-        collectLifecycleFlow(viewModel.networkErrorEvent) {
+        collectWhenStarted(viewModel.networkErrorEvent) {
             showRetrySnackBar { viewModel.retryLastAction() }
         }
-        collectLifecycleFlow(viewModel.errorEvent) {
+        collectWhenStarted(viewModel.errorEvent) {
             showSnackBar(R.string.error_guide)
         }
-        collectLifecycleFlow(viewModel.isLoading) { isLoading ->
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
             if (isLoading) {
                 showLoadingDialog()
-                return@collectLifecycleFlow
+                return@collectWhenStarted
             }
             hideLoadingDialog()
         }

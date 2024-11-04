@@ -7,7 +7,7 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentNotificationLogBinding
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
@@ -43,13 +43,13 @@ class NotificationLogFragment :
     }
 
     private fun initializeObserve() {
-        collectLifecycleFlow(viewModel.notificationLogs) {
+        collectWhenStarted(viewModel.notificationLogs) {
             notificationLogsAdapter.submitList(it)
         }
-        collectLifecycleFlow(viewModel.mates) {
+        collectWhenStarted(viewModel.mates) {
             matesAdapter.submitList(it)
         }
-        collectLifecycleFlow(viewModel.copyInviteCodeEvent) {
+        collectWhenStarted(viewModel.copyInviteCodeEvent) {
             viewModel.copyInviteCodeEvent.collect {
                 val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
                 intent.type = "text/plain"

@@ -12,7 +12,7 @@ import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentAddressSearchBinding
 import com.mulberry.ody.presentation.address.adapter.AddressesAdapter
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.toPixel
@@ -71,25 +71,25 @@ class AddressSearchFragment :
             viewLifecycleOwner,
             onBackPressedCallback,
         )
-        collectLifecycleFlow(viewModel.isLoading) { isLoading ->
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
             if (isLoading) {
                 showLoadingDialog()
-                return@collectLifecycleFlow
+                return@collectWhenStarted
             }
             hideLoadingDialog()
         }
-        collectLifecycleFlow(viewModel.networkErrorEvent) {
+        collectWhenStarted(viewModel.networkErrorEvent) {
             showRetrySnackBar { viewModel.retryLastAction() }
         }
-        collectLifecycleFlow(viewModel.addressUiModels) {
+        collectWhenStarted(viewModel.addressUiModels) {
             adapter.submitList(it)
         }
-        collectLifecycleFlow(viewModel.addressSelectEvent) {
+        collectWhenStarted(viewModel.addressSelectEvent) {
             (parentFragment as? AddressSearchListener)?.onReceive(it)
             (activity as? AddressSearchListener)?.onReceive(it)
             onBack()
         }
-        collectLifecycleFlow(viewModel.addressSearchKeyword) {
+        collectWhenStarted(viewModel.addressSearchKeyword) {
             if (it.isEmpty()) viewModel.clearAddresses()
         }
     }

@@ -12,7 +12,7 @@ import com.mulberry.ody.databinding.ActivityMeetingCreationBinding
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.address.AddressSearchFragment
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.ViewPagerAdapter
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
@@ -66,13 +66,13 @@ class MeetingCreationActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        collectLifecycleFlow(viewModel.inviteCode) {
+        collectWhenStarted(viewModel.inviteCode) {
             viewModel.onClickCreationMeeting()
         }
-        collectLifecycleFlow(viewModel.nextPageEvent) {
+        collectWhenStarted(viewModel.nextPageEvent) {
             handleMeetingInfoNextClick()
         }
-        collectLifecycleFlow(viewModel.navigateAction) {
+        collectWhenStarted(viewModel.navigateAction) {
             when (it) {
                 MeetingCreationNavigateAction.NavigateToMeetings -> {
                     finish()
@@ -89,16 +89,16 @@ class MeetingCreationActivity :
                 }
             }
         }
-        collectLifecycleFlow(viewModel.networkErrorEvent) {
+        collectWhenStarted(viewModel.networkErrorEvent) {
             showRetrySnackBar { viewModel.retryLastAction() }
         }
-        collectLifecycleFlow(viewModel.errorEvent) {
+        collectWhenStarted(viewModel.errorEvent) {
             showSnackBar(R.string.error_guide)
         }
-        collectLifecycleFlow(viewModel.isLoading) { isLoading ->
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
             if (isLoading) {
                 showLoadingDialog()
-                return@collectLifecycleFlow
+                return@collectWhenStarted
             }
             hideLoadingDialog()
         }

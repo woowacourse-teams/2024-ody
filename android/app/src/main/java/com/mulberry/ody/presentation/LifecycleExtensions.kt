@@ -8,7 +8,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-fun <T> AppCompatActivity.collectLifecycleFlow(
+fun <T> AppCompatActivity.collectWhenStarted(
     flow: Flow<T>,
     block: suspend (T) -> Unit,
 ) {
@@ -19,7 +19,7 @@ fun <T> AppCompatActivity.collectLifecycleFlow(
     }
 }
 
-fun <T> Fragment.collectLifecycleFlow(
+fun <T> Fragment.collectWhenStarted(
     flow: Flow<T>,
     block: suspend (T) -> Unit,
 ) {

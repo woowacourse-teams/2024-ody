@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.databinding.DialogExitMeetingRoomBinding
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.log.listener.ExitMeetingRoomListener
 
@@ -51,10 +51,10 @@ class ExitMeetingRoomDialog : DialogFragment(), ExitMeetingRoomListener {
     }
 
     private fun initializeObserve() {
-        collectLifecycleFlow(viewModel.meeting) {
+        collectWhenStarted(viewModel.meeting) {
             binding.meetingName = it.name
         }
-        collectLifecycleFlow(viewModel.exitMeetingRoomEvent) {
+        collectWhenStarted(viewModel.exitMeetingRoomEvent) {
             requireActivity().finish()
         }
     }

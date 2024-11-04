@@ -13,7 +13,7 @@ import com.mulberry.ody.R
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.domain.model.NotificationType
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
@@ -57,7 +57,7 @@ class SettingActivity :
     }
 
     private fun initializeObserve() {
-        collectLifecycleFlow(viewModel.loginNavigateEvent) {
+        collectWhenStarted(viewModel.loginNavigateEvent) {
             when (it) {
                 LoginNavigatedReason.LOGOUT -> {
                     navigateToLogin()
@@ -68,19 +68,19 @@ class SettingActivity :
                 }
             }
         }
-        collectLifecycleFlow(viewModel.isLoading) { isLoading ->
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
             if (isLoading) {
                 showLoadingDialog()
-                return@collectLifecycleFlow
+                return@collectWhenStarted
             }
             hideLoadingDialog()
         }
-        collectLifecycleFlow(viewModel.networkErrorEvent) {
+        collectWhenStarted(viewModel.networkErrorEvent) {
             viewModel.networkErrorEvent.collect {
                 showRetrySnackBar { viewModel.retryLastAction() }
             }
         }
-        collectLifecycleFlow(viewModel.errorEvent) {
+        collectWhenStarted(viewModel.errorEvent) {
             showSnackBar(R.string.error_guide)
         }
     }

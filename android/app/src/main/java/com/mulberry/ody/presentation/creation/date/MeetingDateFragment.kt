@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDateBinding
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.creation.MeetingCreationInfoType
 import com.mulberry.ody.presentation.creation.MeetingCreationViewModel
@@ -42,7 +42,7 @@ class MeetingDateFragment :
     }
 
     private fun initializeObserve() {
-        collectLifecycleFlow(viewModel.invalidMeetingDateEvent) {
+        collectWhenStarted(viewModel.invalidMeetingDateEvent) {
             showSnackBar(R.string.meeting_date_date_guide)
             val meetingDate = viewModel.meetingDate.value
             binding.dpDate.updateDate(

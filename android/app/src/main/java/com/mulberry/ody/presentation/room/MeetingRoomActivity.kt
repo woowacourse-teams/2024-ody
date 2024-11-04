@@ -7,10 +7,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingRoomBinding
-import com.mulberry.ody.presentation.collectLifecycleFlow
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.room.etadashboard.EtaDashboardFragment
@@ -55,22 +54,22 @@ class MeetingRoomActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        collectLifecycleFlow(viewModel.navigateToEtaDashboardEvent) {
+        collectWhenStarted(viewModel.navigateToEtaDashboardEvent) {
             addFragment(EtaDashboardFragment())
         }
-        collectLifecycleFlow(viewModel.networkErrorEvent) {
+        collectWhenStarted(viewModel.networkErrorEvent) {
             showRetrySnackBar { viewModel.retryLastAction() }
         }
-        collectLifecycleFlow(viewModel.errorEvent) {
+        collectWhenStarted(viewModel.errorEvent) {
             showSnackBar(R.string.error_guide)
         }
-        collectLifecycleFlow(viewModel.expiredNudgeTimeLimit) {
+        collectWhenStarted(viewModel.expiredNudgeTimeLimit) {
             showSnackBar(R.string.nudge_time_limit_expired)
         }
-        collectLifecycleFlow(viewModel.isLoading) { isLoading ->
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
             if (isLoading) {
                 showLoadingDialog()
-                return@collectLifecycleFlow
+                return@collectWhenStarted
             }
             hideLoadingDialog()
         }
