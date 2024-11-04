@@ -13,7 +13,8 @@ public class ExistingUserForNewDevice implements AuthPolicy {
             Optional<Member> sameProviderIdMember,
             Member requestMember
     ) {
-        return sameDeviceMember.isEmpty() && sameProviderIdMember.isPresent();
+        return sameDeviceMember.isEmpty()
+                && sameProviderIdMember.isPresent();
     }
 
     @Override
