@@ -9,10 +9,10 @@ import com.ody.common.BaseRouteClientTest;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
-import com.ody.route.config.RouteClientProperty;
 import com.ody.route.domain.RouteTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -20,7 +20,12 @@ import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestClientTest(GoogleRouteClient.class)
-class GoogleRouteClientTest extends BaseRouteClientTest {
+public class GoogleRouteClientTest extends BaseRouteClientTest {
+
+    private static final String BASE_URI = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+
+    @Value("${google.maps.api-key}")
+    private String testApiKey;
 
     @DisplayName("버스, 지하철을 이용한 소요시간 계산 요청 성공 시, 가장 빠른 소요 시간을 분으로 변환하여 반환한다.")
     @Test
@@ -105,12 +110,12 @@ class GoogleRouteClientTest extends BaseRouteClientTest {
     }
 
     private String makeUri(Coordinates origin, Coordinates target) {
-        return UriComponentsBuilder.fromHttpUrl(property.baseUrl())
+        return UriComponentsBuilder.fromHttpUrl(BASE_URI)
                 .queryParam("destinations", mapCoordinatesToUrl(target))
                 .queryParam("origins", mapCoordinatesToUrl(origin))
                 .queryParam("mode", "transit")
                 .queryParam("transit_mode", "bus%7Csubway")
-                .queryParam("key", property.apiKey())
+                .queryParam("key", testApiKey)
                 .build()
                 .toUriString();
     }
@@ -126,12 +131,7 @@ class GoogleRouteClientTest extends BaseRouteClientTest {
     }
 
     @Override
-    protected RouteClientProperty getProperty() {
-        return properties.getProperty("google");
-    }
-
-    @Override
     protected RouteClient createRouteClient() {
-        return new GoogleRouteClient(property, restClientBuilder);
+        return new GoogleRouteClient(restClientBuilder, testApiKey);
     }
 }

@@ -10,7 +10,6 @@ import com.ody.common.BaseRouteClientTest;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
-import com.ody.route.config.RouteClientProperty;
 import com.ody.route.domain.RouteTime;
 import java.io.IOException;
 import java.net.URI;
@@ -92,12 +91,12 @@ class OdsayRouteClientTest extends BaseRouteClientTest {
     }
 
     private URI makeUri(Coordinates origin, Coordinates target) {
-        String uri = property.baseUrl()
+        String uri = routeProperties.getUrl()
                 + "?SX=" + origin.getLongitude()
                 + "&SY=" + origin.getLatitude()
                 + "&EX=" + target.getLongitude()
                 + "&EY=" + target.getLatitude()
-                + "&apiKey=" + property.apiKey();
+                + "&apiKey=" + routeProperties.getApiKey();
 
         try {
             return new URI(uri);
@@ -113,12 +112,7 @@ class OdsayRouteClientTest extends BaseRouteClientTest {
     }
 
     @Override
-    protected RouteClientProperty getProperty() {
-        return properties.getProperty("odsay");
-    }
-
-    @Override
     protected RouteClient createRouteClient() {
-        return new OdsayRouteClient(property, restClientBuilder);
+        return new OdsayRouteClient(routeProperties, restClientBuilder);
     }
 }
