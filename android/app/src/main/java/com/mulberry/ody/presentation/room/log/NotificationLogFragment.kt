@@ -7,15 +7,14 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentNotificationLogBinding
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
-import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.log.adapter.MatesAdapter
 import com.mulberry.ody.presentation.room.log.adapter.NotificationLogsAdapter
 import com.mulberry.ody.presentation.room.log.listener.MenuListener
 import com.mulberry.ody.presentation.room.log.listener.NotificationLogListener
-import kotlinx.coroutines.launch
 
 class NotificationLogFragment :
     BindingFragment<FragmentNotificationLogBinding>(R.layout.fragment_notification_log),
@@ -44,28 +43,23 @@ class NotificationLogFragment :
     }
 
     private fun initializeObserve() {
-        launchWhenStarted {
-            launch {
-                viewModel.notificationLogs.collect {
-                    notificationLogsAdapter.submitList(it)
-                }
-            }
-            launch {
-                viewModel.mates.collect {
-                    matesAdapter.submitList(it)
-                }
-            }
-            launch {
-                viewModel.copyInviteCodeEvent.collect {
-                    val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
-                    intent.type = "text/plain"
+        collectWhenStarted(viewModel.notificationLogs) {
+            notificationLogsAdapter.submitList(it)
+        }
+        collectWhenStarted(viewModel.mates) {
+            matesAdapter.submitList(it)
+        }
+        collectWhenStarted(viewModel.copyInviteCodeEvent) {
+            viewModel.copyInviteCodeEvent.collect {
+                val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
+                intent.type = "text/plain"
 
-                    val shareMessage = getString(R.string.invite_code_copy, it.meetingName, it.inviteCode)
-                    intent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+                val shareMessage =
+                    getString(R.string.invite_code_copy, it.meetingName, it.inviteCode)
+                intent.putExtra(Intent.EXTRA_TEXT, shareMessage)
 
-                    val chooserTitle = getString(R.string.invite_code_copy_title)
-                    startActivity(Intent.createChooser(intent, chooserTitle))
-                }
+                val chooserTitle = getString(R.string.invite_code_copy_title)
+                startActivity(Intent.createChooser(intent, chooserTitle))
             }
         }
     }

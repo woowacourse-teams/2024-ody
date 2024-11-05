@@ -13,10 +13,10 @@ import com.mulberry.ody.R
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.domain.model.NotificationType
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
-import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.login.LoginNavigatedReason
 import com.mulberry.ody.presentation.setting.adapter.SettingsAdapter
@@ -57,39 +57,31 @@ class SettingActivity :
     }
 
     private fun initializeObserve() {
-        launchWhenStarted {
-            launch {
-                viewModel.loginNavigateEvent.collect {
-                    when (it) {
-                        LoginNavigatedReason.LOGOUT -> {
-                            navigateToLogin()
-                        }
+        collectWhenStarted(viewModel.loginNavigateEvent) {
+            when (it) {
+                LoginNavigatedReason.LOGOUT -> {
+                    navigateToLogin()
+                }
 
-                        LoginNavigatedReason.WITHDRAWAL -> {
-                            navigateToWithdrawal()
-                        }
-                    }
+                LoginNavigatedReason.WITHDRAWAL -> {
+                    navigateToWithdrawal()
                 }
             }
-            launch {
-                viewModel.isLoading.collect { isLoading ->
-                    if (isLoading) {
-                        showLoadingDialog()
-                        return@collect
-                    }
-                    hideLoadingDialog()
-                }
+        }
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@collectWhenStarted
             }
-            launch {
-                viewModel.networkErrorEvent.collect {
-                    showRetrySnackBar { viewModel.retryLastAction() }
-                }
+            hideLoadingDialog()
+        }
+        collectWhenStarted(viewModel.networkErrorEvent) {
+            viewModel.networkErrorEvent.collect {
+                showRetrySnackBar { viewModel.retryLastAction() }
             }
-            launch {
-                viewModel.errorEvent.collect {
-                    showSnackBar(R.string.error_guide)
-                }
-            }
+        }
+        collectWhenStarted(viewModel.errorEvent) {
+            showSnackBar(R.string.error_guide)
         }
     }
 
@@ -152,8 +144,16 @@ class SettingActivity :
 
         val isNotificationOn =
             when (settingItemType) {
-                SettingItemType.NOTIFICATION_DEPARTURE -> odyDatastore.getIsNotificationOn(NotificationType.DEPARTURE_REMINDER)
-                SettingItemType.NOTIFICATION_ENTRY -> odyDatastore.getIsNotificationOn(NotificationType.ENTRY)
+                SettingItemType.NOTIFICATION_DEPARTURE ->
+                    odyDatastore.getIsNotificationOn(
+                        NotificationType.DEPARTURE_REMINDER,
+                    )
+
+                SettingItemType.NOTIFICATION_ENTRY ->
+                    odyDatastore.getIsNotificationOn(
+                        NotificationType.ENTRY,
+                    )
+
                 SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> return
             }
         lifecycleScope.launch {

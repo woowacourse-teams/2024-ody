@@ -12,6 +12,7 @@ import com.mulberry.ody.databinding.ActivityMeetingCreationBinding
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.address.AddressSearchFragment
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.ViewPagerAdapter
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
@@ -20,9 +21,7 @@ import com.mulberry.ody.presentation.creation.destination.MeetingDestinationFrag
 import com.mulberry.ody.presentation.creation.name.MeetingNameFragment
 import com.mulberry.ody.presentation.creation.time.MeetingTimeFragment
 import com.mulberry.ody.presentation.join.MeetingJoinActivity
-import com.mulberry.ody.presentation.launchWhenStarted
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MeetingCreationActivity :
@@ -67,55 +66,41 @@ class MeetingCreationActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        launchWhenStarted {
-            launch {
-                viewModel.inviteCode.collect {
-                    viewModel.onClickCreationMeeting()
+        collectWhenStarted(viewModel.inviteCode) {
+            viewModel.onClickCreationMeeting()
+        }
+        collectWhenStarted(viewModel.nextPageEvent) {
+            handleMeetingInfoNextClick()
+        }
+        collectWhenStarted(viewModel.navigateAction) {
+            when (it) {
+                MeetingCreationNavigateAction.NavigateToMeetings -> {
+                    finish()
                 }
-            }
-            launch {
-                viewModel.nextPageEvent.collect {
-                    handleMeetingInfoNextClick()
-                }
-            }
-            launch {
-                viewModel.navigateAction.collect {
-                    when (it) {
-                        MeetingCreationNavigateAction.NavigateToMeetings -> {
-                            finish()
-                        }
 
-                        is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
-                            startActivity(
-                                MeetingJoinActivity.getIntent(
-                                    it.inviteCode,
-                                    this@MeetingCreationActivity,
-                                ),
-                            )
-                            finish()
-                        }
-                    }
+                is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
+                    startActivity(
+                        MeetingJoinActivity.getIntent(
+                            it.inviteCode,
+                            this@MeetingCreationActivity,
+                        ),
+                    )
+                    finish()
                 }
             }
-            launch {
-                viewModel.networkErrorEvent.collect {
-                    showRetrySnackBar { viewModel.retryLastAction() }
-                }
+        }
+        collectWhenStarted(viewModel.networkErrorEvent) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+        collectWhenStarted(viewModel.errorEvent) {
+            showSnackBar(R.string.error_guide)
+        }
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@collectWhenStarted
             }
-            launch {
-                viewModel.errorEvent.collect {
-                    showSnackBar(R.string.error_guide)
-                }
-            }
-            launch {
-                viewModel.isLoading.collect { isLoading ->
-                    if (isLoading) {
-                        showLoadingDialog()
-                        return@collect
-                    }
-                    hideLoadingDialog()
-                }
-            }
+            hideLoadingDialog()
         }
     }
 

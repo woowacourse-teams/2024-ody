@@ -6,11 +6,10 @@ import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDestinationBinding
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.creation.MeetingCreationInfoType
 import com.mulberry.ody.presentation.creation.MeetingCreationViewModel
-import com.mulberry.ody.presentation.launchWhenStarted
-import kotlinx.coroutines.launch
 
 class MeetingDestinationFragment :
     BindingFragment<FragmentMeetingDestinationBinding>(
@@ -33,17 +32,11 @@ class MeetingDestinationFragment :
     }
 
     private fun initializeObserve() {
-        launchWhenStarted {
-            launch {
-                viewModel.invalidDestinationEvent.collect {
-                    showSnackBar(R.string.invalid_address)
-                }
-            }
-            launch {
-                viewModel.defaultLocationError.collect {
-                    showSnackBar(R.string.default_location_error_guide)
-                }
-            }
+        collectWhenStarted(viewModel.invalidDestinationEvent) {
+            showSnackBar(R.string.invalid_address)
+        }
+        collectWhenStarted(viewModel.defaultLocationError) {
+            showSnackBar(R.string.default_location_error_guide)
         }
     }
 

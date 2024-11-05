@@ -5,21 +5,27 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-fun AppCompatActivity.launchWhenStarted(block: suspend CoroutineScope.() -> Unit) {
+fun <T> AppCompatActivity.collectWhenStarted(
+    flow: Flow<T>,
+    block: suspend (T) -> Unit,
+) {
     lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
-            block()
+            flow.collect(block)
         }
     }
 }
 
-fun Fragment.launchWhenStarted(block: suspend CoroutineScope.() -> Unit) {
+fun <T> Fragment.collectWhenStarted(
+    flow: Flow<T>,
+    block: suspend (T) -> Unit,
+) {
     viewLifecycleOwner.lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            block()
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(block)
         }
     }
 }
