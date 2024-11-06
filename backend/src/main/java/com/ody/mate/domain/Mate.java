@@ -27,8 +27,8 @@ import org.hibernate.annotations.SQLDelete;
 
 @Table(uniqueConstraints = {
         @UniqueConstraint(
-                name = "uniqueMeetingAndMember",
-                columnNames = {"meeting_id", "member_id"}
+                name = "uniqueMeetingAndMemberAndDeletedAt",
+                columnNames = {"meeting_id", "member_id", "deleted_at"}
         )
 })
 @Entity
