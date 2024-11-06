@@ -18,13 +18,13 @@ public class Authorizer {
     @Transactional
     public Member authorize(
             Optional<Member> sameDeviceMember,
-            Optional<Member> samePidMember,
+            Optional<Member> sameProviderIdMember,
             Member requestMember
     ) {
         return authPolicies.stream()
-                .filter(type -> type.match(sameDeviceMember, samePidMember, requestMember))
+                .filter(type -> type.match(sameDeviceMember, sameProviderIdMember, requestMember))
                 .findAny()
                 .orElseThrow(() -> new OdyUnauthorizedException("잘못된 인증 요청입니다."))
-                .authorize(sameDeviceMember, samePidMember, requestMember);
+                .authorize(sameDeviceMember, sameProviderIdMember, requestMember);
     }
 }
