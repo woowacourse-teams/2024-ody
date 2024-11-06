@@ -1,11 +1,11 @@
-package com.ody.auth.domain.authpolicy;
+package com.ody.auth.domain.logincontext;
 
 import com.ody.member.domain.Member;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ExistingUserForExistingDevice implements AuthPolicy {
+public class NewUserForNewDevice implements LoginContext {
 
     @Override
     public boolean match(
@@ -13,17 +13,16 @@ public class ExistingUserForExistingDevice implements AuthPolicy {
             Optional<Member> sameProviderIdMember,
             Member requestMember
     ) {
-        return sameDeviceMember.isPresent()
-                && sameProviderIdMember.isPresent()
-                && requestMember.isSame(sameDeviceMember.get());
+        return sameDeviceMember.isEmpty()
+                && sameProviderIdMember.isEmpty();
     }
 
     @Override
-    public Member authorize(
+    public Member syncDevice(
             Optional<Member> sameDeviceMember,
             Optional<Member> sameProviderIdMember,
             Member requestMember
     ) {
-        return sameProviderIdMember.get();
+        return requestMember;
     }
 }

@@ -1,9 +1,9 @@
-package com.ody.auth.domain.authpolicy;
+package com.ody.auth.domain.logincontext;
 
 import com.ody.member.domain.Member;
 import java.util.Optional;
 
-public interface AuthPolicy {
+public interface LoginContext {
 
     boolean match(
             Optional<Member> sameDeviceMember,
@@ -11,7 +11,7 @@ public interface AuthPolicy {
             Member requestMember
     );
 
-    Member authorize(
+    Member syncDevice(
             Optional<Member> sameDeviceMember,
             Optional<Member> sameProviderIdMember,
             Member requestMember

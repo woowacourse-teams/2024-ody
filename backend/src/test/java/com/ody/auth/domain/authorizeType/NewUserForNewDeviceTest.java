@@ -2,7 +2,7 @@ package com.ody.auth.domain.authorizeType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ody.auth.domain.authpolicy.NewUserForNewDevice;
+import com.ody.auth.domain.logincontext.NewUserForNewDevice;
 import com.ody.mate.domain.Nickname;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
@@ -29,11 +29,11 @@ class NewUserForNewDeviceTest {
 
     @DisplayName("신규 유저를 인증 대상으로 반환한다")
     @Test
-    void authorize() {
+    void syncDevice() {
         NewUserForNewDevice authorizationType = new NewUserForNewDevice();
         Member requestMember = new Member("pid", new Nickname("콜리"), "imgUrl", new DeviceToken("dt"));
 
-        Member authorizedMember = authorizationType.authorize(
+        Member authorizedMember = authorizationType.syncDevice(
                 Optional.empty(),
                 Optional.empty(),
                 requestMember

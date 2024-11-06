@@ -1,6 +1,6 @@
 package com.ody.auth.domain;
 
-import com.ody.auth.domain.authpolicy.AuthPolicy;
+import com.ody.auth.domain.logincontext.LoginContext;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.member.domain.Member;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class Authorizer {
 
-    private final List<AuthPolicy> authPolicies;
+    private final List<LoginContext> authPolicies;
 
     @Transactional
     public Member authorize(
@@ -25,6 +25,6 @@ public class Authorizer {
                 .filter(type -> type.match(sameDeviceMember, sameProviderIdMember, requestMember))
                 .findAny()
                 .orElseThrow(() -> new OdyUnauthorizedException("잘못된 인증 요청입니다."))
-                .authorize(sameDeviceMember, sameProviderIdMember, requestMember);
+                .syncDevice(sameDeviceMember, sameProviderIdMember, requestMember);
     }
 }

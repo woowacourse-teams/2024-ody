@@ -1,11 +1,11 @@
-package com.ody.auth.domain.authpolicy;
+package com.ody.auth.domain.logincontext;
 
 import com.ody.member.domain.Member;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OtherUserForExistingDevice implements AuthPolicy {
+public class OtherUserForExistingDevice implements LoginContext {
 
     @Override
     public boolean match(
@@ -19,7 +19,7 @@ public class OtherUserForExistingDevice implements AuthPolicy {
     }
 
     @Override
-    public Member authorize(
+    public Member syncDevice(
             Optional<Member> sameDeviceMember,
             Optional<Member> sameProviderIdMember,
             Member requestMember

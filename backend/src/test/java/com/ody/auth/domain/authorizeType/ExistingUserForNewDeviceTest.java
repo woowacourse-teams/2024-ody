@@ -3,7 +3,7 @@ package com.ody.auth.domain.authorizeType;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.ody.auth.domain.authpolicy.ExistingUserForNewDevice;
+import com.ody.auth.domain.logincontext.ExistingUserForNewDevice;
 import com.ody.mate.domain.Nickname;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
@@ -27,12 +27,12 @@ class ExistingUserForNewDeviceTest {
 
     @DisplayName("기존 유저의 디바이스 토큰을 새로운 디바이스 토큰으로 업데이트 한다")
     @Test
-    void authorize() {
+    void syncDevice() {
         ExistingUserForNewDevice authorizationType = new ExistingUserForNewDevice();
         Member member = new Member("pid", new Nickname("콜리"), "imgUrl", new DeviceToken("dt"));
         Member requestMember = new Member("pid", new Nickname("콜리"), "imgUrl", new DeviceToken("other_dt"));
 
-        Member authorizedMember = authorizationType.authorize(Optional.empty(), Optional.of(member), requestMember);
+        Member authorizedMember = authorizationType.syncDevice(Optional.empty(), Optional.of(member), requestMember);
 
         assertAll(
                 () -> assertThat(authorizedMember.getDeviceToken().getValue()).isEqualTo("other_dt"),

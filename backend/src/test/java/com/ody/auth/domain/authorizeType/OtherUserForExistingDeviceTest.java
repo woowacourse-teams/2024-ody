@@ -3,7 +3,7 @@ package com.ody.auth.domain.authorizeType;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.ody.auth.domain.authpolicy.OtherUserForExistingDevice;
+import com.ody.auth.domain.logincontext.OtherUserForExistingDevice;
 import com.ody.mate.domain.Nickname;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
@@ -32,12 +32,12 @@ class OtherUserForExistingDeviceTest {
 
     @DisplayName("기존 기기 사용자의 디바이스 토큰을 null로 업데이트하고, 로그인 요청 사용자의 기기 토큰을 요청한 기기 토큰으로 업데이트 한다")
     @Test
-    void authorize() {
+    void syncDevice() {
         OtherUserForExistingDevice authorizationType = new OtherUserForExistingDevice();
         Member originalMember = new Member("pid", new Nickname("콜리"), "imgUrl", new DeviceToken("dt"));
         Member requestMember = new Member("pid2", new Nickname("제리"), "imgUrl2", new DeviceToken("dt"));
 
-        Member authroziedMember = authorizationType.authorize(
+        Member authroziedMember = authorizationType.syncDevice(
                 Optional.of(originalMember),
                 Optional.of(requestMember),
                 requestMember
