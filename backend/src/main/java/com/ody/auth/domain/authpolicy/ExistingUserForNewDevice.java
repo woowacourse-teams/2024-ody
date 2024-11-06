@@ -18,7 +18,11 @@ public class ExistingUserForNewDevice implements AuthPolicy {
     }
 
     @Override
-    public Member authorize(Optional<Member> sameDeviceMember, Optional<Member> sameProviderIdMember, Member requestMember) {
+    public Member authorize(
+            Optional<Member> sameDeviceMember,
+            Optional<Member> sameProviderIdMember,
+            Member requestMember
+    ) {
         Member sameAuthProviderMember = sameProviderIdMember.get();
         sameAuthProviderMember.updateDeviceToken(requestMember.getDeviceToken());
         return sameAuthProviderMember;
