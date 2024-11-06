@@ -14,14 +14,13 @@ spring:
   flyway:
     enabled: false
 
-route:
-  vendors:
-    - name: odsay
-      base-url: https://api.odsay.com/v1/api/searchPubTransPathT
-      api-key: testApiKey
-    - name: google
-      base-url: https://maps.googleapis.com/maps/api/distancematrix/json
-      api-key: testApiKey
+odsay:
+  url: https://api.odsay.com/v1/api/searchPubTransPathT
+  api-key: testApiKey
+
+google:
+  maps:
+    api-key: testApiKey
 
 allowed-origins:
   api-call: testOrigin

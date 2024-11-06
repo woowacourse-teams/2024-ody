@@ -12,12 +12,11 @@ import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentAddressSearchBinding
 import com.mulberry.ody.presentation.address.adapter.AddressesAdapter
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.toPixel
-import com.mulberry.ody.presentation.launchWhenStarted
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AddressSearchFragment :
@@ -72,39 +71,26 @@ class AddressSearchFragment :
             viewLifecycleOwner,
             onBackPressedCallback,
         )
-
-        launchWhenStarted {
-            launch {
-                viewModel.isLoading.collect { isLoading ->
-                    if (isLoading) {
-                        showLoadingDialog()
-                        return@collect
-                    }
-                    hideLoadingDialog()
-                }
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@collectWhenStarted
             }
-            launch {
-                viewModel.networkErrorEvent.collect {
-                    showRetrySnackBar { viewModel.retryLastAction() }
-                }
-            }
-            launch {
-                viewModel.addressUiModels.collect {
-                    adapter.submitList(it)
-                }
-            }
-            launch {
-                viewModel.addressSelectEvent.collect {
-                    (parentFragment as? AddressSearchListener)?.onReceive(it)
-                    (activity as? AddressSearchListener)?.onReceive(it)
-                    onBack()
-                }
-            }
-            launch {
-                viewModel.addressSearchKeyword.collect {
-                    if (it.isEmpty()) viewModel.clearAddresses()
-                }
-            }
+            hideLoadingDialog()
+        }
+        collectWhenStarted(viewModel.networkErrorEvent) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+        collectWhenStarted(viewModel.addressUiModels) {
+            adapter.submitList(it)
+        }
+        collectWhenStarted(viewModel.addressSelectEvent) {
+            (parentFragment as? AddressSearchListener)?.onReceive(it)
+            (activity as? AddressSearchListener)?.onReceive(it)
+            onBack()
+        }
+        collectWhenStarted(viewModel.addressSearchKeyword) {
+            if (it.isEmpty()) viewModel.clearAddresses()
         }
     }
 

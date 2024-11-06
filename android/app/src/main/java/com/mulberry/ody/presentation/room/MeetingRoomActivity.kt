@@ -7,16 +7,14 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingRoomBinding
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.room.etadashboard.EtaDashboardFragment
 import com.mulberry.ody.presentation.room.log.NotificationLogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -56,34 +54,24 @@ class MeetingRoomActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        lifecycleScope.launch {
-            viewModel.navigateToEtaDashboardEvent.collect {
-                addFragment(EtaDashboardFragment())
-            }
+        collectWhenStarted(viewModel.navigateToEtaDashboardEvent) {
+            addFragment(EtaDashboardFragment())
         }
-        lifecycleScope.launch {
-            viewModel.networkErrorEvent.collect {
-                showRetrySnackBar { viewModel.retryLastAction() }
-            }
+        collectWhenStarted(viewModel.networkErrorEvent) {
+            showRetrySnackBar { viewModel.retryLastAction() }
         }
-        lifecycleScope.launch {
-            viewModel.errorEvent.collect {
-                showSnackBar(R.string.error_guide)
-            }
+        collectWhenStarted(viewModel.errorEvent) {
+            showSnackBar(R.string.error_guide)
         }
-        lifecycleScope.launch {
-            viewModel.expiredNudgeTimeLimit.collect {
-                showSnackBar(R.string.nudge_time_limit_expired)
-            }
+        collectWhenStarted(viewModel.expiredNudgeTimeLimit) {
+            showSnackBar(R.string.nudge_time_limit_expired)
         }
-        lifecycleScope.launch {
-            viewModel.isLoading.collect { isLoading ->
-                if (isLoading) {
-                    showLoadingDialog()
-                    return@collect
-                }
-                hideLoadingDialog()
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@collectWhenStarted
             }
+            hideLoadingDialog()
         }
     }
 

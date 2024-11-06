@@ -23,8 +23,8 @@ android {
         applicationId = "com.mulberry.ody"
         minSdk = 26
         targetSdk = 34
-        versionCode = 31
-        versionName = "1.2.2"
+        versionCode = 32
+        versionName = "1.2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_DEV_URL", properties["BASE_DEV_URL"].toString())

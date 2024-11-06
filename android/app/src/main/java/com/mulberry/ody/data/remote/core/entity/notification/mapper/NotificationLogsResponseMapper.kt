@@ -29,7 +29,7 @@ private fun String.toNotificationLogType(): NotificationLogType {
         "DEPARTURE_REMINDER" -> DEPARTURE_REMINDER
         "DEPARTURE" -> DEPARTURE
         "MEMBER_DELETION" -> MEMBER_DELETION
-        "MEMBER_EXIT" -> MEMBER_EXIT
+        "LEAVE" -> MEMBER_EXIT
         "NUDGE" -> NUDGE
         else -> DEFAULT
     }

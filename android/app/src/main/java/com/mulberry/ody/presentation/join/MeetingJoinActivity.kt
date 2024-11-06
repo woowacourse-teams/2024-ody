@@ -11,16 +11,14 @@ import com.mulberry.ody.databinding.ActivityMeetingJoinBinding
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.address.AddressSearchFragment
 import com.mulberry.ody.presentation.address.listener.AddressSearchListener
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.listener.NextListener
 import com.mulberry.ody.presentation.join.complete.JoinCompleteActivity
-import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -55,49 +53,35 @@ class MeetingJoinActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        launchWhenStarted {
-            launch {
-                viewModel.invalidDepartureEvent.collect {
-                    showSnackBar(R.string.invalid_address)
+        collectWhenStarted(viewModel.invalidDepartureEvent) {
+            showSnackBar(R.string.invalid_address)
+        }
+        collectWhenStarted(viewModel.navigateAction) {
+            when (it) {
+                is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
+                    navigateToNotificationRoom(it.meetingId)
                 }
-            }
-            launch {
-                viewModel.navigateAction.conflate().collect {
-                    when (it) {
-                        is MeetingJoinNavigateAction.JoinNavigateToRoom -> {
-                            navigateToNotificationRoom(it.meetingId)
-                        }
 
-                        MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
-                            startActivity(JoinCompleteActivity.getIntent(this@MeetingJoinActivity))
-                        }
-                    }
+                MeetingJoinNavigateAction.JoinNavigateToJoinComplete -> {
+                    startActivity(JoinCompleteActivity.getIntent(this@MeetingJoinActivity))
                 }
             }
-            launch {
-                viewModel.networkErrorEvent.collect {
-                    showRetrySnackBar { viewModel.retryLastAction() }
-                }
+        }
+        collectWhenStarted(viewModel.networkErrorEvent) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+        collectWhenStarted(viewModel.errorEvent) {
+            showSnackBar(R.string.error_guide)
+        }
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@collectWhenStarted
             }
-            launch {
-                viewModel.errorEvent.collect {
-                    showSnackBar(R.string.error_guide)
-                }
-            }
-            launch {
-                viewModel.isLoading.collect { isLoading ->
-                    if (isLoading) {
-                        showLoadingDialog()
-                        return@collect
-                    }
-                    hideLoadingDialog()
-                }
-            }
-            launch {
-                viewModel.defaultLocationError.collect {
-                    showSnackBar(R.string.default_location_error_guide)
-                }
-            }
+            hideLoadingDialog()
+        }
+        collectWhenStarted(viewModel.defaultLocationError) {
+            showSnackBar(R.string.default_location_error_guide)
         }
     }
 
@@ -113,8 +97,7 @@ class MeetingJoinActivity :
     }
 
     override fun onNext() {
-        viewModel.joinMeeting(getInviteCode())
-        viewModel.onClickMeetingJoin()
+        viewModel.onClickMeetingJoin(getInviteCode())
     }
 
     override fun onBack() = finish()

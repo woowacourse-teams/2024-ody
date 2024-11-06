@@ -54,7 +54,8 @@ class MeetingJoinViewModel
                     initialValue = false,
                 )
 
-        private val _navigateAction: MutableSharedFlow<MeetingJoinNavigateAction> = MutableSharedFlow()
+        private val _navigateAction: MutableSharedFlow<MeetingJoinNavigateAction> =
+            MutableSharedFlow(replay = 1)
         val navigateAction: SharedFlow<MeetingJoinNavigateAction> get() = _navigateAction.asSharedFlow()
 
         private val _defaultLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
@@ -95,7 +96,11 @@ class MeetingJoinViewModel
             }
         }
 
-        fun joinMeeting(inviteCode: String) {
+        override fun onClickMeetingJoin(inviteCode: String) {
+            joinMeeting(inviteCode)
+        }
+
+        private fun joinMeeting(inviteCode: String) {
             val meetingJoinInfo = createMeetingJoinInfo(inviteCode) ?: return
 
             viewModelScope.launch {
@@ -104,6 +109,7 @@ class MeetingJoinViewModel
                     .suspendOnSuccess {
                         matesEtaRepository.reserveEtaFetchingJob(it.meetingId, it.meetingDateTime)
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
+                        _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
@@ -128,12 +134,6 @@ class MeetingJoinViewModel
             val departureAddress = departureAddress.value ?: return false
             return AddressValidator.isValid(departureAddress.detailAddress).also {
                 if (!it) _invalidDepartureEvent.emit(Unit)
-            }
-        }
-
-        override fun onClickMeetingJoin() {
-            viewModelScope.launch {
-                _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
             }
         }
 

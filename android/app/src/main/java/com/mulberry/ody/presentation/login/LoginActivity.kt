@@ -6,11 +6,10 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityLoginBinding
+import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingActivity
-import com.mulberry.ody.presentation.launchWhenStarted
 import com.mulberry.ody.presentation.meetings.MeetingsActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_login) {
@@ -28,46 +27,34 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
     }
 
     private fun initializeObserve() {
-        launchWhenStarted {
-            launch {
-                viewModel.navigatedReason.collect {
-                    when (it) {
-                        LoginNavigatedReason.LOGOUT -> {
-                            showSnackBar(R.string.login_logout_success)
-                        }
+        collectWhenStarted(viewModel.navigatedReason) {
+            when (it) {
+                LoginNavigatedReason.LOGOUT -> {
+                    showSnackBar(R.string.login_logout_success)
+                }
 
-                        LoginNavigatedReason.WITHDRAWAL -> {
-                            showSnackBar(R.string.login_withdrawal_success)
-                        }
-                    }
+                LoginNavigatedReason.WITHDRAWAL -> {
+                    showSnackBar(R.string.login_withdrawal_success)
                 }
             }
-            launch {
-                viewModel.navigateAction.collect {
-                    val intent = MeetingsActivity.getIntent(this@LoginActivity)
-                    startActivity(intent)
-                    finish()
-                }
+        }
+        collectWhenStarted(viewModel.navigateAction) {
+            val intent = MeetingsActivity.getIntent(this@LoginActivity)
+            startActivity(intent)
+            finish()
+        }
+        collectWhenStarted(viewModel.networkErrorEvent) {
+            showRetrySnackBar { viewModel.retryLastAction() }
+        }
+        collectWhenStarted(viewModel.errorEvent) {
+            showSnackBar(R.string.error_guide)
+        }
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@collectWhenStarted
             }
-            launch {
-                viewModel.networkErrorEvent.collect {
-                    showRetrySnackBar { viewModel.retryLastAction() }
-                }
-            }
-            launch {
-                viewModel.errorEvent.collect {
-                    showSnackBar(R.string.error_guide)
-                }
-            }
-            launch {
-                viewModel.isLoading.collect { isLoading ->
-                    if (isLoading) {
-                        showLoadingDialog()
-                        return@collect
-                    }
-                    hideLoadingDialog()
-                }
-            }
+            hideLoadingDialog()
         }
     }
 
