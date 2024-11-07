@@ -3,7 +3,7 @@ name: backend-cd-prod
 on:
   pull_request:
     branches:
-      - 'release-be/**'
+      - main
     types:
       - closed
 
@@ -13,7 +13,7 @@ env:
 
 jobs:
   build-and-push:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-be/')
     runs-on: ubuntu-latest
     env:
       TZ: 'Asia/Seoul'
@@ -72,7 +72,7 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
 
       - name: Docker Image Build And Push
-        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod -f Dockerfile . --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} -push
+        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod -f Dockerfile . --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} --push
 
   pull-and-deploy:
     needs: build-and-push
@@ -129,7 +129,7 @@ jobs:
       - name: Tag successful deployment as latest
         if: success()
         run: |
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }-prod ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
 
       - name: Check Docker Process
