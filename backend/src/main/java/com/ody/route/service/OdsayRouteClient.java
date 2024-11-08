@@ -36,7 +36,6 @@ public class OdsayRouteClient implements RouteClient {
                 .uri(makeURI(origin, target))
                 .retrieve()
                 .body(OdsayResponse.class);
-        log.info("ODsay API 호출 : {}", response);
         return Objects.requireNonNullElseGet(response, () -> {
             throw new OdyServerErrorException("서버 에러");
         });

@@ -31,10 +31,10 @@ public class RouteService {
                 RouteTime routeTime = calculateTime(client, origin, target);
                 apiCallService.increaseCountByClientType(client.getClientType());
                 log.info(
-                        "mateId : {}, {} API 사용한 소요 시간 계산 : {}분",
-                        MDC.get("mateId"),
+                        "{} API 소요 시간 계산 : {}분, mateId : {}",
                         client.getClientType(),
-                        routeTime.getMinutes()
+                        routeTime.getMinutes(),
+                        MDC.get("mateId")
                 );
                 return routeTime;
             } catch (Exception exception) {
