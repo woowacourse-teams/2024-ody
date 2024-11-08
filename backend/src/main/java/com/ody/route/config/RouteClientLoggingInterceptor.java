@@ -15,6 +15,9 @@ import org.springframework.util.StreamUtils;
 @RequiredArgsConstructor
 public class RouteClientLoggingInterceptor implements ClientHttpRequestInterceptor {
 
+    private static final int MAX_BODY_LENGTH = 500;
+    private static final String TRUNCATE_SUFFIX = "...";
+
     private final ObjectMapper objectMapper;
 
     @Override
@@ -23,7 +26,6 @@ public class RouteClientLoggingInterceptor implements ClientHttpRequestIntercept
         log.info("[RouteClient Request] Method: {}, URI: {}", request.getMethod(), request.getURI());
 
         ClientHttpResponse response = execution.execute(request, body);
-
         String responseBody = StreamUtils.copyToString(response.getBody(), StandardCharsets.UTF_8);
         String singleLineBody = convertToSingleLine(responseBody);
         log.info("[RouteClient Response] Status: {}, Body: {}", response.getStatusCode(), singleLineBody);
@@ -32,6 +34,10 @@ public class RouteClientLoggingInterceptor implements ClientHttpRequestIntercept
 
     private String convertToSingleLine(String jsonString) throws IOException {
         Object json = objectMapper.readValue(jsonString, Object.class);
-        return objectMapper.writeValueAsString(json);
+        String line = objectMapper.writeValueAsString(json);
+        if (line.length() <= MAX_BODY_LENGTH) {
+            return line;
+        }
+        return line.substring(0, MAX_BODY_LENGTH) + TRUNCATE_SUFFIX;
     }
 }
