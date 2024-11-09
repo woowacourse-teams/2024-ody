@@ -27,17 +27,6 @@ public class FcmEventListener {
 
     @Async
     @EventListener
-    public void sendNudgeMessage(NudgeEvent nudgeEvent) {
-        Notification nudgeNotification = nudgeEvent.getNudgeNotification();
-        Mate requestMate = nudgeEvent.getRequestMate();
-        fcmPushSender.sendNudgeMessage(
-                nudgeNotification,
-                DirectMessage.createMessageToOther(requestMate, nudgeNotification)
-        );
-    }
-
-    @Async
-    @EventListener
     public void subscribeTopic(SubscribeEvent subscribeEvent) {
         FcmTopic topic = subscribeEvent.getTopic();
         DeviceToken deviceToken = subscribeEvent.getDeviceToken();
@@ -65,5 +54,16 @@ public class FcmEventListener {
         Notification notification = pushEvent.getNotification();
         GroupMessage groupMessage = GroupMessage.from(notification);
         fcmPushSender.sendGeneralMessage2(groupMessage.message(), notification);
+    }
+
+    @Async
+    @EventListener
+    public void sendNudgeMessage(NudgeEvent nudgeEvent) {
+        Notification nudgeNotification = nudgeEvent.getNudgeNotification();
+        Mate requestMate = nudgeEvent.getRequestMate();
+        fcmPushSender.sendNudgeMessage(
+                nudgeNotification,
+                DirectMessage.createMessageToOther(requestMate, nudgeNotification)
+        );
     }
 }
