@@ -20,27 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FcmPushSender {
 
-    private final NotificationRepository notificationRepository;
     private final FirebaseMessaging firebaseMessaging;
 
-    @Transactional
-    public void sendPushNotification(Notification notification) {
-        Notification savedNotification = notificationRepository.findById(notification.getId())
-                .orElse(notification); // noti 생성과 동시에 실행되는 경우, 다른 트랜잭션이므로 즉시 findById 할 수 없어 기존 noti 사용
-
-        if (savedNotification.isStatusDismissed()) {
-            log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", savedNotification);
-            return;
-        }
-        GroupMessage groupMessage = GroupMessage.from(savedNotification);
-        sendGeneralMessage(groupMessage.message(), savedNotification);
-    }
-
     public void sendNudgeMessage(Notification notification, DirectMessage directMessage) {
-        sendGeneralMessage(directMessage.message(), notification);
+        sendGeneralMessage2(directMessage.message(), notification);
     }
 
-    private void sendGeneralMessage(Message message, Notification notification) {
+    @Transactional
+    public void sendGeneralMessage2(Message message, Notification notification) {
         try {
             firebaseMessaging.send(message);
             updateDepartureReminderToDone(notification);

@@ -1,6 +1,8 @@
 package com.ody.notification.service;
 
 import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.NotificationStatus;
+import com.ody.notification.domain.NotificationType;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.notification.service.event.NoticeEvent;
 import com.ody.notification.service.event.NudgeEvent;
@@ -9,9 +11,13 @@ import com.ody.notification.service.event.SubscribeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
 import com.ody.util.InstantConverter;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +32,7 @@ public class FcmEventPublisher {
     private final NotificationRepository notificationRepository;
 
     @Transactional
-    public void scheduleNotification2(Object source, Notification notification) {
+    public void schedulePushEvent(Object source, Notification notification) {
         Instant startTime = InstantConverter.kstToInstant(notification.getSendAt());
         taskScheduler.schedule(() -> publishPushEvent(source, notification), startTime);
         log.info(
@@ -48,12 +54,24 @@ public class FcmEventPublisher {
         eventPublisher.publishEvent(new PushEvent(source, savedNotification));
     }
 
+    @Transactional
+    @EventListener(ApplicationReadyEvent.class)
+    public void schedulePendingPushEvent() {
+        List<Notification> notifications = notificationRepository.findAllByTypeAndStatus(
+                NotificationType.DEPARTURE_REMINDER,
+                NotificationStatus.PENDING
+        );
+        notifications.forEach(noti -> schedulePushEvent(this, noti));
+        log.info("애플리케이션 시작 - PENDING 상태 출발 알림 {}개 스케줄링", notifications.size());
+    }
+
     public void publishNudgeEvent(NudgeEvent nudgeEvent) {
         eventPublisher.publishEvent(nudgeEvent);
     }
 
-    public void publishNoticeEvent(NoticeEvent noticeEvent) {
-        eventPublisher.publishEvent(noticeEvent);
+    public void scheduleNoticeEvent(LocalDateTime noticeTime, NoticeEvent noticeEvent) {
+        Instant startTime = InstantConverter.kstToInstant(noticeTime);
+        taskScheduler.schedule(() -> eventPublisher.publishEvent(noticeEvent), startTime);
     }
 
     public void publishSubscribeEvent(SubscribeEvent subscribeEvent) {
@@ -63,8 +81,4 @@ public class FcmEventPublisher {
     public void publishUnSubscribeEvent(UnSubscribeEvent unSubscribeEvent) {
         eventPublisher.publishEvent(unSubscribeEvent);
     }
-
-
-
-
 }

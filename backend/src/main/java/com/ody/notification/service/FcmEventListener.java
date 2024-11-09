@@ -61,9 +61,7 @@ public class FcmEventListener {
     public void sendNudgeMessage(NudgeEvent nudgeEvent) {
         Notification nudgeNotification = nudgeEvent.getNudgeNotification();
         Mate requestMate = nudgeEvent.getRequestMate();
-        fcmPushSender.sendNudgeMessage(
-                nudgeNotification,
-                DirectMessage.createMessageToOther(requestMate, nudgeNotification)
-        );
+        DirectMessage nudgeMessage = DirectMessage.createMessageToOther(requestMate, nudgeNotification);
+        fcmPushSender.sendGeneralMessage2(nudgeMessage.message(), nudgeNotification);
     }
 }
