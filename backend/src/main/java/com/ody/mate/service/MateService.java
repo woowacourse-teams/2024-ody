@@ -14,6 +14,7 @@ import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
+import com.ody.notification.domain.Notification;
 import com.ody.notification.service.NotificationService;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
@@ -48,7 +49,7 @@ public class MateService {
         }
 
         Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
-        notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken());
+        notificationService.saveAndSendNotifications2(meeting, mate, member.getDeviceToken());
         return MateSaveResponseV2.from(meeting);
     }
 
@@ -77,7 +78,7 @@ public class MateService {
         Mate requestMate = findFetchedMate(nudgeRequest.requestMateId());
         Mate nudgedMate = findFetchedMate(nudgeRequest.nudgedMateId());
         validateNudgeCondition(requestMate, nudgedMate);
-        notificationService.sendNudgeMessage(requestMate, nudgedMate);
+        notificationService.sendNudgeMessage2(requestMate, nudgedMate);
     }
 
     private void validateNudgeCondition(Mate requestMate, Mate nudgedMate) {
@@ -132,21 +133,23 @@ public class MateService {
 
     @Transactional
     public void withdraw(Mate mate) {
-        notificationService.saveMemberDeletionNotification(mate);
+        Notification memberDeletionNotification = Notification.createMemberDeletion(mate);
+        notificationService.save(memberDeletionNotification);
         delete(mate);
     }
 
     @Transactional
     public void leaveByMeetingIdAndMemberId(Long meetingId, Long memberId) {
         Mate mate = findByMeetingIdAndMemberId(meetingId, memberId);
-        notificationService.saveMateLeaveNotification(mate);
+        Notification leaveNotification = Notification.createMateLeave(mate);
+        notificationService.save(leaveNotification);
         delete(mate);
     }
 
     @Transactional
     public void delete(Mate mate) {
         notificationService.updateAllStatusToDismissByMateIdAndSendAtAfterNow(mate.getId());
-        notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken());
+        notificationService.unSubscribeTopic2(mate.getMeeting(), mate.getMember().getDeviceToken());
         etaService.deleteByMateId(mate.getId());
         mateRepository.deleteById(mate.getId());
     }
