@@ -1,14 +1,17 @@
 package com.ody.auth.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.ody.auth.dto.request.AuthRequest;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.TokenFixture;
-import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyUnauthorizedException;
+import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
@@ -24,6 +27,85 @@ class AuthServiceTest extends BaseServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @DisplayName("멤버 인증 테스트")
+    @Nested
+    class AuthTest {
+
+        @DisplayName("로그인 이력이 있는 기기로 비회원이 회원 생성을 시도하면 기기 이력을 삭제하고 회원을 생성한다.")
+        @Test
+        void saveMemberWhenNonMemberAttemptsWithLoggedInDevice() {
+            fixtureGenerator.generateSavedMember("pid", "deviceToken");
+            Member sameDeivceFreshMember = fixtureGenerator.generateUnsavedMember("newPid", "deviceToken");
+            AuthRequest sameDeviceFreshMemberRequest = dtoGenerator.generateAuthRequest(sameDeivceFreshMember);
+
+            authService.issueTokens(sameDeviceFreshMemberRequest);
+
+            assertAll(
+                    () -> assertThat(getDeviceTokenByAuthProvider("pid")).isNull(),
+                    () -> assertThat(getDeviceTokenByAuthProvider("newPid").getValue()).isEqualTo("deviceToken")
+            );
+        }
+
+        @DisplayName("로그인 이력이 있는 기기로 동일 회원이 회원 생성을 시도하면 회원을 생성하지 않는다.")
+        @Test
+        void saveMemberWhenMemberAttemptsWithLoggedInDevice() {
+            fixtureGenerator.generateSavedMember("pid", "deviceToken");
+            Member sameMember = fixtureGenerator.generateUnsavedMember("pid", "deviceToken");
+            AuthRequest sameMemberRequest = dtoGenerator.generateAuthRequest(sameMember);
+
+            authService.issueTokens(sameMemberRequest);
+
+            assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("deviceToken");
+        }
+
+        @DisplayName("로그인 이력이 있는 기기로 타 회원이 회원 생성을 시도하면 기기 이력을 이전한다.")
+        @Test
+        void saveMemberWhenOtherMemberAttemptsWithLoggedInDevice() {
+            fixtureGenerator.generateSavedMember("pid", "deviceToken");
+            fixtureGenerator.generateSavedMember("otherPid", "otherDeviceToken");
+            Member otherPidSameDeviceUser = fixtureGenerator.generateUnsavedMember("otherPid", "deviceToken");
+            AuthRequest otherPidSameDeviceUserRequest = dtoGenerator.generateAuthRequest(otherPidSameDeviceUser);
+
+            authService.issueTokens(otherPidSameDeviceUserRequest);
+
+            assertAll(
+                    () -> assertThat(getDeviceTokenByAuthProvider("pid")).isNull(),
+                    () -> assertThat(getDeviceTokenByAuthProvider("otherPid").getValue()).isEqualTo("deviceToken")
+            );
+        }
+
+        @DisplayName("로그인 이력이 없는 기기로 비회원이 회원 생성을 시도하면 회원을 생성한다.")
+        @Test
+        void saveMemberWhenNonMemberAttemptsWithUnloggedDevice() {
+            fixtureGenerator.generateSavedMember("pid", "deviceToken");
+            Member freshDeivceFreshPidMember = fixtureGenerator.generateUnsavedMember("newPid", "newDeviceToken");
+            AuthRequest freshDeviceFreshPidMemberRequest = dtoGenerator.generateAuthRequest(freshDeivceFreshPidMember);
+
+            authService.issueTokens(freshDeviceFreshPidMemberRequest);
+
+            assertAll(
+                    () -> assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("deviceToken"),
+                    () -> assertThat(getDeviceTokenByAuthProvider("newPid").getValue()).isEqualTo("newDeviceToken")
+            );
+        }
+
+        @DisplayName("로그인 이력이 없는 기기로 회원이 회원 생성을 시도하면 기기 이력을 변경한다.")
+        @Test
+        void saveMemberWhenMemberAttemptsWithUnloggedDevice() {
+            fixtureGenerator.generateSavedMember("pid", "deviceToken");
+            Member freshDeivceSamePidMember = fixtureGenerator.generateUnsavedMember("pid", "newDeviceToken");
+            AuthRequest freshDeviceSamePidRequest = dtoGenerator.generateAuthRequest(freshDeivceSamePidMember);
+
+            authService.issueTokens(freshDeviceSamePidRequest);
+
+            assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("newDeviceToken");
+        }
+
+        private DeviceToken getDeviceTokenByAuthProvider(String providerId) {
+            return memberRepository.findByAuthProvider(new AuthProvider(providerId)).get().getDeviceToken();
+        }
+    }
 
     @DisplayName("로그아웃 테스트")
     @Nested

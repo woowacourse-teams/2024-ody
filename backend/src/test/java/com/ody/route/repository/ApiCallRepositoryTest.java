@@ -47,7 +47,7 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
         apiCallRepository.save(secondDateApiCall);
         apiCallRepository.save(firstDateApiCall);
 
-        Optional<ApiCall> actual = apiCallRepository.findFirstByDateBetweenAndClientType(firstDay, now, clientType);
+        Optional<ApiCall> actual = apiCallRepository.findFirstByDateBetweenAndClientType(firstDay, firstDay.plusDays(10), clientType);
 
         assertThat(actual).isPresent()
                 .get().extracting(ApiCall::getDate).isEqualTo(firstDateApiCall.getDate());
