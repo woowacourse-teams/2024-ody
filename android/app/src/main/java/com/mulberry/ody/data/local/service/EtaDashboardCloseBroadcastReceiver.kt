@@ -14,7 +14,7 @@ import javax.inject.Inject
 class EtaDashboardCloseBroadcastReceiver : BroadcastReceiver() {
     @Inject
     lateinit var matesEtaRepository: MatesEtaRepository
-    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 
     override fun onReceive(
         context: Context,

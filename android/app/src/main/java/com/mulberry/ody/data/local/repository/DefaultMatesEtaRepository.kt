@@ -1,6 +1,7 @@
 package com.mulberry.ody.data.local.repository
 
 import android.content.Context
+import android.util.Log
 import com.mulberry.ody.data.local.db.EtaReservationDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
@@ -82,6 +83,7 @@ class DefaultMatesEtaRepository
 
         override suspend fun reserveAllEtaReservation() {
             val entities = etaReservationDao.fetchAll()
+            Log.e("TEST", "reserveAllEtaReservation ${entities.size}")
             entities.forEach { entity ->
                 etaDashboardAlarm.reserve(
                     entity.meetingId,
