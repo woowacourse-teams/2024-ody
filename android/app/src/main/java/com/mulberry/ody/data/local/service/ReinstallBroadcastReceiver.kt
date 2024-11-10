@@ -3,7 +3,6 @@ package com.mulberry.ody.data.local.service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -20,11 +19,7 @@ class ReinstallBroadcastReceiver : BroadcastReceiver() {
         context: Context,
         intent: Intent,
     ) {
-        Log.e("TEST", "${intent.action}")
-        val matesEtaRepository =
-            EntryPointAccessors
-                .fromApplication(context, ReinstallBroadcastReceiverEntryPoint::class.java)
-                .matesEtaRepository()
+        val matesEtaRepository = ReinstallBroadcastReceiverEntryPoint.matesEtaRepository(context)
         coroutineScope.launch {
             matesEtaRepository.reserveAllEtaReservation()
         }
@@ -34,5 +29,13 @@ class ReinstallBroadcastReceiver : BroadcastReceiver() {
     @InstallIn(SingletonComponent::class)
     interface ReinstallBroadcastReceiverEntryPoint {
         fun matesEtaRepository(): MatesEtaRepository
+
+        companion object {
+            fun matesEtaRepository(context: Context): MatesEtaRepository {
+                return EntryPointAccessors
+                    .fromApplication(context, ReinstallBroadcastReceiverEntryPoint::class.java)
+                    .matesEtaRepository()
+            }
+        }
     }
 }
