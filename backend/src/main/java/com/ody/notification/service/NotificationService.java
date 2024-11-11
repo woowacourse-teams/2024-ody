@@ -16,15 +16,12 @@ import com.ody.notification.service.event.NudgeEvent;
 import com.ody.notification.service.event.SubscribeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
 import com.ody.route.domain.DepartureTime;
-import com.ody.util.InstantConverter;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +39,7 @@ public class NotificationService {
         FcmTopic fcmTopic = new FcmTopic(meeting);
 
         Notification entryNotification = Notification.createEntry(mate, fcmTopic);
-        saveAndSendNotification2(entryNotification);
+        saveAndScheduleNotification(entryNotification);
 
         SubscribeEvent subscribeEvent = new SubscribeEvent(this, deviceToken, fcmTopic);
         fcmEventPublisher.publishSubscribeEvent(subscribeEvent);
@@ -54,7 +51,7 @@ public class NotificationService {
         DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
         LocalDateTime sendAt = calculateSendAt(departureTime);
         Notification notification = Notification.createDepartureReminder(mate, sendAt, fcmTopic);
-        saveAndSendNotification2(notification);
+        saveAndScheduleNotification(notification);
     }
 
     private LocalDateTime calculateSendAt(DepartureTime departureTime) {
@@ -64,7 +61,7 @@ public class NotificationService {
         return departureTime.getValue();
     }
 
-    private void saveAndSendNotification2(Notification notification) {
+    private void saveAndScheduleNotification(Notification notification) {
         Notification savedNotification = notificationRepository.save(notification);
         fcmEventPublisher.schedulePushEvent(this, savedNotification);
     }
