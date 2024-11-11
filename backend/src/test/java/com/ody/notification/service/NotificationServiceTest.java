@@ -3,6 +3,7 @@ package com.ody.notification.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
+import com.google.firebase.messaging.Message;
 import com.ody.auth.service.KakaoAuthUnlinkClient;
 import com.ody.common.BaseServiceTest;
 import com.ody.mate.domain.Mate;
@@ -16,7 +17,6 @@ import com.ody.notification.dto.response.NotiLogFindResponse;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.service.RouteService;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -106,9 +106,9 @@ class NotificationServiceTest extends BaseServiceTest {
         Mate requestMate = fixtureGenerator.generateMate(odyMeeting);
         Mate nudgedMate = fixtureGenerator.generateMate(odyMeeting);
 
-        notificationService.sendNudgeMessage2(requestMate, nudgedMate);
+        notificationService.sendNudgeMessage(requestMate, nudgedMate);
 
-        Mockito.verify(fcmPushSender, Mockito.times(1)).sendNudgeMessage(any(), any());
+        Mockito.verify(fcmPushSender, Mockito.times(1)).sendGeneralMessage2(any(Message.class), any(Notification.class));
     }
 
     @DisplayName("특정 참여자의 전송 전 알람을 모두 DISMISSED 상태로 변경한다.")

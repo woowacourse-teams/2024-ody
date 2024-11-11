@@ -78,7 +78,7 @@ public class MateService {
         Mate requestMate = findFetchedMate(nudgeRequest.requestMateId());
         Mate nudgedMate = findFetchedMate(nudgeRequest.nudgedMateId());
         validateNudgeCondition(requestMate, nudgedMate);
-        notificationService.sendNudgeMessage2(requestMate, nudgedMate);
+        notificationService.sendNudgeMessage(requestMate, nudgedMate);
     }
 
     private void validateNudgeCondition(Mate requestMate, Mate nudgedMate) {
