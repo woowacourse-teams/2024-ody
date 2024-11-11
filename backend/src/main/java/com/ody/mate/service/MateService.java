@@ -49,7 +49,7 @@ public class MateService {
         }
 
         Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
-        notificationService.saveAndSendNotifications2(meeting, mate, member.getDeviceToken());
+        notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken());
         return MateSaveResponseV2.from(meeting);
     }
 
