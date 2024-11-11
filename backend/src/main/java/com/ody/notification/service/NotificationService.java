@@ -6,6 +6,7 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.dto.response.NotiLogFindResponses;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,6 +77,17 @@ public class NotificationService {
 
     public void scheduleNotice(GroupMessage groupMessage, LocalDateTime scheduledTime) {
         fcmEventPublisher.scheduleNoticeEvent(scheduledTime, new NoticeEvent(this, groupMessage));
+    }
+
+    @Transactional
+    @EventListener(ApplicationReadyEvent.class)
+    public void schedulePendingPushEvent() {
+        List<Notification> notifications = notificationRepository.findAllByTypeAndStatus(
+                NotificationType.DEPARTURE_REMINDER,
+                NotificationStatus.PENDING
+        );
+        notifications.forEach(noti -> fcmEventPublisher.schedulePushEvent(this, noti));
+        log.info("애플리케이션 시작 - PENDING 상태 출발 알림 {}개 스케줄링", notifications.size());
     }
 
     @Transactional

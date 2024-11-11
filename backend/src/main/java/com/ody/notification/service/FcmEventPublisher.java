@@ -54,17 +54,6 @@ public class FcmEventPublisher {
         eventPublisher.publishEvent(new PushEvent(source, savedNotification));
     }
 
-    @Transactional
-    @EventListener(ApplicationReadyEvent.class)
-    public void schedulePendingPushEvent() {
-        List<Notification> notifications = notificationRepository.findAllByTypeAndStatus(
-                NotificationType.DEPARTURE_REMINDER,
-                NotificationStatus.PENDING
-        );
-        notifications.forEach(noti -> schedulePushEvent(this, noti));
-        log.info("애플리케이션 시작 - PENDING 상태 출발 알림 {}개 스케줄링", notifications.size());
-    }
-
     public void publishNudgeEvent(NudgeEvent nudgeEvent) {
         eventPublisher.publishEvent(nudgeEvent);
     }
