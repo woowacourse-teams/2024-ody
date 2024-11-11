@@ -22,10 +22,6 @@ public class FcmPushSender {
 
     private final FirebaseMessaging firebaseMessaging;
 
-    public void sendNudgeMessage(Notification notification, DirectMessage directMessage) {
-        sendGeneralMessage2(directMessage.message(), notification);
-    }
-
     @Transactional
     public void sendGeneralMessage2(Message message, Notification notification) {
         try {
