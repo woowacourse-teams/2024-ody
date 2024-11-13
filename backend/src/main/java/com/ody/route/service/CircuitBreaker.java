@@ -25,7 +25,7 @@ class CircuitBreaker {
         redisTemplate.opsForValue().setBit(failCountKey, failedMinutes, true);
         redisTemplate.expire(failCountKey, FAIL_MINUTES_TTL);
 
-        Long failureCount = redisTemplate.getBitCount(failCountKey, MIN_MINUTES, MAX_MINUTES);
+        int failureCount = redisTemplate.getBitCount(failCountKey, MIN_MINUTES, MAX_MINUTES);
         log.warn("{} 요청 실패 횟수 : {}", failCountKey, failureCount);
     }
 
@@ -37,7 +37,7 @@ class CircuitBreaker {
     }
 
     private boolean exceedFailCount(String failCountKey) {
-        Long failureCount = redisTemplate.getBitCount(failCountKey, MIN_MINUTES, MAX_MINUTES);
+        int failureCount = redisTemplate.getBitCount(failCountKey, MIN_MINUTES, MAX_MINUTES);
         return failureCount >= MAX_FAIL_COUNT;
     }
 
