@@ -1,7 +1,6 @@
 package com.ody.route.service;
 
 import com.ody.common.exception.OdyServerErrorException;
-import com.ody.route.domain.RouteClientKey;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RouteClientManager {
+
     private final List<RouteClient> routeClients;
-    private final CircuitBreaker circuitBreaker;
+    private final RouteClientCircuitBreaker routeClientCircuitBreaker;
 
     public List<RouteClient> getAvailableClients() {
         List<RouteClient> availableClients = routeClients.stream()
@@ -27,6 +27,6 @@ public class RouteClientManager {
     }
 
     private boolean isAvailable(RouteClient routeClient) {
-        return !circuitBreaker.isBlocked(RouteClientKey.getBlockKey(routeClient));
+        return !routeClientCircuitBreaker.isBlocked(routeClient);
     }
 }

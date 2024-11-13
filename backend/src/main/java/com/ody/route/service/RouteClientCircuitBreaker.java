@@ -1,6 +1,7 @@
 package com.ody.route.service;
 
 import com.ody.common.redis.CustomRedisTemplate;
+import com.ody.route.domain.RouteClientKey;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-class CircuitBreaker {
+class RouteClientCircuitBreaker {
 
     private static final int MIN_MINUTES = 0;
     private static final int MAX_MINUTES = 59;
@@ -20,19 +21,22 @@ class CircuitBreaker {
 
     private final CustomRedisTemplate redisTemplate;
 
-    public void recordFailCountInMinutes(String failCountKey) {
+    public void recordFailCountInMinutes(RouteClient routeClient) {
+        String failClientKey = RouteClientKey.getFailKey(routeClient);
         int failedMinutes = LocalDateTime.now().getMinute();
-        redisTemplate.opsForValue().setBit(failCountKey, failedMinutes, true);
-        redisTemplate.expire(failCountKey, FAIL_MINUTES_TTL);
+        redisTemplate.opsForValue().setBit(failClientKey, failedMinutes, true);
+        redisTemplate.expire(failClientKey, FAIL_MINUTES_TTL);
 
-        int failureCount = redisTemplate.getBitCount(failCountKey, MIN_MINUTES, MAX_MINUTES);
-        log.warn("{} 요청 실패 횟수 : {}", failCountKey, failureCount);
+        int failureCount = redisTemplate.getBitCount(failClientKey, MIN_MINUTES, MAX_MINUTES);
+        log.warn("{} 요청 실패 횟수 : {}", failClientKey, failureCount);
     }
 
-    public void determineBlock(String failCountKey, String blockKey) {
-        if (exceedFailCount(failCountKey)) {
+    public void determineBlock(RouteClient routeClient) {
+        String failClientKey = RouteClientKey.getFailKey(routeClient);
+        String blockKey = RouteClientKey.getBlockKey(routeClient);
+        if (exceedFailCount(failClientKey)) {
             block(blockKey);
-            clearFailCount(failCountKey);
+            clearFailCount(failClientKey);
         }
     }
 
@@ -51,7 +55,7 @@ class CircuitBreaker {
         redisTemplate.unlink(failCountKey);
     }
 
-    public boolean isBlocked(String blockKey) {
-        return Boolean.TRUE.equals(redisTemplate.hasKey(blockKey));
+    public boolean isBlocked(RouteClient routeClient) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(RouteClientKey.getBlockKey(routeClient)));
     }
 }

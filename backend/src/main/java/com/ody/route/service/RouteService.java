@@ -2,7 +2,6 @@ package com.ody.route.service;
 
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
-import com.ody.route.domain.RouteClientKey;
 import com.ody.route.domain.RouteTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ public class RouteService {
 
     private final RouteClientManager routeClientManager;
     private final ApiCallService apiCallService;
-    private final CircuitBreaker circuitBreaker;
+    private final RouteClientCircuitBreaker routeClientCircuitBreaker;
 
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         List<RouteClient> availableClients = routeClientManager.getAvailableClients();
@@ -34,10 +33,8 @@ public class RouteService {
                 return routeTime;
             } catch (Exception exception) {
                 log.error("{} API 에러 발생 :  ", routeClient.getClass().getSimpleName(), exception);
-                String failClientKey = RouteClientKey.getFailKey(routeClient);
-                String blockKey = RouteClientKey.getBlockKey(routeClient);
-                circuitBreaker.recordFailCountInMinutes(failClientKey);
-                circuitBreaker.determineBlock(failClientKey, blockKey);
+                routeClientCircuitBreaker.recordFailCountInMinutes(routeClient);
+                routeClientCircuitBreaker.determineBlock(routeClient);
             }
         }
         log.error("모든 RouteClient API 사용 불가");
