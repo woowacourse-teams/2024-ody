@@ -5,7 +5,6 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.notification.domain.Notification;
-import com.ody.notification.domain.message.DirectMessage;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.util.TimeUtil;
@@ -21,12 +20,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class FcmPushSender {
 
     private final FirebaseMessaging firebaseMessaging;
+    private final NotificationRepository notificationRepository;
 
     @Transactional
-    public void sendGeneralMessage2(Message message, Notification notification) {
+    public void sendGeneralMessage(Message message, Notification notification) {
         try {
+            Notification savedNotification = notificationRepository.findById(notification.getId())
+                    .orElse(notification); // noti 생성과 동시에 실행되는 경우, 다른 트랜잭션이므로 즉시 findById 할 수 없어 기존 noti 사용
+
+            if (savedNotification.isStatusDismissed()) {
+                log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", savedNotification);
+                return;
+            }
+
             firebaseMessaging.send(message);
-            updateDepartureReminderToDone(notification);
+            updateDepartureReminderToDone(savedNotification);
         } catch (FirebaseMessagingException exception) {
             log.error("FCM 알림(ID : {}) 전송 실패 : {}", notification.getId(), exception.getMessage());
             throw new OdyServerErrorException(exception.getMessage());
