@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.notification.service.event.NoticeEvent;
@@ -22,11 +23,8 @@ class FcmEventListenerTest extends BaseServiceTest {
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    @MockBean
-    private FcmEventListener fcmEventListener;
-
-    @MockBean
-    private FcmPushSender fcmPushSender;
+    @Autowired
+    private TestEventPublisher testEventPublisher;
 
     @DisplayName("SubscribeEvent 발생 시, 특정 주제 구독 로직을 실행한다")
     @Test
@@ -58,14 +56,24 @@ class FcmEventListenerTest extends BaseServiceTest {
         verify(fcmEventListener, times(1)).sendNoticeMessage(eq(noticeEvent));
     }
 
-    @DisplayName("PushEvent 발생 시, 푸시 알림 발송 로직을 실행한다")
+    @DisplayName("PushEvent 발생 + 트랜잭션 커밋 이후, 푸시 알림 발송 로직을 실행한다")
     @Test
     void sendPushMessage() {
         PushEvent pushEvent = mock(PushEvent.class);
 
-        eventPublisher.publishEvent(pushEvent);
+        testEventPublisher.transactionMethod(pushEvent);
 
         verify(fcmEventListener, times(1)).sendPushMessage(eq(pushEvent));
+    }
+
+    @DisplayName("트랜잭션이 열리지 않으면, 푸시 알림 발송 로직이 실행되지 않는다")
+    @Test
+    void notEventTriggerWhenTransactionNotOpen() {
+        PushEvent pushEvent = mock(PushEvent.class);
+
+        testEventPublisher.noneTransactionMethod(pushEvent);
+
+        verifyNoInteractions(fcmEventListener);
     }
 
     @DisplayName("NudgeEvent 발생 시, 넛지 알림 발송 로직을 실행한다")

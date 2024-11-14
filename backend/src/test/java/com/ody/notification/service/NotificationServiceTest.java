@@ -33,7 +33,6 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
 
-@RecordApplicationEvents
 class NotificationServiceTest extends BaseServiceTest {
 
     @Autowired
@@ -41,9 +40,6 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @MockBean
     private RouteService routeService;
-
-    @Autowired
-    private ApplicationEvents applicationEvents;
 
     @MockBean
     private TaskScheduler taskScheduler;

@@ -3,13 +3,9 @@ package com.ody.mate.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 
-import com.google.firebase.messaging.Message;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
-import com.ody.common.FixtureGenerator;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.domain.Eta;
@@ -21,27 +17,19 @@ import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.FcmTopic;
-import com.ody.notification.domain.Notification;
-import com.ody.notification.service.FcmPushSender;
+import com.ody.notification.service.event.NudgeEvent;
+import com.ody.notification.service.event.UnSubscribeEvent;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 class MateServiceTest extends BaseServiceTest {
 
     @Autowired
     private MateService mateService;
-
-    @Autowired
-    private FixtureGenerator fixtureGenerator;
-
-    @MockBean
-    protected FcmPushSender fcmPushSender;
 
     @DisplayName("회원이 참여하고 있는 특정 약속의 참여자 리스트를 조회한다.")
     @Test
@@ -86,7 +74,8 @@ class MateServiceTest extends BaseServiceTest {
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
             mateService.nudge(nudgeRequest);
 
-            Mockito.verify(fcmPushSender, times(1)).sendGeneralMessage(any(Message.class), any(Notification.class));
+            assertThat(applicationEvents.stream(NudgeEvent.class))
+                    .hasSize(1);
         }
 
         @DisplayName("약속이 지금이고 소요시간이 2분으로 Eta상태가 지각인 mate를 재촉할 수 있다")
@@ -100,7 +89,8 @@ class MateServiceTest extends BaseServiceTest {
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateMate.getId());
             mateService.nudge(nudgeRequest);
 
-            Mockito.verify(fcmPushSender, times(1)).sendGeneralMessage(any(Message.class), any(Notification.class));
+            assertThat(applicationEvents.stream(NudgeEvent.class))
+                    .hasSize(1);
         }
 
         @DisplayName("같은 약속 참여자가 아니라면 재촉할 수 없다")
@@ -156,7 +146,8 @@ class MateServiceTest extends BaseServiceTest {
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
             mateService.nudge(nudgeRequest);
 
-            Mockito.verify(fcmPushSender, times(1)).sendGeneralMessage(any(Message.class), any(Notification.class));
+            assertThat(applicationEvents.stream(NudgeEvent.class))
+                    .hasSize(1);
         }
 
         @DisplayName("약속 30분 이후에는 mate를 재촉할 수 없다")
@@ -172,7 +163,8 @@ class MateServiceTest extends BaseServiceTest {
             assertAll(
                     () -> assertThatThrownBy(() -> mateService.nudge(nudgeRequest))
                             .isInstanceOf(OdyBadRequestException.class),
-                    () -> Mockito.verifyNoInteractions(fcmPushSender)
+                    () -> assertThat(applicationEvents.stream(NudgeEvent.class))
+                            .isEmpty()
             );
         }
     }
@@ -223,7 +215,15 @@ class MateServiceTest extends BaseServiceTest {
 
         mateService.withdraw(mate);
 
-        Mockito.verify(fcmSubscriber, Mockito.times(1)).unSubscribeTopic(fcmTopic, deviceToken);
+        assertThat(applicationEvents.stream(UnSubscribeEvent.class))
+                .hasSize(1)
+                .anySatisfy(event -> {
+                            assertAll(
+                                    () -> assertThat(event.getTopic()).isEqualTo(fcmTopic),
+                                    () -> assertThat(event.getDeviceToken()).isEqualTo(deviceToken)
+                            );
+                        }
+                );
     }
 
     @DisplayName("회원 삭제 시, 구독하고 있는 모든 fcmTopic을 취소한다.")
@@ -238,7 +238,8 @@ class MateServiceTest extends BaseServiceTest {
 
         mateService.deleteAllByMember(jojo);
 
-        Mockito.verify(fcmSubscriber, Mockito.times(2)).unSubscribeTopic(any(FcmTopic.class), any(DeviceToken.class));
+        assertThat(applicationEvents.stream(UnSubscribeEvent.class))
+                .hasSize(2);
     }
 
     @DisplayName("약속에 참여하고 있는 mate를 약속 방에서 삭제한다.")
