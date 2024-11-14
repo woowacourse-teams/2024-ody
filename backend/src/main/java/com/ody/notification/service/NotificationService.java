@@ -24,7 +24,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
@@ -75,7 +74,8 @@ public class NotificationService {
     @Transactional
     public void scheduleNotification(Notification notification) {
         Instant startTime = InstantConverter.kstToInstant(notification.getSendAt());
-        taskScheduler.schedule(() -> fcmEventPublisher.publishWithTransaction(new PushEvent(this, notification)), startTime);
+        PushEvent pushEvent = new PushEvent(this, notification);
+        taskScheduler.schedule(() -> fcmEventPublisher.publishWithTransaction(pushEvent), startTime);
         log.info(
                 "{} 타입 {} 상태 알림 {}에 스케줄링 예약",
                 notification.getType(),
@@ -127,20 +127,20 @@ public class NotificationService {
         notificationRepository.updateAllStatusToDismissedByMateIdAndSendAtAfterDateTime(mateId, LocalDateTime.now());
     }
 
-    public void unSubscribeTopic2(Meeting meeting, DeviceToken deviceToken) {
+    public void unSubscribeTopic(Meeting meeting, DeviceToken deviceToken) {
         FcmTopic fcmTopic = new FcmTopic(meeting);
         UnSubscribeEvent unSubscribeEvent = new UnSubscribeEvent(this, deviceToken, fcmTopic);
         fcmEventPublisher.publish(unSubscribeEvent);
     }
 
-    public void unSubscribeTopic2(List<Meeting> meetings) {
+    public void unSubscribeTopic(List<Meeting> meetings) {
         for (Meeting meeting : meetings) {
 
             List<Notification> allMeetingIdAndType = notificationRepository.findAllMeetingIdAndType(meeting.getId(),
                     NotificationType.DEPARTURE_REMINDER);
 
             notificationRepository.findAllMeetingIdAndType(meeting.getId(), NotificationType.DEPARTURE_REMINDER)
-                    .forEach(notification -> unSubscribeTopic2(
+                    .forEach(notification -> unSubscribeTopic(
                                     meeting,
                                     notification.getMate().getMember().getDeviceToken()
                             )

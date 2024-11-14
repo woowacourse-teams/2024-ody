@@ -16,7 +16,6 @@ import com.ody.notification.dto.response.NotiLogFindResponse;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.notification.service.event.NudgeEvent;
-import com.ody.notification.service.event.PushEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
 import com.ody.route.service.RouteService;
 import java.time.Instant;
@@ -28,10 +27,7 @@ import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.test.context.event.ApplicationEvents;
-import org.springframework.test.context.event.RecordApplicationEvents;
 
 class NotificationServiceTest extends BaseServiceTest {
 
@@ -97,7 +93,7 @@ class NotificationServiceTest extends BaseServiceTest {
         fixtureGenerator.generateNotification(kaki, NotificationType.DEPARTURE_REMINDER, NotificationStatus.DONE);
         fixtureGenerator.generateNotification(kaki, NotificationType.ENTRY, NotificationStatus.DONE);
 
-        notificationService.unSubscribeTopic2(List.of(odyMeeting, sojuMeeting));
+        notificationService.unSubscribeTopic(List.of(odyMeeting, sojuMeeting));
 
         assertThat(applicationEvents.stream(UnSubscribeEvent.class))
                 .hasSize(2);
