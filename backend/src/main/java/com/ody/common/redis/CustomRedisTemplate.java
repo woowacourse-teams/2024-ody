@@ -1,9 +1,8 @@
 package com.ody.common.redis;
 
-import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.BitFieldSubCommands;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -23,13 +22,15 @@ public class CustomRedisTemplate extends RedisTemplate<String, String> {
         this.afterPropertiesSet();
     }
 
-    public int getBitCount(String key, int startBit, int endBit) {
-        int bitRange = endBit - startBit + 1;
-        BitFieldSubCommands commands = BitFieldSubCommands.create()
-                .get(BitFieldSubCommands.BitFieldType.unsigned(bitRange))
-                .valueAt(startBit);
+    public int increment(String key) {
+        return Optional.ofNullable(opsForValue().increment(key))
+                .map(Long::intValue)
+                .orElse(0);
+    }
 
-        List<Long> result = opsForValue().bitField(key, commands);
-        return Long.bitCount(result.get(0));
+    public int getKeyCount(String key) {
+        return Optional.ofNullable(opsForValue().get(key))
+                .map(Integer::parseInt)
+                .orElse(0);
     }
 }

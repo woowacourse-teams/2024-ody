@@ -13,22 +13,17 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class RouteClientCircuitBreaker {
 
-    private static final int MIN_MINUTES = 0;
-    private static final int MAX_MINUTES = 59;
     private static final int MAX_FAIL_COUNT = 3;
-    private static final Duration FAIL_MINUTES_TTL = Duration.ofMinutes(31);
-    private static final Duration BLOCK_HOUR_TTL = Duration.ofHours(3);
+    public static final Duration FAIL_MINUTES_TTL = Duration.ofMinutes(31); // 지연 시간 고려해 31분으로 설정
+    public static final Duration BLOCK_HOUR_TTL = Duration.ofHours(3);
 
     private final CustomRedisTemplate redisTemplate;
 
     public void recordFailCountInMinutes(RouteClient routeClient) {
         String failClientKey = RouteClientKey.getFailKey(routeClient);
-        int failedMinutes = LocalDateTime.now().getMinute();
-        redisTemplate.opsForValue().setBit(failClientKey, failedMinutes, true);
+        int failCount = redisTemplate.increment(failClientKey);
         redisTemplate.expire(failClientKey, FAIL_MINUTES_TTL);
-
-        int failureCount = redisTemplate.getBitCount(failClientKey, MIN_MINUTES, MAX_MINUTES);
-        log.warn("{} 요청 실패 횟수 : {}", failClientKey, failureCount);
+        log.warn("{} 요청 실패 횟수 : {}", failClientKey, failCount);
     }
 
     public void determineBlock(RouteClient routeClient) {
@@ -41,8 +36,7 @@ class RouteClientCircuitBreaker {
     }
 
     private boolean exceedFailCount(String failCountKey) {
-        int failureCount = redisTemplate.getBitCount(failCountKey, MIN_MINUTES, MAX_MINUTES);
-        return failureCount >= MAX_FAIL_COUNT;
+        return redisTemplate.getKeyCount(failCountKey) >= MAX_FAIL_COUNT;
     }
 
     private void block(String blockKey) {
