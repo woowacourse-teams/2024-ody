@@ -3,7 +3,6 @@ package com.ody.common.config;
 import com.ody.auth.service.AuthService;
 import com.ody.common.argumentresolver.AuthMemberArgumentResolver;
 import com.ody.common.interceptor.LoggingInterceptor;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
