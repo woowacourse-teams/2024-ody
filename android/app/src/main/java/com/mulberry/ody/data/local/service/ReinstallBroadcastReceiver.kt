@@ -27,7 +27,7 @@ class ReinstallBroadcastReceiver : BroadcastReceiver() {
 
     @EntryPoint
     @InstallIn(SingletonComponent::class)
-    private interface ReinstallBroadcastReceiverEntryPoint {
+    interface ReinstallBroadcastReceiverEntryPoint {
         fun matesEtaRepository(): MatesEtaRepository
 
         companion object {
