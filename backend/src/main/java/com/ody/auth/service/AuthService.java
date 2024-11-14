@@ -2,6 +2,7 @@ package com.ody.auth.service;
 
 import com.ody.auth.JwtTokenProvider;
 import com.ody.auth.domain.AuthorizationHeader;
+import com.ody.auth.domain.Authorizer;
 import com.ody.auth.dto.request.AuthRequest;
 import com.ody.auth.dto.response.AuthResponse;
 import com.ody.auth.token.AccessToken;
@@ -9,18 +10,20 @@ import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.member.domain.Member;
 import com.ody.member.service.MemberService;
-import lombok.AllArgsConstructor;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
+    private final Authorizer authorizer;
 
     public Member parseAccessToken(String rawAccessToken) {
         AccessToken accessToken = new AccessToken(rawAccessToken);
@@ -31,8 +34,16 @@ public class AuthService {
 
     @Transactional
     public AuthResponse issueTokens(AuthRequest authRequest) {
-        Member member = memberService.save(authRequest.toMember());
-        return issueNewTokens(member.getId());
+        Member requestMember = authRequest.toMember();
+        Member authorizedMember = findAuthroizedMember(requestMember);
+        Member savedAuthorizedMember = memberService.save(authorizedMember) ;
+        return issueNewTokens(savedAuthorizedMember.getId());
+    }
+
+    private Member findAuthroizedMember(Member requestMember) {
+        Optional<Member> sameDeviceMember = memberService.findByDeviceToken(requestMember.getDeviceToken());
+        Optional<Member> samePidMember = memberService.findByAuthProvider(requestMember.getAuthProvider());
+        return authorizer.authorize(sameDeviceMember, samePidMember, requestMember);
     }
 
     @Transactional
@@ -69,7 +80,6 @@ public class AuthService {
     public void logout(String rawAccessTokenValue) {
         AccessToken accessToken = new AccessToken(rawAccessTokenValue);
         jwtTokenProvider.validate(accessToken);
-
         long memberId = jwtTokenProvider.parseAccessToken(accessToken);
         memberService.updateRefreshToken(memberId, null);
     }

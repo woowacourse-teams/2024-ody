@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RefreshToken {
+public class RefreshToken implements JwtToken {
 
     public static final String REFRESH_TOKEN_PREFIX = "refresh-token=";
 
@@ -43,6 +43,11 @@ public class RefreshToken {
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, authProperties.getRefreshKey())
                 .compact();
+    }
+
+    @Override
+    public String getSecretKey(AuthProperties authProperties) {
+        return authProperties.getRefreshKey();
     }
 
     @Override

@@ -58,8 +58,8 @@ public class Member {
         return this.refreshToken == null;
     }
 
-    public boolean isSame(AuthProvider otherAuthProvider) {
-        return this.authProvider.equals(otherAuthProvider);
+    public boolean isSame(Member otherMember) {
+        return this.authProvider.equals(otherMember.getAuthProvider());
     }
 
     public void updateRefreshToken(RefreshToken refreshToken) {

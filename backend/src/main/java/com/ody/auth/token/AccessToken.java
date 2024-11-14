@@ -8,10 +8,9 @@ import java.util.Date;
 import lombok.Getter;
 
 @Getter
-public class AccessToken {
+public class AccessToken implements JwtToken {
 
     private static final String ACCESS_TOKEN_PREFIX = "Bearer access-token=";
-    public static final String DELIMITER = " ";
 
     private final String value;
 
@@ -37,5 +36,10 @@ public class AccessToken {
 
     private String parseAccessToken(String rawValue) {
         return rawValue.substring(ACCESS_TOKEN_PREFIX.length()).trim();
+    }
+
+    @Override
+    public String getSecretKey(AuthProperties authProperties) {
+        return authProperties.getAccessKey();
     }
 }
