@@ -3,6 +3,7 @@ package com.ody.common;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ody.notification.config.FcmConfig;
 import com.ody.notification.service.FcmSubscriber;
+import com.ody.route.service.RouteClientCircuitBreaker;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,9 @@ public abstract class BaseServiceTest {
 
     @MockBean
     protected FirebaseMessaging firebaseMessaging;
+
+    @MockBean
+    protected RouteClientCircuitBreaker routeClientCircuitBreaker;
 
     @MockBean
     protected FcmSubscriber fcmSubscriber;

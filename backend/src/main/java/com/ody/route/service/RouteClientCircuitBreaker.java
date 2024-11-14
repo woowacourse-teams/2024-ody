@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-class RouteClientCircuitBreaker {
+public class RouteClientCircuitBreaker {
 
     private static final int MAX_FAIL_COUNT = 3;
     public static final Duration FAIL_MINUTES_TTL = Duration.ofMinutes(31); // 지연 시간 고려해 31분으로 설정
