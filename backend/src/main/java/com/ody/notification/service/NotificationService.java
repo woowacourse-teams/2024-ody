@@ -75,7 +75,7 @@ public class NotificationService {
     @Transactional
     public void scheduleNotification(Notification notification) {
         Instant startTime = InstantConverter.kstToInstant(notification.getSendAt());
-        taskScheduler.schedule(() -> sendNotification(notification), startTime);
+        taskScheduler.schedule(() -> eventPublisher.publishEvent(new PushEvent(this, notification)), startTime);
         log.info(
                 "{} 타입 {} 상태 알림 {}에 스케줄링 예약",
                 notification.getType(),
@@ -84,26 +84,17 @@ public class NotificationService {
         );
     }
 
-    private void sendNotification(Notification notification) {
-        Notification savedNotification = notificationRepository.findById(notification.getId())
-                .orElse(notification); // noti 생성과 동시에 실행되는 경우, 다른 트랜잭션이므로 즉시 findById 할 수 없어 기존 noti 사용
-
-        if (savedNotification.isStatusDismissed()) {
-            log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", savedNotification);
-            return;
-        }
-        eventPublisher.publishEvent(new PushEvent(this, savedNotification));
-    }
-
     @Transactional
     public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
         Notification nudgeNotification = notificationRepository.save(Notification.createNudge(nudgedMate));
-        eventPublisher.publishEvent(new NudgeEvent(this, requestMate, nudgeNotification));
+        NudgeEvent nudgeEvent = new NudgeEvent(this, requestMate, nudgeNotification);
+        eventPublisher.publishEvent(nudgeEvent);
     }
 
     public void scheduleNotice(GroupMessage groupMessage, LocalDateTime noticeTime) {
         Instant startTime = InstantConverter.kstToInstant(noticeTime);
-        taskScheduler.schedule(() -> eventPublisher.publishEvent(new NoticeEvent(this, groupMessage)), startTime);
+        NoticeEvent noticeEvent = new NoticeEvent(this, groupMessage);
+        taskScheduler.schedule(() -> eventPublisher.publishEvent(noticeEvent), startTime);
     }
 
     @Transactional
@@ -144,6 +135,11 @@ public class NotificationService {
 
     public void unSubscribeTopic2(List<Meeting> meetings) {
         for (Meeting meeting : meetings) {
+
+            List<Notification> allMeetingIdAndType = notificationRepository.findAllMeetingIdAndType(meeting.getId(),
+                    NotificationType.DEPARTURE_REMINDER);
+
+
             notificationRepository.findAllMeetingIdAndType(meeting.getId(), NotificationType.DEPARTURE_REMINDER)
                     .forEach(notification -> unSubscribeTopic2(
                                     meeting,
