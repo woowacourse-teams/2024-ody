@@ -16,6 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
 @Component
@@ -49,11 +53,12 @@ public class FcmEventListener {
     }
 
     @Async
-    @EventListener
+    @Transactional(propagation = Propagation.REQUIRES_NEW) // 추가 커밋 허용을 위해 트랜잭션을 염
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)// 커밋 이후 발송
     public void sendPushMessage(PushEvent pushEvent) {
         Notification notification = pushEvent.getNotification();
         GroupMessage groupMessage = GroupMessage.from(notification);
-        fcmPushSender.sendGeneralMessage2(groupMessage.message(), notification);
+        fcmPushSender.sendGeneralMessage(groupMessage.message(), notification);
     }
 
     @Async
@@ -62,6 +67,6 @@ public class FcmEventListener {
         Notification nudgeNotification = nudgeEvent.getNudgeNotification();
         Mate requestMate = nudgeEvent.getRequestMate();
         DirectMessage nudgeMessage = DirectMessage.createMessageToOther(requestMate, nudgeNotification);
-        fcmPushSender.sendGeneralMessage2(nudgeMessage.message(), nudgeNotification);
+        fcmPushSender.sendGeneralMessage(nudgeMessage.message(), nudgeNotification);
     }
 }
