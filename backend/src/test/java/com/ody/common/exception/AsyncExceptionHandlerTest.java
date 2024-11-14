@@ -15,6 +15,7 @@ import com.ody.common.TestRouteConfig;
 import com.ody.notification.service.FcmEventListener;
 import com.ody.notification.service.FcmSubscriber;
 import com.ody.notification.service.event.SubscribeEvent;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +38,7 @@ class AsyncExceptionHandlerTest extends BaseControllerTest {
     @MockBean
     private AsyncExceptionHandler asyncExceptionHandler;
 
+    @DisplayName("비동기 메서드에서 발생한 에러를 핸들링한다")
     @Test
     void handleUncaughtException() throws InterruptedException {
         ApplicationEvent subscribeEvent = mock(SubscribeEvent.class);
