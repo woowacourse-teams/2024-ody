@@ -25,20 +25,24 @@ public class FcmPushSender {
     @Transactional
     public void sendGeneralMessage(Message message, Notification notification) {
         try {
-            Notification savedNotification = notificationRepository.findById(notification.getId())
-                    .orElse(notification); // noti 생성과 동시에 실행되는 경우, 다른 트랜잭션이므로 즉시 findById 할 수 없어 기존 noti 사용
-
-            if (savedNotification.isStatusDismissed()) {
-                log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", savedNotification);
+            if (isSkipAbleNotification(notification)) {
+                log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", notification);
                 return;
             }
 
             firebaseMessaging.send(message);
-            updateDepartureReminderToDone(savedNotification);
+            updateDepartureReminderToDone(notification);
         } catch (FirebaseMessagingException exception) {
             log.error("FCM 알림(ID : {}) 전송 실패 : {}", notification.getId(), exception.getMessage());
             throw new OdyServerErrorException(exception.getMessage());
         }
+    }
+
+    private boolean isSkipAbleNotification(Notification notification) {
+        Notification savedNotification = notificationRepository.findById(notification.getId())
+                .orElseThrow(() -> new OdyServerErrorException("저장된 알림을 찾을 수 없습니다.")); // 트랜잭션 완료 후 실행
+
+        return savedNotification.isStatusDismissed();
     }
 
     private void updateDepartureReminderToDone(Notification notification) {

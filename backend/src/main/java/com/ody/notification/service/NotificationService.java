@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final ApplicationEventPublisher eventPublisher;
+    private final FcmEventPublisher fcmEventPublisher;
     private final TaskScheduler taskScheduler;
 
     @Transactional
@@ -48,7 +48,7 @@ public class NotificationService {
         saveAndScheduleNotification(entryNotification);
 
         SubscribeEvent subscribeEvent = new SubscribeEvent(this, deviceToken, fcmTopic);
-        eventPublisher.publishEvent(subscribeEvent);
+        fcmEventPublisher.publish(subscribeEvent);
 
         saveAndSendDepartureReminderNotification(meeting, mate, fcmTopic);
     }
@@ -75,7 +75,7 @@ public class NotificationService {
     @Transactional
     public void scheduleNotification(Notification notification) {
         Instant startTime = InstantConverter.kstToInstant(notification.getSendAt());
-        taskScheduler.schedule(() -> eventPublisher.publishEvent(new PushEvent(this, notification)), startTime);
+        taskScheduler.schedule(() -> fcmEventPublisher.publishWithTransaction(new PushEvent(this, notification)), startTime);
         log.info(
                 "{} 타입 {} 상태 알림 {}에 스케줄링 예약",
                 notification.getType(),
@@ -88,13 +88,13 @@ public class NotificationService {
     public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
         Notification nudgeNotification = notificationRepository.save(Notification.createNudge(nudgedMate));
         NudgeEvent nudgeEvent = new NudgeEvent(this, requestMate, nudgeNotification);
-        eventPublisher.publishEvent(nudgeEvent);
+        fcmEventPublisher.publishWithTransaction(nudgeEvent);
     }
 
     public void scheduleNotice(GroupMessage groupMessage, LocalDateTime noticeTime) {
         Instant startTime = InstantConverter.kstToInstant(noticeTime);
         NoticeEvent noticeEvent = new NoticeEvent(this, groupMessage);
-        taskScheduler.schedule(() -> eventPublisher.publishEvent(noticeEvent), startTime);
+        taskScheduler.schedule(() -> fcmEventPublisher.publish(noticeEvent), startTime);
     }
 
     @Transactional
@@ -130,7 +130,7 @@ public class NotificationService {
     public void unSubscribeTopic2(Meeting meeting, DeviceToken deviceToken) {
         FcmTopic fcmTopic = new FcmTopic(meeting);
         UnSubscribeEvent unSubscribeEvent = new UnSubscribeEvent(this, deviceToken, fcmTopic);
-        eventPublisher.publishEvent(unSubscribeEvent);
+        fcmEventPublisher.publish(unSubscribeEvent);
     }
 
     public void unSubscribeTopic2(List<Meeting> meetings) {
@@ -138,7 +138,6 @@ public class NotificationService {
 
             List<Notification> allMeetingIdAndType = notificationRepository.findAllMeetingIdAndType(meeting.getId(),
                     NotificationType.DEPARTURE_REMINDER);
-
 
             notificationRepository.findAllMeetingIdAndType(meeting.getId(), NotificationType.DEPARTURE_REMINDER)
                     .forEach(notification -> unSubscribeTopic2(
