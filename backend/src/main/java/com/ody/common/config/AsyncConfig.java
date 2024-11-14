@@ -23,8 +23,6 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy()); //스레드풀이 가득찼을 경우 톰캣 스레드에서 처리
         int coreCount = Runtime.getRuntime().availableProcessors();
         executor.setCorePoolSize(coreCount);
-        executor.setMaxPoolSize(coreCount * 2);
-        executor.setQueueCapacity(10);
         executor.setThreadNamePrefix("ody-fcm");
         executor.initialize();
         return executor;
