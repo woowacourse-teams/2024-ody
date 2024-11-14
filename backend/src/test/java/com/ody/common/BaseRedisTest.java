@@ -24,7 +24,10 @@ public abstract class BaseRedisTest {
     private FirebaseMessaging firebaseMessaging;
 
     @BeforeEach
-    void setUp() {
-        redisTemplate.getConnectionFactory().getConnection().serverCommands().flushAll();
+    void init() {
+        redisTemplate.getConnectionFactory()
+                .getConnection()
+                .serverCommands()
+                .flushAll();
     }
 }
