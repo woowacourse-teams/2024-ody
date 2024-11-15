@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,11 +36,8 @@ class InviteCodeViewModel
                     initialValue = false,
                 )
 
-        private val _invalidInviteCodeEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val invalidInviteCodeEvent: SharedFlow<Unit> get() = _invalidInviteCodeEvent.asSharedFlow()
-
-        private val _alreadyParticipatedEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val alreadyParticipatedEvent: SharedFlow<Unit> get() = _alreadyParticipatedEvent.asSharedFlow()
+        private val _invitationCodeEvent: MutableSharedFlow<String> = MutableSharedFlow()
+        val invitationCodeEvent: SharedFlow<String> get() = _invitationCodeEvent.asSharedFlow()
 
         private val _navigateAction: MutableSharedFlow<InviteCodeNavigateAction> = MutableSharedFlow()
         val navigateAction: SharedFlow<InviteCodeNavigateAction> get() = _navigateAction.asSharedFlow()
@@ -58,12 +54,8 @@ class InviteCodeViewModel
                     .suspendOnSuccess {
                         _navigateAction.emit(InviteCodeNavigateAction.CodeNavigateToJoin)
                     }.suspendOnFailure { code, errorMessage ->
-                        when (code) {
-                            400 -> _alreadyParticipatedEvent.emit(Unit)
-                            404 -> _invalidInviteCodeEvent.emit(Unit)
-                        }
+                        _invitationCodeEvent.emit(errorMessage.toString())
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                        Timber.e("$code $errorMessage")
                     }.onNetworkError {
                         handleNetworkError()
                         lastFailedAction = { checkInviteCode() }
