@@ -54,12 +54,12 @@ class InviteCodeViewModelTest {
 
             // when
             val actual =
-                viewModel.invalidInviteCodeEvent.valueOnAction {
+                viewModel.invitationCodeEvent.valueOnAction {
                     viewModel.checkInviteCode()
                 }
 
             // then
-            assertThat(actual).isInstanceOf(Unit::class.java)
+            assertThat(actual).isInstanceOf(String::class.java)
         }
     }
 }
