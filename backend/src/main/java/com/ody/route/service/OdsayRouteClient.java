@@ -2,7 +2,7 @@ package com.ody.route.service;
 
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
-import com.ody.route.config.RouteProperties;
+import com.ody.route.config.RouteClientProperty;
 import com.ody.route.domain.ClientType;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.dto.OdsayResponse;
@@ -10,21 +10,19 @@ import com.ody.route.mapper.OdsayResponseMapper;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClient;
 
 @Slf4j
+@RequiredArgsConstructor
 public class OdsayRouteClient implements RouteClient {
 
-    private final RouteProperties routeProperties;
+    private final RouteClientProperty property;
     private final RestClient restClient;
 
-    public OdsayRouteClient(
-            RouteProperties routeProperties,
-            RestClient.Builder routeRestClientBuilder
-    ) {
-        this.routeProperties = routeProperties;
-        this.restClient = routeRestClientBuilder.build();
+    public OdsayRouteClient(RouteClientProperty property, RestClient.Builder builder) {
+        this(property, builder.build());
     }
 
     @Override
@@ -38,19 +36,18 @@ public class OdsayRouteClient implements RouteClient {
                 .uri(makeURI(origin, target))
                 .retrieve()
                 .body(OdsayResponse.class);
-        log.info("ODsay API 호출 : {}", response);
         return Objects.requireNonNullElseGet(response, () -> {
             throw new OdyServerErrorException("서버 에러");
         });
     }
 
     private URI makeURI(Coordinates origin, Coordinates target) {
-        String uri = routeProperties.getUrl()
+        String uri = property.baseUrl()
                 + "?SX=" + origin.getLongitude()
                 + "&SY=" + origin.getLatitude()
                 + "&EX=" + target.getLongitude()
                 + "&EY=" + target.getLatitude()
-                + "&apiKey=" + routeProperties.getApiKey();
+                + "&apiKey=" + property.apiKey();
         try {
             return new URI(uri);
         } catch (URISyntaxException exception) {

@@ -6,9 +6,14 @@ import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
+import com.ody.member.domain.Member;
 import java.time.LocalDateTime;
 
 public class DtoGenerator {
+
+    public AuthRequest generateAuthRequest(Member member) {
+        return generateAuthRequest(member.getAuthProvider().getProviderId(), member.getDeviceToken().getValue());
+    }
 
     public AuthRequest generateAuthRequest(String providerId, String deviceToken) {
         return new AuthRequest(deviceToken, providerId, "nickname", "imageUrl");

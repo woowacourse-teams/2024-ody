@@ -4,6 +4,8 @@ import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.mate.service.MateService;
+import com.ody.member.domain.AuthProvider;
+import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.repository.MemberRepository;
 import java.util.Optional;
@@ -21,33 +23,22 @@ public class MemberService {
     private final SocialAuthUnlinkClient socialAuthUnlinkClient;
 
     @Transactional
-    public Member save(Member requestMember) {
-        Optional<Member> findMember = memberRepository.findByDeviceToken(requestMember.getDeviceToken());
-
-        if (findMember.isPresent()) {
-            Member sameDeviceTokenMember = findMember.get();
-            if (sameDeviceTokenMember.isSame(requestMember.getAuthProvider())) {
-                return sameDeviceTokenMember;
-            }
-            sameDeviceTokenMember.updateDeviceTokenNull();
-        }
-        return saveOrUpdateByAuthProvider(requestMember);
-    }
-
-    private Member saveOrUpdateByAuthProvider(Member requestMember) {
-        Optional<Member> findMember = memberRepository.findByAuthProvider(requestMember.getAuthProvider());
-        if (findMember.isPresent()) {
-            Member sameAuthProviderMember = findMember.get();
-            sameAuthProviderMember.updateDeviceToken(requestMember.getDeviceToken());
-            return sameAuthProviderMember;
-        }
-        return memberRepository.save(requestMember);
+    public Member save(Member member) {
+        return memberRepository.save(member);
     }
 
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId)
                 .filter(member -> member.getDeletedAt() == null)
                 .orElseThrow(() -> new OdyUnauthorizedException("존재하지 않는 회원입니다."));
+    }
+
+    public Optional<Member> findByDeviceToken(DeviceToken deviceToken) {
+        return memberRepository.findByDeviceToken(deviceToken);
+    }
+
+    public Optional<Member> findByAuthProvider(AuthProvider authProvider) {
+        return memberRepository.findByAuthProvider(authProvider);
     }
 
     @Transactional
