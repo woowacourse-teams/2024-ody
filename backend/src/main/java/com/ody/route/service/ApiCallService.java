@@ -1,5 +1,6 @@
 package com.ody.route.service;
 
+import com.ody.common.aop.DistributedLock;
 import com.ody.route.domain.ApiCall;
 import com.ody.route.domain.ClientType;
 import com.ody.route.dto.ApiCallCountResponse;
@@ -33,6 +34,7 @@ public class ApiCallService {
     }
 
     @Transactional
+    @DistributedLock(key = "#clientType.name()")
     public void increaseCountByClientType(ClientType clientType) {
         ApiCall apiCall = findOrSaveFirstByClientTypeAndDate(clientType);
         apiCall.increaseCount();
