@@ -54,7 +54,7 @@ class InviteCodeViewModelTest {
 
             // when
             val actual =
-                viewModel.invitationCodeEvent.valueOnAction {
+                viewModel.invalidCodeEvent.valueOnAction {
                     viewModel.checkInviteCode()
                 }
 

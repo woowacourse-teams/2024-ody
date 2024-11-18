@@ -29,7 +29,7 @@ class InviteCodeActivity :
     }
 
     private fun initializeObserve() {
-        collectWhenStarted(viewModel.invitationCodeEvent) { errorMmessage ->
+        collectWhenStarted(viewModel.invalidCodeEvent) { errorMmessage ->
             viewModel.clearInviteCode()
             showSnackBar(errorMmessage)
         }

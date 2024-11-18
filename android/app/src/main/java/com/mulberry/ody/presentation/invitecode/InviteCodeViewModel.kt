@@ -36,8 +36,8 @@ class InviteCodeViewModel
                     initialValue = false,
                 )
 
-        private val _invitationCodeEvent: MutableSharedFlow<String> = MutableSharedFlow()
-        val invitationCodeEvent: SharedFlow<String> get() = _invitationCodeEvent.asSharedFlow()
+        private val _invalidCodeEvent: MutableSharedFlow<String> = MutableSharedFlow()
+        val invalidCodeEvent: SharedFlow<String> get() = _invalidCodeEvent.asSharedFlow()
 
         private val _navigateAction: MutableSharedFlow<InviteCodeNavigateAction> = MutableSharedFlow()
         val navigateAction: SharedFlow<InviteCodeNavigateAction> get() = _navigateAction.asSharedFlow()
@@ -54,7 +54,7 @@ class InviteCodeViewModel
                     .suspendOnSuccess {
                         _navigateAction.emit(InviteCodeNavigateAction.CodeNavigateToJoin)
                     }.suspendOnFailure { code, errorMessage ->
-                        _invitationCodeEvent.emit(errorMessage.toString())
+                        _invalidCodeEvent.emit(errorMessage.toString())
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                     }.onNetworkError {
                         handleNetworkError()
