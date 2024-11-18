@@ -40,6 +40,19 @@ abstract class BindingActivity<T : ViewDataBinding>(
         snackBar?.show()
     }
 
+    protected fun showSnackBar(
+        message: String,
+        @StringRes actionMessageId: Int? = null,
+        action: () -> Unit = {},
+    ) {
+        snackBar?.dismiss()
+        snackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+        actionMessageId?.let {
+            snackBar?.setAction(actionMessageId) { action() }
+        }
+        snackBar?.show()
+    }
+
     protected fun showRetrySnackBar(action: () -> Unit) {
         snackBar?.dismiss()
         snackBar =
