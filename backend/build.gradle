@@ -55,8 +55,8 @@ dependencies {
     implementation 'org.flywaydb:flyway-mysql'
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.testcontainers:testcontainers-bom:1.20.2'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.38.1'
 
     runtimeOnly 'com.mysql:mysql-connector-j:8.4.0'
 
