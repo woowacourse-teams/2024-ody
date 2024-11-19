@@ -50,7 +50,7 @@ class RouteClientCircuitBreakerTest extends BaseRedisTest {
         Boolean blocked = redisTemplate.hasKey(RouteClientKey.getBlockKey(routeClient));
 
         assertAll(
-                () -> assertThat(failCount).isEqualTo(0),
+                () -> assertThat(failCount).isZero(),
                 () -> assertThat(blocked).isTrue()
         );
     }
