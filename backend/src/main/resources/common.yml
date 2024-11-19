@@ -59,11 +59,3 @@ api-call:
 
 allowed-origins:
   api-call: ENC(QicQ16sDQJlHTuf3E/wIS+VBG0UVfQ62HDBXQbtfM8pmnYsBAH8xmACD7PBVgpLjWAHdJXN6bOKv/Z8BZFFbFyfp5x5f7dNCgok83Cn6jSE=)
-
-route:
-  client:
-    cooldown:
-      duration: 3600000  # 1시간
-    failure:
-      max-count: 5       # 5회 연속 실패시 쿨다운
-      window: 300000    # 5분 내 실패 카운트
