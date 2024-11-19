@@ -1,4 +1,4 @@
-package com.ody.common.redis;
+package com.ody.route.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
