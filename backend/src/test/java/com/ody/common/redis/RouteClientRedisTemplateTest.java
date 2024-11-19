@@ -6,7 +6,7 @@ import com.ody.common.BaseRedisTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class CustomRedisTemplateTest extends BaseRedisTest {
+class RouteClientRedisTemplateTest extends BaseRedisTest {
 
     private static final String TEST_KEY = "test";
 

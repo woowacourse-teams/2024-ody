@@ -1,4 +1,4 @@
-package com.ody.common.redis;
+package com.ody.route.repository;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CustomRedisTemplate extends RedisTemplate<String, String> {
+public class RouteClientRedisTemplate extends RedisTemplate<String, String> {
 
     @Autowired
-    public CustomRedisTemplate(RedisConnectionFactory connectionFactory) {
+    public RouteClientRedisTemplate(RedisConnectionFactory connectionFactory) {
         this.setKeySerializer(RedisSerializer.string());
         this.setValueSerializer(RedisSerializer.string());
         this.setHashKeySerializer(RedisSerializer.string());
