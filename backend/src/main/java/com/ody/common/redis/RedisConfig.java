@@ -25,6 +25,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 
     private static final String REDISSON_HOST_PREFIX = "redis://";
+    private static final int THREE_SECOND = 3000;
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
@@ -37,7 +38,7 @@ public class RedisConfig {
         Config config = new Config();
         config.useSingleServer()
                 .setAddress(REDISSON_HOST_PREFIX + redisHost + ":" + redisPort)
-                .setConnectTimeout(3000)
+                .setConnectTimeout(THREE_SECOND)
                 .setRetryAttempts(3);
 
         return Redisson.create(config);
