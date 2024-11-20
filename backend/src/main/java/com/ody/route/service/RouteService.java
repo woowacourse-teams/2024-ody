@@ -6,6 +6,7 @@ import com.ody.route.domain.RouteTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -29,9 +30,14 @@ public class RouteService {
             try {
                 RouteTime routeTime = calculateTime(routeClient, origin, target);
                 apiCallService.increaseCountByClientType(routeClient.getClientType());
-                log.info("{} API를 사용한 소요 시간 계산 성공", routeClient.getClass().getSimpleName());
+                log.info(
+                        "{} API 소요 시간 계산 : {}분, mateId : {}",
+                        routeClient.getClass().getSimpleName(),
+                        routeTime.getMinutes(),
+                        MDC.get("mateId")
+                );
                 return routeTime;
-            } catch (Exception exception) {
+            } catch (OdyServerErrorException exception) {
                 log.warn("{} API 에러 발생 :  ", routeClient.getClass().getSimpleName(), exception);
                 routeClientCircuitBreaker.recordFailCountInMinutes(routeClient);
                 routeClientCircuitBreaker.determineBlock(routeClient);
