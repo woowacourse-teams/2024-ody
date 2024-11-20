@@ -31,16 +31,11 @@ jobs:
           echo "Current date and time: $(date)"
           echo "TZ environment variable: $TZ"
 
-      - name: Setup Docker
-        run: |
-          docker --version
-          docker ps
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
       - name: Clean And Test With Gradle
-        run: ./gradlew clean test --info
+        run: ./gradlew clean test
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
