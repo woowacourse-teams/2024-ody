@@ -17,5 +17,7 @@ public class RedisTestContainersConfig {
 
     static {
         redisContainer.start();
+        System.setProperty("spring.data.redis.host", redisContainer.getHost());
+        System.setProperty("spring.data.redis.port", String.valueOf(redisContainer.getMappedPort(REDIS_PORT)));
     }
 }
