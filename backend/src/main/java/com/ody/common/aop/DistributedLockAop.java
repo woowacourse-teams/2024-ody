@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class DistributedLockAop {
+
     private static final String REDISSON_LOCK_PREFIX = "LOCK:";
 
     private final RedissonLockManager redissonLockManager;
