@@ -43,7 +43,7 @@ public class OdsayResponseMapper {
 
     private static void checkOdsayException(OdsayResponse response) {
         if (isServerErrorCode(response)) {
-            log.error("ODsay 500 에러: {}", response);
+            log.error("ODsay Server Error: {}", response);
             throw new OdyServerErrorException("서버 에러");
         }
 

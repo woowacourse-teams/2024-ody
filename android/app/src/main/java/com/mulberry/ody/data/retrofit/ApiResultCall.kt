@@ -1,6 +1,9 @@
 package com.mulberry.ody.data.retrofit
 
+import com.mulberry.ody.data.remote.core.entity.ErrorResponse
 import com.mulberry.ody.domain.apiresult.ApiResult
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -22,16 +25,22 @@ class ApiResultCall<T>(private val call: Call<T>) : Call<ApiResult<T>> {
                     call: Call<T>,
                     response: Response<T>,
                 ) {
-                    val body: T = response.body() ?: Unit as T
                     if (response.isSuccessful) {
+                        val body: T = response.body() ?: Unit as T
+
                         callback.onResponse(
                             this@ApiResultCall,
                             Response.success(ApiResult.Success(body)),
                         )
                     } else {
+                        val errorBody = response.errorBody()?.string()
+                        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+                        val adapter = moshi.adapter(ErrorResponse::class.java)
+                        val errorResponse = errorBody?.let { adapter.fromJson(it) }
+
                         callback.onResponse(
                             this@ApiResultCall,
-                            Response.success(ApiResult.Failure(response.code(), response.message())),
+                            Response.success(ApiResult.Failure(errorResponse?.status, errorResponse?.detail)),
                         )
                     }
                 }

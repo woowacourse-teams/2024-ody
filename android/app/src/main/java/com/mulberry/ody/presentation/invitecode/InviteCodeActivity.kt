@@ -29,13 +29,9 @@ class InviteCodeActivity :
     }
 
     private fun initializeObserve() {
-        collectWhenStarted(viewModel.alreadyParticipatedEvent) {
+        collectWhenStarted(viewModel.invalidCodeEvent) { errorMmessage ->
             viewModel.clearInviteCode()
-            showSnackBar(R.string.invite_code_already_participated)
-        }
-        collectWhenStarted(viewModel.invalidInviteCodeEvent) {
-            viewModel.clearInviteCode()
-            showSnackBar(R.string.invite_code_invalid_invite_code)
+            showSnackBar(errorMmessage)
         }
         collectWhenStarted(viewModel.navigateAction) {
             navigateToJoinView()
@@ -56,7 +52,7 @@ class InviteCodeActivity :
     }
 
     private fun navigateToJoinView() {
-        val inviteCode = viewModel.inviteCode.value ?: return
+        val inviteCode = viewModel.inviteCode.value
         startActivity(MeetingJoinActivity.getIntent(inviteCode, this))
     }
 
