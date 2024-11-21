@@ -13,10 +13,10 @@ public enum RouteClientKey {
     private final String value;
 
     public static String getFailKey(RouteClient routeClient) {
-        return String.format(FAIL_KEY.value, routeClient.getClass().getSimpleName());
+        return String.format(FAIL_KEY.value, routeClient.getClientType());
     }
 
     public static String getBlockKey(RouteClient routeClient) {
-        return String.format(BLOCK_KEY.value, routeClient.getClass().getSimpleName());
+        return String.format(BLOCK_KEY.value, routeClient.getClientType());
     }
 }
