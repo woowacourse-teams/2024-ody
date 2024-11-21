@@ -134,10 +134,6 @@ public class NotificationService {
 
     public void unSubscribeTopic(List<Meeting> meetings) {
         for (Meeting meeting : meetings) {
-
-            List<Notification> allMeetingIdAndType = notificationRepository.findAllMeetingIdAndType(meeting.getId(),
-                    NotificationType.DEPARTURE_REMINDER);
-
             notificationRepository.findAllMeetingIdAndType(meeting.getId(), NotificationType.DEPARTURE_REMINDER)
                     .forEach(notification -> unSubscribeTopic(
                                     meeting,
