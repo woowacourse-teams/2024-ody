@@ -24,7 +24,7 @@ public class RouteService {
         List<RouteClient> availableClients = routeClientManager.getAvailableClients();
         for (RouteClient routeClient : availableClients) {
             if (isDisabled(routeClient)) {
-                log.info("{} API 사용이 차단되어 건너뜁니다.", routeClient.getClass().getSimpleName());
+                log.info("{} API 사용이 차단되어 건너뜁니다.", routeClient.getClientType());
                 continue;
             }
             try {
@@ -32,13 +32,13 @@ public class RouteService {
                 apiCallService.increaseCountByClientType(routeClient.getClientType());
                 log.info(
                         "{} API 소요 시간 계산 : {}분, mateId : {}",
-                        routeClient.getClass().getSimpleName(),
+                        routeClient.getClientType(),
                         routeTime.getMinutes(),
                         MDC.get("mateId")
                 );
                 return routeTime;
             } catch (OdyServerErrorException exception) {
-                log.warn("{} API 에러 발생 :  ", routeClient.getClass().getSimpleName(), exception);
+                log.warn("{} API 에러 발생 :  ", routeClient.getClientType(), exception);
                 routeClientCircuitBreaker.recordFailCountInMinutes(routeClient);
                 routeClientCircuitBreaker.determineBlock(routeClient);
             }
