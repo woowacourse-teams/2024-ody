@@ -11,18 +11,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 class RouteClientManagerTest extends BaseServiceTest {
 
     @Autowired
     private RouteClientManager routeClientManager;
 
-    @MockBean
+    @SpyBean
     @Qualifier("odsay")
     private RouteClient odsayRouteClient;
 
-    @MockBean
+    @SpyBean
     @Qualifier("google")
     private RouteClient googleRouteClient;
 
@@ -44,7 +44,7 @@ class RouteClientManagerTest extends BaseServiceTest {
 
     @DisplayName("이용 가능한 RouteClient가 없으면 예외가 발생한다.")
     @Test
-    void FailWhenGetAvailableClientsBy() {
+    void failWhenGetAvailableClientsBy() {
         Mockito.when(routeClientCircuitBreaker.isBlocked(odsayRouteClient))
                 .thenReturn(true);
 

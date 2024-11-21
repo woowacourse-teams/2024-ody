@@ -60,10 +60,10 @@ class RouteServiceTest extends BaseServiceTest {
 
         assertAll(
                 () -> assertThat(result).isEqualTo(expectRouteTime.getMinutes()),
-                () -> verify(odsayRouteClient, times(1)).calculateRouteTime(origin, target),
-                () -> Mockito.verifyNoInteractions(googleRouteClient),
-                () -> verify(apiCallService, times(1)).increaseCountByClientType(odsayRouteClient.getClientType()),
-                () -> verify(apiCallService, Mockito.never()).increaseCountByClientType(
+                () -> Mockito.verify(odsayRouteClient, times(1)).calculateRouteTime(origin, target),
+                () -> verify(googleRouteClient, Mockito.never()).calculateRouteTime(origin, target),
+                () -> Mockito.verify(apiCallService, times(1)).increaseCountByClientType(odsayRouteClient.getClientType()),
+                () -> Mockito.verify(apiCallService, Mockito.never()).increaseCountByClientType(
                         googleRouteClient.getClientType())
         );
     }
@@ -86,7 +86,7 @@ class RouteServiceTest extends BaseServiceTest {
         assertAll(
                 () -> assertThat(result).isEqualTo(expectRouteTime),
                 () -> Mockito.verify(odsayRouteClient, Mockito.times(1)).calculateRouteTime(origin, target),
-                () -> Mockito.verifyNoInteractions(googleRouteClient),
+                () -> Mockito.verify(googleRouteClient, Mockito.never()).calculateRouteTime(origin, target),
                 () -> Mockito.verify(apiCallService, Mockito.times(1)).increaseCountByClientType(odsayRouteClient.getClientType()),
                 () -> Mockito.verify(apiCallService, Mockito.never()).increaseCountByClientType(googleRouteClient.getClientType())
         );
