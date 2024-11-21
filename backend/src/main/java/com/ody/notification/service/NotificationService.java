@@ -71,8 +71,7 @@ public class NotificationService {
         scheduleNotification(savedNotification);
     }
 
-    @Transactional
-    public void scheduleNotification(Notification notification) {
+    private void scheduleNotification(Notification notification) {
         Instant startTime = InstantConverter.kstToInstant(notification.getSendAt());
         PushEvent pushEvent = new PushEvent(this, notification);
         taskScheduler.schedule(() -> fcmEventPublisher.publishWithTransaction(pushEvent), startTime);
