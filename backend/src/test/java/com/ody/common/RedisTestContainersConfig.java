@@ -13,6 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @TestConfiguration
 @Testcontainers
 public class RedisTestContainersConfig {
+
     private static final int REDIS_PORT = 6379;
 
     @Container
