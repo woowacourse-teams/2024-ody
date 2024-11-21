@@ -5,6 +5,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -18,6 +19,7 @@ public class AsyncConfig implements AsyncConfigurer {
     private final AsyncExceptionHandler asyncExceptionHandler;
 
     @Override
+    @Bean(name = "fcmAsyncExecutor")
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy()); //스레드풀이 가득찼을 경우 톰캣 스레드에서 처리

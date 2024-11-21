@@ -29,7 +29,7 @@ public class FcmEventListener {
     private final FcmPushSender fcmPushSender;
     private final FcmSubscriber fcmSubscriber;
 
-    @Async
+    @Async("fcmAsyncExecutor")
     @EventListener
     public void subscribeTopic(SubscribeEvent subscribeEvent) {
         FcmTopic topic = subscribeEvent.getTopic();
@@ -37,7 +37,7 @@ public class FcmEventListener {
         fcmSubscriber.subscribeTopic(topic, deviceToken);
     }
 
-    @Async
+    @Async("fcmAsyncExecutor")
     @EventListener
     public void unSubscribeTopic(UnSubscribeEvent subscribeEvent) {
         FcmTopic topic = subscribeEvent.getTopic();
@@ -45,7 +45,7 @@ public class FcmEventListener {
         fcmSubscriber.unSubscribeTopic(topic, deviceToken);
     }
 
-    @Async
+    @Async("fcmAsyncExecutor")
     @EventListener
     public void sendNoticeMessage(NoticeEvent noticeEvent) {
         GroupMessage groupMessage = noticeEvent.getGroupMessage();
@@ -53,7 +53,7 @@ public class FcmEventListener {
         log.info("공지 알림 전송 | 전송 시간 : {}", Instant.now().atZone(TimeUtil.KST_OFFSET));
     }
 
-    @Async
+    @Async("fcmAsyncExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)// 커밋 이후 발송
     public void sendPushMessage(PushEvent pushEvent) {
         Notification notification = pushEvent.getNotification();
@@ -62,7 +62,7 @@ public class FcmEventListener {
         log.info("푸시 알림 성공- id : {}, 전송시간 : {}", notification.getId(), notification.getSendAt());
     }
 
-    @Async
+    @Async("fcmAsyncExecutor")
     @EventListener
     public void sendNudgeMessage(NudgeEvent nudgeEvent) {
         Notification nudgeNotification = nudgeEvent.getNudgeNotification();
