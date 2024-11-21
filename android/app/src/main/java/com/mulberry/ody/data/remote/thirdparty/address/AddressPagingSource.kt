@@ -13,11 +13,12 @@ class AddressPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Address> {
         val page = params.key ?: 1
         return runCatching {
-            val address = addressRepository.fetchAddresses(
-                keyword = keyword,
-                page = page,
-                pageSize = PAGE_SIZE,
-            ).getOrThrow()
+            val address =
+                addressRepository.fetchAddresses(
+                    keyword = keyword,
+                    page = page,
+                    pageSize = PAGE_SIZE,
+                ).getOrThrow()
 
             val prevKey = if (page == 1) null else page - PAGE_OFFSET
             val nextKey = if (address.isEnd) null else page + PAGE_OFFSET

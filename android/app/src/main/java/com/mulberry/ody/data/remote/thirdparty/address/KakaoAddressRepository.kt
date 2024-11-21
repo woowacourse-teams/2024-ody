@@ -12,7 +12,7 @@ class KakaoAddressRepository
     constructor(private val service: KakaoAddressService) : AddressRepository {
         override suspend fun fetchAddresses(
             keyword: String,
-            page:Int,
+            page: Int,
             pageSize: Int,
         ): ApiResult<Addresses> {
             return service.fetchAddresses(keyword, pageSize).map { it.toAddresses() }

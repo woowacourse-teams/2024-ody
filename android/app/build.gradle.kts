@@ -34,7 +34,7 @@ android {
         buildConfigField(
             "String",
             "PRIVACY_POLICY_URI",
-            properties["PRIVACY_POLICY_URI"].toString()
+            properties["PRIVACY_POLICY_URI"].toString(),
         )
         buildConfigField("String", "TERM_URI", properties["TERM_URI"].toString())
         manifestPlaceholders["KAKAO_NATIVE_KEY"] =

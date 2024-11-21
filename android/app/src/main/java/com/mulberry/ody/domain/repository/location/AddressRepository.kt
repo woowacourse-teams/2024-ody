@@ -1,7 +1,6 @@
 package com.mulberry.ody.domain.repository.location
 
 import com.mulberry.ody.domain.apiresult.ApiResult
-import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.Addresses
 
 interface AddressRepository {
