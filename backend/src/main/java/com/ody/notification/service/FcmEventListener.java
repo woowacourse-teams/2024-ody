@@ -53,7 +53,6 @@ public class FcmEventListener {
     }
 
     @Async
-    @Transactional(propagation = Propagation.REQUIRES_NEW) // 추가 커밋 허용을 위해 트랜잭션을 염
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)// 커밋 이후 발송
     public void sendPushMessage(PushEvent pushEvent) {
         Notification notification = pushEvent.getNotification();
