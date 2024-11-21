@@ -33,7 +33,7 @@ class RouteClientCircuitBreakerTest extends BaseRedisTest {
         // 지연 시간 때문에 TTL을 범위로 테스트
         assertAll(
                 () -> assertThat(failureCount).isEqualTo(1),
-                () -> assertThat(ttlMinutes).isGreaterThanOrEqualTo(30).isLessThanOrEqualTo(31)
+                () -> assertThat(ttlMinutes).isBetween(30L, 31L)
         );
     }
 
