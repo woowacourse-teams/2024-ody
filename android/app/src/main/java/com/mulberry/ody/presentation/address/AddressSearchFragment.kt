@@ -59,6 +59,9 @@ class AddressSearchFragment :
             }
         binding.rvAddress.addItemDecoration(dividerItemDecoration)
         binding.rvAddress.adapter = adapter
+        adapter.addLoadStateListener {
+            viewModel.emptyAddresses(adapter.itemCount == 0)
+        }
     }
 
     private fun initializeBinding() {
@@ -81,9 +84,6 @@ class AddressSearchFragment :
         collectWhenStarted(viewModel.networkErrorEvent) {
             showRetrySnackBar { viewModel.retryLastAction() }
         }
-        collectWhenStarted(viewModel.addressUiModels) {
-            adapter.submitList(it)
-        }
         collectWhenStarted(viewModel.addressSelectEvent) {
             (parentFragment as? AddressSearchListener)?.onReceive(it)
             (activity as? AddressSearchListener)?.onReceive(it)
@@ -91,6 +91,9 @@ class AddressSearchFragment :
         }
         collectWhenStarted(viewModel.addressSearchKeyword) {
             if (it.isEmpty()) viewModel.clearAddresses()
+        }
+        collectWhenStarted(viewModel.addressClearEvent) {
+            adapter.refresh()
         }
     }
 
