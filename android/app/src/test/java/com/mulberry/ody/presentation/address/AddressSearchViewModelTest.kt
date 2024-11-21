@@ -1,13 +1,12 @@
 package com.mulberry.ody.presentation.address
 
-import com.mulberry.ody.addresses
+import androidx.paging.map
+import com.mulberry.ody.address
 import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.fake.FakeAnalyticsHelper
-import com.mulberry.ody.presentation.address.model.toAddressUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -39,8 +38,9 @@ class AddressSearchViewModelTest {
             viewModel.searchAddress()
 
             // then
-            val actual = viewModel.addressUiModels.first()
-            assertThat(actual).isEqualTo(addresses.toAddressUiModels())
+            viewModel.address.value.map { actual ->
+                assertThat(actual).isEqualTo(address)
+            }
         }
     }
 }
