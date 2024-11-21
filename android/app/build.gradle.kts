@@ -31,9 +31,14 @@ android {
         buildConfigField("String", "BASE_PROD_URL", properties["BASE_PROD_URL"].toString())
         buildConfigField("String", "KAKAO_API_KEY", properties["KAKAO_API_KEY"].toString())
         buildConfigField("String", "KAKAO_NATIVE_KEY", properties["KAKAO_NATIVE_KEY"].toString())
-        buildConfigField("String", "PRIVACY_POLICY_URI", properties["PRIVACY_POLICY_URI"].toString())
+        buildConfigField(
+            "String",
+            "PRIVACY_POLICY_URI",
+            properties["PRIVACY_POLICY_URI"].toString()
+        )
         buildConfigField("String", "TERM_URI", properties["TERM_URI"].toString())
-        manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["KAKAO_NATIVE_KEY"].toString().trim('"')
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] =
+            properties["KAKAO_NATIVE_KEY"].toString().trim('"')
     }
     buildTypes {
         debug {
@@ -131,7 +136,7 @@ dependencies {
     implementation(libs.timber)
 
     // dotsibdicator
-    implementation(libs.dotsibdicator)
+    implementation(libs.dotsinbdicator)
 
     // play service
     implementation(libs.play.services.location)
@@ -152,4 +157,7 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    // paging
+    implementation(libs.androidx.paging)
 }
