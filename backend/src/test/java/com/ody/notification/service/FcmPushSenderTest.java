@@ -9,6 +9,7 @@ import com.ody.common.BaseServiceTest;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
+import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.repository.NotificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,12 +28,13 @@ class FcmPushSenderTest extends BaseServiceTest {
     @Test
     void sendPushNotificationSuccess() {
         Message message = Mockito.mock(Message.class);
+        GroupMessage groupMessage = new GroupMessage(message);
         Notification pendingNotification = fixtureGenerator.generateNotification(
                 NotificationType.DEPARTURE_REMINDER,
                 NotificationStatus.PENDING
         );
 
-        fcmPushSender.sendGeneralMessage(message, pendingNotification);
+        fcmPushSender.sendGroupMessage(groupMessage, pendingNotification);
 
         Notification notificationAfterSend = notificationRepository.findById(pendingNotification.getId()).get();
 
@@ -46,12 +48,13 @@ class FcmPushSenderTest extends BaseServiceTest {
     @Test
     void sendPushNotificationFailure() {
         Message message = Mockito.mock(Message.class);
+        GroupMessage groupMessage = new GroupMessage(message);
         Notification dismissedNotification = fixtureGenerator.generateNotification(
                 NotificationType.DEPARTURE_REMINDER,
                 NotificationStatus.DISMISSED
         );
 
-        fcmPushSender.sendGeneralMessage(message, dismissedNotification);
+        fcmPushSender.sendGroupMessage(groupMessage, dismissedNotification);
 
         Notification notificationAfterSend = notificationRepository.findById(dismissedNotification.getId()).get();
 
