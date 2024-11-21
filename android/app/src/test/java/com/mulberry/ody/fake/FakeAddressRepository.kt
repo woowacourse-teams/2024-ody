@@ -8,6 +8,7 @@ import com.mulberry.ody.domain.repository.location.AddressRepository
 object FakeAddressRepository : AddressRepository {
     override suspend fun fetchAddresses(
         keyword: String,
+        page: Int,
         pageSize: Int,
     ): ApiResult<List<Address>> {
         return ApiResult.Success(addresses)
