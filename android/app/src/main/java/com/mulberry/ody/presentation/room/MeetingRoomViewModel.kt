@@ -146,7 +146,7 @@ class MeetingRoomViewModel
         ) {
             meetingRepository.postNudge(Nudge(nudgeId, mateId))
                 .suspendOnSuccess {
-                        _nudgeSuccessMate.emit(mateNickname)
+                    _nudgeSuccessMate.emit(mateNickname)
                 }.suspendOnFailure { code, errorMessage ->
                     when (code) {
                         400 -> _expiredNudgeTimeLimit.emit(Unit)
