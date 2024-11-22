@@ -15,23 +15,18 @@ import com.ody.notification.service.event.UnSubscribeEvent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationEventPublisher;
 
 class FcmEventListenerTest extends BaseServiceTest {
 
     @Autowired
-    private ApplicationEventPublisher eventPublisher;
-
-    @Autowired
-    private TestEventPublisher testEventPublisher;
+    private FcmEventPublisher eventPublisher;
 
     @DisplayName("SubscribeEvent 발생 시, 특정 주제 구독 로직을 실행한다")
     @Test
     void subscribeTopic() {
         SubscribeEvent subscribeEvent = mock(SubscribeEvent.class);
 
-        eventPublisher.publishEvent(subscribeEvent);
+        eventPublisher.publish(subscribeEvent);
 
         verify(fcmEventListener, times(1)).subscribeTopic(eq(subscribeEvent));
     }
@@ -41,7 +36,7 @@ class FcmEventListenerTest extends BaseServiceTest {
     void unSubscribeTopic() {
         UnSubscribeEvent unSubscribeEvent = mock(UnSubscribeEvent.class);
 
-        eventPublisher.publishEvent(unSubscribeEvent);
+        eventPublisher.publish(unSubscribeEvent);
 
         verify(fcmEventListener, times(1)).unSubscribeTopic(eq(unSubscribeEvent));
     }
@@ -51,7 +46,7 @@ class FcmEventListenerTest extends BaseServiceTest {
     void sendNoticeMessage() {
         NoticeEvent noticeEvent = mock(NoticeEvent.class);
 
-        eventPublisher.publishEvent(noticeEvent);
+        eventPublisher.publish(noticeEvent);
 
         verify(fcmEventListener, times(1)).sendNoticeMessage(eq(noticeEvent));
     }
@@ -61,7 +56,7 @@ class FcmEventListenerTest extends BaseServiceTest {
     void sendPushMessage() {
         PushEvent pushEvent = mock(PushEvent.class);
 
-        testEventPublisher.transactionMethod(pushEvent);
+        eventPublisher.publishWithTransaction(pushEvent);
 
         verify(fcmEventListener, times(1)).sendPushMessage(eq(pushEvent));
     }
@@ -71,7 +66,7 @@ class FcmEventListenerTest extends BaseServiceTest {
     void notEventTriggerWhenTransactionNotOpen() {
         PushEvent pushEvent = mock(PushEvent.class);
 
-        testEventPublisher.noneTransactionMethod(pushEvent);
+        eventPublisher.publish(pushEvent);
 
         verifyNoInteractions(fcmEventListener);
     }
@@ -81,7 +76,7 @@ class FcmEventListenerTest extends BaseServiceTest {
     void sendNudgeMessage() {
         NudgeEvent nudgeEvent = mock(NudgeEvent.class);
 
-        eventPublisher.publishEvent(nudgeEvent);
+        eventPublisher.publish(nudgeEvent);
 
         verify(fcmEventListener, times(1)).sendNudgeMessage(eq(nudgeEvent));
     }
