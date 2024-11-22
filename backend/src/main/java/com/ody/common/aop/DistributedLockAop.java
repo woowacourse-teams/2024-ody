@@ -1,5 +1,6 @@
 package com.ody.common.aop;
 
+import com.ody.common.exception.OdyException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.common.redis.RedissonLockManager;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,8 @@ public class DistributedLockAop {
     private Object proceedWithJoinPoint(ProceedingJoinPoint joinPoint) {
         try {
             return joinPoint.proceed();
+        } catch (OdyException exception) {
+            throw exception;
         } catch (Throwable throwable) {
             log.error("분산락 작업 처리중 에러 발생 : ", throwable);
             throw new OdyServerErrorException("서버에 장애가 발생했습니다.");
