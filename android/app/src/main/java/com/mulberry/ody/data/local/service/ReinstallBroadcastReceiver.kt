@@ -14,7 +14,7 @@ import javax.inject.Inject
 class ReinstallBroadcastReceiver : BroadcastReceiver() {
     @Inject
     lateinit var matesEtaRepository: MatesEtaRepository
-    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     override fun onReceive(
         context: Context,
