@@ -1,4 +1,7 @@
 spring:
+  data:
+    redis:
+      host: localhost
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:53306/ody
