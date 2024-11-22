@@ -26,9 +26,9 @@ class MateControllerTest extends BaseControllerTest {
     @DisplayName("바로 전송해야 하는 입장/출발 알림의 경우, 트랜잭션이 완료 된 후 알림을 조회한다")
     @Test
     void sendUnSavedMessage() throws InterruptedException, FirebaseMessagingException {
-        Meeting nowMeeting = fixtureGenerator.generateMeeting();
+        Meeting tenMinutesLaterMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().plusMinutes(10L));
         Member member = fixtureGenerator.generateMember();
-        MateSaveRequestV2 mateSaveRequestV2 = dtoGenerator.generateMateSaveRequest(nowMeeting);
+        MateSaveRequestV2 mateSaveRequestV2 = dtoGenerator.generateMateSaveRequest(tenMinutesLaterMeeting);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

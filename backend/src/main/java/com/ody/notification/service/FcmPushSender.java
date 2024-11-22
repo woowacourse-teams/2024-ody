@@ -1,7 +1,5 @@
 package com.ody.notification.service;
 
-import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
-
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
