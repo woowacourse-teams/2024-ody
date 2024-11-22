@@ -1,5 +1,7 @@
 package com.ody.notification.service;
 
+import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
+
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -51,7 +53,7 @@ public class FcmPushSender {
 
     private Notification findNotification(Notification notification) {
         return notificationRepository.findById(notification.getId())
-                .orElseThrow(() -> new OdyServerErrorException("저장된 알림을 찾을 수 없습니다.")); // 트랜잭션 완료 후 실행
+                .orElseThrow(() -> new OdyServerErrorException(notification.getId()+ " id 알림을 찾을 수 없습니다.")); // 트랜잭션 완료 후 실행
     }
 
     private void updateDepartureReminderToDone(Notification notification) {
