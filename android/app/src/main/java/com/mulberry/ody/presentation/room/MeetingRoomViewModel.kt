@@ -101,10 +101,10 @@ class MeetingRoomViewModel
         private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
         val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
 
-        private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
-
         private val _copyInviteCodeEvent: MutableSharedFlow<InviteCodeCopyInfo> = MutableSharedFlow()
         val copyInviteCodeEvent: SharedFlow<InviteCodeCopyInfo> get() = _copyInviteCodeEvent.asSharedFlow()
+
+        private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
         init {
             fetchMeeting()
@@ -127,35 +127,16 @@ class MeetingRoomViewModel
         ) {
             val recentNudgeTime = matesNudgeTimes.getOrDefault(mateId, DEFAULT_NUDGE_TIME)
             val currentTime = LocalDateTime.now()
-
             val elapsedSeconds = Duration.between(recentNudgeTime, currentTime).seconds
+            val remainingCooldown = NUDGE_DELAY_SECONDS - elapsedSeconds
 
             if (recentNudgeTime == DEFAULT_NUDGE_TIME || elapsedSeconds >= NUDGE_DELAY_SECONDS) {
                 matesNudgeTimes[mateId] = currentTime
                 performNudge(nudgeId, mateId, mateNickname)
-            } else {
-                val remainingCooldown = NUDGE_DELAY_SECONDS - elapsedSeconds
-                _nudgeFailMate.emit(remainingCooldown.toInt())
-                meetingRepository.postNudge(Nudge(nudgeId, mateId))
-                    .suspendOnSuccess {
-                        matesEta.collect { mateEta ->
-                            val mateNickname =
-                                mateEta?.mateEtas?.find { it.mateId == mateId }?.nickname
-                                    ?: return@collect
-                            _nudgeSuccessMate.emit(mateNickname)
-                        }
-                    }.suspendOnFailure { code, errorMessage ->
-                        when (code) {
-                            400 -> _expiredNudgeTimeLimit.emit(Unit)
-                            else -> handleError()
-                        }
-                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                        Timber.e("$code $errorMessage")
-                    }.onNetworkError {
-                        handleNetworkError()
-                        lastFailedAction = { nudgeMate(nudgeId, mateId) }
-                    }
+                return
             }
+
+            _nudgeFailMate.emit(remainingCooldown.toInt())
         }
 
         private suspend fun performNudge(
@@ -165,11 +146,13 @@ class MeetingRoomViewModel
         ) {
             meetingRepository.postNudge(Nudge(nudgeId, mateId))
                 .suspendOnSuccess {
-                    _nudgeSuccessMate.emit(mateNickname)
-                }.onFailure { code, errorMessage ->
-                    handleError()
+                        _nudgeSuccessMate.emit(mateNickname)
+                }.suspendOnFailure { code, errorMessage ->
+                    when (code) {
+                        400 -> _expiredNudgeTimeLimit.emit(Unit)
+                        else -> handleError()
+                    }
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    Timber.e("$code $errorMessage")
                 }.onNetworkError {
                     handleNetworkError()
                     lastFailedAction = { nudgeMate(nudgeId, mateId) }
