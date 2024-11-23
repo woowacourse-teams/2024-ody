@@ -1,7 +1,7 @@
 package com.ody.common;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.ody.common.redis.CustomRedisTemplate;
+import com.ody.route.repository.RouteClientRedisTemplate;
 import com.ody.notification.config.FcmConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import;
 public abstract class BaseRedisTest {
 
     @Autowired
-    protected CustomRedisTemplate redisTemplate;
+    protected RouteClientRedisTemplate redisTemplate;
 
     @MockBean
     private FcmConfig fcmConfig;

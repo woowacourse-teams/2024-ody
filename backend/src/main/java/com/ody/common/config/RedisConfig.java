@@ -1,4 +1,4 @@
-package com.ody.common.redis;
+package com.ody.common.config;
 
 import java.time.Duration;
 import org.redisson.Redisson;
