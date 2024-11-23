@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.mulberry.ody.databinding.ItemAddressSearchBinding
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.address.listener.AddressListener
 import com.mulberry.ody.presentation.address.listener.AddressViewHolder
-import com.mulberry.ody.presentation.address.model.AddressUiModel
 
 class AddressesAdapter(
     private val addressListener: AddressListener,
-) : PagingDataAdapter<AddressUiModel, AddressViewHolder>(diffUtil) {
+) : PagingDataAdapter<Address, AddressViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -30,15 +30,15 @@ class AddressesAdapter(
 
     companion object {
         private val diffUtil =
-            object : DiffUtil.ItemCallback<AddressUiModel>() {
+            object : DiffUtil.ItemCallback<Address>() {
                 override fun areItemsTheSame(
-                    oldItem: AddressUiModel,
-                    newItem: AddressUiModel,
+                    oldItem: Address,
+                    newItem: Address,
                 ): Boolean = oldItem == newItem
 
                 override fun areContentsTheSame(
-                    oldItem: AddressUiModel,
-                    newItem: AddressUiModel,
+                    oldItem: Address,
+                    newItem: Address,
                 ): Boolean = oldItem == newItem
             }
     }

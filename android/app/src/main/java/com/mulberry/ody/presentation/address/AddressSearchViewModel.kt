@@ -5,13 +5,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.map
 import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.presentation.address.listener.AddressListener
-import com.mulberry.ody.presentation.address.model.AddressUiModel
-import com.mulberry.ody.presentation.address.model.toAddressUiModel
 import com.mulberry.ody.presentation.common.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,8 +37,8 @@ class AddressSearchViewModel
                 initialValue = false,
             )
 
-        private val _address: MutableStateFlow<PagingData<AddressUiModel>> = MutableStateFlow(PagingData.empty())
-        val address: StateFlow<PagingData<AddressUiModel>> get() = _address
+        private val _address: MutableStateFlow<PagingData<Address>> = MutableStateFlow(PagingData.empty())
+        val address: StateFlow<PagingData<Address>> get() = _address
 
         private val _isEmptyAddresses: MutableStateFlow<Boolean> = MutableStateFlow(true)
         val isEmptyAddresses: StateFlow<Boolean> get() = _isEmptyAddresses
@@ -70,10 +67,9 @@ class AddressSearchViewModel
                             addressRepository = addressRepository,
                         )
                     },
-                ).flow.cachedIn(viewModelScope)
-                    .collectLatest { pagingData ->
-                        _address.emit(pagingData.map { it.toAddressUiModel() })
-                    }
+                ).flow
+                    .cachedIn(viewModelScope)
+                    .collectLatest { _address.emit(it) }
                 stopLoading()
             }
         }
