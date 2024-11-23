@@ -35,7 +35,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -43,7 +42,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronExpression;
 
@@ -54,6 +52,9 @@ class MeetingServiceTest extends BaseServiceTest {
 
     @Autowired
     private MeetingRepository meetingRepository;
+
+    @Autowired
+    private ApiCallService apiCallService;
 
     @MockBean
     private TaskScheduler taskScheduler;
@@ -258,12 +259,6 @@ class MeetingServiceTest extends BaseServiceTest {
 
         private static final int TOTAL_REQUESTS = 100;
 
-        @SpyBean
-        private ApiCallService apiCallService;
-
-        @SpyBean
-        private MeetingService meetingService;
-
         @DisplayName("100명의 사용자가 동시에 약속에 참여하여 API를 호출할 경우 정확히 count+100 한다.")
         @Test
         void concurrencySaveMateAndSendNotifications() throws InterruptedException {
@@ -296,24 +291,18 @@ class MeetingServiceTest extends BaseServiceTest {
         void concurrencySaveMateAndSendNotificationsRollBack() throws InterruptedException {
             ExecutorService executorService = Executors.newFixedThreadPool(TOTAL_REQUESTS);
             CountDownLatch countDownLatch = new CountDownLatch(TOTAL_REQUESTS);
-            AtomicInteger successCount = new AtomicInteger(0);
-            AtomicInteger totalCount = new AtomicInteger(0);
 
             Meeting meeting = fixtureGenerator.generateMeeting(LocalDateTime.now().plusHours(1));
-            Mockito.doAnswer(invocation -> {
-                int currentCount = totalCount.getAndIncrement();
-                if (currentCount % 2 == 0) {
-                    successCount.incrementAndGet();
-                    return invocation.callRealMethod();
-                }
-                throw new RuntimeException();
-            }).when(meetingService).saveMateAndSendNotifications(any(), any());
 
             for (int i = 1; i <= TOTAL_REQUESTS; i++) {
+                final int index = i;
                 executorService.execute(() -> {
                     try {
                         Member member = fixtureGenerator.generateMember();
                         MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateSaveRequest(meeting);
+                        if (index % 2 == 0) {
+                            throw new RuntimeException();
+                        }
                         meetingService.saveMateAndSendNotifications(mateSaveRequest, member);
                     } finally {
                         countDownLatch.countDown();

@@ -21,7 +21,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,6 +36,9 @@ class EtaServiceTest extends BaseServiceTest {
 
     @Autowired
     private EtaService etaService;
+
+    @Autowired
+    private ApiCallService apiCallService;
 
     @DisplayName("오디세이 호출 여부 테스트")
     @Nested
@@ -125,12 +127,6 @@ class EtaServiceTest extends BaseServiceTest {
 
         private static final int TOTAL_REQUESTS = 100;
 
-        @SpyBean
-        private ApiCallService apiCallService;
-
-        @SpyBean
-        private EtaService etaService;
-
         @DisplayName("100명의 사용자가 동시에 ETA 목록 조회하여 API를 호출할 경우 정확히 count+100 한다.")
         @Test
         void concurrencyFindAllMateEtas() throws InterruptedException {
@@ -166,8 +162,6 @@ class EtaServiceTest extends BaseServiceTest {
         void concurrencyFindAllMateEtasRollBack() throws InterruptedException {
             ExecutorService executorService = Executors.newFixedThreadPool(TOTAL_REQUESTS);
             CountDownLatch countDownLatch = new CountDownLatch(TOTAL_REQUESTS);
-            AtomicInteger successCount = new AtomicInteger(0);
-            AtomicInteger totalCount = new AtomicInteger(0);
 
             Meeting odyMeeting = fixtureGenerator.generateMeeting();
             Mate mate = fixtureGenerator.generateMate(odyMeeting, Fixture.ORIGIN_LOCATION);
@@ -175,18 +169,13 @@ class EtaServiceTest extends BaseServiceTest {
             fixtureGenerator.generateEta(mate, 30L, updateTime);
             MateEtaRequest mateEtaRequest = dtoGenerator.generateMateEtaRequest(false, Fixture.ORIGIN_LOCATION);
 
-            Mockito.doAnswer(invocation -> {
-                int currentCount = totalCount.getAndIncrement();
-                if (currentCount % 2 == 0) {
-                    successCount.incrementAndGet();
-                    return invocation.callRealMethod();
-                }
-                throw new RuntimeException();
-            }).when(etaService).findAllMateEtas(mateEtaRequest, mate);
-
             for (int i = 1; i <= TOTAL_REQUESTS; i++) {
+                final int index = i;
                 executorService.execute(() -> {
                     try {
+                        if (index % 2 == 0) {
+                            throw new RuntimeException();
+                        }
                         etaService.findAllMateEtas(mateEtaRequest, mate);
                     } finally {
                         countDownLatch.countDown();
