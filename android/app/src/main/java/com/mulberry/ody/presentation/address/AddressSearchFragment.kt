@@ -60,7 +60,7 @@ class AddressSearchFragment :
         binding.rvAddress.addItemDecoration(dividerItemDecoration)
         binding.rvAddress.adapter = adapter
         adapter.addLoadStateListener {
-            viewModel.emptyAddresses(adapter.itemCount == 0)
+            viewModel.updateAddressItemCount(adapter.itemCount)
         }
     }
 

@@ -13,7 +13,6 @@ import com.mulberry.ody.presentation.address.listener.AddressListener
 import com.mulberry.ody.presentation.address.model.AddressUiModel
 import com.mulberry.ody.presentation.address.model.toAddressUiModel
 import com.mulberry.ody.presentation.common.BaseViewModel
-import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +30,6 @@ import javax.inject.Inject
 class AddressSearchViewModel
     @Inject
     constructor(
-        private val analyticsHelper: AnalyticsHelper,
         private val addressRepository: AddressRepository,
     ) : BaseViewModel(), AddressListener {
         val addressSearchKeyword: MutableStateFlow<String> = MutableStateFlow("")
@@ -45,7 +43,8 @@ class AddressSearchViewModel
         private val _address: MutableStateFlow<PagingData<AddressUiModel>> = MutableStateFlow(PagingData.empty())
         val address: StateFlow<PagingData<AddressUiModel>> get() = _address
 
-        private val isEmptyAddresses: MutableStateFlow<Boolean> = MutableStateFlow(true)
+        private val _isEmptyAddresses: MutableStateFlow<Boolean> = MutableStateFlow(true)
+        val isEmptyAddresses: StateFlow<Boolean> get() = _isEmptyAddresses
 
         private val _addressSelectEvent: MutableSharedFlow<Address> = MutableSharedFlow()
         val addressSelectEvent: SharedFlow<Address> get() = _addressSelectEvent.asSharedFlow()
@@ -85,9 +84,9 @@ class AddressSearchViewModel
             }
         }
 
-        fun emptyAddresses(isEmpty: Boolean) {
+        fun updateAddressItemCount(itemCount: Int) {
             viewModelScope.launch {
-                isEmptyAddresses.emit(isEmpty)
+                _isEmptyAddresses.emit(itemCount == 0)
             }
         }
 
