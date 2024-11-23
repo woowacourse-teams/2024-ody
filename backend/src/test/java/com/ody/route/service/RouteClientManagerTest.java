@@ -44,7 +44,7 @@ class RouteClientManagerTest extends BaseServiceTest {
 
     @DisplayName("이용 가능한 RouteClient가 없으면 예외가 발생한다.")
     @Test
-    void FailWhenGetAvailableClientsBy() {
+    void failWhenGetAvailableClientsBy() {
         Mockito.when(routeClientCircuitBreaker.isBlocked(odsayRouteClient))
                 .thenReturn(true);
 

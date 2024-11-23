@@ -12,11 +12,12 @@ import org.springframework.stereotype.Component;
 public class RouteClientManager {
 
     private final List<RouteClient> routeClients;
+    private final ApiCallService apiCallService;
     private final RouteClientCircuitBreaker routeClientCircuitBreaker;
 
     public List<RouteClient> getAvailableClients() {
         List<RouteClient> availableClients = routeClients.stream()
-                .filter(this::isAvailable)
+                .filter(client -> isAvailable(client) && isEnabled(client))
                 .toList();
 
         if (availableClients.isEmpty()) {
@@ -28,5 +29,9 @@ public class RouteClientManager {
 
     private boolean isAvailable(RouteClient routeClient) {
         return !routeClientCircuitBreaker.isBlocked(routeClient);
+    }
+
+    private boolean isEnabled(RouteClient routeClient) {
+        return Boolean.TRUE.equals(apiCallService.getEnabledByClientType(routeClient.getClientType()));
     }
 }

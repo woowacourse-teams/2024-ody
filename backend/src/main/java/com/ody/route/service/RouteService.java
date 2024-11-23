@@ -23,10 +23,6 @@ public class RouteService {
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         List<RouteClient> availableClients = routeClientManager.getAvailableClients();
         for (RouteClient routeClient : availableClients) {
-            if (isDisabled(routeClient)) {
-                log.info("{} API 사용이 차단되어 건너뜁니다.", routeClient.getClientType());
-                continue;
-            }
             try {
                 RouteTime routeTime = calculateTime(routeClient, origin, target);
                 apiCallService.increaseCountByClientType(routeClient.getClientType());
@@ -45,10 +41,6 @@ public class RouteService {
         }
         log.error("모든 RouteClient API 사용 불가");
         throw new OdyServerErrorException("서버에 장애가 발생했습니다.");
-    }
-
-    private boolean isDisabled(RouteClient routeClient) {
-        return Boolean.FALSE.equals(apiCallService.getEnabledByClientType(routeClient.getClientType()));
     }
 
     private RouteTime calculateTime(RouteClient routeClient, Coordinates origin, Coordinates target) {
