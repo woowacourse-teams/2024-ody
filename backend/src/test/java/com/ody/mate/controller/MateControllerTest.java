@@ -14,11 +14,14 @@ import com.ody.member.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.mockito.Mockito;
 import org.springframework.http.HttpHeaders;
 
 class MateControllerTest extends BaseControllerTest {
@@ -30,6 +33,13 @@ class MateControllerTest extends BaseControllerTest {
         Member member = fixtureGenerator.generateMember();
         MateSaveRequestV2 mateSaveRequestV2 = dtoGenerator.generateMateSaveRequest(tenMinutesLaterMeeting);
 
+        CountDownLatch countDownLatch = new CountDownLatch(2);
+        Mockito.doAnswer(invocation -> {
+            countDownLatch.countDown();
+            return null;
+
+        }).when(firebaseMessaging).send(any(Message.class));
+
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
@@ -39,7 +49,7 @@ class MateControllerTest extends BaseControllerTest {
                 .then()
                 .statusCode(201);
 
-        Thread.sleep(1000L); //비동기 메서드 유휴 시간
+        countDownLatch.await(3L, TimeUnit.SECONDS);
 
         verify(firebaseMessaging, times(2))
                 .send(any(Message.class));
