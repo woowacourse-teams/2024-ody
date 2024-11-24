@@ -89,12 +89,13 @@ class AddressSearchFragment :
             (activity as? AddressSearchListener)?.onReceive(it)
             onBack()
         }
-        collectWhenStarted(viewModel.addressSearchKeyword) {
-            if (it.isEmpty()) viewModel.clearAddresses()
+        collectWhenStarted(viewModel.hasAddressSearchKeyword) { hasKeyword ->
+            if (hasKeyword) {
+                return@collectWhenStarted
+            }
+            viewModel.clearAddresses()
         }
-        collectWhenStarted(viewModel.addressClearEvent) {
-            adapter.refresh()
-        }
+
         collectWhenStarted(viewModel.address) {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
         }

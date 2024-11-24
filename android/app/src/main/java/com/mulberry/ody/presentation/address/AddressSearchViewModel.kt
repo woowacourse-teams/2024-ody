@@ -47,18 +47,18 @@ class AddressSearchViewModel
         private val _addressSelectEvent: MutableSharedFlow<Address> = MutableSharedFlow()
         val addressSelectEvent: SharedFlow<Address> get() = _addressSelectEvent.asSharedFlow()
 
-        private val _addressClearEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val addressClearEvent: SharedFlow<Unit> get() = _addressClearEvent.asSharedFlow()
-
         fun clearAddressSearchKeyword() {
             addressSearchKeyword.value = ""
         }
 
         fun searchAddress() {
             val addressSearchKeyword = addressSearchKeyword.value
-            if (addressSearchKeyword.isEmpty()) return
 
             viewModelScope.launch {
+                if (addressSearchKeyword.isBlank()) {
+                    clearAddresses()
+                }
+
                 startLoading()
                 Pager(
                     config = PagingConfig(pageSize = PAGE_SIZE),
@@ -73,7 +73,7 @@ class AddressSearchViewModel
                     .collectLatest {
                         _address.emit(it)
                         stopLoading()
-                }
+                    }
             }
         }
 
@@ -91,7 +91,8 @@ class AddressSearchViewModel
 
         fun clearAddresses() {
             viewModelScope.launch {
-                _addressClearEvent.emit(Unit)
+                _address.emit(PagingData.empty())
+                _isEmptyAddresses.emit(true)
             }
         }
 
