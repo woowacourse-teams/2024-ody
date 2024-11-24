@@ -95,6 +95,9 @@ class AddressSearchFragment :
         collectWhenStarted(viewModel.addressClearEvent) {
             adapter.refresh()
         }
+        collectWhenStarted(viewModel.address) {
+            adapter.submitData(viewLifecycleOwner.lifecycle, it)
+        }
     }
 
     override fun onBack() {

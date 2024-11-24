@@ -69,8 +69,10 @@ class AddressSearchViewModel
                     },
                 ).flow
                     .cachedIn(viewModelScope)
-                    .collectLatest { _address.emit(it) }
-                stopLoading()
+                    .collectLatest {
+                        _address.emit(it)
+                        stopLoading()
+                }
             }
         }
 
