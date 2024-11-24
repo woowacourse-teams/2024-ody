@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -57,7 +59,7 @@ public class FcmEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)// 커밋 이후 발송
     public void sendPushMessage(PushEvent pushEvent) {
         Notification notification = pushEvent.getNotification();
-        GroupMessage groupMessage = GroupMessage.from(notification);
+        GroupMessage groupMessage = pushEvent.getGroupMessage();
         fcmPushSender.sendGroupMessage(groupMessage, notification);
         log.info("푸시 알림 성공- id : {}, 전송시간 : {}", notification.getId(), notification.getSendAt());
     }
