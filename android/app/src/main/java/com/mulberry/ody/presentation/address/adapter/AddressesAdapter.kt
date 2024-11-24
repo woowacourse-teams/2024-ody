@@ -39,7 +39,7 @@ class AddressesAdapter(
                 override fun areContentsTheSame(
                     oldItem: Address,
                     newItem: Address,
-                ): Boolean = oldItem == newItem
+                ): Boolean = oldItem.id == newItem.id
             }
     }
 }
