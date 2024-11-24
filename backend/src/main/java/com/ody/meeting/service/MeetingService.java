@@ -112,7 +112,7 @@ public class MeetingService {
     }
 
     @Transactional
-    @DistributedLock(key = "'MEETING:' + #mateSaveRequest.inviteCode")
+    @DistributedLock(key = "'MATE_SAVE'")
     public MateSaveResponseV2 saveMateAndSendNotifications(MateSaveRequestV2 mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
         if (meeting.isEnd()) {
