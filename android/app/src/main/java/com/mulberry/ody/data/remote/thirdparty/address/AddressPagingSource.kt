@@ -11,20 +11,20 @@ class AddressPagingSource(
     private val addressRepository: AddressRepository,
 ) : PagingSource<Int, Address>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Address> {
-        val page = params.key ?: 1
+        val page = params.key ?: PAGE_START
         return runCatching {
-            val address =
+            val addresses =
                 addressRepository.fetchAddresses(
                     keyword = keyword,
                     page = page,
                     pageSize = PAGE_SIZE,
                 ).getOrThrow()
 
-            val prevKey = if (page == 1) null else page - PAGE_OFFSET
-            val nextKey = if (address.isEnd) null else page + PAGE_OFFSET
+            val prevKey = if (page == PAGE_START) null else page - PAGE_OFFSET
+            val nextKey = if (addresses.isEnd) null else page + PAGE_OFFSET
 
             LoadResult.Page(
-                data = address.addresses,
+                data = addresses.addresses,
                 prevKey = prevKey,
                 nextKey = nextKey,
             )
@@ -40,7 +40,8 @@ class AddressPagingSource(
     }
 
     companion object {
+        private const val PAGE_START = 1
         private const val PAGE_OFFSET = 1
-        private const val PAGE_SIZE = 10
+        const val PAGE_SIZE = 10
     }
 }

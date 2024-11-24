@@ -6,6 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource
+import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource.Companion.PAGE_SIZE
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.presentation.address.listener.AddressListener
@@ -95,7 +96,6 @@ class AddressSearchViewModel
         }
 
         companion object {
-            private const val PAGE_SIZE = 10
             private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
         }
     }
