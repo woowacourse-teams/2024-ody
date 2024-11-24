@@ -10,7 +10,8 @@ interface KakaoAddressService {
     @GET("/v2/local/search/keyword.json")
     suspend fun fetchAddresses(
         @Query("query") keyword: String,
-        @Query("size") size: Int,
+        @Query("page") page: Int,
+        @Query("size") pageSize: Int,
     ): ApiResult<AddressResponse>
 
     @GET("/v2/local/geo/coord2address.json")
