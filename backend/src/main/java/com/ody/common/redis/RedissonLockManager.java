@@ -27,7 +27,6 @@ public class RedissonLockManager {
             acquireLock(rLock, lockName, distributedLock);
             return executeWithTransaction(supplier);
         } catch (InterruptedException exception) {
-            Thread.currentThread().interrupt();
             log.error("[분산락 오류] {} 획득 중 인터럽트 발생", lockName, exception);
             throw new OdyServerErrorException("서버에 장애가 발생했습니다.");
         } finally {
