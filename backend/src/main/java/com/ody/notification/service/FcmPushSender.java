@@ -51,7 +51,7 @@ public class FcmPushSender {
 
     private Notification findNotification(Notification notification) {
         return notificationRepository.findById(notification.getId())
-                .orElseThrow(() -> new OdyServerErrorException(notification.getId()+ " id 알림을 찾을 수 없습니다.")); // 트랜잭션 완료 후 실행
+                .orElse(notification);
     }
 
     private void updateDepartureReminderToDone(Notification notification) {
