@@ -99,7 +99,7 @@ moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", ver
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 # dotsindicator
-dotsinbdicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotsindicator" }
+dotsindicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotsindicator" }
 
 # loggig
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }

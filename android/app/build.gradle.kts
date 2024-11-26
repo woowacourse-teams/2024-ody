@@ -135,8 +135,8 @@ dependencies {
     // timber
     implementation(libs.timber)
 
-    // dotsibdicator
-    implementation(libs.dotsinbdicator)
+    // dotsindicator
+    implementation(libs.dotsindicator)
 
     // play service
     implementation(libs.play.services.location)
