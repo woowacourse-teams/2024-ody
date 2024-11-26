@@ -2,6 +2,7 @@
 activity = "1.9.2"
 agp = "8.5.0"
 androidJunitJupiter = "1.10.0.0"
+androidxPaging = "3.3.4"
 appcompat = "1.7.0"
 assertj = "3.25.3"
 constraintlayout = "2.1.4"
@@ -43,7 +44,6 @@ splashScreen = "1.0.1"
 timber = "5.0.1"
 viewPager = "1.1.0"
 workRuntimeKtx = "2.9.1"
-androidxPaging = "3.3.4"
 
 [libraries]
 # androidx
