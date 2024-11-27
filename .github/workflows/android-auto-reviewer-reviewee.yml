@@ -1,0 +1,21 @@
+name: android auto reviewer reviewee
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - android/**
+    types: [opened, ready_for_review]
+
+defaults:
+  run:
+    working-directory: android
+
+jobs:
+  assigns:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hkusu/review-assign-action@v1
+        with:
+          assignees: ${{ github.actor}}
+          reviewers: aprilgom, kimhm0728
