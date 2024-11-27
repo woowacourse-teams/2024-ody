@@ -14,6 +14,7 @@ import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
+import com.ody.notification.domain.Notification;
 import com.ody.notification.service.NotificationService;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
@@ -132,14 +133,16 @@ public class MateService {
 
     @Transactional
     public void withdraw(Mate mate) {
-        notificationService.saveMemberDeletionNotification(mate);
+        Notification memberDeletionNotification = Notification.createMemberDeletion(mate);
+        notificationService.save(memberDeletionNotification);
         delete(mate);
     }
 
     @Transactional
     public void leaveByMeetingIdAndMemberId(Long meetingId, Long memberId) {
         Mate mate = findByMeetingIdAndMemberId(meetingId, memberId);
-        notificationService.saveMateLeaveNotification(mate);
+        Notification leaveNotification = Notification.createMateLeave(mate);
+        notificationService.save(leaveNotification);
         delete(mate);
     }
 

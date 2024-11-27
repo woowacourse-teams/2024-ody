@@ -23,6 +23,8 @@ import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.FcmPushSender;
+import com.ody.notification.service.event.NoticeEvent;
+import com.ody.notification.service.event.UnSubscribeEvent;
 import com.ody.route.domain.ClientType;
 import com.ody.route.service.ApiCallService;
 import com.ody.util.TimeUtil;
@@ -146,7 +148,7 @@ class MeetingServiceTest extends BaseServiceTest {
         assertAll(
                 () -> assertThat(meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET))
                         .isEqualTo(scheduledTime),
-                () -> Mockito.verify(fcmPushSender, Mockito.times(1)).sendNoticeMessage(any(GroupMessage.class))
+                () -> assertThat(applicationEvents.stream(NoticeEvent.class)).hasSize(1)
         );
     }
 
@@ -248,7 +250,7 @@ class MeetingServiceTest extends BaseServiceTest {
         Meeting findMeeting = meetingRepository.findById(meeting.getId()).get();
 
         assertAll(
-                () -> Mockito.verify(fcmSubscriber).unSubscribeTopic(any(), any()),
+                () -> assertThat(applicationEvents.stream(UnSubscribeEvent.class)).hasSize(1),
                 () -> assertThat(findMeeting.isOverdue()).isTrue()
         );
     }

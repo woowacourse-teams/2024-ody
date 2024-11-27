@@ -15,6 +15,8 @@ import com.ody.notification.domain.NotificationType;
 import com.ody.notification.dto.response.NotiLogFindResponse;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
+import com.ody.notification.service.event.NudgeEvent;
+import com.ody.notification.service.event.UnSubscribeEvent;
 import com.ody.route.service.RouteService;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -37,9 +39,6 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @MockBean
     private TaskScheduler taskScheduler;
-
-    @MockBean
-    protected FcmPushSender fcmPushSender;
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -81,7 +80,7 @@ class NotificationServiceTest extends BaseServiceTest {
                 .schedule(any(Runnable.class), any(Instant.class));
     }
 
-    @DisplayName("모임방에 대한 구독을 취소한다")
+    @DisplayName("모임방에 대한 구독 취소 이벤트가 발행된다")
     @Test
     void unSubscribeTopic() {
         Member member = fixtureGenerator.generateMember();
@@ -96,10 +95,11 @@ class NotificationServiceTest extends BaseServiceTest {
 
         notificationService.unSubscribeTopic(List.of(odyMeeting, sojuMeeting));
 
-        BDDMockito.verify(fcmSubscriber, Mockito.times(2)).unSubscribeTopic(any(), any());
+        assertThat(applicationEvents.stream(UnSubscribeEvent.class))
+                .hasSize(2);
     }
 
-    @DisplayName("재촉하기 메시지가 발송된다")
+    @DisplayName("재촉하기 이벤트가 발행된다")
     @Test
     void sendSendNudgeMessageMessage() {
         Meeting odyMeeting = fixtureGenerator.generateMeeting();
@@ -108,7 +108,8 @@ class NotificationServiceTest extends BaseServiceTest {
 
         notificationService.sendNudgeMessage(requestMate, nudgedMate);
 
-        Mockito.verify(fcmPushSender, Mockito.times(1)).sendNudgeMessage(any(), any());
+        assertThat(applicationEvents.stream(NudgeEvent.class))
+                .hasSize(1);
     }
 
     @DisplayName("특정 참여자의 전송 전 알람을 모두 DISMISSED 상태로 변경한다.")
