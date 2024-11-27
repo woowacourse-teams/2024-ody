@@ -7,7 +7,7 @@ fun <T> ApiResult<T>.onSuccess(block: (T) -> Unit): ApiResult<T> {
     return this
 }
 
-fun <T> ApiResult<T>.onFailure(block: (code: Int, errorMessage: String?) -> Unit): ApiResult<T> {
+fun <T> ApiResult<T>.onFailure(block: (code: Int?, errorMessage: String?) -> Unit): ApiResult<T> {
     if (this is ApiResult.Failure) {
         block(this.code, this.errorMessage)
     }
@@ -35,7 +35,7 @@ suspend fun <T> ApiResult<T>.suspendOnSuccess(block: suspend (T) -> Unit): ApiRe
     return this
 }
 
-suspend fun <T> ApiResult<T>.suspendOnFailure(block: suspend (code: Int, errorMessage: String?) -> Unit): ApiResult<T> {
+suspend fun <T> ApiResult<T>.suspendOnFailure(block: suspend (code: Int?, errorMessage: String?) -> Unit): ApiResult<T> {
     if (this is ApiResult.Failure) {
         block(this.code, this.errorMessage)
     }

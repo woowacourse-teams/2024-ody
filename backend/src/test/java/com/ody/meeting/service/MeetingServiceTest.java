@@ -25,13 +25,20 @@ import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.event.NoticeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
+import com.ody.route.domain.ClientType;
+import com.ody.route.service.ApiCallService;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -47,6 +54,9 @@ class MeetingServiceTest extends BaseServiceTest {
 
     @Autowired
     private MeetingRepository meetingRepository;
+
+    @Autowired
+    private ApiCallService apiCallService;
 
     @MockBean
     private TaskScheduler taskScheduler;
@@ -243,5 +253,71 @@ class MeetingServiceTest extends BaseServiceTest {
                 () -> assertThat(applicationEvents.stream(UnSubscribeEvent.class)).hasSize(1),
                 () -> assertThat(findMeeting.isOverdue()).isTrue()
         );
+    }
+
+    @DisplayName("약속 참여시 API 호출 카운팅 Redisson 분산락 동시성 테스트")
+    @Nested
+    public class RedissonDistributedLockTest {
+
+        private static final int TOTAL_REQUESTS = 100;
+
+        @DisplayName("100명의 사용자가 동시에 약속에 참여하여 API를 호출할 경우 정확히 count+100 한다.")
+        @Test
+        void concurrencySaveMateAndSendNotifications() throws InterruptedException {
+            ExecutorService executorService = Executors.newFixedThreadPool(TOTAL_REQUESTS);
+            CountDownLatch countDownLatch = new CountDownLatch(TOTAL_REQUESTS);
+
+            Meeting meeting = fixtureGenerator.generateMeeting(LocalDateTime.now());
+            for (int i = 1; i <= TOTAL_REQUESTS; i++) {
+                executorService.execute(() -> {
+                    try {
+                        Member member = fixtureGenerator.generateMember();
+                        MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateSaveRequest(meeting);
+                        meetingService.saveMateAndSendNotifications(mateSaveRequest, member);
+                    } finally {
+                        countDownLatch.countDown();
+                    }
+                });
+            }
+            countDownLatch.await(3, TimeUnit.SECONDS);
+            executorService.shutdown();
+            executorService.awaitTermination(3, TimeUnit.SECONDS);
+
+            int actual = apiCallService.countApiCall(ClientType.ODSAY).count();
+
+            assertThat(actual).isEqualTo(TOTAL_REQUESTS);
+        }
+
+        @DisplayName("100명의 사용자가 동시에 약속에 참여하여 절반이 예외가 발생하면 해당 트랜잭션은 롤백되어 count+50 한다.")
+        @Test
+        void concurrencySaveMateAndSendNotificationsRollBack() throws InterruptedException {
+            ExecutorService executorService = Executors.newFixedThreadPool(TOTAL_REQUESTS);
+            CountDownLatch countDownLatch = new CountDownLatch(TOTAL_REQUESTS);
+
+            Meeting meeting = fixtureGenerator.generateMeeting(LocalDateTime.now().plusHours(1));
+
+            for (int i = 1; i <= TOTAL_REQUESTS; i++) {
+                final int index = i;
+                executorService.execute(() -> {
+                    try {
+                        Member member = fixtureGenerator.generateMember();
+                        MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateSaveRequest(meeting);
+                        if (index % 2 == 0) {
+                            throw new RuntimeException();
+                        }
+                        meetingService.saveMateAndSendNotifications(mateSaveRequest, member);
+                    } finally {
+                        countDownLatch.countDown();
+                    }
+                });
+            }
+            countDownLatch.await(3, TimeUnit.SECONDS);
+            executorService.shutdown();
+            executorService.awaitTermination(3, TimeUnit.SECONDS);
+
+            int actual = apiCallService.countApiCall(ClientType.ODSAY).count();
+
+            assertThat(actual).isEqualTo(TOTAL_REQUESTS / 2);
+        }
     }
 }

@@ -2,6 +2,10 @@ server:
   shutdown: graceful
 
 spring:
+  data:
+    redis:
+      port: 6379
+      connect-timeout: 3000
   jpa:
     open-in-view: false
     defer-datasource-initialization: false

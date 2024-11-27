@@ -16,44 +16,38 @@ public class RouteService {
 
     private static final long CLOSEST_LOCATION_DURATION = 10L;
 
-    private final List<RouteClient> routeClients;
+    private final RouteClientManager routeClientManager;
     private final ApiCallService apiCallService;
+    private final RouteClientCircuitBreaker routeClientCircuitBreaker;
 
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
-        for (RouteClient client : routeClients) {
-            if (isDisabled(client)) {
-                log.info("{} API 사용이 비활성화되어 건너뜁니다.", client.getClass().getSimpleName());
-                continue;
-            }
-
+        List<RouteClient> availableClients = routeClientManager.getAvailableClients();
+        for (RouteClient routeClient : availableClients) {
             try {
-
-                RouteTime routeTime = calculateTime(client, origin, target);
-                apiCallService.increaseCountByClientType(client.getClientType());
+                RouteTime routeTime = calculateTime(routeClient, origin, target);
+                apiCallService.increaseCountByClientType(routeClient.getClientType());
                 log.info(
                         "{} API 소요 시간 계산 : {}분, mateId : {}",
-                        client.getClientType(),
+                        routeClient.getClientType(),
                         routeTime.getMinutes(),
                         MDC.get("mateId")
                 );
                 return routeTime;
-            } catch (Exception exception) {
-                log.warn("Route Client 에러 : {} ", client.getClass().getSimpleName(), exception);
+            } catch (OdyServerErrorException exception) {
+                log.warn("{} API 에러 발생 :  ", routeClient.getClientType(), exception);
+                routeClientCircuitBreaker.recordFailCountInMinutes(routeClient);
+                routeClientCircuitBreaker.determineBlock(routeClient);
             }
         }
-        log.error("모든 소요시간 계산 API 사용 불가");
+        log.error("모든 RouteClient API 사용 불가");
         throw new OdyServerErrorException("서버에 장애가 발생했습니다.");
     }
 
-    private RouteTime calculateTime(RouteClient client, Coordinates origin, Coordinates target) {
-        RouteTime calculatedRouteTime = client.calculateRouteTime(origin, target);
+    private RouteTime calculateTime(RouteClient routeClient, Coordinates origin, Coordinates target) {
+        RouteTime calculatedRouteTime = routeClient.calculateRouteTime(origin, target);
         if (calculatedRouteTime.equals(RouteTime.CLOSEST_EXCEPTION_TIME)) {
             return new RouteTime(CLOSEST_LOCATION_DURATION);
         }
         return calculatedRouteTime;
-    }
-
-    private boolean isDisabled(RouteClient client) {
-        return Boolean.FALSE.equals(apiCallService.getEnabledByClientType(client.getClientType()));
     }
 }

@@ -55,7 +55,7 @@ public class MateService {
 
     public void validateAlreadyAttended(Member member, Meeting meeting) {
         if (mateRepository.existsByMeetingIdAndMemberId(meeting.getId(), member.getId())) {
-            throw new OdyBadRequestException("약속에 이미 참여한 회원입니다.");
+            throw new OdyBadRequestException("약속에 이미 참여했습니다.");
         }
     }
 
