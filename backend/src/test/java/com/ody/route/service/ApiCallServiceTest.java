@@ -3,7 +3,6 @@ package com.ody.route.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ody.common.BaseServiceTest;
-import com.ody.route.domain.ApiCall;
 import com.ody.route.domain.ClientType;
 import com.ody.route.dto.ApiCallCountResponse;
 import java.time.LocalDate;

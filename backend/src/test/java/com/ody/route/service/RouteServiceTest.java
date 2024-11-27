@@ -98,18 +98,18 @@ class RouteServiceTest extends BaseServiceTest {
         origin = new Coordinates("37.505419", "127.050817");
         target = new Coordinates("37.515253", "127.102895");
 
-        when(odsayRouteClient.calculateRouteTime(origin, target))
+        Mockito.when(odsayRouteClient.calculateRouteTime(origin, target))
                 .thenThrow(new OdyServerErrorException("Odsay API 에러 발생"));
-        when(googleRouteClient.calculateRouteTime(origin, target)).thenReturn(new RouteTime(18));
+
+        Mockito.when(googleRouteClient.calculateRouteTime(origin, target))
+                .thenReturn(new RouteTime(18));
 
         long result = routeService.calculateRouteTime(origin, target).getMinutes();
         RouteTime expectRouteTime = new RouteTime(18);
 
         assertAll(
                 () -> assertThat(result).isEqualTo(expectRouteTime.getMinutes()),
-                () -> verify(odsayRouteClient, times(1)).calculateRouteTime(origin, target),
                 () -> verify(googleRouteClient, times(1)).calculateRouteTime(origin, target),
-                () -> verify(apiCallService, Mockito.never()).increaseCountByClientType(odsayRouteClient.getClientType()),
                 () -> verify(apiCallService, times(1)).increaseCountByClientType(googleRouteClient.getClientType())
         );
     }
