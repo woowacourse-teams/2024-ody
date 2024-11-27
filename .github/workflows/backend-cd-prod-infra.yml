@@ -1,4 +1,4 @@
-name: backend-cd-dev
+name: backend-cd-prod-infra
 
 on:
   push:
