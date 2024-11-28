@@ -19,7 +19,7 @@ services:
       retries: 5
 
   web:
-    image: ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:${GIT_SHA}-dev
+    image: ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:${GIT_SHA}-prod_v2
     container_name: ody-dev-app
     ports:
       - "8080:8080"
