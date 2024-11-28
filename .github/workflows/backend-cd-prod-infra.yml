@@ -53,7 +53,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Docker Image Build And Push
-        run: docker build -e SPRING_PROFILES_ACTIVE=prod --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod_v2 -f Dockerfile . --push
+        run: docker build --build-arg SPRING_PROFILES_ACTIVE=prod --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod_v2 -f Dockerfile . --push
 
   pull-and-deploy:
     needs: build-and-push
