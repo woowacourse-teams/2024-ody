@@ -68,7 +68,7 @@ jobs:
     strategy:
       max-parallel: 1 # 직렬처리
       matrix:
-        environment: [ prod, prod-a, prod-b ]
+        environment: [ prod-a, prod-b ]
 
     steps:
       - name: Login to Docker Hub

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 
 @Slf4j
-@Profile("prod__")
+@Profile("prod")
 @Configuration
 public class ReplicationDataSourceConfig {
 

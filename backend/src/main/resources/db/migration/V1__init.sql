@@ -64,5 +64,6 @@ create table if not exists notification (
     created_at timestamp not null default current_timestamp(),
     updated_at timestamp not null default current_timestamp(),
     primary key (id),
-    constraint fk_notification_mate_id foreign key (mate_id) references mate (id)
+    constraint fk_notification_mate_id foreign key (mate_id) references mate (id),
+    constraint notification_chk_1 check (`type` IN ('DEPARTURE_REMINDER','ENTRY','NUDGE','MEMBER_DELETION'))
 );
