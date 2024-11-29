@@ -5,17 +5,17 @@ spring:
   datasource:
     write:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: ENC(/pYkPoMxvv/cFWWYEEIJ1/7gtMSjD9WKhM4oSIUEiK3WGRrcXZGELR8s+ozO5hmimO3U99cs3yMKf5B/5uh7RLk4wC3W1IuZ3F0oX3hSEJeq16YkxR1okYZokeE3mZXTxcOHBb3krNg=)
-      username: ENC(Pjtz7HDMEVm9ScNAjaDEqA==)
-      password: ENC(9yYOk4n/7co8h0HDfOA20tduvw3htCFa)
+      jdbc-url: ENC(hUTRLeL45g21ytOn23CNtFgdwR43Li1qV8OM3qbrcPb3AxAcTzhCbEd00nhoiZtMSK+sBKJlxlZXFaAfdUIvd8IUqSndxpHsUps/BjtAVqLtCpmPA8P5ScMFMrsLM0Xj1jacERJM+wvCoMvhx2ZiRw==)
+      username: ENC(jNYhZN6xMCmPQ7GZM+Hu3A==)
+      password: ENC(VRtr3RjM+XnPvRdLjrPMHyTSzDlEjR7o)
     read:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: ENC(Ho2WMst/QlNJngqZ1nnRiQIaytH55rjohNVg/5W14vhcd88rAhk16y1yO3zzorKNGSsYV95t/lChWuFA5ivEz4Rh5NaZHjxddhvs1T7HHltl/eC5V1bhPh3+ck98Lk2iil0+RljDy+I=)
-      username: ENC(Pjtz7HDMEVm9ScNAjaDEqA==)
-      password: ENC(9yYOk4n/7co8h0HDfOA20tduvw3htCFa)
+      jdbc-url: ENC(hUTRLeL45g21ytOn23CNtFgdwR43Li1qV8OM3qbrcPb3AxAcTzhCbEd00nhoiZtMSK+sBKJlxlZXFaAfdUIvd8IUqSndxpHsUps/BjtAVqLtCpmPA8P5ScMFMrsLM0Xj1jacERJM+wvCoMvhx2ZiRw==)
+      username: ENC(jNYhZN6xMCmPQ7GZM+Hu3A==)
+      password: ENC(VRtr3RjM+XnPvRdLjrPMHyTSzDlEjR7o)
   flyway:
     baseline-version: 2
-    
+
 log:
   file:
     path: /ody-prod-logs
