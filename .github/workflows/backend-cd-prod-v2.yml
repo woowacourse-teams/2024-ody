@@ -74,7 +74,7 @@ jobs:
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
           export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
           export PROD_MYSQL_PASSWORD=${{ secrets.PROD_MYSQL_PASSWORD }}
-          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.OLD_JASYPT_PASSWORD }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
           export GIT_SHA=${{ github.sha }}
           docker compose up -d
       - name: Check Docker Process
