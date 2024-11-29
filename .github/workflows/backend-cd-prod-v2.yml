@@ -1,9 +1,9 @@
-name: backend-cd-prod-infra
+name: backend-cd-prod-v2
 
 on:
   push:
     branches:
-      - hotfix/infra
+      - hotfix/923
 #    paths:
 #      - backend/**
 
