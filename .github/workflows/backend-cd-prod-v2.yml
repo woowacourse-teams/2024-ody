@@ -1,29 +1,46 @@
 name: backend-cd-prod-v2
 
+#on:
+#  pull_request:
+#    branches:
+#      - main
+#    types:
+#      - closed
 on:
   push:
     branches:
       - hotfix/923
-#    paths:
-#      - backend/**
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
+  DOCKER_CONTAINER_NAME: ody-prod-app
 
 jobs:
   build-and-push:
+#    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-be/')
     runs-on: ubuntu-latest
+    env:
+      TZ: 'Asia/Seoul'
+
     defaults:
       run:
         working-directory: backend
+
     steps:
       - uses: actions/checkout@v4
+#        with:
+#          ref: main
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Check system timezone
+        run: |
+          echo "Current date and time: $(date)"
+          echo "TZ environment variable: $TZ"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -53,7 +70,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Docker Image Build And Push
-        run: docker build --build-arg SPRING_PROFILES_ACTIVE=prod --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod_v2 -f Dockerfile . --push
+        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod_v2 -f Dockerfile . --push
 
   pull-and-deploy:
     needs: build-and-push
@@ -69,6 +86,7 @@ jobs:
         run: |
           docker compose down || true
           docker rmi $(docker images -q) -f || true
+
       - name: Docker Compose up
         run: |
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
@@ -77,5 +95,6 @@ jobs:
           export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
           export GIT_SHA=${{ github.sha }}
           docker compose up -d
+
       - name: Check Docker Process
         run: docker ps
