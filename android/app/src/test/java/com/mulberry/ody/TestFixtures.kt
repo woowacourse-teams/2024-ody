@@ -1,6 +1,7 @@
 package com.mulberry.ody
 
 import com.mulberry.ody.domain.model.Address
+import com.mulberry.ody.domain.model.Addresses
 import com.mulberry.ody.domain.model.EtaStatus
 import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.MateEta
@@ -123,4 +124,10 @@ fun Address(
     return Address(id = id, detailAddress = roadNameAddress, placeName = "", latitude = "0.0", longitude = "0.0")
 }
 
-val addresses: List<Address> = List(5) { Address(id = it.toLong(), roadNameAddress = "") }
+val address = Address(id = 0L, roadNameAddress = "")
+
+val addresses: Addresses =
+    Addresses(
+        addresses = List(5) { Address(id = it.toLong(), roadNameAddress = "") },
+        isEnd = true,
+    )

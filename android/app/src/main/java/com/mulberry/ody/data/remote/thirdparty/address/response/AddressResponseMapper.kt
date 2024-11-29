@@ -1,9 +1,11 @@
 package com.mulberry.ody.data.remote.thirdparty.address.response
 
 import com.mulberry.ody.domain.model.Address
+import com.mulberry.ody.domain.model.Addresses
 
-fun AddressResponse.toAddresses(): List<Address> {
-    return documents.map { it.toAddress() }
+fun AddressResponse.toAddresses(): Addresses {
+    val addresses = documents.map { it.toAddress() }
+    return Addresses(addresses, meta.isEnd)
 }
 
 private fun Document.toAddress(): Address {
