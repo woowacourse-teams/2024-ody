@@ -67,7 +67,6 @@ jobs:
 
       - name: Clean Up Legacy Image
         run: |
-          pwd
           docker compose down || true
           docker rmi $(docker images -q) -f || true
 
