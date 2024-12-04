@@ -18,6 +18,8 @@ public class DatabaseCleaner {
     private static final String TRUNCATE_TABLE_FORMAT = "TRUNCATE TABLE %s";
     private static final String ALTER_TABLE_AUTO_INCREMENT_FORMAT = "ALTER TABLE %s AUTO_INCREMENT = %d";
 
+    private static final List<String> excludeTableNames = List.of("departure_reminder", "entry", "nudge", "mate_leave",
+            "member_deletion");
     private List<String> tableNames = new ArrayList<>();
 
     @PersistenceContext
@@ -33,6 +35,7 @@ public class DatabaseCleaner {
                 .getEntities().stream()
                 .filter(entityType -> entityType.getJavaType().getAnnotation(Entity.class) != null)
                 .map(entityType -> CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, entityType.getName()))
+                .filter(tableName -> !excludeTableNames.contains(tableName))
                 .toList();
     }
 
