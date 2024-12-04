@@ -113,22 +113,6 @@ class NotificationServiceTest extends BaseServiceTest {
         );
     }
 
-    @Disabled
-    @DisplayName("리팩터링 : 참여자의 출발 시간이 현재 시간보다 전이라면 입장 알림 - 출발 알림 순으로 로그 목록이 조회된다.")
-    @Test
-    void findAllMeetingLogsOrderOfEntryAndDepartureNotification() {
-        Member member = fixtureGenerator.generateMember();
-        Meeting savedPastMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().minusDays(1));
-        Mate mate = fixtureGenerator.generateMate(savedPastMeeting, member); // 소요 시간 : 10분
-
-//        notificationService.saveAndSendNotifications(savedPastMeeting, mate, member.getDeviceToken());
-
-        NotiLogFindResponses allMeetingLogs = notificationService.findAllNotiLogs(savedPastMeeting.getId());
-
-        assertThat(allMeetingLogs.notiLog()).extracting(NotiLogFindResponse::type)
-                .containsExactly(NotificationType.ENTRY.name(), NotificationType.DEPARTURE_REMINDER.name());
-    }
-
     @DisplayName("삭제 회원이 포함된 로그 목록을 조회한다.")
     @Test
     void findAllMeetingLogsIncludingDeletedMember() {
