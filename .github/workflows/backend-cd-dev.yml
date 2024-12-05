@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feature/927
     paths:
       - backend/**
 
