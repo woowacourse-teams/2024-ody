@@ -19,7 +19,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: backend
+        working-directory: feature/927
     steps:
       - uses: actions/checkout@v4
         with:
