@@ -19,11 +19,11 @@ jobs:
 
     defaults:
       run:
-        working-directory: feature/927
+        working-directory: backend
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: feature/927
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
