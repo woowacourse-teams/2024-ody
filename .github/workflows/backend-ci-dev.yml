@@ -1,6 +1,9 @@
 name: backend-ci-dev
 
 on:
+  push:
+    branches:
+      - feature/926
   pull_request:
     branches:
       - develop
