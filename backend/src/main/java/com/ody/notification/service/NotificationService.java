@@ -9,6 +9,7 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.message.GroupMessage;
+import com.ody.notification.domain.types.Nudge;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.notification.service.event.NoticeEvent;
@@ -16,7 +17,6 @@ import com.ody.notification.service.event.NudgeEvent;
 import com.ody.notification.service.event.PushEvent;
 import com.ody.notification.service.event.SubscribeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
-import com.ody.route.domain.DepartureTime;
 import com.ody.util.InstantConverter;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -40,35 +40,14 @@ public class NotificationService {
     private final TaskScheduler taskScheduler;
 
     @Transactional
-    public void saveAndSendNotifications(Meeting meeting, Mate mate, DeviceToken deviceToken) {
-        FcmTopic fcmTopic = new FcmTopic(meeting);
-
-        Notification entryNotification = Notification.createEntry(mate, fcmTopic);
-        saveAndScheduleNotification(entryNotification);
-
-        SubscribeEvent subscribeEvent = new SubscribeEvent(this, deviceToken, fcmTopic);
-        fcmEventPublisher.publish(subscribeEvent);
-
-        saveAndSendDepartureReminderNotification(meeting, mate, fcmTopic);
-    }
-
-    private void saveAndSendDepartureReminderNotification(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
-        DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
-        LocalDateTime sendAt = calculateSendAt(departureTime);
-        Notification notification = Notification.createDepartureReminder(mate, sendAt, fcmTopic);
-        saveAndScheduleNotification(notification);
-    }
-
-    private LocalDateTime calculateSendAt(DepartureTime departureTime) {
-        if (departureTime.isBefore(LocalDateTime.now())) {
-            return LocalDateTime.now();
-        }
-        return departureTime.getValue();
-    }
-
-    private void saveAndScheduleNotification(Notification notification) {
-        Notification savedNotification = notificationRepository.save(notification);
+    public void saveAndSchedule(Notification notification) {
+        Notification savedNotification = save(notification);
         scheduleNotification(savedNotification);
+    }
+
+    @Transactional
+    public Notification save(Notification notification) {
+        return notificationRepository.save(notification);
     }
 
     private void scheduleNotification(Notification notification) {
@@ -83,9 +62,14 @@ public class NotificationService {
         );
     }
 
+    public void subscribeTopic(DeviceToken deviceToken, FcmTopic fcmTopic){
+        SubscribeEvent subscribeEvent = new SubscribeEvent(this, deviceToken, fcmTopic);
+        fcmEventPublisher.publish(subscribeEvent);
+    }
+
     @Transactional
     public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
-        Notification nudgeNotification = notificationRepository.save(Notification.createNudge(nudgedMate));
+        Notification nudgeNotification = notificationRepository.save(new Nudge(nudgedMate).toNotification());
         NudgeEvent nudgeEvent = new NudgeEvent(this, requestMate, nudgeNotification);
         fcmEventPublisher.publishWithTransaction(nudgeEvent);
     }
@@ -105,11 +89,6 @@ public class NotificationService {
         );
         notifications.forEach(this::scheduleNotification);
         log.info("애플리케이션 시작 - PENDING 상태 출발 알림 {}개 스케줄링", notifications.size());
-    }
-
-    @Transactional
-    public Notification save(Notification notification) {
-        return notificationRepository.save(notification);
     }
 
     @DisabledDeletedFilter
