@@ -9,7 +9,10 @@ interface RemoteAuthDataSource {
 
     suspend fun postAuthToken(): ApiResult<AuthToken>
 
-    suspend fun login(fcmToken: String, context: Context): ApiResult<AuthToken>
+    suspend fun login(
+        fcmToken: String,
+        context: Context,
+    ): ApiResult<AuthToken>
 
     suspend fun logout(): ApiResult<Unit>
 

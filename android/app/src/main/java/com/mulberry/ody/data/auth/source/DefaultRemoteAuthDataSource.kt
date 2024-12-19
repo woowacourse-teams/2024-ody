@@ -16,48 +16,53 @@ import com.mulberry.ody.domain.model.AuthToken
 import javax.inject.Inject
 
 class DefaultRemoteAuthDataSource
-@Inject constructor(
-    private val loginService: LoginService,
-    private val logoutService: LogoutService,
-    private val memberService: MemberService,
-    private val refreshTokenService: RefreshTokenService,
-    private val kakaoOAuthLoginService: KakaoOAuthLoginService,
-) : RemoteAuthDataSource {
-    override suspend fun checkIfLoggedIn(): Boolean {
-        return kakaoOAuthLoginService.checkIfLoggedIn()
-    }
-
-    override suspend fun postAuthToken(): ApiResult<AuthToken> {
-        return refreshTokenService.postRefreshToken().map { it.toAuthToken() }
-    }
-
-    override suspend fun login(fcmToken: String, context: Context): ApiResult<AuthToken> {
-        val loginResult = kakaoOAuthLoginService.login(context).toApiResult().map {
-            LoginRequest(
-                fcmToken,
-                it.providerId,
-                it.nickname,
-                it.imageUrl,
-            )
-        }
-        return loginResult.flatMap { loginRequest ->
-            loginService.postLoginWithKakao(loginRequest).map { it.toAuthToken() }
-        }
-    }
-
-    override suspend fun logout(): ApiResult<Unit> {
-        val kakaoLogoutResult = kakaoOAuthLoginService.logout()
-        val odyLogoutResult = logoutService.postLogout()
-
-        val exception = kakaoLogoutResult.exceptionOrNull()
-        if (exception != null) {
-            return ApiResult.Unexpected(exception)
+    @Inject
+    constructor(
+        private val loginService: LoginService,
+        private val logoutService: LogoutService,
+        private val memberService: MemberService,
+        private val refreshTokenService: RefreshTokenService,
+        private val kakaoOAuthLoginService: KakaoOAuthLoginService,
+    ) : RemoteAuthDataSource {
+        override suspend fun checkIfLoggedIn(): Boolean {
+            return kakaoOAuthLoginService.checkIfLoggedIn()
         }
 
-        return odyLogoutResult
-    }
+        override suspend fun postAuthToken(): ApiResult<AuthToken> {
+            return refreshTokenService.postRefreshToken().map { it.toAuthToken() }
+        }
 
-    override suspend fun withdraw(): ApiResult<Unit> {
-        return memberService.deleteMember()
+        override suspend fun login(
+            fcmToken: String,
+            context: Context,
+        ): ApiResult<AuthToken> {
+            val loginResult =
+                kakaoOAuthLoginService.login(context).toApiResult().map {
+                    LoginRequest(
+                        fcmToken,
+                        it.providerId,
+                        it.nickname,
+                        it.imageUrl,
+                    )
+                }
+            return loginResult.flatMap { loginRequest ->
+                loginService.postLoginWithKakao(loginRequest).map { it.toAuthToken() }
+            }
+        }
+
+        override suspend fun logout(): ApiResult<Unit> {
+            val kakaoLogoutResult = kakaoOAuthLoginService.logout()
+            val odyLogoutResult = logoutService.postLogout()
+
+            val exception = kakaoLogoutResult.exceptionOrNull()
+            if (exception != null) {
+                return ApiResult.Unexpected(exception)
+            }
+
+            return odyLogoutResult
+        }
+
+        override suspend fun withdraw(): ApiResult<Unit> {
+            return memberService.deleteMember()
+        }
     }
-}
