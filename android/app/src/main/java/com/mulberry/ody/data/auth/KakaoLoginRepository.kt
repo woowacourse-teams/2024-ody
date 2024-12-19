@@ -1,4 +1,4 @@
-package com.mulberry.ody.data.remote.thirdparty.login.kakao
+package com.mulberry.ody.data.auth
 
 import android.content.Context
 import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
@@ -8,6 +8,7 @@ import com.mulberry.ody.data.remote.core.service.LogoutService
 import com.mulberry.ody.data.remote.core.service.MemberService
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.data.remote.thirdparty.login.entity.UserProfile
+import com.mulberry.ody.data.remote.thirdparty.login.kakao.KakaoOAuthLoginService
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map
 import com.mulberry.ody.domain.apiresult.suspendOnSuccess

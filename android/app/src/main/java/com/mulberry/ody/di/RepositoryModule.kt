@@ -7,7 +7,7 @@ import com.mulberry.ody.data.remote.core.repository.DefaultJoinRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultNotificationLogRepository
 import com.mulberry.ody.data.remote.thirdparty.address.KakaoAddressRepository
-import com.mulberry.ody.data.remote.thirdparty.login.kakao.KakaoLoginRepository
+import com.mulberry.ody.data.auth.KakaoLoginRepository
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
 import com.mulberry.ody.domain.repository.ody.FCMTokenRepository
