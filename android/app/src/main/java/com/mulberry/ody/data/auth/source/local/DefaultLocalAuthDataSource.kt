@@ -1,4 +1,4 @@
-package com.mulberry.ody.data.auth.source
+package com.mulberry.ody.data.auth.source.local
 
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.domain.model.AuthToken

@@ -6,13 +6,13 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class DefaultFCMTokenRepository
-@Inject
-constructor(
-    private val odyDatastore: OdyDatastore,
-) : FCMTokenRepository {
-    override suspend fun fetchFCMToken(): Result<String> {
-        return odyDatastore.getFCMToken().first()
-    }
+    @Inject
+    constructor(
+        private val odyDatastore: OdyDatastore,
+    ) : FCMTokenRepository {
+        override suspend fun fetchFCMToken(): Result<String> {
+            return odyDatastore.getFCMToken().first()
+        }
 
-    override suspend fun postFCMToken(fcmToken: String) = odyDatastore.setFCMToken(fcmToken)
-}
+        override suspend fun postFCMToken(fcmToken: String) = odyDatastore.setFCMToken(fcmToken)
+    }

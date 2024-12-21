@@ -1,9 +1,9 @@
 package com.mulberry.ody.di
 
-import com.mulberry.ody.data.auth.source.DefaultLocalAuthDataSource
-import com.mulberry.ody.data.auth.source.DefaultRemoteAuthDataSource
-import com.mulberry.ody.data.auth.source.LocalAuthDataSource
-import com.mulberry.ody.data.auth.source.RemoteAuthDataSource
+import com.mulberry.ody.data.auth.source.local.DefaultLocalAuthDataSource
+import com.mulberry.ody.data.auth.source.local.LocalAuthDataSource
+import com.mulberry.ody.data.auth.source.remote.DefaultRemoteAuthDataSource
+import com.mulberry.ody.data.auth.source.remote.RemoteAuthDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

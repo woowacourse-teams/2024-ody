@@ -7,19 +7,19 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class DefaultAuthTokenRepository
-@Inject
-constructor(
-    private val odyDatastore: OdyDatastore,
-) : AuthTokenRepository {
-    override suspend fun fetchAuthToken(): Result<AuthToken> {
-        return odyDatastore.getAuthToken().first()
-    }
+    @Inject
+    constructor(
+        private val odyDatastore: OdyDatastore,
+    ) : AuthTokenRepository {
+        override suspend fun fetchAuthToken(): Result<AuthToken> {
+            return odyDatastore.getAuthToken().first()
+        }
 
-    override suspend fun removeAuthToken() {
-        odyDatastore.removeAuthToken()
-    }
+        override suspend fun removeAuthToken() {
+            odyDatastore.removeAuthToken()
+        }
 
-    override suspend fun setAuthToken(authToken: AuthToken) {
-        odyDatastore.setAuthToken(authToken)
+        override suspend fun setAuthToken(authToken: AuthToken) {
+            odyDatastore.setAuthToken(authToken)
+        }
     }
-}

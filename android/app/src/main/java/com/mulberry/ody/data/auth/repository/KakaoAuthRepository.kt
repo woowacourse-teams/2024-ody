@@ -1,8 +1,8 @@
-package com.mulberry.ody.data.auth
+package com.mulberry.ody.data.auth.repository
 
 import android.content.Context
-import com.mulberry.ody.data.auth.source.LocalAuthDataSource
-import com.mulberry.ody.data.auth.source.RemoteAuthDataSource
+import com.mulberry.ody.data.auth.source.local.LocalAuthDataSource
+import com.mulberry.ody.data.auth.source.remote.RemoteAuthDataSource
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.getOrNull
 import com.mulberry.ody.domain.apiresult.suspendOnSuccess

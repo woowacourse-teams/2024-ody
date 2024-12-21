@@ -1,4 +1,4 @@
-package com.mulberry.ody.data.auth.source
+package com.mulberry.ody.data.auth.source.remote
 
 import android.content.Context
 import com.mulberry.ody.domain.apiresult.ApiResult
