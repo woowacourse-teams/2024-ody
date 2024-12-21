@@ -16,11 +16,8 @@ class KakaoAuthRepository
         private val localAuthDataSource: LocalAuthDataSource,
         private val remoteAuthDataSource: RemoteAuthDataSource,
     ) : AuthRepository {
-        override suspend fun checkIfLoggedIn(): Boolean {
-            if (!remoteAuthDataSource.checkIfLoggedIn()) {
-                return false
-            }
-            if (localAuthDataSource.fetchAuthToken().getOrNull() == null) {
+        override suspend fun isLoggedIn(): Boolean {
+            if (!remoteAuthDataSource.isLoggedIn() || !localAuthDataSource.isLoggedIn()) {
                 return false
             }
             val authToken = remoteAuthDataSource.postAuthToken().getOrNull() ?: return false
@@ -29,7 +26,7 @@ class KakaoAuthRepository
         }
 
         override suspend fun login(context: Context): ApiResult<AuthToken> {
-            val fcmToken = localAuthDataSource.fetchFCMToken().getOrNull() ?: return ApiResult.Unexpected(Exception())
+            val fcmToken = localAuthDataSource.fetchFCMToken().getOrNull() ?: return ApiResult.Unexpected(Exception("FCM 토큰이 존재하지 않습니다."))
             return remoteAuthDataSource.login(fcmToken, context).suspendOnSuccess {
                 localAuthDataSource.postAuthToken(it)
             }

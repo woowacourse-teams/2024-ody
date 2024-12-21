@@ -27,7 +27,7 @@ class KakaoOAuthLoginService {
             }
         }
 
-    fun checkIfLoggedIn(): Boolean = TokenManagerProvider.instance.manager.getToken() != null
+    fun isLoggedIn(): Boolean = TokenManagerProvider.instance.manager.getToken() != null
 
     private suspend fun loginWithKakao(context: Context): Result<AuthToken> =
         loginWithKakaoTalk(context).onFailure { error ->

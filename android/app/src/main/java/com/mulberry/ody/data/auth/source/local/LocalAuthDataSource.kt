@@ -3,7 +3,7 @@ package com.mulberry.ody.data.auth.source.local
 import com.mulberry.ody.domain.model.AuthToken
 
 interface LocalAuthDataSource {
-    suspend fun fetchAuthToken(): Result<AuthToken>
+    suspend fun isLoggedIn(): Boolean
 
     suspend fun removeAuthToken()
 

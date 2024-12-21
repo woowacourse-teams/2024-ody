@@ -35,7 +35,7 @@ class LoginViewModel
             MutableSharedFlow()
         val navigateAction: SharedFlow<LoginNavigateAction> get() = _navigateAction.asSharedFlow()
 
-        fun checkIfNavigated() {
+        fun verifyNavigation() {
             savedStateHandle.get<LoginNavigatedReason>(NAVIGATED_REASON)?.let { reason ->
                 viewModelScope.launch {
                     _navigatedReason.emit(reason)
@@ -43,9 +43,9 @@ class LoginViewModel
             }
         }
 
-        fun checkIfLoggedIn() {
+        fun verifyLogin() {
             viewModelScope.launch {
-                if (authRepository.checkIfLoggedIn()) {
+                if (authRepository.isLoggedIn()) {
                     navigateToMeetings()
                 }
             }

@@ -10,8 +10,8 @@ class DefaultLocalAuthDataSource
     constructor(
         private val odyDatastore: OdyDatastore,
     ) : LocalAuthDataSource {
-        override suspend fun fetchAuthToken(): Result<AuthToken> {
-            return odyDatastore.getAuthToken().first()
+        override suspend fun isLoggedIn(): Boolean {
+            return odyDatastore.getAuthToken().first().isSuccess
         }
 
         override suspend fun removeAuthToken() {

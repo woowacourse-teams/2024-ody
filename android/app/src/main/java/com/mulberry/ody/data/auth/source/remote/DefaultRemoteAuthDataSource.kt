@@ -20,8 +20,8 @@ class DefaultRemoteAuthDataSource
         private val refreshTokenService: RefreshTokenService,
         private val kakaoOAuthLoginService: KakaoOAuthLoginService,
     ) : RemoteAuthDataSource {
-        override suspend fun checkIfLoggedIn(): Boolean {
-            return kakaoOAuthLoginService.checkIfLoggedIn()
+        override suspend fun isLoggedIn(): Boolean {
+            return kakaoOAuthLoginService.isLoggedIn()
         }
 
         override suspend fun postAuthToken(): ApiResult<AuthToken> {
