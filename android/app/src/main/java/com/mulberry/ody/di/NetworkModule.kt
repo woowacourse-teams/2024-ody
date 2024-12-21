@@ -1,11 +1,11 @@
 package com.mulberry.ody.di
 
 import com.mulberry.ody.BuildConfig
+import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.data.retrofit.AccessTokenInterceptor
 import com.mulberry.ody.data.retrofit.ApiResultCallAdapter
 import com.mulberry.ody.data.retrofit.RefreshTokenInterceptor
-import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -190,17 +190,17 @@ object NetworkModule {
     @Singleton
     @AuthTokenInterceptor
     fun provideAuthTokenInterceptor(
-        authTokenRepository: AuthTokenRepository,
+        odyDatastore: OdyDatastore,
         refreshTokenService: RefreshTokenService,
     ): Interceptor {
-        return AccessTokenInterceptor(authTokenRepository, refreshTokenService)
+        return AccessTokenInterceptor(odyDatastore, refreshTokenService)
     }
 
     @Provides
     @Singleton
     @AuthRefreshTokenInterceptor
-    fun provideRefreshTokenInterceptor(authTokenRepository: AuthTokenRepository): Interceptor {
-        return RefreshTokenInterceptor(authTokenRepository)
+    fun provideRefreshTokenInterceptor(odyDatastore: OdyDatastore): Interceptor {
+        return RefreshTokenInterceptor(odyDatastore)
     }
 
     @Provides

@@ -2,8 +2,8 @@ package com.mulberry.ody.data.remote.thirdparty.fcm.service
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.domain.model.NotificationType
-import com.mulberry.ody.domain.repository.ody.FCMTokenRepository
 import com.mulberry.ody.presentation.notification.FCMNotification
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
@@ -12,7 +12,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FCMService : FirebaseMessagingService() {
     @Inject
-    lateinit var fcmTokenRepository: FCMTokenRepository
+    lateinit var odyDatastore: OdyDatastore
 
     @Inject
     lateinit var fcmNotification: FCMNotification
@@ -28,7 +28,7 @@ class FCMService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         runBlocking {
-            fcmTokenRepository.postFCMToken(token)
+            odyDatastore.setFCMToken(token)
         }
     }
 }
