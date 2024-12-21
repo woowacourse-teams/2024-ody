@@ -7,15 +7,15 @@ import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.getOrNull
 import com.mulberry.ody.domain.apiresult.suspendOnSuccess
 import com.mulberry.ody.domain.model.AuthToken
-import com.mulberry.ody.domain.repository.ody.LoginRepository
+import com.mulberry.ody.domain.repository.ody.AuthRepository
 import javax.inject.Inject
 
-class KakaoLoginRepository
+class KakaoAuthRepository
     @Inject
     constructor(
         private val localAuthDataSource: LocalAuthDataSource,
         private val remoteAuthDataSource: RemoteAuthDataSource,
-    ) : LoginRepository {
+    ) : AuthRepository {
         override suspend fun checkIfLoggedIn(): Boolean {
             if (!remoteAuthDataSource.checkIfLoggedIn()) {
                 return false

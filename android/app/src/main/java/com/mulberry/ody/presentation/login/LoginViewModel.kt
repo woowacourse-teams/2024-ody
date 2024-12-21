@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.suspendOnSuccess
-import com.mulberry.ody.domain.repository.ody.LoginRepository
+import com.mulberry.ody.domain.repository.ody.AuthRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
@@ -23,7 +23,7 @@ class LoginViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val loginRepository: LoginRepository,
+        private val authRepository: AuthRepository,
         private val savedStateHandle: SavedStateHandle,
         private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel() {
@@ -45,7 +45,7 @@ class LoginViewModel
 
         fun checkIfLoggedIn() {
             viewModelScope.launch {
-                if (loginRepository.checkIfLoggedIn()) {
+                if (authRepository.checkIfLoggedIn()) {
                     navigateToMeetings()
                 }
             }
@@ -54,7 +54,7 @@ class LoginViewModel
         fun loginWithKakao(context: Context) {
             viewModelScope.launch {
                 startLoading()
-                loginRepository.login(context)
+                authRepository.login(context)
                     .suspendOnSuccess {
                         navigateToMeetings()
                         matesEtaRepository.reserveAllEtaReservation()
