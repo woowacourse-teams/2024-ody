@@ -2,8 +2,8 @@ package com.mulberry.ody.di
 
 import com.mulberry.ody.data.auth.KakaoLoginRepository
 import com.mulberry.ody.data.local.repository.DefaultAuthTokenRepository
+import com.mulberry.ody.data.local.repository.DefaultFCMTokenRepository
 import com.mulberry.ody.data.local.repository.DefaultMatesEtaRepository
-import com.mulberry.ody.data.remote.core.repository.DefaultFCMTokenRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultJoinRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultMeetingRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultNotificationLogRepository
