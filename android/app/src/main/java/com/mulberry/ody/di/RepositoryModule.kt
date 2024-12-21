@@ -1,8 +1,6 @@
 package com.mulberry.ody.di
 
 import com.mulberry.ody.data.auth.repository.KakaoAuthRepository
-import com.mulberry.ody.data.local.repository.DefaultAuthTokenRepository
-import com.mulberry.ody.data.local.repository.DefaultFCMTokenRepository
 import com.mulberry.ody.data.local.repository.DefaultMatesEtaRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultJoinRepository
 import com.mulberry.ody.data.remote.core.repository.DefaultMeetingRepository
@@ -10,8 +8,6 @@ import com.mulberry.ody.data.remote.core.repository.DefaultNotificationLogReposi
 import com.mulberry.ody.data.remote.thirdparty.address.KakaoAddressRepository
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.AuthRepository
-import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
-import com.mulberry.ody.domain.repository.ody.FCMTokenRepository
 import com.mulberry.ody.domain.repository.ody.JoinRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
@@ -35,10 +31,6 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindFCMTokenRepository(defaultFCMTokenRepository: DefaultFCMTokenRepository): FCMTokenRepository
-
-    @Binds
-    @Singleton
     fun bindEtaRepository(defaultMatesEtaRepository: DefaultMatesEtaRepository): MatesEtaRepository
 
     @Binds
@@ -52,8 +44,4 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindAddressRepository(kakaoGeoLocationRepository: KakaoAddressRepository): AddressRepository
-
-    @Binds
-    @Singleton
-    fun bindAuthTokenRepository(defaultAuthTokenRepository: DefaultAuthTokenRepository): AuthTokenRepository
 }
