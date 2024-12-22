@@ -25,7 +25,14 @@ public abstract class AbstractNotification {
             NotificationStatus status,
             FcmTopic fcmTopic
     ) {
-        this(null, mate, type, sendAt, status, fcmTopic);
+        this(null, mate, type, calculateSendAt(sendAt), status, fcmTopic);
+    }
+
+    private static LocalDateTime calculateSendAt(LocalDateTime sendAt) {
+        if (sendAt.isBefore(LocalDateTime.now())) {
+            return LocalDateTime.now();
+        }
+        return sendAt;
     }
 
     public Notification toNotification() {
