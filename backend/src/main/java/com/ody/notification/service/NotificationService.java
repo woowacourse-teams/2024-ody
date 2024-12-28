@@ -68,8 +68,8 @@ public class NotificationService {
     }
 
     @Transactional
-    public void sendNudgeMessage(Mate requestMate, Mate nudgedMate) {
-        Notification nudgeNotification = notificationRepository.save(new Nudge(nudgedMate).toNotification());
+    public void sendNudgeMessage(Mate requestMate, Nudge nudge) {
+        Notification nudgeNotification = notificationRepository.save(nudge.toNotification());
         NudgeEvent nudgeEvent = new NudgeEvent(this, requestMate, nudgeNotification);
         fcmEventPublisher.publishWithTransaction(nudgeEvent);
     }

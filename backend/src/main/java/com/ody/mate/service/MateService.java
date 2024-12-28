@@ -20,6 +20,7 @@ import com.ody.notification.domain.types.DepartureReminder;
 import com.ody.notification.domain.types.Entry;
 import com.ody.notification.domain.types.MateLeave;
 import com.ody.notification.domain.types.MemberDeletion;
+import com.ody.notification.domain.types.Nudge;
 import com.ody.notification.service.NotificationService;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
@@ -102,7 +103,8 @@ public class MateService {
         Mate requestMate = findFetchedMate(nudgeRequest.requestMateId());
         Mate nudgedMate = findFetchedMate(nudgeRequest.nudgedMateId());
         validateNudgeCondition(requestMate, nudgedMate);
-        notificationService.sendNudgeMessage(requestMate, nudgedMate);
+        Nudge nudge = new Nudge(nudgedMate);
+        notificationService.sendNudgeMessage(requestMate, nudge);
     }
 
     private void validateNudgeCondition(Mate requestMate, Mate nudgedMate) {

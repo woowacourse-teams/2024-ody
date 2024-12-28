@@ -12,8 +12,8 @@ import com.ody.member.service.MemberService;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
+import com.ody.notification.domain.types.Nudge;
 import com.ody.notification.dto.response.NotiLogFindResponse;
-import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.notification.service.event.NudgeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
@@ -21,7 +21,6 @@ import com.ody.route.service.RouteService;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -88,8 +87,9 @@ class NotificationServiceTest extends BaseServiceTest {
         Meeting odyMeeting = fixtureGenerator.generateMeeting();
         Mate requestMate = fixtureGenerator.generateMate(odyMeeting);
         Mate nudgedMate = fixtureGenerator.generateMate(odyMeeting);
+        Nudge nudge = new Nudge(nudgedMate);
 
-        notificationService.sendNudgeMessage(requestMate, nudgedMate);
+        notificationService.sendNudgeMessage(requestMate, nudge);
 
         assertThat(applicationEvents.stream(NudgeEvent.class))
                 .hasSize(1);
