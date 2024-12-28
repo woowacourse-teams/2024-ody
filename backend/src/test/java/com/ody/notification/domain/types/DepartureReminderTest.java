@@ -21,13 +21,11 @@ class DepartureReminderTest {
     @DisplayName("출발 알림 생성 시점이 알림 전송 시점보다 늦은 경우 즉시 전송된다")
     @Test
     void sendImmediatelyIfDepartureTimeIsPast() {
+        LocalDateTime now = TimeUtil.nowWithTrim();
+        Meeting meeting = new Meeting("과거 약속", now.toLocalDate(), now.toLocalTime(), Fixture.TARGET_LOCATION, "초대코드");
         Mate mate = Mockito.mock(Mate.class);
         FcmTopic fcmTopic = Mockito.mock(FcmTopic.class);
-        DepartureTime departureTime = Mockito.mock(DepartureTime.class);
-        LocalDateTime now = TimeUtil.nowWithTrim();
-
-        Mockito.when(departureTime.isBefore(any()))
-                .thenReturn(true);
+        DepartureTime departureTime = new DepartureTime(meeting, 10L);
 
         DepartureReminder departureReminder = new DepartureReminder(mate, departureTime, fcmTopic);
         Notification departureReminderNotification = departureReminder.toNotification();
