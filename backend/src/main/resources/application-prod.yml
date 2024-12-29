@@ -1,7 +1,7 @@
 spring:
   data:
     redis:
-      host: ody-redis-001.ody-redis.vd1e5e.apn2.cache.amazonaws.com
+      host: ody-prod-redis
   jpa:
     hibernate:
       ddl-auto: validate
