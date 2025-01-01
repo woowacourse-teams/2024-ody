@@ -16,8 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -53,33 +51,42 @@ class EtaDashboardService : Service() {
 
         when (intent.action) {
             OPEN_ACTION -> {
-                val notification = etaDashboardNotification.createNotification(meetingId)
-                startForeground(meetingId.toInt(), notification)
-                openEtaDashboard(meetingId)
+                val meetingTime = intent.getLongExtra(MEETING_TIME_KEY, MEETING_TIME_DEFAULT_VALUE)
+                if (meetingTime == MEETING_ID_DEFAULT_VALUE) {
+                    return super.onStartCommand(intent, flags, startId)
+                }
+
+                if (!meetingJobs.contains(meetingId)) {
+                    openEtaDashboard(meetingId, meetingTime)
+                }
             }
 
             CLOSE_ACTION -> {
                 closeEtaDashboard(meetingId)
-                if (meetingJobs.isEmpty()) {
-                    stopSelf()
-                }
             }
         }
         return START_REDELIVER_INTENT
     }
 
-    private fun openEtaDashboard(meetingId: Long) {
-        meetingJobs[meetingId]?.cancel()
+    private fun openEtaDashboard(meetingId: Long, meetingTime: Long) {
+        val notification = etaDashboardNotification.createNotification(meetingId)
+        startForeground(meetingId.toInt(), notification)
 
         val job =
             CoroutineScope(Dispatchers.IO).launch {
-                while (isActive) {
+                for (time in etaDashboardTimes(meetingTime) step POLLING_INTERVAL) {
                     upsertEtaDashboard(meetingId)
-                    delay(POLLING_INTERVAL)
                 }
+                closeEtaDashboard(meetingId)
             }
 
         meetingJobs[meetingId] = job
+    }
+
+    private fun etaDashboardTimes(meetingTime: Long): LongRange {
+        val startTime = System.currentTimeMillis()
+        val endTime = meetingTime + ETA_CLOSE_MINUTE
+        return startTime..endTime
     }
 
     private suspend fun upsertEtaDashboard(meetingId: Long) {
@@ -117,6 +124,9 @@ class EtaDashboardService : Service() {
     private fun closeEtaDashboard(meetingId: Long) {
         val job = meetingJobs.remove(meetingId)
         job?.cancel()
+        if (meetingJobs.isEmpty()) {
+            stopSelf()
+        }
     }
 
     override fun onDestroy() {
@@ -126,13 +136,17 @@ class EtaDashboardService : Service() {
 
     companion object {
         private const val TAG = "EtaDashboardService"
-        const val MEETING_ID_KEY = "meeting_id"
-        const val MEETING_ID_DEFAULT_VALUE = -1L
+        private const val MEETING_ID_KEY = "meeting_id"
+        private const val MEETING_ID_DEFAULT_VALUE = -1L
+
+        private const val MEETING_TIME_KEY = "meeting_time"
+        const val MEETING_TIME_DEFAULT_VALUE = -1L
 
         private const val OPEN_ACTION = "eta_dashboard_open"
         private const val CLOSE_ACTION = "eta_dashboard_close"
 
         private const val POLLING_INTERVAL = 10 * 1000L
+        private const val ETA_CLOSE_MINUTE = 60 * 2 * 1000L
 
         private const val DEFAULT_LATITUDE = "0.0"
         private const val DEFAULT_LONGITUDE = "0.0"
@@ -140,10 +154,12 @@ class EtaDashboardService : Service() {
         fun getIntent(
             context: Context,
             meetingId: Long? = null,
+            meetingTime: Long? = null,
             isOpen: Boolean? = null,
         ): Intent {
             val intent = Intent(context, EtaDashboardService::class.java)
             if (meetingId != null) intent.putExtra(MEETING_ID_KEY, meetingId)
+            if (meetingTime != null) intent.putExtra(MEETING_TIME_KEY, meetingTime)
             if (isOpen != null) intent.action = if (isOpen) OPEN_ACTION else CLOSE_ACTION
 
             return intent

@@ -3,6 +3,7 @@ package com.mulberry.ody.data.remote.thirdparty.fcm.service
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.mulberry.ody.data.local.db.OdyDatastore
+import com.mulberry.ody.data.local.service.EtaDashboard
 import com.mulberry.ody.domain.model.FCMNotificationType
 import com.mulberry.ody.domain.model.FCMType
 import com.mulberry.ody.presentation.notification.FCMNotification
@@ -20,6 +21,9 @@ class FCMService : FirebaseMessagingService() {
     @Inject
     lateinit var fcmNotification: FCMNotification
 
+    @Inject
+    lateinit var etaDashboard: EtaDashboard
+
     override fun onMessageReceived(message: RemoteMessage) {
         val type = message.data["type"] ?: return
         val fcmType = FCMType.from(type)
@@ -33,7 +37,7 @@ class FCMService : FirebaseMessagingService() {
         }
 
         if (fcmType.isEtaType()) {
-            // service start
+            etaDashboard.open(meetingId.toLong(), meetingTime ?: return)
         }
     }
 
