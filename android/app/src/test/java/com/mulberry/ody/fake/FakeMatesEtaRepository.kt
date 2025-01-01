@@ -5,7 +5,6 @@ import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.mateEtaInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.time.LocalDateTime
 
 object FakeMatesEtaRepository : MatesEtaRepository {
     override fun fetchMatesEtaInfo(meetingId: Long): Flow<MateEtaInfo?> {

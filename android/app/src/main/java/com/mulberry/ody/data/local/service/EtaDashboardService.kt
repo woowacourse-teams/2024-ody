@@ -68,7 +68,10 @@ class EtaDashboardService : Service() {
         return START_REDELIVER_INTENT
     }
 
-    private fun openEtaDashboard(meetingId: Long, meetingTime: Long) {
+    private fun openEtaDashboard(
+        meetingId: Long,
+        meetingTime: Long,
+    ) {
         val notification = etaDashboardNotification.createNotification(meetingId)
         startForeground(meetingId.toInt(), notification)
 

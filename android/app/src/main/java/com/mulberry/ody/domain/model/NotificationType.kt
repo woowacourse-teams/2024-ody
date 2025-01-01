@@ -25,10 +25,8 @@ enum class FCMNotificationType : FCMType {
     DEPARTURE_REMINDER,
     NUDGE,
     ETA_NOTICE,
-    ;
 }
 
 enum class FCMMessageType : FCMType {
     ETA_SCHEDULING_NOTICE,
-    ;
 }
