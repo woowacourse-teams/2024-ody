@@ -25,7 +25,6 @@ class LoginViewModel
         private val analyticsHelper: AnalyticsHelper,
         private val loginRepository: LoginRepository,
         private val savedStateHandle: SavedStateHandle,
-        private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel() {
         private val _navigatedReason: MutableSharedFlow<LoginNavigatedReason> =
             MutableSharedFlow()
@@ -57,7 +56,6 @@ class LoginViewModel
                 loginRepository.login(context)
                     .suspendOnSuccess {
                         navigateToMeetings()
-                        matesEtaRepository.reserveAllEtaReservation()
                     }.onFailure { code, errorMessage ->
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                         handleError()

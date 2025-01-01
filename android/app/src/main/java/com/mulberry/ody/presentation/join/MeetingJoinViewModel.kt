@@ -37,7 +37,6 @@ class MeetingJoinViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         private val joinRepository: JoinRepository,
-        private val matesEtaRepository: MatesEtaRepository,
         private val addressRepository: AddressRepository,
         private val locationHelper: LocationHelper,
     ) : BaseViewModel(), MeetingJoinListener {
@@ -107,7 +106,6 @@ class MeetingJoinViewModel
                 startLoading()
                 joinRepository.postMates(meetingJoinInfo)
                     .suspendOnSuccess {
-                        matesEtaRepository.reserveEtaFetchingJob(it.meetingId, it.meetingDateTime)
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
                     }.onFailure { code, errorMessage ->

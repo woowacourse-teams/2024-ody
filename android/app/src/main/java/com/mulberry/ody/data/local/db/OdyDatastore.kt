@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mulberry.ody.domain.model.AuthToken
-import com.mulberry.ody.domain.model.NotificationType
+import com.mulberry.ody.domain.model.FCMNotificationType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -73,7 +73,7 @@ class OdyDatastore(private val context: Context) {
     }
 
     suspend fun setIsNotificationOn(
-        notificationType: NotificationType,
+        notificationType: FCMNotificationType,
         isNotificationOn: Boolean,
     ) {
         val preferencesKey = notificationType.toPreferencesKey() ?: return
@@ -82,18 +82,18 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
-    fun getIsNotificationOn(notificationType: NotificationType): Flow<Boolean> {
+    fun getIsNotificationOn(notificationType: FCMNotificationType): Flow<Boolean> {
         val preferencesKey = notificationType.toPreferencesKey() ?: return flow { emit(false) }
         return context.dataStore.data.map { preferences ->
             preferences[preferencesKey] ?: true
         }
     }
 
-    private fun NotificationType.toPreferencesKey(): Preferences.Key<Boolean>? {
+    private fun FCMNotificationType.toPreferencesKey(): Preferences.Key<Boolean>? {
         return when (this) {
-            NotificationType.ENTRY -> IS_NOTIFICATION_ENTRY_ON
-            NotificationType.DEPARTURE_REMINDER -> IS_NOTIFICATION_DEPARTURE_ON
-            NotificationType.NUDGE, NotificationType.ETA_NOTICE, NotificationType.DEFAULT -> null
+            FCMNotificationType.ENTRY -> IS_NOTIFICATION_ENTRY_ON
+            FCMNotificationType.DEPARTURE_REMINDER -> IS_NOTIFICATION_DEPARTURE_ON
+            FCMNotificationType.NUDGE, FCMNotificationType.ETA_NOTICE -> null
         }
     }
 
