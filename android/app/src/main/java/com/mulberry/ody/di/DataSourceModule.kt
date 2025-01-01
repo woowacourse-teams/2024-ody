@@ -1,8 +1,8 @@
 package com.mulberry.ody.di
 
-import com.mulberry.ody.data.auth.source.local.DefaultLocalAuthDataSource
+import com.mulberry.ody.data.auth.source.local.KakaoLocalAuthDataSource
 import com.mulberry.ody.data.auth.source.local.LocalAuthDataSource
-import com.mulberry.ody.data.auth.source.remote.DefaultRemoteAuthDataSource
+import com.mulberry.ody.data.auth.source.remote.KakaoRemoteAuthDataSource
 import com.mulberry.ody.data.auth.source.remote.RemoteAuthDataSource
 import dagger.Binds
 import dagger.Module
@@ -15,9 +15,9 @@ import javax.inject.Singleton
 interface DataSourceModule {
     @Binds
     @Singleton
-    fun bindRemoteAuthDataSource(defaultRemoteAuthDataSource: DefaultRemoteAuthDataSource): RemoteAuthDataSource
+    fun bindRemoteAuthDataSource(kakaoRemoteAuthDataSource: KakaoRemoteAuthDataSource): RemoteAuthDataSource
 
     @Binds
     @Singleton
-    fun bindLocalAuthDataSource(defaultLocalAuthDataSource: DefaultLocalAuthDataSource): LocalAuthDataSource
+    fun bindLocalAuthDataSource(kakaoLocalAuthDataSource: KakaoLocalAuthDataSource): LocalAuthDataSource
 }

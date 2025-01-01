@@ -5,7 +5,7 @@ import com.mulberry.ody.domain.model.AuthToken
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class DefaultLocalAuthDataSource
+class KakaoLocalAuthDataSource
     @Inject
     constructor(
         private val odyDatastore: OdyDatastore,

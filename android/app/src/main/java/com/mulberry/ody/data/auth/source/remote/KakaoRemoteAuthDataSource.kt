@@ -13,7 +13,7 @@ import com.mulberry.ody.domain.apiresult.toApiResult
 import com.mulberry.ody.domain.model.AuthToken
 import javax.inject.Inject
 
-class DefaultRemoteAuthDataSource
+class KakaoRemoteAuthDataSource
     @Inject
     constructor(
         private val authService: AuthService,
