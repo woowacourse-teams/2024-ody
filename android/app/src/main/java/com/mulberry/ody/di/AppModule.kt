@@ -76,7 +76,8 @@ object AppModule {
     @Singleton
     fun provideEtaDashboard(
         @ApplicationContext context: Context,
+        odyDatastore: OdyDatastore,
     ): EtaDashboard {
-        return EtaDashboard(context)
+        return EtaDashboard(context, odyDatastore)
     }
 }
