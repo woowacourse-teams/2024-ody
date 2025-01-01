@@ -276,7 +276,7 @@ class MeetingRoomViewModel
                 startLoading()
                 meetingRepository.exitMeeting(_meeting.value.id)
                     .suspendOnSuccess {
-                        matesEtaRepository.deleteEtaReservation(meetingId)
+                        matesEtaRepository.stopEtaDashboardService(meetingId)
                         _exitMeetingRoomEvent.emit(Unit)
                     }.onFailure { code, errorMessage ->
                         handleError()

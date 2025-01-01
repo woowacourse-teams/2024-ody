@@ -25,12 +25,12 @@ class DefaultMatesEtaRepository
             matesEtaInfoDao.deleteAll()
         }
 
-        override suspend fun deleteEtaReservation(meetingId: Long) {
+        override suspend fun stopEtaDashboardService(meetingId: Long) {
             val serviceIntent = EtaDashboardService.getIntent(context, meetingId, isOpen = false)
             context.startForegroundService(serviceIntent)
         }
 
-        override suspend fun clearEtaReservation() {
+        override suspend fun stopEtaDashboardService() {
             val serviceIntent = EtaDashboardService.getIntent(context)
             context.stopService(serviceIntent)
         }

@@ -8,7 +8,7 @@ interface MatesEtaRepository {
 
     suspend fun clearEtaFetchingJob()
 
-    suspend fun deleteEtaReservation(meetingId: Long)
+    suspend fun stopEtaDashboardService(meetingId: Long)
 
-    suspend fun clearEtaReservation()
+    suspend fun stopEtaDashboardService()
 }
