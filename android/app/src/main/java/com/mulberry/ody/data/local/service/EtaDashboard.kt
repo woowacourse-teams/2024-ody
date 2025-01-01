@@ -21,8 +21,15 @@ class EtaDashboard @Inject constructor(
         meetingId: Long,
         meetingTime: LocalDateTime,
     ) {
+        if (!isLoggedIn()) {
+            return
+        }
         val meetingTimeMills = meetingTime.toMilliSeconds()
         val serviceIntent = EtaDashboardService.getIntent(context, meetingId, meetingTimeMills, isOpen = true)
         context.startForegroundService(serviceIntent)
+    }
+
+    private fun isLoggedIn(): Boolean {
+        return runBlocking { odyDatastore.getAuthToken().first().isSuccess }
     }
 }
