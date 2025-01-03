@@ -1,7 +1,6 @@
 name: backend-cd-prod
 
 on:
-  push:
   pull_request:
     branches:
       - main
