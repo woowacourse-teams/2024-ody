@@ -60,56 +60,6 @@ public class Notification extends BaseEntity {
         this(null, mate, type, sendAt, status, fcmTopic);
     }
 
-    public static Notification createEntry(Mate mate, FcmTopic fcmTopic) {
-        return new Notification(
-                mate,
-                NotificationType.ENTRY,
-                LocalDateTime.now(),
-                NotificationStatus.DONE,
-                fcmTopic
-        );
-    }
-
-    public static Notification createDepartureReminder(Mate mate, LocalDateTime sendAt, FcmTopic fcmTopic) {
-        return new Notification(
-                mate,
-                NotificationType.DEPARTURE_REMINDER,
-                sendAt,
-                NotificationStatus.PENDING,
-                fcmTopic
-        );
-    }
-
-    public static Notification createNudge(Mate nudgeMate) {
-        return new Notification(
-                nudgeMate,
-                NotificationType.NUDGE,
-                LocalDateTime.now(),
-                NotificationStatus.DONE,
-                null
-        );
-    }
-
-    public static Notification createMemberDeletion(Mate mate) {
-        return new Notification(
-                mate,
-                NotificationType.MEMBER_DELETION,
-                LocalDateTime.now(),
-                NotificationStatus.DONE,
-                null
-        );
-    }
-
-    public static Notification createMateLeave(Mate mate) {
-        return new Notification(
-                mate,
-                NotificationType.LEAVE,
-                LocalDateTime.now(),
-                NotificationStatus.DONE,
-                null
-        );
-    }
-
     public boolean isDepartureReminder() {
         return this.type.isDepartureReminder();
     }

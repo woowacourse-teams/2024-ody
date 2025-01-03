@@ -1,6 +1,7 @@
 package com.ody.meeting.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import com.ody.common.BaseControllerTest;
 import com.ody.common.DtoGenerator;
@@ -8,6 +9,7 @@ import com.ody.eta.domain.Eta;
 import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.mate.domain.Mate;
+import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MateEtaResponseV2;
@@ -15,13 +17,20 @@ import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.member.domain.Member;
+import com.ody.notification.domain.NotificationType;
+import com.ody.notification.dto.response.NotiLogFindResponse;
+import com.ody.notification.dto.response.NotiLogFindResponses;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.springframework.http.HttpHeaders;
 
 class MeetingControllerTest extends BaseControllerTest {
@@ -194,6 +203,47 @@ class MeetingControllerTest extends BaseControllerTest {
             assertThat(mateEtaResponses.mateEtas().get(0).status()).isEqualTo(EtaStatus.MISSING);
             assertThat(mateEtaResponses.mateEtas().get(1).status()).isNotEqualTo(EtaStatus.MISSING);
         }
+    }
+
+    @DisplayName("입장과 동시에 출발 알림이 발송되는 시나리오 : 입장 - 출발 알림 순으로 로그 목록이 조회된다.")
+    @TestFactory
+    Stream<DynamicTest> entryFollowedByDepartureReminder() {
+        LocalDateTime fiveMinutesLater = LocalDateTime.now().plusMinutes(5L);
+        Meeting meeting = fixtureGenerator.generateMeeting(fiveMinutesLater);
+        Member member = fixtureGenerator.generateMember();
+
+        return Stream.of(
+                dynamicTest("약속에 최초 참여한다", () -> {
+                    MateSaveRequestV2 mateSaveRequestV2 = dtoGenerator.generateMateSaveRequest(meeting);
+                    RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .header(HttpHeaders.AUTHORIZATION,
+                                    fixtureGenerator.generateAccessTokenValueByMember(member))
+                            .body(mateSaveRequestV2)
+                            .when()
+                            .post("/v2/mates")
+                            .then()
+                            .statusCode(201);
+                }),
+                dynamicTest("입장 - 출발 알림 순으로 알림이 조회된다", () -> {
+                    List<String> notiLogTypes = RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .header(HttpHeaders.AUTHORIZATION, fixtureGenerator.generateAccessTokenValueByMember(member))
+                            .when()
+                            .get("/meetings/" + meeting.getId() + "/noti-log")
+                            .then()
+                            .statusCode(200)
+                            .extract()
+                            .as(NotiLogFindResponses.class)
+                            .notiLog()
+                            .stream()
+                            .map(NotiLogFindResponse::type)
+                            .toList();
+
+                    assertThat(notiLogTypes)
+                            .containsExactly(NotificationType.ENTRY.name(), NotificationType.DEPARTURE_REMINDER.name());
+                })
+        );
     }
 }
 
