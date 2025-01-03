@@ -1,5 +1,7 @@
 package com.mulberry.ody.presentation.address.listener
 
+import com.mulberry.ody.domain.model.Address
+
 interface AddressListener {
-    fun onClickAddressItem(id: Long)
+    fun onClickAddressItem(address: Address)
 }

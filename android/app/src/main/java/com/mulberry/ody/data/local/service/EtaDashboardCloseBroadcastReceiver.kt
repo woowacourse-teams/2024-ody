@@ -6,11 +6,13 @@ import android.content.Intent
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_DEFAULT_VALUE
 import com.mulberry.ody.data.local.service.EtaDashboardService.Companion.MEETING_ID_KEY
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class EtaDashboardCloseBroadcastReceiver : BroadcastReceiver() {
     @Inject
     lateinit var matesEtaRepository: MatesEtaRepository

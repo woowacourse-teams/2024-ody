@@ -4,6 +4,7 @@
 
     <uses-configuration android:name="android:permission.POST_NOTIFICATIONS" />
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
@@ -128,7 +129,14 @@
 
         <receiver android:name=".data.local.service.EtaDashboardOpenBroadcastReceiver" />
         <receiver android:name=".data.local.service.EtaDashboardCloseBroadcastReceiver" />
-
+        <receiver
+            android:name=".data.local.service.ReinstallBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

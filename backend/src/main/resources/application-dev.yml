@@ -1,4 +1,7 @@
 spring:
+  data:
+    redis:
+      host: ody-dev-redis
   jpa:
     hibernate:
       ddl-auto: validate

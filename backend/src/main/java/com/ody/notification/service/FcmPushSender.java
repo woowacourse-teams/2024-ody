@@ -8,8 +8,6 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.message.DirectMessage;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.repository.NotificationRepository;
-import com.ody.util.TimeUtil;
-import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,50 +18,46 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FcmPushSender {
 
-    private final NotificationRepository notificationRepository;
     private final FirebaseMessaging firebaseMessaging;
+    private final NotificationRepository notificationRepository;
 
     @Transactional
-    public void sendPushNotification(Notification notification) {
-        Notification savedNotification = notificationRepository.findById(notification.getId())
-                .orElse(notification); // noti 생성과 동시에 실행되는 경우, 다른 트랜잭션이므로 즉시 findById 할 수 없어 기존 noti 사용
-
+    public void sendGroupMessage(GroupMessage groupMessage, Notification notification) {
+        Notification savedNotification = findNotification(notification);
         if (savedNotification.isStatusDismissed()) {
-            log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", savedNotification);
+            log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", notification);
             return;
         }
-        GroupMessage groupMessage = GroupMessage.from(savedNotification);
-        sendGeneralMessage(groupMessage.message(), savedNotification);
+        sendMessage(groupMessage.message());
+        updateDepartureReminderToDone(savedNotification);
     }
 
-    public void sendNudgeMessage(Notification notification, DirectMessage directMessage) {
-        sendGeneralMessage(directMessage.message(), notification);
+    public void sendDirectMessage(DirectMessage directMessage) {
+        sendMessage(directMessage.message());
     }
 
-    private void sendGeneralMessage(Message message, Notification notification) {
+    public void sendNoticeMessage(GroupMessage groupMessage) {
+        sendMessage(groupMessage.message());
+    }
+
+    private void sendMessage(Message message) {
         try {
             firebaseMessaging.send(message);
-            updateDepartureReminderToDone(notification);
         } catch (FirebaseMessagingException exception) {
-            log.error("FCM 알림(ID : {}) 전송 실패 : {}", notification.getId(), exception.getMessage());
+            log.error("FCM 전송 실패 : {}", exception.getMessage());
             throw new OdyServerErrorException(exception.getMessage());
         }
+    }
+
+    private Notification findNotification(Notification notification) {
+        return notificationRepository.findById(notification.getId())
+                .orElse(notification);
     }
 
     private void updateDepartureReminderToDone(Notification notification) {
         if (notification.isDepartureReminder()) {
             notification.updateStatusToDone();
             log.info("{} 타입 알림(ID : {}) 상태 업데이트", notification.getType(), notification.getId());
-        }
-    }
-
-    public void sendNoticeMessage(GroupMessage groupMessage) {
-        try {
-            firebaseMessaging.send(groupMessage.message());
-            log.info("공지 알림 전송 | 전송 시간 : {}", Instant.now().atZone(TimeUtil.KST_OFFSET));
-        } catch (FirebaseMessagingException exception) {
-            log.error("FCM 공지 전송 실패 : {}", exception.getMessage());
-            throw new OdyServerErrorException(exception.getMessage());
         }
     }
 }

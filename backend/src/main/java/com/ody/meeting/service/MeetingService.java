@@ -1,5 +1,6 @@
 package com.ody.meeting.service;
 
+import com.ody.common.aop.DistributedLock;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
@@ -17,18 +18,14 @@ import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.message.GroupMessage;
-import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.NotificationService;
-import com.ody.util.InstantConverter;
 import com.ody.util.InviteCodeGenerator;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,8 +42,6 @@ public class MeetingService {
     private final MeetingRepository meetingRepository;
     private final MateRepository mateRepository;
     private final NotificationService notificationService;
-    private final FcmPushSender fcmPushSender;
-    private final TaskScheduler taskScheduler;
 
     @Transactional
     public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
@@ -59,9 +54,8 @@ public class MeetingService {
     private void scheduleEtaNotice(Meeting meeting) {
         GroupMessage noticeMessage = GroupMessage.createMeetingNotice(meeting, NotificationType.ETA_NOTICE);
         LocalDateTime etaNoticeTime = meeting.getMeetingTime().minusMinutes(ETA_NOTICE_TIME_DEFER);
-        Instant startTime = InstantConverter.kstToInstant(etaNoticeTime);
-        taskScheduler.schedule(() -> fcmPushSender.sendNoticeMessage(noticeMessage), startTime);
-        log.info("{} 타입 알림 {}에 스케줄링 예약", NotificationType.ETA_NOTICE, InstantConverter.instantToKst(startTime));
+        notificationService.scheduleNotice(noticeMessage, etaNoticeTime);
+        log.info("{} 타입 알림 {}에 스케줄링 예약", NotificationType.ETA_NOTICE, etaNoticeTime);
     }
 
     private String generateUniqueInviteCode() {
@@ -111,6 +105,7 @@ public class MeetingService {
     }
 
     @Transactional
+    @DistributedLock(key = "'MATE_SAVE'")
     public MateSaveResponseV2 saveMateAndSendNotifications(MateSaveRequestV2 mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
         if (meeting.isEnd()) {

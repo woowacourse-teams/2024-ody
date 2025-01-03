@@ -1,17 +1,16 @@
 package com.mulberry.ody.presentation.address
 
 import androidx.lifecycle.viewModelScope
-import com.mulberry.ody.domain.apiresult.onFailure
-import com.mulberry.ody.domain.apiresult.onNetworkError
-import com.mulberry.ody.domain.apiresult.onSuccess
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource
+import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource.Companion.PAGE_SIZE
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.presentation.address.listener.AddressListener
-import com.mulberry.ody.presentation.address.model.AddressUiModel
-import com.mulberry.ody.presentation.address.model.toAddressUiModels
 import com.mulberry.ody.presentation.common.BaseViewModel
-import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
-import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,17 +18,16 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class AddressSearchViewModel
     @Inject
     constructor(
-        private val analyticsHelper: AnalyticsHelper,
         private val addressRepository: AddressRepository,
     ) : BaseViewModel(), AddressListener {
         val addressSearchKeyword: MutableStateFlow<String> = MutableStateFlow("")
@@ -40,19 +38,11 @@ class AddressSearchViewModel
                 initialValue = false,
             )
 
-        private val addresses: MutableStateFlow<List<Address>> = MutableStateFlow(emptyList())
-        val isEmptyAddresses: StateFlow<Boolean> =
-            addresses.map { it.isEmpty() }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                initialValue = true,
-            )
-        val addressUiModels: StateFlow<List<AddressUiModel>> =
-            addresses.map { it.toAddressUiModels() }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Eagerly,
-                initialValue = emptyList(),
-            )
+        private val _address: MutableStateFlow<PagingData<Address>> = MutableStateFlow(PagingData.empty())
+        val address: StateFlow<PagingData<Address>> get() = _address
+
+        private val _isEmptyAddresses: MutableStateFlow<Boolean> = MutableStateFlow(true)
+        val isEmptyAddresses: StateFlow<Boolean> get() = _isEmptyAddresses
 
         private val _addressSelectEvent: MutableSharedFlow<Address> = MutableSharedFlow()
         val addressSelectEvent: SharedFlow<Address> get() = _addressSelectEvent.asSharedFlow()
@@ -63,39 +53,50 @@ class AddressSearchViewModel
 
         fun searchAddress() {
             val addressSearchKeyword = addressSearchKeyword.value
-            if (addressSearchKeyword.isEmpty()) return
 
             viewModelScope.launch {
+                if (addressSearchKeyword.isBlank()) {
+                    clearAddresses()
+                }
+
                 startLoading()
-                addressRepository.fetchAddresses(addressSearchKeyword, PAGE_SIZE)
-                    .onSuccess {
-                        addresses.value = it
-                    }.onFailure { code, errorMessage ->
-                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                        Timber.e("$code $errorMessage")
-                    }.onNetworkError {
-                        handleNetworkError()
-                        lastFailedAction = { searchAddress() }
+                Pager(
+                    config = PagingConfig(pageSize = PAGE_SIZE),
+                    pagingSourceFactory = {
+                        AddressPagingSource(
+                            keyword = addressSearchKeyword,
+                            addressRepository = addressRepository,
+                        )
+                    },
+                ).flow
+                    .cachedIn(viewModelScope)
+                    .collectLatest {
+                        _address.emit(it)
+                        stopLoading()
                     }
-                stopLoading()
             }
         }
 
-        override fun onClickAddressItem(id: Long) {
-            val address = addresses.value?.find { it.id == id } ?: return
+        override fun onClickAddressItem(address: Address) {
             viewModelScope.launch {
                 _addressSelectEvent.emit(address)
             }
         }
 
+        fun updateAddressItemCount(itemCount: Int) {
+            viewModelScope.launch {
+                _isEmptyAddresses.emit(itemCount == 0)
+            }
+        }
+
         fun clearAddresses() {
-            addresses.value = emptyList()
+            viewModelScope.launch {
+                _address.emit(PagingData.empty())
+                _isEmptyAddresses.emit(true)
+            }
         }
 
         companion object {
-            private const val TAG = "AddressSearchViewModel"
-
-            private const val PAGE_SIZE = 10
             private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
         }
     }

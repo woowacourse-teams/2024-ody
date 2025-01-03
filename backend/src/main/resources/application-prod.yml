@@ -1,21 +1,24 @@
 spring:
+  data:
+    redis:
+      host: ody-prod-redis
   jpa:
     hibernate:
       ddl-auto: validate
   datasource:
     write:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: ENC(+p2DZSe9yNp28DPB+6F7aERvNdgI9vTRrbpU5C5RmKIkrZaNNBTThg/Kb2xg1M1qrtOhYVLtbFnLLbiXUKIfmRPls9py5cf1eO/sAER4Rqpx9oxMQ8m75pOqw/L3CKzAMlL7/TvoXDB0HIvkeYejqg==)
-      username: ENC(YZ2LkaSgfkD9S8m67TunJw==)
-      password: ENC(yjnFbKAlVVvzzQuWNECa7DcpWubhBn0Q)
+      jdbc-url: ENC(/pYkPoMxvv/cFWWYEEIJ1/7gtMSjD9WKhM4oSIUEiK3WGRrcXZGELR8s+ozO5hmimO3U99cs3yMKf5B/5uh7RLk4wC3W1IuZ3F0oX3hSEJeq16YkxR1okYZokeE3mZXTxcOHBb3krNg=)
+      username: ENC(Pjtz7HDMEVm9ScNAjaDEqA==)
+      password: ENC(9yYOk4n/7co8h0HDfOA20tduvw3htCFa)
     read:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: ENC(+p2DZSe9yNp28DPB+6F7aERvNdgI9vTRrbpU5C5RmKIkrZaNNBTThg/Kb2xg1M1qrtOhYVLtbFnLLbiXUKIfmRPls9py5cf1eO/sAER4Rqpx9oxMQ8m75pOqw/L3CKzAMlL7/TvoXDB0HIvkeYejqg==)
-      username: ENC(YZ2LkaSgfkD9S8m67TunJw==)
-      password: ENC(yjnFbKAlVVvzzQuWNECa7DcpWubhBn0Q)
+      jdbc-url: ENC(Ho2WMst/QlNJngqZ1nnRiQIaytH55rjohNVg/5W14vhcd88rAhk16y1yO3zzorKNGSsYV95t/lChWuFA5ivEz4Rh5NaZHjxddhvs1T7HHltl/eC5V1bhPh3+ck98Lk2iil0+RljDy+I=)
+      username: ENC(Pjtz7HDMEVm9ScNAjaDEqA==)
+      password: ENC(9yYOk4n/7co8h0HDfOA20tduvw3htCFa)
   flyway:
     baseline-version: 2
-
+    
 log:
   file:
     path: /ody-prod-logs

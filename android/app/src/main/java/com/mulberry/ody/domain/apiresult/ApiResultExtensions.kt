@@ -1,5 +1,7 @@
 package com.mulberry.ody.domain.apiresult
 
+import java.lang.IllegalArgumentException
+
 fun <T> ApiResult<T>.onSuccess(block: (T) -> Unit): ApiResult<T> {
     if (this is ApiResult.Success) {
         block(this.data)
@@ -7,7 +9,7 @@ fun <T> ApiResult<T>.onSuccess(block: (T) -> Unit): ApiResult<T> {
     return this
 }
 
-fun <T> ApiResult<T>.onFailure(block: (code: Int, errorMessage: String?) -> Unit): ApiResult<T> {
+fun <T> ApiResult<T>.onFailure(block: (code: Int?, errorMessage: String?) -> Unit): ApiResult<T> {
     if (this is ApiResult.Failure) {
         block(this.code, this.errorMessage)
     }
@@ -35,7 +37,7 @@ suspend fun <T> ApiResult<T>.suspendOnSuccess(block: suspend (T) -> Unit): ApiRe
     return this
 }
 
-suspend fun <T> ApiResult<T>.suspendOnFailure(block: suspend (code: Int, errorMessage: String?) -> Unit): ApiResult<T> {
+suspend fun <T> ApiResult<T>.suspendOnFailure(block: suspend (code: Int?, errorMessage: String?) -> Unit): ApiResult<T> {
     if (this is ApiResult.Failure) {
         block(this.code, this.errorMessage)
     }
@@ -67,6 +69,15 @@ suspend fun <T, R> ApiResult<T>.map(block: suspend (T) -> R): ApiResult<R> {
 
 fun <T> ApiResult<T>.getOrNull(): T? {
     return if (this is ApiResult.Success) data else null
+}
+
+fun <T> ApiResult<T>.getOrThrow(): T {
+    when (this) {
+        is ApiResult.Failure -> throw IllegalArgumentException(errorMessage)
+        is ApiResult.NetworkError -> throw exception
+        is ApiResult.Unexpected -> throw t
+        is ApiResult.Success -> return data
+    }
 }
 
 fun <T> Result<T>.toApiResult(): ApiResult<T> {

@@ -23,17 +23,22 @@ android {
         applicationId = "com.mulberry.ody"
         minSdk = 26
         targetSdk = 34
-        versionCode = 32
-        versionName = "1.2.3"
+        versionCode = 14
+        versionName = "1.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_DEV_URL", properties["BASE_DEV_URL"].toString())
         buildConfigField("String", "BASE_PROD_URL", properties["BASE_PROD_URL"].toString())
         buildConfigField("String", "KAKAO_API_KEY", properties["KAKAO_API_KEY"].toString())
         buildConfigField("String", "KAKAO_NATIVE_KEY", properties["KAKAO_NATIVE_KEY"].toString())
-        buildConfigField("String", "PRIVACY_POLICY_URI", properties["PRIVACY_POLICY_URI"].toString())
+        buildConfigField(
+            "String",
+            "PRIVACY_POLICY_URI",
+            properties["PRIVACY_POLICY_URI"].toString(),
+        )
         buildConfigField("String", "TERM_URI", properties["TERM_URI"].toString())
-        manifestPlaceholders["KAKAO_NATIVE_KEY"] = properties["KAKAO_NATIVE_KEY"].toString().trim('"')
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] =
+            properties["KAKAO_NATIVE_KEY"].toString().trim('"')
     }
     buildTypes {
         debug {
@@ -130,8 +135,8 @@ dependencies {
     // timber
     implementation(libs.timber)
 
-    // dotsibdicator
-    implementation(libs.dotsibdicator)
+    // dotsindicator
+    implementation(libs.dotsindicator)
 
     // play service
     implementation(libs.play.services.location)
@@ -152,4 +157,7 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    // paging
+    implementation(libs.androidx.paging)
 }

@@ -9,6 +9,7 @@ import com.ody.common.BaseServiceTest;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
+import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.repository.NotificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,15 +24,17 @@ class FcmPushSenderTest extends BaseServiceTest {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @DisplayName("출발 알림이 DISMISSED 상태가 아니면 이면 푸시 알림을 보내고, DONE 상태로 변경한다.")
+    @DisplayName("출발 알림이 푸시 알림을 보내고, DONE 상태로 변경한다.")
     @Test
     void sendPushNotificationSuccess() {
+        Message message = Mockito.mock(Message.class);
+        GroupMessage groupMessage = new GroupMessage(message);
         Notification pendingNotification = fixtureGenerator.generateNotification(
                 NotificationType.DEPARTURE_REMINDER,
                 NotificationStatus.PENDING
         );
 
-        fcmPushSender.sendPushNotification(pendingNotification);
+        fcmPushSender.sendGroupMessage(groupMessage, pendingNotification);
 
         Notification notificationAfterSend = notificationRepository.findById(pendingNotification.getId()).get();
 
@@ -44,12 +47,14 @@ class FcmPushSenderTest extends BaseServiceTest {
     @DisplayName("DISMISSED 상태이면 푸시 알림을 보내지 않는다.")
     @Test
     void sendPushNotificationFailure() {
+        Message message = Mockito.mock(Message.class);
+        GroupMessage groupMessage = new GroupMessage(message);
         Notification dismissedNotification = fixtureGenerator.generateNotification(
                 NotificationType.DEPARTURE_REMINDER,
                 NotificationStatus.DISMISSED
         );
 
-        fcmPushSender.sendPushNotification(dismissedNotification);
+        fcmPushSender.sendGroupMessage(groupMessage, dismissedNotification);
 
         Notification notificationAfterSend = notificationRepository.findById(dismissedNotification.getId()).get();
 
