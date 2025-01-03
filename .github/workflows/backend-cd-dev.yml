@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feature/927
+          ref: develop
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
