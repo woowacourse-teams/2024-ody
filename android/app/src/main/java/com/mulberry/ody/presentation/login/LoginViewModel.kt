@@ -7,7 +7,6 @@ import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.suspendOnSuccess
 import com.mulberry.ody.domain.repository.ody.LoginRepository
-import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
@@ -25,7 +24,6 @@ class LoginViewModel
         private val analyticsHelper: AnalyticsHelper,
         private val loginRepository: LoginRepository,
         private val savedStateHandle: SavedStateHandle,
-        private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel() {
         private val _navigatedReason: MutableSharedFlow<LoginNavigatedReason> =
             MutableSharedFlow()
@@ -57,7 +55,6 @@ class LoginViewModel
                 loginRepository.login(context)
                     .suspendOnSuccess {
                         navigateToMeetings()
-                        matesEtaRepository.reserveAllEtaReservation()
                     }.onFailure { code, errorMessage ->
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                         handleError()

@@ -11,7 +11,6 @@ import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.JoinRepository
-import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.domain.validator.AddressValidator
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
@@ -37,7 +36,6 @@ class MeetingJoinViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         private val joinRepository: JoinRepository,
-        private val matesEtaRepository: MatesEtaRepository,
         private val addressRepository: AddressRepository,
         private val locationHelper: LocationHelper,
     ) : BaseViewModel(), MeetingJoinListener {
@@ -107,7 +105,6 @@ class MeetingJoinViewModel
                 startLoading()
                 joinRepository.postMates(meetingJoinInfo)
                     .suspendOnSuccess {
-                        matesEtaRepository.reserveEtaFetchingJob(it.meetingId, it.meetingDateTime)
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
                     }.onFailure { code, errorMessage ->
