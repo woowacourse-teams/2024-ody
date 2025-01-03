@@ -106,3 +106,12 @@ suspend fun <R, T> ApiResult<T>.suspendFold(
         else -> onFailure(exception)
     }
 }
+
+suspend fun <T, R> ApiResult<T>.flatMap(block: suspend (T) -> ApiResult<R>): ApiResult<R> {
+    return when (this) {
+        is ApiResult.Success -> block(this.data)
+        is ApiResult.Failure -> ApiResult.Failure(this.code, this.errorMessage)
+        is ApiResult.NetworkError -> ApiResult.NetworkError(this.exception)
+        is ApiResult.Unexpected -> ApiResult.Unexpected(this.t)
+    }
+}

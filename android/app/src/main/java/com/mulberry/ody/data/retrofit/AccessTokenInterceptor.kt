@@ -1,13 +1,14 @@
 package com.mulberry.ody.data.retrofit
 
+import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map
 import com.mulberry.ody.domain.apiresult.suspendOnSuccess
 import com.mulberry.ody.domain.model.AuthToken
-import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class AccessTokenInterceptor
     @Inject
     constructor(
-        private val tokenRepository: AuthTokenRepository,
+        private val odyDatastore: OdyDatastore,
         private val refreshTokenService: RefreshTokenService,
     ) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
@@ -47,7 +48,7 @@ class AccessTokenInterceptor
 
         private fun fetchAuthToken(): Result<AuthToken> =
             runBlocking {
-                tokenRepository.fetchAuthToken()
+                odyDatastore.getAuthToken().first()
             }
 
         private fun refreshAuthToken(): ApiResult<AuthToken> =
@@ -55,7 +56,7 @@ class AccessTokenInterceptor
                 refreshTokenService.postRefreshToken()
                     .map { it.toAuthToken() }
                     .suspendOnSuccess {
-                        tokenRepository.setAuthToken(it)
+                        odyDatastore.setAuthToken(it)
                     }
             }
     }

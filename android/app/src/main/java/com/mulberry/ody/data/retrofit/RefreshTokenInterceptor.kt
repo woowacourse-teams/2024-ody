@@ -1,7 +1,8 @@
 package com.mulberry.ody.data.retrofit
 
+import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.domain.model.AuthToken
-import com.mulberry.ody.domain.repository.ody.AuthTokenRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -10,7 +11,7 @@ import javax.inject.Inject
 class RefreshTokenInterceptor
     @Inject
     constructor(
-        private val tokenRepository: AuthTokenRepository,
+        private val odyDatastore: OdyDatastore,
     ) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val token =
@@ -26,6 +27,6 @@ class RefreshTokenInterceptor
 
         private fun fetchAuthToken(): Result<AuthToken> =
             runBlocking {
-                tokenRepository.fetchAuthToken()
+                odyDatastore.getAuthToken().first()
             }
     }
