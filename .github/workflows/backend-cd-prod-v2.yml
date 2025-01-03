@@ -2,19 +2,18 @@ name: backend-cd-prod-v2
 
 on:
   push:
-#  pull_request:
+  pull_request:
     branches:
-#      - main
-      - feature/942
-#    types:
-#      - closed
+      - main
+    types:
+      - closed
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
 
 jobs:
   build-and-push:
-#    if: github.event.pull_request.merged == true && (startsWith(github.event.pull_request.head.ref, 'release-be/') || startsWith(github.event.pull_request.head.ref, 'hotfix-be/'))
+    if: github.event.pull_request.merged == true && (startsWith(github.event.pull_request.head.ref, 'release-be/') || startsWith(github.event.pull_request.head.ref, 'hotfix-be/'))
 
     runs-on: ubuntu-latest
     env:
@@ -26,8 +25,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-#        with:
-#          ref: main
+        with:
+          ref: main
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
