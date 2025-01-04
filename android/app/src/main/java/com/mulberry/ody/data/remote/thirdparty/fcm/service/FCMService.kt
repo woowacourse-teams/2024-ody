@@ -8,7 +8,9 @@ import com.mulberry.ody.domain.model.FCMNotificationType
 import com.mulberry.ody.domain.model.FCMType
 import com.mulberry.ody.presentation.notification.FCMNotification
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -42,7 +44,7 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        runBlocking {
+        CoroutineScope(Dispatchers.Default).launch {
             odyDatastore.setFCMToken(token)
         }
     }
