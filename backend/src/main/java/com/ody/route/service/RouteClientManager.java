@@ -1,9 +1,11 @@
 package com.ody.route.service;
 
 import com.ody.common.exception.OdyServerErrorException;
+import com.ody.route.domain.ApiCall;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -13,11 +15,10 @@ public class RouteClientManager {
 
     private final List<RouteClient> routeClients;
     private final ApiCallService apiCallService;
-    private final RouteClientCircuitBreaker routeClientCircuitBreaker;
 
     public List<RouteClient> getAvailableClients() {
         List<RouteClient> availableClients = routeClients.stream()
-                .filter(client -> isAvailable(client) && isEnabled(client))
+                .filter(this::isEnabled)
                 .toList();
 
         if (availableClients.isEmpty()) {
@@ -27,8 +28,11 @@ public class RouteClientManager {
         return availableClients;
     }
 
-    private boolean isAvailable(RouteClient routeClient) {
-        return !routeClientCircuitBreaker.isBlocked(routeClient);
+    @Scheduled(cron = "0 55 23 * * *", zone = "Asia/Seoul")
+    public void initializeClientApiCalls() {
+        routeClients.stream()
+                .map(client -> new ApiCall(client.getClientType()))
+                .forEach(apiCallService::save);
     }
 
     private boolean isEnabled(RouteClient routeClient) {
