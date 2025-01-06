@@ -4,8 +4,8 @@ import android.content.Context
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.model.AuthToken
 
-interface LoginRepository {
-    suspend fun checkIfLoggedIn(): Boolean
+interface AuthRepository {
+    suspend fun isLoggedIn(): Boolean
 
     suspend fun login(context: Context): ApiResult<AuthToken>
 
