@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: feature/927
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -83,6 +83,11 @@ jobs:
 
       - name: Clean Up Legacy Image
         run: |
+          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+          export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
+          export DEV_MYSQL_PASSWORD=${{ secrets.DEV_MYSQL_PASSWORD }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
+          export TAG=${{ github.sha }}-dev
           docker compose down || true
           docker rmi $(docker images -q) -f || true
 

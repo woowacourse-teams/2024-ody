@@ -29,7 +29,7 @@ public class AccessToken implements JwtToken {
     }
 
     private void validate(String value) {
-        if (!value.startsWith(ACCESS_TOKEN_PREFIX)) {
+        if (value == null || !value.startsWith(ACCESS_TOKEN_PREFIX)) {
             throw new OdyBadRequestException("잘못된 액세스 토큰 형식입니다.");
         }
     }

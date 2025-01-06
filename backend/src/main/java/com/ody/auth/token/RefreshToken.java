@@ -22,27 +22,27 @@ public class RefreshToken implements JwtToken {
     @Column(name = "refreshToken")
     private String value;
 
-    public RefreshToken(String rawValue) {
-        validate(rawValue);
-        this.value = parseRefreshToken(rawValue);
-    }
-
-    private void validate(String value) {
-        if (!value.startsWith(REFRESH_TOKEN_PREFIX)) {
-            throw new OdyBadRequestException("잘못된 리프레시 토큰 형식입니다.");
-        }
-    }
-
-    private String parseRefreshToken(String rawValue) {
-        return rawValue.substring(REFRESH_TOKEN_PREFIX.length()).trim();
-    }
-
     public RefreshToken(AuthProperties authProperties) {
         Date validity = new Date(System.currentTimeMillis() + authProperties.getRefreshExpiration());
         this.value = Jwts.builder()
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, authProperties.getRefreshKey())
                 .compact();
+    }
+
+    public RefreshToken(String rawValue) {
+        validate(rawValue);
+        this.value = parseRefreshToken(rawValue);
+    }
+
+    private void validate(String value) {
+        if (value == null || !value.startsWith(REFRESH_TOKEN_PREFIX)) {
+            throw new OdyBadRequestException("잘못된 리프레시 토큰 형식입니다.");
+        }
+    }
+
+    private String parseRefreshToken(String rawValue) {
+        return rawValue.substring(REFRESH_TOKEN_PREFIX.length()).trim();
     }
 
     @Override
