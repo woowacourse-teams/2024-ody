@@ -6,6 +6,7 @@ import com.ody.route.domain.ClientType;
 import com.ody.route.dto.ApiCallCountResponse;
 import com.ody.route.dto.ApiCallEnabledResponse;
 import com.ody.route.repository.ApiCallRepository;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ApiCallService {
 
+    private final EntityManager entityManager;
     private final ApiCallRepository apiCallRepository;
 
     @Transactional
@@ -40,13 +42,10 @@ public class ApiCallService {
 
     @Transactional
     public void increaseCountByClientType(ClientType clientType) {
-        ApiCall apiCall = findFirstByClientTypeAndDate(clientType);
+        entityManager.flush();
+        entityManager.clear();
+        ApiCall apiCall = findTodayApiCallByClientType(clientType);
         apiCall.increaseCount();
-    }
-
-    private ApiCall findFirstByClientTypeAndDate(ClientType clientType) {
-        return apiCallRepository.findFirstByDateAndClientType(LocalDate.now(), clientType)
-                .orElseThrow(() -> new OdyServerErrorException(clientType + "의 apiCall이 존재하지 않습니다."));
     }
 
     public ApiCallEnabledResponse getApiCallEnabled(ClientType clientType) {
@@ -70,6 +69,11 @@ public class ApiCallService {
         LocalDate start = clientType.determineResetDate(end);
         Optional<ApiCall> apiCall = apiCallRepository.findFirstByDateBetweenAndClientType(start, end, clientType);
         return apiCall
+                .orElseThrow(() -> new OdyServerErrorException(clientType + "의 apiCall이 존재하지 않습니다."));
+    }
+
+    private ApiCall findTodayApiCallByClientType(ClientType clientType) {
+        return apiCallRepository.findByDateAndClientType(LocalDate.now(), clientType)
                 .orElseThrow(() -> new OdyServerErrorException(clientType + "의 apiCall이 존재하지 않습니다."));
     }
 }
