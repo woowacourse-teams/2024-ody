@@ -2,6 +2,7 @@ package com.mulberry.ody.di
 
 import com.mulberry.ody.data.remote.core.service.AuthService
 import com.mulberry.ody.data.remote.core.service.JoinService
+import com.mulberry.ody.data.remote.core.service.LoginService
 import com.mulberry.ody.data.remote.core.service.MeetingService
 import com.mulberry.ody.data.remote.core.service.NotificationService
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
@@ -30,6 +31,14 @@ object ServiceModule {
     @Singleton
     fun provideLoginService(
         @LoginRetrofit retrofit: Retrofit,
+    ): LoginService {
+        return retrofit.create(LoginService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthService(
+        @DefaultRetrofit retrofit: Retrofit,
     ): AuthService {
         return retrofit.create(AuthService::class.java)
     }

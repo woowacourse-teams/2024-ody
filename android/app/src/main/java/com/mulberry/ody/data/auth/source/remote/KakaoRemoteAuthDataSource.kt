@@ -4,6 +4,7 @@ import android.content.Context
 import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
 import com.mulberry.ody.data.remote.core.entity.login.request.LoginRequest
 import com.mulberry.ody.data.remote.core.service.AuthService
+import com.mulberry.ody.data.remote.core.service.LoginService
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.data.remote.thirdparty.login.kakao.KakaoOAuthLoginService
 import com.mulberry.ody.domain.apiresult.ApiResult
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class KakaoRemoteAuthDataSource
     @Inject
     constructor(
+        private val loginService: LoginService,
         private val authService: AuthService,
         private val refreshTokenService: RefreshTokenService,
         private val kakaoOAuthLoginService: KakaoOAuthLoginService,
@@ -25,7 +27,9 @@ class KakaoRemoteAuthDataSource
         }
 
         override suspend fun postAuthToken(): ApiResult<AuthToken> {
-            return refreshTokenService.postRefreshToken().map { it.toAuthToken() }
+            return refreshTokenService.postRefreshToken().map {
+                it.toAuthToken()
+            }
         }
 
         override suspend fun login(
@@ -37,7 +41,7 @@ class KakaoRemoteAuthDataSource
                     .map { LoginRequest(fcmToken, it.providerId, it.nickname, it.imageUrl) }
 
             return loginResult.flatMap { loginRequest ->
-                authService.postLoginWithKakao(loginRequest).map { it.toAuthToken() }
+                loginService.postLoginWithKakao(loginRequest).map { it.toAuthToken() }
             }
         }
 
