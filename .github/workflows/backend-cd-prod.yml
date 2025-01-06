@@ -9,11 +9,11 @@ on:
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
-  DOCKER_CONTAINER_NAME: ody-prod-app
 
 jobs:
   build-and-push:
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-be/')
+    if: github.event.pull_request.merged == true && (startsWith(github.event.pull_request.head.ref, 'release-be/') || startsWith(github.event.pull_request.head.ref, 'hotfix-be/'))
+
     runs-on: ubuntu-latest
     env:
       TZ: 'Asia/Seoul'
@@ -67,23 +67,16 @@ jobs:
 
       - name: Back Up Image For Rollback
         run: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest || true
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-latest || true
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-latest ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-previous || true
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-previous || true
 
       - name: Docker Image Build And Push
-        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod -f Dockerfile . --build-arg JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} --push
+        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod_v2 -f Dockerfile . --push
 
   pull-and-deploy:
     needs: build-and-push
-
-    runs-on: ${{ matrix.environment }}
-
-    strategy:
-      max-parallel: 1 # 직렬처리
-      matrix:
-        environment: [ prod-a, prod-b ]
-
+    runs-on: prod
     steps:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -91,16 +84,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Clean Up Legacy Image And Pull
+      - name: Clean Up Legacy Image
         run: |
-          docker image prune -a -f
-          docker pull --platform linux/arm64 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
+          docker compose down || true
+          docker rmi $(docker images -q) -f || true
 
-      - name: Set up Container And Run Docker Image
+      - name: Docker Compose up
         run: |
-          docker stop $DOCKER_CONTAINER_NAME || true
-          docker rm $DOCKER_CONTAINER_NAME || true          
-          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod
+          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+          export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
+          export PROD_MYSQL_PASSWORD=${{ secrets.PROD_MYSQL_PASSWORD }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
+          export TAG=${{ github.sha }}-prod_v2
+          docker compose up -d
 
       - name: Health Check with Retry
         uses: nick-invision/retry@v2
@@ -122,15 +118,22 @@ jobs:
       - name: Rollback if Health Check fails
         if: failure()
         run: |
-          docker stop $DOCKER_CONTAINER_NAME || true
-          docker rm $DOCKER_CONTAINER_NAME || true
-          docker run -d --platform linux/arm64 --name $DOCKER_CONTAINER_NAME -v /var/logs/ody-prod-logs:/ody-prod-logs -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod -e JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }} ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:previous
+          docker compose down || true
+          docker rmi $(docker images -q) -f || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-previous
+          
+          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+          export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
+          export PROD_MYSQL_PASSWORD=${{ secrets.PROD_MYSQL_PASSWORD }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
+          export TAG=prod-previous
+          docker compose up -d
 
       - name: Tag successful deployment as latest
         if: success()
         run: |
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod_v2 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-latest
 
       - name: Check Docker Process
         if: always()
