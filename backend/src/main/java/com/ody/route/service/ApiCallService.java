@@ -1,5 +1,6 @@
 package com.ody.route.service;
 
+import com.ody.common.exception.OdyServerErrorException;
 import com.ody.route.domain.ApiCall;
 import com.ody.route.domain.ClientType;
 import com.ody.route.dto.ApiCallCountResponse;
@@ -21,6 +22,11 @@ public class ApiCallService {
 
     private final ApiCallRepository apiCallRepository;
 
+    @Transactional
+    public ApiCall save(ApiCall apiCall) {
+        return apiCallRepository.save(apiCall);
+    }
+
     public ApiCallCountResponse countApiCall(ClientType clientType) {
         LocalDate end = LocalDate.now();
         LocalDate start = clientType.determineResetDate(end);
@@ -34,13 +40,13 @@ public class ApiCallService {
 
     @Transactional
     public void increaseCountByClientType(ClientType clientType) {
-        ApiCall apiCall = findOrSaveFirstByClientTypeAndDate(clientType);
+        ApiCall apiCall = findFirstByClientTypeAndDate(clientType);
         apiCall.increaseCount();
     }
 
-    private ApiCall findOrSaveFirstByClientTypeAndDate(ClientType clientType) {
+    private ApiCall findFirstByClientTypeAndDate(ClientType clientType) {
         return apiCallRepository.findFirstByDateAndClientType(LocalDate.now(), clientType)
-                .orElseGet(() -> apiCallRepository.save(new ApiCall(clientType)));
+                .orElseThrow(() -> new OdyServerErrorException(clientType + "의 apiCall이 존재하지 않습니다."));
     }
 
     public ApiCallEnabledResponse getApiCallEnabled(ClientType clientType) {
@@ -49,20 +55,21 @@ public class ApiCallService {
     }
 
     public boolean getEnabledByClientType(ClientType clientType) {
-        ApiCall apiCall = findOrSaveApiCallForToggleByClientType(clientType);
+        ApiCall apiCall = findApiCallForToggleByClientType(clientType);
         return apiCall.getEnabled();
     }
 
     @Transactional
     public void toggleApiCallEnabled(ClientType clientType) {
-        ApiCall apiCall = findOrSaveApiCallForToggleByClientType(clientType);
+        ApiCall apiCall = findApiCallForToggleByClientType(clientType);
         apiCall.updateEnabled();
     }
 
-    private ApiCall findOrSaveApiCallForToggleByClientType(ClientType clientType) {
+    private ApiCall findApiCallForToggleByClientType(ClientType clientType) {
         LocalDate end = LocalDate.now();
         LocalDate start = clientType.determineResetDate(end);
         Optional<ApiCall> apiCall = apiCallRepository.findFirstByDateBetweenAndClientType(start, end, clientType);
-        return apiCall.orElseGet(() -> apiCallRepository.save(new ApiCall(clientType)));
+        return apiCall
+                .orElseThrow(() -> new OdyServerErrorException(clientType + "의 apiCall이 존재하지 않습니다."));
     }
 }
