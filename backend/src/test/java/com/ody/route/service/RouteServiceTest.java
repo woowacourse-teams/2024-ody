@@ -10,24 +10,25 @@ import static org.mockito.Mockito.when;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
-import com.ody.route.domain.ClientType;
 import com.ody.route.domain.RouteTime;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 class RouteServiceTest extends BaseServiceTest {
 
-    @MockBean
+    private static Coordinates origin = new Coordinates("37.505419", "127.050817");
+    private static Coordinates target = new Coordinates("37.515253", "127.102895");
+
+
+    @SpyBean
     @Qualifier("odsay")
     private RouteClient odsayRouteClient;
 
-    @MockBean
+    @SpyBean
     @Qualifier("google")
     private RouteClient googleRouteClient;
 
@@ -36,18 +37,6 @@ class RouteServiceTest extends BaseServiceTest {
 
     @Autowired
     private RouteService routeService;
-
-    private Coordinates origin;
-    private Coordinates target;
-
-    @BeforeEach
-    void setUp() {
-        origin = new Coordinates("37.505419", "127.050817");
-        target = new Coordinates("37.515253", "127.102895");
-
-        when(odsayRouteClient.getClientType()).thenReturn(ClientType.ODSAY);
-        when(googleRouteClient.getClientType()).thenReturn(ClientType.GOOGLE);
-    }
 
     @DisplayName("OdsayRouteClient에 에러가 발생하지 않으면 첫 번째 외부 API를 사용해 소요시간을 반환한다.")
     @Test
@@ -62,7 +51,8 @@ class RouteServiceTest extends BaseServiceTest {
                 () -> assertThat(result).isEqualTo(expectRouteTime.getMinutes()),
                 () -> Mockito.verify(odsayRouteClient, times(1)).calculateRouteTime(origin, target),
                 () -> verify(googleRouteClient, Mockito.never()).calculateRouteTime(origin, target),
-                () -> Mockito.verify(apiCallService, times(1)).increaseCountByClientType(odsayRouteClient.getClientType()),
+                () -> Mockito.verify(apiCallService, times(1))
+                        .increaseCountByClientType(odsayRouteClient.getClientType()),
                 () -> Mockito.verify(apiCallService, Mockito.never()).increaseCountByClientType(
                         googleRouteClient.getClientType())
         );
@@ -71,9 +61,6 @@ class RouteServiceTest extends BaseServiceTest {
     @DisplayName("OdsayRouteClient에서 700m 이내라 소요시간 -1을 반환하면 10분으로 소요시간이 전환된다")
     @Test
     void calculateClosestDurationRouteTimeByOdsayRouteClient() {
-        Coordinates origin = new Coordinates("37.505419", "127.050817");
-        Coordinates target = new Coordinates("37.515253", "127.102895");
-
         Mockito.when(odsayRouteClient.calculateRouteTime(origin, target))
                 .thenReturn(new RouteTime(-1));
 
@@ -87,17 +74,16 @@ class RouteServiceTest extends BaseServiceTest {
                 () -> assertThat(result).isEqualTo(expectRouteTime),
                 () -> Mockito.verify(odsayRouteClient, Mockito.times(1)).calculateRouteTime(origin, target),
                 () -> Mockito.verify(googleRouteClient, Mockito.never()).calculateRouteTime(origin, target),
-                () -> Mockito.verify(apiCallService, Mockito.times(1)).increaseCountByClientType(odsayRouteClient.getClientType()),
-                () -> Mockito.verify(apiCallService, Mockito.never()).increaseCountByClientType(googleRouteClient.getClientType())
+                () -> Mockito.verify(apiCallService, Mockito.times(1))
+                        .increaseCountByClientType(odsayRouteClient.getClientType()),
+                () -> Mockito.verify(apiCallService, Mockito.never())
+                        .increaseCountByClientType(googleRouteClient.getClientType())
         );
     }
 
     @DisplayName("OdsayRouteClient에 에러가 발생하면 그 다음 요소인 Google API를 사용해 소요시간을 반환한다.")
     @Test
     void calculateRouteTimeByGoogleRouteClient() {
-        origin = new Coordinates("37.505419", "127.050817");
-        target = new Coordinates("37.515253", "127.102895");
-
         Mockito.when(odsayRouteClient.calculateRouteTime(origin, target))
                 .thenThrow(new OdyServerErrorException("Odsay API 에러 발생"));
 
