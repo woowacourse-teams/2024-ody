@@ -3,8 +3,9 @@ package com.ody.common;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ody.notification.config.FcmConfig;
 import com.ody.notification.service.FcmEventListener;
-import com.ody.notification.service.FcmSubscriber;
-import com.ody.route.service.RouteClientCircuitBreaker;
+import com.ody.route.domain.ApiCall;
+import com.ody.route.domain.ClientType;
+import com.ody.route.repository.ApiCallRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,9 +30,6 @@ public abstract class BaseServiceTest {
 
     @MockBean
     protected FcmEventListener fcmEventListener;
-  
-    @MockBean
-    protected RouteClientCircuitBreaker routeClientCircuitBreaker;
 
     @Autowired
     protected ApplicationEvents applicationEvents;
@@ -42,12 +40,18 @@ public abstract class BaseServiceTest {
     @Autowired
     protected FixtureGenerator fixtureGenerator;
 
+    @Autowired
+    private ApiCallRepository apiCallRepository;
+
+
     protected DtoGenerator dtoGenerator = new DtoGenerator();
 
     @BeforeEach
     void cleanUp() {
         databaseCleaner.cleanUp();
         applicationEvents.clear();
+        apiCallRepository.save(new ApiCall(ClientType.GOOGLE));
+        apiCallRepository.save(new ApiCall(ClientType.ODSAY));
     }
 }
 
