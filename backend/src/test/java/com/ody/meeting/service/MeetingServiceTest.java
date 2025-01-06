@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
@@ -21,7 +20,6 @@ import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
-import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.event.NoticeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
@@ -257,7 +255,7 @@ class MeetingServiceTest extends BaseServiceTest {
 
     @DisplayName("약속 참여시 API 호출 카운팅 Redisson 분산락 동시성 테스트")
     @Nested
-    public class RedissonDistributedLockTest {
+    class RedissonDistributedLockTest {
 
         private static final int TOTAL_REQUESTS = 100;
 
