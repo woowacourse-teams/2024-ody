@@ -3,10 +3,6 @@ package com.mulberry.ody.domain.model
 import java.lang.IllegalArgumentException
 
 sealed interface FCMType {
-    fun isEtaType(): Boolean {
-        return this == FCMNotificationType.ETA_NOTICE || this == FCMMessageType.ETA_SCHEDULING_NOTICE
-    }
-
     companion object {
         fun from(type: String): FCMType =
             when (type) {

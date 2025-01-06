@@ -4,6 +4,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.local.service.EtaDashboard
+import com.mulberry.ody.domain.model.FCMMessageType
 import com.mulberry.ody.domain.model.FCMNotificationType
 import com.mulberry.ody.domain.model.FCMType
 import com.mulberry.ody.presentation.notification.FCMNotification
@@ -38,7 +39,7 @@ class FCMService : FirebaseMessagingService() {
             fcmNotification.showNotification(fcmType, nickname, meetingId, meetingName)
         }
 
-        if (fcmType.isEtaType()) {
+        if (fcmType == FCMMessageType.ETA_SCHEDULING_NOTICE) {
             etaDashboard.open(meetingId.toLong(), meetingTime ?: return)
         }
     }
