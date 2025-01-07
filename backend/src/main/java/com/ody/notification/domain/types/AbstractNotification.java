@@ -6,26 +6,27 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public abstract class AbstractNotification {
 
-    private final Long id;
     private final Mate mate;
     private final NotificationType type;
     private final LocalDateTime sendAt;
     private final NotificationStatus status;
     private final FcmTopic fcmTopic;
 
-    public AbstractNotification(
+    protected AbstractNotification(
             Mate mate,
             NotificationType type,
             LocalDateTime sendAt,
             NotificationStatus status,
             FcmTopic fcmTopic
     ) {
-        this(null, mate, type, calculateSendAt(sendAt), status, fcmTopic);
+        this.mate = mate;
+        this.type = type;
+        this.sendAt = calculateSendAt(sendAt);
+        this.status = status;
+        this.fcmTopic = fcmTopic;
     }
 
     private static LocalDateTime calculateSendAt(LocalDateTime sendAt) {
@@ -36,6 +37,6 @@ public abstract class AbstractNotification {
     }
 
     public Notification toNotification() {
-        return new Notification(id, mate, type, sendAt, status, fcmTopic);
+        return new Notification(null, mate, type, sendAt, status, fcmTopic);
     }
 }
