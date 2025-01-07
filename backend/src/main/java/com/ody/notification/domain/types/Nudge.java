@@ -7,9 +7,12 @@ import java.time.LocalDateTime;
 
 public class Nudge extends AbstractNotification {
 
-    private static final NotificationType type = NotificationType.NUDGE;
-
     public Nudge(Mate nudgeMate) {
-        super(nudgeMate, type, LocalDateTime.now(), NotificationStatus.DONE, null);
+        super(nudgeMate, LocalDateTime.now(), NotificationStatus.DONE, null);
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.NUDGE;
     }
 }

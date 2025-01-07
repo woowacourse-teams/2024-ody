@@ -1,8 +1,6 @@
 package com.ody.notification.domain.types;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 
 import com.ody.common.Fixture;
 import com.ody.mate.domain.Mate;
@@ -33,5 +31,4 @@ class DepartureReminderTest {
 
         assertThat(actualSendTime).isEqualTo(now);
     }
-
 }

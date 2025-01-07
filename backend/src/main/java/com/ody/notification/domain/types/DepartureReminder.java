@@ -8,9 +8,12 @@ import com.ody.route.domain.DepartureTime;
 
 public class DepartureReminder extends AbstractNotification {
 
-    private static final NotificationType type = NotificationType.DEPARTURE_REMINDER;
-
     public DepartureReminder(Mate mate, DepartureTime departureTime, FcmTopic fcmTopic) {
-        super(mate, type, departureTime.getValue(), NotificationStatus.PENDING, fcmTopic);
+        super(mate, departureTime.getValue(), NotificationStatus.PENDING, fcmTopic);
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.DEPARTURE_REMINDER;
     }
 }

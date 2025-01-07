@@ -17,13 +17,12 @@ public abstract class AbstractNotification {
 
     protected AbstractNotification(
             Mate mate,
-            NotificationType type,
             LocalDateTime sendAt,
             NotificationStatus status,
             FcmTopic fcmTopic
     ) {
         this.mate = mate;
-        this.type = type;
+        this.type = getType();
         this.sendAt = calculateSendAt(sendAt);
         this.status = status;
         this.fcmTopic = fcmTopic;
@@ -35,6 +34,8 @@ public abstract class AbstractNotification {
         }
         return sendAt;
     }
+
+    abstract NotificationType getType();
 
     public Notification toNotification() {
         return new Notification(null, mate, type, sendAt, status, fcmTopic);

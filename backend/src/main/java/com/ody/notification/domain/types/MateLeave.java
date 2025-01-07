@@ -7,9 +7,12 @@ import java.time.LocalDateTime;
 
 public class MateLeave extends AbstractNotification {
 
-    private static final NotificationType type = NotificationType.LEAVE;
-
     public MateLeave(Mate mate) {
-        super(mate, type, LocalDateTime.now(), NotificationStatus.DONE, null);
+        super(mate, LocalDateTime.now(), NotificationStatus.DONE, null);
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.LEAVE;
     }
 }

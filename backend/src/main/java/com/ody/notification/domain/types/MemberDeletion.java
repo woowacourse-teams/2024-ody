@@ -7,9 +7,12 @@ import java.time.LocalDateTime;
 
 public class MemberDeletion extends AbstractNotification {
 
-    private static final NotificationType type = NotificationType.MEMBER_DELETION;
-
     public MemberDeletion(Mate mate) {
-        super(mate, type, LocalDateTime.now(), NotificationStatus.DONE, null);
+        super(mate, LocalDateTime.now(), NotificationStatus.DONE, null);
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.MEMBER_DELETION;
     }
 }

@@ -8,10 +8,13 @@ import java.time.LocalDateTime;
 
 public class Entry extends AbstractNotification {
 
-    private static final NotificationType type = NotificationType.ENTRY;
-
     public Entry(Mate mate, FcmTopic fcmTopic) {
-        super(mate, type, LocalDateTime.now(), NotificationStatus.DONE, fcmTopic);
+        super(mate, LocalDateTime.now(), NotificationStatus.DONE, fcmTopic);
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.ENTRY;
     }
 }
 
