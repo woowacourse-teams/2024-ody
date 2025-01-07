@@ -2,6 +2,7 @@ package com.ody.route.service;
 
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.route.domain.ApiCall;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +31,10 @@ public class RouteClientManager {
 
     @Scheduled(cron = "0 55 23 * * *", zone = "Asia/Seoul")
     public void initializeClientApiCalls() {
+        LocalDate nextDay = LocalDate.now().plusDays(1);
         routeClients.stream()
-                .map(client -> new ApiCall(client.getClientType()))
+                .map(client -> apiCallService.findTodayApiCallByClientType(client.getClientType()))
+                .map(apiCall -> new ApiCall(apiCall.getClientType(), 0, nextDay, apiCall.getEnabled()))
                 .forEach(apiCallService::save);
     }
 
