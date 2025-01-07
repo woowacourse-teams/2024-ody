@@ -1,7 +1,6 @@
 package com.ody.notification.domain.types;
 
 import com.ody.mate.domain.Mate;
-import com.ody.meeting.domain.Meeting;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
@@ -11,7 +10,7 @@ public class Entry extends AbstractNotification {
 
     private static final NotificationType type = NotificationType.ENTRY;
 
-    public Entry(Mate mate, Meeting meeting, FcmTopic fcmTopic) {
+    public Entry(Mate mate, FcmTopic fcmTopic) {
         super(mate, type, LocalDateTime.now(), NotificationStatus.DONE, fcmTopic);
     }
 }

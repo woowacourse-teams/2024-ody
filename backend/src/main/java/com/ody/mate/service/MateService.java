@@ -55,14 +55,14 @@ public class MateService {
         Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
 
         FcmTopic fcmTopic = new FcmTopic(meeting);
-        sendEntry(meeting, mate, fcmTopic);
+        sendEntry(mate, fcmTopic);
         notificationService.subscribeTopic(member.getDeviceToken(), fcmTopic);
         sendDepartureReminder(meeting, mate, fcmTopic);
         return MateSaveResponseV2.from(meeting);
     }
 
-    private void sendEntry(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
-        Entry entry = new Entry(mate, meeting, fcmTopic);
+    private void sendEntry(Mate mate, FcmTopic fcmTopic) {
+        Entry entry = new Entry(mate, fcmTopic);
         notificationService.saveAndSchedule(entry.toNotification());
     }
 
