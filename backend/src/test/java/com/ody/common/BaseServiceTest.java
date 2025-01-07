@@ -51,6 +51,7 @@ public abstract class BaseServiceTest {
         databaseCleaner.cleanUp();
         applicationEvents.clear();
         apiCallRepository.save(new ApiCall(ClientType.ODSAY, 0, LocalDate.now()));
-        apiCallRepository.save(new ApiCall(ClientType.GOOGLE, 0, LocalDate.now()));    }
+        apiCallRepository.save(new ApiCall(ClientType.GOOGLE, 0, LocalDate.now()));
+    }
 }
 
