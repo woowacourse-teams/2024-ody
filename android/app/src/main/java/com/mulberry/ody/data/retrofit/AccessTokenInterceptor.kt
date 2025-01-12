@@ -5,7 +5,7 @@ import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map
-import com.mulberry.ody.domain.apiresult.suspendOnSuccess
+import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.model.AuthToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -55,7 +55,7 @@ class AccessTokenInterceptor
             runBlocking(Dispatchers.IO) {
                 refreshTokenService.postRefreshToken()
                     .map { it.toAuthToken() }
-                    .suspendOnSuccess {
+                    .onSuccess {
                         odyDatastore.setAuthToken(it)
                     }
             }

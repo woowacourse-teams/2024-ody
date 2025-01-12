@@ -5,8 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
-import com.mulberry.ody.domain.apiresult.suspendOnSuccess
-import com.mulberry.ody.domain.apiresult.suspendOnUnexpected
+import com.mulberry.ody.domain.apiresult.onUnexpected
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
@@ -65,10 +64,10 @@ class MeetingJoinViewModel
             viewModelScope.launch {
                 startLoading()
                 locationHelper.getCurrentCoordinate()
-                    .suspendOnSuccess { location ->
+                    .onSuccess { location ->
                         fetchAddressesByCoordinate(location)
                     }
-                    .suspendOnUnexpected {
+                    .onUnexpected {
                         _defaultLocationError.emit(Unit)
                     }
                 stopLoading()
@@ -89,7 +88,7 @@ class MeetingJoinViewModel
             }.onFailure { code, errorMessage ->
                 handleError()
                 analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-            }.suspendOnUnexpected {
+            }.onUnexpected {
                 _defaultLocationError.emit(Unit)
             }.onNetworkError {
                 handleNetworkError()
@@ -106,7 +105,7 @@ class MeetingJoinViewModel
             viewModelScope.launch {
                 startLoading()
                 joinRepository.postMates(meetingJoinInfo)
-                    .suspendOnSuccess {
+                    .onSuccess {
                         matesEtaRepository.reserveEtaFetchingJob(it.meetingId, it.meetingDateTime)
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)

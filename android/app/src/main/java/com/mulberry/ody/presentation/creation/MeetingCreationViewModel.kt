@@ -5,8 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
-import com.mulberry.ody.domain.apiresult.suspendOnSuccess
-import com.mulberry.ody.domain.apiresult.suspendOnUnexpected
+import com.mulberry.ody.domain.apiresult.onUnexpected
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingCreationInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
@@ -116,10 +115,10 @@ class MeetingCreationViewModel
             viewModelScope.launch {
                 startLoading()
                 locationHelper.getCurrentCoordinate()
-                    .suspendOnSuccess { location ->
+                    .onSuccess { location ->
                         fetchAddressesByCoordinate(location)
                     }
-                    .suspendOnUnexpected {
+                    .onUnexpected {
                         _defaultLocationError.emit(Unit)
                     }
                 stopLoading()
@@ -140,7 +139,7 @@ class MeetingCreationViewModel
             }.onFailure { code, errorMessage ->
                 handleError()
                 analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-            }.suspendOnUnexpected {
+            }.onUnexpected {
                 _defaultLocationError.emit(Unit)
             }.onNetworkError {
                 handleNetworkError()
