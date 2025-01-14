@@ -59,4 +59,35 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
                 () -> assertThat(applicationEvents.stream(NoticeEvent.class)).hasSize(1)
         );
     }
+
+    @DisplayName("ETA 스케줄링 알림 발송 전 약속이 삭제되면 알림이 발송되지 않는다.")
+    @Test
+    void doesNotSendEtaSchedulingNoticeIfInvalidMeeting() {
+        LocalDateTime oneHourLater = TimeUtil.nowWithTrim().plusHours(1L);
+        Meeting oneHourLaterMeeting = new Meeting(
+                "우테코 등교",
+                oneHourLater.toLocalDate(),
+                oneHourLater.toLocalTime(),
+                TARGET_LOCATION,
+                InviteCodeGenerator.generate()
+        );
+        Meeting meeting = meetingRepository.save(oneHourLaterMeeting);
+
+        etaSchedulingService.scheduleEtaSchedulingNotice(meeting);
+
+        meetingRepository.delete(meeting); // 현재 meeting 삭제 기능은 없어서 검증할 필요 없긴 함
+
+        ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
+        ArgumentCaptor<Instant> timeCaptor = ArgumentCaptor.forClass(Instant.class);
+
+        Mockito.verify(taskScheduler).schedule(runnableCaptor.capture(), timeCaptor.capture());
+        Instant scheduledTime = timeCaptor.getValue();
+        runnableCaptor.getValue().run();
+
+        assertAll(
+                () -> assertThat(oneHourLater.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET))
+                        .isEqualTo(scheduledTime),
+                () -> assertThat(applicationEvents.stream(NoticeEvent.class)).isEmpty()
+        );
+    }
 }
