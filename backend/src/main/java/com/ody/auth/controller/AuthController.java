@@ -31,7 +31,7 @@ public class AuthController implements AuthControllerSwagger {
     }
 
     @Override
-    @PostMapping("/auth/apple")
+    @PostMapping("/v1/auth/apple")
     public ResponseEntity<AuthResponse> authApple(@Valid @RequestBody AppleAuthRequest authRequest) {
         AuthResponse authResponse = new AuthResponse(
                 new AccessToken("Bearer access-token=accesstokenaccesstoken"),
