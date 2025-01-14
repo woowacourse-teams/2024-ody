@@ -21,7 +21,11 @@ public record AppleAuthRequest(
         String nickname,
 
         @Schema(description = "프로필 사진 url", example = "imageurl")
-        String imageUrl
+        String imageUrl,
+
+        @Schema(description = "애플 인증 코드", example = "authorizationcodeauthorizationcode")
+        @NotNull
+        String authorizationCode
 ) {
 
     public Member toMember() {
