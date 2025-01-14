@@ -1,7 +1,6 @@
 package com.ody.member.controller;
 
 import com.ody.member.domain.Member;
-import com.ody.member.dto.request.MemberDeleteRequestV2;
 import com.ody.swagger.annotation.ErrorCode401;
 import com.ody.swagger.annotation.ErrorCode500;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,5 +28,5 @@ public interface MemberControllerSwagger {
     )
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<Void> deleteV2(@Parameter(hidden = true) Member member, MemberDeleteRequestV2 memberDeleteRequest);
+    ResponseEntity<Void> deleteV2(@Parameter(hidden = true) Member member);
 }
