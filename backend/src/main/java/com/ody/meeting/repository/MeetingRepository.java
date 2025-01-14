@@ -1,6 +1,8 @@
 package com.ody.meeting.repository;
 
 import com.ody.meeting.domain.Meeting;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +27,21 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
     @Query("select m from Meeting m where m.overdue = true and CAST(m.updatedAt AS LOCALDATE) = CURRENT_DATE")
     List<Meeting> findAllByUpdatedTodayAndOverdue();
+
+    @Query("""
+            select m
+            from Meeting m
+            where m.date > :startDate and m.date < :endDate
+            or (m.date = :startDate and m.time >= :includeStartTime)
+            or (m.date = :endDate and m.time < :excludeEndTime)
+            """
+    )
+    List<Meeting> findAllWithInDateTimeRange(
+            LocalDate startDate,
+            LocalTime includeStartTime,
+            LocalDate endDate,
+            LocalTime excludeEndTime
+    );
 
     Optional<Meeting> findByIdAndOverdueFalse(Long id);
 
