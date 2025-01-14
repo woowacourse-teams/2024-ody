@@ -1,5 +1,6 @@
 package com.ody.auth.controller;
 
+import com.ody.auth.dto.request.AppleAuthRequest;
 import com.ody.auth.dto.request.AuthRequest;
 import com.ody.auth.dto.response.AuthResponse;
 import com.ody.swagger.annotation.ErrorCode400;
@@ -20,11 +21,11 @@ import org.springframework.http.ResponseEntity;
 public interface AuthControllerSwagger {
 
     @Operation(
-            summary = "카카오 소셜 로그인",
+            summary = "카카오 로그인",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "카카오 소셜 로그인 성공",
+                            description = "카카오 로그인 성공",
                             content = @Content(schema = @Schema(implementation = AuthResponse.class))
                     )
             }
@@ -32,6 +33,20 @@ public interface AuthControllerSwagger {
     @ErrorCode400
     @ErrorCode500
     ResponseEntity<AuthResponse> authKakao(AuthRequest authRequest);
+
+    @Operation(
+            summary = "애플 로그인",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "애플 로그인 성공",
+                            content = @Content(schema = @Schema(implementation = AuthResponse.class))
+                    )
+            }
+    )
+    @ErrorCode400
+    @ErrorCode500
+    ResponseEntity<AuthResponse> authApple(AppleAuthRequest authRequest);
 
     @Operation(
             summary = "액세스 토큰 갱신",
