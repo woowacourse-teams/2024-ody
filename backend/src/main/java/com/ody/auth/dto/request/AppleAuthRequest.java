@@ -4,16 +4,17 @@ import com.ody.mate.domain.Nickname;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record AppleAuthRequest(
 
         @Schema(description = "디바이스 토큰", example = "devicetokendevicetoken")
-        @NotNull
+        @NotBlank
         String deviceToken,
 
         @Schema(description = "회원 번호", example = "12345")
-        @NotNull
+        @NotBlank
         String providerId,
 
         @Schema(description = "닉네임", example = "몽키건우")
@@ -24,7 +25,7 @@ public record AppleAuthRequest(
         String imageUrl,
 
         @Schema(description = "애플 인증 코드", example = "authorizationcodeauthorizationcode")
-        @NotNull
+        @NotBlank
         String authorizationCode
 ) {
 
