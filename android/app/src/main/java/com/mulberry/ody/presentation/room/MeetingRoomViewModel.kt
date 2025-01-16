@@ -10,8 +10,6 @@ import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
-import com.mulberry.ody.domain.apiresult.suspendOnFailure
-import com.mulberry.ody.domain.apiresult.suspendOnSuccess
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Nudge
 import com.mulberry.ody.domain.repository.image.ImageStorage
@@ -145,9 +143,9 @@ class MeetingRoomViewModel
             mateNickname: String,
         ) {
             meetingRepository.postNudge(Nudge(nudgeId, mateId))
-                .suspendOnSuccess {
+                .onSuccess {
                     _nudgeSuccessMate.emit(mateNickname)
-                }.suspendOnFailure { code, errorMessage ->
+                }.onFailure { code, errorMessage ->
                     when (code) {
                         400 -> _expiredNudgeTimeLimit.emit(Unit)
                         else -> handleError()
@@ -275,7 +273,7 @@ class MeetingRoomViewModel
 
                 startLoading()
                 meetingRepository.exitMeeting(_meeting.value.id)
-                    .suspendOnSuccess {
+                    .onSuccess {
                         matesEtaRepository.deleteEtaReservation(meetingId)
                         _exitMeetingRoomEvent.emit(Unit)
                     }.onFailure { code, errorMessage ->

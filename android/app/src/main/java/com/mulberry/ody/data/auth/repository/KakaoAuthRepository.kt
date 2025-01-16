@@ -5,7 +5,7 @@ import com.mulberry.ody.data.auth.source.local.LocalAuthDataSource
 import com.mulberry.ody.data.auth.source.remote.RemoteAuthDataSource
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.getOrNull
-import com.mulberry.ody.domain.apiresult.suspendOnSuccess
+import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.model.AuthToken
 import com.mulberry.ody.domain.repository.ody.AuthRepository
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class KakaoAuthRepository
 
         override suspend fun login(context: Context): ApiResult<AuthToken> {
             val fcmToken = localAuthDataSource.fetchFCMToken().getOrNull() ?: return ApiResult.Unexpected(Exception("FCM 토큰이 존재하지 않습니다."))
-            return remoteAuthDataSource.login(fcmToken, context).suspendOnSuccess {
+            return remoteAuthDataSource.login(fcmToken, context).onSuccess {
                 localAuthDataSource.postAuthToken(it)
             }
         }
@@ -38,7 +38,7 @@ class KakaoAuthRepository
         }
 
         override suspend fun withdrawAccount(): ApiResult<Unit> {
-            return remoteAuthDataSource.withdraw().suspendOnSuccess {
+            return remoteAuthDataSource.withdraw().onSuccess {
                 localAuthDataSource.removeAuthToken()
             }
         }
