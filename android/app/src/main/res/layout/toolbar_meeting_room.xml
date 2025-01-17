@@ -13,6 +13,10 @@
             name="backListener"
             type="com.mulberry.ody.presentation.common.listener.BackListener" />
 
+        <variable
+            name="meetingRoomListener"
+            type="com.mulberry.ody.presentation.room.listener.MeetingRoomListener" />
+
     </data>
 
     <androidx.appcompat.widget.Toolbar
@@ -66,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="14dp"
                 android:src="@drawable/ic_exit"
+                app:onSingleClick="@{() -> meetingRoomListener.onExitMeetingRoom()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/hsv_title"

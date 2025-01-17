@@ -166,6 +166,16 @@
     <string name="exit_meeting_room_title">약속을 정말 나가실 건가요?</string>
     <string name="exit_meeting_room">나가기</string>
 
+    <!-- fragment_detail_meeting.xml -->
+    <string name="detail_meeting_time">약속 시간</string>
+    <string name="detail_meeting_address">약속 장소</string>
+    <string name="detail_meeting_departure_address">출발 장소</string>
+    <string name="detail_meeting_departure_time">늦지 않으려면</string>
+    <string name="detail_meeting_departure_time_guide">출발 시간은 대중교통 지연 등을 고려한\n 여유 있게 알려드리고 있어요.</string>
+    <string name="detail_meeting_departure_time_content">%s에 나가야 해요.\n출발 장소부터 약속 장소까지 %s걸려요.</string>
+    <string name="detail_meeting_ody">오디?</string>
+    <string name="detail_meeting_log">약속 로그</string>
+
     <!-- all -->
     <string name="next_button">다음</string>
     <string name="confirm_button">확인</string>

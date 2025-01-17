@@ -33,7 +33,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:mateCount="@{vm.meeting.mates.size()}"
             app:title="@{vm.meeting.name}" />
 
         <androidx.recyclerview.widget.RecyclerView

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -19,7 +20,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:mateCount="3"
             app:title="이름" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,13 +27,208 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/rectangle_cream_downside_shadow_radius_30"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/layout_detail_meeting_info"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/tb_detail_meeting">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="13dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_mate" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_detail_meeting_info"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="28dp"
+            android:orientation="vertical"
+            android:paddingTop="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_meeting_info">
+
+            <TextView
+                android:id="@+id/tv_detail_meeting_time_title"
+                style="@style/pretendard_bold_18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_meeting_time"
+                android:textColor="@color/secondary"
+                app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_detail_meeting_time"
+                style="@style/pretendard_regular_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/tertiary"
+                app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_address_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detail_detail_meeting_departure_time_title"
+                tools:text="2024년 7월 11일 03시 00분" />
+
+            <TextView
+                android:id="@+id/tv_detail_meeting_address_title"
+                style="@style/pretendard_bold_18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="@string/detail_meeting_address"
+                android:textColor="@color/secondary"
+                app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_time" />
+
+            <TextView
+                android:id="@+id/tv_detail_meeting_address"
+                style="@style/pretendard_regular_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/tertiary"
+                app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_departure_address_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_address_title"
+                tools:text="서울특별시 강남구 테헤란로 411 (성담빌딩)" />
+
+            <TextView
+                android:id="@+id/tv_detail_meeting_departure_address_title"
+                style="@style/pretendard_bold_18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:textColor="@color/secondary"
+                app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_departure_address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_address"
+                tools:text="@string/detail_meeting_departure_address" />
+
+            <TextView
+                android:id="@+id/tv_detail_meeting_departure_address"
+                style="@style/pretendard_regular_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/tertiary"
+                app:layout_constraintBottom_toTopOf="@id/detail_detail_meeting_departure_time_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_departure_address_title"
+                tools:text="서울특별시 송파구 올림픽로 35다길 (한국루터회관)" />
+
+            <TextView
+                android:id="@+id/detail_detail_meeting_departure_time_title"
+                style="@style/pretendard_bold_18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="@string/detail_meeting_departure_time"
+                android:textColor="@color/secondary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_departure_address" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:paddingHorizontal="4dp"
+                android:src="@drawable/ic_information"
+                app:layout_constraintBottom_toBottomOf="@id/detail_detail_meeting_departure_time_title"
+                app:layout_constraintStart_toEndOf="@id/detail_detail_meeting_departure_time_title"
+                app:layout_constraintTop_toTopOf="@id/detail_detail_meeting_departure_time_title" />
+
+            <TextView
+                android:id="@+id/detail_detail_meeting_departure_time"
+                style="@style/pretendard_regular_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/tertiary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detail_detail_meeting_departure_time_title"
+                tools:text="2시 30분에 나가야 해요.\n출발 장소부터 약속 장소까지 20분 걸려요." />
+
+            <LinearLayout
+                android:id="@+id/btn_detail_meeting_ody"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:background="@drawable/rectangle_radius_15_stroke_1_purple_800"
+                android:gravity="center"
+                android:paddingHorizontal="9dp"
+                android:paddingVertical="6dp"
+                app:layout_constraintBottom_toBottomOf="@id/btn_detail_meeting"
+                app:layout_constraintEnd_toStartOf="@id/btn_detail_meeting"
+                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:paddingTop="3dp"
+                    android:src="@drawable/ic_ody"
+                    app:tint="@color/secondary" />
+
+                <TextView
+                    style="@style/pretendard_bold_16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_meeting_ody"
+                    android:textColor="@color/secondary" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_detail_meeting"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginBottom="26dp"
+                android:background="@drawable/rectangle_radius_10"
+                android:backgroundTint="@color/secondary"
+                android:src="@drawable/selector_detail_meeting_button"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/btn_detail_meeting_log"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="18dp"
+                android:background="@drawable/rectangle_radius_15_stroke_1_purple_800"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="9dp"
+                android:paddingVertical="6dp"
+                app:layout_constraintBottom_toBottomOf="@id/btn_detail_meeting"
+                app:layout_constraintStart_toEndOf="@id/btn_detail_meeting"
+                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting">
+
+                <TextView
+                    style="@style/pretendard_bold_16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_meeting_log"
+                    android:textColor="@color/secondary" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
