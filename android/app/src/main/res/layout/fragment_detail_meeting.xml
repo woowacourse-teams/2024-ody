@@ -5,6 +5,17 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="com.mulberry.ody.presentation.room.MeetingRoomViewModel" />
+
+        <variable
+            name="backListener"
+            type="com.mulberry.ody.presentation.common.listener.BackListener" />
+
+        <variable
+            name="meetingRoomListener"
+            type="com.mulberry.ody.presentation.room.listener.MeetingRoomListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,11 +27,13 @@
             layout="@layout/toolbar_meeting_room"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:backListener="@{backListener}"
             app:layout_constraintBottom_toTopOf="@id/layout_meeting_info"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="이름" />
+            app:meetingRoomListener="@{meetingRoomListener}"
+            app:title="@{vm.meeting.name}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_meeting_info"

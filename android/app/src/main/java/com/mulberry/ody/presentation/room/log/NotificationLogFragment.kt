@@ -10,13 +10,11 @@ import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
-import com.mulberry.ody.presentation.room.listener.MeetingRoomListener
 import com.mulberry.ody.presentation.room.log.adapter.MatesAdapter
 import com.mulberry.ody.presentation.room.log.adapter.NotificationLogsAdapter
 
 class NotificationLogFragment :
-    BindingFragment<FragmentNotificationLogBinding>(R.layout.fragment_notification_log),
-    MeetingRoomListener {
+    BindingFragment<FragmentNotificationLogBinding>(R.layout.fragment_notification_log) {
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
     private val notificationLogsAdapter: NotificationLogsAdapter by lazy { NotificationLogsAdapter() }
     private val matesAdapter: MatesAdapter by lazy { MatesAdapter() }
@@ -33,7 +31,7 @@ class NotificationLogFragment :
     fun initializeBinding() {
         binding.vm = viewModel
         binding.backListener = requireActivity() as MeetingRoomActivity
-        binding.meetingRoomListener = this
+        binding.meetingRoomListener = requireActivity() as MeetingRoomActivity
         binding.rvNotificationLog.adapter = notificationLogsAdapter
     }
 
@@ -57,13 +55,5 @@ class NotificationLogFragment :
                 startActivity(Intent.createChooser(intent, chooserTitle))
             }
         }
-    }
-
-    override fun onExitMeetingRoom() {
-        ExitMeetingRoomDialog().show(parentFragmentManager, EXIT_MEETING_ROOM_DIALOG_TAG)
-    }
-
-    companion object {
-        private const val EXIT_MEETING_ROOM_DIALOG_TAG = "exitMeetingRoomDialog"
     }
 }
