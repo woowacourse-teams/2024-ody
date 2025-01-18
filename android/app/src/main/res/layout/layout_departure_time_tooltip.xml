@@ -10,7 +10,7 @@
         style="@style/pretendard_regular_12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rectangle_tooltip_left"
+        android:background="@drawable/rectangle_radius_20_without_bottom_left"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
         android:text="@string/detail_meeting_departure_time_guide"
