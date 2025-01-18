@@ -16,6 +16,11 @@
         <variable
             name="meetingRoomListener"
             type="com.mulberry.ody.presentation.room.listener.MeetingRoomListener" />
+
+        <variable
+            name="departureTimeGuideListener"
+            type="com.mulberry.ody.presentation.room.detail.listener.DepartureTimeGuideListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,8 +69,8 @@
             android:id="@+id/layout_detail_meeting_info"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="28dp"
             android:orientation="vertical"
+            android:paddingHorizontal="28dp"
             android:paddingTop="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -92,7 +97,7 @@
                 android:textColor="@color/tertiary"
                 app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_address_title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/detail_detail_meeting_departure_time_title"
+                app:layout_constraintTop_toBottomOf="@id/detail_meeting_departure_time_title"
                 tools:text="2024년 7월 11일 03시 00분" />
 
             <TextView
@@ -138,13 +143,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/tertiary"
-                app:layout_constraintBottom_toTopOf="@id/detail_detail_meeting_departure_time_title"
+                app:layout_constraintBottom_toTopOf="@id/detail_meeting_departure_time_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_departure_address_title"
                 tools:text="서울특별시 송파구 올림픽로 35다길 (한국루터회관)" />
 
             <TextView
-                android:id="@+id/detail_detail_meeting_departure_time_title"
+                android:id="@+id/detail_meeting_departure_time_title"
                 style="@style/pretendard_bold_18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -155,14 +160,16 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_departure_address" />
 
             <ImageView
+                android:id="@+id/iv_detail_departure_time_guide"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:paddingHorizontal="4dp"
+                android:padding="4dp"
                 android:src="@drawable/ic_information"
-                app:layout_constraintBottom_toBottomOf="@id/detail_detail_meeting_departure_time_title"
-                app:layout_constraintStart_toEndOf="@id/detail_detail_meeting_departure_time_title"
-                app:layout_constraintTop_toTopOf="@id/detail_detail_meeting_departure_time_title" />
+                app:layout_constraintBottom_toBottomOf="@id/detail_meeting_departure_time_title"
+                app:layout_constraintStart_toEndOf="@id/detail_meeting_departure_time_title"
+                app:layout_constraintTop_toTopOf="@id/detail_meeting_departure_time_title"
+                app:onClickDepartureTimeGuide="@{departureTimeGuideListener}" />
 
             <TextView
                 android:id="@+id/detail_detail_meeting_departure_time"
@@ -172,7 +179,7 @@
                 android:layout_marginTop="6dp"
                 android:textColor="@color/tertiary"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/detail_detail_meeting_departure_time_title"
+                app:layout_constraintTop_toBottomOf="@id/detail_meeting_departure_time_title"
                 tools:text="2시 30분에 나가야 해요.\n출발 장소부터 약속 장소까지 20분 걸려요." />
 
             <LinearLayout
