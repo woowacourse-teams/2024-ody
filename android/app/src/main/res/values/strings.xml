@@ -120,7 +120,6 @@
     <string name="request_background_permission_dialog_no">아니오</string>
 
     <!-- fragment_notification_log -->
-    <string name="notification_log_mate_count">%d명</string>
     <string name="invite_code_copy_title">초대 코드 공유하기</string>
     <string name="invite_code_copy">%s 약속에 초대했어요. 오디 앱에서 함께해 보세요.\n초대 코드: %s</string>
 
