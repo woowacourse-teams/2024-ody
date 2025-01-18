@@ -12,6 +12,7 @@ import com.mulberry.ody.databinding.ActivityMeetingRoomBinding
 import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.listener.BackListener
+import com.mulberry.ody.presentation.room.detail.DetailMeetingFragment
 import com.mulberry.ody.presentation.room.etadashboard.EtaDashboardFragment
 import com.mulberry.ody.presentation.room.log.NotificationLogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +31,7 @@ class MeetingRoomActivity :
 
     private val fragments: Map<String, Fragment> by lazy {
         mapOf(
+            NAVIGATE_TO_DETAIL_MEETING to DetailMeetingFragment(),
             NAVIGATE_TO_ETA_DASHBOARD to EtaDashboardFragment(),
             NAVIGATE_TO_NOTIFICATION_LOG to NotificationLogFragment(),
         )
@@ -102,14 +104,15 @@ class MeetingRoomActivity :
 
     private fun getMeetingId(): Long = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
 
-    private fun getNavigateView(): String = intent.getStringExtra(NAVIGATE_VIEW_KEY) ?: NAVIGATE_TO_NOTIFICATION_LOG
+    private fun getNavigateView(): String = intent.getStringExtra(NAVIGATE_VIEW_KEY) ?: NAVIGATE_TO_DETAIL_MEETING
 
     companion object {
         private const val MEETING_ID_KEY = "meeting_id"
         private const val MEETING_ID_DEFAULT_VALUE = -1L
         private const val NAVIGATE_VIEW_KEY = "navigate_view"
+        const val NAVIGATE_TO_DETAIL_MEETING = "detail_meeting"
         const val NAVIGATE_TO_ETA_DASHBOARD = "eta_dashboard"
-        const val NAVIGATE_TO_NOTIFICATION_LOG = "notification_log"
+        private const val NAVIGATE_TO_NOTIFICATION_LOG = "notification_log"
 
         fun getIntent(
             context: Context,

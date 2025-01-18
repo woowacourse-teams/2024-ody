@@ -18,6 +18,7 @@ import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.listener.NextListener
 import com.mulberry.ody.presentation.join.complete.JoinCompleteActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
+import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -90,7 +91,7 @@ class MeetingJoinActivity :
             MeetingRoomActivity.getIntent(
                 this,
                 meetingId,
-                MeetingRoomActivity.NAVIGATE_TO_NOTIFICATION_LOG,
+                NAVIGATE_TO_DETAIL_MEETING,
             )
         startActivity(intent)
         finish()

@@ -12,8 +12,8 @@ import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.domain.model.NotificationType
 import com.mulberry.ody.presentation.meetings.MeetingsActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
+import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
-import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_NOTIFICATION_LOG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -93,7 +93,7 @@ class FCMNotification
         ): PendingIntent? {
             val navigationTarget =
                 when (type) {
-                    NotificationType.ENTRY, NotificationType.DEPARTURE_REMINDER -> NAVIGATE_TO_NOTIFICATION_LOG
+                    NotificationType.ENTRY, NotificationType.DEPARTURE_REMINDER -> NAVIGATE_TO_DETAIL_MEETING
                     NotificationType.NUDGE, NotificationType.ETA_NOTICE -> NAVIGATE_TO_ETA_DASHBOARD
                     NotificationType.DEFAULT -> ""
                 }
