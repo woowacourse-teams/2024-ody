@@ -153,14 +153,14 @@ class MeetingServiceTest extends BaseServiceTest {
 
     @DisplayName("약속과 참여자들 정보를 조회한다.")
     @Test
-    void findMeetingWithMatesSuccess() {
+    void findMeetingWithMatesV1Success() {
         Member member1 = fixtureGenerator.generateMember();
         Member member2 = fixtureGenerator.generateMember();
         Meeting meeting = fixtureGenerator.generateMeeting();
         Mate mate1 = fixtureGenerator.generateMate(meeting, member1);
         Mate mate2 = fixtureGenerator.generateMate(meeting, member2);
 
-        MeetingWithMatesResponseV1 response = meetingService.findMeetingWithMates(member1, meeting.getId());
+        MeetingWithMatesResponseV1 response = meetingService.findMeetingWithMatesV1(member1, meeting.getId());
 
         List<String> mateNicknames = response.mates().stream()
                 .map(MateResponse::nickname)
@@ -177,10 +177,10 @@ class MeetingServiceTest extends BaseServiceTest {
 
     @DisplayName("약속 조회 시, 약속이 존재하지 않으면 예외가 발생한다.")
     @Test
-    void findMeetingWithMatesException() {
+    void findMeetingWithMatesV1Exception() {
         Member member = fixtureGenerator.generateMember();
 
-        assertThatThrownBy(() -> meetingService.findMeetingWithMates(member, 1L))
+        assertThatThrownBy(() -> meetingService.findMeetingWithMatesV1(member, 1L))
                 .isInstanceOf(OdyNotFoundException.class);
     }
 

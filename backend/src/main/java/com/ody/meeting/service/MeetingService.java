@@ -98,7 +98,7 @@ public class MeetingService {
         return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
     }
 
-    public MeetingWithMatesResponseV1 findMeetingWithMates(Member member, Long meetingId) {
+    public MeetingWithMatesResponseV1 findMeetingWithMatesV1(Member member, Long meetingId) {
         Meeting meeting = findByIdAndOverdueFalse(meetingId);
         List<Mate> mates = mateService.findAllByMeetingIdIfMate(member, meeting.getId());
         return MeetingWithMatesResponseV1.of(meeting, mates);
