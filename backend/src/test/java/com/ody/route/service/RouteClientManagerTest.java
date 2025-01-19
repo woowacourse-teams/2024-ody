@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 class RouteClientManagerTest extends BaseServiceTest {
 
     @Autowired
-    private RouteClientManager routeclientManager;
+    private RouteClientManager routeClientManager;
 
     @Autowired
     private ApiCallRepository apiCallRepository;
@@ -38,7 +38,7 @@ class RouteClientManagerTest extends BaseServiceTest {
         apiCallRepository.save(odsayApiCall);
         apiCallRepository.save(googleApiCall);
 
-        routeclientManager.initializeClientApiCalls();
+        routeClientManager.initializeClientApiCalls();
         Optional<ApiCall> nextDayOdsay = apiCallRepository.findFirstByDateBetweenAndClientType(tommorow, tommorow, ClientType.ODSAY);
         Optional<ApiCall> nextDayGoogle = apiCallRepository.findFirstByDateBetweenAndClientType(tommorow, tommorow, ClientType.GOOGLE);
 
