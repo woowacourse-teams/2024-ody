@@ -193,7 +193,9 @@
                 android:paddingVertical="6dp"
                 app:layout_constraintBottom_toBottomOf="@id/btn_detail_meeting"
                 app:layout_constraintEnd_toStartOf="@id/btn_detail_meeting"
-                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting">
+                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting"
+                app:visibility="@{vm.isVisibleNavigation}"
+                tools:visibility="visible">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -219,10 +221,20 @@
                 android:layout_marginBottom="26dp"
                 android:background="@drawable/rectangle_radius_10"
                 android:backgroundTint="@color/secondary"
-                android:src="@drawable/selector_detail_meeting_button"
+                android:onClick="@{()->vm.handleNavigationVisibility()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:selected="@{vm.isVisibleNavigation}"
+                android:src="@drawable/selector_detail_meeting_button"
+                app:layout_constraintBottom_toBottomOf="@id/btn_detail_meeting"
+                app:layout_constraintEnd_toEndOf="@id/btn_detail_meeting"
+                app:layout_constraintStart_toStartOf="@id/btn_detail_meeting"
+                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting" />
 
             <LinearLayout
                 android:id="@+id/btn_detail_meeting_log"
@@ -237,7 +249,9 @@
                 android:paddingVertical="6dp"
                 app:layout_constraintBottom_toBottomOf="@id/btn_detail_meeting"
                 app:layout_constraintStart_toEndOf="@id/btn_detail_meeting"
-                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting">
+                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting"
+                app:visibility="@{vm.isVisibleNavigation}"
+                tools:visibility="visible">
 
                 <TextView
                     style="@style/pretendard_bold_16"

@@ -104,6 +104,9 @@ class MeetingRoomViewModel
 
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
+        private val _isVisibleNavigation: MutableStateFlow<Boolean>  = MutableStateFlow(false)
+        val isVisibleNavigation: StateFlow<Boolean> get() = _isVisibleNavigation
+
         init {
             fetchMeeting()
         }
@@ -287,6 +290,10 @@ class MeetingRoomViewModel
                 stopLoading()
             }
         }
+
+    fun handleNavigationVisibility() {
+        _isVisibleNavigation.value = !_isVisibleNavigation.value
+    }
 
         @AssistedFactory
         interface MeetingViewModelFactory {
