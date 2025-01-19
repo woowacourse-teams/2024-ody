@@ -28,7 +28,7 @@ public record MeetingWithMatesResponseV2(
         LocalTime time,
 
         @Schema(description = "출발 시간", type = "string", example = "11:00")
-        LocalDateTime departureTime,
+        LocalTime departureTime,
 
         @Schema(description = "소요 시간 (분)", type = "string", example = "60")
         long routeTime,
@@ -63,7 +63,7 @@ public record MeetingWithMatesResponseV2(
                 meeting.getName(),
                 meeting.getDate(),
                 TimeUtil.trimSecondsAndNanos(meeting.getTime()),
-                departureTime.getValue(),
+                departureTime.getValue().toLocalTime(),
                 routeTime.getMinutes(),
                 meeting.getTargetAddress(),
                 meeting.getTargetLatitude(),

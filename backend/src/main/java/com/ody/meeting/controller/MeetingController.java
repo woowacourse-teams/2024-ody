@@ -50,8 +50,8 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @PathVariable Long meetingId
     ) {
-        MeetingWithMatesResponseV1 meetingWithMatesResponse = meetingService.findMeetingWithMatesV1(member, meetingId);
-        return ResponseEntity.ok(meetingWithMatesResponse);
+        MeetingWithMatesResponseV1 meetingWithMatesResponseV1 = meetingService.findMeetingWithMatesV1(member, meetingId);
+        return ResponseEntity.ok(meetingWithMatesResponseV1);
     }
 
     @GetMapping("/v2/meetings/{meetingId}")
@@ -59,8 +59,8 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @PathVariable Long meetingId
     ) {
-        MeetingWithMatesResponseV1 meetingWithMatesResponse = meetingService.findMeetingWithMatesV1(member, meetingId);
-        return ResponseEntity.ok(null); //TODO 정상 응답으로 대체
+        MeetingWithMatesResponseV2 meetingWithMatesResponseV2 = meetingService.findMeetingWithMatesV2(member, meetingId);
+        return ResponseEntity.ok(meetingWithMatesResponseV2);
     }
 
     @Override
