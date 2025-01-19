@@ -84,8 +84,8 @@ class MeetingRoomViewModel
         private val _notificationLogs = MutableStateFlow<List<NotificationLogUiModel>>(listOf())
         val notificationLogs: StateFlow<List<NotificationLogUiModel>> = _notificationLogs.asStateFlow()
 
-        private val _navigateToEtaDashboardEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val navigateToEtaDashboardEvent: SharedFlow<Unit> get() = _navigateToEtaDashboardEvent.asSharedFlow()
+        private val _navigationEvent: MutableSharedFlow<MeetingRoomNavigateAction> = MutableSharedFlow()
+        val navigationEvent: SharedFlow<MeetingRoomNavigateAction> get() = _navigationEvent.asSharedFlow()
 
         private val _nudgeSuccessMate: MutableSharedFlow<String> = MutableSharedFlow()
         val nudgeSuccessMate: SharedFlow<String> get() = _nudgeSuccessMate.asSharedFlow()
@@ -201,12 +201,22 @@ class MeetingRoomViewModel
         fun navigateToEtaDashboard() {
             viewModelScope.launch {
                 analyticsHelper.logButtonClicked(
-                    eventName = "eta_button_from_notification_log",
+                    eventName = "navigate_to_eta_dashboard",
                     location = TAG,
                 )
-                _navigateToEtaDashboardEvent.emit(Unit)
+                _navigationEvent.emit(MeetingRoomNavigateAction.NavigateToEtaDashboard)
             }
         }
+
+        fun navigateToNotificationLog() {
+            viewModelScope.launch {
+                analyticsHelper.logButtonClicked(
+                    eventName = "navigate_to_notification_log",
+                    location = TAG,
+                )
+                _navigationEvent.emit(MeetingRoomNavigateAction.NavigateToNotificationLog)
+            }
+    }
 
         fun shareEtaDashboard(
             title: String,

@@ -59,8 +59,13 @@ class MeetingRoomActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        collectWhenStarted(viewModel.navigateToEtaDashboardEvent) {
-            addFragment(EtaDashboardFragment())
+        collectWhenStarted(viewModel.navigationEvent) {
+            val fragment =
+                when (it) {
+                    MeetingRoomNavigateAction.NavigateToEtaDashboard -> fragments[NAVIGATE_TO_ETA_DASHBOARD]
+                    MeetingRoomNavigateAction.NavigateToNotificationLog -> fragments[NAVIGATE_TO_NOTIFICATION_LOG]
+                } ?: return@collectWhenStarted
+            addFragment(fragment)
         }
         collectWhenStarted(viewModel.networkErrorEvent) {
             showRetrySnackBar { viewModel.retryLastAction() }

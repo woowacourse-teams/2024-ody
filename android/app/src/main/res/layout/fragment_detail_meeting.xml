@@ -25,7 +25,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/primary">
 
         <include
             android:id="@+id/tb_detail_meeting"
@@ -194,6 +195,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/btn_detail_meeting"
                 app:layout_constraintEnd_toStartOf="@id/btn_detail_meeting"
                 app:layout_constraintTop_toTopOf="@id/btn_detail_meeting"
+                app:onSingleClick="@{() -> vm.navigateToEtaDashboard()}"
                 app:visibility="@{vm.isVisibleNavigation}"
                 tools:visibility="visible">
 
@@ -250,6 +252,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/btn_detail_meeting"
                 app:layout_constraintStart_toEndOf="@id/btn_detail_meeting"
                 app:layout_constraintTop_toTopOf="@id/btn_detail_meeting"
+                app:onSingleClick="@{() -> vm.navigateToNotificationLog()}"
                 app:visibility="@{vm.isVisibleNavigation}"
                 tools:visibility="visible">
 
