@@ -33,7 +33,7 @@ public class RouteClientManager {
     public void initializeClientApiCalls() {
         LocalDate nextDay = LocalDate.now().plusDays(1);
         routeClients.stream()
-                .map(client -> apiCallService.findTodayApiCallByClientType(client.getClientType()))
+                .map(client -> apiCallService.findOrSaveTodayApiCallByClientType(client.getClientType()))
                 .map(apiCall -> new ApiCall(apiCall.getClientType(), 0, nextDay, apiCall.getEnabled()))
                 .forEach(apiCallService::save);
     }

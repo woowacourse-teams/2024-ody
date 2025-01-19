@@ -31,7 +31,6 @@ class RouteClientManagerTest extends BaseServiceTest {
     @Test
     void initializeClientApiCalls() {
         LocalDate now = LocalDate.now();
-        System.out.println(now);
         LocalDate tommorow = now.plusDays(1);
         ApiCall odsayApiCall = new ApiCall(ClientType.ODSAY, 1, now, true);
         ApiCall googleApiCall = new ApiCall(ClientType.GOOGLE, 1, now, false);

@@ -40,7 +40,7 @@ public class ApiCallService {
 
     @Transactional
     public void increaseCountByClientType(ClientType clientType) {
-        ApiCall apiCall = findTodayApiCallByClientType(clientType);
+        ApiCall apiCall = findOrSaveTodayApiCallByClientType(clientType);
         apiCall.increaseCount();
     }
 
@@ -50,13 +50,17 @@ public class ApiCallService {
     }
 
     public boolean getEnabledByClientType(ClientType clientType) {
-        ApiCall apiCall = findTodayApiCallByClientType(clientType);
+        ApiCall apiCall = findOrSaveTodayApiCallByClientType(clientType);
         return apiCall.getEnabled();
     }
 
-    public ApiCall findTodayApiCallByClientType(ClientType clientType) {
-        return apiCallRepository.findByDateAndClientType(LocalDate.now(), clientType)
-                .orElseThrow(() -> new OdyServerErrorException(clientType + "의 apiCall이 존재하지 않습니다."));
+    public ApiCall findOrSaveTodayApiCallByClientType(ClientType clientType) {
+        LocalDate now = LocalDate.now();
+        return apiCallRepository.findByDateAndClientType(now, clientType)
+                .orElseGet(() -> {
+                    log.error("date : {}, clientType : {} apiCall을 찾을 수 없습니다.", now, clientType);
+                    return save(new ApiCall(clientType, 0, now));
+                });
     }
 
     @Transactional
