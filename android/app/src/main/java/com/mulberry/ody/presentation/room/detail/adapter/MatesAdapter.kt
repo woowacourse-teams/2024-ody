@@ -6,11 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.mulberry.ody.databinding.ItemInviteCodeCopyBinding
 import com.mulberry.ody.databinding.ItemMateBinding
+import com.mulberry.ody.presentation.room.detail.listener.InviteCodeCopyListener
 import com.mulberry.ody.presentation.room.detail.model.MateUiModel
 import com.mulberry.ody.presentation.room.detail.model.MatesUiModel
 import java.lang.IllegalStateException
 
-class MatesAdapter :
+class MatesAdapter(
+    private val inviteCodeCopyListener: InviteCodeCopyListener,
+) :
     ListAdapter<MatesUiModel, MatesViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -39,7 +42,7 @@ class MatesAdapter :
     ) {
         when (holder) {
             is MateViewHolder -> holder.bind(getItem(position) as MateUiModel)
-            is InviteCodeCopyViewHolder -> holder.bind()
+            is InviteCodeCopyViewHolder -> holder.bind(inviteCodeCopyListener)
         }
     }
 

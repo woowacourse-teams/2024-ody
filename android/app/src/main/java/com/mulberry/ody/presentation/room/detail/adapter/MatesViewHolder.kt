@@ -4,6 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.mulberry.ody.databinding.ItemInviteCodeCopyBinding
 import com.mulberry.ody.databinding.ItemMateBinding
+import com.mulberry.ody.presentation.room.detail.listener.InviteCodeCopyListener
 import com.mulberry.ody.presentation.room.detail.model.MateUiModel
 
 sealed class MatesViewHolder(view: View) : RecyclerView.ViewHolder(view)
@@ -15,9 +16,11 @@ class MateViewHolder(private val binding: ItemMateBinding) :
     }
 }
 
-class InviteCodeCopyViewHolder(private val binding: ItemInviteCodeCopyBinding) :
+class InviteCodeCopyViewHolder(
+    private val binding: ItemInviteCodeCopyBinding,
+) :
     MatesViewHolder(binding.root) {
-    fun bind() {
-
+    fun bind(inviteCodeCopyListener: InviteCodeCopyListener) {
+        binding.inviteCodeCopyListener = inviteCodeCopyListener
     }
 }

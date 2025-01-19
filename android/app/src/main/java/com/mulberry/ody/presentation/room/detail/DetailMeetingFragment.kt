@@ -2,17 +2,15 @@ package com.mulberry.ody.presentation.room.detail
 
 import android.app.Activity
 import android.content.Context.LAYOUT_INFLATER_SERVICE
+import android.content.Intent
 import android.graphics.Point
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentDetailMeetingBinding
 import com.mulberry.ody.databinding.LayoutDepartureTimeTooltipBinding
@@ -23,15 +21,17 @@ import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.room.detail.adapter.MatesAdapter
 import com.mulberry.ody.presentation.room.detail.listener.DepartureTimeGuideListener
+import com.mulberry.ody.presentation.room.detail.listener.InviteCodeCopyListener
 import com.mulberry.ody.presentation.room.detail.model.InviteCodeCopyUiModel
 import com.mulberry.ody.presentation.room.detail.model.MatesUiModel
 
 class DetailMeetingFragment :
     BindingFragment<FragmentDetailMeetingBinding>(R.layout.fragment_detail_meeting),
-    DepartureTimeGuideListener {
+    DepartureTimeGuideListener,
+    InviteCodeCopyListener {
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
     private val parentActivity: Activity by lazy { requireActivity() }
-    private val matesAdapter: MatesAdapter by lazy { MatesAdapter() }
+    private val matesAdapter: MatesAdapter by lazy { MatesAdapter(this) }
 
     override fun onViewCreated(
         view: View,
@@ -54,6 +54,19 @@ class DetailMeetingFragment :
         collectWhenStarted(viewModel.mates) {
             val mates: List<MatesUiModel> = it + listOf(InviteCodeCopyUiModel())
             matesAdapter.submitList(mates)
+        }
+        collectWhenStarted(viewModel.copyInviteCodeEvent) {
+            viewModel.copyInviteCodeEvent.collect {
+                val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
+                intent.type = "text/plain"
+
+                val shareMessage =
+                    getString(R.string.invite_code_copy, it.meetingName, it.inviteCode)
+                intent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+
+                val chooserTitle = getString(R.string.invite_code_copy_title)
+                startActivity(Intent.createChooser(intent, chooserTitle))
+            }
         }
     }
 
@@ -101,6 +114,10 @@ class DetailMeetingFragment :
             point.x,
             point.y,
         )
+    }
+
+    override fun onCopy() {
+        viewModel.copyInviteCode()
     }
 
     companion object {
