@@ -5,7 +5,7 @@ import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
-import com.ody.meeting.dto.response.MeetingWithMatesResponse;
+import com.ody.meeting.dto.response.MeetingWithMatesResponseV1;
 import com.ody.member.domain.Member;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.swagger.annotation.ErrorCode400;
@@ -52,14 +52,14 @@ public interface MeetingControllerSwagger {
                     @ApiResponse(
                             responseCode = "200",
                             description = "약속 단건 조회 성공",
-                            content = @Content(schema = @Schema(implementation = MeetingWithMatesResponse.class))
+                            content = @Content(schema = @Schema(implementation = MeetingWithMatesResponseV1.class))
                     )
             }
     )
     @ErrorCode401
     @ErrorCode404(description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우")
     @ErrorCode500
-    ResponseEntity<MeetingWithMatesResponse> findMeetingWithMatesV1(
+    ResponseEntity<MeetingWithMatesResponseV1> findMeetingWithMatesV1(
             @Parameter(hidden = true) Member member,
             Long meetingId
     );

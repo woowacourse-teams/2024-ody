@@ -7,7 +7,7 @@ import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
-import com.ody.meeting.dto.response.MeetingWithMatesResponse;
+import com.ody.meeting.dto.response.MeetingWithMatesResponseV1;
 import com.ody.meeting.service.MeetingService;
 import com.ody.member.domain.Member;
 import com.ody.notification.dto.response.NotiLogFindResponses;
@@ -45,14 +45,22 @@ public class MeetingController implements MeetingControllerSwagger {
     }
 
     @GetMapping("/v1/meetings/{meetingId}")
-    public ResponseEntity<MeetingWithMatesResponse> findMeetingWithMatesV1(
+    public ResponseEntity<MeetingWithMatesResponseV1> findMeetingWithMatesV1(
             @AuthMember Member member,
             @PathVariable Long meetingId
     ) {
-        MeetingWithMatesResponse meetingWithMatesResponse = meetingService.findMeetingWithMates(member, meetingId);
+        MeetingWithMatesResponseV1 meetingWithMatesResponse = meetingService.findMeetingWithMates(member, meetingId);
         return ResponseEntity.ok(meetingWithMatesResponse);
     }
 
+    @GetMapping("/v2/meetings/{meetingId}")
+    public ResponseEntity<MeetingWithMatesResponseV1> findMeetingWithMatesV2(
+            @AuthMember Member member,
+            @PathVariable Long meetingId
+    ) {
+        MeetingWithMatesResponseV1 meetingWithMatesResponse = meetingService.findMeetingWithMates(member, meetingId);
+        return ResponseEntity.ok(meetingWithMatesResponse);
+    }
 
     @Override
     @GetMapping("/v1/meetings/me")

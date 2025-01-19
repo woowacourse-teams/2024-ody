@@ -16,12 +16,11 @@ import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
-import com.ody.meeting.dto.response.MeetingWithMatesResponse;
+import com.ody.meeting.dto.response.MeetingWithMatesResponseV1;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
-import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.event.NoticeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
@@ -161,7 +160,7 @@ class MeetingServiceTest extends BaseServiceTest {
         Mate mate1 = fixtureGenerator.generateMate(meeting, member1);
         Mate mate2 = fixtureGenerator.generateMate(meeting, member2);
 
-        MeetingWithMatesResponse response = meetingService.findMeetingWithMates(member1, meeting.getId());
+        MeetingWithMatesResponseV1 response = meetingService.findMeetingWithMates(member1, meeting.getId());
 
         List<String> mateNicknames = response.mates().stream()
                 .map(MateResponse::nickname)

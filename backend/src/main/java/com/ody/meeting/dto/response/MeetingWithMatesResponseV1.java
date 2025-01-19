@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public record MeetingWithMatesResponse(
+public record MeetingWithMatesResponseV1(
 
         @Schema(description = "약속 ID", example = "1")
         Long id,
@@ -43,8 +43,8 @@ public record MeetingWithMatesResponse(
         String inviteCode
 ) {
 
-    public static MeetingWithMatesResponse of(Meeting meeting, List<Mate> mates) {
-        return new MeetingWithMatesResponse(
+    public static MeetingWithMatesResponseV1 of(Meeting meeting, List<Mate> mates) {
+        return new MeetingWithMatesResponseV1(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
