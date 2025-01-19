@@ -52,6 +52,7 @@
             app:layout_constraintTop_toTopOf="@id/tb_detail_meeting">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_detail_meeting_mates"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="14dp"

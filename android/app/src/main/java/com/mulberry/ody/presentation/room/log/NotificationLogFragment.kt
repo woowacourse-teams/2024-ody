@@ -10,14 +10,12 @@ import com.mulberry.ody.presentation.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomViewModel
-import com.mulberry.ody.presentation.room.log.adapter.MatesAdapter
 import com.mulberry.ody.presentation.room.log.adapter.NotificationLogsAdapter
 
 class NotificationLogFragment :
     BindingFragment<FragmentNotificationLogBinding>(R.layout.fragment_notification_log) {
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
     private val notificationLogsAdapter: NotificationLogsAdapter by lazy { NotificationLogsAdapter() }
-    private val matesAdapter: MatesAdapter by lazy { MatesAdapter() }
 
     override fun onViewCreated(
         view: View,
@@ -38,9 +36,6 @@ class NotificationLogFragment :
     private fun initializeObserve() {
         collectWhenStarted(viewModel.notificationLogs) {
             notificationLogsAdapter.submitList(it)
-        }
-        collectWhenStarted(viewModel.mates) {
-            matesAdapter.submitList(it)
         }
         collectWhenStarted(viewModel.copyInviteCodeEvent) {
             viewModel.copyInviteCodeEvent.collect {

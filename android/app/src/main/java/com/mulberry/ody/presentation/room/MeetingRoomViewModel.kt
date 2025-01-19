@@ -25,12 +25,12 @@ import com.mulberry.ody.presentation.common.image.ImageShareHelper
 import com.mulberry.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.mulberry.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.room.etadashboard.model.toMateEtaUiModels
-import com.mulberry.ody.presentation.room.log.model.InviteCodeCopyInfo
-import com.mulberry.ody.presentation.room.log.model.MateUiModel
-import com.mulberry.ody.presentation.room.log.model.MeetingDetailUiModel
+import com.mulberry.ody.presentation.room.detail.model.InviteCodeCopyInfo
+import com.mulberry.ody.presentation.room.detail.model.MateUiModel
+import com.mulberry.ody.presentation.room.detail.model.MeetingDetailUiModel
 import com.mulberry.ody.presentation.room.log.model.NotificationLogUiModel
-import com.mulberry.ody.presentation.room.log.model.toMateUiModels
-import com.mulberry.ody.presentation.room.log.model.toMeetingUiModel
+import com.mulberry.ody.presentation.room.detail.model.toMateUiModels
+import com.mulberry.ody.presentation.room.detail.model.toMeetingUiModel
 import com.mulberry.ody.presentation.room.log.model.toNotificationUiModels
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory

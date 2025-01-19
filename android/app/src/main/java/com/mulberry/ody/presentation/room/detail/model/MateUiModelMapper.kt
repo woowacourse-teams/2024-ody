@@ -1,4 +1,4 @@
-package com.mulberry.ody.presentation.room.log.model
+package com.mulberry.ody.presentation.room.detail.model
 
 import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.Meeting

@@ -1,4 +1,4 @@
-package com.mulberry.ody.presentation.room.log.model
+package com.mulberry.ody.presentation.room.detail.model
 
 data class MeetingDetailUiModel(
     val id: Long,
