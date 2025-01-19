@@ -104,7 +104,7 @@ class MeetingRoomViewModel
 
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
-        private val _isVisibleNavigation: MutableStateFlow<Boolean>  = MutableStateFlow(false)
+        private val _isVisibleNavigation: MutableStateFlow<Boolean> = MutableStateFlow(false)
         val isVisibleNavigation: StateFlow<Boolean> get() = _isVisibleNavigation
 
         private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
@@ -224,7 +224,7 @@ class MeetingRoomViewModel
                 )
                 _navigationEvent.emit(MeetingRoomNavigateAction.NavigateToNotificationLog)
             }
-    }
+        }
 
         fun shareEtaDashboard(
             title: String,
@@ -309,9 +309,9 @@ class MeetingRoomViewModel
             }
         }
 
-    fun handleNavigationVisibility() {
-        _isVisibleNavigation.value = !_isVisibleNavigation.value
-    }
+        fun handleNavigationVisibility() {
+            _isVisibleNavigation.value = !_isVisibleNavigation.value
+        }
 
         @AssistedFactory
         interface MeetingViewModelFactory {

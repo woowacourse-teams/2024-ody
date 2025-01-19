@@ -58,7 +58,7 @@ class DetailMeetingFragment :
 
     private fun calculateDepartureTimeGuidePoint(
         popupView: View,
-        guideButtonPoint: Point
+        guideButtonPoint: Point,
     ): Point {
         val popupHeight = popupView.measuredHeight
 
