@@ -139,7 +139,7 @@ class MeetingsActivity :
     }
 
     override fun guideItemDisabled() {
-        showSnackBar(R.string.meetings_entrance_unavailable_guide)
+        showSnackBar(R.string.inaccessible_eta_guide)
     }
 
     override fun onClickSetting() {

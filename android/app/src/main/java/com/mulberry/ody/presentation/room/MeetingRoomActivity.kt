@@ -83,6 +83,9 @@ class MeetingRoomActivity :
             }
             hideLoadingDialog()
         }
+        collectWhenStarted(viewModel.inaccessibleEtaEvent) {
+            showSnackBar(R.string.inaccessible_eta_guide)
+        }
     }
 
     private fun initializeFragment() {

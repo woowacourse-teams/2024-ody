@@ -107,6 +107,9 @@ class MeetingRoomViewModel
         private val _isVisibleNavigation: MutableStateFlow<Boolean>  = MutableStateFlow(false)
         val isVisibleNavigation: StateFlow<Boolean> get() = _isVisibleNavigation
 
+        private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent
+
         init {
             fetchMeeting()
         }
@@ -200,6 +203,11 @@ class MeetingRoomViewModel
 
         fun navigateToEtaDashboard() {
             viewModelScope.launch {
+                if (!meeting.value.isEtaAccessible) {
+                    _inaccessibleEtaEvent.emit(Unit)
+                    return@launch
+                }
+
                 analyticsHelper.logButtonClicked(
                     eventName = "navigate_to_eta_dashboard",
                     location = TAG,
