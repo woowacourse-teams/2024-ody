@@ -59,7 +59,7 @@ public interface MeetingControllerSwagger {
     @ErrorCode401
     @ErrorCode404(description = "존재하지 않는 약속이거나 해당 약속 참여자가 아닌 경우")
     @ErrorCode500
-    ResponseEntity<MeetingWithMatesResponse> findMeetingWithMates(
+    ResponseEntity<MeetingWithMatesResponse> findMeetingWithMatesV1(
             @Parameter(hidden = true) Member member,
             Long meetingId
     );

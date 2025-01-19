@@ -45,13 +45,14 @@ public class MeetingController implements MeetingControllerSwagger {
     }
 
     @GetMapping("/v1/meetings/{meetingId}")
-    public ResponseEntity<MeetingWithMatesResponse> findMeetingWithMates(
+    public ResponseEntity<MeetingWithMatesResponse> findMeetingWithMatesV1(
             @AuthMember Member member,
             @PathVariable Long meetingId
     ) {
         MeetingWithMatesResponse meetingWithMatesResponse = meetingService.findMeetingWithMates(member, meetingId);
         return ResponseEntity.ok(meetingWithMatesResponse);
     }
+
 
     @Override
     @GetMapping("/v1/meetings/me")
