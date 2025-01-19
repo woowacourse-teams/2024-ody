@@ -1,6 +1,5 @@
 package com.mulberry.ody.presentation.room.log
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
