@@ -11,19 +11,22 @@ fun MeetingResponse.toMeeting(): Meeting =
     Meeting(
         id = id,
         name = name,
-        targetPosition = targetAddress,
-        meetingDate = date.parseToLocalDate(),
-        meetingTime = time.parseToLocalTime(),
+        date = date.toLocalDate(),
+        time = time.toLocalTime(),
+        destinationAddress = targetAddress,
+        departureAddress = departureAddress,
+        departureTime = departureTime.toLocalTime(),
+        routeTime = routeTime,
         mates = mates.map { Mate(nickname = it.nickname, imageUrl = it.imageUrl) },
         inviteCode = inviteCode,
     )
 
-private fun String.parseToLocalDate(): LocalDate {
+private fun String.toLocalDate(): LocalDate {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     return LocalDate.parse(this, formatter)
 }
 
-private fun String.parseToLocalTime(): LocalTime {
+private fun String.toLocalTime(): LocalTime {
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
     return LocalTime.parse(this, formatter)
 }
