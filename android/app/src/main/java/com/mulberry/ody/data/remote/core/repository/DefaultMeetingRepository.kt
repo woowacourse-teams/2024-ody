@@ -3,7 +3,6 @@ package com.mulberry.ody.data.remote.core.repository
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.remote.core.entity.meeting.mapper.toMateEtaInfo
-import com.mulberry.ody.data.remote.core.entity.meeting.mapper.toMeeting
 import com.mulberry.ody.data.remote.core.entity.meeting.mapper.toMeetingCatalogs
 import com.mulberry.ody.data.remote.core.entity.meeting.mapper.toMeetingRequest
 import com.mulberry.ody.data.remote.core.entity.meeting.mapper.toNudgeRequest
@@ -37,18 +36,17 @@ class DefaultMeetingRepository
                 Meeting(
                     id = 1,
                     name = "약속 이름",
-                    date = LocalDate.of(2025,2,1),
-                    time = LocalTime.of(11,30),
+                    date = LocalDate.of(2025, 2, 1),
+                    time = LocalTime.of(11, 30),
                     destinationAddress = "서울특별시 강남구 테헤란로 411 (성담빌딩)",
-                    departureAddress="서울특별시 송파구 올림픽로 35다길 (한국루터회관)",
-                    departureTime = LocalTime.of(10,0),
-                    routeTime=70,
-                    mates = listOf(Mate("올리브1",""), Mate("올리브2","")),
-                    inviteCode= "12345"
-
-                )
+                    departureAddress = "서울특별시 송파구 올림픽로 35다길 (한국루터회관)",
+                    departureTime = LocalTime.of(10, 0),
+                    routeTime = 70,
+                    mates = listOf(Mate("올리브1", ""), Mate("올리브2", "")),
+                    inviteCode = "12345",
+                ),
             )
-            //return service.fetchMeeting(meetingId).map { it.toMeeting() }
+            // return service.fetchMeeting(meetingId).map { it.toMeeting() }
         }
 
         override suspend fun postNudge(nudge: Nudge): ApiResult<Unit> = service.postNudge(nudge.toNudgeRequest())

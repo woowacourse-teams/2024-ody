@@ -18,10 +18,10 @@ fun ImageView.setOnClickDepartureTimeGuide(missingToolTipListener: DepartureTime
 
 @BindingAdapter("departureTime")
 fun TextView.setDepartureTimeText(detailMeetingUiModel: DetailMeetingUiModel) {
-    text = context.getString(
-        R.string.detail_meeting_departure_time_content,
-        detailMeetingUiModel.departureTime,
-        detailMeetingUiModel.routeTime,
-    )
+    text =
+        context.getString(
+            R.string.detail_meeting_departure_time_content,
+            detailMeetingUiModel.departureTime,
+            detailMeetingUiModel.routeTime,
+        )
 }
-
