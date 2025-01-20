@@ -5,10 +5,10 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-fun Meeting.toMeetingUiModel(): MeetingDetailUiModel {
+fun Meeting.toDetailMeetingUiModel(): DetailMeetingUiModel {
     val meetingDateTime = LocalDateTime.of(date, time)
 
-    return MeetingDetailUiModel(
+    return DetailMeetingUiModel(
         id = id,
         name = name,
         dateTime = this.toDateTimeString(),

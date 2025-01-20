@@ -24,9 +24,9 @@ import com.mulberry.ody.presentation.common.image.ImageShareContent
 import com.mulberry.ody.presentation.common.image.ImageShareHelper
 import com.mulberry.ody.presentation.room.detail.model.InviteCodeCopyInfo
 import com.mulberry.ody.presentation.room.detail.model.MateUiModel
-import com.mulberry.ody.presentation.room.detail.model.MeetingDetailUiModel
+import com.mulberry.ody.presentation.room.detail.model.DetailMeetingUiModel
 import com.mulberry.ody.presentation.room.detail.model.toMateUiModels
-import com.mulberry.ody.presentation.room.detail.model.toMeetingUiModel
+import com.mulberry.ody.presentation.room.detail.model.toDetailMeetingUiModel
 import com.mulberry.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.mulberry.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.room.etadashboard.model.toMateEtaUiModels
@@ -74,9 +74,8 @@ class MeetingRoomViewModel
                 initialValue = null,
             )
 
-        private val _meeting: MutableStateFlow<MeetingDetailUiModel> =
-            MutableStateFlow(MeetingDetailUiModel.DEFAULT)
-        val meeting: StateFlow<MeetingDetailUiModel> = _meeting.asStateFlow()
+        private val _meeting: MutableStateFlow<DetailMeetingUiModel> = MutableStateFlow(DetailMeetingUiModel.DEFAULT)
+        val meeting: StateFlow<DetailMeetingUiModel> = _meeting.asStateFlow()
 
         private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
         val mates: StateFlow<List<MateUiModel>> = _mates.asStateFlow()
@@ -186,7 +185,7 @@ class MeetingRoomViewModel
                 startLoading()
                 meetingRepository.fetchMeeting(meetingId)
                     .onSuccess {
-                        _meeting.value = it.toMeetingUiModel()
+                        _meeting.value = it.toDetailMeetingUiModel()
                         _mates.value = it.toMateUiModels()
                         fetchNotificationLogs()
                     }.onFailure { code, errorMessage ->

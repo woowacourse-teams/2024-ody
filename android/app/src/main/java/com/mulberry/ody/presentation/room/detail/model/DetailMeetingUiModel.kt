@@ -1,6 +1,6 @@
 package com.mulberry.ody.presentation.room.detail.model
 
-data class MeetingDetailUiModel(
+data class DetailMeetingUiModel(
     val id: Long,
     val name: String,
     val dateTime: String,
@@ -15,8 +15,8 @@ data class MeetingDetailUiModel(
     fun isDefault(): Boolean = this == DEFAULT
 
     companion object {
-        val DEFAULT: MeetingDetailUiModel =
-            MeetingDetailUiModel(
+        val DEFAULT: DetailMeetingUiModel =
+            DetailMeetingUiModel(
                 id = -1L,
                 name = "-",
                 dateTime = "0",

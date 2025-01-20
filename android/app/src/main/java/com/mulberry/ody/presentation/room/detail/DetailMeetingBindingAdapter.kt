@@ -6,7 +6,7 @@ import androidx.databinding.BindingAdapter
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.getPointOnScreen
 import com.mulberry.ody.presentation.room.detail.listener.DepartureTimeGuideListener
-import com.mulberry.ody.presentation.room.detail.model.MeetingDetailUiModel
+import com.mulberry.ody.presentation.room.detail.model.DetailMeetingUiModel
 
 @BindingAdapter("onClickDepartureTimeGuide")
 fun ImageView.setOnClickDepartureTimeGuide(missingToolTipListener: DepartureTimeGuideListener) {
@@ -17,7 +17,7 @@ fun ImageView.setOnClickDepartureTimeGuide(missingToolTipListener: DepartureTime
 }
 
 @BindingAdapter("departureTime")
-fun TextView.setDepartureTimeText(detailMeetingUiModel: MeetingDetailUiModel) {
+fun TextView.setDepartureTimeText(detailMeetingUiModel: DetailMeetingUiModel) {
     text = context.getString(
         R.string.detail_meeting_departure_time_content,
         detailMeetingUiModel.departureTime,
