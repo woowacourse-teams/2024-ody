@@ -33,6 +33,9 @@ public record MeetingWithMatesResponseV2(
         @Schema(description = "소요 시간 (분)", type = "string", example = "60")
         long routeTime,
 
+        @Schema(description = "출발지 주소", example = "서울 강남구 테헤란로 411")
+        String originAddress,
+
         @Schema(description = "도착지 주소", example = "서울 송파구 올림픽로35다길 42")
         String targetAddress,
 
@@ -54,17 +57,19 @@ public record MeetingWithMatesResponseV2(
 
     public static MeetingWithMatesResponseV2 of(
             Meeting meeting,
-            DepartureTime departureTime,
-            RouteTime routeTime,
+            Mate requestMate,
             List<Mate> mates
     ) {
+        RouteTime mateRouteTime = new RouteTime(requestMate.getEstimatedMinutes());
+        DepartureTime mateDepartureTime = new DepartureTime(meeting, requestMate.getEstimatedMinutes());
         return new MeetingWithMatesResponseV2(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
                 TimeUtil.trimSecondsAndNanos(meeting.getTime()),
-                departureTime.getValue().toLocalTime(),
-                routeTime.getMinutes(),
+                mateDepartureTime.getValue().toLocalTime(),
+                mateRouteTime.getMinutes(),
+                requestMate.getOriginAddress(),
                 meeting.getTargetAddress(),
                 meeting.getTargetLatitude(),
                 meeting.getTargetLongitude(),

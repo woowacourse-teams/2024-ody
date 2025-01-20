@@ -197,6 +197,7 @@ class MeetingServiceTest extends BaseServiceTest {
                 () -> assertThat(response.id()).isEqualTo(meeting.getId()),
                 () -> assertThat(response.routeTime()).isEqualTo(mate1.getEstimatedMinutes()),
                 () -> assertThat(response.departureTime()).isEqualTo(expectedDepartureTime),
+                () -> assertThat(response.originAddress()).isEqualTo(mate1.getOriginAddress()),
                 () -> assertThat(mateNicknames).containsOnly(
                         mate1.getNickname().getValue(),
                         mate2.getNickname().getValue()
