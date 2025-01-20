@@ -56,17 +56,15 @@ class DetailMeetingFragment :
             matesAdapter.submitList(mates)
         }
         collectWhenStarted(viewModel.copyInviteCodeEvent) {
-            viewModel.copyInviteCodeEvent.collect {
-                val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
-                intent.type = "text/plain"
+            val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
+            intent.type = "text/plain"
 
-                val shareMessage =
-                    getString(R.string.invite_code_copy, it.meetingName, it.inviteCode)
-                intent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+            val shareMessage =
+                getString(R.string.invite_code_copy, it.meetingName, it.inviteCode)
+            intent.putExtra(Intent.EXTRA_TEXT, shareMessage)
 
-                val chooserTitle = getString(R.string.invite_code_copy_title)
-                startActivity(Intent.createChooser(intent, chooserTitle))
-            }
+            val chooserTitle = getString(R.string.invite_code_copy_title)
+            startActivity(Intent.createChooser(intent, chooserTitle))
         }
     }
 
