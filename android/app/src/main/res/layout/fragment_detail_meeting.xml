@@ -96,10 +96,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:text="@{vm.meeting.dateTime}"
                 android:textColor="@color/tertiary"
                 app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_address_title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/detail_meeting_departure_time_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_time_title"
                 tools:text="2024년 7월 11일 03시 00분" />
 
             <TextView
@@ -120,6 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:text="@{vm.meeting.destinationAddress}"
                 android:textColor="@color/tertiary"
                 app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_departure_address_title"
                 app:layout_constraintStart_toStartOf="parent"
@@ -132,11 +134,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
+                android:text="@string/detail_meeting_departure_address"
                 android:textColor="@color/secondary"
                 app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_departure_address"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_address"
-                tools:text="@string/detail_meeting_departure_address" />
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_address" />
 
             <TextView
                 android:id="@+id/tv_detail_meeting_departure_address"
@@ -144,6 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:text="@{vm.meeting.departureAddress}"
                 android:textColor="@color/tertiary"
                 app:layout_constraintBottom_toTopOf="@id/detail_meeting_departure_time_title"
                 app:layout_constraintStart_toStartOf="parent"
@@ -158,6 +161,7 @@
                 android:layout_marginTop="28dp"
                 android:text="@string/detail_meeting_departure_time"
                 android:textColor="@color/secondary"
+                app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_departure_time"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_departure_address" />
 
@@ -174,12 +178,13 @@
                 app:onClickDepartureTimeGuide="@{departureTimeGuideListener}" />
 
             <TextView
-                android:id="@+id/detail_detail_meeting_departure_time"
+                android:id="@+id/tv_detail_meeting_departure_time"
                 style="@style/pretendard_regular_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/tertiary"
+                app:departureTime="@{vm.meeting}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/detail_meeting_departure_time_title"
                 tools:text="2시 30분에 나가야 해요.\n출발 장소부터 약속 장소까지 20분 걸려요." />
