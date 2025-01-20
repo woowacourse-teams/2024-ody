@@ -6,8 +6,6 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 fun Meeting.toDetailMeetingUiModel(): DetailMeetingUiModel {
-    val meetingDateTime = LocalDateTime.of(date, time)
-
     return DetailMeetingUiModel(
         id = id,
         name = name,
@@ -18,13 +16,12 @@ fun Meeting.toDetailMeetingUiModel(): DetailMeetingUiModel {
         routeTime = routeTime.toTimeString(),
         mates = mates.map { it.nickname },
         inviteCode = inviteCode,
-        isEtaAccessible = meetingDateTime.minusMinutes(30) <= LocalDateTime.now(),
     )
 }
 
 private fun Meeting.toDateTimeString(): String {
     val dateTime = LocalDateTime.of(date, time)
-    val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH시 mm분")
+    val dateTimeFormatter = DateTimeFormatter.ofPattern(DetailMeetingUiModel.DATE_TIME_PATTERN)
     return dateTime.format(dateTimeFormatter)
 }
 

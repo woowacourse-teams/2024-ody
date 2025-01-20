@@ -202,7 +202,7 @@ class MeetingRoomViewModel
 
         fun navigateToEtaDashboard() {
             viewModelScope.launch {
-                if (!meeting.value.isEtaAccessible) {
+                if (!meeting.value.isEtaAccessible()) {
                     _inaccessibleEtaEvent.emit(Unit)
                     return@launch
                 }
