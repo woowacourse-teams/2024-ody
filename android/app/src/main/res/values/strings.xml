@@ -166,7 +166,7 @@
     <string name="detail_meeting_departure_address">출발 장소</string>
     <string name="detail_meeting_departure_time">늦지 않으려면</string>
     <string name="detail_meeting_departure_time_guide">출발 시간은 대중교통 지연 등을 고려해\n여유 있게 알려드리고 있어요.</string>
-    <string name="detail_meeting_departure_time_content">%s에 나가야 해요.\n출발 장소부터 약속 장소까지 %s걸려요.</string>
+    <string name="detail_meeting_departure_time_content">%s에 나가야 해요.\n출발 장소부터 약속 장소까지 %s 걸려요.</string>
     <string name="detail_meeting_log">약속 로그</string>
     <string name="detail_meeting_invite_code_guide">친구를 초대해 보세요!</string>
     <string name="detail_meeting_invite_code_copy">초대 코드 복사하기</string>
