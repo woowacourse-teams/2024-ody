@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
@@ -16,16 +15,17 @@ import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
-import com.ody.meeting.dto.response.MeetingWithMatesResponse;
+import com.ody.meeting.dto.response.MeetingWithMatesResponseV1;
+import com.ody.meeting.dto.response.MeetingWithMatesResponseV2;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
-import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.event.NoticeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
 import com.ody.route.domain.ClientType;
+import com.ody.route.domain.DepartureTime;
 import com.ody.route.service.ApiCallService;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
@@ -152,16 +152,16 @@ class MeetingServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("약속과 참여자들 정보를 조회한다.")
+    @DisplayName("약속 조회 성공 V1: 약속과 참여자들 정보를 조회한다.")
     @Test
-    void findMeetingWithMatesSuccess() {
+    void findMeetingWithMatesV1Success() {
         Member member1 = fixtureGenerator.generateMember();
         Member member2 = fixtureGenerator.generateMember();
         Meeting meeting = fixtureGenerator.generateMeeting();
         Mate mate1 = fixtureGenerator.generateMate(meeting, member1);
         Mate mate2 = fixtureGenerator.generateMate(meeting, member2);
 
-        MeetingWithMatesResponse response = meetingService.findMeetingWithMates(member1, meeting.getId());
+        MeetingWithMatesResponseV1 response = meetingService.findMeetingWithMatesV1(member1, meeting.getId());
 
         List<String> mateNicknames = response.mates().stream()
                 .map(MateResponse::nickname)
@@ -176,12 +176,50 @@ class MeetingServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("약속 조회 시, 약속이 존재하지 않으면 예외가 발생한다.")
+    @DisplayName("약속 조회 성공 V2: 약속과 참여자들 정보를 조회한다.")
     @Test
-    void findMeetingWithMatesException() {
+    void findMeetingWithMatesV2Success() {
+        Member member1 = fixtureGenerator.generateMember();
+        Member member2 = fixtureGenerator.generateMember();
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Mate mate1 = fixtureGenerator.generateMate(meeting, member1);
+        Mate mate2 = fixtureGenerator.generateMate(meeting, member2);
+        DepartureTime mateDepartureTime = new DepartureTime(meeting, mate1.getEstimatedMinutes());
+        LocalTime expectedDepartureTime = mateDepartureTime.getValue().toLocalTime();
+
+        MeetingWithMatesResponseV2 response = meetingService.findMeetingWithMatesV2(member1, meeting.getId());
+
+        List<String> mateNicknames = response.mates().stream()
+                .map(MateResponse::nickname)
+                .toList();
+
+        assertAll(
+                () -> assertThat(response.id()).isEqualTo(meeting.getId()),
+                () -> assertThat(response.routeTime()).isEqualTo(mate1.getEstimatedMinutes()),
+                () -> assertThat(response.departureTime()).isEqualTo(expectedDepartureTime),
+                () -> assertThat(response.originAddress()).isEqualTo(mate1.getOriginAddress()),
+                () -> assertThat(mateNicknames).containsOnly(
+                        mate1.getNickname().getValue(),
+                        mate2.getNickname().getValue()
+                )
+        );
+    }
+
+    @DisplayName("약속 조회 실패 V1: 약속 조회 시, 약속이 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void findMeetingWithMatesV1Exception() {
         Member member = fixtureGenerator.generateMember();
 
-        assertThatThrownBy(() -> meetingService.findMeetingWithMates(member, 1L))
+        assertThatThrownBy(() -> meetingService.findMeetingWithMatesV1(member, 1L))
+                .isInstanceOf(OdyNotFoundException.class);
+    }
+
+    @DisplayName("약속 조회 실패 V2: 약속 조회 시, 약속이 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void findMeetingWithMatesV2Exception() {
+        Member member = fixtureGenerator.generateMember();
+
+        assertThatThrownBy(() -> meetingService.findMeetingWithMatesV2(member, 1L))
                 .isInstanceOf(OdyNotFoundException.class);
     }
 
