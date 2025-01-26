@@ -12,8 +12,5 @@ fun Int.toPixel(context: Context): Int {
 fun View.getPointOnScreen(): Point {
     val location = IntArray(2)
     this.getLocationOnScreen(location)
-    return Point().apply {
-        x = location[0]
-        y = location[1]
-    }
+    return Point(location[0], location[1])
 }
