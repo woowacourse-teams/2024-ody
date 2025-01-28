@@ -14,7 +14,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -27,6 +30,12 @@ public class RedisConfig {
     private static final String REDISSON_HOST_PREFIX = "redis://";
     private static final int THREE_SECOND = 3000;
 
+    @Value("${spring.data.redisson.host}")
+    private String redissonHost;
+
+    @Value("${spring.data.redisson.port}")
+    private int redissonPort;
+
     @Value("${spring.data.redis.host}")
     private String redisHost;
 
@@ -34,10 +43,23 @@ public class RedisConfig {
     private int redisPort;
 
     @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
+        return new LettuceConnectionFactory(config);
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory);
+        return container;
+    }
+
+    @Bean
     public RedissonClient redissonClient() {
         Config config = new Config();
         config.useSingleServer()
-                .setAddress(REDISSON_HOST_PREFIX + redisHost + ":" + redisPort)
+                .setAddress(REDISSON_HOST_PREFIX + redissonHost + ":" + redissonPort)
                 .setConnectTimeout(THREE_SECOND)
                 .setRetryAttempts(3);
 

@@ -1,8 +1,10 @@
 package com.ody.common;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.ody.eta.repository.EtaSchedulingRedisTemplate;
 import com.ody.route.repository.RouteClientRedisTemplate;
 import com.ody.notification.config.FcmConfig;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +19,9 @@ public abstract class BaseRedisTest {
     @Autowired
     protected RouteClientRedisTemplate redisTemplate;
 
+    @Autowired
+    protected EtaSchedulingRedisTemplate etaSchedulingRedisTemplate;
+
     @MockBean
     private FcmConfig fcmConfig;
 
@@ -25,7 +30,7 @@ public abstract class BaseRedisTest {
 
     @BeforeEach
     void init() {
-        redisTemplate.getConnectionFactory()
+        Objects.requireNonNull(redisTemplate.getConnectionFactory())
                 .getConnection()
                 .serverCommands()
                 .flushAll();

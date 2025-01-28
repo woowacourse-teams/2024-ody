@@ -3,7 +3,6 @@ package com.ody.common;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ody.notification.config.FcmConfig;
 import com.ody.notification.service.FcmEventListener;
-import com.ody.notification.service.FcmSubscriber;
 import com.ody.route.service.RouteClientCircuitBreaker;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,9 @@ public abstract class BaseServiceTest {
     protected RouteClientCircuitBreaker routeClientCircuitBreaker;
 
     @Autowired
+    protected RedisCacheCleaner redisCacheCleaner;
+
+    @Autowired
     protected ApplicationEvents applicationEvents;
 
     @Autowired
@@ -48,6 +50,7 @@ public abstract class BaseServiceTest {
     void cleanUp() {
         databaseCleaner.cleanUp();
         applicationEvents.clear();
+        redisCacheCleaner.cleanUp();
     }
 }
 

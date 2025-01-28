@@ -3,9 +3,12 @@ server:
 
 spring:
   data:
-    redis:
+    redisson:
       port: 6379
       connect-timeout: 3000
+    redis:
+      port: 6380
+      ttl: 30000
   jpa:
     open-in-view: false
     defer-datasource-initialization: false
