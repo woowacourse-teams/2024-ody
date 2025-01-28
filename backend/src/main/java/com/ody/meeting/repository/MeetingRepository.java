@@ -36,7 +36,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
             or (m.date = :endDate and m.time < :excludeEndTime)
             """
     )
-    List<Meeting> findAllWithInDateTimeRange(
+    List<Meeting> findAllWithInDateTimeRange( // StartDateTime >= TargetDateTime > EndDateTime
             LocalDate startDate,
             LocalTime includeStartTime,
             LocalDate endDate,

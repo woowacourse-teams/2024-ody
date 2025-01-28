@@ -118,29 +118,12 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 .containsExactly(oneDayBeforeMeeting.getId(), twoDayBeforeMeeting.getId());
     }
 
-    @DisplayName("특정 날짜 내 약속 리스트들을 조회한다")
+    @DisplayName("오늘부터 24시간 이내 약속 리스트들을 조회한다")
     @Test
     void findAllWithInDateTimeRange() {
         LocalDateTime now = TimeUtil.nowWithTrim();
-        LocalDateTime oneHourLater = now.plusHours(1L);
-        Meeting oneHourLaterMeeting = new Meeting(
-                "우테코 등교",
-                oneHourLater.toLocalDate(),
-                oneHourLater.toLocalTime(),
-                TARGET_LOCATION,
-                InviteCodeGenerator.generate()
-        );
-        meetingRepository.save(oneHourLaterMeeting);
-
-        LocalDateTime oneDayLater = now.plusDays(1L);
-        Meeting oneDayLaterMeeting = new Meeting(
-                "우테코 등교",
-                oneDayLater.toLocalDate(),
-                oneDayLater.toLocalTime(),
-                TARGET_LOCATION,
-                InviteCodeGenerator.generate()
-        );
-        meetingRepository.save(oneDayLaterMeeting);
+        Meeting oneHourLaterMeeting = fixtureGenerator.generateMeeting(now.plusHours(1L));
+        Meeting oneDayLaterMeeting = fixtureGenerator.generateMeeting(now.plusDays(1L));
 
         List<Meeting> actual = meetingRepository.findAllWithInDateTimeRange(
                 now.toLocalDate(),
