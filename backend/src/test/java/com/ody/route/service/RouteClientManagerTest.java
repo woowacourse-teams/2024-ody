@@ -1,57 +1,49 @@
 package com.ody.route.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseServiceTest;
-import com.ody.common.exception.OdyServerErrorException;
-import java.util.List;
+import com.ody.route.domain.ApiCall;
+import com.ody.route.domain.ClientType;
+import com.ody.route.repository.ApiCallRepository;
+import java.time.LocalDate;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 class RouteClientManagerTest extends BaseServiceTest {
 
     @Autowired
     private RouteClientManager routeClientManager;
 
-    @SpyBean
-    @Qualifier("odsay")
-    private RouteClient odsayRouteClient;
+    @Autowired
+    private ApiCallRepository apiCallRepository;
 
-    @SpyBean
-    @Qualifier("google")
-    private RouteClient googleRouteClient;
-
-    @DisplayName("이용 가능한 RouteClient를 반환한다.")
-    @Test
-    void getAvailableClients() {
-        Mockito.when(routeClientCircuitBreaker.isBlocked(odsayRouteClient))
-                .thenReturn(true);
-
-        Mockito.when(routeClientCircuitBreaker.isBlocked(googleRouteClient))
-                .thenReturn(false);
-
-        List<RouteClient> availableClients = routeClientManager.getAvailableClients();
-
-        assertThat(availableClients)
-                .hasSize(1)
-                .containsExactly(googleRouteClient);
+    @BeforeEach
+    void cleanup() {
+        apiCallRepository.deleteAll();
     }
 
-    @DisplayName("이용 가능한 RouteClient가 없으면 예외가 발생한다.")
+    @DisplayName("오늘 일자의 apiCall Enabled를 가진 다음 날짜 apiCall이 초기화된다.")
     @Test
-    void failWhenGetAvailableClientsBy() {
-        Mockito.when(routeClientCircuitBreaker.isBlocked(odsayRouteClient))
-                .thenReturn(true);
+    void initializeClientApiCalls() {
+        LocalDate now = LocalDate.now();
+        LocalDate tommorow = now.plusDays(1);
+        ApiCall odsayApiCall = new ApiCall(ClientType.ODSAY, 1, now, true);
+        ApiCall googleApiCall = new ApiCall(ClientType.GOOGLE, 1, now, false);
+        apiCallRepository.save(odsayApiCall);
+        apiCallRepository.save(googleApiCall);
 
-        Mockito.when(routeClientCircuitBreaker.isBlocked(googleRouteClient))
-                .thenReturn(true);
+        routeClientManager.initializeClientApiCalls();
+        Optional<ApiCall> nextDayOdsay = apiCallRepository.findFirstByDateBetweenAndClientType(tommorow, tommorow, ClientType.ODSAY);
+        Optional<ApiCall> nextDayGoogle = apiCallRepository.findFirstByDateBetweenAndClientType(tommorow, tommorow, ClientType.GOOGLE);
 
-        assertThatThrownBy(() -> routeClientManager.getAvailableClients())
-                .isInstanceOf(OdyServerErrorException.class);
+        assertAll(
+                () -> assertThat(nextDayOdsay.get().getEnabled()).isTrue(),
+                () -> assertThat(nextDayGoogle.get().getEnabled()).isFalse()
+        );
     }
 }

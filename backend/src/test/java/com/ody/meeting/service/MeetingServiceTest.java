@@ -295,7 +295,7 @@ class MeetingServiceTest extends BaseServiceTest {
 
     @DisplayName("약속 참여시 API 호출 카운팅 Redisson 분산락 동시성 테스트")
     @Nested
-    public class RedissonDistributedLockTest {
+    class RedissonDistributedLockTest {
 
         private static final int TOTAL_REQUESTS = 100;
 
