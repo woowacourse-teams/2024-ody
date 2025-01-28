@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
@@ -21,7 +20,6 @@ import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
-import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.event.NoticeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
@@ -134,7 +132,7 @@ class MeetingServiceTest extends BaseServiceTest {
     @DisplayName("약속 생성 후 약속 시간 30분 전에 ETA 공지 알림이 예약된다.")
     @Test
     void saveAndScheduleEtaNotice() {
-        LocalDateTime meetingDateTime = TimeUtil.nowWithTrim().plusMinutes(40);
+        LocalDateTime meetingDateTime = TimeUtil.nowWithTrim().plusDays(1);
         MeetingSaveRequestV1 request = dtoGenerator.generateMeetingRequest(meetingDateTime);
         meetingService.saveV1(request);
 

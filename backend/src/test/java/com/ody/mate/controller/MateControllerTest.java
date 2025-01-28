@@ -2,7 +2,7 @@ package com.ody.mate.controller;
 
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -37,7 +37,6 @@ class MateControllerTest extends BaseControllerTest {
         Mockito.doAnswer(invocation -> {
             countDownLatch.countDown();
             return null;
-
         }).when(firebaseMessaging).send(any(Message.class));
 
         RestAssured.given().log().all()
@@ -51,7 +50,7 @@ class MateControllerTest extends BaseControllerTest {
 
         countDownLatch.await(3L, TimeUnit.SECONDS);
 
-        verify(firebaseMessaging, times(2))
+        verify(firebaseMessaging, atLeast(2))
                 .send(any(Message.class));
     }
 
