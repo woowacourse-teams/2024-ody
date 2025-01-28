@@ -37,15 +37,6 @@ public class EtaSchedulingService {
         sendNowOrScheduleLater(noticeTime, () -> noticeGroupMessageAndCache(notice));
     }
 
-    private void noticeGroupMessageAndCache(EtaSchedulingNotice notice) {
-        meetingRepository.findById(notice.getMeetingId())
-                .ifPresent(meeting -> {
-                    GroupMessage groupMessage = GroupMessage.create(notice, new FcmTopic(meeting));
-                    noticeService.send(notice, groupMessage);
-                    schedulingCacheService.addAll(meeting);
-                });
-    }
-
     private void sendNowOrScheduleLater(LocalDateTime noticeTime, Runnable task) {
         if (isUpcoming(noticeTime)) {
             Instant startTime = InstantConverter.kstToInstant(noticeTime);
@@ -57,6 +48,15 @@ public class EtaSchedulingService {
 
     private boolean isUpcoming(LocalDateTime dateTime) {
         return dateTime.isAfter(TimeUtil.nowWithTrim());
+    }
+
+    private void noticeGroupMessageAndCache(EtaSchedulingNotice notice) {
+        meetingRepository.findById(notice.getMeetingId())
+                .ifPresent(meeting -> {
+                    GroupMessage groupMessage = GroupMessage.create(notice, new FcmTopic(meeting));
+                    noticeService.send(notice, groupMessage);
+                    schedulingCacheService.addAll(meeting);
+                });
     }
 
     public void sendFallbackNotice(EtaSchedulingKey etaSchedulingKey) {
@@ -72,18 +72,6 @@ public class EtaSchedulingService {
     private boolean isPast(LocalDateTime dateTime) {
         return TimeUtil.nowWithTrim().isAfter(dateTime);
     }
-
-    /***
-     *
-     * 해야 할 것
-     * [x] TTL 소모시 mate Direct message 보내는 메서드 만들기
-     * [x] keyspace notification 구현 & redis 설정 변경
-     * [] 예외 케이스 추가
-     *      - 부팅시 스케줄링 추가, 당일 약속에 한해 meeting 생성시 추가
-     * [] 테스트 케이스 추가
-     *     - notice 관련들...
-     * [] 리팩터링
-     */
 
     public void updateCache(Mate mate) {
         schedulingCacheService.add(EtaSchedulingKey.from(mate));
