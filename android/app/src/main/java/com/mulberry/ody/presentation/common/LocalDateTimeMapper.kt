@@ -22,7 +22,7 @@ fun LocalDate.toMessage(): String = format(DATE_PATTERN)
 
 fun LocalTime.toMessage(): String = format(TIME_PATTERN)
 
-fun Int.toRemainingTimeMessage(): String {
+fun Int.toDurationTimeMessage(): String {
     val hour = this / 60
     val minute = this % 60
     val localTime = LocalTime.of(hour, minute)

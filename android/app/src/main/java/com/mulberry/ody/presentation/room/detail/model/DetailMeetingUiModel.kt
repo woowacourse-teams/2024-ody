@@ -10,7 +10,7 @@ data class DetailMeetingUiModel(
     val destinationAddress: String,
     val departureAddress: String,
     val departureTime: String,
-    val routeTime: String,
+    val durationTime: String,
     val mates: List<String>,
     val inviteCode: String,
 ) {
@@ -32,7 +32,7 @@ data class DetailMeetingUiModel(
                 destinationAddress = "-",
                 departureAddress = "-",
                 departureTime = "-",
-                routeTime = "-",
+                durationTime = "-",
                 mates = listOf("-"),
                 inviteCode = "",
             )

@@ -2,7 +2,7 @@ package com.mulberry.ody.presentation.room.detail.model
 
 import com.mulberry.ody.domain.model.Meeting
 import com.mulberry.ody.presentation.common.toMessage
-import com.mulberry.ody.presentation.common.toRemainingTimeMessage
+import com.mulberry.ody.presentation.common.toDurationTimeMessage
 import java.time.LocalDateTime
 
 fun Meeting.toDetailMeetingUiModel(): DetailMeetingUiModel {
@@ -13,7 +13,7 @@ fun Meeting.toDetailMeetingUiModel(): DetailMeetingUiModel {
         destinationAddress = departureAddress,
         departureAddress = destinationAddress,
         departureTime = departureTime.toMessage(),
-        routeTime = routeTime.toRemainingTimeMessage(),
+        durationTime = durationTime.toDurationTimeMessage(),
         mates = mates.map { it.nickname },
         inviteCode = inviteCode,
     )

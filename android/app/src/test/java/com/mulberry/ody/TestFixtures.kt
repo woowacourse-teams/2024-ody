@@ -27,7 +27,7 @@ val meeting: Meeting =
         date = LocalDate.of(2024, 1, 1),
         time = LocalTime.of(10, 0),
         departureTime = LocalTime.of(2, 30),
-        routeTime = 30,
+        durationTime = 30,
         mates = listOf(Mate("A", ""), Mate("B", ""), Mate("C", "")),
         inviteCode = inviteCode,
     )

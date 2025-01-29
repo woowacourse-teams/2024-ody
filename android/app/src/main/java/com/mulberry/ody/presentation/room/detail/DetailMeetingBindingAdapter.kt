@@ -22,6 +22,6 @@ fun TextView.setDepartureTimeText(detailMeetingUiModel: DetailMeetingUiModel) {
         context.getString(
             R.string.detail_meeting_departure_time_content,
             detailMeetingUiModel.departureTime,
-            detailMeetingUiModel.routeTime,
+            detailMeetingUiModel.durationTime,
         )
 }
