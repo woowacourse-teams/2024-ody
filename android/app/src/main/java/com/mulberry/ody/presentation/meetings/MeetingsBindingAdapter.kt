@@ -3,9 +3,8 @@ package com.mulberry.ody.presentation.meetings
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.toMessage
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @BindingAdapter("showDateTime")
 fun TextView.showDateTime(dateTime: LocalDateTime) {
@@ -32,17 +31,12 @@ fun TextView.showDateTime(dateTime: LocalDateTime) {
                 )
             }
 
-            else -> {
-                DateTimeFormatter.ofPattern("yyyy년 M월 d일").format(dateTime)
-            }
+            else -> dateTime.toLocalDate().toMessage()
         }
-    val meetingTime = dateTime.toLocalTime()
     if (!(isToday || isTomorrow)) {
         this.text = dateString
         return
     }
-    val timeString =
-        DateTimeFormatter.ofPattern("a h시 mm분").withLocale(Locale.forLanguageTag("ko"))
-            .format(meetingTime)
+    val timeString = dateTime.toLocalTime().toMessage()
     this.text = "$dateString $timeString"
 }

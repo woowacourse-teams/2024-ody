@@ -16,7 +16,7 @@ fun MeetingResponse.toMeeting(): Meeting =
         destinationAddress = targetAddress,
         departureAddress = originAddress,
         departureTime = departureTime.toLocalTime(),
-        routeTime = routeTime,
+        durationTime = routeTime,
         mates = mates.map { Mate(nickname = it.nickname, imageUrl = it.imageUrl) },
         inviteCode = inviteCode,
     )

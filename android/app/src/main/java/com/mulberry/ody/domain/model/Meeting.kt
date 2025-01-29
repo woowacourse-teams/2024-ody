@@ -11,7 +11,7 @@ data class Meeting(
     val destinationAddress: String,
     val departureAddress: String,
     val departureTime: LocalTime,
-    val routeTime: Int,
+    val durationTime: Int,
     val mates: List<Mate>,
     val inviteCode: String,
 )
