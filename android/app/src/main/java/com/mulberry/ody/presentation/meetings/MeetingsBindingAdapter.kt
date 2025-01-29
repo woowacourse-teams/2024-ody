@@ -4,39 +4,42 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.toMessage
+import java.time.LocalDate
 import java.time.LocalDateTime
 
-@BindingAdapter("showDateTime")
-fun TextView.showDateTime(dateTime: LocalDateTime) {
-    val meetingDay = dateTime.toLocalDate()
-    val today = LocalDateTime.now().toLocalDate()
-    val tomorrow = today.plusDays(1)
-    val isToday = meetingDay == today
-    val isTomorrow = meetingDay == tomorrow
+@BindingAdapter("meetingDateTime")
+fun TextView.setMeetingDateTime(meetingDateTime: LocalDateTime) {
+    val meetingDate = meetingDateTime.toLocalDate()
+    val meetingTimeMessage = meetingDateTime.toLocalTime().toMessage()
 
-    val dateString =
-        when {
-            isToday -> {
-                context.getString(R.string.meetings_today)
-            }
-
-            isTomorrow -> {
-                context.getString(R.string.meetings_tomorrow)
-            }
-
-            meetingDay >= today.plusDays(2) && meetingDay <= today.plusDays(7) -> {
-                context.getString(
-                    R.string.meetings_post_tomorrow,
-                    (meetingDay.dayOfYear - today.dayOfYear).toString(),
-                )
-            }
-
-            else -> dateTime.toLocalDate().toMessage()
+    text = when {
+        meetingDate.isToday() -> {
+            context.getString(R.string.meetings_today) + " " + meetingTimeMessage
         }
-    if (!(isToday || isTomorrow)) {
-        this.text = dateString
-        return
+
+        meetingDate.isTomorrow() -> {
+            context.getString(R.string.meetings_tomorrow) + " " + meetingTimeMessage
+        }
+
+        meetingDate.isShowDaysLater() -> {
+            val daysDifference = meetingDate.daysDifferenceByNow()
+            context.getString(R.string.meetings_post_tomorrow, daysDifference)
+        }
+
+        else -> meetingDate.toMessage()
     }
-    val timeString = dateTime.toLocalTime().toMessage()
-    this.text = "$dateString $timeString"
 }
+
+private fun LocalDate.isToday(): Boolean {
+    return this == LocalDate.now()
+}
+
+private fun LocalDate.isTomorrow(): Boolean {
+    return this == LocalDate.now().plusDays(1)
+}
+
+private fun LocalDate.isShowDaysLater(): Boolean {
+    return daysDifferenceByNow() in 2..7
+}
+
+private fun LocalDate.daysDifferenceByNow(): Int = this.dayOfYear - LocalDate.now().dayOfYear

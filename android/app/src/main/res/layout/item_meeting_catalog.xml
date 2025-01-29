@@ -77,12 +77,12 @@
         <TextView
             android:id="@+id/tv_meeting_date_time"
             style="@style/pretendard_medium_16"
-            showDateTime="@{meeting.datetime}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/tv_meeting_title_expanded"
+            app:meetingDateTime="@{meeting.datetime}"
             tools:text="오늘 오후 1시 30분" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
