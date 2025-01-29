@@ -13,6 +13,12 @@ data class MeetingResponse(
     val date: String,
     @Json(name = "time")
     val time: String,
+    @Json(name = "originAddress")
+    val originAddress: String,
+    @Json(name = "departureTime")
+    val departureTime: String,
+    @Json(name = "routeTime")
+    val routeTime: Int,
     @Json(name = "targetAddress")
     val targetAddress: String,
     @Json(name = "targetLatitude")

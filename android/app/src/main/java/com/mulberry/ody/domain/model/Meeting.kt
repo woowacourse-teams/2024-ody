@@ -6,9 +6,12 @@ import java.time.LocalTime
 data class Meeting(
     val id: Long,
     val name: String,
-    val targetPosition: String,
-    val meetingDate: LocalDate,
-    val meetingTime: LocalTime,
+    val date: LocalDate,
+    val time: LocalTime,
+    val destinationAddress: String,
+    val departureAddress: String,
+    val departureTime: LocalTime,
+    val routeTime: Int,
     val mates: List<Mate>,
     val inviteCode: String,
 )
