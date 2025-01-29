@@ -2,7 +2,6 @@ package com.mulberry.ody.presentation.room.detail.model
 
 import com.mulberry.ody.presentation.common.toLocalDateTime
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 data class DetailMeetingUiModel(
     val id: Long,

@@ -5,8 +5,6 @@ import androidx.databinding.BindingAdapter
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.toMessage
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @BindingAdapter("showDateTime")
 fun TextView.showDateTime(dateTime: LocalDateTime) {
