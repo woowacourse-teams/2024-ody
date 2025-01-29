@@ -1,9 +1,11 @@
 package com.mulberry.ody.presentation.common
 
+import java.lang.IllegalArgumentException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.time.temporal.TemporalAccessor
 import java.util.Locale
 
@@ -32,4 +34,13 @@ private fun TemporalAccessor.format(pattern: String): String {
     return DateTimeFormatter.ofPattern(pattern)
         .withLocale(Locale.forLanguageTag("ko"))
         .format(this)
+}
+
+fun String.toLocalDateTime(): LocalDateTime {
+    val formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)
+    return try {
+        LocalDateTime.parse(this, formatter)
+    } catch (e: DateTimeParseException) {
+        throw IllegalArgumentException("LocalDateTime으로 변환할 수 없는 문자열입니다. ($this)")
+    }
 }
