@@ -1,6 +1,5 @@
 package com.ody.eta.service;
 
-import com.ody.common.aop.DistributedLock;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.domain.EtaStatus;
@@ -37,7 +36,6 @@ public class EtaService {
     }
 
     @Transactional
-    @DistributedLock(key = "'FIND_ETAS'")
     public MateEtaResponsesV2 findAllMateEtas(MateEtaRequest mateEtaRequest, Mate mate) {
         Meeting meeting = mate.getMeeting();
         Eta mateEta = findByMateId(mate.getId());

@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
-import com.mulberry.ody.domain.apiresult.suspendOnSuccess
+import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.repository.ody.AuthRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
@@ -55,7 +55,7 @@ class LoginViewModel
             viewModelScope.launch {
                 startLoading()
                 authRepository.login(context)
-                    .suspendOnSuccess {
+                    .onSuccess {
                         navigateToMeetings()
                         matesEtaRepository.reserveAllEtaReservation()
                     }.onFailure { code, errorMessage ->

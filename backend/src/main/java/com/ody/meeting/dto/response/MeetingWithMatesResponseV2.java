@@ -3,14 +3,17 @@ package com.ody.meeting.dto.response;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
+import com.ody.route.domain.DepartureTime;
+import com.ody.route.domain.RouteTime;
 import com.ody.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-public record MeetingWithMatesResponse(
+public record MeetingWithMatesResponseV2(
 
         @Schema(description = "약속 ID", example = "1")
         Long id,
@@ -23,6 +26,15 @@ public record MeetingWithMatesResponse(
 
         @Schema(description = "약속 시간", type = "string", example = "14:00")
         LocalTime time,
+
+        @Schema(description = "출발 시간", type = "string", example = "11:00")
+        LocalTime departureTime,
+
+        @Schema(description = "소요 시간 (분)", type = "string", example = "60")
+        long routeTime,
+
+        @Schema(description = "출발지 주소", example = "서울 강남구 테헤란로 411")
+        String originAddress,
 
         @Schema(description = "도착지 주소", example = "서울 송파구 올림픽로35다길 42")
         String targetAddress,
@@ -43,12 +55,21 @@ public record MeetingWithMatesResponse(
         String inviteCode
 ) {
 
-    public static MeetingWithMatesResponse of(Meeting meeting, List<Mate> mates) {
-        return new MeetingWithMatesResponse(
+    public static MeetingWithMatesResponseV2 of(
+            Meeting meeting,
+            Mate requestMate,
+            List<Mate> mates
+    ) {
+        RouteTime mateRouteTime = new RouteTime(requestMate.getEstimatedMinutes());
+        DepartureTime mateDepartureTime = new DepartureTime(meeting, requestMate.getEstimatedMinutes());
+        return new MeetingWithMatesResponseV2(
                 meeting.getId(),
                 meeting.getName(),
                 meeting.getDate(),
                 TimeUtil.trimSecondsAndNanos(meeting.getTime()),
+                mateDepartureTime.getValue().toLocalTime(),
+                mateRouteTime.getMinutes(),
+                requestMate.getOriginAddress(),
                 meeting.getTargetAddress(),
                 meeting.getTargetLatitude(),
                 meeting.getTargetLongitude(),
@@ -58,3 +79,4 @@ public record MeetingWithMatesResponse(
         );
     }
 }
+

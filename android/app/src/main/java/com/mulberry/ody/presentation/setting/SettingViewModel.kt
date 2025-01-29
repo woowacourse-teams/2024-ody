@@ -3,7 +3,7 @@ package com.mulberry.ody.presentation.setting
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
-import com.mulberry.ody.domain.apiresult.suspendOnSuccess
+import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.repository.ody.AuthRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
@@ -42,7 +42,7 @@ class SettingViewModel
             viewModelScope.launch {
                 startLoading()
                 authRepository.withdrawAccount()
-                    .suspendOnSuccess {
+                    .onSuccess {
                         _loginNavigateEvent.emit(LoginNavigatedReason.WITHDRAWAL)
                         matesEtaRepository.clearEtaFetchingJob()
                         matesEtaRepository.clearEtaReservation(isReservationPending = false)

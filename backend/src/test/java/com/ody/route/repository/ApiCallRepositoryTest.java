@@ -16,7 +16,7 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("특정 날짜와 ClientType이 일치하는 데이터를 조회한다")
     @Test
-    void findFirstByDateAndClientType() {
+    void findByDateAndClientType() {
         // given
         LocalDate now = LocalDate.now();
         ApiCall yesterdayOdsayApiCall = new ApiCall(ClientType.ODSAY, 1, now.minusDays(1));
@@ -27,7 +27,7 @@ class ApiCallRepositoryTest extends BaseRepositoryTest {
         apiCallRepository.save(todayGoogleApiCall);
 
         // when
-        Optional<ApiCall> actual = apiCallRepository.findFirstByDateAndClientType(now, ClientType.ODSAY);
+        Optional<ApiCall> actual = apiCallRepository.findByDateAndClientType(now, ClientType.ODSAY);
 
         // then
         assertThat(actual).isPresent()
