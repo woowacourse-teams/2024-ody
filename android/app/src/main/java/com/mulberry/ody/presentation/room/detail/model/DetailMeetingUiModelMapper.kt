@@ -1,8 +1,8 @@
 package com.mulberry.ody.presentation.room.detail.model
 
 import com.mulberry.ody.domain.model.Meeting
-import com.mulberry.ody.presentation.common.toMessage
 import com.mulberry.ody.presentation.common.toDurationTimeMessage
+import com.mulberry.ody.presentation.common.toMessage
 import java.time.LocalDateTime
 
 fun Meeting.toDetailMeetingUiModel(): DetailMeetingUiModel {
