@@ -32,6 +32,9 @@ public class EtaSchedulingService {
     private final NoticeService noticeService;
 
     public void sendNotice(Meeting meeting) {
+        if (isPast(meeting.getMeetingTime())) {
+            return;
+        }
         LocalDateTime noticeTime = meeting.getMeetingTime().minusMinutes(NOTICE_TIME_DEFER);
         EtaSchedulingNotice notice = new EtaSchedulingNotice(noticeTime, meeting.getId(), meeting.getMeetingTime());
         sendNowOrScheduleLater(noticeTime, () -> noticeGroupMessageAndCache(notice));
