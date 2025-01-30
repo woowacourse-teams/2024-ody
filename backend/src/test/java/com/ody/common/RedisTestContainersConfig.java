@@ -21,7 +21,7 @@ public class RedisTestContainersConfig {
     private static final GenericContainer<?> redisContainer = new GenericContainer<>("redis:7.4.1-alpine3.20")
             .withExposedPorts(REDIS_PORT)
             .withCommand("redis-server --notify-keyspace-events Ex")
-            .withStartupTimeout(Duration.ofSeconds(30));
+            .withStartupTimeout(Duration.ofSeconds(60));
 
     static {
         redisContainer.start();
