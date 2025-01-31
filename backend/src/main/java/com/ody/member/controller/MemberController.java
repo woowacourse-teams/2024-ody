@@ -28,8 +28,8 @@ public class MemberController implements MemberControllerSwagger {
     @Override
     @DeleteMapping("/v2/members")
     public ResponseEntity<Void> deleteV2(@AuthMember Member member) {
+        memberService.deleteV2(member);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
-
 }
