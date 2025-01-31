@@ -46,9 +46,6 @@ class NotificationServiceTest extends BaseServiceTest {
     @Autowired
     private MemberService memberService;
 
-    @MockBean
-    private KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
-
     @DisplayName("PENDING 상태의 알림들을 TaskScheduler로 스케줄링 한다.")
     @Test
     void schedulePendingNotification() {
@@ -123,7 +120,7 @@ class NotificationServiceTest extends BaseServiceTest {
         fixtureGenerator.generateNotification(mate);
 
         int logCountBeforeDelete = notificationService.findAllNotiLogs(meeting.getId()).notiLog().size();
-        memberService.delete(deleteMate.getMember());
+        memberService.deleteV2(deleteMate.getMember());
         int logCountAfterDelete = notificationService.findAllNotiLogs(meeting.getId()).notiLog().size();
 
         assertThat(logCountAfterDelete).isEqualTo(logCountBeforeDelete + 1);
