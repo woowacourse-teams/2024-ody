@@ -82,4 +82,8 @@ public class Mate {
     public boolean isDeleted() {
         return deletedAt != null;
     }
+
+    public String getOriginAddress() {
+        return origin.getAddress();
+    }
 }

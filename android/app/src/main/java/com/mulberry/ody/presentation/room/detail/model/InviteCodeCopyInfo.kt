@@ -1,4 +1,4 @@
-package com.mulberry.ody.presentation.room.log.model
+package com.mulberry.ody.presentation.room.detail.model
 
 class InviteCodeCopyInfo(
     val meetingName: String,

@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 public interface MemberControllerSwagger {
 
     @Operation(
-            summary = "회원 삭제",
+            summary = "회원 삭제 (deprecated)",
             responses = @ApiResponse(responseCode = "204", description = "회원 삭제 성공")
     )
     @ErrorCode401
