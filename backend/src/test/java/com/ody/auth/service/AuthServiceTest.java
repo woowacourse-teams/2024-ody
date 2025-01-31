@@ -37,9 +37,9 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenNonMemberAttemptsWithLoggedInDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member sameDeivceFreshMember = fixtureGenerator.generateUnsavedMember("newPid", "deviceToken");
-            AuthRequest sameDeviceFreshMemberRequest = dtoGenerator.generateAuthRequest(sameDeivceFreshMember);
+            KakaoAuthRequest sameDeviceFreshMemberRequest = dtoGenerator.generateKakaoAuthRequest(sameDeivceFreshMember);
 
-            authService.issueTokens(sameDeviceFreshMemberRequest);
+            authService.authenticate(sameDeviceFreshMemberRequest);
 
             assertAll(
                     () -> assertThat(getDeviceTokenByAuthProvider("pid")).isNull(),
@@ -52,9 +52,9 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenMemberAttemptsWithLoggedInDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member sameMember = fixtureGenerator.generateUnsavedMember("pid", "deviceToken");
-            AuthRequest sameMemberRequest = dtoGenerator.generateAuthRequest(sameMember);
+            KakaoAuthRequest sameMemberRequest = dtoGenerator.generateKakaoAuthRequest(sameMember);
 
-            authService.issueTokens(sameMemberRequest);
+            authService.authenticate(sameMemberRequest);
 
             assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("deviceToken");
         }
@@ -65,9 +65,9 @@ class AuthServiceTest extends BaseServiceTest {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             fixtureGenerator.generateSavedMember("otherPid", "otherDeviceToken");
             Member otherPidSameDeviceUser = fixtureGenerator.generateUnsavedMember("otherPid", "deviceToken");
-            AuthRequest otherPidSameDeviceUserRequest = dtoGenerator.generateAuthRequest(otherPidSameDeviceUser);
+            KakaoAuthRequest otherPidSameDeviceUserRequest = dtoGenerator.generateKakaoAuthRequest(otherPidSameDeviceUser);
 
-            authService.issueTokens(otherPidSameDeviceUserRequest);
+            authService.authenticate(otherPidSameDeviceUserRequest);
 
             assertAll(
                     () -> assertThat(getDeviceTokenByAuthProvider("pid")).isNull(),
@@ -80,9 +80,9 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenNonMemberAttemptsWithUnloggedDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member freshDeivceFreshPidMember = fixtureGenerator.generateUnsavedMember("newPid", "newDeviceToken");
-            AuthRequest freshDeviceFreshPidMemberRequest = dtoGenerator.generateAuthRequest(freshDeivceFreshPidMember);
+            KakaoAuthRequest freshDeviceFreshPidMemberRequest = dtoGenerator.generateKakaoAuthRequest(freshDeivceFreshPidMember);
 
-            authService.issueTokens(freshDeviceFreshPidMemberRequest);
+            authService.authenticate(freshDeviceFreshPidMemberRequest);
 
             assertAll(
                     () -> assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("deviceToken"),
@@ -95,9 +95,9 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenMemberAttemptsWithUnloggedDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member freshDeivceSamePidMember = fixtureGenerator.generateUnsavedMember("pid", "newDeviceToken");
-            AuthRequest freshDeviceSamePidRequest = dtoGenerator.generateAuthRequest(freshDeivceSamePidMember);
+            KakaoAuthRequest freshDeviceSamePidRequest = dtoGenerator.generateKakaoAuthRequest(freshDeivceSamePidMember);
 
-            authService.issueTokens(freshDeviceSamePidRequest);
+            authService.authenticate(freshDeviceSamePidRequest);
 
             assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("newDeviceToken");
         }

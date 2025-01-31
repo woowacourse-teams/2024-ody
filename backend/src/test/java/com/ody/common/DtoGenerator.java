@@ -1,6 +1,7 @@
 package com.ody.common;
 
-import com.ody.auth.dto.request.AuthRequest;
+import com.ody.auth.dto.request.AppleAuthRequest;
+import com.ody.auth.dto.request.KakaoAuthRequest;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.meeting.domain.Location;
@@ -11,8 +12,12 @@ import java.time.LocalDateTime;
 
 public class DtoGenerator {
 
-    public AuthRequest generateAuthRequest(Member member) {
-        return generateAuthRequest(member.getAuthProvider().getProviderId(), member.getDeviceToken().getValue());
+    public KakaoAuthRequest generateKakaoAuthRequest(Member member) {
+        return generateKakaoAuthRequest(member.getAuthProvider().getProviderId(), member.getDeviceToken().getValue());
+    }
+
+    public KakaoAuthRequest generateKakaoAuthRequest(String providerId, String deviceToken) {
+        return new KakaoAuthRequest(deviceToken, providerId, "nickname", "imageUrl");
     }
 
     public AuthRequest generateAuthRequest(String providerId, String deviceToken) {

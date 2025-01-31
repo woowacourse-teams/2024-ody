@@ -1,6 +1,6 @@
 package com.ody.auth.controller;
 
-import com.ody.auth.dto.request.AuthRequest;
+import com.ody.auth.dto.request.KakaoAuthRequest;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseControllerTest;
@@ -31,11 +31,11 @@ class AuthControllerTest extends BaseControllerTest {
         @DisplayName("비회원이 로그인하면 200을 반환한다.")
         @Test
         void authKakaoWithNonMember() {
-            AuthRequest authRequest = dtoGenerator.generateAuthRequest("newPid", "newDeviceToken");
+            KakaoAuthRequest kakaoAuthRequest = dtoGenerator.generateKakaoAuthRequest("newPid", "newDeviceToken");
 
             RestAssured.given()
                     .contentType(ContentType.JSON)
-                    .body(authRequest)
+                    .body(kakaoAuthRequest)
                     .when()
                     .post("/v1/auth/kakao")
                     .then()
@@ -46,11 +46,11 @@ class AuthControllerTest extends BaseControllerTest {
         @Test
         void authKakaoWithMember() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
-            AuthRequest authRequest = dtoGenerator.generateAuthRequest("pid", "deviceToken");
+            KakaoAuthRequest kakaoAuthRequest = dtoGenerator.generateKakaoAuthRequest("pid", "deviceToken");
 
             RestAssured.given()
                     .contentType(ContentType.JSON)
-                    .body(authRequest)
+                    .body(kakaoAuthRequest)
                     .when()
                     .post("/v1/auth/kakao")
                     .then()
@@ -60,7 +60,7 @@ class AuthControllerTest extends BaseControllerTest {
         @DisplayName("유효하지 않은 요청 바디로 로그인하면 400을 반환한다.")
         @ParameterizedTest
         @MethodSource("getWrongAuthRequestArguments")
-        void authKakaoWithInvalidRequestBody(AuthRequest authRequest) {
+        void authKakaoWithInvalidRequestBody(KakaoAuthRequest authRequest) {
             RestAssured.given()
                     .contentType(ContentType.JSON)
                     .body(authRequest)
@@ -70,11 +70,11 @@ class AuthControllerTest extends BaseControllerTest {
                     .statusCode(400);
         }
 
-        private static Stream<AuthRequest> getWrongAuthRequestArguments() {
+        private static Stream<KakaoAuthRequest> getWrongAuthRequestArguments() {
             return Stream.of(
-                    new AuthRequest(null, "pId", "nickname", "imageUrl"),
-                    new AuthRequest("deviceToken", null, "nickname", "imageUrl"),
-                    new AuthRequest("deviceToken", "pId", null, "imageUrl")
+                    new KakaoAuthRequest(null, "pId", "nickname", "imageUrl"),
+                    new KakaoAuthRequest("deviceToken", null, "nickname", "imageUrl"),
+                    new KakaoAuthRequest("deviceToken", "pId", null, "imageUrl")
             );
         }
     }
