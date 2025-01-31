@@ -4,6 +4,7 @@ import com.ody.common.config.JpaAuditingConfig;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.repository.MeetingRepository;
+import com.ody.member.repository.MemberAppleTokenRepository;
 import com.ody.member.repository.MemberRepository;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.repository.ApiCallRepository;
@@ -38,6 +39,9 @@ public abstract class BaseRepositoryTest {
 
     @Autowired
     protected ApiCallRepository apiCallRepository;
+
+    @Autowired
+    protected MemberAppleTokenRepository memberAppleTokenRepository;
 
     @Autowired
     protected EntityManager entityManager;
