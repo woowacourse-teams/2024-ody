@@ -8,7 +8,6 @@ import com.ody.auth.service.AppleRevokeTokenClient;
 import com.ody.auth.service.KakaoAuthUnlinkClient;
 import com.ody.notification.config.FcmConfig;
 import com.ody.notification.service.FcmEventListener;
-import com.ody.route.service.RouteClientCircuitBreaker;
 import com.ody.route.domain.ApiCall;
 import com.ody.route.domain.ClientType;
 import com.ody.route.repository.ApiCallRepository;
@@ -38,9 +37,6 @@ public abstract class BaseServiceTest {
 
     @MockBean
     protected FcmEventListener fcmEventListener;
-  
-    @MockBean
-    protected RouteClientCircuitBreaker routeClientCircuitBreaker;
 
     @Autowired
     protected ApplicationEvents applicationEvents;
@@ -66,10 +62,7 @@ public abstract class BaseServiceTest {
     void setUp() {
         doNothing().when(kakaoAuthUnlinkClient).unlink(anyString());
         doNothing().when(appleRevokeTokenClient).unlink(anyString());
-    }
 
-    @BeforeEach
-    void setUp() {
         databaseCleaner.cleanUp();
         applicationEvents.clear();
         apiCallRepository.save(new ApiCall(ClientType.ODSAY, 0, LocalDate.now()));
