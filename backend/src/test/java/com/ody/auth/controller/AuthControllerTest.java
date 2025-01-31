@@ -74,8 +74,7 @@ class AuthControllerTest extends BaseControllerTest {
             return Stream.of(
                     new AuthRequest(null, "pId", "nickname", "imageUrl"),
                     new AuthRequest("deviceToken", null, "nickname", "imageUrl"),
-                    new AuthRequest("deviceToken", "pId", null, "imageUrl"),
-                    new AuthRequest("deviceToken", "pId", "nickname", null)
+                    new AuthRequest("deviceToken", "pId", null, "imageUrl")
             );
         }
     }

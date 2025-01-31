@@ -38,7 +38,6 @@ public class Member {
     @NotNull
     private Nickname nickname;
 
-    @NotNull
     private String imageUrl;
 
     @Embedded
