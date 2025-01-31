@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.when;
 
-import com.ody.auth.dto.request.AuthRequest;
+import com.ody.auth.dto.request.AppleAuthRequest;
+import com.ody.auth.dto.request.KakaoAuthRequest;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
@@ -14,11 +16,14 @@ import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
+import com.ody.member.domain.ProviderType;
+import com.ody.member.repository.MemberAppleTokenRepository;
 import com.ody.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 class AuthServiceTest extends BaseServiceTest {
 
@@ -27,6 +32,12 @@ class AuthServiceTest extends BaseServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @MockBean
+    private AppleValidateTokenClient appleValidateTokenClient;
+
+    @Autowired
+    private MemberAppleTokenRepository memberAppleTokenRepository;
 
     @DisplayName("멤버 인증 테스트")
     @Nested
@@ -157,5 +168,24 @@ class AuthServiceTest extends BaseServiceTest {
             member.updateRefreshToken(refreshToken);
             return memberRepository.save(member);
         }
+    }
+
+    @DisplayName("애플 회원 로그인 시 Apple Refresh Token을 저장한다.")
+    @Test
+    void authenticateSuccess() {
+        String appleRefreshToken = "sample-apple-refresh-token";
+        AppleAuthRequest appleAuthRequest = dtoGenerator.generateAppleAuthRequest();
+        String authorizationCode = appleAuthRequest.getAuthorizationCode();
+        when(appleValidateTokenClient.obtainRefreshToken(authorizationCode)).thenReturn(appleRefreshToken);
+
+        authService.authenticate(appleAuthRequest);
+
+        String result = getAppleRefreshTokenByProviderId(appleAuthRequest.getProviderId());
+        assertThat(result).isEqualTo(appleRefreshToken);
+    }
+
+    private String getAppleRefreshTokenByProviderId(String providerId) {
+        AuthProvider authProvider = new AuthProvider(ProviderType.APPLE, providerId);
+        return memberAppleTokenRepository.findByMember_AuthProvider(authProvider).get().getAppleRefreshToken();
     }
 }

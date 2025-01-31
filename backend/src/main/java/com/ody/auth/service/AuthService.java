@@ -3,12 +3,14 @@ package com.ody.auth.service;
 import com.ody.auth.JwtTokenProvider;
 import com.ody.auth.domain.AuthorizationHeader;
 import com.ody.auth.domain.Authorizer;
-import com.ody.auth.dto.request.AuthRequest;
+import com.ody.auth.dto.request.AppleAuthRequest;
+import com.ody.auth.dto.request.KakaoAuthRequest;
 import com.ody.auth.dto.response.AuthResponse;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.member.domain.Member;
+import com.ody.member.service.MemberAppleTokenService;
 import com.ody.member.service.MemberService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,8 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
     private final Authorizer authorizer;
+    private final AppleValidateTokenClient appleValidateTokenClient;
+    private final MemberAppleTokenService memberAppleTokenService;
 
     public Member parseAccessToken(String rawAccessToken) {
         AccessToken accessToken = new AccessToken(rawAccessToken);
@@ -33,11 +37,22 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthResponse issueTokens(AuthRequest authRequest) {
-        Member requestMember = authRequest.toMember();
-        Member authorizedMember = findAuthroizedMember(requestMember);
-        Member savedAuthorizedMember = memberService.save(authorizedMember) ;
-        return issueNewTokens(savedAuthorizedMember.getId());
+    public AuthResponse authenticate(KakaoAuthRequest kakaoAuthRequest) {
+        Member savedMember = saveMember(kakaoAuthRequest.toMember());
+        return issueNewTokens(savedMember.getId());
+    }
+
+    @Transactional
+    public AuthResponse authenticate(AppleAuthRequest appleAuthRequest) {
+        String appleRefreshToken = appleValidateTokenClient.obtainRefreshToken(appleAuthRequest.getAuthorizationCode());
+        Member savedMember = saveMember(appleAuthRequest.toMember());
+        memberAppleTokenService.save(savedMember, appleRefreshToken);
+        return issueNewTokens(savedMember.getId());
+    }
+
+    private Member saveMember(Member member) {
+        Member authorizedMember = findAuthroizedMember(member);
+        return memberService.save(authorizedMember);
     }
 
     private Member findAuthroizedMember(Member requestMember) {

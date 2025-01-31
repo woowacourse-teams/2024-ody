@@ -1,7 +1,7 @@
 package com.ody.auth.controller;
 
 import com.ody.auth.dto.request.AppleAuthRequest;
-import com.ody.auth.dto.request.AuthRequest;
+import com.ody.auth.dto.request.KakaoAuthRequest;
 import com.ody.auth.dto.response.AuthResponse;
 import com.ody.swagger.annotation.ErrorCode400;
 import com.ody.swagger.annotation.ErrorCode401;
@@ -32,7 +32,7 @@ public interface AuthControllerSwagger {
     )
     @ErrorCode400
     @ErrorCode500
-    ResponseEntity<AuthResponse> authKakao(AuthRequest authRequest);
+    ResponseEntity<AuthResponse> authKakao(KakaoAuthRequest kakaoAuthRequest);
 
     @Operation(
             summary = "애플 로그인",
@@ -46,7 +46,7 @@ public interface AuthControllerSwagger {
     )
     @ErrorCode400
     @ErrorCode500
-    ResponseEntity<AuthResponse> authApple(AppleAuthRequest authRequest);
+    ResponseEntity<AuthResponse> authApple(AppleAuthRequest appleAuthRequest);
 
     @Operation(
             summary = "액세스 토큰 갱신",

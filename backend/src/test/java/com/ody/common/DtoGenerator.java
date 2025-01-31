@@ -20,8 +20,11 @@ public class DtoGenerator {
         return new KakaoAuthRequest(deviceToken, providerId, "nickname", "imageUrl");
     }
 
-    public AuthRequest generateAuthRequest(String providerId, String deviceToken) {
-        return new AuthRequest(deviceToken, providerId, "nickname", "imageUrl");
+    public AppleAuthRequest generateAppleAuthRequest() {
+        String providerId = "sample-provider-id";
+        String deviceToken = "sample-device-token";
+        String authorizationCode = "sample-authorization-code";
+        return new AppleAuthRequest(deviceToken, providerId, "apple-user", null, authorizationCode);
     }
 
     public MateSaveRequestV2 generateMateSaveRequest(Meeting meeting) {
