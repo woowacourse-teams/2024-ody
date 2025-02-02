@@ -53,8 +53,9 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
     @Value("${spring.data.redis.ttl}")
     private int ttlMs;
 
+    @DisplayName("약속 30분 전 ETA 스케줄링 알림")
     @Nested
-    class 약속_30분_전_ETA_스케줄링_알림 {
+    class Notice30MinutesBeforeMeeting {
 
         @DisplayName("약속 시간 30분 전 ETA 스케줄링 알림이 예약된다.")
         @Test
@@ -114,8 +115,9 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
         }
     }
 
+    @DisplayName("ETA 스케줄링 알림 재시도")
     @Nested
-    class ETA_스케줄링_알림_재시도 {
+    class RetryETASchedulingNotice {
 
         @DisplayName("다이렉트 메시지로 ETA 스케줄링 알림을 발송한다.")
         @Test
@@ -146,8 +148,9 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
         }
     }
 
+    @DisplayName("ETA 스케줄링 알림 시나리오")
     @Nested
-    class ETA_스케줄링_알림_시나리오 {
+    class ETASchedulingNoticeScenario {
 
         @DisplayName("정상 시나리오 : 스케줄링 그룹 알림 전송 -> ETA 요청 -> 스케줄링 개인 알림 재전송 X")
         @TestFactory
