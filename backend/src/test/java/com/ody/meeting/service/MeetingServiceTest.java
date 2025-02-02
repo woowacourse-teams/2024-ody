@@ -157,8 +157,8 @@ class MeetingServiceTest extends BaseServiceTest {
     @DisplayName("내일 오전 5시 이내 약속을 생성한 경우가 아니면, 약속 시간 30분 전에 ETA 공지 알림만 예약된다.")
     @Test
     void saveAndScheduleEtaNotice() {
-        LocalDateTime meetingDateTime = TimeUtil.nowWithTrim().plusDays(1);
-        MeetingSaveRequestV1 request = dtoGenerator.generateMeetingRequest(meetingDateTime);
+        LocalDateTime twoDaysLater = TimeUtil.nowWithTrim().plusDays(2);
+        MeetingSaveRequestV1 request = dtoGenerator.generateMeetingRequest(twoDaysLater);
         meetingService.saveV1(request);
 
         ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
@@ -169,7 +169,7 @@ class MeetingServiceTest extends BaseServiceTest {
         runnableCaptor.getValue().run();
 
         assertAll(
-                () -> assertThat(meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET))
+                () -> assertThat(twoDaysLater.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET))
                         .isEqualTo(scheduledTime),
                 () -> assertThat(applicationEvents.stream(NoticeEvent.class)).hasSize(1)
         );
