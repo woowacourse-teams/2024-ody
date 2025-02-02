@@ -23,7 +23,7 @@ public class RedisKeyExpiredListener extends KeyExpirationEventMessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        log.info("TTL 만료 트리거 동작 - " + message.toString());
+        log.info("TTL 만료 트리거 동작 - redis key : " + message.toString());
         EtaSchedulingKey etaSchedulingKey = EtaSchedulingKey.from(message.toString());
         etaSchedulingService.sendFallbackNotice(etaSchedulingKey);
     }
