@@ -8,11 +8,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisCacheCleaner {
 
+    private static final String ALL_KEYS = "*";
+
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    public void cleanUp() {
-        Set<String> keys = redisTemplate.keys("*");
+    public void clear() {
+        Set<String> keys = redisTemplate.keys(ALL_KEYS);
         if (keys != null && !keys.isEmpty()) {
             redisTemplate.delete(keys);
         }
