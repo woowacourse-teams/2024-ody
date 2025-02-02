@@ -8,6 +8,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -20,6 +21,7 @@ public class RedisTestContainersConfig {
     @Container
     private static final GenericContainer<?> redisContainer = new GenericContainer<>("redis:7.4.1-alpine3.20")
             .withExposedPorts(REDIS_PORT)
+            .waitingFor(Wait.forListeningPort())
             .withCommand("redis-server --notify-keyspace-events Ex")
             .withStartupTimeout(Duration.ofSeconds(60));
 
