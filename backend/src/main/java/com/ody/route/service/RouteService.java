@@ -18,7 +18,6 @@ public class RouteService {
 
     private final RouteClientManager routeClientManager;
     private final ApiCallService apiCallService;
-    private final RouteClientCircuitBreaker routeClientCircuitBreaker;
 
     public RouteTime calculateRouteTime(Coordinates origin, Coordinates target) {
         List<RouteClient> availableClients = routeClientManager.getAvailableClients();
@@ -35,8 +34,6 @@ public class RouteService {
                 return routeTime;
             } catch (OdyServerErrorException exception) {
                 log.warn("{} API 에러 발생 :  ", routeClient.getClientType(), exception);
-                routeClientCircuitBreaker.recordFailCountInMinutes(routeClient);
-                routeClientCircuitBreaker.determineBlock(routeClient);
             }
         }
         log.error("모든 RouteClient API 사용 불가");

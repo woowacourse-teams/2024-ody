@@ -11,8 +11,8 @@ import com.mulberry.ody.mateEtaInfo
 import com.mulberry.ody.meeting
 import com.mulberry.ody.meetingId
 import com.mulberry.ody.notificationLogs
+import com.mulberry.ody.presentation.room.detail.model.toDetailMeetingUiModel
 import com.mulberry.ody.presentation.room.etadashboard.model.toMateEtaUiModels
-import com.mulberry.ody.presentation.room.log.model.toMeetingUiModel
 import com.mulberry.ody.presentation.room.log.model.toNotificationUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
@@ -65,7 +65,7 @@ class MeetingRoomViewModelTest {
         runTest {
             // then
             val meetingUiModel = viewModel.meeting.first()
-            assertThat(meetingUiModel).isEqualTo(meeting.toMeetingUiModel())
+            assertThat(meetingUiModel).isEqualTo(meeting.toDetailMeetingUiModel())
 
             val notificationLogUiModel = viewModel.notificationLogs.first()
             assertThat(notificationLogUiModel).isEqualTo(notificationLogs.toNotificationUiModels())

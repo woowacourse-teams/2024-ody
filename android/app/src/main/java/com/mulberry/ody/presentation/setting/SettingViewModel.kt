@@ -3,8 +3,8 @@ package com.mulberry.ody.presentation.setting
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
-import com.mulberry.ody.domain.apiresult.suspendOnSuccess
-import com.mulberry.ody.domain.repository.ody.LoginRepository
+import com.mulberry.ody.domain.apiresult.onSuccess
+import com.mulberry.ody.domain.repository.ody.AuthRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
@@ -23,7 +23,7 @@ class SettingViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val loginRepository: LoginRepository,
+        private val authRepository: AuthRepository,
         private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel() {
         private val _loginNavigateEvent: MutableSharedFlow<LoginNavigatedReason> =
@@ -32,7 +32,7 @@ class SettingViewModel
 
         fun logout() {
             viewModelScope.launch {
-                loginRepository.logout()
+                authRepository.logout()
                 _loginNavigateEvent.emit(LoginNavigatedReason.LOGOUT)
                 matesEtaRepository.clearEtaReservation(isReservationPending = true)
             }
@@ -41,8 +41,8 @@ class SettingViewModel
         fun withdrawAccount() {
             viewModelScope.launch {
                 startLoading()
-                loginRepository.withdrawAccount()
-                    .suspendOnSuccess {
+                authRepository.withdrawAccount()
+                    .onSuccess {
                         _loginNavigateEvent.emit(LoginNavigatedReason.WITHDRAWAL)
                         matesEtaRepository.clearEtaFetchingJob()
                         matesEtaRepository.clearEtaReservation(isReservationPending = false)

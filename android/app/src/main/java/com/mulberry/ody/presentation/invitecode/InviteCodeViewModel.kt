@@ -1,9 +1,9 @@
 package com.mulberry.ody.presentation.invitecode
 
 import androidx.lifecycle.viewModelScope
+import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
-import com.mulberry.ody.domain.apiresult.suspendOnFailure
-import com.mulberry.ody.domain.apiresult.suspendOnSuccess
+import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
@@ -51,9 +51,9 @@ class InviteCodeViewModel
                 val inviteCode = inviteCode.value.ifBlank { return@launch }
                 startLoading()
                 meetingRepository.fetchInviteCodeValidity(inviteCode)
-                    .suspendOnSuccess {
+                    .onSuccess {
                         _navigateAction.emit(InviteCodeNavigateAction.CodeNavigateToJoin)
-                    }.suspendOnFailure { code, errorMessage ->
+                    }.onFailure { code, errorMessage ->
                         _invalidCodeEvent.emit(errorMessage.toString())
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                     }.onNetworkError {

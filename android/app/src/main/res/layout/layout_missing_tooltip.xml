@@ -11,7 +11,7 @@
         style="@style/pretendard_regular_12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rectangle_tooltip"
+        android:background="@drawable/rectangle_radius_20_without_bottom_right"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
         android:textColor="@color/secondaryVariant"

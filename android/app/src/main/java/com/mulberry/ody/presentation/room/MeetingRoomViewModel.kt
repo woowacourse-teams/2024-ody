@@ -10,8 +10,6 @@ import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
-import com.mulberry.ody.domain.apiresult.suspendOnFailure
-import com.mulberry.ody.domain.apiresult.suspendOnSuccess
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Nudge
 import com.mulberry.ody.domain.repository.image.ImageStorage
@@ -24,15 +22,15 @@ import com.mulberry.ody.presentation.common.analytics.logButtonClicked
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.common.image.ImageShareContent
 import com.mulberry.ody.presentation.common.image.ImageShareHelper
+import com.mulberry.ody.presentation.room.detail.model.DetailMeetingUiModel
+import com.mulberry.ody.presentation.room.detail.model.InviteCodeCopyInfo
+import com.mulberry.ody.presentation.room.detail.model.MateUiModel
+import com.mulberry.ody.presentation.room.detail.model.toDetailMeetingUiModel
+import com.mulberry.ody.presentation.room.detail.model.toMateUiModels
 import com.mulberry.ody.presentation.room.etadashboard.listener.NudgeListener
 import com.mulberry.ody.presentation.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.room.etadashboard.model.toMateEtaUiModels
-import com.mulberry.ody.presentation.room.log.model.InviteCodeCopyInfo
-import com.mulberry.ody.presentation.room.log.model.MateUiModel
-import com.mulberry.ody.presentation.room.log.model.MeetingDetailUiModel
 import com.mulberry.ody.presentation.room.log.model.NotificationLogUiModel
-import com.mulberry.ody.presentation.room.log.model.toMateUiModels
-import com.mulberry.ody.presentation.room.log.model.toMeetingUiModel
 import com.mulberry.ody.presentation.room.log.model.toNotificationUiModels
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -76,9 +74,8 @@ class MeetingRoomViewModel
                 initialValue = null,
             )
 
-        private val _meeting: MutableStateFlow<MeetingDetailUiModel> =
-            MutableStateFlow(MeetingDetailUiModel.DEFAULT)
-        val meeting: StateFlow<MeetingDetailUiModel> = _meeting.asStateFlow()
+        private val _meeting: MutableStateFlow<DetailMeetingUiModel> = MutableStateFlow(DetailMeetingUiModel.DEFAULT)
+        val meeting: StateFlow<DetailMeetingUiModel> = _meeting.asStateFlow()
 
         private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
         val mates: StateFlow<List<MateUiModel>> = _mates.asStateFlow()
@@ -86,8 +83,8 @@ class MeetingRoomViewModel
         private val _notificationLogs = MutableStateFlow<List<NotificationLogUiModel>>(listOf())
         val notificationLogs: StateFlow<List<NotificationLogUiModel>> = _notificationLogs.asStateFlow()
 
-        private val _navigateToEtaDashboardEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val navigateToEtaDashboardEvent: SharedFlow<Unit> get() = _navigateToEtaDashboardEvent.asSharedFlow()
+        private val _navigationEvent: MutableSharedFlow<MeetingRoomNavigateAction> = MutableSharedFlow()
+        val navigationEvent: SharedFlow<MeetingRoomNavigateAction> get() = _navigationEvent.asSharedFlow()
 
         private val _nudgeSuccessMate: MutableSharedFlow<String> = MutableSharedFlow()
         val nudgeSuccessMate: SharedFlow<String> get() = _nudgeSuccessMate.asSharedFlow()
@@ -105,6 +102,12 @@ class MeetingRoomViewModel
         val copyInviteCodeEvent: SharedFlow<InviteCodeCopyInfo> get() = _copyInviteCodeEvent.asSharedFlow()
 
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
+
+        private val _isVisibleNavigation: MutableStateFlow<Boolean> = MutableStateFlow(false)
+        val isVisibleNavigation: StateFlow<Boolean> get() = _isVisibleNavigation
+
+        private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent
 
         init {
             fetchMeeting()
@@ -145,9 +148,9 @@ class MeetingRoomViewModel
             mateNickname: String,
         ) {
             meetingRepository.postNudge(Nudge(nudgeId, mateId))
-                .suspendOnSuccess {
+                .onSuccess {
                     _nudgeSuccessMate.emit(mateNickname)
-                }.suspendOnFailure { code, errorMessage ->
+                }.onFailure { code, errorMessage ->
                     when (code) {
                         400 -> _expiredNudgeTimeLimit.emit(Unit)
                         else -> handleError()
@@ -182,7 +185,7 @@ class MeetingRoomViewModel
                 startLoading()
                 meetingRepository.fetchMeeting(meetingId)
                     .onSuccess {
-                        _meeting.value = it.toMeetingUiModel()
+                        _meeting.value = it.toDetailMeetingUiModel()
                         _mates.value = it.toMateUiModels()
                         fetchNotificationLogs()
                     }.onFailure { code, errorMessage ->
@@ -199,11 +202,26 @@ class MeetingRoomViewModel
 
         fun navigateToEtaDashboard() {
             viewModelScope.launch {
+                if (!meeting.value.isEtaAccessible()) {
+                    _inaccessibleEtaEvent.emit(Unit)
+                    return@launch
+                }
+
                 analyticsHelper.logButtonClicked(
-                    eventName = "eta_button_from_notification_log",
+                    eventName = "navigate_to_eta_dashboard",
                     location = TAG,
                 )
-                _navigateToEtaDashboardEvent.emit(Unit)
+                _navigationEvent.emit(MeetingRoomNavigateAction.NavigateToEtaDashboard)
+            }
+        }
+
+        fun navigateToNotificationLog() {
+            viewModelScope.launch {
+                analyticsHelper.logButtonClicked(
+                    eventName = "navigate_to_notification_log",
+                    location = TAG,
+                )
+                _navigationEvent.emit(MeetingRoomNavigateAction.NavigateToNotificationLog)
             }
         }
 
@@ -275,7 +293,7 @@ class MeetingRoomViewModel
 
                 startLoading()
                 meetingRepository.exitMeeting(_meeting.value.id)
-                    .suspendOnSuccess {
+                    .onSuccess {
                         matesEtaRepository.deleteEtaReservation(meetingId)
                         _exitMeetingRoomEvent.emit(Unit)
                     }.onFailure { code, errorMessage ->
@@ -288,6 +306,10 @@ class MeetingRoomViewModel
                     }
                 stopLoading()
             }
+        }
+
+        fun handleNavigationVisibility() {
+            _isVisibleNavigation.value = !_isVisibleNavigation.value
         }
 
         @AssistedFactory

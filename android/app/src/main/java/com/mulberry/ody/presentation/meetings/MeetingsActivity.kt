@@ -19,6 +19,8 @@ import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.mulberry.ody.presentation.meetings.listener.MeetingsListener
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
+import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
+import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
 import com.mulberry.ody.presentation.setting.SettingActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -116,7 +118,7 @@ class MeetingsActivity :
             MeetingRoomActivity.getIntent(
                 this,
                 meetingId,
-                MeetingRoomActivity.NAVIGATE_TO_NOTIFICATION_LOG,
+                NAVIGATE_TO_DETAIL_MEETING,
             )
         startActivity(intent)
     }
@@ -126,7 +128,7 @@ class MeetingsActivity :
             MeetingRoomActivity.getIntent(
                 this,
                 meetingId,
-                MeetingRoomActivity.NAVIGATE_TO_ETA_DASHBOARD,
+                NAVIGATE_TO_ETA_DASHBOARD,
             )
         startActivity(intent)
     }
@@ -137,7 +139,7 @@ class MeetingsActivity :
     }
 
     override fun guideItemDisabled() {
-        showSnackBar(R.string.meetings_entrance_unavailable_guide)
+        showSnackBar(R.string.inaccessible_eta_guide)
     }
 
     override fun onClickSetting() {

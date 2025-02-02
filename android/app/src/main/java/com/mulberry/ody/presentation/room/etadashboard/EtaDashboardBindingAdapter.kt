@@ -1,12 +1,11 @@
 package com.mulberry.ody.presentation.room.etadashboard
 
-import android.graphics.Point
-import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.getPointOnScreen
 import com.mulberry.ody.presentation.common.listener.setOnSingleClickListener
 import com.mulberry.ody.presentation.room.etadashboard.listener.MissingToolTipListener
 import com.mulberry.ody.presentation.room.etadashboard.listener.NudgeListener
@@ -29,7 +28,7 @@ fun TextView.setOnClickMissingTooltip(
     isUserSelf: Boolean,
     missingToolTipListener: MissingToolTipListener,
 ) {
-    setOnSingleClickListener {
+    setOnClickListener {
         val point = this.getPointOnScreen()
         missingToolTipListener.onClickMissingToolTipListener(point, isUserSelf)
     }
@@ -63,14 +62,5 @@ fun TextView.setOnClickNudge(
                 mateId = mateEtaUiModel.mateId,
             )
         }
-    }
-}
-
-private fun View.getPointOnScreen(): Point {
-    val location = IntArray(2)
-    this.getLocationOnScreen(location)
-    return Point().apply {
-        x = location[0]
-        y = location[1]
     }
 }

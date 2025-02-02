@@ -14,8 +14,15 @@ import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.member.domain.Member;
+import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.types.DepartureReminder;
+import com.ody.notification.domain.types.Entry;
+import com.ody.notification.domain.types.MateLeave;
+import com.ody.notification.domain.types.MemberDeletion;
+import com.ody.notification.domain.types.Nudge;
 import com.ody.notification.service.NotificationService;
+import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.TimeUtil;
@@ -43,14 +50,32 @@ public class MateService {
             Member member,
             Meeting meeting
     ) {
+        validateMeetingOverdue(meeting);
         validateAlreadyAttended(member, meeting);
+        Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
+
+        FcmTopic fcmTopic = new FcmTopic(meeting);
+        sendEntry(mate, fcmTopic);
+        notificationService.subscribeTopic(member.getDeviceToken(), fcmTopic);
+        sendDepartureReminder(meeting, mate, fcmTopic);
+        return MateSaveResponseV2.from(meeting);
+    }
+
+    private void sendEntry(Mate mate, FcmTopic fcmTopic) {
+        Entry entry = new Entry(mate, fcmTopic);
+        notificationService.saveAndSchedule(entry.toNotification());
+    }
+
+    private void sendDepartureReminder(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
+        DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
+        DepartureReminder departureReminder = new DepartureReminder(mate, departureTime, fcmTopic);
+        notificationService.saveAndSchedule(departureReminder.toNotification());
+    }
+
+    private void validateMeetingOverdue(Meeting meeting) {
         if (meeting.isOverdue()) {
             throw new OdyBadRequestException("참여 가능한 시간이 지난 약속에 참여할 수 없습니다.");
         }
-
-        Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
-        notificationService.saveAndSendNotifications(meeting, mate, member.getDeviceToken());
-        return MateSaveResponseV2.from(meeting);
     }
 
     public void validateAlreadyAttended(Member member, Meeting meeting) {
@@ -78,7 +103,8 @@ public class MateService {
         Mate requestMate = findFetchedMate(nudgeRequest.requestMateId());
         Mate nudgedMate = findFetchedMate(nudgeRequest.nudgedMateId());
         validateNudgeCondition(requestMate, nudgedMate);
-        notificationService.sendNudgeMessage(requestMate, nudgedMate);
+        Nudge nudge = new Nudge(nudgedMate);
+        notificationService.sendNudgeMessage(requestMate, nudge);
     }
 
     private void validateNudgeCondition(Mate requestMate, Mate nudgedMate) {
@@ -133,7 +159,7 @@ public class MateService {
 
     @Transactional
     public void withdraw(Mate mate) {
-        Notification memberDeletionNotification = Notification.createMemberDeletion(mate);
+        Notification memberDeletionNotification = new MemberDeletion(mate).toNotification();
         notificationService.save(memberDeletionNotification);
         delete(mate);
     }
@@ -141,7 +167,7 @@ public class MateService {
     @Transactional
     public void leaveByMeetingIdAndMemberId(Long meetingId, Long memberId) {
         Mate mate = findByMeetingIdAndMemberId(meetingId, memberId);
-        Notification leaveNotification = Notification.createMateLeave(mate);
+        Notification leaveNotification = new MateLeave(mate).toNotification();
         notificationService.save(leaveNotification);
         delete(mate);
     }

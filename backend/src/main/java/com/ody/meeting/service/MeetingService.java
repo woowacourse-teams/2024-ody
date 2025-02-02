@@ -1,6 +1,5 @@
 package com.ody.meeting.service;
 
-import com.ody.common.aop.DistributedLock;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
@@ -13,7 +12,8 @@ import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponse;
 import com.ody.meeting.dto.response.MeetingFindByMemberResponses;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
-import com.ody.meeting.dto.response.MeetingWithMatesResponse;
+import com.ody.meeting.dto.response.MeetingWithMatesResponseV1;
+import com.ody.meeting.dto.response.MeetingWithMatesResponseV2;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.NotificationType;
@@ -93,19 +93,29 @@ public class MeetingService {
 
     private MeetingFindByMemberResponse makeMeetingFindByMemberResponse(Member member, Meeting meeting) {
         int mateCount = mateRepository.countByMeetingId(meeting.getId());
-        Mate mate = mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId())
-                .orElseThrow(() -> new OdyNotFoundException("참여하고 있지 않는 약속입니다"));
+        Mate mate = findMateByMemberAndMeeting(member, meeting);
         return MeetingFindByMemberResponse.of(meeting, mateCount, mate);
     }
 
-    public MeetingWithMatesResponse findMeetingWithMates(Member member, Long meetingId) {
+    public MeetingWithMatesResponseV1 findMeetingWithMatesV1(Member member, Long meetingId) {
         Meeting meeting = findByIdAndOverdueFalse(meetingId);
         List<Mate> mates = mateService.findAllByMeetingIdIfMate(member, meeting.getId());
-        return MeetingWithMatesResponse.of(meeting, mates);
+        return MeetingWithMatesResponseV1.of(meeting, mates);
+    }
+
+    public MeetingWithMatesResponseV2 findMeetingWithMatesV2(Member member, Long meetingId) {
+        Meeting meeting = findByIdAndOverdueFalse(meetingId);
+        Mate requestMate = findMateByMemberAndMeeting(member, meeting);
+        List<Mate> mates = mateService.findAllByMeetingIdIfMate(member, meeting.getId());
+        return MeetingWithMatesResponseV2.of(meeting, requestMate, mates);
+    }
+
+    private Mate findMateByMemberAndMeeting(Member member, Meeting meeting) {
+        return mateRepository.findByMeetingIdAndMemberId(meeting.getId(), member.getId())
+                .orElseThrow(() -> new OdyNotFoundException("참여하고 있지 않는 약속입니다"));
     }
 
     @Transactional
-    @DistributedLock(key = "'MATE_SAVE'")
     public MateSaveResponseV2 saveMateAndSendNotifications(MateSaveRequestV2 mateSaveRequest, Member member) {
         Meeting meeting = findByInviteCode(mateSaveRequest.inviteCode());
         if (meeting.isEnd()) {

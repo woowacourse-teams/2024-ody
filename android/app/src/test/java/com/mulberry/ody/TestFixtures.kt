@@ -20,16 +20,17 @@ val meetingId: Long = 0L
 
 val meeting: Meeting =
     Meeting(
-        0,
-        "meetingA",
-        "선릉 캠퍼스",
-        LocalDate.of(2024, 1, 1),
-        LocalTime.of(10, 0),
-        listOf(Mate("A", ""), Mate("B", ""), Mate("C", "")),
-        inviteCode,
+        id = meetingId,
+        name = "meetingA",
+        destinationAddress = "선릉 캠퍼스",
+        departureAddress = "잠실 캠퍼스",
+        date = LocalDate.of(2024, 1, 1),
+        time = LocalTime.of(10, 0),
+        departureTime = LocalTime.of(2, 30),
+        durationTime = 30,
+        mates = listOf(Mate("A", ""), Mate("B", ""), Mate("C", "")),
+        inviteCode = inviteCode,
     )
-
-val meetings: List<Meeting> = listOf(meeting)
 
 val meetingCatalog =
     MeetingCatalog(

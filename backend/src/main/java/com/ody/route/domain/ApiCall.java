@@ -43,8 +43,8 @@ public class ApiCall {
 
     private Boolean enabled;
 
-    public ApiCall(ClientType clientType) {
-        this(null, clientType, 0, LocalDate.now(), null);
+    public ApiCall(ClientType clientType, Integer count, LocalDate date, Boolean enabled) {
+        this(null, clientType, count, date, enabled);
     }
 
     public ApiCall(ClientType clientType, Integer count, LocalDate date) {

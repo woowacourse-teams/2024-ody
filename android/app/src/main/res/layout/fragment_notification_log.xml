@@ -14,237 +14,74 @@
             type="com.mulberry.ody.presentation.common.listener.BackListener" />
 
         <variable
-            name="menuListener"
-            type="com.mulberry.ody.presentation.room.log.listener.MenuListener" />
-
-        <variable
-            name="notificationLogListener"
-            type="com.mulberry.ody.presentation.room.log.listener.NotificationLogListener" />
+            name="meetingRoomListener"
+            type="com.mulberry.ody.presentation.room.listener.MeetingRoomListener" />
     </data>
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/dl_notification_log"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/primary"
+        tools:context=".presentation.room.log.NotificationLogFragment">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".presentation.room.log.NotificationLogFragment">
+        <include
+            android:id="@+id/tb_detail_meeting"
+            layout="@layout/toolbar_meeting_room"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:backListener="@{backListener}"
+            app:layout_constraintBottom_toTopOf="@id/rv_notification_log"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:meetingRoomListener="@{meetingRoomListener}"
+            app:title="@{vm.meeting.name}" />
 
-            <include
-                android:id="@+id/tb_notification_log"
-                layout="@layout/toolbar_notification_log"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:backListener="@{backListener}"
-                app:layout_constraintBottom_toTopOf="@id/ll_notification_log"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:mateCount="@{vm.meeting.mates.size()}"
-                app:menuListener="@{menuListener}"
-                app:title="@{vm.meeting.name}" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_notification_log"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingTop="16dp"
+            app:itemAnimator="@{null}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_detail_meeting"
+            tools:listitem="@layout/item_notification_log" />
 
-            <LinearLayout
-                android:id="@+id/ll_notification_log"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tb_notification_log">
+        <LinearLayout
+            android:id="@+id/btn_ody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/rectangle_radius_15"
+            android:backgroundTint="@color/secondary"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:onSingleClick="@{() -> vm.navigateToEtaDashboard()}"
+            app:visibility="@{vm.meeting.etaAccessible}">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_meeting_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rectangle_cream_downside_shadow_radius_30">
-
-                    <ImageView
-                        android:id="@+id/iv_meeting_date_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="22dp"
-                        android:src="@drawable/ic_watch"
-                        app:layout_constraintEnd_toStartOf="@id/tv_meeting_date_time"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tv_meeting_date_time" />
-
-                    <TextView
-                        android:id="@+id/tv_meeting_date_time"
-                        style="@style/pretendard_regular_16"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="14dp"
-                        android:layout_marginTop="14dp"
-                        android:text="@{vm.meeting.meetingTime}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/iv_meeting_date_time"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="2024년 7월 11일 03시 00분" />
-
-                    <ImageView
-                        android:id="@+id/iv_meeting_position"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="22dp"
-                        android:src="@drawable/ic_location_on"
-                        app:layout_constraintEnd_toStartOf="@id/tv_meeting_destination"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tv_meeting_destination" />
-
-                    <TextView
-                        android:id="@+id/tv_meeting_destination"
-                        style="@style/pretendard_regular_16"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="14dp"
-                        android:text="@{vm.meeting.targetPosition}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/iv_meeting_position"
-                        app:layout_constraintTop_toBottomOf="@id/tv_meeting_date_time"
-                        tools:text="서울특별시 강남구 테헤란로 411" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_notification_log"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="-20dp"
-                    android:clipToPadding="false"
-                    android:overScrollMode="never"
-                    android:paddingTop="16dp"
-                    app:itemAnimator="@{null}"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_notification_log" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btn_ody"
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="18dp"
-                android:layout_marginBottom="18dp"
-                android:background="@drawable/rectangle_radius_15"
-                android:backgroundTint="@color/secondary"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:onSingleClick="@{() -> vm.navigateToEtaDashboard()}"
-                app:visibility="@{vm.meeting.etaAccessible}">
+                android:src="@drawable/ic_white_ody" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_white_ody" />
+            <TextView
+                style="@style/pretendard_bold_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/ody_button"
+                android:textColor="@color/secondaryVariant" />
 
-                <TextView
-                    style="@style/pretendard_bold_16"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="@string/meeting_room_dashboard_button"
-                    android:textColor="@color/secondaryVariant" />
+        </LinearLayout>
 
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nv_notification_log"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:background="@color/septenary">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/rectangle_hamburger_menu">
-
-                <TextView
-                    android:id="@+id/tv_invite_code_top"
-                    style="@style/pretendard_medium_16"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="28dp"
-                    android:text="@string/item_invite_code_top"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_invite_code_bottom"
-                    style="@style/pretendard_medium_16"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/item_invite_code_bottom"
-                    app:layout_constraintStart_toStartOf="@id/tv_invite_code_top"
-                    app:layout_constraintTop_toBottomOf="@id/tv_invite_code_top" />
-
-                <TextView
-                    android:id="@+id/tv_invite_copy"
-                    style="@style/pretendard_bold_16"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
-                    android:background="@drawable/rectangle_radius_20"
-                    android:backgroundTint="@color/secondary"
-                    android:gravity="center"
-                    android:paddingHorizontal="22dp"
-                    android:paddingVertical="12dp"
-                    android:text="@string/item_invite_code_copy"
-                    android:textColor="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_invite_code_bottom"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_invite_code_top"
-                    app:onSingleClick="@{() -> notificationLogListener.onCopyInviteCode()}" />
-
-                <View
-                    android:id="@+id/guide_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="14dp"
-                    android:layout_marginTop="24dp"
-                    android:background="@color/gray_350"
-                    app:layout_constraintTop_toBottomOf="@id/tv_invite_code_bottom" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_mates"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:clipToPadding="false"
-                    android:overScrollMode="never"
-                    android:paddingVertical="18dp"
-                    app:itemAnimator="@{null}"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toTopOf="@id/iv_exit_meeting_room"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/guide_line"
-                    tools:listitem="@layout/item_mate" />
-
-                <ImageView
-                    android:id="@+id/iv_exit_meeting_room"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:padding="18dp"
-                    android:src="@drawable/ic_exit"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_mates"
-                    app:onSingleClick="@{() -> notificationLogListener.onExitMeetingRoom()}" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.navigation.NavigationView>
-
-    </androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
