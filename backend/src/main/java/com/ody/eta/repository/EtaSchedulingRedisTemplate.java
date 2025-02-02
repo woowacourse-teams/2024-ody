@@ -5,24 +5,26 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class EtaSchedulingRedisTemplate {
+public class EtaSchedulingRedisTemplate extends StringRedisTemplate {
 
     private final long ttlMs;
-    private final StringRedisTemplate redisTemplate;
     private final MateRepository mateRepository;
 
+    @Autowired
     public EtaSchedulingRedisTemplate(
+            RedisConnectionFactory redisConnectionFactory,
             @Value("${spring.data.redis.ttl}") long ttlMs,
-            StringRedisTemplate redisTemplate,
             MateRepository mateRepository
     ) {
+        super(redisConnectionFactory);
         this.ttlMs = ttlMs;
-        this.redisTemplate = redisTemplate;
         this.mateRepository = mateRepository;
     }
 
@@ -32,12 +34,15 @@ public class EtaSchedulingRedisTemplate {
     }
 
     public void add(EtaSchedulingKey etaSchedulingKey) {
-        redisTemplate.opsForValue()
-                .set(etaSchedulingKey.serialize(), LocalDateTime.now().toString(), ttlMs, TimeUnit.MILLISECONDS);
+        opsForValue().set(
+                etaSchedulingKey.serialize(),
+                LocalDateTime.now().toString(),
+                ttlMs,
+                TimeUnit.MILLISECONDS
+        );
     }
 
     public String get(EtaSchedulingKey etaSchedulingKey) {
-        return redisTemplate.opsForValue()
-                .get(etaSchedulingKey.serialize());
+        return opsForValue().get(etaSchedulingKey.serialize());
     }
 }
