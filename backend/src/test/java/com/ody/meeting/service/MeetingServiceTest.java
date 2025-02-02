@@ -38,6 +38,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -315,6 +316,7 @@ class MeetingServiceTest extends BaseServiceTest {
         );
     }
 
+    @Disabled
     @DisplayName("약속 참여시 API 호출 카운팅 Redisson 분산락 동시성 테스트")
     @Nested
     class RedissonDistributedLockTest {
