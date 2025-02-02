@@ -57,7 +57,6 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
     implementation "io.jsonwebtoken:jjwt:0.9.1"
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
-    implementation 'org.redisson:redisson-spring-boot-starter:3.38.1'
 
     runtimeOnly 'com.mysql:mysql-connector-j:8.4.0'
 

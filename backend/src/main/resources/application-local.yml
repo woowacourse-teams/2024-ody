@@ -1,7 +1,5 @@
 spring:
   data:
-    redisson:
-      host: localhost
     redis:
       host: localhost
   datasource:

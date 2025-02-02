@@ -1,7 +1,5 @@
 spring:
   data:
-    redisson:
-      host: ody-dev-redis-legacy
     redis:
       host: ody-dev-redis
   jpa:

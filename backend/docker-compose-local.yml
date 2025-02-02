@@ -22,20 +22,6 @@ services:
       --save "" 
       --appendonly yes
       --auto-aof-rewrite-percentage 0
-    environment:
-      TZ: Asia/Seoul
-
-  redis2:
-    image: redis:7.4.1-alpine3.20
-    container_name: redis-local-lettuce
-    restart: always
-    ports:
-      - "6380:6379"
-    command: >
-      redis-server 
-      --save "" 
-      --appendonly yes
-      --auto-aof-rewrite-percentage 0
       --notify-keyspace-events Ex
     environment:
       TZ: Asia/Seoul
