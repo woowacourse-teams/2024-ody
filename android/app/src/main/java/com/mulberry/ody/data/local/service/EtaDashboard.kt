@@ -14,15 +14,15 @@ import javax.inject.Inject
 class EtaDashboard
     @Inject
     constructor(
-        val context: Context,
-        val odyDatastore: OdyDatastore,
+        private val context: Context,
+        private val odyDatastore: OdyDatastore,
     ) {
         fun open(
             meetingId: Long,
             meetingTime: LocalDateTime,
         ) {
             CoroutineScope(Dispatchers.Default).launch {
-                if (!isLoggedIn()) {
+                if (!isLoggedIn() || !meetingTime.isOpenTime()) {
                     return@launch
                 }
 
@@ -34,6 +34,10 @@ class EtaDashboard
             return coroutineScope { odyDatastore.getAuthToken().first().isSuccess }
         }
 
+        private fun LocalDateTime.isOpenTime(): Boolean {
+            return LocalDateTime.now() >= this.minusMinutes(ETA_OPEN_MINUTE)
+        }
+
         private fun startEtaDashboardService(
             meetingId: Long,
             meetingTime: LocalDateTime,
@@ -41,5 +45,9 @@ class EtaDashboard
             val meetingTimeMills = meetingTime.toMilliSeconds()
             val serviceIntent = EtaDashboardService.getIntent(context, meetingId, meetingTimeMills, isOpen = true)
             context.startForegroundService(serviceIntent)
+        }
+
+        companion object {
+            private const val ETA_OPEN_MINUTE = 30L
         }
     }
