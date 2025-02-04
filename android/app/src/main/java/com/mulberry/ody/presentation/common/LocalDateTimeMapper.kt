@@ -13,7 +13,7 @@ private const val DATE_TIME_PATTERN = "yyyy년 M월 d일 a h시 m분"
 private const val DATE_PATTERN = "yyyy년 M월 d일"
 private const val TIME_PATTERN = "a h시 m분"
 
-private const val HOUR_MINUTE_PATTERN = "h시 m분"
+private const val HOUR_MINUTE_PATTERN = "h시간 m분"
 private const val MINUTE_PATTERN = "m분"
 
 fun LocalDateTime.toMessage(): String = format(DATE_TIME_PATTERN)
