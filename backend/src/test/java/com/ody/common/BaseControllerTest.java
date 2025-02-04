@@ -52,7 +52,7 @@ public abstract class BaseControllerTest {
 
     @BeforeEach
     void setUp() {
-        databaseCleaner.cleanUp();
+        databaseCleaner.clear();
         apiCallRepository.save(new ApiCall(ClientType.ODSAY, 0, LocalDate.now()));
         apiCallRepository.save(new ApiCall(ClientType.GOOGLE, 0, LocalDate.now()));
     }

@@ -1,5 +1,6 @@
 package com.ody.common;
 
+import com.ody.mate.domain.Mate;
 import com.ody.mate.domain.Nickname;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
@@ -7,6 +8,7 @@ import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.util.InviteCodeGenerator;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Fixture {
@@ -63,9 +65,22 @@ public class Fixture {
             InviteCodeGenerator.generate()
     );
 
+    public static Meeting Meeting(long meetingId, LocalDateTime dateTime) {
+        return new Meeting(meetingId, "조조와 새해 떡국", dateTime.toLocalDate(), dateTime.toLocalTime(), TARGET_LOCATION, ODY_MEETING.getInviteCode(), false);
+    }
+
     public static Member MEMBER1 = new Member("pid1", new Nickname("콜리1"), "imageUrl1", new DeviceToken("dt1"));
     public static Member MEMBER2 = new Member("pid2", new Nickname("콜리2"), "imageUrl2", new DeviceToken("dt2"));
+
     public static Member MEMBER3 = new Member("pid3", new Nickname("콜리3"), "imageUrl3", new DeviceToken("dt3"));
+
+    public static Member Member(long memberId, DeviceToken deviceToken) {
+        return new Member(memberId, MEMBER1.getAuthProvider(), MEMBER1.getNickname(), "imageUrl1", deviceToken, MEMBER1.getRefreshToken(), null);
+    }
+
+    public static Mate Mate(long mateId, Meeting meeting, Member member) {
+        return new Mate(mateId, meeting, member, member.getNickname(), ORIGIN_LOCATION, 60L, null);
+    }
 
     private Fixture() {
     }

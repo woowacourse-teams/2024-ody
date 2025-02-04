@@ -5,7 +5,7 @@ spring:
   data:
     redis:
       port: 6379
-      connect-timeout: 3000
+      ttl: 30000
   jpa:
     open-in-view: false
     defer-datasource-initialization: false

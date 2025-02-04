@@ -3,8 +3,12 @@ package com.ody.notification.domain.message;
 import com.google.firebase.messaging.Message;
 import com.ody.mate.domain.Mate;
 import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.notice.EtaSchedulingNotice;
+import java.time.format.DateTimeFormatter;
 
-public record DirectMessage(Message message) {
+public class DirectMessage extends AbstractMessage {
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static DirectMessage createMessageToOther(Mate sender, Notification recipientNotification) {
         Message message = Message.builder()
@@ -26,5 +30,20 @@ public record DirectMessage(Message message) {
                 .build();
 
         return new DirectMessage(message);
+    }
+
+    public static DirectMessage create(EtaSchedulingNotice etaSchedulingNotice, String deviceToken) {
+        Message message = Message.builder()
+                .putData("type", etaSchedulingNotice.getType().name())
+                .putData("meetingId", String.valueOf(etaSchedulingNotice.getMeetingId()))
+                .putData("meetingTime", etaSchedulingNotice.getMeetingTime().format(FORMATTER))
+                .setToken(deviceToken)
+                .build();
+
+        return new DirectMessage(message);
+    }
+
+    public DirectMessage(Message message) {
+        super(message);
     }
 }

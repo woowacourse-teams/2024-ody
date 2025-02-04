@@ -4,6 +4,7 @@ import com.ody.mate.domain.Mate;
 import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
+import com.ody.notification.domain.message.AbstractMessage;
 import com.ody.notification.domain.message.DirectMessage;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.event.NoticeEvent;
@@ -18,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -49,10 +48,13 @@ public class FcmEventListener {
 
     @Async("fcmAsyncExecutor")
     @EventListener
-    public void sendNoticeMessage(NoticeEvent noticeEvent) {
-        GroupMessage groupMessage = noticeEvent.getGroupMessage();
-        fcmPushSender.sendNoticeMessage(groupMessage);
-        log.info("공지 알림 전송 | 전송 시간 : {}", Instant.now().atZone(TimeUtil.KST_OFFSET));
+    public <T extends AbstractMessage> void sendNoticeMessage(NoticeEvent<T> noticeEvent) {
+        fcmPushSender.sendMessage(noticeEvent.getMessage());
+        log.info(
+                "{} 공지 알림 전송 | 전송 시간 : {}",
+                noticeEvent.getNotice().getType(),
+                Instant.now().atZone(TimeUtil.KST_OFFSET)
+        );
     }
 
     @Async("fcmAsyncExecutor")
@@ -61,7 +63,7 @@ public class FcmEventListener {
         Notification notification = pushEvent.getNotification();
         GroupMessage groupMessage = pushEvent.getGroupMessage();
         fcmPushSender.sendGroupMessage(groupMessage, notification);
-        log.info("푸시 알림 성공- id : {}, 전송시간 : {}", notification.getId(), notification.getSendAt());
+        log.info("푸시 알림 성공 - id : {}, 전송시간 : {}", notification.getId(), notification.getSendAt());
     }
 
     @Async("fcmAsyncExecutor")
@@ -70,7 +72,7 @@ public class FcmEventListener {
         Notification nudgeNotification = nudgeEvent.getNudgeNotification();
         Mate requestMate = nudgeEvent.getRequestMate();
         DirectMessage nudgeMessage = DirectMessage.createMessageToOther(requestMate, nudgeNotification);
-        fcmPushSender.sendDirectMessage(nudgeMessage);
-        log.info("재촉하기 성공- id : {}, 전송시간 : {}", nudgeNotification.getId(), nudgeNotification.getSendAt());
+        fcmPushSender.sendMessage(nudgeMessage);
+        log.info("재촉하기 성공 - id : {}, 전송시간 : {}", nudgeNotification.getId(), nudgeNotification.getSendAt());
     }
 }

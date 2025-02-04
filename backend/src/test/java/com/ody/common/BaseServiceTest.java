@@ -33,6 +33,9 @@ public abstract class BaseServiceTest {
     protected FcmEventListener fcmEventListener;
 
     @Autowired
+    protected RedisCacheCleaner redisCacheCleaner;
+
+    @Autowired
     protected ApplicationEvents applicationEvents;
 
     @Autowired
@@ -48,8 +51,9 @@ public abstract class BaseServiceTest {
 
     @BeforeEach
     void setUp() {
-        databaseCleaner.cleanUp();
+        databaseCleaner.clear();
         applicationEvents.clear();
+        redisCacheCleaner.clear();
         apiCallRepository.save(new ApiCall(ClientType.ODSAY, 0, LocalDate.now()));
         apiCallRepository.save(new ApiCall(ClientType.GOOGLE, 0, LocalDate.now()));
     }

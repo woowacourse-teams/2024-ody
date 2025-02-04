@@ -5,7 +5,7 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.notification.domain.Notification;
-import com.ody.notification.domain.message.DirectMessage;
+import com.ody.notification.domain.message.AbstractMessage;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,16 +28,12 @@ public class FcmPushSender {
             log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", notification);
             return;
         }
-        sendMessage(groupMessage.message());
+        sendMessage(groupMessage.getMessage());
         updateDepartureReminderToDone(savedNotification);
     }
 
-    public void sendDirectMessage(DirectMessage directMessage) {
-        sendMessage(directMessage.message());
-    }
-
-    public void sendNoticeMessage(GroupMessage groupMessage) {
-        sendMessage(groupMessage.message());
+    public void sendMessage(AbstractMessage abstractMessage) {
+        sendMessage(abstractMessage.getMessage());
     }
 
     private void sendMessage(Message message) {

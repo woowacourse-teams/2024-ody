@@ -8,11 +8,9 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
-import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.domain.types.Nudge;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
-import com.ody.notification.service.event.NoticeEvent;
 import com.ody.notification.service.event.NudgeEvent;
 import com.ody.notification.service.event.PushEvent;
 import com.ody.notification.service.event.SubscribeEvent;
@@ -62,7 +60,7 @@ public class NotificationService {
         );
     }
 
-    public void subscribeTopic(DeviceToken deviceToken, FcmTopic fcmTopic){
+    public void subscribeTopic(DeviceToken deviceToken, FcmTopic fcmTopic) {
         SubscribeEvent subscribeEvent = new SubscribeEvent(this, deviceToken, fcmTopic);
         fcmEventPublisher.publish(subscribeEvent);
     }
@@ -72,12 +70,6 @@ public class NotificationService {
         Notification nudgeNotification = notificationRepository.save(nudge.toNotification());
         NudgeEvent nudgeEvent = new NudgeEvent(this, requestMate, nudgeNotification);
         fcmEventPublisher.publishWithTransaction(nudgeEvent);
-    }
-
-    public void scheduleNotice(GroupMessage groupMessage, LocalDateTime noticeTime) {
-        Instant startTime = InstantConverter.kstToInstant(noticeTime);
-        NoticeEvent noticeEvent = new NoticeEvent(this, groupMessage);
-        taskScheduler.schedule(() -> fcmEventPublisher.publish(noticeEvent), startTime);
     }
 
     @Transactional
