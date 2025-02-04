@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.when;
 
-import com.ody.auth.dto.request.AuthRequest;
+import com.ody.auth.dto.request.AppleAuthRequest;
+import com.ody.auth.dto.request.KakaoAuthRequest;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
@@ -14,11 +16,14 @@ import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
+import com.ody.member.domain.ProviderType;
+import com.ody.member.repository.MemberAppleTokenRepository;
 import com.ody.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 class AuthServiceTest extends BaseServiceTest {
 
@@ -27,6 +32,12 @@ class AuthServiceTest extends BaseServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @MockBean
+    private AppleValidateTokenClient appleValidateTokenClient;
+
+    @Autowired
+    private MemberAppleTokenRepository memberAppleTokenRepository;
 
     @DisplayName("멤버 인증 테스트")
     @Nested
@@ -37,9 +48,9 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenNonMemberAttemptsWithLoggedInDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member sameDeivceFreshMember = fixtureGenerator.generateUnsavedMember("newPid", "deviceToken");
-            AuthRequest sameDeviceFreshMemberRequest = dtoGenerator.generateAuthRequest(sameDeivceFreshMember);
+            KakaoAuthRequest sameDeviceFreshMemberRequest = dtoGenerator.generateKakaoAuthRequest(sameDeivceFreshMember);
 
-            authService.issueTokens(sameDeviceFreshMemberRequest);
+            authService.authenticate(sameDeviceFreshMemberRequest);
 
             assertAll(
                     () -> assertThat(getDeviceTokenByAuthProvider("pid")).isNull(),
@@ -52,9 +63,9 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenMemberAttemptsWithLoggedInDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member sameMember = fixtureGenerator.generateUnsavedMember("pid", "deviceToken");
-            AuthRequest sameMemberRequest = dtoGenerator.generateAuthRequest(sameMember);
+            KakaoAuthRequest sameMemberRequest = dtoGenerator.generateKakaoAuthRequest(sameMember);
 
-            authService.issueTokens(sameMemberRequest);
+            authService.authenticate(sameMemberRequest);
 
             assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("deviceToken");
         }
@@ -65,9 +76,9 @@ class AuthServiceTest extends BaseServiceTest {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             fixtureGenerator.generateSavedMember("otherPid", "otherDeviceToken");
             Member otherPidSameDeviceUser = fixtureGenerator.generateUnsavedMember("otherPid", "deviceToken");
-            AuthRequest otherPidSameDeviceUserRequest = dtoGenerator.generateAuthRequest(otherPidSameDeviceUser);
+            KakaoAuthRequest otherPidSameDeviceUserRequest = dtoGenerator.generateKakaoAuthRequest(otherPidSameDeviceUser);
 
-            authService.issueTokens(otherPidSameDeviceUserRequest);
+            authService.authenticate(otherPidSameDeviceUserRequest);
 
             assertAll(
                     () -> assertThat(getDeviceTokenByAuthProvider("pid")).isNull(),
@@ -80,9 +91,9 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenNonMemberAttemptsWithUnloggedDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member freshDeivceFreshPidMember = fixtureGenerator.generateUnsavedMember("newPid", "newDeviceToken");
-            AuthRequest freshDeviceFreshPidMemberRequest = dtoGenerator.generateAuthRequest(freshDeivceFreshPidMember);
+            KakaoAuthRequest freshDeviceFreshPidMemberRequest = dtoGenerator.generateKakaoAuthRequest(freshDeivceFreshPidMember);
 
-            authService.issueTokens(freshDeviceFreshPidMemberRequest);
+            authService.authenticate(freshDeviceFreshPidMemberRequest);
 
             assertAll(
                     () -> assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("deviceToken"),
@@ -95,9 +106,9 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenMemberAttemptsWithUnloggedDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member freshDeivceSamePidMember = fixtureGenerator.generateUnsavedMember("pid", "newDeviceToken");
-            AuthRequest freshDeviceSamePidRequest = dtoGenerator.generateAuthRequest(freshDeivceSamePidMember);
+            KakaoAuthRequest freshDeviceSamePidRequest = dtoGenerator.generateKakaoAuthRequest(freshDeivceSamePidMember);
 
-            authService.issueTokens(freshDeviceSamePidRequest);
+            authService.authenticate(freshDeviceSamePidRequest);
 
             assertThat(getDeviceTokenByAuthProvider("pid").getValue()).isEqualTo("newDeviceToken");
         }
@@ -157,5 +168,24 @@ class AuthServiceTest extends BaseServiceTest {
             member.updateRefreshToken(refreshToken);
             return memberRepository.save(member);
         }
+    }
+
+    @DisplayName("애플 회원 로그인 시 Apple Refresh Token을 저장한다.")
+    @Test
+    void authenticateSuccess() {
+        String appleRefreshToken = "sample-apple-refresh-token";
+        AppleAuthRequest appleAuthRequest = dtoGenerator.generateAppleAuthRequest();
+        String authorizationCode = appleAuthRequest.getAuthorizationCode();
+        when(appleValidateTokenClient.obtainRefreshToken(authorizationCode)).thenReturn(appleRefreshToken);
+
+        authService.authenticate(appleAuthRequest);
+
+        String result = getAppleRefreshTokenByProviderId(appleAuthRequest.getProviderId());
+        assertThat(result).isEqualTo(appleRefreshToken);
+    }
+
+    private String getAppleRefreshTokenByProviderId(String providerId) {
+        AuthProvider authProvider = new AuthProvider(ProviderType.APPLE, providerId);
+        return memberAppleTokenRepository.findByMember_AuthProvider(authProvider).get().getAppleRefreshToken();
     }
 }
