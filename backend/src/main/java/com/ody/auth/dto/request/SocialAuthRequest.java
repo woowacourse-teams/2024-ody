@@ -8,11 +8,12 @@ import com.ody.member.domain.ProviderType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class SocialAuthRequest {
 
     @Schema(description = "디바이스 토큰", example = "devicetokendevicetoken")
@@ -27,7 +28,7 @@ public abstract class SocialAuthRequest {
     @NotNull
     private final String nickname;
 
-    @Schema(description = "프로필 사진 url", example = "imageurl")
+    @Schema(description = "프로필 사진 url", example = "imageurl", nullable = true)
     private final String imageUrl;
 
     protected Member toMember(ProviderType providerType) {
