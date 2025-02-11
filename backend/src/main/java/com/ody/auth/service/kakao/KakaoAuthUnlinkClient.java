@@ -1,7 +1,8 @@
-package com.ody.auth.service;
+package com.ody.auth.service.kakao;
 
 import com.google.common.net.HttpHeaders;
 import com.ody.auth.config.KakaoProperties;
+import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.member.domain.ProviderType;
 import java.util.Map;

@@ -3,8 +3,8 @@ package com.ody.member.controller;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 
-import com.ody.auth.service.AppleRevokeTokenClient;
-import com.ody.auth.service.KakaoAuthUnlinkClient;
+import com.ody.auth.service.apple.AppleRevokeTokenClient;
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClient;
 import com.ody.auth.token.AccessToken;
 import com.ody.common.BaseControllerTest;
 import com.ody.common.FixtureGenerator;

@@ -4,8 +4,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.ody.auth.service.AppleRevokeTokenClient;
-import com.ody.auth.service.KakaoAuthUnlinkClient;
+import com.ody.auth.service.apple.AppleRevokeTokenClient;
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClient;
 import com.ody.notification.config.FcmConfig;
 import com.ody.notification.service.FcmEventListener;
 import com.ody.route.domain.ApiCall;

@@ -3,7 +3,6 @@ package com.ody.notification.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
-import com.ody.auth.service.KakaoAuthUnlinkClient;
 import com.ody.common.BaseServiceTest;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;

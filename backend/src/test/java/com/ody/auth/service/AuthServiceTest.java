@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.ody.auth.dto.request.AppleAuthRequest;
 import com.ody.auth.dto.request.KakaoAuthRequest;
+import com.ody.auth.service.apple.AppleValidateTokenClient;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;

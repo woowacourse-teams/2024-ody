@@ -1,6 +1,6 @@
 package com.ody.member.service;
 
-import com.ody.auth.service.KakaoAuthUnlinkClient;
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClient;
 import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.auth.service.SocialAuthUnlinkClientFactory;
 import com.ody.auth.token.RefreshToken;

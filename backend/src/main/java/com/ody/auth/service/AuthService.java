@@ -6,6 +6,7 @@ import com.ody.auth.domain.Authorizer;
 import com.ody.auth.dto.request.AppleAuthRequest;
 import com.ody.auth.dto.request.KakaoAuthRequest;
 import com.ody.auth.dto.response.AuthResponse;
+import com.ody.auth.service.apple.AppleValidateTokenClient;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyBadRequestException;

@@ -1,4 +1,4 @@
-package com.ody.auth.service;
+package com.ody.auth.service.apple;
 
 import com.ody.auth.config.AppleProperties;
 import com.ody.common.exception.OdyServerErrorException;

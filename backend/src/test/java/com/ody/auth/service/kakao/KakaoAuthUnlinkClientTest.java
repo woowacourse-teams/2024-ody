@@ -1,4 +1,4 @@
-package com.ody.auth.service;
+package com.ody.auth.service.kakao;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -10,6 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ody.auth.config.KakaoConfig;
 import com.ody.auth.config.KakaoProperties;
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClient;
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClientErrorHandler;
 import com.ody.common.exception.OdyServerErrorException;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;

@@ -1,4 +1,4 @@
-package com.ody.auth.service;
+package com.ody.auth.service.apple;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ody.common.exception.OdyBadRequestException;
