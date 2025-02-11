@@ -69,3 +69,4 @@ apple:
   client-id: ENC(r/oNboxEkLpw3Y/7gi9wNtDCrYNAvr8kqgzVopiI8ZQ=)
   validate-token-uri: /auth/oauth2/v2/token
   revoke-token-uri: /auth/oauth2/v2/revoke
+  client-secret-expiration-seconds: 3600

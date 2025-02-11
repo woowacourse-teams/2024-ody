@@ -15,4 +15,5 @@ public class AppleProperties {
     private final String clientId;
     private final String validateTokenUri;
     private final String revokeTokenUri;
+    private final long clientSecretExpirationSeconds;
 }

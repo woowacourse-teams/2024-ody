@@ -29,7 +29,7 @@ public class AppleClientSecretGenerator {
         try {
             Instant now = Instant.now();
             Date issuedAt = Date.from(now);
-            Date expiresAt = Date.from(now.plusSeconds(3600)); // TODO: Client Secret 보관 및 기간 연장
+            Date expiresAt = Date.from(now.plusSeconds(appleProperties.getClientSecretExpirationSeconds()));
 
             return Jwts.builder()
                     .setHeaderParam("alg", "ES256")
