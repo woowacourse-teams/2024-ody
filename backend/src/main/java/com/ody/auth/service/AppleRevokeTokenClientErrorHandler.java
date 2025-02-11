@@ -29,7 +29,7 @@ public class AppleRevokeTokenClientErrorHandler implements ResponseErrorHandler 
 
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
-        return response.getStatusCode().is4xxClientError();
+        return response.getStatusCode().is4xxClientError() || response.getStatusCode().is5xxServerError();
     }
 
     @Override
