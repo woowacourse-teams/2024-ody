@@ -1,5 +1,6 @@
-package com.ody.member.domain;
+package com.ody.auth.domain;
 
+import com.ody.member.domain.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

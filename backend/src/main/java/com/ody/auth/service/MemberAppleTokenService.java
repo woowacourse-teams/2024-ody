@@ -1,10 +1,10 @@
-package com.ody.member.service;
+package com.ody.auth.service;
 
+import com.ody.auth.domain.MemberAppleToken;
+import com.ody.auth.repository.MemberAppleTokenRepository;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.Member;
-import com.ody.member.domain.MemberAppleToken;
-import com.ody.member.repository.MemberAppleTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

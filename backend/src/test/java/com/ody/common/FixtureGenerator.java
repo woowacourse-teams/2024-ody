@@ -1,6 +1,8 @@
 package com.ody.common;
 
 import com.ody.auth.JwtTokenProvider;
+import com.ody.auth.domain.MemberAppleToken;
+import com.ody.auth.repository.MemberAppleTokenRepository;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
@@ -12,9 +14,7 @@ import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
-import com.ody.member.domain.MemberAppleToken;
 import com.ody.member.domain.ProviderType;
-import com.ody.member.repository.MemberAppleTokenRepository;
 import com.ody.member.repository.MemberRepository;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;

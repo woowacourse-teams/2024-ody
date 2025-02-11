@@ -1,7 +1,7 @@
-package com.ody.member.repository;
+package com.ody.auth.repository;
 
+import com.ody.auth.domain.MemberAppleToken;
 import com.ody.member.domain.AuthProvider;
-import com.ody.member.domain.MemberAppleToken;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

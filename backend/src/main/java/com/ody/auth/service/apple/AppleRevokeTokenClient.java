@@ -1,11 +1,11 @@
 package com.ody.auth.service.apple;
 
 import com.ody.auth.config.AppleProperties;
+import com.ody.auth.service.MemberAppleTokenService;
 import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.ProviderType;
-import com.ody.member.service.MemberAppleTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

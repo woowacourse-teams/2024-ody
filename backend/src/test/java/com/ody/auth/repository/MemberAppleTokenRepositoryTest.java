@@ -1,10 +1,10 @@
-package com.ody.member.repository;
+package com.ody.auth.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ody.auth.domain.MemberAppleToken;
 import com.ody.common.BaseRepositoryTest;
 import com.ody.member.domain.AuthProvider;
-import com.ody.member.domain.MemberAppleToken;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

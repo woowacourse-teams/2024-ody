@@ -1,10 +1,10 @@
 package com.ody.auth.service.apple;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ody.auth.service.MemberAppleTokenService;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyForbiddenException;
 import com.ody.member.domain.AuthProvider;
-import com.ody.member.service.MemberAppleTokenService;
 import java.io.IOException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

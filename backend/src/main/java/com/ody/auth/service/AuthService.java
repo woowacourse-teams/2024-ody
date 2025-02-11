@@ -11,7 +11,6 @@ import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.member.domain.Member;
-import com.ody.member.service.MemberAppleTokenService;
 import com.ody.member.service.MemberService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,10 @@
 package com.ody.common;
 
+import com.ody.auth.repository.MemberAppleTokenRepository;
 import com.ody.common.config.JpaAuditingConfig;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.repository.MeetingRepository;
-import com.ody.member.repository.MemberAppleTokenRepository;
 import com.ody.member.repository.MemberRepository;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.repository.ApiCallRepository;

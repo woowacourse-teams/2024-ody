@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.ody.auth.dto.request.AppleAuthRequest;
 import com.ody.auth.dto.request.KakaoAuthRequest;
+import com.ody.auth.repository.MemberAppleTokenRepository;
 import com.ody.auth.service.apple.AppleValidateTokenClient;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
@@ -18,7 +19,6 @@ import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.member.domain.ProviderType;
-import com.ody.member.repository.MemberAppleTokenRepository;
 import com.ody.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -49,7 +49,8 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenNonMemberAttemptsWithLoggedInDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member sameDeivceFreshMember = fixtureGenerator.generateUnsavedMember("newPid", "deviceToken");
-            KakaoAuthRequest sameDeviceFreshMemberRequest = dtoGenerator.generateKakaoAuthRequest(sameDeivceFreshMember);
+            KakaoAuthRequest sameDeviceFreshMemberRequest =
+                    dtoGenerator.generateKakaoAuthRequest(sameDeivceFreshMember);
 
             authService.authenticate(sameDeviceFreshMemberRequest);
 
@@ -77,7 +78,8 @@ class AuthServiceTest extends BaseServiceTest {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             fixtureGenerator.generateSavedMember("otherPid", "otherDeviceToken");
             Member otherPidSameDeviceUser = fixtureGenerator.generateUnsavedMember("otherPid", "deviceToken");
-            KakaoAuthRequest otherPidSameDeviceUserRequest = dtoGenerator.generateKakaoAuthRequest(otherPidSameDeviceUser);
+            KakaoAuthRequest otherPidSameDeviceUserRequest =
+                    dtoGenerator.generateKakaoAuthRequest(otherPidSameDeviceUser);
 
             authService.authenticate(otherPidSameDeviceUserRequest);
 
@@ -92,7 +94,8 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenNonMemberAttemptsWithUnloggedDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member freshDeivceFreshPidMember = fixtureGenerator.generateUnsavedMember("newPid", "newDeviceToken");
-            KakaoAuthRequest freshDeviceFreshPidMemberRequest = dtoGenerator.generateKakaoAuthRequest(freshDeivceFreshPidMember);
+            KakaoAuthRequest freshDeviceFreshPidMemberRequest =
+                    dtoGenerator.generateKakaoAuthRequest(freshDeivceFreshPidMember);
 
             authService.authenticate(freshDeviceFreshPidMemberRequest);
 
@@ -107,7 +110,8 @@ class AuthServiceTest extends BaseServiceTest {
         void saveMemberWhenMemberAttemptsWithUnloggedDevice() {
             fixtureGenerator.generateSavedMember("pid", "deviceToken");
             Member freshDeivceSamePidMember = fixtureGenerator.generateUnsavedMember("pid", "newDeviceToken");
-            KakaoAuthRequest freshDeviceSamePidRequest = dtoGenerator.generateKakaoAuthRequest(freshDeivceSamePidMember);
+            KakaoAuthRequest freshDeviceSamePidRequest =
+                    dtoGenerator.generateKakaoAuthRequest(freshDeivceSamePidMember);
 
             authService.authenticate(freshDeviceSamePidRequest);
 
