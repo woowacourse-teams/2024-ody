@@ -15,6 +15,7 @@ import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.creation.MeetingCreationActivity
 import com.mulberry.ody.presentation.invitecode.InviteCodeActivity
+import com.mulberry.ody.presentation.join.MeetingJoinActivity
 import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.meetings.adapter.MeetingsAdapter
 import com.mulberry.ody.presentation.meetings.listener.MeetingsListener
@@ -27,10 +28,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MeetingsActivity :
-    BindingActivity<ActivityMeetingsBinding>(R.layout.activity_meetings),
-    MeetingsListener {
+    BindingActivity<ActivityMeetingsBinding>(R.layout.activity_meetings) {
     private val viewModel: MeetingsViewModel by viewModels<MeetingsViewModel>()
-    private val adapter by lazy { MeetingsAdapter(viewModel, this) }
+    private val adapter by lazy { MeetingsAdapter(viewModel, viewModel) }
 
     @Inject
     lateinit var permissionHelper: PermissionHelper
@@ -50,7 +50,7 @@ class MeetingsActivity :
 
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
-        binding.meetingsListener = this
+        binding.meetingsListener = viewModel
         binding.lifecycleOwner = this
         binding.vm = viewModel
     }
@@ -62,17 +62,17 @@ class MeetingsActivity :
         }
         collectWhenStarted(viewModel.navigateAction) {
             when (it) {
-                is MeetingsNavigateAction.NavigateToEtaDashboard ->
-                    navigateToEtaDashboard(
-                        it.meetingId,
-                    )
+                is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
 
-                is MeetingsNavigateAction.NavigateToNotificationLog ->
-                    navigateToNotificationLog(
-                        it.meetingId,
-                    )
+                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
 
                 is MeetingsNavigateAction.NavigateToLogin -> navigateToLogin()
+
+                MeetingsNavigateAction.NavigateToCreateMeeting -> navigateToCreateMeeting()
+
+                MeetingsNavigateAction.NavigateToJoinMeeting -> navigateToJoinMeeting()
+
+                MeetingsNavigateAction.NavigateToSetting -> navigateToSetting()
             }
         }
         collectWhenStarted(viewModel.networkErrorEvent) {
@@ -88,35 +88,18 @@ class MeetingsActivity :
             }
             hideLoadingDialog()
         }
-    }
-
-    override fun onJoinMeeting() {
-        startActivity(InviteCodeActivity.getIntent(this))
-        viewModel.closeFloatingNavigator()
-    }
-
-    override fun onCreateMeeting() {
-        startActivity(MeetingCreationActivity.getIntent(this))
-        viewModel.closeFloatingNavigator()
+        collectWhenStarted(viewModel.inaccessibleEtaEvent) {
+            showSnackBar(R.string.inaccessible_eta_guide)
+        }
     }
 
     private fun navigateToNotificationLog(meetingId: Long) {
-        val intent =
-            MeetingRoomActivity.getIntent(
-                this,
-                meetingId,
-                NAVIGATE_TO_DETAIL_MEETING,
-            )
+        val intent = MeetingRoomActivity.getIntent(this, meetingId, NAVIGATE_TO_DETAIL_MEETING)
         startActivity(intent)
     }
 
     private fun navigateToEtaDashboard(meetingId: Long) {
-        val intent =
-            MeetingRoomActivity.getIntent(
-                this,
-                meetingId,
-                NAVIGATE_TO_ETA_DASHBOARD,
-            )
+        val intent = MeetingRoomActivity.getIntent(this, meetingId, NAVIGATE_TO_ETA_DASHBOARD)
         startActivity(intent)
     }
 
@@ -125,12 +108,19 @@ class MeetingsActivity :
         startActivity(intent)
     }
 
-    override fun guideItemDisabled() {
-        showSnackBar(R.string.inaccessible_eta_guide)
+    private fun navigateToJoinMeeting() {
+        val intent = InviteCodeActivity.getIntent(this)
+        startActivity(intent)
     }
 
-    override fun onClickSetting() {
-        startActivity(SettingActivity.getIntent(this))
+    private fun navigateToCreateMeeting() {
+        val intent = MeetingCreationActivity.getIntent(this)
+        startActivity(intent)
+    }
+
+    private fun navigateToSetting() {
+        val intent = SettingActivity.getIntent(this)
+        startActivity(intent)
     }
 
     private fun requestPermissions() {

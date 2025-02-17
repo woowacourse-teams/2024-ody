@@ -9,6 +9,7 @@ import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.meetings.listener.MeetingsItemListener
+import com.mulberry.ody.presentation.meetings.listener.MeetingsListener
 import com.mulberry.ody.presentation.meetings.model.MeetingUiModel
 import com.mulberry.ody.presentation.meetings.model.toMeetingCatalogUiModels
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +29,7 @@ class MeetingsViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
-    ) : BaseViewModel(), MeetingsItemListener {
+    ) : BaseViewModel(), MeetingsItemListener, MeetingsListener {
         private val _meetingCatalogs: MutableStateFlow<List<MeetingUiModel>> = MutableStateFlow(listOf())
         val meetingCatalogs: StateFlow<List<MeetingUiModel>> get() = _meetingCatalogs.asStateFlow()
 
@@ -40,6 +41,9 @@ class MeetingsViewModel
 
         private val _isSelectedFloatingNavigator: MutableStateFlow<Boolean> = MutableStateFlow(false)
         val isSelectedFloatingNavigator: StateFlow<Boolean> get() = _isSelectedFloatingNavigator.asStateFlow()
+
+        private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent.asSharedFlow()
 
         fun fetchMeetingCatalogs() {
             viewModelScope.launch {
@@ -87,13 +91,33 @@ class MeetingsViewModel
             }
         }
 
-        fun closeFloatingNavigator() {
-            viewModelScope.launch {
-                _isSelectedFloatingNavigator.emit(false)
-            }
+    override fun onJoinMeeting() {
+        viewModelScope.launch {
+            _navigateAction.emit(MeetingsNavigateAction.NavigateToJoinMeeting)
+            _isSelectedFloatingNavigator.emit(false)
         }
+    }
+
+    override fun onCreateMeeting() {
+        viewModelScope.launch {
+            _navigateAction.emit(MeetingsNavigateAction.NavigateToCreateMeeting)
+            _isSelectedFloatingNavigator.emit(false)
+        }
+    }
+
+    override fun guideItemDisabled() {
+        viewModelScope.launch {
+            _inaccessibleEtaEvent.emit(Unit)
+        }
+    }
+
+    override fun onClickSetting() {
+        viewModelScope.launch {
+            _navigateAction.emit(MeetingsNavigateAction.NavigateToSetting)
+        }
+    }
 
         companion object {
             private const val TAG = "MeetingsViewModel"
         }
-    }
+}
