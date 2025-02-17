@@ -90,33 +90,33 @@ class MeetingsViewModel
             }
         }
 
-    override fun onJoinMeeting() {
-        viewModelScope.launch {
-            _navigateAction.emit(MeetingsNavigateAction.NavigateToJoinMeeting)
-            _isSelectedFloatingNavigator.emit(false)
+        override fun onJoinMeeting() {
+            viewModelScope.launch {
+                _navigateAction.emit(MeetingsNavigateAction.NavigateToJoinMeeting)
+                _isSelectedFloatingNavigator.emit(false)
+            }
         }
-    }
 
-    override fun onCreateMeeting() {
-        viewModelScope.launch {
-            _navigateAction.emit(MeetingsNavigateAction.NavigateToCreateMeeting)
-            _isSelectedFloatingNavigator.emit(false)
+        override fun onCreateMeeting() {
+            viewModelScope.launch {
+                _navigateAction.emit(MeetingsNavigateAction.NavigateToCreateMeeting)
+                _isSelectedFloatingNavigator.emit(false)
+            }
         }
-    }
 
-    override fun guideItemDisabled() {
-        viewModelScope.launch {
-            _inaccessibleEtaEvent.emit(Unit)
+        override fun guideItemDisabled() {
+            viewModelScope.launch {
+                _inaccessibleEtaEvent.emit(Unit)
+            }
         }
-    }
 
-    override fun onClickSetting() {
-        viewModelScope.launch {
-            _navigateAction.emit(MeetingsNavigateAction.NavigateToSetting)
+        override fun onClickSetting() {
+            viewModelScope.launch {
+                _navigateAction.emit(MeetingsNavigateAction.NavigateToSetting)
+            }
         }
-    }
 
         companion object {
             private const val TAG = "MeetingsViewModel"
         }
-}
+    }
