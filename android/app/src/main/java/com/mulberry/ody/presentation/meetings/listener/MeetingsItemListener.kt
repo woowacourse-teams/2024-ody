@@ -5,5 +5,5 @@ interface MeetingsItemListener {
 
     fun navigateToEtaDashboard(meetingId: Long)
 
-    fun toggleFold(position: Int)
+    fun toggleFold(id: Long)
 }
