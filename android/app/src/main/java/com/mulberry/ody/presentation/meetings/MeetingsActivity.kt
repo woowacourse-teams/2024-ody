@@ -27,17 +27,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MeetingsActivity :
-    BindingActivity<ActivityMeetingsBinding>(
-        R.layout.activity_meetings,
-    ),
+    BindingActivity<ActivityMeetingsBinding>(R.layout.activity_meetings),
     MeetingsListener {
     private val viewModel: MeetingsViewModel by viewModels<MeetingsViewModel>()
-    private val adapter by lazy {
-        MeetingsAdapter(
-            viewModel,
-            this,
-        )
-    }
+    private val adapter by lazy { MeetingsAdapter(viewModel, this) }
 
     @Inject
     lateinit var permissionHelper: PermissionHelper

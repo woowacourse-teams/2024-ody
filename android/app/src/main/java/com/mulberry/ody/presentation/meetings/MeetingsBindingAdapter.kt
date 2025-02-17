@@ -13,22 +13,23 @@ fun TextView.setMeetingDateTime(meetingDateTime: LocalDateTime) {
     val meetingDate = meetingDateTime.toLocalDate()
     val meetingTimeMessage = meetingDateTime.toLocalTime().toMessage()
 
-    text = when {
-        meetingDate.isToday() -> {
-            context.getString(R.string.meetings_today) + " " + meetingTimeMessage
-        }
+    text =
+        when {
+            meetingDate.isToday() -> {
+                context.getString(R.string.meetings_today) + " " + meetingTimeMessage
+            }
 
-        meetingDate.isTomorrow() -> {
-            context.getString(R.string.meetings_tomorrow) + " " + meetingTimeMessage
-        }
+            meetingDate.isTomorrow() -> {
+                context.getString(R.string.meetings_tomorrow) + " " + meetingTimeMessage
+            }
 
-        meetingDate.isShowDaysLater() -> {
-            val daysDifference = meetingDate.daysDifferenceByNow()
-            context.getString(R.string.meetings_post_tomorrow, daysDifference)
-        }
+            meetingDate.isShowDaysLater() -> {
+                val daysDifference = meetingDate.daysDifferenceByNow()
+                context.getString(R.string.meetings_post_tomorrow, daysDifference)
+            }
 
-        else -> meetingDate.toMessage()
-    }
+            else -> meetingDate.toMessage()
+        }
 }
 
 private fun LocalDate.isToday(): Boolean {
