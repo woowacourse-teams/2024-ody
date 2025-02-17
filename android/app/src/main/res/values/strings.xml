@@ -31,7 +31,7 @@
     <string name="meetings_traffic_guide">*대중교통 기준</string>
     <string name="meetings_departure_postfix">에서</string>
     <string name="meetings_arrival_postfix">까지</string>
-    <string name="meetings_eta_form">%1$s분 걸려요</string>
+    <string name="meetings_eta_form">%s 걸려요</string>
     <string name="meetings_today">오늘</string>
     <string name="meetings_tomorrow">내일</string>
     <string name="meetings_post_tomorrow">%d일 후</string>

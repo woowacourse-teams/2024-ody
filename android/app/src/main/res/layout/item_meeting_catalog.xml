@@ -148,7 +148,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/layout_departure_arrival"
-            tools:text="15분 걸려요" />
+            tools:text="1시간 10분 걸려요" />
 
         <TextView
             style="@style/pretendard_regular_12"
