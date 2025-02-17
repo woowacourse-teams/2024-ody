@@ -38,6 +38,9 @@ class MeetingsViewModel
         private val _isMeetingCatalogsEmpty: MutableStateFlow<Boolean> = MutableStateFlow(true)
         val isMeetingCatalogsEmpty: StateFlow<Boolean> get() = _isMeetingCatalogsEmpty.asStateFlow()
 
+        private val _isSelectedFloatingNavigator: MutableStateFlow<Boolean> = MutableStateFlow(false)
+        val isSelectedFloatingNavigator: StateFlow<Boolean> get() = _isSelectedFloatingNavigator.asStateFlow()
+
         fun fetchMeetingCatalogs() {
             viewModelScope.launch {
                 startLoading()
@@ -76,6 +79,18 @@ class MeetingsViewModel
             newList[position] =
                 newList[position].copy(isFolded = !newList[position].isFolded)
             _meetingCatalogs.value = newList
+        }
+
+        fun selectFloatingNavigator() {
+            viewModelScope.launch {
+                _isSelectedFloatingNavigator.emit(!_isSelectedFloatingNavigator.value)
+            }
+        }
+
+        fun closeFloatingNavigator() {
+            viewModelScope.launch {
+                _isSelectedFloatingNavigator.emit(false)
+            }
         }
 
         companion object {

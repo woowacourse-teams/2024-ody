@@ -2,6 +2,7 @@ package com.mulberry.ody.presentation.meetings
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.toMessage
 import java.time.LocalDate
@@ -43,3 +44,9 @@ private fun LocalDate.isShowDaysLater(): Boolean {
 }
 
 private fun LocalDate.daysDifferenceByNow(): Int = this.dayOfYear - LocalDate.now().dayOfYear
+
+@BindingAdapter("meetingsFabSrc")
+fun FloatingActionButton.setMeetingFabIcon(isSelectedFab: Boolean) {
+    val drawable = if (isSelectedFab) R.drawable.ic_cancel else R.drawable.ic_plus
+    setImageResource(drawable)
+}

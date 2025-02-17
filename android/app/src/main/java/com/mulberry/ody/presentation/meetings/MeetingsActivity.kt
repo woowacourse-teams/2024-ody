@@ -57,7 +57,7 @@ class MeetingsActivity :
 
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
-        binding.listener = this
+        binding.meetingsListener = this
         binding.lifecycleOwner = this
         binding.vm = viewModel
     }
@@ -97,20 +97,14 @@ class MeetingsActivity :
         }
     }
 
-    override fun onFab() {
-        binding.cvMenuView.visibility =
-            if (binding.fabMeetingsNavigator.isSelected) View.GONE else View.VISIBLE
-        binding.fabMeetingsNavigator.isSelected = !binding.fabMeetingsNavigator.isSelected
-    }
-
     override fun onJoinMeeting() {
         startActivity(InviteCodeActivity.getIntent(this))
-        closeNavigateMenu()
+        viewModel.closeFloatingNavigator()
     }
 
     override fun onCreateMeeting() {
         startActivity(MeetingCreationActivity.getIntent(this))
-        closeNavigateMenu()
+        viewModel.closeFloatingNavigator()
     }
 
     private fun navigateToNotificationLog(meetingId: Long) {
@@ -144,11 +138,6 @@ class MeetingsActivity :
 
     override fun onClickSetting() {
         startActivity(SettingActivity.getIntent(this))
-    }
-
-    private fun closeNavigateMenu() {
-        binding.cvMenuView.visibility = View.GONE
-        binding.fabMeetingsNavigator.isSelected = false
     }
 
     private fun requestPermissions() {

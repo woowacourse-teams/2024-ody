@@ -8,7 +8,7 @@
         <import type="android.view.View" />
 
         <variable
-            name="listener"
+            name="meetingsListener"
             type="com.mulberry.ody.presentation.meetings.listener.MeetingsListener" />
 
         <variable
@@ -28,7 +28,7 @@
         <include
             android:id="@+id/tb_intro"
             layout="@layout/toolbar_intro"
-            app:meetingsListener="@{listener}" />
+            app:meetingsListener="@{meetingsListener}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -82,9 +82,9 @@
             android:layout_marginBottom="18dp"
             android:background="@drawable/rectangle_radius_15"
             android:backgroundTint="@color/primaryVariant"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/fab_meetings_navigator"
             app:layout_constraintEnd_toEndOf="@id/fab_meetings_navigator"
+            app:visibility="@{vm.isSelectedFloatingNavigator}"
             tools:visibility="visible">
 
             <TextView
@@ -101,7 +101,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:onSingleClick="@{() -> listener.onCreateMeeting()}" />
+                app:onSingleClick="@{() -> meetingsListener.onCreateMeeting()}" />
 
             <TextView
                 android:id="@+id/tv_join_meeting"
@@ -117,7 +117,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_create_meeting"
                 app:layout_constraintTop_toBottomOf="@id/tv_create_meeting"
-                app:onSingleClick="@{() -> listener.onJoinMeeting()}" />
+                app:onSingleClick="@{() -> meetingsListener.onJoinMeeting()}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -128,12 +128,13 @@
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="32dp"
             android:backgroundTint="@color/primaryVariant"
-            android:src="@drawable/selector_floating_button"
+            android:onClick="@{() -> vm.selectFloatingNavigator()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:onSingleClick="@{() -> listener.onFab()}"
+            app:meetingsFabSrc="@{vm.isSelectedFloatingNavigator}"
             app:shapeAppearance="@style/floating_button_style"
-            app:tint="@color/secondaryVariant" />
+            app:tint="@color/secondaryVariant"
+            tools:src="@drawable/ic_cancel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
