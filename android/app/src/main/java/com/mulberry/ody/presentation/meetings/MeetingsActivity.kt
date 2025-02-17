@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
@@ -15,10 +14,8 @@ import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.creation.MeetingCreationActivity
 import com.mulberry.ody.presentation.invitecode.InviteCodeActivity
-import com.mulberry.ody.presentation.join.MeetingJoinActivity
 import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.meetings.adapter.MeetingsAdapter
-import com.mulberry.ody.presentation.meetings.listener.MeetingsListener
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
@@ -57,7 +54,7 @@ class MeetingsActivity :
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback())
-        collectWhenStarted(viewModel.meetingCatalogs) {
+        collectWhenStarted(viewModel.meetings) {
             adapter.submitList(it)
         }
         collectWhenStarted(viewModel.navigateAction) {

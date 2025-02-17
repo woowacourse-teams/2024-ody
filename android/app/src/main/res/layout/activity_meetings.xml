@@ -37,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:visibility="@{vm.isMeetingCatalogsEmpty}">
+            app:visibility="@{vm.isMeetingsEmpty}">
 
             <ImageView
                 android:id="@+id/iv_ody_character"
@@ -72,7 +72,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_intro"
-            app:visibility="@{!vm.isMeetingCatalogsEmpty}"
+            app:visibility="@{!vm.isMeetingsEmpty}"
             tools:listitem="@layout/item_meeting_catalog" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
