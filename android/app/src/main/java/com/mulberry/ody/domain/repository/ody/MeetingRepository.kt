@@ -2,7 +2,7 @@ package com.mulberry.ody.domain.repository.ody
 
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.model.MateEtaInfo
-import com.mulberry.ody.domain.model.Meeting
+import com.mulberry.ody.domain.model.DetailMeeting
 import com.mulberry.ody.domain.model.MeetingCatalog
 import com.mulberry.ody.domain.model.MeetingCreationInfo
 import com.mulberry.ody.domain.model.Nudge
@@ -26,7 +26,7 @@ interface MeetingRepository {
 
     suspend fun fetchMeetingCatalogs(): ApiResult<List<MeetingCatalog>>
 
-    suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting>
+    suspend fun fetchMeeting(meetingId: Long): ApiResult<DetailMeeting>
 
     suspend fun postNudge(nudge: Nudge): ApiResult<Unit>
 

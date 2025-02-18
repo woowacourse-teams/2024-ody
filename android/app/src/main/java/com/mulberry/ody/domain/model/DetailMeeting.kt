@@ -3,7 +3,7 @@ package com.mulberry.ody.domain.model
 import java.time.LocalDate
 import java.time.LocalTime
 
-data class Meeting(
+data class DetailMeeting(
     val id: Long,
     val name: String,
     val date: LocalDate,

@@ -6,7 +6,7 @@ import com.mulberry.ody.domain.model.EtaStatus
 import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.MateEta
 import com.mulberry.ody.domain.model.MateEtaInfo
-import com.mulberry.ody.domain.model.Meeting
+import com.mulberry.ody.domain.model.DetailMeeting
 import com.mulberry.ody.domain.model.MeetingCatalog
 import com.mulberry.ody.domain.model.NotificationLog
 import com.mulberry.ody.domain.model.NotificationLogType
@@ -18,8 +18,8 @@ val inviteCode: String = "MDAxMQzv"
 
 val meetingId: Long = 0L
 
-val meeting: Meeting =
-    Meeting(
+val detailMeeting: DetailMeeting =
+    DetailMeeting(
         id = meetingId,
         name = "meetingA",
         destinationAddress = "선릉 캠퍼스",

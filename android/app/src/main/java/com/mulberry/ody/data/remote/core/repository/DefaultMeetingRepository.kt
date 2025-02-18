@@ -12,7 +12,7 @@ import com.mulberry.ody.data.remote.core.service.MeetingService
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map
 import com.mulberry.ody.domain.model.MateEtaInfo
-import com.mulberry.ody.domain.model.Meeting
+import com.mulberry.ody.domain.model.DetailMeeting
 import com.mulberry.ody.domain.model.MeetingCatalog
 import com.mulberry.ody.domain.model.MeetingCreationInfo
 import com.mulberry.ody.domain.model.Nudge
@@ -29,7 +29,7 @@ class DefaultMeetingRepository
             return service.fetchInviteCodeValidity(inviteCode)
         }
 
-        override suspend fun fetchMeeting(meetingId: Long): ApiResult<Meeting> {
+        override suspend fun fetchMeeting(meetingId: Long): ApiResult<DetailMeeting> {
             return service.fetchMeeting(meetingId).map { it.toMeeting() }
         }
 
