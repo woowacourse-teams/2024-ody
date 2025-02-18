@@ -73,7 +73,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_intro"
             app:visibility="@{!vm.isMeetingsEmpty}"
-            tools:listitem="@layout/item_meeting_catalog" />
+            tools:listitem="@layout/item_meeting" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cv_menu_view"

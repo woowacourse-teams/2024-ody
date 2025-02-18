@@ -1,7 +1,7 @@
 package com.mulberry.ody.presentation.room.detail.model
 
-import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.DetailMeeting
+import com.mulberry.ody.domain.model.Mate
 
 fun DetailMeeting.toMateUiModels(): List<MateUiModel> = mates.map { it.toMateUiModel() }
 

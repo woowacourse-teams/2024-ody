@@ -1,9 +1,9 @@
 package com.mulberry.ody.presentation.meetings.model
 
-import com.mulberry.ody.domain.model.MeetingCatalog
+import com.mulberry.ody.domain.model.Meeting
 import com.mulberry.ody.presentation.common.toDurationTimeMessage
 
-private fun MeetingCatalog.toMeetingUiModel(): MeetingUiModel {
+private fun Meeting.toMeetingUiModel(): MeetingUiModel {
     return MeetingUiModel(
         id = id,
         name = name,
@@ -14,6 +14,6 @@ private fun MeetingCatalog.toMeetingUiModel(): MeetingUiModel {
     )
 }
 
-fun List<MeetingCatalog>.toMeetingUiModels(): List<MeetingUiModel> {
+fun List<Meeting>.toMeetingUiModels(): List<MeetingUiModel> {
     return map { it.toMeetingUiModel() }
 }

@@ -2,7 +2,7 @@ package com.mulberry.ody.domain.model
 
 import java.time.LocalDateTime
 
-data class MeetingCatalog(
+data class Meeting(
     val id: Long,
     val name: String,
     val mateCount: Int,

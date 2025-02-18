@@ -1,13 +1,13 @@
 package com.mulberry.ody.data.remote.core.entity.meeting.mapper
 
-import com.mulberry.ody.data.remote.core.entity.meeting.response.MeetingResponse
-import com.mulberry.ody.domain.model.Mate
+import com.mulberry.ody.data.remote.core.entity.meeting.response.DetailMeetingResponse
 import com.mulberry.ody.domain.model.DetailMeeting
+import com.mulberry.ody.domain.model.Mate
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-fun MeetingResponse.toMeeting(): DetailMeeting =
+fun DetailMeetingResponse.toDetailMeeting(): DetailMeeting =
     DetailMeeting(
         id = id,
         name = name,

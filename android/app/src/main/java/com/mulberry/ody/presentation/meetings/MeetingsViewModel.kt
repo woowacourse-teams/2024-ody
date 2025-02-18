@@ -45,10 +45,10 @@ class MeetingsViewModel
         private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
         val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent.asSharedFlow()
 
-        fun fetchMeetingCatalogs() {
+        fun fetchMeetings() {
             viewModelScope.launch {
                 startLoading()
-                meetingRepository.fetchMeetingCatalogs()
+                meetingRepository.fetchMeetings()
                     .onSuccess {
                         val meetings = it.toMeetingUiModels()
                         _meetings.value = meetings
@@ -59,7 +59,7 @@ class MeetingsViewModel
                         Timber.e("$code $errorMessage")
                     }.onNetworkError {
                         handleNetworkError()
-                        lastFailedAction = { fetchMeetingCatalogs() }
+                        lastFailedAction = { fetchMeetings() }
                     }
                 stopLoading()
             }
