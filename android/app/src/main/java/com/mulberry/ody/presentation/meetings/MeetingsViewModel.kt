@@ -113,6 +113,7 @@ class MeetingsViewModel
         override fun onClickSetting() {
             viewModelScope.launch {
                 _navigateAction.emit(MeetingsNavigateAction.NavigateToSetting)
+                _isSelectedFloatingNavigator.emit(false)
             }
         }
 
