@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
@@ -17,7 +16,6 @@ import com.mulberry.ody.presentation.creation.MeetingCreationActivity
 import com.mulberry.ody.presentation.invitecode.InviteCodeActivity
 import com.mulberry.ody.presentation.login.LoginActivity
 import com.mulberry.ody.presentation.meetings.adapter.MeetingsAdapter
-import com.mulberry.ody.presentation.meetings.listener.MeetingsListener
 import com.mulberry.ody.presentation.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
 import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
@@ -27,17 +25,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MeetingsActivity :
-    BindingActivity<ActivityMeetingsBinding>(
-        R.layout.activity_meetings,
-    ),
-    MeetingsListener {
+    BindingActivity<ActivityMeetingsBinding>(R.layout.activity_meetings) {
     private val viewModel: MeetingsViewModel by viewModels<MeetingsViewModel>()
-    private val adapter by lazy {
-        MeetingsAdapter(
-            viewModel,
-            this,
-        )
-    }
+    private val adapter by lazy { MeetingsAdapter(viewModel, viewModel) }
 
     @Inject
     lateinit var permissionHelper: PermissionHelper
@@ -52,34 +42,34 @@ class MeetingsActivity :
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchMeetingCatalogs()
+        viewModel.fetchMeetings()
     }
 
     override fun initializeBinding() {
         binding.rvMeetingList.adapter = adapter
-        binding.listener = this
+        binding.meetingsListener = viewModel
         binding.lifecycleOwner = this
         binding.vm = viewModel
     }
 
     private fun initializeObserve() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback())
-        collectWhenStarted(viewModel.meetingCatalogs) {
+        collectWhenStarted(viewModel.meetings) {
             adapter.submitList(it)
         }
         collectWhenStarted(viewModel.navigateAction) {
             when (it) {
-                is MeetingsNavigateAction.NavigateToEtaDashboard ->
-                    navigateToEtaDashboard(
-                        it.meetingId,
-                    )
+                is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
 
-                is MeetingsNavigateAction.NavigateToNotificationLog ->
-                    navigateToNotificationLog(
-                        it.meetingId,
-                    )
+                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
 
                 is MeetingsNavigateAction.NavigateToLogin -> navigateToLogin()
+
+                MeetingsNavigateAction.NavigateToCreateMeeting -> navigateToCreateMeeting()
+
+                MeetingsNavigateAction.NavigateToJoinMeeting -> navigateToJoinMeeting()
+
+                MeetingsNavigateAction.NavigateToSetting -> navigateToSetting()
             }
         }
         collectWhenStarted(viewModel.networkErrorEvent) {
@@ -95,41 +85,18 @@ class MeetingsActivity :
             }
             hideLoadingDialog()
         }
-    }
-
-    override fun onFab() {
-        binding.cvMenuView.visibility =
-            if (binding.fabMeetingsNavigator.isSelected) View.GONE else View.VISIBLE
-        binding.fabMeetingsNavigator.isSelected = !binding.fabMeetingsNavigator.isSelected
-    }
-
-    override fun onJoinMeeting() {
-        startActivity(InviteCodeActivity.getIntent(this))
-        closeNavigateMenu()
-    }
-
-    override fun onCreateMeeting() {
-        startActivity(MeetingCreationActivity.getIntent(this))
-        closeNavigateMenu()
+        collectWhenStarted(viewModel.inaccessibleEtaEvent) {
+            showSnackBar(R.string.inaccessible_eta_guide)
+        }
     }
 
     private fun navigateToNotificationLog(meetingId: Long) {
-        val intent =
-            MeetingRoomActivity.getIntent(
-                this,
-                meetingId,
-                NAVIGATE_TO_DETAIL_MEETING,
-            )
+        val intent = MeetingRoomActivity.getIntent(this, meetingId, NAVIGATE_TO_DETAIL_MEETING)
         startActivity(intent)
     }
 
     private fun navigateToEtaDashboard(meetingId: Long) {
-        val intent =
-            MeetingRoomActivity.getIntent(
-                this,
-                meetingId,
-                NAVIGATE_TO_ETA_DASHBOARD,
-            )
+        val intent = MeetingRoomActivity.getIntent(this, meetingId, NAVIGATE_TO_ETA_DASHBOARD)
         startActivity(intent)
     }
 
@@ -138,17 +105,19 @@ class MeetingsActivity :
         startActivity(intent)
     }
 
-    override fun guideItemDisabled() {
-        showSnackBar(R.string.inaccessible_eta_guide)
+    private fun navigateToJoinMeeting() {
+        val intent = InviteCodeActivity.getIntent(this)
+        startActivity(intent)
     }
 
-    override fun onClickSetting() {
-        startActivity(SettingActivity.getIntent(this))
+    private fun navigateToCreateMeeting() {
+        val intent = MeetingCreationActivity.getIntent(this)
+        startActivity(intent)
     }
 
-    private fun closeNavigateMenu() {
-        binding.cvMenuView.visibility = View.GONE
-        binding.fabMeetingsNavigator.isSelected = false
+    private fun navigateToSetting() {
+        val intent = SettingActivity.getIntent(this)
+        startActivity(intent)
     }
 
     private fun requestPermissions() {

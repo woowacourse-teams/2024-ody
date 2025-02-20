@@ -49,9 +49,9 @@
             android:id="@+id/iv_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{() -> meetingsItemListener.toggleFold(meeting.id)}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:onSingleClick="@{() -> meetingsItemListener.toggleFold(meeting.position)}">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
                 android:src="@drawable/ic_arrow_down"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:visibility="@{meeting.folded}" />
+                app:visibility="@{meeting.isFolded}" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -69,20 +69,19 @@
                 android:src="@drawable/ic_arrow_up"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:visibility="@{!meeting.folded}" />
+                app:visibility="@{!meeting.isFolded}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <TextView
             android:id="@+id/tv_meeting_date_time"
             style="@style/pretendard_medium_16"
-            showDateTime="@{meeting.datetime}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/tv_meeting_title_expanded"
+            app:meetingDateTime="@{meeting.datetime}"
             tools:text="오늘 오후 1시 30분" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -94,7 +93,7 @@
             app:layout_constraintBottom_toTopOf="@id/tv_meeting_eta"
             app:layout_constraintStart_toStartOf="@id/tv_meeting_title_expanded"
             app:layout_constraintTop_toBottomOf="@id/tv_meeting_date_time"
-            app:visibility="@{!meeting.folded}">
+            app:visibility="@{!meeting.isFolded}">
 
             <TextView
                 android:id="@+id/tv_meeting_departure"
@@ -136,6 +135,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/tv_meeting_arrival"
                 app:layout_constraintStart_toEndOf="@id/tv_meeting_arrival"
                 app:layout_constraintTop_toTopOf="@id/tv_meeting_arrival" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -169,12 +169,11 @@
             android:layout_marginEnd="22dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
-            app:enabled="@{meeting.isEnabled}"
+            app:enabled="@{meeting.isAccessible()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:onClickDisabled="@{() -> meetingsListener.guideItemDisabled()}"
             app:onClickEnabled="@{() -> meetingsItemListener.navigateToEtaDashboard(meeting.id)}" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

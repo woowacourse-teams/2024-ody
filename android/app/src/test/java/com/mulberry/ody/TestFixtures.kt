@@ -2,12 +2,12 @@ package com.mulberry.ody
 
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.Addresses
+import com.mulberry.ody.domain.model.DetailMeeting
 import com.mulberry.ody.domain.model.EtaStatus
 import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.MateEta
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
-import com.mulberry.ody.domain.model.MeetingCatalog
 import com.mulberry.ody.domain.model.NotificationLog
 import com.mulberry.ody.domain.model.NotificationLogType
 import java.time.LocalDate
@@ -18,8 +18,8 @@ val inviteCode: String = "MDAxMQzv"
 
 val meetingId: Long = 0L
 
-val meeting: Meeting =
-    Meeting(
+val detailMeeting: DetailMeeting =
+    DetailMeeting(
         id = meetingId,
         name = "meetingA",
         destinationAddress = "선릉 캠퍼스",
@@ -32,8 +32,8 @@ val meeting: Meeting =
         inviteCode = inviteCode,
     )
 
-val meetingCatalog =
-    MeetingCatalog(
+val meeting =
+    Meeting(
         meetingId,
         "meetingA",
         1,
@@ -43,9 +43,9 @@ val meetingCatalog =
         16,
     )
 
-val meetingCatalogs: List<MeetingCatalog> =
+val meetings: List<Meeting> =
     listOf(
-        meetingCatalog,
+        meeting,
     )
 
 val notificationLogs: List<NotificationLog> =

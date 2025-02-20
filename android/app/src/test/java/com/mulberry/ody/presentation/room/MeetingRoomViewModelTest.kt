@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.room
 
+import com.mulberry.ody.detailMeeting
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeImageShareHelper
@@ -8,7 +9,6 @@ import com.mulberry.ody.fake.FakeMatesEtaRepository
 import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.fake.FakeNotificationLogRepository
 import com.mulberry.ody.mateEtaInfo
-import com.mulberry.ody.meeting
 import com.mulberry.ody.meetingId
 import com.mulberry.ody.notificationLogs
 import com.mulberry.ody.presentation.room.detail.model.toDetailMeetingUiModel
@@ -65,7 +65,7 @@ class MeetingRoomViewModelTest {
         runTest {
             // then
             val meetingUiModel = viewModel.meeting.first()
-            assertThat(meetingUiModel).isEqualTo(meeting.toDetailMeetingUiModel())
+            assertThat(meetingUiModel).isEqualTo(detailMeeting.toDetailMeetingUiModel())
 
             val notificationLogUiModel = viewModel.notificationLogs.first()
             assertThat(notificationLogUiModel).isEqualTo(notificationLogs.toNotificationUiModels())
