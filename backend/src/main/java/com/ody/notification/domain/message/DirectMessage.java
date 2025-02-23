@@ -21,17 +21,6 @@ public class DirectMessage extends AbstractMessage {
         return new DirectMessage(message);
     }
 
-    public static DirectMessage createMessageToSelf(Notification notification) {
-        Message message = Message.builder()
-                .putData("type", notification.getType().name())
-                .putData("nickname", notification.getMate().getNickname().getValue())
-                .putData("meetingId", notification.getMate().getMeeting().getId().toString())
-                .setToken(notification.getMate().getMember().getDeviceToken().getValue())
-                .build();
-
-        return new DirectMessage(message);
-    }
-
     public static DirectMessage create(EtaSchedulingNotice etaSchedulingNotice, String deviceToken) {
         Message message = Message.builder()
                 .putData("type", etaSchedulingNotice.getType().name())
