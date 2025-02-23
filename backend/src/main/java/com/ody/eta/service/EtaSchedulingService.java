@@ -32,7 +32,7 @@ public class EtaSchedulingService {
     private final NoticeService noticeService;
 
     public void sendNotice(Meeting meeting) {
-        if (isPast(meeting.getMeetingTime())) {
+        if (TimeUtil.isPast(meeting.getMeetingTime())) {
             return;
         }
         LocalDateTime noticeTime = meeting.getMeetingTime().minusMinutes(NOTICE_TIME_DEFER);
@@ -41,16 +41,12 @@ public class EtaSchedulingService {
     }
 
     private void sendNowOrScheduleLater(LocalDateTime noticeTime, Runnable task) {
-        if (isUpcoming(noticeTime)) {
+        if (TimeUtil.isUpcoming(noticeTime)) {
             Instant startTime = InstantConverter.kstToInstant(noticeTime);
             taskScheduler.schedule(task, startTime);
             return;
         }
         task.run();
-    }
-
-    private boolean isUpcoming(LocalDateTime dateTime) {
-        return dateTime.isAfter(TimeUtil.nowWithTrim());
     }
 
     private void noticeGroupMessageAndCache(EtaSchedulingNotice notice) {
@@ -63,17 +59,13 @@ public class EtaSchedulingService {
     }
 
     public void sendFallbackNotice(EtaSchedulingKey etaSchedulingKey) {
-        if (isPast(etaSchedulingKey.meetingDateTime())) {
+        if (TimeUtil.isPast(etaSchedulingKey.meetingDateTime())) {
             return;
         }
         EtaSchedulingNotice notice = new EtaSchedulingNotice(TimeUtil.nowWithTrim(), etaSchedulingKey);
         DirectMessage directMessage = DirectMessage.create(notice, etaSchedulingKey.deviceToken());
         noticeService.send(notice, directMessage);
         etaSchedulingRedisTemplate.add(etaSchedulingKey);
-    }
-
-    private boolean isPast(LocalDateTime dateTime) {
-        return TimeUtil.nowWithTrim().isAfter(dateTime);
     }
 
     public void updateCache(Mate mate) {
