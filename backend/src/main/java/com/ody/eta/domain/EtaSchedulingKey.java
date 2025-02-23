@@ -17,7 +17,7 @@ public record EtaSchedulingKey(
         return new EtaSchedulingKey(
                 mate.getMember().getDeviceToken().getValue(),
                 mate.getMeeting().getId(),
-                LocalDateTime.of(mate.getMeeting().getDate(), mate.getMeeting().getTime())
+                mate.getMeeting().getMeetingTime()
         );
     }
 

@@ -10,6 +10,7 @@ import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
+import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ class EtaSchedulingKeyTest {
     void generateKey() {
         // given
         DeviceToken deviceToken = new DeviceToken("device_token");
-        LocalDateTime meetingDateTime = LocalDateTime.now();
+        LocalDateTime meetingDateTime = TimeUtil.nowWithTrim();
 
         Member member = Fixture.Member(1L, deviceToken);
         Meeting meeting = Fixture.Meeting(2L, meetingDateTime);
