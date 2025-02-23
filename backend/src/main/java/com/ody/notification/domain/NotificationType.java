@@ -6,7 +6,7 @@ public enum NotificationType {
     DEPARTURE_REMINDER,
     NUDGE,
     LEAVE,
-    MEMBER_DELETION
+    MEMBER_DELETION,
     ;
 
     public boolean isDepartureReminder() {
