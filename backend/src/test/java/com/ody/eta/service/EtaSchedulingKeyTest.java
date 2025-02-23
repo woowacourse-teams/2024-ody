@@ -21,20 +21,29 @@ class EtaSchedulingKeyTest {
     @Test
     void generateKey() {
         // given
-        DeviceToken deviceToken = new DeviceToken("device_token");
-        LocalDateTime meetingDateTime = TimeUtil.nowWithTrim();
+        DeviceToken myDeviceToken = new DeviceToken("myDeviceToken");
+        Long id1 = 1L;
+        LocalDateTime now = TimeUtil.nowWithTrim();
 
-        Member member = Fixture.Member(1L, deviceToken);
-        Meeting meeting = Fixture.Meeting(2L, meetingDateTime);
-        Mate mate = Fixture.Mate(3L, meeting, member);
+        Member member = new Member(Fixture.PID1, Fixture.NICKNAME1, Fixture.IMAGE_URL1, myDeviceToken);
+        Meeting meeting = new Meeting(
+                id1,
+                Fixture.SUSHI_MEETING_NAME,
+                now.toLocalDate(),
+                now.toLocalTime(),
+                Fixture.TARGET_LOCATION,
+                Fixture.INVITE_CODE,
+                false
+        );
+        Mate mate = new Mate(meeting, member, Fixture.NICKNAME1, Fixture.ORIGIN_LOCATION, Fixture.ESTIMATED_MINUTES_60);
 
         // when
         String actualKey = EtaSchedulingKey.from(mate).serialize();
 
         // then
-        String expectedKey = deviceToken.getValue() + "/"
-                + meeting.getId().toString() + "/"
-                + meetingDateTime;
+        String expectedKey = myDeviceToken.getValue() + "/"
+                + id1 + "/"
+                + now;
 
         assertThat(actualKey).isEqualTo(expectedKey);
     }
