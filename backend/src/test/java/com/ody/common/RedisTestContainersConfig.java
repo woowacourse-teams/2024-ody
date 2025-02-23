@@ -23,7 +23,7 @@ public class RedisTestContainersConfig {
             .withExposedPorts(REDIS_PORT)
             .waitingFor(Wait.forListeningPort())
             .withCommand("redis-server --notify-keyspace-events Ex")
-            .withStartupTimeout(Duration.ofSeconds(60));
+            .withStartupTimeout(Duration.ofSeconds(30));
 
     static {
         redisContainer.start();
