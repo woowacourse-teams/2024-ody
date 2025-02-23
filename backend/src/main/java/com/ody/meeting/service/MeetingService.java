@@ -60,7 +60,7 @@ public class MeetingService {
         String inviteCode = generateUniqueInviteCode();
         Meeting meeting = meetingRepository.save(meetingSaveRequestV1.toMeeting(inviteCode));
         scheduleEtaNotice(meeting);
-        scheduleNoticeIfUpcomingMeeting(meeting); // TODO: 예외상황) 약속시간 30분 이내 약속 생성의 경우, 참가한 Mate가 없어 스케줄링 사이클이 걸리지 않음. 스케줄링 없이 바로 오디창이 시작되는 경우 안드에서 처리할지, Mate save 시점에 엣지 케이스 둘지 고민.
+        scheduleNoticeIfUpcomingMeeting(meeting);
         return MeetingSaveResponseV1.from(meeting);
     }
 
