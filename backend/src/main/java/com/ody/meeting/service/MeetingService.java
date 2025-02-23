@@ -60,7 +60,7 @@ public class MeetingService {
         String inviteCode = generateUniqueInviteCode();
         Meeting meeting = meetingRepository.save(meetingSaveRequestV1.toMeeting(inviteCode));
         scheduleEtaNotice(meeting);
-        scheduleNoticeIfUpcomingMeeting(meeting);
+        scheduleEtaSchedulingNoticeIfUpcomingMeeting(meeting);
         return MeetingSaveResponseV1.from(meeting);
     }
 
@@ -74,7 +74,7 @@ public class MeetingService {
         log.info("{} 타입 알림 {}에 스케줄링 예약", NoticeType.ETA_NOTICE, etaNoticeTime);
     }
 
-    private void scheduleNoticeIfUpcomingMeeting(Meeting meeting) {
+    private void scheduleEtaSchedulingNoticeIfUpcomingMeeting(Meeting meeting) {
         LocalDateTime meetingDateTime = LocalDateTime.of(meeting.getDate(), meeting.getTime());
         if (isUpcomingMeeting(meetingDateTime)) {
             etaSchedulingService.sendNotice(meeting);
