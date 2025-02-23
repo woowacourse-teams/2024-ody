@@ -316,10 +316,9 @@ class MeetingServiceTest extends BaseServiceTest {
         );
     }
 
-    @Disabled
-    @DisplayName("약속 참여시 API 호출 카운팅 Redisson 분산락 동시성 테스트")
+    @DisplayName("약속 참여시 API 호출 카운팅 동시성 테스트")
     @Nested
-    class RedissonDistributedLockTest {
+    class ApiCallCountConcurrencyTest {
 
         private static final int TOTAL_REQUESTS = 100;
 
