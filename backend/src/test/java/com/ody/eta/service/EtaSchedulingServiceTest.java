@@ -117,7 +117,7 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
 
     @DisplayName("ETA 스케줄링 알림 재시도")
     @Nested
-    class RetryETASchedulingNotice {
+    class RetryEtaSchedulingNotice {
 
         @DisplayName("다이렉트 메시지로 ETA 스케줄링 알림을 발송한다.")
         @Test
@@ -150,7 +150,7 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
 
     @DisplayName("ETA 스케줄링 알림 시나리오")
     @Nested
-    class ETASchedulingNoticeScenario {
+    class EtaSchedulingNoticeScenario {
 
         @DisplayName("정상 시나리오 : 스케줄링 그룹 알림 전송 -> ETA 요청 -> 스케줄링 개인 알림 재전송 X")
         @TestFactory
