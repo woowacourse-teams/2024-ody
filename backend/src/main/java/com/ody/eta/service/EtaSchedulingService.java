@@ -37,7 +37,7 @@ public class EtaSchedulingService {
         }
         LocalDateTime noticeTime = meeting.getMeetingTime().minusMinutes(NOTICE_TIME_DEFER);
         EtaSchedulingNotice notice = new EtaSchedulingNotice(noticeTime, meeting.getId(), meeting.getMeetingTime());
-        sendNowOrScheduleLater(noticeTime, () -> noticeGroupMessageAndCache(notice));
+        sendNowOrScheduleLater(noticeTime, () -> sendEtaSchedulingNoticeAndCache(notice));
     }
 
     private void sendNowOrScheduleLater(LocalDateTime noticeTime, Runnable task) {
@@ -49,7 +49,7 @@ public class EtaSchedulingService {
         task.run();
     }
 
-    private void noticeGroupMessageAndCache(EtaSchedulingNotice notice) {
+    private void sendEtaSchedulingNoticeAndCache(EtaSchedulingNotice notice) {
         meetingRepository.findById(notice.getMeetingId())
                 .ifPresent(meeting -> {
                     GroupMessage groupMessage = GroupMessage.create(notice, new FcmTopic(meeting));
