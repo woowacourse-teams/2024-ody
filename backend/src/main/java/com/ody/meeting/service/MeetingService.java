@@ -75,7 +75,7 @@ public class MeetingService {
     }
 
     private void scheduleEtaSchedulingNoticeIfUpcomingMeeting(Meeting meeting) {
-        LocalDateTime meetingDateTime = LocalDateTime.of(meeting.getDate(), meeting.getTime());
+        LocalDateTime meetingDateTime = meeting.getMeetingTime();
         if (isUpcomingMeeting(meetingDateTime)) {
             etaSchedulingService.sendNotice(meeting);
             log.info("당일 약속 1건 스케줄링 알림 예약 완료");
