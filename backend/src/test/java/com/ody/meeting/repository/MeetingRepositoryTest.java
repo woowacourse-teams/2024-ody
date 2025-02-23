@@ -120,12 +120,12 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("오늘부터 24시간 이내 약속 리스트들을 조회한다")
     @Test
-    void findAllWithInDateTimeRange() {
+    void findAllByDateTimeInClosedOpenRange() {
         LocalDateTime now = TimeUtil.nowWithTrim();
         Meeting oneHourLaterMeeting = fixtureGenerator.generateMeeting(now.plusHours(1L));
         Meeting oneDayLaterMeeting = fixtureGenerator.generateMeeting(now.plusDays(1L));
 
-        List<Meeting> actual = meetingRepository.findAllWithInDateTimeRange(
+        List<Meeting> actual = meetingRepository.findAllByDateTimeInClosedOpenRange(
                 now.toLocalDate(),
                 now.toLocalTime(),
                 now.plusDays(1L).toLocalDate(),

@@ -175,7 +175,7 @@ public class MeetingService {
     }
 
     private List<Meeting> findUpcomingMeetingsWithin24Hours(LocalDate startDate) {
-        return meetingRepository.findAllWithInDateTimeRange(
+        return meetingRepository.findAllByDateTimeInClosedOpenRange(
                 startDate,
                 MEETING_TIME_FOR_SCHEDULING_NOTI,
                 startDate.plusDays(1L),
