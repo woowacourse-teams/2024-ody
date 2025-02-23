@@ -6,4 +6,10 @@ sealed interface MeetingsNavigateAction {
     data class NavigateToEtaDashboard(val meetingId: Long) : MeetingsNavigateAction
 
     data object NavigateToLogin : MeetingsNavigateAction
+
+    data object NavigateToJoinMeeting : MeetingsNavigateAction
+
+    data object NavigateToCreateMeeting : MeetingsNavigateAction
+
+    data object NavigateToSetting : MeetingsNavigateAction
 }

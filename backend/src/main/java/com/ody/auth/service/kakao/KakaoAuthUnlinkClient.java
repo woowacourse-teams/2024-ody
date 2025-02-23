@@ -1,8 +1,10 @@
-package com.ody.auth.service;
+package com.ody.auth.service.kakao;
 
 import com.google.common.net.HttpHeaders;
 import com.ody.auth.config.KakaoProperties;
+import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.common.exception.OdyBadRequestException;
+import com.ody.member.domain.ProviderType;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -47,5 +49,10 @@ public class KakaoAuthUnlinkClient implements SocialAuthUnlinkClient {
         } catch (OdyBadRequestException exception) {
 
         }
+    }
+
+    @Override
+    public ProviderType getProviderType() {
+        return ProviderType.KAKAO;
     }
 }

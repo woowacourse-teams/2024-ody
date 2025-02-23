@@ -1,12 +1,15 @@
 package com.ody.member.service;
 
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClient;
 import com.ody.auth.service.SocialAuthUnlinkClient;
+import com.ody.auth.service.SocialAuthUnlinkClientFactory;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.mate.service.MateService;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
+import com.ody.member.domain.ProviderType;
 import com.ody.member.repository.MemberRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +23,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MateService mateService;
-    private final SocialAuthUnlinkClient socialAuthUnlinkClient;
+    private final KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
+    private final SocialAuthUnlinkClientFactory socialAuthUnlinkClientFactory;
 
     @Transactional
     public Member save(Member member) {
@@ -49,6 +53,16 @@ public class MemberService {
 
     @Transactional
     public void delete(Member member) {
+        kakaoAuthUnlinkClient.unlink(member.getAuthProvider().getProviderId());
+
+        mateService.deleteAllByMember(member);
+        memberRepository.delete(member);
+    }
+
+    @Transactional
+    public void deleteV2(Member member) {
+        ProviderType providerType = member.getAuthProvider().getProviderType();
+        SocialAuthUnlinkClient socialAuthUnlinkClient = socialAuthUnlinkClientFactory.getClient(providerType);
         socialAuthUnlinkClient.unlink(member.getAuthProvider().getProviderId());
 
         mateService.deleteAllByMember(member);

@@ -1,5 +1,6 @@
 package com.ody.common;
 
+import com.ody.auth.repository.MemberAppleTokenRepository;
 import com.ody.common.config.JpaAuditingConfig;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.repository.MateRepository;
@@ -38,6 +39,9 @@ public abstract class BaseRepositoryTest {
 
     @Autowired
     protected ApiCallRepository apiCallRepository;
+
+    @Autowired
+    protected MemberAppleTokenRepository memberAppleTokenRepository;
 
     @Autowired
     protected EntityManager entityManager;

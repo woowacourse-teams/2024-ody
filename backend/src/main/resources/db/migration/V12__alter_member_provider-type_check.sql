@@ -1,0 +1,6 @@
+START TRANSACTION;
+
+ALTER TABLE member DROP CONSTRAINT member_chk_1;
+ALTER TABLE member ADD CONSTRAINT member_chk_1 CHECK (provider_type IN ('KAKAO', 'APPLE'));
+
+COMMIT;

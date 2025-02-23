@@ -3,7 +3,6 @@ package com.ody.notification.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
-import com.ody.auth.service.KakaoAuthUnlinkClient;
 import com.ody.common.BaseServiceTest;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
@@ -45,9 +44,6 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @Autowired
     private MemberService memberService;
-
-    @MockBean
-    private KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 
     @DisplayName("PENDING 상태의 알림들을 TaskScheduler로 스케줄링 한다.")
     @Test
@@ -123,7 +119,7 @@ class NotificationServiceTest extends BaseServiceTest {
         fixtureGenerator.generateNotification(mate);
 
         int logCountBeforeDelete = notificationService.findAllNotiLogs(meeting.getId()).notiLog().size();
-        memberService.delete(deleteMate.getMember());
+        memberService.deleteV2(deleteMate.getMember());
         int logCountAfterDelete = notificationService.findAllNotiLogs(meeting.getId()).notiLog().size();
 
         assertThat(logCountAfterDelete).isEqualTo(logCountBeforeDelete + 1);

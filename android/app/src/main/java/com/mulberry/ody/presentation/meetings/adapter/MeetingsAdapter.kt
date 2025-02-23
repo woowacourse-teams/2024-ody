@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.mulberry.ody.databinding.ItemMeetingCatalogBinding
+import com.mulberry.ody.databinding.ItemMeetingBinding
 import com.mulberry.ody.presentation.meetings.listener.MeetingsItemListener
 import com.mulberry.ody.presentation.meetings.listener.MeetingsListener
 import com.mulberry.ody.presentation.meetings.model.MeetingUiModel
@@ -18,7 +18,7 @@ class MeetingsAdapter(
         viewType: Int,
     ): MeetingsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemMeetingCatalogBinding.inflate(inflater, parent, false)
+        val binding = ItemMeetingBinding.inflate(inflater, parent, false)
         return MeetingsViewHolder(binding)
     }
 

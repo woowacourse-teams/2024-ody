@@ -38,7 +38,6 @@ public class Member {
     @NotNull
     private Nickname nickname;
 
-    @NotNull
     private String imageUrl;
 
     @Embedded
@@ -52,6 +51,10 @@ public class Member {
 
     public Member(String providerId, Nickname nickname, String imageUrl, DeviceToken deviceToken) {
         this(null, new AuthProvider(providerId), nickname, imageUrl, deviceToken, null, null);
+    }
+
+    public Member(AuthProvider authProvider, Nickname nickname, String imageUrl, DeviceToken deviceToken) {
+        this(null, authProvider, nickname, imageUrl, deviceToken, null, null);
     }
 
     public boolean isLogout() {

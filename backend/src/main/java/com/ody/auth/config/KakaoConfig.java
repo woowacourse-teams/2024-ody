@@ -1,7 +1,7 @@
 package com.ody.auth.config;
 
-import com.ody.auth.service.KakaoAuthUnlinkClient;
-import com.ody.auth.service.KakaoAuthUnlinkClientErrorHandler;
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClient;
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClientErrorHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

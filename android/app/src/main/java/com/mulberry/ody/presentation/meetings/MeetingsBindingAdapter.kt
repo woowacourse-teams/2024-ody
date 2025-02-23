@@ -2,47 +2,52 @@ package com.mulberry.ody.presentation.meetings
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.toMessage
+import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
-@BindingAdapter("showDateTime")
-fun TextView.showDateTime(dateTime: LocalDateTime) {
-    val meetingDay = dateTime.toLocalDate()
-    val today = LocalDateTime.now().toLocalDate()
-    val tomorrow = today.plusDays(1)
-    val isToday = meetingDay == today
-    val isTomorrow = meetingDay == tomorrow
+@BindingAdapter("meetingDateTime")
+fun TextView.setMeetingDateTime(meetingDateTime: LocalDateTime) {
+    val meetingDate = meetingDateTime.toLocalDate()
+    val meetingTimeMessage = meetingDateTime.toLocalTime().toMessage()
 
-    val dateString =
+    text =
         when {
-            isToday -> {
-                context.getString(R.string.meetings_today)
+            meetingDate.isToday() -> {
+                context.getString(R.string.meetings_today) + " " + meetingTimeMessage
             }
 
-            isTomorrow -> {
-                context.getString(R.string.meetings_tomorrow)
+            meetingDate.isTomorrow() -> {
+                context.getString(R.string.meetings_tomorrow) + " " + meetingTimeMessage
             }
 
-            meetingDay >= today.plusDays(2) && meetingDay <= today.plusDays(7) -> {
-                context.getString(
-                    R.string.meetings_post_tomorrow,
-                    (meetingDay.dayOfYear - today.dayOfYear).toString(),
-                )
+            meetingDate.isShowDaysLater() -> {
+                val daysDifference = meetingDate.daysDifferenceByNow()
+                context.getString(R.string.meetings_post_tomorrow, daysDifference)
             }
 
-            else -> {
-                DateTimeFormatter.ofPattern("yyyy년 M월 d일").format(dateTime)
-            }
+            else -> meetingDate.toMessage()
         }
-    val meetingTime = dateTime.toLocalTime()
-    if (!(isToday || isTomorrow)) {
-        this.text = dateString
-        return
-    }
-    val timeString =
-        DateTimeFormatter.ofPattern("a h시 mm분").withLocale(Locale.forLanguageTag("ko"))
-            .format(meetingTime)
-    this.text = "$dateString $timeString"
+}
+
+private fun LocalDate.isToday(): Boolean {
+    return this == LocalDate.now()
+}
+
+private fun LocalDate.isTomorrow(): Boolean {
+    return this == LocalDate.now().plusDays(1)
+}
+
+private fun LocalDate.isShowDaysLater(): Boolean {
+    return daysDifferenceByNow() in 2..7
+}
+
+private fun LocalDate.daysDifferenceByNow(): Int = this.dayOfYear - LocalDate.now().dayOfYear
+
+@BindingAdapter("meetingsFabSrc")
+fun FloatingActionButton.setMeetingFabIcon(isSelectedFab: Boolean) {
+    val drawable = if (isSelectedFab) R.drawable.ic_cancel else R.drawable.ic_plus
+    setImageResource(drawable)
 }

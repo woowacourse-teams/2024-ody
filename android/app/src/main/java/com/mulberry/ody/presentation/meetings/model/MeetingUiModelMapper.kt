@@ -1,25 +1,19 @@
 package com.mulberry.ody.presentation.meetings.model
 
-import com.mulberry.ody.domain.model.MeetingCatalog
-import java.time.LocalDateTime
+import com.mulberry.ody.domain.model.Meeting
+import com.mulberry.ody.presentation.common.toDurationTimeMessage
 
-fun MeetingCatalog.toMeetingCatalogUiModel(): MeetingUiModel {
-    val now = LocalDateTime.now()
-    val inDuration = datetime.isBefore(now.plusMinutes(30))
+private fun Meeting.toMeetingUiModel(): MeetingUiModel {
     return MeetingUiModel(
+        id = id,
         name = name,
         datetime = datetime,
-        durationMinutes = durationMinutes.toString(),
-        id = id,
+        durationMinutes = durationMinutes.toInt().toDurationTimeMessage(),
         originAddress = originAddress,
         targetAddress = targetAddress,
-        isEnabled = inDuration,
     )
 }
 
-fun List<MeetingCatalog>.toMeetingCatalogUiModels(): List<MeetingUiModel> =
-    mapIndexed { index, catalog ->
-        catalog.toMeetingCatalogUiModel().copy(
-            position = index,
-        )
-    }
+fun List<Meeting>.toMeetingUiModels(): List<MeetingUiModel> {
+    return map { it.toMeetingUiModel() }
+}

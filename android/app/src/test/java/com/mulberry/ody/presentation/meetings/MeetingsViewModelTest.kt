@@ -2,8 +2,8 @@ package com.mulberry.ody.presentation.meetings
 
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
-import com.mulberry.ody.meetingCatalogs
-import com.mulberry.ody.presentation.meetings.model.toMeetingCatalogUiModel
+import com.mulberry.ody.meetings
+import com.mulberry.ody.presentation.meetings.model.toMeetingUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
 import com.mulberry.ody.util.valueOnAction
@@ -36,11 +36,11 @@ class MeetingsViewModelTest {
     fun `약속 모임 리스트를 가져온다`() {
         runTest {
             // when
-            viewModel.fetchMeetingCatalogs()
+            viewModel.fetchMeetings()
 
             // then
-            val actual = viewModel.meetingCatalogs.first()
-            val expected = meetingCatalogs.map { it.toMeetingCatalogUiModel() }
+            val actual = viewModel.meetings.first()
+            val expected = meetings.toMeetingUiModels()
             assertThat(actual).isEqualTo(expected)
         }
     }

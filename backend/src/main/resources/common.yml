@@ -61,3 +61,12 @@ api-call:
 
 allowed-origins:
   api-call: ENC(QicQ16sDQJlHTuf3E/wIS+VBG0UVfQ62HDBXQbtfM8pmnYsBAH8xmACD7PBVgpLjWAHdJXN6bOKv/Z8BZFFbFyfp5x5f7dNCgok83Cn6jSE=)
+
+apple:
+  private-key: ENC(wbv3z4F7w/6xv7Xt8LVctTSbxbbbSyqmPYTs73oKgXIHlK+N1lQYx4s8L+WDcigPk+pD+Dz+8JS0r+qblyJGzG6K9dCV35Pbe9FDxIPi3neYC4ZcwG6uTGoKBp2QJbvP4R9WFgQgvUuSnGJQ0LDi7tN0cmxXjMvRVc5ZhVq/A9EkYcWJF/XYTUe/e39jZ4fyZo6LpGrjt13ubL6wTFvY4V51vDAgyj2uaKJIVFpE1EulljmsHZIDgu1GM8hGG0y741iaY6kP+idEbMFXSaxGDjVghqWfK81E)
+  key-id: ENC(dQGHzvgEA6vqe6rxyofm9IZ8tp6MCqGe)
+  team-id: ENC(T1ZjYaPg+o5Www/S+kp1V5EVFWoC5HcU)
+  client-id: ENC(r/oNboxEkLpw3Y/7gi9wNtDCrYNAvr8kqgzVopiI8ZQ=)
+  validate-token-uri: /auth/oauth2/v2/token
+  revoke-token-uri: /auth/oauth2/v2/revoke
+  client-secret-expiration-seconds: 3600

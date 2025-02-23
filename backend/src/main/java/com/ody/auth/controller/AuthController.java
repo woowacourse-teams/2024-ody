@@ -1,11 +1,9 @@
 package com.ody.auth.controller;
 
 import com.ody.auth.dto.request.AppleAuthRequest;
-import com.ody.auth.dto.request.AuthRequest;
+import com.ody.auth.dto.request.KakaoAuthRequest;
 import com.ody.auth.dto.response.AuthResponse;
 import com.ody.auth.service.AuthService;
-import com.ody.auth.token.AccessToken;
-import com.ody.auth.token.RefreshToken;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,18 +23,15 @@ public class AuthController implements AuthControllerSwagger {
 
     @Override
     @PostMapping("/v1/auth/kakao")
-    public ResponseEntity<AuthResponse> authKakao(@Valid @RequestBody AuthRequest authRequest) {
-        AuthResponse authResponse = authService.issueTokens(authRequest);
+    public ResponseEntity<AuthResponse> authKakao(@Valid @RequestBody KakaoAuthRequest kakaoAuthRequest) {
+        AuthResponse authResponse = authService.authenticate(kakaoAuthRequest);
         return ResponseEntity.ok(authResponse);
     }
 
     @Override
     @PostMapping("/v1/auth/apple")
-    public ResponseEntity<AuthResponse> authApple(@Valid @RequestBody AppleAuthRequest authRequest) {
-        AuthResponse authResponse = new AuthResponse(
-                new AccessToken("Bearer access-token=accesstokenaccesstoken"),
-                new RefreshToken("refresh-token=refreshtokenrefreshtoken")
-        );
+    public ResponseEntity<AuthResponse> authApple(@Valid @RequestBody AppleAuthRequest appleAuthRequest) {
+        AuthResponse authResponse = authService.authenticate(appleAuthRequest);
         return ResponseEntity.ok(authResponse);
     }
 

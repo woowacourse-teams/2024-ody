@@ -2,9 +2,9 @@ package com.ody.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-import com.ody.auth.service.KakaoAuthUnlinkClient;
 import com.ody.auth.token.RefreshToken;
 import com.ody.common.BaseServiceTest;
 import com.ody.common.exception.OdyUnauthorizedException;
@@ -12,16 +12,13 @@ import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
-import com.ody.member.domain.AuthProvider;
-import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
+import com.ody.member.domain.ProviderType;
 import com.ody.member.repository.MemberRepository;
 import com.ody.notification.repository.NotificationRepository;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 class MemberServiceTest extends BaseServiceTest {
 
@@ -39,9 +36,6 @@ class MemberServiceTest extends BaseServiceTest {
 
     @Autowired
     NotificationRepository notificationRepository;
-
-    @MockBean
-    private KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 
     @DisplayName("특정 회원의 리프레시 토큰을 삭제할 수 있다")
     @Test
@@ -63,17 +57,37 @@ class MemberServiceTest extends BaseServiceTest {
         fixtureGenerator.generateEta(mate);
         fixtureGenerator.generateNotification(mate);
 
-        memberService.delete(member);
+        memberService.deleteV2(member);
 
         Member actual = memberRepository.findById(member.getId()).get();
         assertThat(actual.getDeletedAt()).isNotNull();
+    }
+
+    @DisplayName("카카오 회원 탈퇴 시 카카오 클라이언트가 호출된다.")
+    @Test
+    void deleteUsingKakaoClient() {
+        Member member = fixtureGenerator.generateMember(ProviderType.KAKAO);
+
+        memberService.deleteV2(member);
+
+        verify(kakaoAuthUnlinkClient, times(1)).unlink(member.getAuthProvider().getProviderId());
+    }
+
+    @DisplayName("애플 회원 탈퇴 시 애플 클라이언트가 호출된다.")
+    @Test
+    void deleteUsingAppleClient() {
+        Member member = fixtureGenerator.generateMember(ProviderType.APPLE);
+
+        memberService.deleteV2(member);
+
+        verify(appleRevokeTokenClient, times(1)).unlink(member.getAuthProvider().getProviderId());
     }
 
     @DisplayName("삭제 회원을 조회할 수 없다.")
     @Test
     void findDeletedMemberById() {
         Member member = fixtureGenerator.generateMember();
-        memberService.delete(member);
+        memberService.deleteV2(member);
 
         assertThatThrownBy(() -> memberService.findById(member.getId()))
                 .isInstanceOf(OdyUnauthorizedException.class);

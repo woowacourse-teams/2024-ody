@@ -5,22 +5,41 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="com.mulberry.ody.presentation.room.MeetingRoomViewModel" />
+
+        <variable
+            name="backListener"
+            type="com.mulberry.ody.presentation.common.listener.BackListener" />
+
+        <variable
+            name="meetingRoomListener"
+            type="com.mulberry.ody.presentation.room.listener.MeetingRoomListener" />
+
+        <variable
+            name="departureTimeGuideListener"
+            type="com.mulberry.ody.presentation.room.detail.listener.DepartureTimeGuideListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/primary">
 
         <include
             android:id="@+id/tb_detail_meeting"
             layout="@layout/toolbar_meeting_room"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:backListener="@{backListener}"
             app:layout_constraintBottom_toTopOf="@id/layout_meeting_info"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="이름" />
+            app:meetingRoomListener="@{meetingRoomListener}"
+            app:title="@{vm.meeting.name}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_meeting_info"
@@ -33,9 +52,11 @@
             app:layout_constraintTop_toTopOf="@id/tb_detail_meeting">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_detail_meeting_mates"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="14dp"
+                android:clipToPadding="false"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -51,8 +72,8 @@
             android:id="@+id/layout_detail_meeting_info"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="28dp"
             android:orientation="vertical"
+            android:paddingHorizontal="28dp"
             android:paddingTop="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -76,10 +97,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:text="@{vm.meeting.dateTime}"
                 android:textColor="@color/tertiary"
                 app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_address_title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/detail_detail_meeting_departure_time_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_time_title"
                 tools:text="2024년 7월 11일 03시 00분" />
 
             <TextView
@@ -100,6 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:text="@{vm.meeting.destinationAddress}"
                 android:textColor="@color/tertiary"
                 app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_departure_address_title"
                 app:layout_constraintStart_toStartOf="parent"
@@ -112,11 +135,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
+                android:text="@string/detail_meeting_departure_address"
                 android:textColor="@color/secondary"
                 app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_departure_address"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_address"
-                tools:text="@string/detail_meeting_departure_address" />
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_address" />
 
             <TextView
                 android:id="@+id/tv_detail_meeting_departure_address"
@@ -124,42 +147,47 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:text="@{vm.meeting.departureAddress}"
                 android:textColor="@color/tertiary"
-                app:layout_constraintBottom_toTopOf="@id/detail_detail_meeting_departure_time_title"
+                app:layout_constraintBottom_toTopOf="@id/detail_meeting_departure_time_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_departure_address_title"
                 tools:text="서울특별시 송파구 올림픽로 35다길 (한국루터회관)" />
 
             <TextView
-                android:id="@+id/detail_detail_meeting_departure_time_title"
+                android:id="@+id/detail_meeting_departure_time_title"
                 style="@style/pretendard_bold_18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
                 android:text="@string/detail_meeting_departure_time"
                 android:textColor="@color/secondary"
+                app:layout_constraintBottom_toTopOf="@id/tv_detail_meeting_departure_time"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_detail_meeting_departure_address" />
 
             <ImageView
+                android:id="@+id/iv_detail_departure_time_guide"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:paddingHorizontal="4dp"
+                android:padding="4dp"
                 android:src="@drawable/ic_information"
-                app:layout_constraintBottom_toBottomOf="@id/detail_detail_meeting_departure_time_title"
-                app:layout_constraintStart_toEndOf="@id/detail_detail_meeting_departure_time_title"
-                app:layout_constraintTop_toTopOf="@id/detail_detail_meeting_departure_time_title" />
+                app:layout_constraintBottom_toBottomOf="@id/detail_meeting_departure_time_title"
+                app:layout_constraintStart_toEndOf="@id/detail_meeting_departure_time_title"
+                app:layout_constraintTop_toTopOf="@id/detail_meeting_departure_time_title"
+                app:onClickDepartureTimeGuide="@{departureTimeGuideListener}" />
 
             <TextView
-                android:id="@+id/detail_detail_meeting_departure_time"
+                android:id="@+id/tv_detail_meeting_departure_time"
                 style="@style/pretendard_regular_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/tertiary"
+                app:departureTime="@{vm.meeting}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/detail_detail_meeting_departure_time_title"
+                app:layout_constraintTop_toBottomOf="@id/detail_meeting_departure_time_title"
                 tools:text="2시 30분에 나가야 해요.\n출발 장소부터 약속 장소까지 20분 걸려요." />
 
             <LinearLayout
@@ -173,7 +201,10 @@
                 android:paddingVertical="6dp"
                 app:layout_constraintBottom_toBottomOf="@id/btn_detail_meeting"
                 app:layout_constraintEnd_toStartOf="@id/btn_detail_meeting"
-                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting">
+                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting"
+                app:onSingleClick="@{() -> vm.navigateToEtaDashboard()}"
+                app:visibility="@{vm.isVisibleNavigation}"
+                tools:visibility="visible">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -199,10 +230,20 @@
                 android:layout_marginBottom="26dp"
                 android:background="@drawable/rectangle_radius_10"
                 android:backgroundTint="@color/secondary"
-                android:src="@drawable/selector_detail_meeting_button"
+                android:onClick="@{()->vm.handleNavigationVisibility()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:selected="@{vm.isVisibleNavigation}"
+                android:src="@drawable/selector_detail_meeting_button"
+                app:layout_constraintBottom_toBottomOf="@id/btn_detail_meeting"
+                app:layout_constraintEnd_toEndOf="@id/btn_detail_meeting"
+                app:layout_constraintStart_toStartOf="@id/btn_detail_meeting"
+                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting" />
 
             <LinearLayout
                 android:id="@+id/btn_detail_meeting_log"
@@ -217,7 +258,10 @@
                 android:paddingVertical="6dp"
                 app:layout_constraintBottom_toBottomOf="@id/btn_detail_meeting"
                 app:layout_constraintStart_toEndOf="@id/btn_detail_meeting"
-                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting">
+                app:layout_constraintTop_toTopOf="@id/btn_detail_meeting"
+                app:onSingleClick="@{() -> vm.navigateToNotificationLog()}"
+                app:visibility="@{vm.isVisibleNavigation}"
+                tools:visibility="visible">
 
                 <TextView
                     style="@style/pretendard_bold_16"
