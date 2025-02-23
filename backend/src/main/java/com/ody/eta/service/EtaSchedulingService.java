@@ -28,7 +28,7 @@ public class EtaSchedulingService {
 
     private final TaskScheduler taskScheduler;
     private final MeetingRepository meetingRepository;
-    private final EtaSchedulingRedisTemplate schedulingCacheService;
+    private final EtaSchedulingRedisTemplate etaSchedulingRedisTemplate;
     private final NoticeService noticeService;
 
     public void sendNotice(Meeting meeting) {
@@ -58,7 +58,7 @@ public class EtaSchedulingService {
                 .ifPresent(meeting -> {
                     GroupMessage groupMessage = GroupMessage.create(notice, new FcmTopic(meeting));
                     noticeService.send(notice, groupMessage);
-                    schedulingCacheService.addAll(meeting);
+                    etaSchedulingRedisTemplate.addAll(meeting);
                 });
     }
 
@@ -69,7 +69,7 @@ public class EtaSchedulingService {
         EtaSchedulingNotice notice = new EtaSchedulingNotice(TimeUtil.nowWithTrim(), etaSchedulingKey);
         DirectMessage directMessage = DirectMessage.create(notice, etaSchedulingKey.deviceToken());
         noticeService.send(notice, directMessage);
-        schedulingCacheService.add(etaSchedulingKey);
+        etaSchedulingRedisTemplate.add(etaSchedulingKey);
     }
 
     private boolean isPast(LocalDateTime dateTime) {
@@ -77,6 +77,6 @@ public class EtaSchedulingService {
     }
 
     public void updateCache(Mate mate) {
-        schedulingCacheService.add(EtaSchedulingKey.from(mate));
+        etaSchedulingRedisTemplate.add(EtaSchedulingKey.from(mate));
     }
 }
