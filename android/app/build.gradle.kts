@@ -154,10 +154,22 @@ dependencies {
     // kakao sdk
     implementation(libs.kakao.sdk.v2.user)
 
+    // compose
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.material3)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    debugImplementation(libs.androidx.ui.tooling.preview)
+
     // hilt
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.android.compiler)
 
     // paging
     implementation(libs.androidx.paging)
+
+    // permission
+    implementation(libs.accompanist.permissions)
 }
