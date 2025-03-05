@@ -1,5 +1,6 @@
-package com.mulberry.ody.data.remote.thirdparty.address
+package com.mulberry.ody.data.repository
 
+import com.mulberry.ody.data.remote.thirdparty.address.KakaoAddressService
 import com.mulberry.ody.data.remote.thirdparty.address.response.toAddresses
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map

@@ -1,4 +1,4 @@
-package com.mulberry.ody.data.remote.core.repository
+package com.mulberry.ody.data.repository
 
 import com.mulberry.ody.data.remote.core.entity.join.mapper.toJoinRequest
 import com.mulberry.ody.data.remote.core.entity.join.mapper.toReserveInfo

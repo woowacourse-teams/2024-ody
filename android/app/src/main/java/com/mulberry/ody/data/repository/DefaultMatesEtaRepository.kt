@@ -1,4 +1,4 @@
-package com.mulberry.ody.data.local.repository
+package com.mulberry.ody.data.repository
 
 import android.content.Context
 import com.mulberry.ody.data.local.db.EtaReservationDao

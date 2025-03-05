@@ -1,4 +1,4 @@
-package com.mulberry.ody.data.remote.core.repository
+package com.mulberry.ody.data.repository
 
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity

@@ -1,4 +1,4 @@
-package com.mulberry.ody.data.remote.core.repository
+package com.mulberry.ody.data.repository
 
 import com.mulberry.ody.data.remote.core.entity.notification.mapper.toNotificationList
 import com.mulberry.ody.data.remote.core.service.NotificationService
