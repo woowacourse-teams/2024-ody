@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.mulberry.ody.presentation.join.MeetingJoinViewModel" />
+            type="com.mulberry.ody.presentation.feature.join.MeetingJoinViewModel" />
 
         <variable
             name="nextListener"
@@ -19,13 +19,13 @@
 
         <variable
             name="addressSearchListener"
-            type="com.mulberry.ody.presentation.address.listener.AddressSearchListener" />
+            type="com.mulberry.ody.presentation.feature.address.listener.AddressSearchListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.join.MeetingJoinActivity">
+        tools:context=".presentation.feature.join.MeetingJoinActivity">
 
         <include
             android:id="@+id/tb_join_info"

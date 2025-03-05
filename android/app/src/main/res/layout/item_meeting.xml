@@ -7,15 +7,15 @@
 
         <variable
             name="meeting"
-            type="com.mulberry.ody.presentation.meetings.model.MeetingUiModel" />
+            type="com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel" />
 
         <variable
             name="meetingsItemListener"
-            type="com.mulberry.ody.presentation.meetings.listener.MeetingsItemListener" />
+            type="com.mulberry.ody.presentation.feature.meetings.listener.MeetingsItemListener" />
 
         <variable
             name="meetingsListener"
-            type="com.mulberry.ody.presentation.meetings.listener.MeetingsListener" />
+            type="com.mulberry.ody.presentation.feature.meetings.listener.MeetingsListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.mulberry.ody.presentation.login.LoginViewModel" />
+            type="com.mulberry.ody.presentation.feature.login.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,7 @@
         android:background="@color/primary"
         android:gravity="center"
         android:orientation="vertical"
-        tools:context=".presentation.login.LoginActivity">
+        tools:context=".presentation.feature.login.LoginActivity">
 
         <TextView
             android:id="@+id/login_welcome_top"

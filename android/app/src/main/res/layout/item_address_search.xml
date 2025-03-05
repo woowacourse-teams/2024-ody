@@ -11,7 +11,7 @@
 
         <variable
             name="addressListener"
-            type="com.mulberry.ody.presentation.address.listener.AddressListener" />
+            type="com.mulberry.ody.presentation.feature.address.listener.AddressListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

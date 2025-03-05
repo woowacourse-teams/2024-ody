@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.mulberry.ody.presentation.address.AddressSearchViewModel" />
+            type="com.mulberry.ody.presentation.feature.address.AddressSearchViewModel" />
 
         <variable
             name="backListener"
