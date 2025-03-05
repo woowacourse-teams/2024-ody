@@ -6,8 +6,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityInviteCodeBinding
-import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingActivity
+import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.feature.join.MeetingJoinActivity
 import dagger.hilt.android.AndroidEntryPoint

@@ -2,8 +2,6 @@ package com.mulberry.ody.presentation.feature.invitecode
 
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
-import com.mulberry.ody.presentation.feature.invitecode.InviteCodeNavigateAction
-import com.mulberry.ody.presentation.feature.invitecode.InviteCodeViewModel
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
 import com.mulberry.ody.util.valueOnAction

@@ -6,8 +6,6 @@ import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeLocationHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.inviteCode
-import com.mulberry.ody.presentation.feature.creation.MeetingCreationInfoType
-import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
 import com.mulberry.ody.util.valueOnAction

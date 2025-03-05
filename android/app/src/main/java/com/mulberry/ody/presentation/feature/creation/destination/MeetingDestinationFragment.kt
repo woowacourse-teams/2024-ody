@@ -5,9 +5,9 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentMeetingDestinationBinding
-import com.mulberry.ody.presentation.feature.address.listener.AddressSearchListener
-import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
+import com.mulberry.ody.presentation.common.collectWhenStarted
+import com.mulberry.ody.presentation.feature.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.feature.creation.MeetingCreationInfoType
 import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
 

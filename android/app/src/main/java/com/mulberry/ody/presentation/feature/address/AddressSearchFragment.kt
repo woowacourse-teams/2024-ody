@@ -10,12 +10,12 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentAddressSearchBinding
-import com.mulberry.ody.presentation.feature.address.adapter.AddressesAdapter
-import com.mulberry.ody.presentation.feature.address.listener.AddressSearchListener
-import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
+import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.toPixel
+import com.mulberry.ody.presentation.feature.address.adapter.AddressesAdapter
+import com.mulberry.ody.presentation.feature.address.listener.AddressSearchListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

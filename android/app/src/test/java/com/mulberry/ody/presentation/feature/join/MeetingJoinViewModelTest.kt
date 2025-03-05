@@ -7,8 +7,6 @@ import com.mulberry.ody.fake.FakeJoinRepository
 import com.mulberry.ody.fake.FakeLocationHelper
 import com.mulberry.ody.fake.FakeMatesEtaRepository
 import com.mulberry.ody.meetingId
-import com.mulberry.ody.presentation.feature.join.MeetingJoinNavigateAction
-import com.mulberry.ody.presentation.feature.join.MeetingJoinViewModel
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
 import com.mulberry.ody.util.valueOnAction

@@ -9,9 +9,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingsBinding
-import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
+import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.feature.creation.MeetingCreationActivity
 import com.mulberry.ody.presentation.feature.invitecode.InviteCodeActivity
 import com.mulberry.ody.presentation.feature.login.LoginActivity

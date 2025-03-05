@@ -9,8 +9,8 @@ import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource
 import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource.Companion.PAGE_SIZE
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.repository.location.AddressRepository
-import com.mulberry.ody.presentation.feature.address.listener.AddressListener
 import com.mulberry.ody.presentation.common.BaseViewModel
+import com.mulberry.ody.presentation.feature.address.listener.AddressListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

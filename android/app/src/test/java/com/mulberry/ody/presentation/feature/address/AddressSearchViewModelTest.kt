@@ -3,7 +3,6 @@ package com.mulberry.ody.presentation.feature.address
 import androidx.paging.map
 import com.mulberry.ody.address
 import com.mulberry.ody.fake.FakeAddressRepository
-import com.mulberry.ody.presentation.feature.address.AddressSearchViewModel
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi

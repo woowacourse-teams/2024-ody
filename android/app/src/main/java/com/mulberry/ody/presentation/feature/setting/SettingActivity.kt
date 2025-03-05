@@ -13,9 +13,9 @@ import com.mulberry.ody.R
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.databinding.ActivitySettingBinding
 import com.mulberry.ody.domain.model.NotificationType
-import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
+import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.feature.login.LoginActivity
 import com.mulberry.ody.presentation.feature.login.LoginNavigatedReason

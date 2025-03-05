@@ -14,8 +14,8 @@ import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentDetailMeetingBinding
 import com.mulberry.ody.databinding.LayoutDepartureTimeTooltipBinding
-import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.binding.BindingFragment
+import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.toPixel
 import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel

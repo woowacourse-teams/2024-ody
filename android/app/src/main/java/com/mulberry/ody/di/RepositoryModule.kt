@@ -1,8 +1,8 @@
 package com.mulberry.ody.di
 
 import com.mulberry.ody.data.auth.repository.KakaoAuthRepository
-import com.mulberry.ody.data.repository.DefaultMatesEtaRepository
 import com.mulberry.ody.data.repository.DefaultJoinRepository
+import com.mulberry.ody.data.repository.DefaultMatesEtaRepository
 import com.mulberry.ody.data.repository.DefaultMeetingRepository
 import com.mulberry.ody.data.repository.DefaultNotificationLogRepository
 import com.mulberry.ody.data.repository.KakaoAddressRepository

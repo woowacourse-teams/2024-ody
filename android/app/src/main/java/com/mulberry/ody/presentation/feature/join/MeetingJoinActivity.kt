@@ -9,13 +9,13 @@ import androidx.fragment.app.commit
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingJoinBinding
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.presentation.feature.address.AddressSearchFragment
-import com.mulberry.ody.presentation.feature.address.listener.AddressSearchListener
-import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
+import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.common.listener.NextListener
+import com.mulberry.ody.presentation.feature.address.AddressSearchFragment
+import com.mulberry.ody.presentation.feature.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.feature.join.complete.JoinCompleteActivity
 import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
