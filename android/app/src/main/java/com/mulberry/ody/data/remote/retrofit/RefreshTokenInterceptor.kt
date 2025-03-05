@@ -1,4 +1,4 @@
-package com.mulberry.ody.data.retrofit
+package com.mulberry.ody.data.remote.retrofit
 
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.domain.model.AuthToken

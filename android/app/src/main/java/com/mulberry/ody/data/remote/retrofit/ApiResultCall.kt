@@ -1,4 +1,4 @@
-package com.mulberry.ody.data.retrofit
+package com.mulberry.ody.data.remote.retrofit
 
 import com.mulberry.ody.data.remote.core.entity.ErrorResponse
 import com.mulberry.ody.domain.apiresult.ApiResult

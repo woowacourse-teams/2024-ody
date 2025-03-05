@@ -1,4 +1,4 @@
-package com.mulberry.ody.data.retrofit
+package com.mulberry.ody.data.remote.retrofit
 
 import com.mulberry.ody.domain.apiresult.ApiResult
 import retrofit2.Call
