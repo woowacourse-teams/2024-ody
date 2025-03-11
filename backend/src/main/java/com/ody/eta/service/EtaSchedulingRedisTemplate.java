@@ -12,10 +12,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EtaSchedulingRedisTemplate extends StringRedisTemplate {
+public class EtaSchedulingRedisTemplate {
 
     private final long ttlMs;
     private final MateRepository mateRepository;
+    private final StringRedisTemplate redisTemplate;
 
     @Autowired
     public EtaSchedulingRedisTemplate(
@@ -23,9 +24,9 @@ public class EtaSchedulingRedisTemplate extends StringRedisTemplate {
             @Value("${spring.data.redis.ttl}") long ttlMs,
             MateRepository mateRepository
     ) {
-        super(redisConnectionFactory);
         this.ttlMs = ttlMs;
         this.mateRepository = mateRepository;
+        this.redisTemplate = new StringRedisTemplate(redisConnectionFactory);
     }
 
     public void addAll(Meeting meeting) {
@@ -34,15 +35,17 @@ public class EtaSchedulingRedisTemplate extends StringRedisTemplate {
     }
 
     public void add(EtaSchedulingKey etaSchedulingKey) {
-        opsForValue().set(
-                etaSchedulingKey.serialize(),
-                LocalDateTime.now().toString(),
-                ttlMs,
-                TimeUnit.MILLISECONDS
-        );
+        redisTemplate.opsForValue()
+                .set(
+                        etaSchedulingKey.serialize(),
+                        LocalDateTime.now().toString(),
+                        ttlMs,
+                        TimeUnit.MILLISECONDS
+                );
     }
 
     public String get(EtaSchedulingKey etaSchedulingKey) {
-        return opsForValue().get(etaSchedulingKey.serialize());
+        return redisTemplate.opsForValue()
+                .get(etaSchedulingKey.serialize());
     }
 }
