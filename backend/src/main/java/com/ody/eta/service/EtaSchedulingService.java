@@ -1,7 +1,6 @@
 package com.ody.eta.service;
 
 import com.ody.eta.domain.EtaSchedulingKey;
-import com.ody.eta.repository.EtaSchedulingRedisTemplate;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;

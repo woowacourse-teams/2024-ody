@@ -1,4 +1,4 @@
-package com.ody.eta.repository;
+package com.ody.eta.service;
 
 import com.ody.eta.domain.EtaSchedulingKey;
 import com.ody.mate.repository.MateRepository;
@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class EtaSchedulingRedisTemplate extends StringRedisTemplate {
 
     private final long ttlMs;

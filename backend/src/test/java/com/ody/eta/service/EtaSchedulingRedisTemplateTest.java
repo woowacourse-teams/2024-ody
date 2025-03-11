@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.eta.domain.EtaSchedulingKey;
-import com.ody.eta.repository.EtaSchedulingRedisTemplate;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import java.time.LocalDateTime;
