@@ -6,7 +6,7 @@
 
         <variable
             name="inviteCodeCopyListener"
-            type="com.mulberry.ody.presentation.room.detail.listener.InviteCodeCopyListener" />
+            type="com.mulberry.ody.presentation.feature.room.detail.listener.InviteCodeCopyListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

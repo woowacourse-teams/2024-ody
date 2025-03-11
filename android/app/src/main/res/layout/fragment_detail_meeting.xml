@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.mulberry.ody.presentation.room.MeetingRoomViewModel" />
+            type="com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel" />
 
         <variable
             name="backListener"
@@ -15,11 +15,11 @@
 
         <variable
             name="meetingRoomListener"
-            type="com.mulberry.ody.presentation.room.listener.MeetingRoomListener" />
+            type="com.mulberry.ody.presentation.feature.room.listener.MeetingRoomListener" />
 
         <variable
             name="departureTimeGuideListener"
-            type="com.mulberry.ody.presentation.room.detail.listener.DepartureTimeGuideListener" />
+            type="com.mulberry.ody.presentation.feature.room.detail.listener.DepartureTimeGuideListener" />
 
     </data>
 

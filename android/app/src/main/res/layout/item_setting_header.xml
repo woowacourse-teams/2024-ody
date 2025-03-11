@@ -6,7 +6,7 @@
 
         <variable
             name="header"
-            type="com.mulberry.ody.presentation.setting.model.SettingHeader" />
+            type="com.mulberry.ody.presentation.feature.setting.model.SettingHeader" />
     </data>
 
     <LinearLayout

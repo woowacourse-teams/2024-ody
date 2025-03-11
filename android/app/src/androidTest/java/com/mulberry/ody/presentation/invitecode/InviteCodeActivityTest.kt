@@ -14,6 +14,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.feature.invitecode.InviteCodeActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,7 +22,10 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class InviteCodeActivityTest {
     @get:Rule
-    val activityRule: ActivityScenarioRule<InviteCodeActivity> = ActivityScenarioRule(InviteCodeActivity::class.java)
+    val activityRule: ActivityScenarioRule<InviteCodeActivity> =
+        ActivityScenarioRule(
+            InviteCodeActivity::class.java,
+        )
 
     @Test
     fun `아무것도_입력하지_않으면_확인_버튼이_비활성화_된다`() {

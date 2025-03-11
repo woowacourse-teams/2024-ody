@@ -9,11 +9,11 @@
 
         <variable
             name="meetingsListener"
-            type="com.mulberry.ody.presentation.meetings.listener.MeetingsListener" />
+            type="com.mulberry.ody.presentation.feature.meetings.listener.MeetingsListener" />
 
         <variable
             name="vm"
-            type="com.mulberry.ody.presentation.meetings.MeetingsViewModel" />
+            type="com.mulberry.ody.presentation.feature.meetings.MeetingsViewModel" />
 
         <variable
             name="isFloatingButtonExpanded"
@@ -23,7 +23,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.meetings.MeetingsActivity">
+        tools:context=".presentation.feature.meetings.MeetingsActivity">
 
         <include
             android:id="@+id/tb_intro"

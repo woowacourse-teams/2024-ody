@@ -1,11 +1,11 @@
 package com.mulberry.ody.di
 
 import com.mulberry.ody.data.auth.repository.KakaoAuthRepository
-import com.mulberry.ody.data.local.repository.DefaultMatesEtaRepository
-import com.mulberry.ody.data.remote.core.repository.DefaultJoinRepository
-import com.mulberry.ody.data.remote.core.repository.DefaultMeetingRepository
-import com.mulberry.ody.data.remote.core.repository.DefaultNotificationLogRepository
-import com.mulberry.ody.data.remote.thirdparty.address.KakaoAddressRepository
+import com.mulberry.ody.data.repository.DefaultJoinRepository
+import com.mulberry.ody.data.repository.DefaultMatesEtaRepository
+import com.mulberry.ody.data.repository.DefaultMeetingRepository
+import com.mulberry.ody.data.repository.DefaultNotificationLogRepository
+import com.mulberry.ody.data.repository.KakaoAddressRepository
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.AuthRepository
 import com.mulberry.ody.domain.repository.ody.JoinRepository
