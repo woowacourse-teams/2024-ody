@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.mulberry.ody.presentation.creation.MeetingCreationViewModel" />
+            type="com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel" />
 
         <variable
             name="backListener"
@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.creation.MeetingCreationActivity">
+        tools:context=".presentation.feature.creation.MeetingCreationActivity">
 
         <include
             android:id="@+id/tb_meeting_info"

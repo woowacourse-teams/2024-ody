@@ -14,7 +14,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.mulberry.ody.presentation.setting.SettingActivity">
+        tools:context="com.mulberry.ody.presentation.feature.setting.SettingActivity">
 
         <include
             android:id="@+id/tb_setting"

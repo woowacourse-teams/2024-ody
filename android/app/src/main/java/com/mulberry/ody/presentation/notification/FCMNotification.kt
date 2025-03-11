@@ -10,10 +10,10 @@ import androidx.core.app.TaskStackBuilder
 import com.mulberry.ody.R
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.domain.model.NotificationType
-import com.mulberry.ody.presentation.meetings.MeetingsActivity
-import com.mulberry.ody.presentation.room.MeetingRoomActivity
-import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
-import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
+import com.mulberry.ody.presentation.feature.meetings.MeetingsActivity
+import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity
+import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
+import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first

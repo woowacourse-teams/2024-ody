@@ -15,7 +15,7 @@
 
         <variable
             name="meetingRoomListener"
-            type="com.mulberry.ody.presentation.room.listener.MeetingRoomListener" />
+            type="com.mulberry.ody.presentation.feature.room.listener.MeetingRoomListener" />
 
     </data>
 
