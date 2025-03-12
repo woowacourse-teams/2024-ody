@@ -1,14 +1,13 @@
 [versions]
-accompanistPermissions = "0.36.0"
 activity = "1.9.2"
-activityCompose = "1.10.0"
+activityCompose = "1.9.2"
 agp = "8.5.0"
 androidJunitJupiter = "1.10.0.0"
 androidxPaging = "3.3.4"
 appcompat = "1.7.0"
 assertj = "3.25.3"
 constraintlayout = "2.1.4"
-composeBom = "2025.01.01"
+composeBom = "2025.02.00"
 coreKtx = "1.13.1"
 coroutine = "1.9.0"
 coroutinesTest = "1.9.0-RC"
@@ -30,9 +29,8 @@ hiltNavigationCompose = "1.2.0"
 hiltWork = "1.2.0"
 junitJupiter = "5.10.2"
 junitVersion = "1.2.1"
-jvm = "1.9.23"
 kakaoShare = "2.20.3"
-kotlin = "1.9.10"
+kotlin = "1.9.23"
 ksp = "1.9.23-1.0.20"
 ktlint = "12.1.1"
 kakaoSdk = "2.20.3"
@@ -47,12 +45,9 @@ room = "2.6.1"
 splashScreen = "1.0.1"
 timber = "5.0.1"
 viewPager = "1.1.0"
-workRuntimeKtx = "2.9.1"
-
 
 [libraries]
 # androidx
-androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltWork" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -60,7 +55,6 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-view-pager = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewPager" }
-androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
 androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "fragmentTesting" }
 androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "lifecycle" }
@@ -142,11 +136,8 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
-# permission
-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
-
 [plugins]
-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jvm" }
+jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }

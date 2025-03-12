@@ -65,10 +65,14 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.13"
+    }
     buildFeatures {
         buildConfig = true
         dataBinding = true
         viewBinding = true
+        compose = true
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -83,12 +87,10 @@ dependencies {
     // androidx
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity)
-    implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle)
     implementation(libs.androidx.view.pager)
     implementation(libs.androidx.fragment.ktx)
-    implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.viewmodel)
@@ -160,6 +162,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
+    debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.tooling.preview)
 
     // hilt
@@ -169,7 +172,4 @@ dependencies {
 
     // paging
     implementation(libs.androidx.paging)
-
-    // permission
-    implementation(libs.accompanist.permissions)
 }
