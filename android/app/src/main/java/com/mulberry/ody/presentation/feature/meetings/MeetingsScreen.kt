@@ -79,6 +79,12 @@ fun MeetingsScreen(
     ) { innerPadding ->
         Text(text = "안녕", modifier = Modifier.padding(innerPadding))
     }
+
+    OnLifecycleEvent { _, event ->
+        if (event == Lifecycle.Event.ON_RESUME) {
+            viewModel.fetchMeetings()
+        }
+    }
 }
 
 @Composable
