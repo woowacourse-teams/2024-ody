@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.theme.Gray350
 import com.mulberry.ody.presentation.theme.OdyTheme
 import com.mulberry.ody.presentation.theme.White
@@ -36,6 +37,7 @@ fun OdyButton(
         shape = RoundedCornerShape(15.dp),
         border = BorderStroke(width = if (isEnabled) 0.dp else 1.dp, color = Gray350),
         contentPadding = PaddingValues(all = 10.dp),
+        interactionSource = NoRippleInteractionSource,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(

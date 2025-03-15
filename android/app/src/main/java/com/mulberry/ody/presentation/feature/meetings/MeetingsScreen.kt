@@ -7,7 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,6 +58,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.OnLifecycleEvent
+import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyButton
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
@@ -94,7 +94,7 @@ fun MeetingsScreen(
                     Icon(
                         painter = painterResource(R.drawable.ic_setting),
                         modifier = Modifier
-                            .clickable { viewModel.onClickSetting() }
+                            .noRippleClickable { viewModel.onClickSetting() }
                             .padding(end = 18.dp),
                         tint = OdyTheme.colors.tertiary,
                         contentDescription = null,
@@ -211,15 +211,15 @@ private fun MeetingItem(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .clickable { onClickMeeting(meeting) },
+            .noRippleClickable { onClickMeeting(meeting) },
     ) {
-        Column(modifier = Modifier.padding(horizontal = 22.dp)) {
-            Row(
-                modifier =
-                Modifier
-                    .padding(top = 18.dp)
-                    .padding(bottom = 4.dp),
-            ) {
+        Column(
+            modifier =
+            Modifier
+                .padding(horizontal = 22.dp)
+                .padding(vertical = 12.dp)
+        ) {
+            Row(modifier = Modifier.padding(top = 6.dp)) {
                 Text(
                     modifier = Modifier.weight(1f),
                     text = meeting.name,
@@ -233,7 +233,7 @@ private fun MeetingItem(
                     contentDescription = null,
                     modifier = Modifier
                         .padding(10.dp)
-                        .clickable { isFolded = !isFolded },
+                        .noRippleClickable { isFolded = !isFolded },
                 )
             }
             Text(
@@ -269,7 +269,7 @@ private fun MeetingItem(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 6.dp),
+                    .padding(top = 6.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
@@ -283,7 +283,7 @@ private fun MeetingItem(
                     Text(
                         text = stringResource(id = R.string.meetings_traffic_guide),
                         style = OdyTheme.typography.pretendardRegular14.copy(color = Gray400),
-                        modifier = Modifier.padding(vertical = 4.dp),
+                        modifier = Modifier.padding(top = 4.dp),
                     )
                 }
                 OdyButton(
