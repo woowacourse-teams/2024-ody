@@ -3,6 +3,7 @@ package com.mulberry.ody.presentation.feature.meetings
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.meetings
+import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
 import com.mulberry.ody.presentation.feature.meetings.model.toMeetingUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
@@ -39,7 +40,7 @@ class MeetingsViewModelTest {
             viewModel.fetchMeetings()
 
             // then
-            val actual = viewModel.meetings.first()
+            val actual = (viewModel.meetingsUiState.value as MeetingsUiState.Meetings).content
             val expected = meetings.toMeetingUiModels()
             assertThat(actual).isEqualTo(expected)
         }

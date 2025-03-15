@@ -59,6 +59,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.OnLifecycleEvent
+import com.mulberry.ody.presentation.component.OdyButton
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
@@ -85,7 +86,7 @@ fun MeetingsScreen(
     CheckAndLaunchPermission(onShowSnackbar)
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        modifier = Modifier.background(OdyTheme.colors.primary),
+        containerColor = OdyTheme.colors.primary,
         topBar = {
             OdyTopAppBar(
                 title = stringResource(id = R.string.app_name),
@@ -168,6 +169,149 @@ private fun CheckAndLaunchPermission(
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )
             )
+        }
+    }
+}
+
+@Composable
+private fun EmptyMeetingsContent(modifier: Modifier = Modifier) {
+
+}
+
+@Composable
+private fun MeetingsContent(
+    meetings: List<MeetingUiModel>,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(top = 24.dp, start = 18.dp, end = 18.dp, bottom = 32.dp),
+    ) {
+        items(meetings) {
+            MeetingItem(it)
+        }
+    }
+}
+
+@Composable
+private fun MeetingItem(
+    meeting: MeetingUiModel,
+    initialIsFolded: Boolean = false,
+    onClickMeeting: (MeetingUiModel) -> Unit = {},
+    onClickOdy: () -> Unit = {},
+) {
+    val context = LocalContext.current
+    var isFolded by rememberSaveable { mutableStateOf(initialIsFolded) }
+
+    Card(
+        shape = RoundedCornerShape(15.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = OdyTheme.colors.octonary),
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onClickMeeting(meeting) },
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 22.dp)) {
+            Row(
+                modifier =
+                Modifier
+                    .padding(top = 18.dp)
+                    .padding(bottom = 4.dp),
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = meeting.name,
+                    style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.quinary),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                )
+                Icon(
+                    painter = painterResource(id = if (isFolded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down),
+                    tint = OdyTheme.colors.secondary,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .clickable { isFolded = !isFolded },
+                )
+            }
+            Text(
+                text = meeting.dateTimeMessage(context),
+                style = OdyTheme.typography.pretendardMedium16.copy(color = OdyTheme.colors.quinary),
+            )
+            if (isFolded) {
+                Row(
+                    modifier = Modifier
+                        .padding(top = 6.dp)
+                        .padding(bottom = 4.dp),
+                ) {
+                    Text(
+                        text = meeting.originAddress,
+                        style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.secondary),
+                    )
+                    Text(
+                        text = stringResource(id = R.string.meetings_arrival_postfix),
+                        style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.quarternary),
+                    )
+                }
+                Row {
+                    Text(
+                        text = meeting.targetAddress,
+                        style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.secondary),
+                    )
+                    Text(
+                        text = stringResource(id = R.string.meetings_departure_postfix),
+                        style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.quarternary),
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = stringResource(
+                            id = R.string.meetings_eta_form,
+                            meeting.durationMinutes
+                        ),
+                        style = OdyTheme.typography.pretendardBold20.copy(color = OdyTheme.colors.quinary),
+                    )
+                    Text(
+                        text = stringResource(id = R.string.meetings_traffic_guide),
+                        style = OdyTheme.typography.pretendardRegular14.copy(color = Gray400),
+                        modifier = Modifier.padding(vertical = 4.dp),
+                    )
+                }
+                OdyButton(
+                    isEnabled = meeting.isAccessible(),
+                    onClick = onClickOdy,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+@Preview(showSystemUi = true)
+private fun MeetingItemPreview() {
+    val meeting =
+        MeetingUiModel(
+            id = 1L,
+            name = "올리브와 저녁 마라탕",
+            datetime = LocalDateTime.now().plusMinutes(20),
+            originAddress = "서울 강남구 테헤란로 411",
+            targetAddress = "서울특별시 송파구 올림픽로35다길 42",
+            durationMinutes = "1시간 10분",
+        )
+    OdyTheme {
+        Column(modifier = Modifier.padding(all = 16.dp)) {
+            MeetingItem(meeting)
+            Spacer(Modifier.height(16.dp))
+            MeetingItem(meeting, initialIsFolded = true)
         }
     }
 }

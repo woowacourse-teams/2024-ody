@@ -11,6 +11,7 @@ import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.feature.meetings.listener.MeetingsItemListener
 import com.mulberry.ody.presentation.feature.meetings.listener.MeetingsListener
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
+import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
 import com.mulberry.ody.presentation.feature.meetings.model.toMeetingUiModels
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,14 +31,11 @@ class MeetingsViewModel
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
     ) : BaseViewModel(), MeetingsItemListener, MeetingsListener {
-        private val _meetings: MutableStateFlow<List<MeetingUiModel>> = MutableStateFlow(listOf())
-        val meetings: StateFlow<List<MeetingUiModel>> get() = _meetings.asStateFlow()
+        private val _meetingsUiState: MutableStateFlow<MeetingsUiState> = MutableStateFlow(MeetingsUiState.Empty)
+        val meetingsUiState: StateFlow<MeetingsUiState> get() = _meetingsUiState.asStateFlow()
 
         private val _navigateAction = MutableSharedFlow<MeetingsNavigateAction>()
         val navigateAction: SharedFlow<MeetingsNavigateAction> = _navigateAction.asSharedFlow()
-
-        private val _isMeetingsEmpty: MutableStateFlow<Boolean> = MutableStateFlow(true)
-        val isMeetingsEmpty: StateFlow<Boolean> get() = _isMeetingsEmpty.asStateFlow()
 
         private val _isSelectedFloatingNavigator: MutableStateFlow<Boolean> = MutableStateFlow(false)
         val isSelectedFloatingNavigator: StateFlow<Boolean> get() = _isSelectedFloatingNavigator.asStateFlow()
@@ -51,8 +49,7 @@ class MeetingsViewModel
                 meetingRepository.fetchMeetings()
                     .onSuccess {
                         val meetings = it.toMeetingUiModels()
-                        _meetings.value = meetings
-                        _isMeetingsEmpty.value = meetings.isEmpty()
+                        _meetingsUiState.value = if (meetings.isEmpty()) MeetingsUiState.Empty else MeetingsUiState.Meetings(meetings)
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
@@ -75,13 +72,6 @@ class MeetingsViewModel
             viewModelScope.launch {
                 _navigateAction.emit(MeetingsNavigateAction.NavigateToNotificationLog(meetingId))
             }
-        }
-
-        override fun toggleFold(id: Long) {
-            val meetings = _meetings.value.toMutableList()
-            val index = meetings.indexOfFirst { it.id == id }
-            meetings[index] = meetings[index].copy(isFolded = !meetings[index].isFolded)
-            _meetings.value = meetings
         }
 
         fun selectFloatingNavigator() {
