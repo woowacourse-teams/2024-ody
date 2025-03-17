@@ -1,207 +1,104 @@
 package com.mulberry.ody.presentation.feature.meetings
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.mulberry.ody.R
-import com.mulberry.ody.databinding.ActivityMeetingsBinding
-import com.mulberry.ody.presentation.common.PermissionHelper
-import com.mulberry.ody.presentation.common.binding.BindingActivity
+import com.mulberry.ody.presentation.common.LoadingDialog
 import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.feature.creation.MeetingCreationActivity
 import com.mulberry.ody.presentation.feature.invitecode.InviteCodeActivity
 import com.mulberry.ody.presentation.feature.login.LoginActivity
-import com.mulberry.ody.presentation.feature.meetings.adapter.MeetingsAdapter
 import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
 import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
 import com.mulberry.ody.presentation.feature.setting.SettingActivity
 import com.mulberry.ody.presentation.theme.OdyTheme
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MeetingsActivity : ComponentActivity() {
     private val viewModel: MeetingsViewModel by viewModels<MeetingsViewModel>()
-    private val adapter by lazy { MeetingsAdapter(viewModel, viewModel) }
-
-    @Inject
-    lateinit var permissionHelper: PermissionHelper
-    private var lastBackPressedTime = 0L
+    private var dialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             enableEdgeToEdge()
             OdyTheme {
-                MeetingsScreen()
+                MeetingsScreen(navigate = ::navigate)
             }
         }
-        // requestPermissions()
+
+        initializeObserve()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.fetchMeetings()
+    private fun navigate(action: MeetingsNavigateAction) {
+        when (action) {
+            is MeetingsNavigateAction.NavigateToEtaDashboard -> {
+                val intent = MeetingRoomActivity.getIntent(this, action.meetingId, NAVIGATE_TO_ETA_DASHBOARD)
+                startActivity(intent)
+
+            }
+
+            is MeetingsNavigateAction.NavigateToNotificationLog -> {
+                val intent = MeetingRoomActivity.getIntent(this, action.meetingId, NAVIGATE_TO_DETAIL_MEETING)
+                startActivity(intent)
+            }
+
+            is MeetingsNavigateAction.NavigateToLogin -> {
+                val intent = LoginActivity.getIntent(this)
+                startActivity(intent)
+            }
+
+            MeetingsNavigateAction.NavigateToCreateMeeting -> {
+                val intent = InviteCodeActivity.getIntent(this)
+                startActivity(intent)
+            }
+
+            MeetingsNavigateAction.NavigateToJoinMeeting -> {
+                val intent = MeetingCreationActivity.getIntent(this)
+                startActivity(intent)
+            }
+
+            MeetingsNavigateAction.NavigateToSetting -> {
+
+                val intent = SettingActivity.getIntent(this)
+                startActivity(intent)
+            }
+        }
     }
 
-    //    override fun initializeBinding() {
-//        binding.rvMeetingList.adapter = adapter
-//        binding.meetingsListener = viewModel
-//        binding.lifecycleOwner = this
-//        binding.vm = viewModel
-//    }
-//
     private fun initializeObserve() {
-//        onBackPressedDispatcher.addCallback(this, onBackPressedCallback())
-//        collectWhenStarted(viewModel.meetings) {
-//            adapter.submitList(it)
-//        }
-        collectWhenStarted(viewModel.navigateAction) {
-            when (it) {
-                is MeetingsNavigateAction.NavigateToEtaDashboard -> navigateToEtaDashboard(it.meetingId)
-
-                is MeetingsNavigateAction.NavigateToNotificationLog -> navigateToNotificationLog(it.meetingId)
-
-                is MeetingsNavigateAction.NavigateToLogin -> navigateToLogin()
-
-                MeetingsNavigateAction.NavigateToCreateMeeting -> navigateToCreateMeeting()
-
-                MeetingsNavigateAction.NavigateToJoinMeeting -> navigateToJoinMeeting()
-
-                MeetingsNavigateAction.NavigateToSetting -> navigateToSetting()
+        collectWhenStarted(viewModel.isLoading) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+                return@collectWhenStarted
             }
+            hideLoadingDialog()
         }
     }
-//        collectWhenStarted(viewModel.networkErrorEvent) {
-//            showRetrySnackBar { viewModel.retryLastAction() }
-//        }
-//        collectWhenStarted(viewModel.errorEvent) {
-//            showSnackBar(R.string.error_guide)
-//        }
-//        collectWhenStarted(viewModel.isLoading) { isLoading ->
-//            if (isLoading) {
-//                showLoadingDialog()
-//                return@collectWhenStarted
-//            }
-//            hideLoadingDialog()
-//        }
-//        collectWhenStarted(viewModel.inaccessibleEtaEvent) {
-//            showSnackBar(R.string.inaccessible_eta_guide)
-//        }
-//    }
 
-    private fun navigateToNotificationLog(meetingId: Long) {
-        val intent = MeetingRoomActivity.getIntent(this, meetingId, NAVIGATE_TO_DETAIL_MEETING)
-        startActivity(intent)
+    private fun showLoadingDialog() {
+        dialog?.dismiss()
+        dialog = LoadingDialog(this)
+        dialog?.show()
     }
 
-    private fun navigateToEtaDashboard(meetingId: Long) {
-        val intent = MeetingRoomActivity.getIntent(this, meetingId, NAVIGATE_TO_ETA_DASHBOARD)
-        startActivity(intent)
+    private fun hideLoadingDialog() {
+        dialog?.dismiss()
     }
 
-    private fun navigateToLogin() {
-        val intent = LoginActivity.getIntent(this)
-        startActivity(intent)
+    override fun onDestroy() {
+        super.onDestroy()
+        dialog = null
     }
-
-    private fun navigateToJoinMeeting() {
-        val intent = InviteCodeActivity.getIntent(this)
-        startActivity(intent)
-    }
-
-    private fun navigateToCreateMeeting() {
-        val intent = MeetingCreationActivity.getIntent(this)
-        startActivity(intent)
-    }
-
-    private fun navigateToSetting() {
-        val intent = SettingActivity.getIntent(this)
-        startActivity(intent)
-    }
-
-    private fun requestPermissions() {
-        if (permissionHelper.hasNotificationPermission() &&
-            permissionHelper.hasFineLocationPermission() &&
-            permissionHelper.hasCoarseLocationPermission() &&
-            permissionHelper.hasBackgroundLocationPermission()
-        ) {
-            return
-        }
-
-        permissionHelper.requestCoarseAndFineLocationPermission(this)
-    }
-
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<out String>,
-//        grantResults: IntArray,
-//    ) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//
-//        if (grantResults.isEmpty()) return
-//
-//        when (requestCode) {
-//            PermissionHelper.NOTIFICATION_REQUEST_CODE -> {
-//                checkPermissionAndProceed(
-//                    grantResults[0],
-//                    R.string.meetings_notification_permission_required,
-//                )
-//            }
-//
-//            PermissionHelper.COARSE_AND_FINE_LOCATION_REQUEST_CODE ->
-//                checkPermissionAndProceed(
-//                    grantResults[0],
-//                    R.string.meetings_location_permission_required,
-//                ) { permissionHelper.requestBackgroundLocationPermission(this) }
-//
-//            PermissionHelper.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE ->
-//                checkPermissionAndProceed(
-//                    grantResults[0],
-//                    R.string.meetings_location_permission_required,
-//                ) { permissionHelper.requestNotificationPermission(this) }
-//        }
-//    }
-//
-//    private fun onBackPressedCallback(): OnBackPressedCallback {
-//        return object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                if (lastBackPressedTime > System.currentTimeMillis() - BACK_PRESSED_DELAY) {
-//                    finish()
-//                } else {
-//                    Toast.makeText(
-//                        this@MeetingsActivity,
-//                        R.string.meetings_back_pressed_guide,
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
-//                    lastBackPressedTime = System.currentTimeMillis()
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun checkPermissionAndProceed(
-//        grantResult: Int,
-//        requiredMessage: Int,
-//        requestNextPermission: () -> Unit = {},
-//    ) {
-//        if (grantResult != PackageManager.PERMISSION_GRANTED) {
-//            showSnackBar(requiredMessage)
-//        }
-//        requestNextPermission()
-//    }
 
     companion object {
-        private const val BACK_PRESSED_DELAY = 2000
-
         fun getIntent(context: Context): Intent = Intent(context, MeetingsActivity::class.java)
     }
 }

@@ -1,7 +1,10 @@
 package com.mulberry.ody.presentation.feature.meetings
 
 import android.Manifest
+import android.app.Activity
 import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -12,9 +15,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,7 +26,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -41,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -67,30 +68,55 @@ import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
 import com.mulberry.ody.presentation.theme.Gray400
 import com.mulberry.ody.presentation.theme.OdyTheme
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @Composable
 fun MeetingsScreen(
     viewModel: MeetingsViewModel = hiltViewModel(),
+    navigate: (MeetingsNavigateAction) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    val onShowSnackbar: (String) -> Unit = { message ->
+    val context = LocalContext.current
+    val onShowSnackbar: (Int) -> Unit = { id ->
         coroutineScope.launch {
-            snackbarHostState.showSnackbar(message)
+            snackbarHostState.showSnackbar(context.getString(id))
         }
     }
+    LaunchedEffect(Unit) {
+        viewModel.networkErrorEvent.collect {
+            onShowSnackbar(R.string.network_error_guide)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.errorEvent.collect {
+            onShowSnackbar(R.string.error_guide)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.inaccessibleEtaEvent.collect {
+            onShowSnackbar(R.string.inaccessible_eta_guide)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.navigateAction.collect {
+            navigate(it)
+        }
+    }
+
     val meetingsUiState by viewModel.meetingsUiState.collectAsStateWithLifecycle()
 
     CheckAndLaunchPermission(onShowSnackbar)
+    BackPressed()
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = OdyTheme.colors.primary,
         floatingActionButton = {
             MeetingsFloatingActionButton(
-                onCreateClick = {},
-                onJoinClick = {},
+                onCreate = { viewModel.onCreateMeeting() },
+                onJoin = { viewModel.onJoinMeeting() },
             )
         },
         topBar = {
@@ -100,7 +126,7 @@ fun MeetingsScreen(
                     Icon(
                         painter = painterResource(R.drawable.ic_setting),
                         modifier = Modifier
-                            .noRippleClickable { viewModel.onClickSetting() }
+                            .noRippleClickable { viewModel.navigateToSetting() }
                             .padding(end = 18.dp),
                         tint = OdyTheme.colors.tertiary,
                         contentDescription = null,
@@ -113,6 +139,8 @@ fun MeetingsScreen(
             MeetingsUiState.Empty -> EmptyMeetingsContent(modifier = Modifier.padding(innerPadding))
             is MeetingsUiState.Meetings -> MeetingsContent(
                 meetings = state.content,
+                onClickMeeting = { viewModel.navigateToNotificationLog(it.id) },
+                onClickOdy = { viewModel.navigateToEta(it) },
                 modifier = Modifier.padding(innerPadding),
             )
         }
@@ -126,15 +154,30 @@ fun MeetingsScreen(
 }
 
 @Composable
-private fun CheckAndLaunchPermission(
-    onShowSnackbar: (String) -> Unit
-) {
+fun BackPressed() {
     val context = LocalContext.current
+    var backPressedTime by rememberSaveable { mutableLongStateOf(0L) }
+
+    BackHandler {
+        if (backPressedTime > System.currentTimeMillis() - 2000L) {
+            // 앱 종료
+            (context as Activity).finish()
+        } else {
+            Toast.makeText(context, R.string.meetings_back_pressed_guide, Toast.LENGTH_SHORT).show()
+        }
+        backPressedTime = System.currentTimeMillis()
+    }
+}
+
+@Composable
+private fun CheckAndLaunchPermission(
+    onShowSnackbar: (Int) -> Unit
+) {
     val backgroundLocationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (!isGranted) {
-            onShowSnackbar(context.getString(R.string.meetings_background_location_permission_required))
+            onShowSnackbar(R.string.meetings_background_location_permission_required)
         }
     }
 
@@ -147,7 +190,7 @@ private fun CheckAndLaunchPermission(
                 backgroundLocationPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
             }
         } else {
-            onShowSnackbar(context.getString(R.string.meetings_location_permission_required))
+            onShowSnackbar(R.string.meetings_location_permission_required)
         }
     }
 
@@ -161,7 +204,7 @@ private fun CheckAndLaunchPermission(
             )
         )
         if (!isGranted) {
-            onShowSnackbar(context.getString(R.string.meetings_notification_permission_required))
+            onShowSnackbar(R.string.meetings_notification_permission_required)
         }
     }
 
@@ -181,8 +224,8 @@ private fun CheckAndLaunchPermission(
 
 @Composable
 private fun MeetingsFloatingActionButton(
-    onCreateClick: () -> Unit,
-    onJoinClick: () -> Unit,
+    onCreate: () -> Unit,
+    onJoin: () -> Unit,
     initialIsExpanded: Boolean = false,
 ) {
     var isExpanded by rememberSaveable { mutableStateOf(initialIsExpanded) }
@@ -196,7 +239,7 @@ private fun MeetingsFloatingActionButton(
         if (isExpanded) {
             Column(
                 modifier = Modifier
-                    .width(172.dp)
+                    .width(164.dp)
                     .wrapContentHeight()
                     .background(
                         color = OdyTheme.colors.primaryVariant,
@@ -209,16 +252,18 @@ private fun MeetingsFloatingActionButton(
                     style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.secondaryVariant),
                     modifier =
                     Modifier
-                        .noRippleClickable { onCreateClick() }
+                        .fillMaxWidth()
                         .padding(bottom = 14.dp)
+                        .noRippleClickable { onCreate() }
                 )
                 Text(
                     text = stringResource(id = R.string.meetings_join_meeting),
                     style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.secondaryVariant),
                     modifier =
                     Modifier
-                        .noRippleClickable { onJoinClick() }
+                        .fillMaxWidth()
                         .padding(top = 14.dp)
+                        .noRippleClickable { onJoin() }
                 )
             }
         }
@@ -261,6 +306,8 @@ private fun EmptyMeetingsContent(modifier: Modifier = Modifier) {
 @Composable
 private fun MeetingsContent(
     meetings: List<MeetingUiModel>,
+    onClickMeeting: (MeetingUiModel) -> Unit,
+    onClickOdy: (MeetingUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -269,7 +316,11 @@ private fun MeetingsContent(
         contentPadding = PaddingValues(top = 24.dp, start = 18.dp, end = 18.dp, bottom = 32.dp),
     ) {
         items(meetings) {
-            MeetingItem(it)
+            MeetingItem(
+                meeting = it,
+                onClickMeeting = onClickMeeting,
+                onClickOdy = onClickOdy,
+            )
         }
     }
 }
@@ -277,9 +328,9 @@ private fun MeetingsContent(
 @Composable
 private fun MeetingItem(
     meeting: MeetingUiModel,
+    onClickMeeting: (MeetingUiModel) -> Unit,
+    onClickOdy: (MeetingUiModel) -> Unit,
     initialIsFolded: Boolean = false,
-    onClickMeeting: (MeetingUiModel) -> Unit = {},
-    onClickOdy: () -> Unit = {},
 ) {
     val context = LocalContext.current
     var isFolded by rememberSaveable { mutableStateOf(initialIsFolded) }
@@ -328,7 +379,7 @@ private fun MeetingItem(
                 Column {
                     Row(
                         modifier = Modifier
-                            .padding(vertical = 6.dp)
+                            .padding(top = 6.dp)
                             .padding(bottom = 4.dp),
                     ) {
                         Text(
@@ -373,8 +424,8 @@ private fun MeetingItem(
                     )
                 }
                 OdyButton(
-                    isEnabled = meeting.isAccessible(),
-                    onClick = onClickOdy,
+                    isEnabled = !meeting.isAccessible(),
+                    onClick = { onClickOdy(meeting) },
                 )
             }
         }
@@ -386,8 +437,8 @@ private fun MeetingItem(
 private fun MeetingsFloatingActionButtonPreview() {
     OdyTheme {
         MeetingsFloatingActionButton(
-            onCreateClick = {},
-            onJoinClick = {},
+            onCreate = {},
+            onJoin = {},
             initialIsExpanded = true,
         )
     }
@@ -415,9 +466,9 @@ private fun MeetingItemPreview() {
         )
     OdyTheme {
         Column(modifier = Modifier.padding(all = 16.dp)) {
-            MeetingItem(meeting)
+            MeetingItem(meeting, {}, {})
             Spacer(Modifier.height(16.dp))
-            MeetingItem(meeting, initialIsFolded = true)
+            MeetingItem(meeting, {}, {}, initialIsFolded = true)
         }
     }
 }

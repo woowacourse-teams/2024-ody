@@ -1,6 +1,7 @@
 package com.mulberry.ody.presentation.feature.meetings.model
 
 import android.content.Context
+import android.util.Log
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.toMessage
 import java.time.LocalDate
@@ -16,7 +17,7 @@ data class MeetingUiModel(
 ) {
     fun isAccessible(): Boolean {
         val now = LocalDateTime.now()
-        return datetime.isBefore(now.plusMinutes(30))
+        return !datetime.isBefore(now.plusMinutes(30))
     }
 
     fun dateTimeMessage(context: Context): String {

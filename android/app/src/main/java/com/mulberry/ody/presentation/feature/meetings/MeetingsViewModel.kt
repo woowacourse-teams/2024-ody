@@ -8,8 +8,6 @@ import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
-import com.mulberry.ody.presentation.feature.meetings.listener.MeetingsItemListener
-import com.mulberry.ody.presentation.feature.meetings.listener.MeetingsListener
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
 import com.mulberry.ody.presentation.feature.meetings.model.toMeetingUiModels
@@ -30,15 +28,12 @@ class MeetingsViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
-    ) : BaseViewModel(), MeetingsItemListener, MeetingsListener {
+    ) : BaseViewModel() {
         private val _meetingsUiState: MutableStateFlow<MeetingsUiState> = MutableStateFlow(MeetingsUiState.Empty)
         val meetingsUiState: StateFlow<MeetingsUiState> get() = _meetingsUiState.asStateFlow()
 
         private val _navigateAction = MutableSharedFlow<MeetingsNavigateAction>()
         val navigateAction: SharedFlow<MeetingsNavigateAction> = _navigateAction.asSharedFlow()
-
-        private val _isSelectedFloatingNavigator: MutableStateFlow<Boolean> = MutableStateFlow(false)
-        val isSelectedFloatingNavigator: StateFlow<Boolean> get() = _isSelectedFloatingNavigator.asStateFlow()
 
         private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
         val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent.asSharedFlow()
@@ -62,48 +57,37 @@ class MeetingsViewModel
             }
         }
 
-        override fun navigateToEtaDashboard(meetingId: Long) {
+        fun onJoinMeeting() {
             viewModelScope.launch {
-                _navigateAction.emit(MeetingsNavigateAction.NavigateToEtaDashboard(meetingId))
+                _navigateAction.emit(MeetingsNavigateAction.NavigateToJoinMeeting)
             }
         }
 
-        override fun navigateToNotificationLog(meetingId: Long) {
+        fun onCreateMeeting() {
+            viewModelScope.launch {
+                _navigateAction.emit(MeetingsNavigateAction.NavigateToCreateMeeting)
+            }
+        }
+
+        fun navigateToEta(meeting: MeetingUiModel) {
+            viewModelScope.launch {
+                if (meeting.isAccessible()) {
+                    _inaccessibleEtaEvent.emit(Unit)
+                    return@launch
+                }
+                _navigateAction.emit(MeetingsNavigateAction.NavigateToEtaDashboard(meeting.id))
+            }
+        }
+
+        fun navigateToNotificationLog(meetingId: Long) {
             viewModelScope.launch {
                 _navigateAction.emit(MeetingsNavigateAction.NavigateToNotificationLog(meetingId))
             }
         }
 
-        fun selectFloatingNavigator() {
-            viewModelScope.launch {
-                _isSelectedFloatingNavigator.emit(!_isSelectedFloatingNavigator.value)
-            }
-        }
-
-        override fun onJoinMeeting() {
-            viewModelScope.launch {
-                _navigateAction.emit(MeetingsNavigateAction.NavigateToJoinMeeting)
-                _isSelectedFloatingNavigator.emit(false)
-            }
-        }
-
-        override fun onCreateMeeting() {
-            viewModelScope.launch {
-                _navigateAction.emit(MeetingsNavigateAction.NavigateToCreateMeeting)
-                _isSelectedFloatingNavigator.emit(false)
-            }
-        }
-
-        override fun guideItemDisabled() {
-            viewModelScope.launch {
-                _inaccessibleEtaEvent.emit(Unit)
-            }
-        }
-
-        override fun onClickSetting() {
+        fun navigateToSetting() {
             viewModelScope.launch {
                 _navigateAction.emit(MeetingsNavigateAction.NavigateToSetting)
-                _isSelectedFloatingNavigator.emit(false)
             }
         }
 
