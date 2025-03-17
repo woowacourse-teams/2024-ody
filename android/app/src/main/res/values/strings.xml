@@ -35,7 +35,7 @@
     <string name="meetings_today">오늘</string>
     <string name="meetings_tomorrow">내일</string>
     <string name="meetings_post_tomorrow">%d일 후</string>
-    <string name="meetings_no_meeting_room_guide">아직 약속이 없어요.\n약속을 만들어 주세요!</string>
+    <string name="meetings_empty">아직 약속이 없어요.\n약속을 만들어 주세요!</string>
     <string name="meetings_notification_permission_required">알림 권한을 거절하실 경우 푸시 알람을 받으실 수 없어요</string>
     <string name="meetings_location_permission_required">위치 권한을 거절하면 내 위치를 친구에게 공유할 수 없어요</string>
     <string name="meetings_background_location_permission_required">백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.</string>
