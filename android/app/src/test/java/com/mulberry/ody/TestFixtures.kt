@@ -10,6 +10,7 @@ import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
 import com.mulberry.ody.domain.model.NotificationLog
 import com.mulberry.ody.domain.model.NotificationLogType
+import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -30,6 +31,16 @@ val detailMeeting: DetailMeeting =
         durationTime = 30,
         mates = listOf(Mate("A", ""), Mate("B", ""), Mate("C", "")),
         inviteCode = inviteCode,
+    )
+
+val meetingUiModel: MeetingUiModel =
+    MeetingUiModel(
+        id = 1L,
+        name = "올리브와 저녁 마라탕",
+        datetime = LocalDateTime.now().plusMinutes(20),
+        originAddress = "서울 강남구 테헤란로 411",
+        targetAddress = "서울특별시 송파구 올림픽로35다길 42",
+        durationMinutes = "1시간 10분",
     )
 
 val meeting =
