@@ -4,6 +4,12 @@ import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -314,30 +320,36 @@ private fun MeetingItem(
                 text = meeting.dateTimeMessage(context),
                 style = OdyTheme.typography.pretendardMedium16.copy(color = OdyTheme.colors.quinary),
             )
-            if (isFolded) {
-                Row(
-                    modifier = Modifier
-                        .padding(top = 6.dp)
-                        .padding(bottom = 4.dp),
-                ) {
-                    Text(
-                        text = meeting.originAddress,
-                        style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.secondary),
-                    )
-                    Text(
-                        text = stringResource(id = R.string.meetings_arrival_postfix),
-                        style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.quarternary),
-                    )
-                }
-                Row {
-                    Text(
-                        text = meeting.targetAddress,
-                        style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.secondary),
-                    )
-                    Text(
-                        text = stringResource(id = R.string.meetings_departure_postfix),
-                        style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.quarternary),
-                    )
+            AnimatedVisibility(
+                visible = isFolded,
+                enter = fadeIn(tween(durationMillis = 300)) + expandVertically(tween(durationMillis = 300)),
+                exit = fadeOut(tween(durationMillis = 300)) + shrinkVertically(tween(durationMillis = 300)),
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .padding(vertical = 6.dp)
+                            .padding(bottom = 4.dp),
+                    ) {
+                        Text(
+                            text = meeting.originAddress,
+                            style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.secondary),
+                        )
+                        Text(
+                            text = stringResource(id = R.string.meetings_arrival_postfix),
+                            style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.quarternary),
+                        )
+                    }
+                    Row {
+                        Text(
+                            text = meeting.targetAddress,
+                            style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.secondary),
+                        )
+                        Text(
+                            text = stringResource(id = R.string.meetings_departure_postfix),
+                            style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.quarternary),
+                        )
+                    }
                 }
             }
             Row(
