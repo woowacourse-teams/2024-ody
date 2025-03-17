@@ -42,7 +42,6 @@ class MeetingsActivity : ComponentActivity() {
             is MeetingsNavigateAction.NavigateToEtaDashboard -> {
                 val intent = MeetingRoomActivity.getIntent(this, action.meetingId, NAVIGATE_TO_ETA_DASHBOARD)
                 startActivity(intent)
-
             }
 
             is MeetingsNavigateAction.NavigateToNotificationLog -> {
@@ -66,7 +65,6 @@ class MeetingsActivity : ComponentActivity() {
             }
 
             MeetingsNavigateAction.NavigateToSetting -> {
-
                 val intent = SettingActivity.getIntent(this)
                 startActivity(intent)
             }

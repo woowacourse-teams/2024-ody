@@ -1,7 +1,6 @@
 package com.mulberry.ody.presentation.feature.meetings.model
 
 import android.content.Context
-import android.util.Log
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.toMessage
 import java.time.LocalDate

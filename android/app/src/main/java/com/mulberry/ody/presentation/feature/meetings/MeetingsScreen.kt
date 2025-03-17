@@ -68,7 +68,6 @@ import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
 import com.mulberry.ody.presentation.theme.Gray400
 import com.mulberry.ody.presentation.theme.OdyTheme
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
@@ -125,9 +124,10 @@ fun MeetingsScreen(
                 actions = {
                     Icon(
                         painter = painterResource(R.drawable.ic_setting),
-                        modifier = Modifier
-                            .noRippleClickable { viewModel.navigateToSetting() }
-                            .padding(end = 18.dp),
+                        modifier =
+                            Modifier
+                                .noRippleClickable { viewModel.navigateToSetting() }
+                                .padding(end = 18.dp),
                         tint = OdyTheme.colors.tertiary,
                         contentDescription = null,
                     )
@@ -137,12 +137,13 @@ fun MeetingsScreen(
     ) { innerPadding ->
         when (val state = meetingsUiState) {
             MeetingsUiState.Empty -> EmptyMeetingsContent(modifier = Modifier.padding(innerPadding))
-            is MeetingsUiState.Meetings -> MeetingsContent(
-                meetings = state.content,
-                onClickMeeting = { viewModel.navigateToNotificationLog(it.id) },
-                onClickOdy = { viewModel.navigateToEta(it) },
-                modifier = Modifier.padding(innerPadding),
-            )
+            is MeetingsUiState.Meetings ->
+                MeetingsContent(
+                    meetings = state.content,
+                    onClickMeeting = { viewModel.navigateToNotificationLog(it.id) },
+                    onClickOdy = { viewModel.navigateToEta(it) },
+                    modifier = Modifier.padding(innerPadding),
+                )
         }
     }
 
@@ -170,43 +171,44 @@ fun BackPressed() {
 }
 
 @Composable
-private fun CheckAndLaunchPermission(
-    onShowSnackbar: (Int) -> Unit
-) {
-    val backgroundLocationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (!isGranted) {
-            onShowSnackbar(R.string.meetings_background_location_permission_required)
-        }
-    }
-
-    val locationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val isGranted = permissions.filter { !it.value }.isEmpty()
-        if (isGranted) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                backgroundLocationPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+private fun CheckAndLaunchPermission(onShowSnackbar: (Int) -> Unit) {
+    val backgroundLocationPermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+        ) { isGranted ->
+            if (!isGranted) {
+                onShowSnackbar(R.string.meetings_background_location_permission_required)
             }
-        } else {
-            onShowSnackbar(R.string.meetings_location_permission_required)
         }
-    }
 
-    val notificationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        locationPermissionLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        )
-        if (!isGranted) {
-            onShowSnackbar(R.string.meetings_notification_permission_required)
+    val locationPermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestMultiplePermissions(),
+        ) { permissions ->
+            val isGranted = permissions.filter { !it.value }.isEmpty()
+            if (isGranted) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    backgroundLocationPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                }
+            } else {
+                onShowSnackbar(R.string.meetings_location_permission_required)
+            }
         }
-    }
+
+    val notificationPermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+        ) { isGranted ->
+            locationPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                ),
+            )
+            if (!isGranted) {
+                onShowSnackbar(R.string.meetings_notification_permission_required)
+            }
+        }
 
     LaunchedEffect(Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -215,8 +217,8 @@ private fun CheckAndLaunchPermission(
             locationPermissionLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                ),
             )
         }
     }
@@ -232,38 +234,40 @@ private fun MeetingsFloatingActionButton(
 
     Column(
         horizontalAlignment = Alignment.End,
-        modifier = Modifier
-            .padding(bottom = 16.dp)
-            .padding(end = 16.dp),
+        modifier =
+            Modifier
+                .padding(bottom = 16.dp)
+                .padding(end = 16.dp),
     ) {
         if (isExpanded) {
             Column(
-                modifier = Modifier
-                    .width(164.dp)
-                    .wrapContentHeight()
-                    .background(
-                        color = OdyTheme.colors.primaryVariant,
-                        shape = RoundedCornerShape(10.dp),
-                    )
-                    .padding(all = 18.dp)
+                modifier =
+                    Modifier
+                        .width(164.dp)
+                        .wrapContentHeight()
+                        .background(
+                            color = OdyTheme.colors.primaryVariant,
+                            shape = RoundedCornerShape(10.dp),
+                        )
+                        .padding(all = 18.dp),
             ) {
                 Text(
                     text = stringResource(id = R.string.meetings_create_meeting),
                     style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.secondaryVariant),
                     modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 14.dp)
-                        .noRippleClickable { onCreate() }
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 14.dp)
+                            .noRippleClickable { onCreate() },
                 )
                 Text(
                     text = stringResource(id = R.string.meetings_join_meeting),
                     style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.secondaryVariant),
                     modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 14.dp)
-                        .noRippleClickable { onJoin() }
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 14.dp)
+                            .noRippleClickable { onJoin() },
                 )
             }
         }
@@ -339,16 +343,17 @@ private fun MeetingItem(
         shape = RoundedCornerShape(15.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = OdyTheme.colors.octonary),
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .noRippleClickable { onClickMeeting(meeting) },
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .noRippleClickable { onClickMeeting(meeting) },
     ) {
         Column(
             modifier =
-            Modifier
-                .padding(horizontal = 22.dp)
-                .padding(vertical = 12.dp)
+                Modifier
+                    .padding(horizontal = 22.dp)
+                    .padding(vertical = 12.dp),
         ) {
             Row(modifier = Modifier.padding(top = 6.dp)) {
                 Text(
@@ -362,9 +367,10 @@ private fun MeetingItem(
                     painter = painterResource(id = if (isFolded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down),
                     tint = OdyTheme.colors.secondary,
                     contentDescription = null,
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .noRippleClickable { isFolded = !isFolded },
+                    modifier =
+                        Modifier
+                            .padding(10.dp)
+                            .noRippleClickable { isFolded = !isFolded },
                 )
             }
             Text(
@@ -378,9 +384,10 @@ private fun MeetingItem(
             ) {
                 Column {
                     Row(
-                        modifier = Modifier
-                            .padding(top = 6.dp)
-                            .padding(bottom = 4.dp),
+                        modifier =
+                            Modifier
+                                .padding(top = 6.dp)
+                                .padding(bottom = 4.dp),
                     ) {
                         Text(
                             text = meeting.originAddress,
@@ -404,17 +411,19 @@ private fun MeetingItem(
                 }
             }
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 6.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Column {
                     Text(
-                        text = stringResource(
-                            id = R.string.meetings_eta_form,
-                            meeting.durationMinutes
-                        ),
+                        text =
+                            stringResource(
+                                id = R.string.meetings_eta_form,
+                                meeting.durationMinutes,
+                            ),
                         style = OdyTheme.typography.pretendardBold20.copy(color = OdyTheme.colors.quinary),
                     )
                     Text(
