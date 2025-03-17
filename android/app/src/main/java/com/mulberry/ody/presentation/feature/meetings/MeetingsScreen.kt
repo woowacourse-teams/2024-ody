@@ -5,7 +5,10 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,12 +17,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -74,6 +81,12 @@ fun MeetingsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = OdyTheme.colors.primary,
+        floatingActionButton = {
+            MeetingsFloatingActionButton(
+                onCreateClick = {},
+                onJoinClick = {},
+            )
+        },
         topBar = {
             OdyTopAppBar(
                 title = stringResource(id = R.string.app_name),
@@ -155,6 +168,65 @@ private fun CheckAndLaunchPermission(
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )
+            )
+        }
+    }
+}
+
+@Composable
+private fun MeetingsFloatingActionButton(
+    onCreateClick: () -> Unit,
+    onJoinClick: () -> Unit,
+    initialIsExpanded: Boolean = false,
+) {
+    var isExpanded by rememberSaveable { mutableStateOf(initialIsExpanded) }
+
+    Column(
+        horizontalAlignment = Alignment.End,
+        modifier = Modifier
+            .padding(bottom = 16.dp)
+            .padding(end = 16.dp),
+    ) {
+        if (isExpanded) {
+            Column(
+                modifier = Modifier
+                    .width(172.dp)
+                    .wrapContentHeight()
+                    .background(
+                        color = OdyTheme.colors.primaryVariant,
+                        shape = RoundedCornerShape(10.dp),
+                    )
+                    .padding(all = 18.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.meetings_create_meeting),
+                    style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.secondaryVariant),
+                    modifier =
+                    Modifier
+                        .noRippleClickable { onCreateClick() }
+                        .padding(bottom = 14.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.meetings_join_meeting),
+                    style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.secondaryVariant),
+                    modifier =
+                    Modifier
+                        .noRippleClickable { onJoinClick() }
+                        .padding(top = 14.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(18.dp))
+        FloatingActionButton(
+            onClick = { isExpanded = !isExpanded },
+            shape = CircleShape,
+            containerColor = OdyTheme.colors.primaryVariant,
+        ) {
+            val iconId = if (isExpanded) R.drawable.ic_cancel else R.drawable.ic_plus
+            Icon(
+                painter = painterResource(id = iconId),
+                tint = OdyTheme.colors.secondaryVariant,
+                contentDescription = null,
             )
         }
     }
@@ -294,6 +366,18 @@ private fun MeetingItem(
                 )
             }
         }
+    }
+}
+
+@Composable
+@Preview
+private fun MeetingsFloatingActionButtonPreview() {
+    OdyTheme {
+        MeetingsFloatingActionButton(
+            onCreateClick = {},
+            onJoinClick = {},
+            initialIsExpanded = true,
+        )
     }
 }
 
