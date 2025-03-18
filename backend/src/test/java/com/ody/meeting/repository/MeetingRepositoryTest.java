@@ -118,6 +118,26 @@ class MeetingRepositoryTest extends BaseRepositoryTest {
                 .containsExactly(oneDayBeforeMeeting.getId(), twoDayBeforeMeeting.getId());
     }
 
+    @DisplayName("오늘부터 24시간 이내 약속 리스트들을 조회한다")
+    @Test
+    void findAllByDateTimeInClosedOpenRange() {
+        LocalDateTime now = TimeUtil.nowWithTrim();
+        Meeting oneHourLaterMeeting = fixtureGenerator.generateMeeting(now.plusHours(1L));
+        Meeting oneDayLaterMeeting = fixtureGenerator.generateMeeting(now.plusDays(1L));
+
+        List<Meeting> actual = meetingRepository.findAllByDateTimeInClosedOpenRange(
+                now.toLocalDate(),
+                now.toLocalTime(),
+                now.plusDays(1L).toLocalDate(),
+                now.plusDays(1L).toLocalTime()
+        );
+
+        assertThat(actual)
+                .hasSize(1)
+                .extracting(Meeting::getId)
+                .containsExactly(oneHourLaterMeeting.getId());
+    }
+
     @DisplayName("약속 기한이 지나지 않은 모임방을 조회한다.")
     @Test
     void findByIdAndOverdueFalse() {

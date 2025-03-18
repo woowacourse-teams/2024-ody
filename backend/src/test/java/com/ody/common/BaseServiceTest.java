@@ -39,6 +39,9 @@ public abstract class BaseServiceTest {
     protected FcmEventListener fcmEventListener;
 
     @Autowired
+    protected RedisCacheCleaner redisCacheCleaner;
+
+    @Autowired
     protected ApplicationEvents applicationEvents;
 
     @Autowired
@@ -63,8 +66,9 @@ public abstract class BaseServiceTest {
         doNothing().when(kakaoAuthUnlinkClient).unlink(anyString());
         doNothing().when(appleRevokeTokenClient).unlink(anyString());
 
-        databaseCleaner.cleanUp();
+        databaseCleaner.clear();
         applicationEvents.clear();
+        redisCacheCleaner.clear();
         apiCallRepository.save(new ApiCall(ClientType.ODSAY, 0, LocalDate.now()));
         apiCallRepository.save(new ApiCall(ClientType.GOOGLE, 0, LocalDate.now()));
     }

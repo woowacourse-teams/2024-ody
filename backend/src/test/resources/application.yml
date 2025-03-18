@@ -13,6 +13,9 @@ spring:
         format_sql: true
   flyway:
     enabled: false
+  data:
+    redis:
+      ttl: 700
 
 route:
   vendors:
