@@ -24,10 +24,6 @@ public class FcmPushSender {
     @Transactional
     public void sendGroupMessage(GroupMessage groupMessage, Notification notification) {
         Notification savedNotification = findNotification(notification);
-        if (savedNotification.isStatusDismissed()) {
-            log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", notification);
-            return;
-        }
         sendMessage(groupMessage.getMessage());
         updateDepartureReminderToDone(savedNotification);
     }

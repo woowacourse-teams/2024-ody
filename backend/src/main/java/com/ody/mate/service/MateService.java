@@ -81,16 +81,17 @@ public class MateService {
     private void sendDepartureReminder(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
         DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
         DepartureReminder departureReminder = new DepartureReminder(mate, departureTime, fcmTopic);
-        Notification departureReminderNotification = departureReminder.toNotification();
-        LocalDateTime sendAt = departureReminderNotification.getSendAt();
+        Notification savedDepartureReminder = notificationService.save(departureReminder.toNotification());
+        LocalDateTime sendAt = savedDepartureReminder.getSendAt();
 
         scheduleRunner.runWithTransaction(() -> {
             Mate savedMate = findFetchedMate(mate.getId());
-            MeetingLog departureReminderLog = new MeetingLog(savedMate, MeetingLogType.DEPARTURE_REMINDER);
-            meetingLogService.save(departureReminderLog);
-            notificationService.saveAndSend(departureReminder.toNotification());
+            boolean sended = notificationService.send(savedDepartureReminder);
+            if (sended) {
+                MeetingLog departureReminderLog = new MeetingLog(savedMate, MeetingLogType.DEPARTURE_REMINDER);
+                meetingLogService.save(departureReminderLog);
+            }
         }, sendAt);
-
         log.info("출발 알림 알림 {}에 스케줄링 예약", sendAt);
     }
 

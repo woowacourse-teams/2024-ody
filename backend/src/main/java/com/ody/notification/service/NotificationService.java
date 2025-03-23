@@ -1,5 +1,6 @@
 package com.ody.notification.service;
 
+import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
@@ -36,7 +37,7 @@ public class NotificationService {
     @Transactional
     public void saveAndSend(Notification notification) {
         Notification savedNotification = save(notification);
-        sendNotification(savedNotification);
+        send(savedNotification);
     }
 
     @Transactional
@@ -44,15 +45,22 @@ public class NotificationService {
         return notificationRepository.save(notification);
     }
 
-    private void sendNotification(Notification notification) {
-        PushEvent pushEvent = new PushEvent(this, notification);
+    @Transactional
+    public boolean send(Notification notification) {
+        Notification foundNotification = findById(notification.getId());
+        if (foundNotification.isStatusDismissed()) {
+            log.info("DISMISSED 상태 푸시 알림 전송 스킵 : {}", notification);
+            return false;
+        }
+
+        PushEvent pushEvent = new PushEvent(this, foundNotification);
         fcmEventPublisher.publishWithTransaction(pushEvent);
-        log.info(
-                "{} 타입 {} 상태 알림 {}에 발송 성공",
-                notification.getType(),
-                notification.getStatus(),
-                notification.getSendAt()
-        );
+        return true;
+    }
+
+    private Notification findById(long notificationId) {
+        return notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new OdyNotFoundException("알림을 찾을 수 없습니다"));
     }
 
     public void subscribeTopic(DeviceToken deviceToken, FcmTopic fcmTopic) {
@@ -76,7 +84,7 @@ public class NotificationService {
                 NotificationStatus.PENDING
         );
         notifications.forEach(notification -> scheduleRunner.runWithTransaction(
-                        () -> sendNotification(notification),
+                        () -> send(notification),
                         notification.getSendAt()
                 )
         );
