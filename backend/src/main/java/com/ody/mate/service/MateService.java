@@ -107,6 +107,10 @@ public class MateService {
         Mate requestMate = findFetchedMate(nudgeRequest.requestMateId());
         Mate nudgedMate = findFetchedMate(nudgeRequest.nudgedMateId());
         validateNudgeCondition(requestMate, nudgedMate);
+
+        MeetingLog nudgeLog = new MeetingLog(nudgedMate, MeetingLogType.NUDGE_LOG);
+        meetingLogService.save(nudgeLog);
+
         Nudge nudge = new Nudge(nudgedMate);
         notificationService.sendNudgeMessage(requestMate, nudge);
     }
