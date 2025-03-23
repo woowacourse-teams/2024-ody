@@ -158,7 +158,7 @@ public class MateService {
         return etaStatus == EtaStatus.LATE_WARNING || etaStatus == EtaStatus.LATE;
     }
 
-    private Mate findFetchedMate(Long mateId) {
+    private Mate findFetchedMate(long mateId) {
         Mate mate = mateRepository.findFetchedMateById(mateId)
                 .orElseThrow(() -> new OdyBadRequestException("존재하지 않는 약속 참여자입니다."));
         if (mate.getMeeting().isOverdue()) {
