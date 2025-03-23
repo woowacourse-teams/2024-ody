@@ -2,6 +2,7 @@ package com.ody.meetinglog.service;
 
 import com.ody.meetinglog.domain.MeetingLog;
 import com.ody.meetinglog.repository.MeetingLogRepository;
+import com.ody.notification.dto.response.NotiLogFindResponses;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,8 @@ public class MeetingLogService {
         return meetingLogRepository.save(meetingLog);
     }
 
-    public List<MeetingLog> findAllByMeetingId(long meetingId) {
-        return meetingLogRepository.findByMeetingId(meetingId);
+    public NotiLogFindResponses findAllByMeetingId(long meetingId) {
+        List<MeetingLog> meetingLogs = meetingLogRepository.findByMeetingId(meetingId);
+        return NotiLogFindResponses.from(meetingLogs);
     }
 }

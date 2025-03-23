@@ -1,6 +1,5 @@
 package com.ody.notification.service;
 
-import com.ody.common.aop.DisabledDeletedFilter;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.member.domain.DeviceToken;
@@ -9,21 +8,18 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.types.Nudge;
-import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.notification.service.event.NudgeEvent;
 import com.ody.notification.service.event.PushEvent;
 import com.ody.notification.service.event.SubscribeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
-import com.ody.util.InstantConverter;
-import java.time.Instant;
+import com.ody.util.ScheduleRunner;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,12 +31,12 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final FcmEventPublisher fcmEventPublisher;
-    private final TaskScheduler taskScheduler;
+    private final ScheduleRunner scheduleRunner;
 
     @Transactional
-    public void saveAndSchedule(Notification notification) {
+    public void saveAndSend(Notification notification) {
         Notification savedNotification = save(notification);
-        scheduleNotification(savedNotification);
+        sendNotification(savedNotification);
     }
 
     @Transactional
@@ -48,15 +44,14 @@ public class NotificationService {
         return notificationRepository.save(notification);
     }
 
-    private void scheduleNotification(Notification notification) {
-        Instant startTime = InstantConverter.kstToInstant(notification.getSendAt());
+    private void sendNotification(Notification notification) {
         PushEvent pushEvent = new PushEvent(this, notification);
-        taskScheduler.schedule(() -> fcmEventPublisher.publishWithTransaction(pushEvent), startTime);
+        fcmEventPublisher.publishWithTransaction(pushEvent);
         log.info(
-                "{} 타입 {} 상태 알림 {}에 스케줄링 예약",
+                "{} 타입 {} 상태 알림 {}에 발송 성공",
                 notification.getType(),
                 notification.getStatus(),
-                InstantConverter.instantToKst(startTime)
+                notification.getSendAt()
         );
     }
 
@@ -75,21 +70,17 @@ public class NotificationService {
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void schedulePendingNotification() {
+        //TODO reserved Noti로 분리하면서 리팩터링 예정
         List<Notification> notifications = notificationRepository.findAllByTypeAndStatus(
                 NotificationType.DEPARTURE_REMINDER,
                 NotificationStatus.PENDING
         );
-        notifications.forEach(this::scheduleNotification);
-        log.info("애플리케이션 시작 - PENDING 상태 출발 알림 {}개 스케줄링", notifications.size());
-    }
-
-    @DisabledDeletedFilter
-    public NotiLogFindResponses findAllNotiLogs(Long meetingId) {
-        List<Notification> notifications = notificationRepository.findAllByMeetingIdAndSentAtBeforeDateTimeAndStatusIsNotDismissed(
-                meetingId,
-                LocalDateTime.now()
+        notifications.forEach(notification -> scheduleRunner.runWithTransaction(
+                        () -> sendNotification(notification),
+                        notification.getSendAt()
+                )
         );
-        return NotiLogFindResponses.from(notifications);
+        log.info("애플리케이션 시작 - PENDING 상태 출발 알림 {}개 스케줄링", notifications.size());
     }
 
     @Transactional

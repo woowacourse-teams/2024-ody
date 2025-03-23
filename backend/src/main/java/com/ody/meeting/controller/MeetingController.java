@@ -10,6 +10,7 @@ import com.ody.meeting.dto.response.MeetingSaveResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponseV2;
 import com.ody.meeting.service.MeetingService;
+import com.ody.meetinglog.service.MeetingLogService;
 import com.ody.member.domain.Member;
 import com.ody.notification.dto.response.NotiLogFindResponses;
 import com.ody.notification.service.NotificationService;
@@ -33,6 +34,7 @@ public class MeetingController implements MeetingControllerSwagger {
     private final MeetingService meetingService;
     private final MateService mateService;
     private final NotificationService notificationService;
+    private final MeetingLogService meetingLogService;
 
     @Override
     @PostMapping("/v1/meetings")
@@ -77,7 +79,7 @@ public class MeetingController implements MeetingControllerSwagger {
             @AuthMember Member member,
             @PathVariable Long meetingId
     ) {
-        NotiLogFindResponses response = notificationService.findAllNotiLogs(meetingId);
+        NotiLogFindResponses response = meetingLogService.findAllByMeetingId(meetingId);
         return ResponseEntity.ok(response);
     }
 

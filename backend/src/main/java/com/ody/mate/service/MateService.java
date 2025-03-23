@@ -21,20 +21,21 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.types.DepartureReminder;
 import com.ody.notification.domain.types.Entry;
-import com.ody.notification.domain.types.MateLeave;
-import com.ody.notification.domain.types.MemberDeletion;
 import com.ody.notification.domain.types.Nudge;
 import com.ody.notification.service.NotificationService;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
+import com.ody.util.ScheduleRunner;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -47,6 +48,7 @@ public class MateService {
     private final EtaService etaService;
     private final NotificationService notificationService;
     private final RouteService routeService;
+    private final ScheduleRunner scheduleRunner;
 
     @Transactional
     public MateSaveResponseV2 saveAndSendNotifications(
@@ -59,21 +61,37 @@ public class MateService {
         Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
 
         FcmTopic fcmTopic = new FcmTopic(meeting);
-        sendEntry(mate, fcmTopic);
+        saveEntryLog(mate);
+        sendEntryNotification(mate, fcmTopic);
         notificationService.subscribeTopic(member.getDeviceToken(), fcmTopic);
         sendDepartureReminder(meeting, mate, fcmTopic);
         return MateSaveResponseV2.from(meeting);
     }
 
-    private void sendEntry(Mate mate, FcmTopic fcmTopic) {
+    private void saveEntryLog(Mate mate) {
+        MeetingLog entryLog = new MeetingLog(mate, MeetingLogType.ENTRY_LOG);
+        meetingLogService.save(entryLog);
+    }
+
+    private void sendEntryNotification(Mate mate, FcmTopic fcmTopic) {
         Entry entry = new Entry(mate, fcmTopic);
-        notificationService.saveAndSchedule(entry.toNotification());
+        notificationService.saveAndSend(entry.toNotification());
     }
 
     private void sendDepartureReminder(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
         DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
         DepartureReminder departureReminder = new DepartureReminder(mate, departureTime, fcmTopic);
-        notificationService.saveAndSchedule(departureReminder.toNotification());
+        Notification departureReminderNotification = departureReminder.toNotification();
+        LocalDateTime sendAt = departureReminderNotification.getSendAt();
+
+        scheduleRunner.runWithTransaction(() -> {
+            Mate savedMate = findFetchedMate(mate.getId());
+            MeetingLog departureReminderLog = new MeetingLog(savedMate, MeetingLogType.DEPARTURE_REMINDER);
+            meetingLogService.save(departureReminderLog);
+            notificationService.saveAndSend(departureReminder.toNotification());
+        }, sendAt);
+
+        log.info("출발 알림 알림 {}에 스케줄링 예약", sendAt);
     }
 
     private void validateMeetingOverdue(Meeting meeting) {
