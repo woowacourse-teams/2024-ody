@@ -13,6 +13,9 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
+import com.ody.meetinglog.domain.MeetingLog;
+import com.ody.meetinglog.domain.MeetingLogType;
+import com.ody.meetinglog.service.MeetingLogService;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
@@ -40,6 +43,7 @@ public class MateService {
     private static final long AVAILABLE_NUDGE_DURATION = 30L;
 
     private final MateRepository mateRepository;
+    private final MeetingLogService meetingLogService;
     private final EtaService etaService;
     private final NotificationService notificationService;
     private final RouteService routeService;
@@ -159,16 +163,16 @@ public class MateService {
 
     @Transactional
     public void withdraw(Mate mate) {
-        Notification memberDeletionNotification = new MemberDeletion(mate).toNotification();
-        notificationService.save(memberDeletionNotification);
+        MeetingLog deletionLog = new MeetingLog(mate, MeetingLogType.MEMBER_DELETION_LOG);
+        meetingLogService.save(deletionLog);
         delete(mate);
     }
 
     @Transactional
     public void leaveByMeetingIdAndMemberId(Long meetingId, Long memberId) {
         Mate mate = findByMeetingIdAndMemberId(meetingId, memberId);
-        Notification leaveNotification = new MateLeave(mate).toNotification();
-        notificationService.save(leaveNotification);
+        MeetingLog leaveLog = new MeetingLog(mate, MeetingLogType.LEAVE_LOG);
+        meetingLogService.save(leaveLog);
         delete(mate);
     }
 
