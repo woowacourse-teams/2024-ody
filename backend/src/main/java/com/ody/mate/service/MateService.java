@@ -92,7 +92,7 @@ public class MateService {
                 meetingLogService.save(departureReminderLog);
             }
         }, sendAt);
-        log.info("출발 알림 알림 {}에 스케줄링 예약", sendAt);
+        log.info("출발 리마인더 {}에 스케줄링 예약", sendAt);
     }
 
     private void validateMeetingOverdue(Meeting meeting) {
