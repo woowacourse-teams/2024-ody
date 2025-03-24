@@ -80,27 +80,6 @@ fun MeetingsScreen(
             snackbarHostState.showSnackbar(context.getString(id))
         }
     }
-    LaunchedEffect(Unit) {
-        viewModel.networkErrorEvent.collect {
-            onShowSnackbar(R.string.network_error_guide)
-        }
-    }
-    LaunchedEffect(Unit) {
-        viewModel.errorEvent.collect {
-            onShowSnackbar(R.string.error_guide)
-        }
-    }
-    LaunchedEffect(Unit) {
-        viewModel.inaccessibleEtaEvent.collect {
-            onShowSnackbar(R.string.inaccessible_eta_guide)
-        }
-    }
-    LaunchedEffect(Unit) {
-        viewModel.navigateAction.collect {
-            navigate(it)
-        }
-    }
-
     val meetingsUiState by viewModel.meetingsUiState.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -142,8 +121,28 @@ fun MeetingsScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.networkErrorEvent.collect {
+            onShowSnackbar(R.string.network_error_guide)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.errorEvent.collect {
+            onShowSnackbar(R.string.error_guide)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.inaccessibleEtaEvent.collect {
+            onShowSnackbar(R.string.inaccessible_eta_guide)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.navigateAction.collect {
+            navigate(it)
+        }
+    }
     OnLifecycleEvent { _, event ->
-        if (event == Lifecycle.Event.ON_RESUME) {
+        if (event == Lifecycle.Event.ON_START) {
             viewModel.fetchMeetings()
         }
     }
@@ -372,18 +371,6 @@ private fun MeetingItem(
                 )
             }
         }
-    }
-}
-
-@Composable
-@Preview
-private fun MeetingsFloatingActionButtonPreview() {
-    OdyTheme {
-        MeetingsFloatingActionButton(
-            onCreate = {},
-            onJoin = {},
-            initialIsExpanded = true,
-        )
     }
 }
 
