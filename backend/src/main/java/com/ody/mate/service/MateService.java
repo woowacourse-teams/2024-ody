@@ -4,6 +4,7 @@ import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
+import com.ody.eta.service.EtaSchedulingService;
 import com.ody.eta.service.EtaService;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequestV2;
@@ -43,6 +44,7 @@ public class MateService {
     private final EtaService etaService;
     private final NotificationService notificationService;
     private final RouteService routeService;
+    private final EtaSchedulingService etaSchedulingService;
 
     @Transactional
     public MateSaveResponseV2 saveAndSendNotifications(
@@ -172,11 +174,11 @@ public class MateService {
         delete(mate);
     }
 
-    @Transactional
-    public void delete(Mate mate) {
+    private void delete(Mate mate) {
         notificationService.updateAllStatusToDismissByMateIdAndSendAtAfterNow(mate.getId());
         notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken());
         etaService.deleteByMateId(mate.getId());
         mateRepository.deleteById(mate.getId());
+        etaSchedulingService.deleteCache(mate);
     }
 }

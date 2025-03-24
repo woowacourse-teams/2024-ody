@@ -70,4 +70,8 @@ public class EtaSchedulingService {
     public void updateCache(Mate mate) {
         etaSchedulingRedisTemplate.add(EtaSchedulingKey.from(mate));
     }
+
+    public void deleteCache(Mate mate) {
+        etaSchedulingRedisTemplate.delete(EtaSchedulingKey.from(mate));
+    }
 }

@@ -44,8 +44,7 @@ public class EtaSchedulingRedisTemplate {
                 );
     }
 
-    public String get(EtaSchedulingKey etaSchedulingKey) {
-        return redisTemplate.opsForValue()
-                .get(etaSchedulingKey.serialize());
+    public void delete(EtaSchedulingKey etaSchedulingKey) {
+        redisTemplate.delete(etaSchedulingKey.serialize());
     }
 }
