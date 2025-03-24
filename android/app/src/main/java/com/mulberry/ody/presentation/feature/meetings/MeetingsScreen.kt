@@ -9,6 +9,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -128,7 +130,8 @@ fun MeetingsScreen(
         },
     ) { innerPadding ->
         when (val state = meetingsUiState) {
-            MeetingsUiState.Empty -> EmptyMeetingsContent(modifier = Modifier.padding(innerPadding))
+            MeetingsUiState.Loading -> MeetingsLoading()
+            MeetingsUiState.Empty -> MeetingsEmpty(modifier = Modifier.padding(innerPadding))
             is MeetingsUiState.Meetings ->
                 MeetingsContent(
                     meetings = state.content,
@@ -212,7 +215,14 @@ private fun MeetingsFloatingActionButton(
 }
 
 @Composable
-private fun EmptyMeetingsContent(modifier: Modifier = Modifier) {
+private fun MeetingsLoading() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun MeetingsEmpty(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -381,7 +391,7 @@ private fun MeetingsFloatingActionButtonPreview() {
 @Preview(showSystemUi = true)
 private fun EmptyMeetingsContentPreview() {
     OdyTheme {
-        EmptyMeetingsContent()
+        MeetingsEmpty()
     }
 }
 

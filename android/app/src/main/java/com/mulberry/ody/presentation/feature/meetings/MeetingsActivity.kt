@@ -1,15 +1,11 @@
 package com.mulberry.ody.presentation.feature.meetings
 
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import com.mulberry.ody.presentation.common.LoadingDialog
-import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.feature.creation.MeetingCreationActivity
 import com.mulberry.ody.presentation.feature.invitecode.InviteCodeActivity
 import com.mulberry.ody.presentation.feature.login.LoginActivity
@@ -22,9 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MeetingsActivity : ComponentActivity() {
-    private val viewModel: MeetingsViewModel by viewModels<MeetingsViewModel>()
-    private var dialog: Dialog? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -33,8 +26,6 @@ class MeetingsActivity : ComponentActivity() {
                 MeetingsScreen(navigate = ::navigate)
             }
         }
-
-        initializeObserve()
     }
 
     private fun navigate(action: MeetingsNavigateAction) {
@@ -69,31 +60,6 @@ class MeetingsActivity : ComponentActivity() {
                 startActivity(intent)
             }
         }
-    }
-
-    private fun initializeObserve() {
-        collectWhenStarted(viewModel.isLoading) { isLoading ->
-            if (isLoading) {
-                showLoadingDialog()
-                return@collectWhenStarted
-            }
-            hideLoadingDialog()
-        }
-    }
-
-    private fun showLoadingDialog() {
-        dialog?.dismiss()
-        dialog = LoadingDialog(this)
-        dialog?.show()
-    }
-
-    private fun hideLoadingDialog() {
-        dialog?.dismiss()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        dialog = null
     }
 
     companion object {

@@ -40,7 +40,7 @@ class MeetingsViewModel
 
         fun fetchMeetings() {
             viewModelScope.launch {
-                startLoading()
+                _meetingsUiState.value = MeetingsUiState.Loading
                 meetingRepository.fetchMeetings()
                     .onSuccess {
                         val meetings = it.toMeetingUiModels()
@@ -53,7 +53,6 @@ class MeetingsViewModel
                         handleNetworkError()
                         lastFailedAction = { fetchMeetings() }
                     }
-                stopLoading()
             }
         }
 
