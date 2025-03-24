@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -77,19 +78,19 @@ class EtaDashboardService : Service() {
 
         val job =
             CoroutineScope(Dispatchers.IO).launch {
-                for (time in etaDashboardTimes(meetingTime) step POLLING_INTERVAL) {
+                while (isInETARange(meetingTime)) {
                     upsertEtaDashboard(meetingId)
+                    delay(POLLING_INTERVAL)
                 }
                 closeEtaDashboard(meetingId)
             }
-
         meetingJobs[meetingId] = job
     }
 
-    private fun etaDashboardTimes(meetingTime: Long): LongRange {
-        val startTime = System.currentTimeMillis()
+    private fun isInETARange(meetingTime: Long): Boolean {
+        val nowTime = System.currentTimeMillis()
         val endTime = meetingTime + ETA_CLOSE_MINUTE
-        return startTime..endTime
+        return nowTime <= endTime
     }
 
     private suspend fun upsertEtaDashboard(meetingId: Long) {
