@@ -1,12 +1,5 @@
 package com.mulberry.ody.presentation.feature.meetings
 
-import android.Manifest
-import android.app.Activity
-import android.os.Build
-import android.widget.Toast
-import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -41,7 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -64,6 +56,8 @@ import com.mulberry.ody.presentation.common.OnLifecycleEvent
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyButton
 import com.mulberry.ody.presentation.component.OdyTopAppBar
+import com.mulberry.ody.presentation.feature.meetings.component.BackPressed
+import com.mulberry.ody.presentation.feature.meetings.component.MeetingsLaunchPermission
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
 import com.mulberry.ody.presentation.theme.Gray400
@@ -107,8 +101,6 @@ fun MeetingsScreen(
 
     val meetingsUiState by viewModel.meetingsUiState.collectAsStateWithLifecycle()
 
-    CheckAndLaunchPermission(onShowSnackbar)
-    BackPressed()
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = OdyTheme.colors.primary,
@@ -152,76 +144,8 @@ fun MeetingsScreen(
             viewModel.fetchMeetings()
         }
     }
-}
-
-@Composable
-fun BackPressed() {
-    val context = LocalContext.current
-    var backPressedTime by rememberSaveable { mutableLongStateOf(0L) }
-
-    BackHandler {
-        if (backPressedTime > System.currentTimeMillis() - 2000L) {
-            // 앱 종료
-            (context as Activity).finish()
-        } else {
-            Toast.makeText(context, R.string.meetings_back_pressed_guide, Toast.LENGTH_SHORT).show()
-        }
-        backPressedTime = System.currentTimeMillis()
-    }
-}
-
-@Composable
-private fun CheckAndLaunchPermission(onShowSnackbar: (Int) -> Unit) {
-    val backgroundLocationPermissionLauncher =
-        rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission(),
-        ) { isGranted ->
-            if (!isGranted) {
-                onShowSnackbar(R.string.meetings_background_location_permission_required)
-            }
-        }
-
-    val locationPermissionLauncher =
-        rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestMultiplePermissions(),
-        ) { permissions ->
-            val isGranted = permissions.filter { !it.value }.isEmpty()
-            if (isGranted) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    backgroundLocationPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                }
-            } else {
-                onShowSnackbar(R.string.meetings_location_permission_required)
-            }
-        }
-
-    val notificationPermissionLauncher =
-        rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission(),
-        ) { isGranted ->
-            locationPermissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                ),
-            )
-            if (!isGranted) {
-                onShowSnackbar(R.string.meetings_notification_permission_required)
-            }
-        }
-
-    LaunchedEffect(Unit) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-        } else {
-            locationPermissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                ),
-            )
-        }
-    }
+    MeetingsLaunchPermission(onShowSnackbar)
+    BackPressed()
 }
 
 @Composable
