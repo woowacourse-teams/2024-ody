@@ -7,23 +7,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
-import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -48,7 +42,7 @@ fun SettingScreen(
     onClickBack: () -> Unit,
     onClickItem: (SettingItemType) -> Unit,
     onChangedChecked: (SettingItemType, Boolean) -> Unit,
-    viewModel: SettingViewModel = hiltViewModel()
+    viewModel: SettingViewModel = hiltViewModel(),
 ) {
     val notificationDepartureSwitchChecked by rememberSaveable { mutableStateOf(false) }
     val notificationEntrySwitchChecked by rememberSaveable { mutableStateOf(false) }
@@ -68,7 +62,7 @@ fun SettingScreen(
                     }
                 },
             )
-        }
+        },
     ) { innerPadding ->
         SettingContent(
             onClickItem = onClickItem,
@@ -89,28 +83,32 @@ private fun SettingContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
+        modifier =
+            modifier
+                .fillMaxWidth(),
     ) {
         SettingNotificationItems(
             onChangedChecked = onChangedChecked,
             notificationDepartureSwitchChecked = notificationDepartureSwitchChecked,
             notificationEntrySwitchChecked = notificationEntrySwitchChecked,
-            modifier = Modifier
-                .padding(horizontal = 26.dp)
-                .padding(top = 26.dp),
+            modifier =
+                Modifier
+                    .padding(horizontal = 26.dp)
+                    .padding(top = 26.dp),
         )
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 32.dp)
-                .background(OdyTheme.colors.senary)
-                .height(3.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp)
+                    .background(OdyTheme.colors.senary)
+                    .height(3.dp),
         )
         SettingItems(
             onClickItem = onClickItem,
-            modifier = Modifier
-                .padding(horizontal = 26.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 26.dp),
         )
     }
 }
@@ -128,9 +126,10 @@ private fun SettingNotificationItems(
         Text(
             text = stringResource(id = R.string.setting_header_notification),
             style = OdyTheme.typography.pretendardBold18.copy(OdyTheme.colors.nonary),
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .padding(bottom = 28.dp),
+            modifier =
+                Modifier
+                    .padding(start = 8.dp)
+                    .padding(bottom = 28.dp),
         )
         SettingItem(
             settingItemType = SettingItemType.NOTIFICATION_DEPARTURE,
@@ -157,9 +156,10 @@ private fun SettingItems(
         Text(
             text = stringResource(id = R.string.setting_header_service),
             style = OdyTheme.typography.pretendardBold18.copy(OdyTheme.colors.nonary),
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .padding(bottom = 28.dp),
+            modifier =
+                Modifier
+                    .padding(start = 8.dp)
+                    .padding(bottom = 28.dp),
         )
         itemType.forEachIndexed { index, type ->
             SettingItem(
@@ -181,10 +181,11 @@ private fun SettingItem(
     onChangedChecked: (SettingItemType, Boolean) -> Unit = { _, _ -> },
 ) {
     Row(
-        modifier = Modifier
-            .height(34.dp)
-            .noRippleClickable { onClickItem(settingItemType) }
-            .padding(horizontal = 8.dp),
+        modifier =
+            Modifier
+                .height(34.dp)
+                .noRippleClickable { onClickItem(settingItemType) }
+                .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -202,17 +203,19 @@ private fun SettingItem(
             Switch(
                 checked = isChecked,
                 onCheckedChange = { isChecked -> onChangedChecked(settingItemType, isChecked) },
-                modifier = Modifier
-                    .requiredSize(40.dp)
-                    .scale(0.8f),
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = White,
-                    checkedTrackColor = OdyTheme.colors.secondary,
-                    checkedBorderColor = OdyTheme.colors.secondary,
-                    uncheckedThumbColor = White,
-                    uncheckedTrackColor = Gray400,
-                    uncheckedBorderColor = Gray400,
-                )
+                modifier =
+                    Modifier
+                        .requiredSize(40.dp)
+                        .scale(0.8f),
+                colors =
+                    SwitchDefaults.colors(
+                        checkedThumbColor = White,
+                        checkedTrackColor = OdyTheme.colors.secondary,
+                        checkedBorderColor = OdyTheme.colors.secondary,
+                        uncheckedThumbColor = White,
+                        uncheckedTrackColor = Gray400,
+                        uncheckedBorderColor = Gray400,
+                    ),
             )
         }
     }
