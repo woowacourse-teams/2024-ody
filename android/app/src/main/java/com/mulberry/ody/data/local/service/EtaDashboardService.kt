@@ -16,6 +16,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +36,7 @@ class EtaDashboardService : Service() {
     @Inject
     lateinit var etaDashboardNotification: EtaDashboardNotification
 
+    private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
     private val meetingJobs: MutableMap<Long, Job> = mutableMapOf()
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -47,14 +50,14 @@ class EtaDashboardService : Service() {
     ): Int {
         val meetingId = intent.getLongExtra(MEETING_ID_KEY, MEETING_ID_DEFAULT_VALUE)
         if (meetingId == MEETING_ID_DEFAULT_VALUE) {
-            return super.onStartCommand(intent, flags, startId)
+            return START_REDELIVER_INTENT
         }
 
         when (intent.action) {
             OPEN_ACTION -> {
                 val meetingTime = intent.getLongExtra(MEETING_TIME_KEY, MEETING_TIME_DEFAULT_VALUE)
                 if (meetingTime == MEETING_ID_DEFAULT_VALUE) {
-                    return super.onStartCommand(intent, flags, startId)
+                    return START_REDELIVER_INTENT
                 }
 
                 if (!meetingJobs.contains(meetingId)) {
@@ -77,7 +80,7 @@ class EtaDashboardService : Service() {
         startForeground(meetingId.toInt(), notification)
 
         val job =
-            CoroutineScope(Dispatchers.IO).launch {
+            serviceScope.launch {
                 while (isInETARange(meetingTime)) {
                     upsertEtaDashboard(meetingId)
                     delay(POLLING_INTERVAL)
@@ -126,16 +129,19 @@ class EtaDashboardService : Service() {
     }
 
     private fun closeEtaDashboard(meetingId: Long) {
-        val job = meetingJobs.remove(meetingId)
-        job?.cancel()
-        if (meetingJobs.isEmpty()) {
-            stopSelf()
+        serviceScope.launch {
+            val job = meetingJobs.remove(meetingId) ?: return@launch
+            job.cancelAndJoin()
+            if (meetingJobs.isEmpty()) {
+                stopSelf()
+            }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        meetingJobs.keys.forEach(::closeEtaDashboard)
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        serviceScope.cancel()
     }
 
     companion object {

@@ -52,6 +52,6 @@ class FCMService : FirebaseMessagingService() {
 }
 
 private fun String.toLocalDateTime(): LocalDateTime {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") // 형식 지정
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     return LocalDateTime.parse(this, formatter)
 }
