@@ -19,8 +19,8 @@ import com.mulberry.ody.presentation.theme.OdyTheme
 @Composable
 fun OdyTopAppBar(
     title: String = "",
-    navigationIcon: (@Composable () -> Unit)? = null,
-    actions: (@Composable () -> Unit)? = null,
+    navigationIcon: (@Composable () -> Unit) = {},
+    actions: (@Composable () -> Unit) = {},
 ) {
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
@@ -36,8 +36,8 @@ fun OdyTopAppBar(
                 overflow = TextOverflow.Ellipsis,
             )
         },
-        navigationIcon = { navigationIcon?.let { it() } },
-        actions = { actions?.let { it() } },
+        navigationIcon = { navigationIcon() },
+        actions = { actions() },
     )
 }
 
@@ -48,7 +48,7 @@ private fun OdyTopAppBarPreview() {
         OdyTopAppBar(
             title = "오디",
             navigationIcon = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = {}) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_back),
                         contentDescription = null,
@@ -56,7 +56,7 @@ private fun OdyTopAppBarPreview() {
                 }
             },
             actions = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = {}) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_setting),
                         contentDescription = null,
