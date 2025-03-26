@@ -361,7 +361,7 @@ private fun MeetingItem(
                     )
                     Text(
                         text = stringResource(id = R.string.meetings_traffic_guide),
-                        style = OdyTheme.typography.pretendardRegular14.copy(color = Gray400),
+                        style = OdyTheme.typography.pretendardRegular12.copy(color = Gray400),
                         modifier = Modifier.padding(top = 4.dp),
                     )
                 }

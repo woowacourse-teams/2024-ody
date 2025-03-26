@@ -99,7 +99,7 @@ object OdyTypography {
         TextStyle(
             fontFamily = OdyFontFamily,
             fontWeight = FontWeight.Light,
-            fontSize = 14.sp,
+            fontSize = 12.sp,
             lineHeight = 14.3.sp,
         )
 }
