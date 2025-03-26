@@ -81,12 +81,15 @@ fun MeetingsScreen(
         }
     }
     val meetingsUiState by viewModel.meetingsUiState.collectAsStateWithLifecycle()
+    var isExpandedFloatingActionButton by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = OdyTheme.colors.primary,
         floatingActionButton = {
             MeetingsFloatingActionButton(
+                isExpanded = isExpandedFloatingActionButton,
+                onExpand = { isExpandedFloatingActionButton = !isExpandedFloatingActionButton },
                 onCreate = { viewModel.onCreateMeeting() },
                 onJoin = { viewModel.onJoinMeeting() },
             )
@@ -139,6 +142,7 @@ fun MeetingsScreen(
     LaunchedEffect(Unit) {
         viewModel.navigateAction.collect {
             navigate(it)
+            isExpandedFloatingActionButton = false
         }
     }
     OnLifecycleEvent { _, event ->
@@ -152,12 +156,11 @@ fun MeetingsScreen(
 
 @Composable
 private fun MeetingsFloatingActionButton(
+    isExpanded: Boolean = false,
+    onExpand: () -> Unit,
     onCreate: () -> Unit,
     onJoin: () -> Unit,
-    initialIsExpanded: Boolean = false,
 ) {
-    var isExpanded by rememberSaveable { mutableStateOf(initialIsExpanded) }
-
     Column(
         horizontalAlignment = Alignment.End,
         modifier =
@@ -199,7 +202,7 @@ private fun MeetingsFloatingActionButton(
         }
         Spacer(modifier = Modifier.height(18.dp))
         FloatingActionButton(
-            onClick = { isExpanded = !isExpanded },
+            onClick = onExpand,
             shape = CircleShape,
             containerColor = OdyTheme.colors.primaryVariant,
         ) {
