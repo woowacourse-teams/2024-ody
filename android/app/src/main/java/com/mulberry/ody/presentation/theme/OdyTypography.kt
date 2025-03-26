@@ -39,6 +39,14 @@ object OdyTypography {
             lineHeight = 23.9.sp,
         )
 
+    val pretendardBold18 =
+        TextStyle(
+            fontFamily = OdyFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            lineHeight = 21.sp,
+        )
+
     val pretendardBold16 =
         TextStyle(
             fontFamily = OdyFontFamily,
