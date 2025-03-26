@@ -29,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -54,6 +55,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.common.OnLifecycleEvent
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyButton
@@ -98,15 +100,16 @@ fun MeetingsScreen(
             OdyTopAppBar(
                 title = stringResource(id = R.string.app_name),
                 actions = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_setting),
-                        modifier =
-                            Modifier
-                                .noRippleClickable { viewModel.navigateToSetting() }
-                                .padding(end = 18.dp),
-                        tint = OdyTheme.colors.tertiary,
-                        contentDescription = null,
-                    )
+                    IconButton(
+                        onClick = { viewModel.navigateToSetting() },
+                        interactionSource = NoRippleInteractionSource,
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_setting),
+                            tint = OdyTheme.colors.tertiary,
+                            contentDescription = null,
+                        )
+                    }
                 },
             )
         },
