@@ -2,7 +2,7 @@ package com.mulberry.ody.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Cream = Color(0xFFF9F9F8)
+val Cream = Color(0xFFFFFFF6)
 val Purple300 = Color(0xFFB8A7FF)
 val Purple800 = Color(0xFF5C47AE)
 val White = Color(0xFFFFFFFF)

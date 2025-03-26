@@ -37,7 +37,7 @@ private fun TemporalAccessor.format(pattern: String): String {
 }
 
 fun String.toLocalDateTime(): LocalDateTime {
-    val formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)
+    val formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN, Locale.KOREAN)
     return try {
         LocalDateTime.parse(this, formatter)
     } catch (e: DateTimeParseException) {

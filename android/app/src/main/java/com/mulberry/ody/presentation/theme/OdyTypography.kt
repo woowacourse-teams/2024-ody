@@ -94,4 +94,12 @@ object OdyTypography {
             fontSize = 14.sp,
             lineHeight = 16.7.sp,
         )
+
+    val pretendardRegular12 =
+        TextStyle(
+            fontFamily = OdyFontFamily,
+            fontWeight = FontWeight.Light,
+            fontSize = 12.sp,
+            lineHeight = 14.3.sp,
+        )
 }
