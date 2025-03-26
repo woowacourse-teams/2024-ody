@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.setting.model.SettingItemType
 import com.mulberry.ody.presentation.theme.Gray400
@@ -45,8 +46,13 @@ import com.mulberry.ody.presentation.theme.White
 @Composable
 fun SettingScreen(
     onClickBack: () -> Unit,
+    onClickItem: (SettingItemType) -> Unit,
+    onChangedChecked: (SettingItemType, Boolean) -> Unit,
     viewModel: SettingViewModel = hiltViewModel()
 ) {
+    val notificationDepartureSwitchChecked by rememberSaveable { mutableStateOf(false) }
+    val notificationEntrySwitchChecked by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         containerColor = OdyTheme.colors.primary,
         topBar = {
@@ -64,21 +70,60 @@ fun SettingScreen(
             )
         }
     ) { innerPadding ->
-        SettingContent(modifier = Modifier.padding(innerPadding))
+        SettingContent(
+            onClickItem = onClickItem,
+            onChangedChecked = onChangedChecked,
+            notificationDepartureSwitchChecked = notificationDepartureSwitchChecked,
+            notificationEntrySwitchChecked = notificationEntrySwitchChecked,
+            modifier = Modifier.padding(innerPadding),
+        )
     }
 }
 
 @Composable
-private fun SettingContent(modifier: Modifier = Modifier) {
-    val itemType = SettingItemType.entries.filterNot { it.isSwitch }
-    val notificationDepartureSwitchChecked by rememberSaveable { mutableStateOf(false) }
-    val notificationEntrySwitchChecked by rememberSaveable { mutableStateOf(false) }
-
+private fun SettingContent(
+    onClickItem: (SettingItemType) -> Unit,
+    onChangedChecked: (SettingItemType, Boolean) -> Unit,
+    notificationDepartureSwitchChecked: Boolean,
+    notificationEntrySwitchChecked: Boolean,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 26.dp)
-            .padding(top = 26.dp),
+    ) {
+        SettingNotificationItems(
+            onChangedChecked = onChangedChecked,
+            notificationDepartureSwitchChecked = notificationDepartureSwitchChecked,
+            notificationEntrySwitchChecked = notificationEntrySwitchChecked,
+            modifier = Modifier
+                .padding(horizontal = 26.dp)
+                .padding(top = 26.dp),
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 32.dp)
+                .background(OdyTheme.colors.senary)
+                .height(3.dp)
+        )
+        SettingItems(
+            onClickItem = onClickItem,
+            modifier = Modifier
+                .padding(horizontal = 26.dp)
+        )
+    }
+}
+
+@Composable
+private fun SettingNotificationItems(
+    onChangedChecked: (SettingItemType, Boolean) -> Unit,
+    notificationDepartureSwitchChecked: Boolean,
+    notificationEntrySwitchChecked: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
     ) {
         Text(
             text = stringResource(id = R.string.setting_header_notification),
@@ -90,21 +135,25 @@ private fun SettingContent(modifier: Modifier = Modifier) {
         SettingItem(
             settingItemType = SettingItemType.NOTIFICATION_DEPARTURE,
             isChecked = notificationDepartureSwitchChecked,
-            onChangedChecked = {},
+            onChangedChecked = onChangedChecked,
         )
         HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
         SettingItem(
             settingItemType = SettingItemType.NOTIFICATION_ENTRY,
             isChecked = notificationEntrySwitchChecked,
-            onChangedChecked = {},
+            onChangedChecked = onChangedChecked,
         )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 32.dp)
-                .background(OdyTheme.colors.senary)
-                .height(3.dp)
-        )
+    }
+}
+
+@Composable
+private fun SettingItems(
+    onClickItem: (SettingItemType) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val itemType = SettingItemType.entries.filterNot { it.isSwitch }
+
+    Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = stringResource(id = R.string.setting_header_service),
             style = OdyTheme.typography.pretendardBold18.copy(OdyTheme.colors.nonary),
@@ -113,7 +162,10 @@ private fun SettingContent(modifier: Modifier = Modifier) {
                 .padding(bottom = 28.dp),
         )
         itemType.forEachIndexed { index, type ->
-            SettingItem(type)
+            SettingItem(
+                settingItemType = type,
+                onClickItem = onClickItem,
+            )
             if (index != itemType.size - 1) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
             }
@@ -124,12 +176,14 @@ private fun SettingContent(modifier: Modifier = Modifier) {
 @Composable
 private fun SettingItem(
     settingItemType: SettingItemType,
+    onClickItem: (SettingItemType) -> Unit = {},
     isChecked: Boolean = true,
-    onChangedChecked: (Boolean) -> Unit = {},
+    onChangedChecked: (SettingItemType, Boolean) -> Unit = { _, _ -> },
 ) {
     Row(
         modifier = Modifier
             .height(34.dp)
+            .noRippleClickable { onClickItem(settingItemType) }
             .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -147,7 +201,7 @@ private fun SettingItem(
         if (settingItemType.isSwitch) {
             Switch(
                 checked = isChecked,
-                onCheckedChange = onChangedChecked,
+                onCheckedChange = { isChecked -> onChangedChecked(settingItemType, isChecked) },
                 modifier = Modifier
                     .requiredSize(40.dp)
                     .scale(0.8f),
@@ -168,6 +222,11 @@ private fun SettingItem(
 @Preview(showSystemUi = true)
 private fun SettingContentPreview() {
     OdyTheme {
-        SettingContent()
+        SettingContent(
+            onClickItem = {},
+            onChangedChecked = { _, _ -> },
+            notificationDepartureSwitchChecked = true,
+            notificationEntrySwitchChecked = false,
+        )
     }
 }
