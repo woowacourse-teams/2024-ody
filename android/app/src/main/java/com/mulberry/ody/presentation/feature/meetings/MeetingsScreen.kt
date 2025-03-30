@@ -54,10 +54,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
-import com.mulberry.ody.presentation.common.OnLifecycleEvent
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyButton
 import com.mulberry.ody.presentation.component.OdyTopAppBar
@@ -150,10 +150,8 @@ fun MeetingsScreen(
             isExpandedFloatingActionButton = false
         }
     }
-    OnLifecycleEvent { _, event ->
-        if (event == Lifecycle.Event.ON_START) {
-            viewModel.fetchMeetings()
-        }
+    LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
+        viewModel.fetchMeetings()
     }
     MeetingsLaunchPermission(onShowSnackbar)
     BackPressed()
@@ -169,39 +167,39 @@ private fun MeetingsFloatingActionButton(
     Column(
         horizontalAlignment = Alignment.End,
         modifier =
-            Modifier
-                .padding(bottom = 16.dp)
-                .padding(end = 16.dp),
+        Modifier
+            .padding(bottom = 16.dp)
+            .padding(end = 16.dp),
     ) {
         if (isExpanded) {
             Column(
                 modifier =
-                    Modifier
-                        .width(164.dp)
-                        .wrapContentHeight()
-                        .background(
-                            color = OdyTheme.colors.primaryVariant,
-                            shape = RoundedCornerShape(10.dp),
-                        )
-                        .padding(all = 18.dp),
+                Modifier
+                    .width(164.dp)
+                    .wrapContentHeight()
+                    .background(
+                        color = OdyTheme.colors.primaryVariant,
+                        shape = RoundedCornerShape(10.dp),
+                    )
+                    .padding(all = 18.dp),
             ) {
                 Text(
                     text = stringResource(id = R.string.meetings_create_meeting),
                     style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.secondaryVariant),
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 14.dp)
-                            .noRippleClickable { onCreate() },
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 14.dp)
+                        .noRippleClickable { onCreate() },
                 )
                 Text(
                     text = stringResource(id = R.string.meetings_join_meeting),
                     style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.secondaryVariant),
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 14.dp)
-                            .noRippleClickable { onJoin() },
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 14.dp)
+                        .noRippleClickable { onJoin() },
                 )
             }
         }
@@ -286,16 +284,16 @@ private fun MeetingItem(
         colors = CardDefaults.cardColors(containerColor = OdyTheme.colors.octonary),
         border = BorderStroke(width = 1.dp, color = White),
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .noRippleClickable { onClickMeeting(meeting) },
+        Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .noRippleClickable { onClickMeeting(meeting) },
     ) {
         Column(
             modifier =
-                Modifier
-                    .padding(horizontal = 22.dp)
-                    .padding(vertical = 12.dp),
+            Modifier
+                .padding(horizontal = 22.dp)
+                .padding(vertical = 12.dp),
         ) {
             Row(modifier = Modifier.padding(top = 6.dp)) {
                 Text(
