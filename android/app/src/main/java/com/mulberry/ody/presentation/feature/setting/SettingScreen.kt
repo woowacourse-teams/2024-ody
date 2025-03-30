@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
+import com.mulberry.ody.presentation.component.OdySadDialog
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.login.LoginNavigatedReason
 import com.mulberry.ody.presentation.feature.setting.model.SettingItemType
@@ -154,6 +155,40 @@ fun SettingScreen(
             modifier = Modifier.padding(innerPadding),
         )
     }
+}
+
+@Composable
+private fun WithdrawalDialog(
+    onClickWithdrawal: () -> Unit,
+    onClickCancel: () -> Unit,
+) {
+    OdySadDialog(
+        title = {
+            Row {
+                Text(
+                    text = stringResource(id = R.string.setting_withdrawal_title_front),
+                    style = OdyTheme.typography.pretendardBold24.copy(OdyTheme.colors.quinary),
+                )
+                Text(
+                    text = stringResource(id = R.string.setting_withdrawal_title_middle),
+                    style = OdyTheme.typography.pretendardBold24.copy(OdyTheme.colors.secondary),
+                )
+                Text(
+                    text = stringResource(id = R.string.setting_withdrawal_title_back),
+                    style = OdyTheme.typography.pretendardBold24.copy(OdyTheme.colors.quinary),
+                )
+            }
+        },
+        subtitle = {
+            Text(
+                text = stringResource(id = R.string.setting_withdrawal_subtitle),
+                style = OdyTheme.typography.pretendardMedium16.copy(OdyTheme.colors.quinary),
+            )
+        },
+        onClickCancel = onClickCancel,
+        onClickConfirm = onClickWithdrawal,
+        confirmButtonText = stringResource(id = R.string.setting_withdrawal_button),
+    )
 }
 
 @Composable

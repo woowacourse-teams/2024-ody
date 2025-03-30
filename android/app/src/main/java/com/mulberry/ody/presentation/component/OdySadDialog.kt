@@ -1,4 +1,4 @@
-package com.mulberry.ody.presentation.feature.setting
+package com.mulberry.ody.presentation.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -18,6 +18,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -30,15 +31,20 @@ import com.mulberry.ody.presentation.theme.OdyTheme
 import com.mulberry.ody.presentation.theme.Red
 
 @Composable
-fun WithdrawalDialog(
+fun OdySadDialog(
+    title: @Composable () -> Unit,
+    onClickConfirm: () -> Unit,
     onClickCancel: () -> Unit,
-    onClickWithdrawal: () -> Unit,
+    confirmButtonText: String,
+    modifier: Modifier = Modifier,
+    subtitle: (@Composable () -> Unit)? = null,
+    confirmButtonTextColor: Color = Red,
 ) {
     Dialog(
         onDismissRequest = onClickCancel,
     ) {
         Card(
-            modifier = Modifier.wrapContentSize(),
+            modifier = modifier.wrapContentSize(),
             shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors().copy(
                 containerColor = OdyTheme.colors.primary,
@@ -55,25 +61,11 @@ fun WithdrawalDialog(
                         .padding(bottom = 34.dp),
                     contentDescription = null,
                 )
-                Row {
-                    Text(
-                        text = stringResource(id = R.string.setting_withdrawal_title_front),
-                        style = OdyTheme.typography.pretendardBold24.copy(OdyTheme.colors.quinary),
-                    )
-                    Text(
-                        text = stringResource(id = R.string.setting_withdrawal_title_middle),
-                        style = OdyTheme.typography.pretendardBold24.copy(OdyTheme.colors.secondary),
-                    )
-                    Text(
-                        text = stringResource(id = R.string.setting_withdrawal_title_back),
-                        style = OdyTheme.typography.pretendardBold24.copy(OdyTheme.colors.quinary),
-                    )
+                title()
+                if (subtitle != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    subtitle()
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = stringResource(id = R.string.setting_withdrawal_subtitle),
-                    style = OdyTheme.typography.pretendardMedium16.copy(OdyTheme.colors.quinary),
-                )
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                 Row(
@@ -86,7 +78,7 @@ fun WithdrawalDialog(
                             .padding(vertical = 22.dp)
                             .noRippleClickable { onClickCancel() },
                         text = stringResource(id = R.string.cancel_button),
-                        style = OdyTheme.typography.pretendardMedium18.copy(OdyTheme.colors.quinary),
+                        style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.quinary),
                         textAlign = TextAlign.Center,
                     )
                     VerticalDivider(modifier = Modifier.height(36.dp))
@@ -94,9 +86,9 @@ fun WithdrawalDialog(
                         modifier = Modifier
                             .weight(1f)
                             .padding(vertical = 22.dp)
-                            .noRippleClickable { onClickWithdrawal() },
-                        text = stringResource(id = R.string.setting_withdrawal_button),
-                        style = OdyTheme.typography.pretendardMedium18.copy(Red),
+                            .noRippleClickable(onClickConfirm),
+                        text = confirmButtonText,
+                        style = OdyTheme.typography.pretendardMedium18.copy(color = confirmButtonTextColor),
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -108,11 +100,24 @@ fun WithdrawalDialog(
 
 @Composable
 @Preview(showSystemUi = true)
-private fun WithdrawalDialogPreview() {
+private fun OdySadDialogPreview() {
     OdyTheme {
-        WithdrawalDialog(
+        OdySadDialog(
+            title = {
+                Text(
+                    text = "슬픈 오디 다이얼로그 타이틀",
+                    style = OdyTheme.typography.pretendardBold24.copy(OdyTheme.colors.quinary),
+                )
+            },
+            subtitle = {
+                Text(
+                    text = "서브 타이틀",
+                    style = OdyTheme.typography.pretendardMedium16.copy(OdyTheme.colors.quinary),
+                )
+            },
             onClickCancel = {},
-            onClickWithdrawal = {},
+            onClickConfirm = {},
+            confirmButtonText = "확인",
         )
     }
 }
