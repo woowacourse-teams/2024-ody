@@ -19,7 +19,6 @@ import com.mulberry.ody.presentation.feature.join.complete.JoinCompleteActivity
 import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MeetingJoinActivity :

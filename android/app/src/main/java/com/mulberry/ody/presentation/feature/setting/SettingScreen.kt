@@ -104,8 +104,8 @@ fun SettingScreen(
         hasNotificationPermission = hasNotificationPermission(context)
     }
 
-    val isNotificationDepartureOn by viewModel.isDepartureNotificationOn.collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
-    val isNotificationEntryOn by viewModel.isEntryNotificationOn.collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
+    val isNotificationDepartureOn by viewModel.isDepartureNotificationOn.collectAsStateWithLifecycle()
+    val isNotificationEntryOn by viewModel.isEntryNotificationOn.collectAsStateWithLifecycle()
     var showWithdrawalDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -157,13 +157,14 @@ fun SettingScreen(
                 }
             },
             onChangedChecked = onChangedChecked@{ type, isChecked ->
-                if (!hasNotificationPermission(context)) {
+                if (!hasNotificationPermission) {
                     coroutineScope.launch {
-                        val result = snackbarHostState.showSnackbar(
-                            message = context.getString(R.string.setting_notification_permission_denied),
-                            actionLabel = context.getString(R.string.setting_notification_permission_guide),
-                            duration = SnackbarDuration.Short,
-                        )
+                        val result =
+                            snackbarHostState.showSnackbar(
+                                message = context.getString(R.string.setting_notification_permission_denied),
+                                actionLabel = context.getString(R.string.setting_notification_permission_guide),
+                                duration = SnackbarDuration.Short,
+                            )
                         when (result) {
                             SnackbarResult.Dismissed -> {}
                             SnackbarResult.ActionPerformed -> {
@@ -238,8 +239,8 @@ private fun SettingContent(
 ) {
     Column(
         modifier =
-        modifier
-            .fillMaxWidth(),
+            modifier
+                .fillMaxWidth(),
     ) {
         SettingNotificationItems(
             onChangedChecked = onChangedChecked,
@@ -247,23 +248,23 @@ private fun SettingContent(
             isNotificationEntryOn = isNotificationEntryOn,
             hasNotificationPermission = hasNotificationPermission,
             modifier =
-            Modifier
-                .padding(horizontal = 26.dp)
-                .padding(top = 26.dp),
+                Modifier
+                    .padding(horizontal = 26.dp)
+                    .padding(top = 26.dp),
         )
         Box(
             modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 32.dp)
-                .background(OdyTheme.colors.senary)
-                .height(3.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp)
+                    .background(OdyTheme.colors.senary)
+                    .height(3.dp),
         )
         SettingItems(
             onClickItem = onClickItem,
             modifier =
-            Modifier
-                .padding(horizontal = 26.dp),
+                Modifier
+                    .padding(horizontal = 26.dp),
         )
     }
 }
@@ -283,9 +284,9 @@ private fun SettingNotificationItems(
             text = stringResource(id = R.string.setting_header_notification),
             style = OdyTheme.typography.pretendardBold18.copy(OdyTheme.colors.nonary),
             modifier =
-            Modifier
-                .padding(start = 8.dp)
-                .padding(bottom = 28.dp),
+                Modifier
+                    .padding(start = 8.dp)
+                    .padding(bottom = 28.dp),
         )
         SettingItem(
             settingItemType = SettingItemType.NOTIFICATION_DEPARTURE,
@@ -305,8 +306,10 @@ private fun hasNotificationPermission(context: Context): Boolean {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
         return true
     }
-    return (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
-            PackageManager.PERMISSION_GRANTED)
+    return (
+        ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+            PackageManager.PERMISSION_GRANTED
+    )
 }
 
 @Composable
@@ -321,9 +324,9 @@ private fun SettingItems(
             text = stringResource(id = R.string.setting_header_service),
             style = OdyTheme.typography.pretendardBold18.copy(OdyTheme.colors.nonary),
             modifier =
-            Modifier
-                .padding(start = 8.dp)
-                .padding(bottom = 28.dp),
+                Modifier
+                    .padding(start = 8.dp)
+                    .padding(bottom = 28.dp),
         )
         itemType.forEachIndexed { index, type ->
             SettingItem(
@@ -346,10 +349,10 @@ private fun SettingItem(
 ) {
     Row(
         modifier =
-        Modifier
-            .height(34.dp)
-            .noRippleClickable { onClickItem(settingItemType) }
-            .padding(horizontal = 8.dp),
+            Modifier
+                .height(34.dp)
+                .noRippleClickable { onClickItem(settingItemType) }
+                .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -368,18 +371,18 @@ private fun SettingItem(
                 checked = isChecked,
                 onCheckedChange = { isChecked -> onChangedChecked(settingItemType, isChecked) },
                 modifier =
-                Modifier
-                    .requiredSize(40.dp)
-                    .scale(0.8f),
+                    Modifier
+                        .requiredSize(40.dp)
+                        .scale(0.8f),
                 colors =
-                SwitchDefaults.colors(
-                    checkedThumbColor = White,
-                    checkedTrackColor = OdyTheme.colors.secondary,
-                    checkedBorderColor = OdyTheme.colors.secondary,
-                    uncheckedThumbColor = White,
-                    uncheckedTrackColor = Gray400,
-                    uncheckedBorderColor = Gray400,
-                ),
+                    SwitchDefaults.colors(
+                        checkedThumbColor = White,
+                        checkedTrackColor = OdyTheme.colors.secondary,
+                        checkedBorderColor = OdyTheme.colors.secondary,
+                        uncheckedThumbColor = White,
+                        uncheckedTrackColor = Gray400,
+                        uncheckedBorderColor = Gray400,
+                    ),
             )
         }
     }

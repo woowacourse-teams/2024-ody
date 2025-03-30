@@ -26,72 +26,72 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel
-@Inject
-constructor(
-    private val analyticsHelper: AnalyticsHelper,
-    private val authRepository: AuthRepository,
-    private val matesEtaRepository: MatesEtaRepository,
-    private val settingRepository: SettingRepository,
-) : BaseViewModel() {
-    private val _loginNavigateEvent: MutableSharedFlow<LoginNavigatedReason> = MutableSharedFlow()
-    val loginNavigateEvent: SharedFlow<LoginNavigatedReason> get() = _loginNavigateEvent.asSharedFlow()
+    @Inject
+    constructor(
+        private val analyticsHelper: AnalyticsHelper,
+        private val authRepository: AuthRepository,
+        private val matesEtaRepository: MatesEtaRepository,
+        private val settingRepository: SettingRepository,
+    ) : BaseViewModel() {
+        private val _loginNavigateEvent: MutableSharedFlow<LoginNavigatedReason> = MutableSharedFlow()
+        val loginNavigateEvent: SharedFlow<LoginNavigatedReason> get() = _loginNavigateEvent.asSharedFlow()
 
-    private val _isDepartureNotificationOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isDepartureNotificationOn: StateFlow<Boolean> get() = _isDepartureNotificationOn.asStateFlow()
+        private val _isDepartureNotificationOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
+        val isDepartureNotificationOn: StateFlow<Boolean> get() = _isDepartureNotificationOn.asStateFlow()
 
-    private val _isEntryNotificationOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isEntryNotificationOn: StateFlow<Boolean> get() = _isEntryNotificationOn.asStateFlow()
+        private val _isEntryNotificationOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
+        val isEntryNotificationOn: StateFlow<Boolean> get() = _isEntryNotificationOn.asStateFlow()
 
-    fun fetchNotificationSetting() {
-        viewModelScope.launch {
-            _isDepartureNotificationOn.value = settingRepository.isNotificationOn(NotificationType.DEPARTURE_REMINDER).first()
-            _isEntryNotificationOn.value = settingRepository.isNotificationOn(NotificationType.ENTRY).first()
+        fun fetchNotificationSetting() {
+            viewModelScope.launch {
+                _isDepartureNotificationOn.value = settingRepository.isNotificationOn(NotificationType.DEPARTURE_REMINDER).first()
+                _isEntryNotificationOn.value = settingRepository.isNotificationOn(NotificationType.ENTRY).first()
+            }
+        }
+
+        fun changeDepartureNotification(isOn: Boolean) {
+            viewModelScope.launch {
+                settingRepository.changeNotificationSetting(NotificationType.DEPARTURE_REMINDER, isOn)
+                _isDepartureNotificationOn.value = isOn
+            }
+        }
+
+        fun changeEntryNotification(isOn: Boolean) {
+            viewModelScope.launch {
+                settingRepository.changeNotificationSetting(NotificationType.ENTRY, isOn)
+                _isEntryNotificationOn.value = isOn
+            }
+        }
+
+        fun logout() {
+            viewModelScope.launch {
+                authRepository.logout()
+                _loginNavigateEvent.emit(LoginNavigatedReason.LOGOUT)
+                matesEtaRepository.clearEtaReservation(isReservationPending = true)
+            }
+        }
+
+        fun withdrawAccount() {
+            viewModelScope.launch {
+                startLoading()
+                authRepository.withdrawAccount()
+                    .onSuccess {
+                        _loginNavigateEvent.emit(LoginNavigatedReason.WITHDRAWAL)
+                        matesEtaRepository.clearEtaFetchingJob()
+                        matesEtaRepository.clearEtaReservation(isReservationPending = false)
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { withdrawAccount() }
+                    }
+                stopLoading()
+            }
+        }
+
+        companion object {
+            private const val TAG = "SettingViewModel"
         }
     }
-
-    fun changeDepartureNotification(isOn: Boolean) {
-        viewModelScope.launch {
-            settingRepository.changeNotificationSetting(NotificationType.DEPARTURE_REMINDER, isOn)
-            _isDepartureNotificationOn.value = isOn
-        }
-    }
-
-    fun changeEntryNotification(isOn: Boolean) {
-        viewModelScope.launch {
-            settingRepository.changeNotificationSetting(NotificationType.ENTRY, isOn)
-            _isEntryNotificationOn.value = isOn
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            authRepository.logout()
-            _loginNavigateEvent.emit(LoginNavigatedReason.LOGOUT)
-            matesEtaRepository.clearEtaReservation(isReservationPending = true)
-        }
-    }
-
-    fun withdrawAccount() {
-        viewModelScope.launch {
-            startLoading()
-            authRepository.withdrawAccount()
-                .onSuccess {
-                    _loginNavigateEvent.emit(LoginNavigatedReason.WITHDRAWAL)
-                    matesEtaRepository.clearEtaFetchingJob()
-                    matesEtaRepository.clearEtaReservation(isReservationPending = false)
-                }.onFailure { code, errorMessage ->
-                    handleError()
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    Timber.e("$code $errorMessage")
-                }.onNetworkError {
-                    handleNetworkError()
-                    lastFailedAction = { withdrawAccount() }
-                }
-            stopLoading()
-        }
-    }
-
-    companion object {
-        private const val TAG = "SettingViewModel"
-    }
-}

@@ -46,19 +46,21 @@ fun OdySadDialog(
         Card(
             modifier = modifier.wrapContentSize(),
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors().copy(
-                containerColor = OdyTheme.colors.primary,
-            )
+            colors =
+                CardDefaults.cardColors().copy(
+                    containerColor = OdyTheme.colors.primary,
+                ),
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_sad_ody),
-                    modifier = Modifier
-                        .width(150.dp)
-                        .padding(top = 30.dp)
-                        .padding(bottom = 34.dp),
+                    modifier =
+                        Modifier
+                            .width(150.dp)
+                            .padding(top = 30.dp)
+                            .padding(bottom = 34.dp),
                     contentDescription = null,
                 )
                 title()
@@ -73,20 +75,22 @@ fun OdySadDialog(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(vertical = 22.dp)
-                            .noRippleClickable { onClickCancel() },
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .padding(vertical = 22.dp)
+                                .noRippleClickable { onClickCancel() },
                         text = stringResource(id = R.string.cancel_button),
                         style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.quinary),
                         textAlign = TextAlign.Center,
                     )
                     VerticalDivider(modifier = Modifier.height(36.dp))
                     Text(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(vertical = 22.dp)
-                            .noRippleClickable(onClickConfirm),
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .padding(vertical = 22.dp)
+                                .noRippleClickable(onClickConfirm),
                         text = confirmButtonText,
                         style = OdyTheme.typography.pretendardMedium18.copy(color = confirmButtonTextColor),
                         textAlign = TextAlign.Center,
@@ -96,7 +100,6 @@ fun OdySadDialog(
         }
     }
 }
-
 
 @Composable
 @Preview(showSystemUi = true)

@@ -50,5 +50,4 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindSettingRepository(defaultSettingRepository: DefaultSettingRepository): SettingRepository
-
 }

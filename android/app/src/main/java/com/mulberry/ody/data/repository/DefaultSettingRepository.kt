@@ -6,17 +6,19 @@ import com.mulberry.ody.domain.repository.ody.SettingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class DefaultSettingRepository @Inject constructor(
-    private val odyDatastore: OdyDatastore,
-) : SettingRepository {
-    override fun isNotificationOn(notificationType: NotificationType): Flow<Boolean> {
-        return odyDatastore.getIsNotificationOn(notificationType)
-    }
+class DefaultSettingRepository
+    @Inject
+    constructor(
+        private val odyDatastore: OdyDatastore,
+    ) : SettingRepository {
+        override fun isNotificationOn(notificationType: NotificationType): Flow<Boolean> {
+            return odyDatastore.getIsNotificationOn(notificationType)
+        }
 
-    override suspend fun changeNotificationSetting(
-        notificationType: NotificationType,
-        isNotificationOn: Boolean
-    ) {
-        odyDatastore.setIsNotificationOn(notificationType, isNotificationOn)
+        override suspend fun changeNotificationSetting(
+            notificationType: NotificationType,
+            isNotificationOn: Boolean,
+        ) {
+            odyDatastore.setIsNotificationOn(notificationType, isNotificationOn)
+        }
     }
-}
