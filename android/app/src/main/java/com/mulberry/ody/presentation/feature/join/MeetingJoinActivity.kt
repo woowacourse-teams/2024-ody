@@ -9,7 +9,6 @@ import androidx.fragment.app.commit
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingJoinBinding
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.common.listener.BackListener
@@ -35,9 +34,6 @@ class MeetingJoinActivity :
                 onBack()
             }
         }
-
-    @Inject
-    lateinit var permissionHelper: PermissionHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

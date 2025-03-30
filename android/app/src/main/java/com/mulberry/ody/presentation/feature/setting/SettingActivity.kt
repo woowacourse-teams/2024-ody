@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.presentation.feature.login.LoginActivity
 import com.mulberry.ody.presentation.feature.login.LoginNavigatedReason
+import com.mulberry.ody.presentation.feature.setting.model.SettingNavigation
 import com.mulberry.ody.presentation.theme.OdyTheme
 import dagger.hilt.android.AndroidEntryPoint
 

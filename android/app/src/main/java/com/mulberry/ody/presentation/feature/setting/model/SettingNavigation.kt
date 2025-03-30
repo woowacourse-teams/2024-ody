@@ -1,4 +1,4 @@
-package com.mulberry.ody.presentation.feature.setting
+package com.mulberry.ody.presentation.feature.setting.model
 
 interface SettingNavigation {
     fun navigateToLoginByLogout()

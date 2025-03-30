@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,6 +52,7 @@ import com.mulberry.ody.presentation.component.OdySadDialog
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.login.LoginNavigatedReason
 import com.mulberry.ody.presentation.feature.setting.model.SettingItemType
+import com.mulberry.ody.presentation.feature.setting.model.SettingNavigation
 import com.mulberry.ody.presentation.theme.Gray400
 import com.mulberry.ody.presentation.theme.OdyTheme
 import com.mulberry.ody.presentation.theme.White
@@ -306,9 +306,7 @@ private fun hasNotificationPermission(context: Context): Boolean {
         return true
     }
     return (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
-            PackageManager.PERMISSION_GRANTED).also {
-                Log.e("TEST" ,"hasNotificationPermission $it")
-    }
+            PackageManager.PERMISSION_GRANTED)
 }
 
 @Composable
