@@ -54,6 +54,8 @@ import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.login.LoginNavigatedReason
 import com.mulberry.ody.presentation.feature.setting.model.SettingItemType
 import com.mulberry.ody.presentation.feature.setting.model.SettingNavigation
+import com.mulberry.ody.presentation.feature.setting.model.SettingNotificationItemType
+import com.mulberry.ody.presentation.feature.setting.model.SettingServiceItemType
 import com.mulberry.ody.presentation.theme.Gray400
 import com.mulberry.ody.presentation.theme.OdyTheme
 import com.mulberry.ody.presentation.theme.White
@@ -92,27 +94,26 @@ fun SettingScreen(
     val isNotificationEntryOn by viewModel.isEntryNotificationOn.collectAsStateWithLifecycle()
     var showWithdrawalDialog by rememberSaveable { mutableStateOf(false) }
 
-    val onClickSettingItem: (SettingItemType) -> Unit = { type ->
+    val onClickSettingItem: (SettingServiceItemType) -> Unit = { type ->
         when (type) {
-            SettingItemType.NOTIFICATION_DEPARTURE, SettingItemType.NOTIFICATION_ENTRY -> {}
-            SettingItemType.PRIVACY_POLICY -> {
+            SettingServiceItemType.PRIVACY_POLICY -> {
                 settingNavigation.navigateToPrivacyPolicy()
             }
 
-            SettingItemType.TERM -> {
+            SettingServiceItemType.TERM -> {
                 settingNavigation.navigateToTerm()
             }
 
-            SettingItemType.LOGOUT -> {
+            SettingServiceItemType.LOGOUT -> {
                 viewModel.logout()
             }
 
-            SettingItemType.WITHDRAW -> {
+            SettingServiceItemType.WITHDRAW -> {
                 showWithdrawalDialog = true
             }
         }
     }
-    val onChangedChecked: (SettingItemType, Boolean) -> Unit = ret@{ type, isChecked ->
+    val onChangedChecked: (SettingNotificationItemType, Boolean) -> Unit = ret@{ type, isChecked ->
         if (!hasNotificationPermission) {
             showActionSnackbar(
                 messageId = R.string.setting_notification_permission_denied,
@@ -122,15 +123,19 @@ fun SettingScreen(
             return@ret
         }
         when (type) {
-            SettingItemType.NOTIFICATION_DEPARTURE -> {
+            SettingNotificationItemType.NOTIFICATION_DEPARTURE -> {
                 viewModel.changeDepartureNotification(isChecked)
             }
 
-            SettingItemType.NOTIFICATION_ENTRY -> {
+            SettingNotificationItemType.NOTIFICATION_ENTRY -> {
                 viewModel.changeEntryNotification(isChecked)
             }
-
-            SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> {}
+        }
+    }
+    val isOn: (SettingNotificationItemType) -> Boolean = { type ->
+        when (type) {
+            SettingNotificationItemType.NOTIFICATION_DEPARTURE -> isNotificationDepartureOn
+            SettingNotificationItemType.NOTIFICATION_ENTRY -> isNotificationEntryOn
         }
     }
 
@@ -164,8 +169,7 @@ fun SettingScreen(
         SettingContent(
             onClickItem = onClickSettingItem,
             onChangedChecked = onChangedChecked,
-            isNotificationDepartureOn = isNotificationDepartureOn,
-            isNotificationEntryOn = isNotificationEntryOn,
+            isOn = isOn,
             hasNotificationPermission = hasNotificationPermission,
             modifier = Modifier.padding(innerPadding),
         )
@@ -184,6 +188,31 @@ fun SettingScreen(
                 LoginNavigatedReason.LOGOUT -> settingNavigation.navigateToLoginByLogout()
                 LoginNavigatedReason.WITHDRAWAL -> settingNavigation.navigateToLoginByWithdrawal()
             }
+        }
+    }
+}
+
+fun onClickSettingItem(
+    type: SettingServiceItemType,
+    settingNavigation: SettingNavigation,
+    viewModel: SettingViewModel,
+    showWithdrawalDialog: () -> Unit,
+) {
+    when (type) {
+        SettingServiceItemType.PRIVACY_POLICY -> {
+            settingNavigation.navigateToPrivacyPolicy()
+        }
+
+        SettingServiceItemType.TERM -> {
+            settingNavigation.navigateToTerm()
+        }
+
+        SettingServiceItemType.LOGOUT -> {
+            viewModel.logout()
+        }
+
+        SettingServiceItemType.WITHDRAW -> {
+            showWithdrawalDialog()
         }
     }
 }
@@ -224,53 +253,51 @@ private fun WithdrawalDialog(
 
 @Composable
 private fun SettingContent(
-    onClickItem: (SettingItemType) -> Unit,
-    onChangedChecked: (SettingItemType, Boolean) -> Unit,
-    isNotificationDepartureOn: Boolean,
-    isNotificationEntryOn: Boolean,
+    onClickItem: (SettingServiceItemType) -> Unit,
+    onChangedChecked: (SettingNotificationItemType, Boolean) -> Unit,
+    isOn: (SettingNotificationItemType) -> Boolean,
     hasNotificationPermission: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier =
-        modifier
-            .fillMaxWidth(),
+            modifier
+                .fillMaxWidth(),
     ) {
         SettingNotificationItems(
             onChangedChecked = onChangedChecked,
-            isNotificationDepartureOn = isNotificationDepartureOn,
-            isNotificationEntryOn = isNotificationEntryOn,
+            isOn = isOn,
             hasNotificationPermission = hasNotificationPermission,
             modifier =
-            Modifier
-                .padding(horizontal = 26.dp)
-                .padding(top = 26.dp),
+                Modifier
+                    .padding(horizontal = 26.dp)
+                    .padding(top = 26.dp),
         )
         Box(
             modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 32.dp)
-                .background(OdyTheme.colors.senary)
-                .height(3.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp)
+                    .background(OdyTheme.colors.senary)
+                    .height(3.dp),
         )
         SettingItems(
             onClickItem = onClickItem,
             modifier =
-            Modifier
-                .padding(horizontal = 26.dp),
+                Modifier
+                    .padding(horizontal = 26.dp),
         )
     }
 }
 
 @Composable
 private fun SettingNotificationItems(
-    onChangedChecked: (SettingItemType, Boolean) -> Unit,
-    isNotificationDepartureOn: Boolean,
-    isNotificationEntryOn: Boolean,
+    onChangedChecked: (SettingNotificationItemType, Boolean) -> Unit,
+    isOn: (SettingNotificationItemType) -> Boolean,
     hasNotificationPermission: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val items = SettingNotificationItemType.entries
     Column(
         modifier = modifier.fillMaxWidth(),
     ) {
@@ -278,21 +305,20 @@ private fun SettingNotificationItems(
             text = stringResource(id = R.string.setting_header_notification),
             style = OdyTheme.typography.pretendardBold18.copy(OdyTheme.colors.nonary),
             modifier =
-            Modifier
-                .padding(start = 8.dp)
-                .padding(bottom = 28.dp),
+                Modifier
+                    .padding(start = 8.dp)
+                    .padding(bottom = 28.dp),
         )
-        SettingItem(
-            settingItemType = SettingItemType.NOTIFICATION_DEPARTURE,
-            isChecked = if (hasNotificationPermission) isNotificationDepartureOn else false,
-            onChangedChecked = onChangedChecked,
-        )
-        HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-        SettingItem(
-            settingItemType = SettingItemType.NOTIFICATION_ENTRY,
-            isChecked = if (hasNotificationPermission) isNotificationEntryOn else false,
-            onChangedChecked = onChangedChecked,
-        )
+        items.forEachIndexed { index, type ->
+            SettingSwitchItem(
+                type = type,
+                isChecked = if (hasNotificationPermission) isOn(type) else false,
+                onChangedChecked = onChangedChecked,
+            )
+            if (index != items.size - 1) {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
+            }
+        }
     }
 }
 
@@ -301,24 +327,23 @@ private fun hasNotificationPermission(context: Context): Boolean {
         return true
     }
     return ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
-            PackageManager.PERMISSION_GRANTED
+        PackageManager.PERMISSION_GRANTED
 }
 
 @Composable
 private fun SettingItems(
-    onClickItem: (SettingItemType) -> Unit,
+    onClickItem: (SettingServiceItemType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val itemType = SettingItemType.entries.filterNot { it.isSwitch }
-
+    val itemType = SettingServiceItemType.entries
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = stringResource(id = R.string.setting_header_service),
             style = OdyTheme.typography.pretendardBold18.copy(OdyTheme.colors.nonary),
             modifier =
-            Modifier
-                .padding(start = 8.dp)
-                .padding(bottom = 28.dp),
+                Modifier
+                    .padding(start = 8.dp)
+                    .padding(bottom = 28.dp),
         )
         itemType.forEachIndexed { index, type ->
             SettingItem(
@@ -333,18 +358,53 @@ private fun SettingItems(
 }
 
 @Composable
+private fun SettingSwitchItem(
+    type: SettingNotificationItemType,
+    isChecked: Boolean = true,
+    onChangedChecked: (SettingNotificationItemType, Boolean) -> Unit = { _, _ -> },
+) {
+    SettingItem(
+        settingItemType = type,
+        trailingIcon = {
+            Switch(
+                checked = isChecked,
+                onCheckedChange = { isChecked -> onChangedChecked(type, isChecked) },
+                modifier =
+                    Modifier
+                        .requiredSize(40.dp)
+                        .scale(0.8f),
+                colors =
+                    SwitchDefaults.colors(
+                        checkedThumbColor = White,
+                        checkedTrackColor = OdyTheme.colors.secondary,
+                        checkedBorderColor = OdyTheme.colors.secondary,
+                        uncheckedThumbColor = White,
+                        uncheckedTrackColor = Gray400,
+                        uncheckedBorderColor = Gray400,
+                    ),
+            )
+        },
+    )
+}
+
+@Composable
 private fun SettingItem(
     settingItemType: SettingItemType,
-    onClickItem: (SettingItemType) -> Unit = {},
-    isChecked: Boolean = true,
-    onChangedChecked: (SettingItemType, Boolean) -> Unit = { _, _ -> },
+    onClickItem: (SettingServiceItemType) -> Unit = {},
+    trailingIcon: (@Composable () -> Unit) = {},
 ) {
     Row(
         modifier =
-        Modifier
-            .height(34.dp)
-            .noRippleClickable { onClickItem(settingItemType) }
-            .padding(horizontal = 8.dp),
+            Modifier
+                .height(34.dp)
+                .noRippleClickable {
+                    if (settingItemType is SettingServiceItemType) {
+                        onClickItem(
+                            settingItemType,
+                        )
+                    }
+                }
+                .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -358,25 +418,7 @@ private fun SettingItem(
             style = OdyTheme.typography.pretendardMedium18.copy(color = OdyTheme.colors.quinary),
             modifier = Modifier.weight(1f),
         )
-        if (settingItemType.isSwitch) {
-            Switch(
-                checked = isChecked,
-                onCheckedChange = { isChecked -> onChangedChecked(settingItemType, isChecked) },
-                modifier =
-                Modifier
-                    .requiredSize(40.dp)
-                    .scale(0.8f),
-                colors =
-                SwitchDefaults.colors(
-                    checkedThumbColor = White,
-                    checkedTrackColor = OdyTheme.colors.secondary,
-                    checkedBorderColor = OdyTheme.colors.secondary,
-                    uncheckedThumbColor = White,
-                    uncheckedTrackColor = Gray400,
-                    uncheckedBorderColor = Gray400,
-                ),
-            )
-        }
+        trailingIcon()
     }
 }
 
@@ -387,8 +429,12 @@ private fun SettingContentPreview() {
         SettingContent(
             onClickItem = {},
             onChangedChecked = { _, _ -> },
-            isNotificationDepartureOn = true,
-            isNotificationEntryOn = false,
+            isOn = { type ->
+                when (type) {
+                    SettingNotificationItemType.NOTIFICATION_DEPARTURE -> true
+                    SettingNotificationItemType.NOTIFICATION_ENTRY -> false
+                }
+            },
             hasNotificationPermission = true,
         )
     }
