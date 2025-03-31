@@ -16,28 +16,20 @@ import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
@@ -46,7 +38,6 @@ import androidx.compose.ui.text.style.TextAlign.Companion.Right
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mulberry.ody.R
 import com.mulberry.ody.presentation.theme.Gray300
 import com.mulberry.ody.presentation.theme.Gray350
 import com.mulberry.ody.presentation.theme.Gray400
@@ -66,10 +57,11 @@ fun OdyTextField(
     var isFocused by rememberSaveable { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
-    val textSelectionColors = TextSelectionColors(
-        handleColor = Gray400,
-        backgroundColor = Gray300,
-    )
+    val textSelectionColors =
+        TextSelectionColors(
+            handleColor = Gray400,
+            backgroundColor = Gray300,
+        )
 
     CompositionLocalProvider(
         LocalTextSelectionColors provides textSelectionColors,
@@ -78,10 +70,11 @@ fun OdyTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = modifier.onFocusChanged { isFocused = it.isFocused },
-            textStyle = OdyTheme.typography.pretendardMedium20.copy(
-                color = OdyTheme.colors.quinary,
-                textAlign = textAlign,
-            ),
+            textStyle =
+                OdyTheme.typography.pretendardMedium20.copy(
+                    color = OdyTheme.colors.quinary,
+                    textAlign = textAlign,
+                ),
             singleLine = true,
             cursorBrush = SolidColor(Gray500),
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
@@ -112,9 +105,10 @@ private fun OdyTextFieldDecorationBox(
     Column {
         Row(modifier = Modifier.padding(vertical = 8.dp)) {
             Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
                 contentAlignment = textAlign.toAlignment(),
             ) {
                 innerTextField()
@@ -122,10 +116,11 @@ private fun OdyTextFieldDecorationBox(
                     Text(
                         text = placeholder,
                         maxLines = 1,
-                        style = OdyTheme.typography.pretendardMedium20.copy(
-                            color = Gray350,
-                            textAlign = textAlign,
-                        ),
+                        style =
+                            OdyTheme.typography.pretendardMedium20.copy(
+                                color = Gray350,
+                                textAlign = textAlign,
+                            ),
                     )
                 }
             }
@@ -135,10 +130,11 @@ private fun OdyTextFieldDecorationBox(
             }
         }
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.5.dp)
-                .background(color = indicatorColor),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.5.dp)
+                    .background(color = indicatorColor),
         )
     }
 }
@@ -166,7 +162,7 @@ private fun OdyTextFieldPreview() {
                         tint = Gray400,
                         contentDescription = null,
                     )
-                }
+                },
             )
             OdyTextField(
                 modifier = Modifier.padding(top = 100.dp),

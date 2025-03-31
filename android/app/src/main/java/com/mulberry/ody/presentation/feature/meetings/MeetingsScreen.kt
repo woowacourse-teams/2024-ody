@@ -250,7 +250,7 @@ private fun MeetingsContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(top = 24.dp, start = 18.dp, end = 18.dp, bottom = 32.dp),
     ) {
-        items(meetings) {
+        items(items = meetings, key = { it.id }) {
             MeetingItem(
                 meeting = it,
                 onClickMeeting = onClickMeeting,
