@@ -132,7 +132,7 @@ fun SettingScreen(
             }
         }
     }
-    val isOn: (SettingNotificationItemType) -> Boolean = { type ->
+    val isSwitchOn: (SettingNotificationItemType) -> Boolean = { type ->
         when (type) {
             SettingNotificationItemType.NOTIFICATION_DEPARTURE -> isNotificationDepartureOn
             SettingNotificationItemType.NOTIFICATION_ENTRY -> isNotificationEntryOn
@@ -169,8 +169,7 @@ fun SettingScreen(
         SettingContent(
             onClickItem = onClickSettingItem,
             onChangedChecked = onChangedChecked,
-            isOn = isOn,
-            hasNotificationPermission = hasNotificationPermission,
+            isSwitchOn = if (hasNotificationPermission) { _ -> false } else isSwitchOn,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -188,31 +187,6 @@ fun SettingScreen(
                 LoginNavigatedReason.LOGOUT -> settingNavigation.navigateToLoginByLogout()
                 LoginNavigatedReason.WITHDRAWAL -> settingNavigation.navigateToLoginByWithdrawal()
             }
-        }
-    }
-}
-
-fun onClickSettingItem(
-    type: SettingServiceItemType,
-    settingNavigation: SettingNavigation,
-    viewModel: SettingViewModel,
-    showWithdrawalDialog: () -> Unit,
-) {
-    when (type) {
-        SettingServiceItemType.PRIVACY_POLICY -> {
-            settingNavigation.navigateToPrivacyPolicy()
-        }
-
-        SettingServiceItemType.TERM -> {
-            settingNavigation.navigateToTerm()
-        }
-
-        SettingServiceItemType.LOGOUT -> {
-            viewModel.logout()
-        }
-
-        SettingServiceItemType.WITHDRAW -> {
-            showWithdrawalDialog()
         }
     }
 }
@@ -255,8 +229,7 @@ private fun WithdrawalDialog(
 private fun SettingContent(
     onClickItem: (SettingServiceItemType) -> Unit,
     onChangedChecked: (SettingNotificationItemType, Boolean) -> Unit,
-    isOn: (SettingNotificationItemType) -> Boolean,
-    hasNotificationPermission: Boolean,
+    isSwitchOn: (SettingNotificationItemType) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -266,8 +239,7 @@ private fun SettingContent(
     ) {
         SettingNotificationItems(
             onChangedChecked = onChangedChecked,
-            isOn = isOn,
-            hasNotificationPermission = hasNotificationPermission,
+            isSwitchOn = isSwitchOn,
             modifier =
                 Modifier
                     .padding(horizontal = 26.dp)
@@ -293,8 +265,7 @@ private fun SettingContent(
 @Composable
 private fun SettingNotificationItems(
     onChangedChecked: (SettingNotificationItemType, Boolean) -> Unit,
-    isOn: (SettingNotificationItemType) -> Boolean,
-    hasNotificationPermission: Boolean,
+    isSwitchOn: (SettingNotificationItemType) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     val items = SettingNotificationItemType.entries
@@ -312,7 +283,7 @@ private fun SettingNotificationItems(
         items.forEachIndexed { index, type ->
             SettingSwitchItem(
                 type = type,
-                isChecked = if (hasNotificationPermission) isOn(type) else false,
+                isChecked = isSwitchOn(type),
                 onChangedChecked = onChangedChecked,
             )
             if (index != items.size - 1) {
@@ -335,7 +306,7 @@ private fun SettingItems(
     onClickItem: (SettingServiceItemType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val itemType = SettingServiceItemType.entries
+    val items = SettingServiceItemType.entries
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = stringResource(id = R.string.setting_header_service),
@@ -345,12 +316,12 @@ private fun SettingItems(
                     .padding(start = 8.dp)
                     .padding(bottom = 28.dp),
         )
-        itemType.forEachIndexed { index, type ->
+        items.forEachIndexed { index, type ->
             SettingItem(
                 settingItemType = type,
                 onClickItem = onClickItem,
             )
-            if (index != itemType.size - 1) {
+            if (index != items.size - 1) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
             }
         }
@@ -429,13 +400,12 @@ private fun SettingContentPreview() {
         SettingContent(
             onClickItem = {},
             onChangedChecked = { _, _ -> },
-            isOn = { type ->
+            isSwitchOn = { type ->
                 when (type) {
                     SettingNotificationItemType.NOTIFICATION_DEPARTURE -> true
                     SettingNotificationItemType.NOTIFICATION_ENTRY -> false
                 }
             },
-            hasNotificationPermission = true,
         )
     }
 }
