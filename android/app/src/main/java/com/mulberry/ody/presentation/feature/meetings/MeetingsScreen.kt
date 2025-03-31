@@ -57,6 +57,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.ErrorSnackbarHandler
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyButton
@@ -79,7 +80,7 @@ fun MeetingsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val onShowSnackbar: (Int) -> Unit = { id ->
+    val showSnackbar: (Int) -> Unit = { id ->
         coroutineScope.launch {
             snackbarHostState.showSnackbar(context.getString(id))
         }
@@ -130,18 +131,8 @@ fun MeetingsScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.networkErrorEvent.collect {
-            onShowSnackbar(R.string.network_error_guide)
-        }
-    }
-    LaunchedEffect(Unit) {
-        viewModel.errorEvent.collect {
-            onShowSnackbar(R.string.error_guide)
-        }
-    }
-    LaunchedEffect(Unit) {
         viewModel.inaccessibleEtaEvent.collect {
-            onShowSnackbar(R.string.inaccessible_eta_guide)
+            showSnackbar(R.string.inaccessible_eta_guide)
         }
     }
     LaunchedEffect(Unit) {
@@ -153,7 +144,8 @@ fun MeetingsScreen(
     LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
         viewModel.fetchMeetings()
     }
-    MeetingsLaunchPermission(onShowSnackbar)
+    ErrorSnackbarHandler(viewModel)
+    MeetingsLaunchPermission(showSnackbar)
     BackPressed()
 }
 

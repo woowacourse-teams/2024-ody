@@ -9,13 +9,13 @@ import androidx.compose.runtime.LaunchedEffect
 import com.mulberry.ody.R
 
 @Composable
-fun MeetingsLaunchPermission(onShowSnackbar: (Int) -> Unit) {
+fun MeetingsLaunchPermission(showSnackbar: (Int) -> Unit) {
     val backgroundLocationPermissionLauncher =
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
         ) { isGranted ->
             if (!isGranted) {
-                onShowSnackbar(R.string.meetings_background_location_permission_required)
+                showSnackbar(R.string.meetings_background_location_permission_required)
             }
         }
 
@@ -29,7 +29,7 @@ fun MeetingsLaunchPermission(onShowSnackbar: (Int) -> Unit) {
                     backgroundLocationPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                 }
             } else {
-                onShowSnackbar(R.string.meetings_location_permission_required)
+                showSnackbar(R.string.meetings_location_permission_required)
             }
         }
 
@@ -44,7 +44,7 @@ fun MeetingsLaunchPermission(onShowSnackbar: (Int) -> Unit) {
                 ),
             )
             if (!isGranted) {
-                onShowSnackbar(R.string.meetings_notification_permission_required)
+                showSnackbar(R.string.meetings_notification_permission_required)
             }
         }
 

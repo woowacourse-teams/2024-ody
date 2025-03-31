@@ -47,6 +47,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.ErrorSnackbarHandler
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdySadDialog
 import com.mulberry.ody.presentation.component.OdyTopAppBar
@@ -67,11 +68,27 @@ fun SettingScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val onShowSnackbar: (Int) -> Unit = { id ->
+
+    fun showActionSnackbar(
+        messageId: Int,
+        actionLabelId: Int,
+        action: () -> Unit,
+    ) {
         coroutineScope.launch {
-            snackbarHostState.showSnackbar(context.getString(id))
+            val result =
+                snackbarHostState.showSnackbar(
+                    message = context.getString(messageId),
+                    actionLabel = context.getString(actionLabelId),
+                    duration = SnackbarDuration.Short,
+                )
+            if (result == SnackbarResult.ActionPerformed) {
+                action()
+            }
         }
     }
+
+    ErrorSnackbarHandler(viewModel)
+
     LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
         viewModel.fetchNotificationSetting()
     }
@@ -86,16 +103,6 @@ fun SettingScreen(
                     settingNavigation.navigateToLoginByWithdrawal()
                 }
             }
-        }
-    }
-    LaunchedEffect(Unit) {
-        viewModel.networkErrorEvent.collect {
-            onShowSnackbar(R.string.network_error_guide)
-        }
-    }
-    LaunchedEffect(Unit) {
-        viewModel.errorEvent.collect {
-            onShowSnackbar(R.string.error_guide)
         }
     }
 
@@ -158,20 +165,11 @@ fun SettingScreen(
             },
             onChangedChecked = onChangedChecked@{ type, isChecked ->
                 if (!hasNotificationPermission) {
-                    coroutineScope.launch {
-                        val result =
-                            snackbarHostState.showSnackbar(
-                                message = context.getString(R.string.setting_notification_permission_denied),
-                                actionLabel = context.getString(R.string.setting_notification_permission_guide),
-                                duration = SnackbarDuration.Short,
-                            )
-                        when (result) {
-                            SnackbarResult.Dismissed -> {}
-                            SnackbarResult.ActionPerformed -> {
-                                settingNavigation.navigateToNotificationSetting()
-                            }
-                        }
-                    }
+                    showActionSnackbar(
+                        messageId = R.string.setting_notification_permission_denied,
+                        actionLabelId = R.string.setting_notification_permission_guide,
+                        action = { settingNavigation.navigateToNotificationSetting() },
+                    )
                     return@onChangedChecked
                 }
                 when (type) {
@@ -306,10 +304,8 @@ private fun hasNotificationPermission(context: Context): Boolean {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
         return true
     }
-    return (
-        ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
-            PackageManager.PERMISSION_GRANTED
-    )
+    return ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+        PackageManager.PERMISSION_GRANTED
 }
 
 @Composable
