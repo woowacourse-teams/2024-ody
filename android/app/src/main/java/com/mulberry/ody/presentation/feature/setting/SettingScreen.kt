@@ -1,11 +1,6 @@
 package com.mulberry.ody.presentation.feature.setting
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,21 +13,16 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -41,7 +31,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
@@ -52,14 +41,15 @@ import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdySadDialog
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.login.LoginNavigatedReason
+import com.mulberry.ody.presentation.feature.setting.model.SettingAction
 import com.mulberry.ody.presentation.feature.setting.model.SettingItemType
 import com.mulberry.ody.presentation.feature.setting.model.SettingNavigation
 import com.mulberry.ody.presentation.feature.setting.model.SettingNotificationItemType
 import com.mulberry.ody.presentation.feature.setting.model.SettingServiceItemType
+import com.mulberry.ody.presentation.feature.setting.model.SettingState
 import com.mulberry.ody.presentation.theme.Gray400
 import com.mulberry.ody.presentation.theme.OdyTheme
 import com.mulberry.ody.presentation.theme.White
-import kotlinx.coroutines.launch
 
 @Composable
 fun SettingScreen(
@@ -71,67 +61,31 @@ fun SettingScreen(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    fun showActionSnackbar(
-        messageId: Int,
-        actionLabelId: Int,
-        action: () -> Unit,
-    ) {
-        coroutineScope.launch {
-            val result =
-                snackbarHostState.showSnackbar(
-                    message = context.getString(messageId),
-                    actionLabel = context.getString(actionLabelId),
-                    duration = SnackbarDuration.Short,
-                )
-            if (result == SnackbarResult.ActionPerformed) {
-                action()
-            }
-        }
-    }
+    val settingAction =
+        object : SettingAction {
+            override fun toggleNotificationDeparture(isChecked: Boolean) = viewModel.changeDepartureNotification(isChecked)
 
-    var hasNotificationPermission by rememberSaveable { mutableStateOf(true) }
+            override fun toggleNotificationEntry(isChecked: Boolean) = viewModel.changeEntryNotification(isChecked)
+
+            override fun logout() = viewModel.logout()
+
+            override fun withdraw() = viewModel.withdraw()
+        }
+
+    val settingState =
+        remember {
+            SettingState(
+                context = context,
+                settingAction = settingAction,
+                coroutineScope = coroutineScope,
+                snackbarHostState = snackbarHostState,
+                settingNavigation = settingNavigation,
+            )
+        }
+
     val isNotificationDepartureOn by viewModel.isDepartureNotificationOn.collectAsStateWithLifecycle()
     val isNotificationEntryOn by viewModel.isEntryNotificationOn.collectAsStateWithLifecycle()
-    var showWithdrawalDialog by rememberSaveable { mutableStateOf(false) }
 
-    val onClickSettingItem: (SettingServiceItemType) -> Unit = { type ->
-        when (type) {
-            SettingServiceItemType.PRIVACY_POLICY -> {
-                settingNavigation.navigateToPrivacyPolicy()
-            }
-
-            SettingServiceItemType.TERM -> {
-                settingNavigation.navigateToTerm()
-            }
-
-            SettingServiceItemType.LOGOUT -> {
-                viewModel.logout()
-            }
-
-            SettingServiceItemType.WITHDRAW -> {
-                showWithdrawalDialog = true
-            }
-        }
-    }
-    val onChangedChecked: (SettingNotificationItemType, Boolean) -> Unit = ret@{ type, isChecked ->
-        if (!hasNotificationPermission) {
-            showActionSnackbar(
-                messageId = R.string.setting_notification_permission_denied,
-                actionLabelId = R.string.setting_notification_permission_guide,
-                action = { settingNavigation.navigateToNotificationSetting() },
-            )
-            return@ret
-        }
-        when (type) {
-            SettingNotificationItemType.NOTIFICATION_DEPARTURE -> {
-                viewModel.changeDepartureNotification(isChecked)
-            }
-
-            SettingNotificationItemType.NOTIFICATION_ENTRY -> {
-                viewModel.changeEntryNotification(isChecked)
-            }
-        }
-    }
     val isSwitchOn: (SettingNotificationItemType) -> Boolean = { type ->
         when (type) {
             SettingNotificationItemType.NOTIFICATION_DEPARTURE -> isNotificationDepartureOn
@@ -157,19 +111,16 @@ fun SettingScreen(
             )
         },
     ) { innerPadding ->
-        if (showWithdrawalDialog) {
+        if (settingState.showWithdrawalDialog) {
             WithdrawalDialog(
-                onClickWithdrawal = {
-                    viewModel.withdrawAccount()
-                    showWithdrawalDialog = false
-                },
-                onClickCancel = { showWithdrawalDialog = false },
+                onClickWithdrawal = settingState::withdraw,
+                onClickCancel = settingState::cancelWithdraw,
             )
         }
         SettingContent(
-            onClickItem = onClickSettingItem,
-            onChangedChecked = onChangedChecked,
-            isSwitchOn = if (hasNotificationPermission) { _ -> false } else isSwitchOn,
+            onClickItem = settingState::onClickServiceItem,
+            onChangedChecked = settingState::toggleNotificationItem,
+            isSwitchOn = if (!settingState.hasNotificationPermission) { _ -> false } else isSwitchOn,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -177,9 +128,7 @@ fun SettingScreen(
     ErrorSnackbarHandler(viewModel)
     LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
         viewModel.fetchNotificationSetting()
-    }
-    LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
-        hasNotificationPermission = hasNotificationPermission(context)
+        settingState.updatePermission()
     }
     LaunchedEffect(Unit) {
         viewModel.loginNavigateEvent.collect {
@@ -245,7 +194,7 @@ private fun SettingContent(
                     .padding(horizontal = 26.dp)
                     .padding(top = 26.dp),
         )
-        Box(
+        HorizontalDivider(
             modifier =
                 Modifier
                     .fillMaxWidth()
@@ -291,14 +240,6 @@ private fun SettingNotificationItems(
             }
         }
     }
-}
-
-private fun hasNotificationPermission(context: Context): Boolean {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-        return true
-    }
-    return ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
-        PackageManager.PERMISSION_GRANTED
 }
 
 @Composable
@@ -370,9 +311,7 @@ private fun SettingItem(
                 .height(34.dp)
                 .noRippleClickable {
                     if (settingItemType is SettingServiceItemType) {
-                        onClickItem(
-                            settingItemType,
-                        )
+                        onClickItem(settingItemType)
                     }
                 }
                 .padding(horizontal = 8.dp),

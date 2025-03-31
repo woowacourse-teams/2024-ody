@@ -71,7 +71,7 @@ class SettingViewModel
             }
         }
 
-        fun withdrawAccount() {
+        fun withdraw() {
             viewModelScope.launch {
                 startLoading()
                 authRepository.withdrawAccount()
@@ -85,7 +85,7 @@ class SettingViewModel
                         Timber.e("$code $errorMessage")
                     }.onNetworkError {
                         handleNetworkError()
-                        lastFailedAction = { withdrawAccount() }
+                        lastFailedAction = { withdraw() }
                     }
                 stopLoading()
             }
