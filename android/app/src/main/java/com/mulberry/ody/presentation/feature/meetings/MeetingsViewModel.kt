@@ -58,7 +58,7 @@ class MeetingsViewModel
 
         fun onJoinMeeting() {
             viewModelScope.launch {
-                _navigateAction.emit(MeetingsNavigateAction.NavigateToJoinMeeting)
+                _navigateAction.emit(MeetingsNavigateAction.NavigateToInviteCode)
             }
         }
 

@@ -50,7 +50,7 @@ class MeetingsActivity : ComponentActivity() {
                 startActivity(intent)
             }
 
-            MeetingsNavigateAction.NavigateToJoinMeeting -> {
+            MeetingsNavigateAction.NavigateToInviteCode -> {
                 val intent = InviteCodeActivity.getIntent(this)
                 startActivity(intent)
             }
