@@ -7,7 +7,7 @@ sealed interface MeetingsNavigateAction {
 
     data object NavigateToLogin : MeetingsNavigateAction
 
-    data object NavigateToJoinMeeting : MeetingsNavigateAction
+    data object NavigateToInviteCode : MeetingsNavigateAction
 
     data object NavigateToCreateMeeting : MeetingsNavigateAction
 

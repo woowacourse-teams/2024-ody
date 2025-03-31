@@ -6,6 +6,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -53,10 +54,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.ErrorSnackbarHandler
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
-import com.mulberry.ody.presentation.common.OnLifecycleEvent
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyButton
 import com.mulberry.ody.presentation.component.OdyTopAppBar
@@ -66,6 +68,7 @@ import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
 import com.mulberry.ody.presentation.theme.Gray400
 import com.mulberry.ody.presentation.theme.OdyTheme
+import com.mulberry.ody.presentation.theme.White
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
@@ -77,7 +80,7 @@ fun MeetingsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val onShowSnackbar: (Int) -> Unit = { id ->
+    val showSnackbar: (Int) -> Unit = { id ->
         coroutineScope.launch {
             snackbarHostState.showSnackbar(context.getString(id))
         }
@@ -128,18 +131,8 @@ fun MeetingsScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.networkErrorEvent.collect {
-            onShowSnackbar(R.string.network_error_guide)
-        }
-    }
-    LaunchedEffect(Unit) {
-        viewModel.errorEvent.collect {
-            onShowSnackbar(R.string.error_guide)
-        }
-    }
-    LaunchedEffect(Unit) {
         viewModel.inaccessibleEtaEvent.collect {
-            onShowSnackbar(R.string.inaccessible_eta_guide)
+            showSnackbar(R.string.inaccessible_eta_guide)
         }
     }
     LaunchedEffect(Unit) {
@@ -148,12 +141,11 @@ fun MeetingsScreen(
             isExpandedFloatingActionButton = false
         }
     }
-    OnLifecycleEvent { _, event ->
-        if (event == Lifecycle.Event.ON_START) {
-            viewModel.fetchMeetings()
-        }
+    LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
+        viewModel.fetchMeetings()
     }
-    MeetingsLaunchPermission(onShowSnackbar)
+    ErrorSnackbarHandler(viewModel)
+    MeetingsLaunchPermission(showSnackbar)
     BackPressed()
 }
 
@@ -282,6 +274,7 @@ private fun MeetingItem(
         shape = RoundedCornerShape(15.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = OdyTheme.colors.octonary),
+        border = BorderStroke(width = 1.dp, color = White),
         modifier =
             Modifier
                 .fillMaxWidth()
