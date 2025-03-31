@@ -87,33 +87,52 @@ fun SettingScreen(
         }
     }
 
-    ErrorSnackbarHandler(viewModel)
-
-    LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
-        viewModel.fetchNotificationSetting()
-    }
-    LaunchedEffect(Unit) {
-        viewModel.loginNavigateEvent.collect {
-            when (it) {
-                LoginNavigatedReason.LOGOUT -> {
-                    settingNavigation.navigateToLoginByLogout()
-                }
-
-                LoginNavigatedReason.WITHDRAWAL -> {
-                    settingNavigation.navigateToLoginByWithdrawal()
-                }
-            }
-        }
-    }
-
     var hasNotificationPermission by rememberSaveable { mutableStateOf(true) }
-    LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
-        hasNotificationPermission = hasNotificationPermission(context)
-    }
-
     val isNotificationDepartureOn by viewModel.isDepartureNotificationOn.collectAsStateWithLifecycle()
     val isNotificationEntryOn by viewModel.isEntryNotificationOn.collectAsStateWithLifecycle()
     var showWithdrawalDialog by rememberSaveable { mutableStateOf(false) }
+
+    val onClickSettingItem: (SettingItemType) -> Unit = { type ->
+        when (type) {
+            SettingItemType.NOTIFICATION_DEPARTURE, SettingItemType.NOTIFICATION_ENTRY -> {}
+            SettingItemType.PRIVACY_POLICY -> {
+                settingNavigation.navigateToPrivacyPolicy()
+            }
+
+            SettingItemType.TERM -> {
+                settingNavigation.navigateToTerm()
+            }
+
+            SettingItemType.LOGOUT -> {
+                viewModel.logout()
+            }
+
+            SettingItemType.WITHDRAW -> {
+                showWithdrawalDialog = true
+            }
+        }
+    }
+    val onChangedChecked: (SettingItemType, Boolean) -> Unit = ret@{ type, isChecked ->
+        if (!hasNotificationPermission) {
+            showActionSnackbar(
+                messageId = R.string.setting_notification_permission_denied,
+                actionLabelId = R.string.setting_notification_permission_guide,
+                action = { settingNavigation.navigateToNotificationSetting() },
+            )
+            return@ret
+        }
+        when (type) {
+            SettingItemType.NOTIFICATION_DEPARTURE -> {
+                viewModel.changeDepartureNotification(isChecked)
+            }
+
+            SettingItemType.NOTIFICATION_ENTRY -> {
+                viewModel.changeEntryNotification(isChecked)
+            }
+
+            SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> {}
+        }
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -143,52 +162,29 @@ fun SettingScreen(
             )
         }
         SettingContent(
-            onClickItem = { type ->
-                when (type) {
-                    SettingItemType.NOTIFICATION_DEPARTURE, SettingItemType.NOTIFICATION_ENTRY -> {}
-                    SettingItemType.PRIVACY_POLICY -> {
-                        settingNavigation.navigateToPrivacyPolicy()
-                    }
-
-                    SettingItemType.TERM -> {
-                        settingNavigation.navigateToTerm()
-                    }
-
-                    SettingItemType.LOGOUT -> {
-                        viewModel.logout()
-                    }
-
-                    SettingItemType.WITHDRAW -> {
-                        showWithdrawalDialog = true
-                    }
-                }
-            },
-            onChangedChecked = onChangedChecked@{ type, isChecked ->
-                if (!hasNotificationPermission) {
-                    showActionSnackbar(
-                        messageId = R.string.setting_notification_permission_denied,
-                        actionLabelId = R.string.setting_notification_permission_guide,
-                        action = { settingNavigation.navigateToNotificationSetting() },
-                    )
-                    return@onChangedChecked
-                }
-                when (type) {
-                    SettingItemType.NOTIFICATION_DEPARTURE -> {
-                        viewModel.changeDepartureNotification(isChecked)
-                    }
-
-                    SettingItemType.NOTIFICATION_ENTRY -> {
-                        viewModel.changeEntryNotification(isChecked)
-                    }
-
-                    SettingItemType.PRIVACY_POLICY, SettingItemType.TERM, SettingItemType.LOGOUT, SettingItemType.WITHDRAW -> {}
-                }
-            },
+            onClickItem = onClickSettingItem,
+            onChangedChecked = onChangedChecked,
             isNotificationDepartureOn = isNotificationDepartureOn,
             isNotificationEntryOn = isNotificationEntryOn,
             hasNotificationPermission = hasNotificationPermission,
             modifier = Modifier.padding(innerPadding),
         )
+    }
+
+    ErrorSnackbarHandler(viewModel)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
+        viewModel.fetchNotificationSetting()
+    }
+    LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
+        hasNotificationPermission = hasNotificationPermission(context)
+    }
+    LaunchedEffect(Unit) {
+        viewModel.loginNavigateEvent.collect {
+            when (it) {
+                LoginNavigatedReason.LOGOUT -> settingNavigation.navigateToLoginByLogout()
+                LoginNavigatedReason.WITHDRAWAL -> settingNavigation.navigateToLoginByWithdrawal()
+            }
+        }
     }
 }
 
@@ -237,8 +233,8 @@ private fun SettingContent(
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxWidth(),
+        modifier
+            .fillMaxWidth(),
     ) {
         SettingNotificationItems(
             onChangedChecked = onChangedChecked,
@@ -246,23 +242,23 @@ private fun SettingContent(
             isNotificationEntryOn = isNotificationEntryOn,
             hasNotificationPermission = hasNotificationPermission,
             modifier =
-                Modifier
-                    .padding(horizontal = 26.dp)
-                    .padding(top = 26.dp),
+            Modifier
+                .padding(horizontal = 26.dp)
+                .padding(top = 26.dp),
         )
         Box(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 32.dp)
-                    .background(OdyTheme.colors.senary)
-                    .height(3.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 32.dp)
+                .background(OdyTheme.colors.senary)
+                .height(3.dp),
         )
         SettingItems(
             onClickItem = onClickItem,
             modifier =
-                Modifier
-                    .padding(horizontal = 26.dp),
+            Modifier
+                .padding(horizontal = 26.dp),
         )
     }
 }
@@ -282,9 +278,9 @@ private fun SettingNotificationItems(
             text = stringResource(id = R.string.setting_header_notification),
             style = OdyTheme.typography.pretendardBold18.copy(OdyTheme.colors.nonary),
             modifier =
-                Modifier
-                    .padding(start = 8.dp)
-                    .padding(bottom = 28.dp),
+            Modifier
+                .padding(start = 8.dp)
+                .padding(bottom = 28.dp),
         )
         SettingItem(
             settingItemType = SettingItemType.NOTIFICATION_DEPARTURE,
@@ -305,7 +301,7 @@ private fun hasNotificationPermission(context: Context): Boolean {
         return true
     }
     return ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
-        PackageManager.PERMISSION_GRANTED
+            PackageManager.PERMISSION_GRANTED
 }
 
 @Composable
@@ -320,9 +316,9 @@ private fun SettingItems(
             text = stringResource(id = R.string.setting_header_service),
             style = OdyTheme.typography.pretendardBold18.copy(OdyTheme.colors.nonary),
             modifier =
-                Modifier
-                    .padding(start = 8.dp)
-                    .padding(bottom = 28.dp),
+            Modifier
+                .padding(start = 8.dp)
+                .padding(bottom = 28.dp),
         )
         itemType.forEachIndexed { index, type ->
             SettingItem(
@@ -345,10 +341,10 @@ private fun SettingItem(
 ) {
     Row(
         modifier =
-            Modifier
-                .height(34.dp)
-                .noRippleClickable { onClickItem(settingItemType) }
-                .padding(horizontal = 8.dp),
+        Modifier
+            .height(34.dp)
+            .noRippleClickable { onClickItem(settingItemType) }
+            .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -367,18 +363,18 @@ private fun SettingItem(
                 checked = isChecked,
                 onCheckedChange = { isChecked -> onChangedChecked(settingItemType, isChecked) },
                 modifier =
-                    Modifier
-                        .requiredSize(40.dp)
-                        .scale(0.8f),
+                Modifier
+                    .requiredSize(40.dp)
+                    .scale(0.8f),
                 colors =
-                    SwitchDefaults.colors(
-                        checkedThumbColor = White,
-                        checkedTrackColor = OdyTheme.colors.secondary,
-                        checkedBorderColor = OdyTheme.colors.secondary,
-                        uncheckedThumbColor = White,
-                        uncheckedTrackColor = Gray400,
-                        uncheckedBorderColor = Gray400,
-                    ),
+                SwitchDefaults.colors(
+                    checkedThumbColor = White,
+                    checkedTrackColor = OdyTheme.colors.secondary,
+                    checkedBorderColor = OdyTheme.colors.secondary,
+                    uncheckedThumbColor = White,
+                    uncheckedTrackColor = Gray400,
+                    uncheckedBorderColor = Gray400,
+                ),
             )
         }
     }
