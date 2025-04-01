@@ -5,6 +5,7 @@ import com.ody.auth.repository.MemberAppleTokenRepository;
 import com.ody.eta.repository.EtaRepository;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.repository.MeetingRepository;
+import com.ody.meetinglog.repository.MeetingLogRepository;
 import com.ody.member.repository.MemberRepository;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.route.repository.ApiCallRepository;
@@ -25,8 +26,8 @@ public class FixtureGeneratorConfig {
             EtaRepository etaRepository,
             ApiCallRepository apiCallRepository,
             MemberAppleTokenRepository memberAppleTokenRepository,
-            JwtTokenProvider jwtTokenProvider
-    ) {
+            MeetingLogRepository meetingLogRepository,
+            JwtTokenProvider jwtTokenProvider) {
         return new FixtureGenerator(
                 meetingRepository,
                 memberRepository,
@@ -35,6 +36,7 @@ public class FixtureGeneratorConfig {
                 etaRepository,
                 apiCallRepository,
                 memberAppleTokenRepository,
+                meetingLogRepository,
                 jwtTokenProvider
         );
     }
