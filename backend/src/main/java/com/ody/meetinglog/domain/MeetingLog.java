@@ -2,6 +2,8 @@ package com.ody.meetinglog.domain;
 
 import com.ody.common.domain.BaseEntity;
 import com.ody.mate.domain.Mate;
+import com.ody.util.TimeUtil;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +39,11 @@ public class MeetingLog extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MeetingLogType type;
 
+    @NotNull
+    @Column(columnDefinition = "TIMESTAMP(6)")
+    private LocalDateTime showAt;
+
     public MeetingLog(Mate mate, MeetingLogType type) {
-        this(null, mate, type);
+        this(null, mate, type, TimeUtil.nowWithTrim());
     }
 }
