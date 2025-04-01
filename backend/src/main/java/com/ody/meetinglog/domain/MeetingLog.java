@@ -48,6 +48,6 @@ public class MeetingLog extends BaseEntity {
     }
 
     public MeetingLog(Mate mate, MeetingLogType type) {
-        this(mate, type, TimeUtil.nowWithTrim());
+        this(mate, type, LocalDateTime.now());
     }
 }

@@ -23,8 +23,7 @@ public class MeetingLogService {
     }
 
     public NotiLogFindResponses findAllByMeetingId(long meetingId) {
-        LocalDateTime now = TimeUtil.nowWithTrim();
-        List<MeetingLog> meetingLogs = meetingLogRepository.findMeetingLogsBeforeThanEqual(meetingId, now);
+        List<MeetingLog> meetingLogs = meetingLogRepository.findMeetingLogsBeforeThanEqual(meetingId, LocalDateTime.now());
         return NotiLogFindResponses.from(meetingLogs);
     }
 }
