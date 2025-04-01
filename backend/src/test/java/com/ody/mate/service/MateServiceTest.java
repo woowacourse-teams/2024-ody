@@ -228,8 +228,6 @@ class MateServiceTest extends BaseServiceTest {
 
             mateService.saveAndSendNotifications(mateSaveRequest, member, now);
 
-            Thread.sleep(1000L); //스케쥴링 로직 실행을 위한 pause
-
             List<MeetingLogType> meetingLogTypes = meetingLogRepository.findMeetingLogsBeforeThanEqual(now.getId(), LocalDateTime.now())
                     .stream()
                     .map(MeetingLog::getType)
