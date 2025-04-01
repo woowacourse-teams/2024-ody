@@ -80,7 +80,9 @@ class MateServiceTest extends BaseServiceTest {
             NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
             mateService.nudge(nudgeRequest);
 
-            List<MeetingLog> meetingLogs = meetingLogRepository.findByMeetingId(oneMinuteLaterMeeting.getId());
+            List<MeetingLog> meetingLogs = meetingLogRepository.findMeetingLogsBeforeThanEqual(
+                    oneMinuteLaterMeeting.getId(), LocalDateTime.now()
+            );
 
             assertAll(
                     () -> assertThat(meetingLogs).hasSize(1),
@@ -207,7 +209,9 @@ class MateServiceTest extends BaseServiceTest {
             MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateSaveRequest(laterMeeting);
             mateService.saveAndSendNotifications(mateSaveRequest, member, laterMeeting);
 
-            List<MeetingLog> meetingLogs = meetingLogRepository.findByMeetingId(laterMeeting.getId());
+            List<MeetingLog> meetingLogs = meetingLogRepository.findMeetingLogsBeforeThanEqual(
+                    laterMeeting.getId(), LocalDateTime.now()
+            );
 
             assertAll(
                     () -> assertThat(meetingLogs).hasSize(1),
@@ -226,7 +230,7 @@ class MateServiceTest extends BaseServiceTest {
 
             Thread.sleep(1000L); //스케쥴링 로직 실행을 위한 pause
 
-            List<MeetingLogType> meetingLogTypes = meetingLogRepository.findByMeetingId(now.getId())
+            List<MeetingLogType> meetingLogTypes = meetingLogRepository.findMeetingLogsBeforeThanEqual(now.getId(), LocalDateTime.now())
                     .stream()
                     .map(MeetingLog::getType)
                     .toList();
@@ -280,7 +284,7 @@ class MateServiceTest extends BaseServiceTest {
 
         mateService.withdraw(mate);
 
-        List<MeetingLog> meetingLogs = meetingLogRepository.findByMeetingId(meeting.getId());
+        List<MeetingLog> meetingLogs = meetingLogRepository.findMeetingLogsBeforeThanEqual(meeting.getId(), LocalDateTime.now());
 
         assertAll(
                 () -> assertThat(meetingLogs).hasSize(1),
@@ -346,7 +350,7 @@ class MateServiceTest extends BaseServiceTest {
 
         mateService.leaveByMeetingIdAndMemberId(meeting.getId(), kaki.getId());
 
-        List<MeetingLog> meetingLogs = meetingLogRepository.findByMeetingId(meeting.getId());
+        List<MeetingLog> meetingLogs = meetingLogRepository.findMeetingLogsBeforeThanEqual(meeting.getId(), LocalDateTime.now());
 
         assertAll(
                 () -> assertThat(meetingLogs).hasSize(1),

@@ -43,7 +43,11 @@ public class MeetingLog extends BaseEntity {
     @Column(columnDefinition = "TIMESTAMP(6)")
     private LocalDateTime showAt;
 
+    public MeetingLog(Mate mate, MeetingLogType type, LocalDateTime showAt) {
+        this(null, mate, type, showAt);
+    }
+
     public MeetingLog(Mate mate, MeetingLogType type) {
-        this(null, mate, type, TimeUtil.nowWithTrim());
+        this(mate, type, TimeUtil.nowWithTrim());
     }
 }
