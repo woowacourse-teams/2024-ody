@@ -1,7 +1,6 @@
 package com.ody.util;
 
 import com.ody.common.exception.OdyServerErrorException;
-import com.ody.notification.service.event.PushEvent;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class ScheduleRunner {
                 runnable.run();
                 log.info("스케쥴링 로직 실행 성공");
             }, startTime);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("스케쥴링 실패");
             throw new OdyServerErrorException("스케쥴링에 실패하였습니다");
         }

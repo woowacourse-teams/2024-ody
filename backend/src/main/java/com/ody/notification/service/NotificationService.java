@@ -46,6 +46,18 @@ public class NotificationService {
     }
 
     @Transactional
+    public Notification saveAndSchedule(Notification notification) {
+        Notification savedNotification = save(notification);
+        scheduleNotification(savedNotification);
+        return savedNotification;
+    }
+
+    public void scheduleNotification(Notification notification) {
+        scheduleRunner.runWithTransaction(() -> send(notification), notification.getSendAt());
+        log.info("{}에 {} 알림 스케줄링 예약", notification.getSendAt(), notification.getType());
+    }
+
+    @Transactional
     public boolean send(Notification notification) {
         Notification foundNotification = findById(notification.getId());
         if (foundNotification.isStatusDismissed()) {

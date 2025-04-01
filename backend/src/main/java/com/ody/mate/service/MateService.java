@@ -26,7 +26,6 @@ import com.ody.notification.service.NotificationService;
 import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
-import com.ody.util.ScheduleRunner;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,7 +47,6 @@ public class MateService {
     private final EtaService etaService;
     private final NotificationService notificationService;
     private final RouteService routeService;
-    private final ScheduleRunner scheduleRunner;
 
     @Transactional
     public MateSaveResponseV2 saveAndSendNotifications(
@@ -61,43 +59,27 @@ public class MateService {
         Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
 
         FcmTopic fcmTopic = new FcmTopic(meeting);
-        saveEntryLog(mate);
-        sendEntryNotification(mate, fcmTopic);
+        saveAndSendEntry(mate, fcmTopic);
         notificationService.subscribeTopic(member.getDeviceToken(), fcmTopic);
-        sendDepartureReminder(meeting, mate, fcmTopic);
+        saveAndSendDepartureReminder(meeting, mate, fcmTopic);
         return MateSaveResponseV2.from(meeting);
     }
 
-    private void saveEntryLog(Mate mate) {
+    private void saveAndSendEntry(Mate mate, FcmTopic fcmTopic) {
         MeetingLog entryLog = new MeetingLog(mate, MeetingLogType.ENTRY_LOG);
         meetingLogService.save(entryLog);
-    }
 
-    private void sendEntryNotification(Mate mate, FcmTopic fcmTopic) {
         Entry entry = new Entry(mate, fcmTopic);
         notificationService.saveAndSend(entry.toNotification());
     }
 
-    private void sendDepartureReminder(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
+    private void saveAndSendDepartureReminder(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
         DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
         DepartureReminder departureReminder = new DepartureReminder(mate, departureTime, fcmTopic);
-        Notification savedDepartureReminder = notificationService.save(departureReminder.toNotification());
+        Notification savedDepartureReminder = notificationService.saveAndSchedule(departureReminder.toNotification());
         LocalDateTime sendAt = savedDepartureReminder.getSendAt();
-        saveDepartureReminderLog(mate, sendAt);
 
-        scheduleRunner.runWithTransaction(() -> {
-            Mate savedMate = findFetchedMate(mate.getId());
-            boolean isSent = notificationService.send(savedDepartureReminder);
-            if (isSent) {
-                MeetingLog departureReminderLog = new MeetingLog(savedMate, MeetingLogType.DEPARTURE_REMINDER);
-                meetingLogService.save(departureReminderLog);
-            }
-        }, sendAt);
-        log.info("출발 리마인더 {}에 스케줄링 예약", sendAt);
-    }
-
-    private void saveDepartureReminderLog(Mate mate, LocalDateTime showAt) {
-        MeetingLog departureReminderLog = new MeetingLog(mate, MeetingLogType.DEPARTURE_REMINDER, showAt);
+        MeetingLog departureReminderLog = new MeetingLog(mate, MeetingLogType.DEPARTURE_REMINDER, sendAt);
         meetingLogService.save(departureReminderLog);
     }
 
