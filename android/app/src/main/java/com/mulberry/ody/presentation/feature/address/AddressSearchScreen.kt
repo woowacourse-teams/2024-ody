@@ -25,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -51,6 +52,7 @@ fun AddressSearchScreen(
     val addresses = viewModel.address.collectAsLazyPagingItems()
 
     Scaffold(
+        containerColor = OdyTheme.colors.primary,
         topBar = {
             OdyTopAppBar(
                 title = stringResource(id = R.string.address_search_toolbar_title),
@@ -95,6 +97,7 @@ private fun AddressSearchContent(
             trailingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_round_cancel),
+                    tint = Color.Unspecified,
                     modifier = Modifier.noRippleClickable { onClearSearchKeyword() },
                     contentDescription = null,
                 )

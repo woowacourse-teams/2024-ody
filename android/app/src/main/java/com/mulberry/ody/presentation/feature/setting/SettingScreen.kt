@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -103,7 +104,7 @@ fun SettingScreen(
                     IconButton(onClick = onClickBack) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_back),
-                            tint = OdyTheme.colors.tertiary,
+                            tint = Color.Unspecified,
                             contentDescription = null,
                         )
                     }
@@ -319,7 +320,7 @@ private fun SettingItem(
     ) {
         Icon(
             painter = painterResource(id = settingItemType.icon),
-            tint = OdyTheme.colors.quarternary,
+            tint = Color.Unspecified,
             contentDescription = null,
         )
         Spacer(Modifier.width(16.dp))

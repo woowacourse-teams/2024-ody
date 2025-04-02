@@ -45,6 +45,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -109,7 +110,7 @@ fun MeetingsScreen(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_setting),
-                            tint = OdyTheme.colors.tertiary,
+                            tint = Color.Unspecified,
                             contentDescription = null,
                         )
                     }
@@ -204,7 +205,7 @@ private fun MeetingsFloatingActionButton(
             val iconId = if (isExpanded) R.drawable.ic_cancel else R.drawable.ic_plus
             Icon(
                 painter = painterResource(id = iconId),
-                tint = OdyTheme.colors.secondaryVariant,
+                tint = Color.Unspecified,
                 contentDescription = null,
             )
         }
@@ -297,7 +298,7 @@ private fun MeetingItem(
                 )
                 Icon(
                     painter = painterResource(id = if (isFolded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down),
-                    tint = OdyTheme.colors.secondary,
+                    tint = Color.Unspecified,
                     contentDescription = null,
                     modifier =
                         Modifier
