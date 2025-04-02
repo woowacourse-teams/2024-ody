@@ -74,8 +74,13 @@ fun AddressSearchScreen(
     ) { innerPadding ->
         AddressSearchContent(
             addressSearchKeyword = addressSearchKeyword,
+            onChangedSearchKeyword = {
+                addressSearchKeyword = it
+                if (addressSearchKeyword.isEmpty()) {
+                    viewModel.clearAddresses()
+                }
+           },
             onSearchAddress = { viewModel.searchAddress(addressSearchKeyword) },
-            onChangedSearchKeyword = { addressSearchKeyword = it },
             onClearSearchKeyword = {
                 addressSearchKeyword = ""
                 viewModel.clearAddresses()
@@ -89,36 +94,22 @@ fun AddressSearchScreen(
 @Composable
 private fun AddressSearchContent(
     addressSearchKeyword: String,
-    onSearchAddress: () -> Unit,
     onChangedSearchKeyword: (String) -> Unit,
+    onSearchAddress: () -> Unit,
     onClearSearchKeyword: () -> Unit,
     addresses: List<Address>,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        OdyTextField(
-            value = addressSearchKeyword,
-            onValueChange = onChangedSearchKeyword,
-            placeholder = stringResource(id = R.string.address_question_hint),
+        AddressSearchTextField(
+            addressSearchKeyword = addressSearchKeyword,
+            onChangedSearchKeyword = onChangedSearchKeyword,
+            onSearchAddress = onSearchAddress,
+            onClearSearchKeyword = onClearSearchKeyword,
             modifier =
-                Modifier
-                    .padding(top = 36.dp)
-                    .padding(horizontal = 40.dp),
-            trailingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_round_cancel),
-                    tint = Color.Unspecified,
-                    modifier = Modifier.noRippleClickable { onClearSearchKeyword() },
-                    contentDescription = null,
-                )
-            },
-            keyboardType = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Search,
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = { onSearchAddress() }
-            )
+            Modifier
+                .padding(top = 36.dp)
+                .padding(horizontal = 40.dp),
         )
         Box(
             modifier =
@@ -134,6 +125,37 @@ private fun AddressSearchContent(
             AddressList(addresses)
         }
     }
+}
+
+@Composable
+private fun AddressSearchTextField(
+    addressSearchKeyword: String,
+    onSearchAddress: () -> Unit,
+    onChangedSearchKeyword: (String) -> Unit,
+    onClearSearchKeyword: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OdyTextField(
+        value = addressSearchKeyword,
+        onValueChange = onChangedSearchKeyword,
+        placeholder = stringResource(id = R.string.address_question_hint),
+        modifier = modifier,
+        trailingIcon = {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_round_cancel),
+                tint = Color.Unspecified,
+                modifier = Modifier.noRippleClickable { onClearSearchKeyword() },
+                contentDescription = null,
+            )
+        },
+        keyboardType = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Search,
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = { onSearchAddress() }
+        )
+    )
 }
 
 @Composable
