@@ -133,7 +133,7 @@ private fun OdyTextFieldDecorationBox(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .height(1.5.dp)
+                    .height(2.dp)
                     .background(color = indicatorColor),
         )
     }

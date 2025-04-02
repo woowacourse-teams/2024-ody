@@ -103,7 +103,7 @@ private fun AddressSearchContent(
                 )
             },
         )
-        HorizontalDivider(
+        Box(
             modifier =
                 Modifier
                     .padding(top = 32.dp)
