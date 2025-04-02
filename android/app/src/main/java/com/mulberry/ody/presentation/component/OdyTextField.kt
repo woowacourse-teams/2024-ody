@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
@@ -26,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -52,10 +54,19 @@ fun OdyTextField(
     placeholder: String = "",
     textAlign: TextAlign = Start,
     trailingIcon: @Composable (() -> Unit)? = null,
-    keyboardType: KeyboardType = KeyboardType.Text,
+    keyboardType: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     var isFocused by rememberSaveable { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+    val modifiedKeyboardActions = KeyboardActions(
+        onDone = { invokeAndClearFocus(keyboardActions.onDone, focusManager) },
+        onGo = { invokeAndClearFocus(keyboardActions.onGo, focusManager) },
+        onNext = { invokeAndClearFocus(keyboardActions.onNext, focusManager) },
+        onPrevious = { invokeAndClearFocus(keyboardActions.onPrevious, focusManager) },
+        onSearch = { invokeAndClearFocus(keyboardActions.onSearch, focusManager) },
+        onSend = { invokeAndClearFocus(keyboardActions.onSend, focusManager) },
+    )
 
     val textSelectionColors =
         TextSelectionColors(
@@ -71,14 +82,14 @@ fun OdyTextField(
             onValueChange = onValueChange,
             modifier = modifier.onFocusChanged { isFocused = it.isFocused },
             textStyle =
-                OdyTheme.typography.pretendardMedium20.copy(
-                    color = OdyTheme.colors.quinary,
-                    textAlign = textAlign,
-                ),
+            OdyTheme.typography.pretendardMedium20.copy(
+                color = OdyTheme.colors.quinary,
+                textAlign = textAlign,
+            ),
             singleLine = true,
             cursorBrush = SolidColor(Gray500),
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            keyboardOptions = keyboardType,
+            keyboardActions = modifiedKeyboardActions,
             decorationBox = { innerTextField ->
                 OdyTextFieldDecorationBox(
                     innerTextField = innerTextField,
@@ -91,6 +102,14 @@ fun OdyTextField(
             },
         )
     }
+}
+
+private fun KeyboardActionScope.invokeAndClearFocus(
+    action: (KeyboardActionScope.() -> Unit)?,
+    focusManager: FocusManager,
+) {
+    action?.let { it() }
+    focusManager.clearFocus()
 }
 
 @Composable
@@ -106,9 +125,9 @@ private fun OdyTextFieldDecorationBox(
         Row(modifier = Modifier.padding(vertical = 8.dp)) {
             Box(
                 modifier =
-                    Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
                 contentAlignment = textAlign.toAlignment(),
             ) {
                 innerTextField()
@@ -117,10 +136,10 @@ private fun OdyTextFieldDecorationBox(
                         text = placeholder,
                         maxLines = 1,
                         style =
-                            OdyTheme.typography.pretendardMedium20.copy(
-                                color = Gray350,
-                                textAlign = textAlign,
-                            ),
+                        OdyTheme.typography.pretendardMedium20.copy(
+                            color = Gray350,
+                            textAlign = textAlign,
+                        ),
                     )
                 }
             }
@@ -131,10 +150,10 @@ private fun OdyTextFieldDecorationBox(
         }
         Box(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(2.dp)
-                    .background(color = indicatorColor),
+            Modifier
+                .fillMaxWidth()
+                .height(2.dp)
+                .background(color = indicatorColor),
         )
     }
 }

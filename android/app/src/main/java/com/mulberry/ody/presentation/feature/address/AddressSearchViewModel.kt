@@ -30,33 +30,16 @@ class AddressSearchViewModel
     constructor(
         private val addressRepository: AddressRepository,
     ) : BaseViewModel(), AddressListener {
-        val addressSearchKeyword: MutableStateFlow<String> = MutableStateFlow("")
-        val hasAddressSearchKeyword: StateFlow<Boolean> =
-            addressSearchKeyword.map { it.isNotEmpty() }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                initialValue = false,
-            )
-
         private val _address: MutableStateFlow<PagingData<Address>> = MutableStateFlow(PagingData.empty())
         val address: StateFlow<PagingData<Address>> get() = _address
-
-        private val _isEmptyAddresses: MutableStateFlow<Boolean> = MutableStateFlow(true)
-        val isEmptyAddresses: StateFlow<Boolean> get() = _isEmptyAddresses
 
         private val _addressSelectEvent: MutableSharedFlow<Address> = MutableSharedFlow()
         val addressSelectEvent: SharedFlow<Address> get() = _addressSelectEvent.asSharedFlow()
 
-        fun clearAddressSearchKeyword() {
-            addressSearchKeyword.value = ""
-        }
-
-        fun searchAddress() {
-            val addressSearchKeyword = addressSearchKeyword.value
-
+        fun searchAddress(addressSearchKeyword: String) {
             viewModelScope.launch {
                 if (addressSearchKeyword.isBlank()) {
-                    clearAddresses()
+                    return@launch
                 }
 
                 startLoading()
@@ -83,20 +66,9 @@ class AddressSearchViewModel
             }
         }
 
-        fun updateAddressItemCount(itemCount: Int) {
-            viewModelScope.launch {
-                _isEmptyAddresses.emit(itemCount == 0)
-            }
-        }
-
         fun clearAddresses() {
             viewModelScope.launch {
                 _address.emit(PagingData.empty())
-                _isEmptyAddresses.emit(true)
             }
-        }
-
-        companion object {
-            private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
         }
     }

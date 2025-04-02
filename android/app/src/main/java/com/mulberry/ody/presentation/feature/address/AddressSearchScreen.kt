@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,6 +52,7 @@ fun AddressSearchScreen(
     onClickBack: () -> Unit,
     viewModel: AddressSearchViewModel = hiltViewModel(),
 ) {
+    // pressed back key 추가
     var addressSearchKeyword by rememberSaveable { mutableStateOf("") }
     val addresses = viewModel.address.collectAsLazyPagingItems()
 
@@ -69,8 +74,12 @@ fun AddressSearchScreen(
     ) { innerPadding ->
         AddressSearchContent(
             addressSearchKeyword = addressSearchKeyword,
+            onSearchAddress = { viewModel.searchAddress(addressSearchKeyword) },
             onChangedSearchKeyword = { addressSearchKeyword = it },
-            onClearSearchKeyword = { addressSearchKeyword = "" },
+            onClearSearchKeyword = {
+                addressSearchKeyword = ""
+                viewModel.clearAddresses()
+            },
             addresses = addresses.toList(),
             modifier = Modifier.padding(innerPadding),
         )
@@ -80,6 +89,7 @@ fun AddressSearchScreen(
 @Composable
 private fun AddressSearchContent(
     addressSearchKeyword: String,
+    onSearchAddress: () -> Unit,
     onChangedSearchKeyword: (String) -> Unit,
     onClearSearchKeyword: () -> Unit,
     addresses: List<Address>,
@@ -102,6 +112,13 @@ private fun AddressSearchContent(
                     contentDescription = null,
                 )
             },
+            keyboardType = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search,
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = { onSearchAddress() }
+            )
         )
         Box(
             modifier =
@@ -180,6 +197,7 @@ fun AddressSearchContentPreview() {
     OdyTheme {
         AddressSearchContent(
             addressSearchKeyword = "사당역",
+            onSearchAddress = {},
             onChangedSearchKeyword = {},
             onClearSearchKeyword = {},
             addresses =
