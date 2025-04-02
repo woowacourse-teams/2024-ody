@@ -10,7 +10,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -27,7 +26,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,8 +60,9 @@ import com.mulberry.ody.presentation.common.ErrorSnackbarHandler
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyButton
+import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTopAppBar
-import com.mulberry.ody.presentation.feature.meetings.component.BackPressed
+import com.mulberry.ody.presentation.feature.meetings.component.MeetingsBackPressed
 import com.mulberry.ody.presentation.feature.meetings.component.MeetingsLaunchPermission
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
@@ -119,7 +118,7 @@ fun MeetingsScreen(
         },
     ) { innerPadding ->
         when (val state = meetingsUiState) {
-            MeetingsUiState.Loading -> MeetingsLoading()
+            MeetingsUiState.Loading -> OdyLoading()
             MeetingsUiState.Empty -> MeetingsEmpty(modifier = Modifier.padding(innerPadding))
             is MeetingsUiState.Meetings ->
                 MeetingsContent(
@@ -147,7 +146,7 @@ fun MeetingsScreen(
     }
     ErrorSnackbarHandler(viewModel)
     MeetingsLaunchPermission(showSnackbar)
-    BackPressed()
+    MeetingsBackPressed()
 }
 
 @Composable
@@ -209,13 +208,6 @@ private fun MeetingsFloatingActionButton(
                 contentDescription = null,
             )
         }
-    }
-}
-
-@Composable
-private fun MeetingsLoading() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
     }
 }
 

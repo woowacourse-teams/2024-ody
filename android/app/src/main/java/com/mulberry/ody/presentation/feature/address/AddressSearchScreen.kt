@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.feature.address
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,11 +37,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.mulberry.ody.R
 import com.mulberry.ody.domain.model.Address
+import com.mulberry.ody.presentation.common.ErrorSnackbarHandler
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
+import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTextField
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.theme.Gray300
@@ -52,9 +56,9 @@ fun AddressSearchScreen(
     onClickBack: () -> Unit,
     viewModel: AddressSearchViewModel = hiltViewModel(),
 ) {
-    // pressed back key 추가
     var addressSearchKeyword by rememberSaveable { mutableStateOf("") }
     val addresses = viewModel.address.collectAsLazyPagingItems()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = OdyTheme.colors.primary,
@@ -72,6 +76,9 @@ fun AddressSearchScreen(
             )
         },
     ) { innerPadding ->
+        if (isLoading) {
+            OdyLoading()
+        }
         AddressSearchContent(
             addressSearchKeyword = addressSearchKeyword,
             onChangedSearchKeyword = {
@@ -89,6 +96,9 @@ fun AddressSearchScreen(
             modifier = Modifier.padding(innerPadding),
         )
     }
+
+    ErrorSnackbarHandler(viewModel = viewModel)
+    BackHandler { onClickBack() }
 }
 
 @Composable
@@ -113,11 +123,11 @@ private fun AddressSearchContent(
         )
         Box(
             modifier =
-                Modifier
-                    .padding(top = 32.dp)
-                    .fillMaxWidth()
-                    .height(3.dp)
-                    .background(Gray300),
+            Modifier
+                .padding(top = 32.dp)
+                .fillMaxWidth()
+                .height(3.dp)
+                .background(Gray300),
         )
         if (addresses.isEmpty()) {
             EmptyAddress()
@@ -176,9 +186,9 @@ private fun EmptyAddress() {
 private fun AddressList(addresses: List<Address>) {
     LazyColumn(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = 26.dp),
+        Modifier
+            .fillMaxSize()
+            .padding(horizontal = 26.dp),
         contentPadding = PaddingValues(vertical = 14.dp),
     ) {
         items(items = addresses, key = { it.id }) {

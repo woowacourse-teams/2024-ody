@@ -36,7 +36,6 @@ fun ErrorSnackbarHandler(
                 snackbarHostState.showSnackbar(
                     message = context.getString(messageId),
                     actionLabel = context.getString(actionLabelId),
-                    duration = SnackbarDuration.Short,
                 )
             if (result == SnackbarResult.ActionPerformed) {
                 action()
