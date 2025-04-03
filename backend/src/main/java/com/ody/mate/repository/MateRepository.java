@@ -51,7 +51,6 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             join fetch mate.member
             join fetch mate.meeting
             where mate.meeting.id = :meetingId
-            and mate.deletedAt is null
             """)
     List<Mate> findFetchedAllByMeetingId(long meetingId);
 
