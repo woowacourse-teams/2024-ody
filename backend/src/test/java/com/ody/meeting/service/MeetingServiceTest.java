@@ -38,7 +38,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -149,7 +148,8 @@ class MeetingServiceTest extends BaseServiceTest {
         runnableCaptor.getAllValues().forEach(Runnable::run);
 
         assertAll(
-                () -> assertThat(scheduledTimes).containsOnly(meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET)),
+                () -> assertThat(scheduledTimes).containsOnly(
+                        meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET)),
                 () -> assertThat(applicationEvents.stream(NoticeEvent.class)).hasSize(2)
         );
     }
