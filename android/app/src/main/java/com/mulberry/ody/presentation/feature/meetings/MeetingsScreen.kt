@@ -119,7 +119,7 @@ fun MeetingsScreen(
     ) { innerPadding ->
         when (val state = meetingsUiState) {
             MeetingsUiState.Loading -> OdyLoading()
-            MeetingsUiState.Empty -> MeetingsEmpty(modifier = Modifier.padding(innerPadding))
+            MeetingsUiState.Empty, MeetingsUiState.Error -> MeetingsEmpty(modifier = Modifier.padding(innerPadding))
             is MeetingsUiState.Meetings ->
                 MeetingsContent(
                     meetings = state.content,
@@ -144,7 +144,7 @@ fun MeetingsScreen(
     LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
         viewModel.fetchMeetings()
     }
-    ErrorSnackbarHandler(viewModel)
+    ErrorSnackbarHandler(viewModel, snackbarHostState)
     MeetingsLaunchPermission(showSnackbar)
     MeetingsBackPressed()
 }

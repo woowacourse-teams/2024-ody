@@ -126,7 +126,7 @@ fun SettingScreen(
         )
     }
 
-    ErrorSnackbarHandler(viewModel)
+    ErrorSnackbarHandler(viewModel, snackbarHostState)
     LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
         viewModel.fetchNotificationSetting()
         settingState.updatePermission()

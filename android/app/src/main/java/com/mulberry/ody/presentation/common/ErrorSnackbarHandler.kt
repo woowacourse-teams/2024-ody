@@ -1,12 +1,11 @@
 package com.mulberry.ody.presentation.common
 
 import android.content.Context
-import androidx.compose.material3.SnackbarDuration
+import android.util.Log
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.mulberry.ody.R
@@ -16,7 +15,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ErrorSnackbarHandler(
     viewModel: BaseViewModel,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    snackbarHostState: SnackbarHostState,
     context: Context = LocalContext.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ) {
