@@ -15,13 +15,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -69,6 +67,18 @@ class AddressSearchViewModel
         fun clearAddresses() {
             viewModelScope.launch {
                 _address.emit(PagingData.empty())
+            }
+        }
+
+        fun handleAddressPageError(
+            addressSearchKeyword: String,
+            throwable: Throwable,
+        ) {
+            if (throwable is IOException) {
+                handleNetworkError()
+                lastFailedAction = { searchAddress(addressSearchKeyword) }
+            } else {
+                handleError()
             }
         }
     }

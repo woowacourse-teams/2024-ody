@@ -40,12 +40,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.mulberry.ody.R
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.presentation.common.BaseActionHandler
+import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTextField
@@ -60,10 +60,15 @@ fun AddressSearchScreen(
     viewModel: AddressSearchViewModel = hiltViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-
     var addressSearchKeyword by rememberSaveable { mutableStateOf("") }
     val addresses = viewModel.address.collectAsLazyPagingItems()
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+
+    val onChangedSearchKeyword: (String) -> Unit = { keyword ->
+        addressSearchKeyword = keyword
+        if (keyword.isEmpty()) {
+            viewModel.clearAddresses()
+        }
+    }
 
     Scaffold(
         containerColor = OdyTheme.colors.primary,
@@ -82,17 +87,16 @@ fun AddressSearchScreen(
             )
         },
     ) { innerPadding ->
-        if (isLoading) {
+        val addressState = addresses.loadState.refresh
+        if (addressState is LoadState.Loading) {
             OdyLoading()
+        } else if (addressState is LoadState.Error) {
+            viewModel.handleAddressPageError(addressSearchKeyword, addressState.error)
         }
+
         AddressSearchContent(
             addressSearchKeyword = addressSearchKeyword,
-            onChangedSearchKeyword = {
-                addressSearchKeyword = it
-                if (addressSearchKeyword.isEmpty()) {
-                    viewModel.clearAddresses()
-                }
-           },
+            onChangedSearchKeyword = onChangedSearchKeyword,
             onSearchAddress = { viewModel.searchAddress(addressSearchKeyword) },
             onClearSearchKeyword = {
                 addressSearchKeyword = ""
