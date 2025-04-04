@@ -27,11 +27,8 @@ class AddressSearchViewModelTest {
     @Test
     fun `주소에 대한 위경도를 받아온다`() {
         runTest {
-            // given
-            viewModel.addressSearchKeyword.value = "사당역"
-
             // when
-            viewModel.searchAddress()
+            viewModel.searchAddress("사당역")
 
             // then
             viewModel.address.value.map { actual ->
