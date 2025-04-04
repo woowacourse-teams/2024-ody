@@ -9,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Service
 public class EtaSchedulingRedisTemplate {
 
     private final long ttlMs;
@@ -29,6 +30,7 @@ public class EtaSchedulingRedisTemplate {
         this.redisTemplate = new StringRedisTemplate(redisConnectionFactory);
     }
 
+    @Transactional(readOnly = true)
     public void addAll(Meeting meeting) {
         mateRepository.findFetchedAllByMeetingId(meeting.getId())
                 .forEach(mate -> add(EtaSchedulingKey.from(mate)));
@@ -44,8 +46,7 @@ public class EtaSchedulingRedisTemplate {
                 );
     }
 
-    public String get(EtaSchedulingKey etaSchedulingKey) {
-        return redisTemplate.opsForValue()
-                .get(etaSchedulingKey.serialize());
+    public void delete(EtaSchedulingKey etaSchedulingKey) {
+        redisTemplate.delete(etaSchedulingKey.serialize());
     }
 }

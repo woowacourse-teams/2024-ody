@@ -46,7 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MeetingService {
 
     private static final long ETA_NOTICE_TIME_DEFER = 30L;
-    private static final LocalTime MEETING_TIME_FOR_SCHEDULING_NOTI = LocalTime.of(5, 0);
+    private static final LocalTime LAST_SCHEDULING_NOTI_TIME = LocalTime.of(0, 0);
 
     private final MateService mateService;
     private final MeetingRepository meetingRepository;
@@ -84,7 +84,7 @@ public class MeetingService {
 
     private boolean isUpcomingMeeting(LocalDateTime meetingDateTime) {
         LocalDateTime include = TimeUtil.nowWithTrim();
-        LocalDateTime exclude = LocalDateTime.of(LocalDate.now().plusDays(1L), MEETING_TIME_FOR_SCHEDULING_NOTI);
+        LocalDateTime exclude = LocalDateTime.of(LocalDate.now().plusDays(1L), LAST_SCHEDULING_NOTI_TIME);
 
         return meetingDateTime.isAfter(include) && meetingDateTime.isBefore(exclude);
     }
@@ -166,20 +166,20 @@ public class MeetingService {
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
-    @Scheduled(cron = "0 30 4 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     public void scheduleTodayMeetingNotices() {
-        LocalDate today = LocalDate.now();
-        List<Meeting> meetings = findUpcomingMeetingsWithin24Hours(today);
+        LocalDateTime today = TimeUtil.nowWithTrim();
+        List<Meeting> meetings = findUpcomingMeetingsWithin24Hours(today.toLocalDate(), today.toLocalTime());
         meetings.forEach(etaSchedulingService::sendNotice);
         log.info("당일 ETA 스케줄링 알림 {}개 등록", meetings.size());
     }
 
-    private List<Meeting> findUpcomingMeetingsWithin24Hours(LocalDate startDate) {
+    private List<Meeting> findUpcomingMeetingsWithin24Hours(LocalDate startDate, LocalTime startTime) {
         return meetingRepository.findAllByDateTimeInClosedOpenRange(
                 startDate,
-                MEETING_TIME_FOR_SCHEDULING_NOTI,
+                startTime,
                 startDate.plusDays(1L),
-                MEETING_TIME_FOR_SCHEDULING_NOTI
+                LAST_SCHEDULING_NOTI_TIME
         );
     }
 }
