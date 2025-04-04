@@ -10,13 +10,9 @@ import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource.Compa
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
-import com.mulberry.ody.presentation.feature.address.listener.AddressListener
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -27,12 +23,9 @@ class AddressSearchViewModel
     @Inject
     constructor(
         private val addressRepository: AddressRepository,
-    ) : BaseViewModel(), AddressListener {
+    ) : BaseViewModel() {
         private val _address: MutableStateFlow<PagingData<Address>> = MutableStateFlow(PagingData.empty())
         val address: StateFlow<PagingData<Address>> get() = _address
-
-        private val _addressSelectEvent: MutableSharedFlow<Address> = MutableSharedFlow()
-        val addressSelectEvent: SharedFlow<Address> get() = _addressSelectEvent.asSharedFlow()
 
         fun searchAddress(addressSearchKeyword: String) {
             viewModelScope.launch {
@@ -55,12 +48,6 @@ class AddressSearchViewModel
                         _address.emit(it)
                         stopLoading()
                     }
-            }
-        }
-
-        override fun onClickAddressItem(address: Address) {
-            viewModelScope.launch {
-                _addressSelectEvent.emit(address)
             }
         }
 

@@ -58,6 +58,7 @@ import kotlinx.coroutines.flow.flowOf
 @Composable
 fun AddressSearchScreen(
     onClickBack: () -> Unit,
+    onClickAddress: (Address) -> Unit,
     viewModel: AddressSearchViewModel = hiltViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -104,6 +105,7 @@ fun AddressSearchScreen(
                 viewModel.clearAddresses()
             },
             addresses = addresses,
+            onClickAddress = onClickAddress,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -119,6 +121,7 @@ private fun AddressSearchContent(
     onSearchAddress: () -> Unit,
     onClearSearchKeyword: () -> Unit,
     addresses: LazyPagingItems<Address>,
+    onClickAddress: (Address) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -143,7 +146,7 @@ private fun AddressSearchContent(
         if (addresses.isEmpty) {
             EmptyAddress()
         } else {
-            AddressList(addresses)
+            AddressList(addresses, onClickAddress)
         }
     }
 }
@@ -194,7 +197,10 @@ private fun EmptyAddress() {
 }
 
 @Composable
-private fun AddressList(addresses: LazyPagingItems<Address>) {
+private fun AddressList(
+    addresses: LazyPagingItems<Address>,
+    onClickAddress: (Address) -> Unit,
+) {
     LazyColumn(
         modifier =
         Modifier
@@ -204,14 +210,17 @@ private fun AddressList(addresses: LazyPagingItems<Address>) {
     ) {
         items(count = addresses.itemCount) { index ->
             val address = addresses[index] ?: return@items
-            AddressItem(address)
+            AddressItem(address, onClickAddress)
         }
     }
 }
 
 @Composable
-private fun AddressItem(address: Address) {
-    Column {
+private fun AddressItem(
+    address: Address,
+    onClickAddress: (Address) -> Unit,
+) {
+    Column(modifier = Modifier.noRippleClickable { onClickAddress(address) }) {
         Row(modifier = Modifier.padding(vertical = 18.dp)) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_location_on),
@@ -234,6 +243,9 @@ private fun AddressItem(address: Address) {
         HorizontalDivider()
     }
 }
+
+private val <T : Any> LazyPagingItems<T>.isEmpty: Boolean
+    get() = itemCount == 0
 
 @Composable
 @Preview(showSystemUi = true)
@@ -265,9 +277,7 @@ private fun AddressSearchContentPreview() {
             onChangedSearchKeyword = {},
             onClearSearchKeyword = {},
             addresses = lazyPagingItems,
+            onClickAddress = {},
         )
     }
 }
-
-private val <T : Any> LazyPagingItems<T>.isEmpty: Boolean
-    get() = itemCount == 0
