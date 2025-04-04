@@ -45,8 +45,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.mulberry.ody.R
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
+import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTextField
 import com.mulberry.ody.presentation.component.OdyTopAppBar
@@ -131,17 +131,17 @@ private fun AddressSearchContent(
             onSearchAddress = onSearchAddress,
             onClearSearchKeyword = onClearSearchKeyword,
             modifier =
-            Modifier
-                .padding(top = 36.dp)
-                .padding(horizontal = 40.dp),
+                Modifier
+                    .padding(top = 36.dp)
+                    .padding(horizontal = 40.dp),
         )
         Box(
             modifier =
-            Modifier
-                .padding(top = 32.dp)
-                .fillMaxWidth()
-                .height(3.dp)
-                .background(Gray300),
+                Modifier
+                    .padding(top = 32.dp)
+                    .fillMaxWidth()
+                    .height(3.dp)
+                    .background(Gray300),
         )
         if (addresses.isEmpty) {
             EmptyAddress()
@@ -157,7 +157,7 @@ private fun AddressSearchTextField(
     onSearchAddress: () -> Unit,
     onChangedSearchKeyword: (String) -> Unit,
     onClearSearchKeyword: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     OdyTextField(
         value = addressSearchKeyword,
@@ -172,13 +172,15 @@ private fun AddressSearchTextField(
                 contentDescription = null,
             )
         },
-        keyboardType = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Search,
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = { onSearchAddress() }
-        )
+        keyboardType =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search,
+            ),
+        keyboardActions =
+            KeyboardActions(
+                onSearch = { onSearchAddress() },
+            ),
     )
 }
 
@@ -203,9 +205,9 @@ private fun AddressList(
 ) {
     LazyColumn(
         modifier =
-        Modifier
-            .fillMaxSize()
-            .padding(horizontal = 26.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 26.dp),
         contentPadding = PaddingValues(vertical = 14.dp),
     ) {
         items(count = addresses.itemCount) { index ->
@@ -250,22 +252,23 @@ private val <T : Any> LazyPagingItems<T>.isEmpty: Boolean
 @Composable
 @Preview(showSystemUi = true)
 private fun AddressSearchContentPreview() {
-    val addresses = listOf(
-        Address(
-            id = 1,
-            placeName = "사당역 2호선",
-            detailAddress = "서울 동작구 남부순환로 2089",
-            longitude = "",
-            latitude = "",
-        ),
-        Address(
-            id = 2,
-            placeName = "사당역 4호선",
-            detailAddress = "서울 동작구 동작대로 3 사당역",
-            longitude = "",
-            latitude = "",
-        ),
-    )
+    val addresses =
+        listOf(
+            Address(
+                id = 1,
+                placeName = "사당역 2호선",
+                detailAddress = "서울 동작구 남부순환로 2089",
+                longitude = "",
+                latitude = "",
+            ),
+            Address(
+                id = 2,
+                placeName = "사당역 4호선",
+                detailAddress = "서울 동작구 동작대로 3 사당역",
+                longitude = "",
+                latitude = "",
+            ),
+        )
 
     val pagingData = PagingData.from(addresses)
     val lazyPagingItems = flowOf(pagingData).collectAsLazyPagingItems()
