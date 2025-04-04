@@ -40,20 +40,19 @@ class MeetingsViewModel
 
         fun fetchMeetings() {
             viewModelScope.launch {
-                _meetingsUiState.value = MeetingsUiState.Loading
+                startLoading()
                 meetingRepository.fetchMeetings()
                     .onSuccess {
                         val meetings = it.toMeetingUiModels()
                         _meetingsUiState.value = if (meetings.isEmpty()) MeetingsUiState.Empty else MeetingsUiState.Meetings(meetings)
                     }.onFailure { code, errorMessage ->
-                        _meetingsUiState.value = MeetingsUiState.Error
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                     }.onNetworkError {
-                        _meetingsUiState.value = MeetingsUiState.Error
                         handleNetworkError()
                         lastFailedAction = { fetchMeetings() }
                     }
+                stopLoading()
             }
         }
 

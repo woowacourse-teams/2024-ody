@@ -56,11 +56,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
-import com.mulberry.ody.presentation.common.ErrorSnackbarHandler
+import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyButton
-import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.meetings.component.MeetingsBackPressed
 import com.mulberry.ody.presentation.feature.meetings.component.MeetingsLaunchPermission
@@ -118,8 +117,7 @@ fun MeetingsScreen(
         },
     ) { innerPadding ->
         when (val state = meetingsUiState) {
-            MeetingsUiState.Loading -> OdyLoading()
-            MeetingsUiState.Empty, MeetingsUiState.Error -> MeetingsEmpty(modifier = Modifier.padding(innerPadding))
+            MeetingsUiState.Empty -> MeetingsEmpty(modifier = Modifier.padding(innerPadding))
             is MeetingsUiState.Meetings ->
                 MeetingsContent(
                     meetings = state.content,
@@ -144,7 +142,7 @@ fun MeetingsScreen(
     LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
         viewModel.fetchMeetings()
     }
-    ErrorSnackbarHandler(viewModel, snackbarHostState)
+    BaseActionHandler(viewModel, snackbarHostState)
     MeetingsLaunchPermission(showSnackbar)
     MeetingsBackPressed()
 }

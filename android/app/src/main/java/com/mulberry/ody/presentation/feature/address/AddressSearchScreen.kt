@@ -45,7 +45,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.mulberry.ody.R
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.presentation.common.ErrorSnackbarHandler
+import com.mulberry.ody.presentation.common.BaseActionHandler
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTextField
@@ -103,7 +103,7 @@ fun AddressSearchScreen(
         )
     }
 
-    ErrorSnackbarHandler(viewModel, snackbarHostState)
+    BaseActionHandler(viewModel, snackbarHostState)
     BackHandler { onClickBack() }
 }
 
