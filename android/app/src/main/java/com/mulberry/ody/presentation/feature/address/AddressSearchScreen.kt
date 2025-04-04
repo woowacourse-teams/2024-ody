@@ -43,6 +43,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.mulberry.ody.R
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
@@ -210,7 +211,10 @@ private fun AddressList(
                 .padding(horizontal = 26.dp),
         contentPadding = PaddingValues(vertical = 14.dp),
     ) {
-        items(count = addresses.itemCount) { index ->
+        items(
+            count = addresses.itemCount,
+            key = addresses.itemKey { it.id },
+        ) { index ->
             val address = addresses[index] ?: return@items
             AddressItem(address, onClickAddress)
         }
