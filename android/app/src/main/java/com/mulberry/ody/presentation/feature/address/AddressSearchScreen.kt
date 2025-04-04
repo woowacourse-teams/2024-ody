@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.HorizontalDivider
@@ -41,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.mulberry.ody.R
@@ -53,6 +53,7 @@ import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.theme.Gray300
 import com.mulberry.ody.presentation.theme.Gray350
 import com.mulberry.ody.presentation.theme.OdyTheme
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun AddressSearchScreen(
@@ -102,7 +103,7 @@ fun AddressSearchScreen(
                 addressSearchKeyword = ""
                 viewModel.clearAddresses()
             },
-            addresses = addresses.toList(),
+            addresses = addresses,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -117,7 +118,7 @@ private fun AddressSearchContent(
     onChangedSearchKeyword: (String) -> Unit,
     onSearchAddress: () -> Unit,
     onClearSearchKeyword: () -> Unit,
-    addresses: List<Address>,
+    addresses: LazyPagingItems<Address>,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -139,7 +140,7 @@ private fun AddressSearchContent(
                 .height(3.dp)
                 .background(Gray300),
         )
-        if (addresses.isEmpty()) {
+        if (addresses.isEmpty) {
             EmptyAddress()
         } else {
             AddressList(addresses)
@@ -193,7 +194,7 @@ private fun EmptyAddress() {
 }
 
 @Composable
-private fun AddressList(addresses: List<Address>) {
+private fun AddressList(addresses: LazyPagingItems<Address>) {
     LazyColumn(
         modifier =
         Modifier
@@ -201,8 +202,9 @@ private fun AddressList(addresses: List<Address>) {
             .padding(horizontal = 26.dp),
         contentPadding = PaddingValues(vertical = 14.dp),
     ) {
-        items(items = addresses, key = { it.id }) {
-            AddressItem(it)
+        items(count = addresses.itemCount) { index ->
+            val address = addresses[index] ?: return@items
+            AddressItem(address)
         }
     }
 }
@@ -235,39 +237,37 @@ private fun AddressItem(address: Address) {
 
 @Composable
 @Preview(showSystemUi = true)
-fun AddressSearchContentPreview() {
+private fun AddressSearchContentPreview() {
+    val addresses = listOf(
+        Address(
+            id = 1,
+            placeName = "사당역 2호선",
+            detailAddress = "서울 동작구 남부순환로 2089",
+            longitude = "",
+            latitude = "",
+        ),
+        Address(
+            id = 2,
+            placeName = "사당역 4호선",
+            detailAddress = "서울 동작구 동작대로 3 사당역",
+            longitude = "",
+            latitude = "",
+        ),
+    )
+
+    val pagingData = PagingData.from(addresses)
+    val lazyPagingItems = flowOf(pagingData).collectAsLazyPagingItems()
+
     OdyTheme {
         AddressSearchContent(
             addressSearchKeyword = "사당역",
             onSearchAddress = {},
             onChangedSearchKeyword = {},
             onClearSearchKeyword = {},
-            addresses =
-                listOf(
-                    Address(
-                        id = 1,
-                        placeName = "사당역 2호선",
-                        detailAddress = "서울 동작구 남부순환로 2089",
-                        longitude = "",
-                        latitude = "",
-                    ),
-                    Address(
-                        id = 2,
-                        placeName = "사당역 4호선",
-                        detailAddress = "서울 동작구 동작대로 3 사당역",
-                        longitude = "",
-                        latitude = "",
-                    ),
-                ),
+            addresses = lazyPagingItems,
         )
     }
 }
 
-fun <T : Any> LazyPagingItems<T>.toList(): List<T> {
-    val list = mutableListOf<T>()
-    repeat(itemCount) {
-        val item = get(it) ?: return@repeat
-        list.add(item)
-    }
-    return list
-}
+private val <T : Any> LazyPagingItems<T>.isEmpty: Boolean
+    get() = itemCount == 0
