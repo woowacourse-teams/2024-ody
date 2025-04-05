@@ -4,9 +4,9 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.local.service.EtaDashboard
+import com.mulberry.ody.domain.model.FCMType
 import com.mulberry.ody.domain.model.MessageType
 import com.mulberry.ody.domain.model.NotificationType
-import com.mulberry.ody.domain.model.FCMType
 import com.mulberry.ody.presentation.notification.FCMNotification
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
