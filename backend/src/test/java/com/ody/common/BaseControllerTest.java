@@ -3,7 +3,11 @@ package com.ody.common;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ody.auth.JwtTokenProvider;
 import com.ody.notification.config.FcmConfig;
+import com.ody.route.domain.ApiCall;
+import com.ody.route.domain.ClientType;
+import com.ody.route.repository.ApiCallRepository;
 import io.restassured.RestAssured;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +32,9 @@ public abstract class BaseControllerTest {
     protected JwtTokenProvider jwtTokenProvider;
 
     @Autowired
+    protected ApiCallRepository apiCallRepository;
+
+    @Autowired
     protected FixtureGenerator fixtureGenerator;
 
     @Autowired
@@ -35,16 +42,18 @@ public abstract class BaseControllerTest {
 
     protected DtoGenerator dtoGenerator = new DtoGenerator();
 
-    @BeforeEach
-    void databaseCleanUp() {
-        databaseCleaner.cleanUp();
-    }
-
     @LocalServerPort
     private int port;
 
     @BeforeEach
     void setPort() {
         RestAssured.port = port;
+    }
+
+    @BeforeEach
+    void setUp() {
+        databaseCleaner.clear();
+        apiCallRepository.save(new ApiCall(ClientType.ODSAY, 0, LocalDate.now()));
+        apiCallRepository.save(new ApiCall(ClientType.GOOGLE, 0, LocalDate.now()));
     }
 }

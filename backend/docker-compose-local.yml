@@ -22,5 +22,6 @@ services:
       --save "" 
       --appendonly yes
       --auto-aof-rewrite-percentage 0
+      --notify-keyspace-events Ex
     environment:
       TZ: Asia/Seoul

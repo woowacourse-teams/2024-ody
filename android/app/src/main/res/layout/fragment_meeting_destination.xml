@@ -6,11 +6,11 @@
 
         <variable
             name="vm"
-            type="com.mulberry.ody.presentation.creation.MeetingCreationViewModel" />
+            type="com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel" />
 
         <variable
             name="addressSearchListener"
-            type="com.mulberry.ody.presentation.address.listener.AddressSearchListener" />
+            type="com.mulberry.ody.presentation.feature.address.listener.AddressSearchListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -11,7 +11,7 @@
 
         <variable
             name="shareListener"
-            type="com.mulberry.ody.presentation.room.etadashboard.listener.ShareListener" />
+            type="com.mulberry.ody.presentation.feature.room.etadashboard.listener.ShareListener" />
 
         <variable
             name="backListener"

@@ -3,10 +3,10 @@ package com.mulberry.ody.data.remote.core.service
 import com.mulberry.ody.data.remote.core.entity.meeting.request.MatesEtaRequest
 import com.mulberry.ody.data.remote.core.entity.meeting.request.MeetingRequest
 import com.mulberry.ody.data.remote.core.entity.meeting.request.NudgeRequest
+import com.mulberry.ody.data.remote.core.entity.meeting.response.DetailMeetingResponse
 import com.mulberry.ody.data.remote.core.entity.meeting.response.MatesEtaResponse
-import com.mulberry.ody.data.remote.core.entity.meeting.response.MeetingCatalogsResponse
 import com.mulberry.ody.data.remote.core.entity.meeting.response.MeetingCreationResponse
-import com.mulberry.ody.data.remote.core.entity.meeting.response.MeetingResponse
+import com.mulberry.ody.data.remote.core.entity.meeting.response.MeetingsResponse
 import com.mulberry.ody.domain.apiresult.ApiResult
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -33,12 +33,12 @@ interface MeetingService {
     ): ApiResult<MatesEtaResponse>
 
     @GET("/v1/meetings/me")
-    suspend fun fetchMeetingCatalogs(): ApiResult<MeetingCatalogsResponse>
+    suspend fun fetchMeetings(): ApiResult<MeetingsResponse>
 
-    @GET("/v1/meetings/{meetingId}")
+    @GET("/v2/meetings/{meetingId}")
     suspend fun fetchMeeting(
         @Path(value = "meetingId") meetingId: Long,
-    ): ApiResult<MeetingResponse>
+    ): ApiResult<DetailMeetingResponse>
 
     @POST("/v1/mates/nudge")
     suspend fun postNudge(

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
@@ -16,16 +16,17 @@ import com.ody.mate.dto.response.MateResponse;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.request.MeetingSaveRequestV1;
 import com.ody.meeting.dto.response.MeetingSaveResponseV1;
-import com.ody.meeting.dto.response.MeetingWithMatesResponse;
+import com.ody.meeting.dto.response.MeetingWithMatesResponseV1;
+import com.ody.meeting.dto.response.MeetingWithMatesResponseV2;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
-import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.event.NoticeEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
 import com.ody.route.domain.ClientType;
+import com.ody.route.domain.DepartureTime;
 import com.ody.route.service.ApiCallService;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
@@ -37,6 +38,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -131,11 +133,32 @@ class MeetingServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("약속 생성 후 약속 시간 30분 전에 ETA 공지 알림이 예약된다.")
+    @DisplayName("당일 약속 생성 후, 약속 시간 30분 전에 ETA 공지 알림과 ETA 스케줄링 알림이 예약된다.")
+    @Test
+    void saveAndScheduleEtaNoticeAndEtaSchedulingNotice() {
+        LocalDateTime meetingDateTime = TimeUtil.nowWithTrim().plusHours(1);
+        MeetingSaveRequestV1 request = dtoGenerator.generateMeetingRequest(meetingDateTime);
+        meetingService.saveV1(request);
+
+        ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
+        ArgumentCaptor<Instant> timeCaptor = ArgumentCaptor.forClass(Instant.class);
+
+        Mockito.verify(taskScheduler, times(2)).schedule(runnableCaptor.capture(), timeCaptor.capture());
+
+        List<Instant> scheduledTimes = timeCaptor.getAllValues();
+        runnableCaptor.getAllValues().forEach(Runnable::run);
+
+        assertAll(
+                () -> assertThat(scheduledTimes).containsOnly(meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET)),
+                () -> assertThat(applicationEvents.stream(NoticeEvent.class)).hasSize(2)
+        );
+    }
+
+    @DisplayName("내일 오전 5시 이내 약속을 생성한 경우가 아니면, 약속 시간 30분 전에 ETA 공지 알림만 예약된다.")
     @Test
     void saveAndScheduleEtaNotice() {
-        LocalDateTime meetingDateTime = TimeUtil.nowWithTrim().plusMinutes(40);
-        MeetingSaveRequestV1 request = dtoGenerator.generateMeetingRequest(meetingDateTime);
+        LocalDateTime twoDaysLater = TimeUtil.nowWithTrim().plusDays(2);
+        MeetingSaveRequestV1 request = dtoGenerator.generateMeetingRequest(twoDaysLater);
         meetingService.saveV1(request);
 
         ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
@@ -146,22 +169,22 @@ class MeetingServiceTest extends BaseServiceTest {
         runnableCaptor.getValue().run();
 
         assertAll(
-                () -> assertThat(meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET))
+                () -> assertThat(twoDaysLater.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET))
                         .isEqualTo(scheduledTime),
                 () -> assertThat(applicationEvents.stream(NoticeEvent.class)).hasSize(1)
         );
     }
 
-    @DisplayName("약속과 참여자들 정보를 조회한다.")
+    @DisplayName("약속 조회 성공 V1: 약속과 참여자들 정보를 조회한다.")
     @Test
-    void findMeetingWithMatesSuccess() {
+    void findMeetingWithMatesV1Success() {
         Member member1 = fixtureGenerator.generateMember();
         Member member2 = fixtureGenerator.generateMember();
         Meeting meeting = fixtureGenerator.generateMeeting();
         Mate mate1 = fixtureGenerator.generateMate(meeting, member1);
         Mate mate2 = fixtureGenerator.generateMate(meeting, member2);
 
-        MeetingWithMatesResponse response = meetingService.findMeetingWithMates(member1, meeting.getId());
+        MeetingWithMatesResponseV1 response = meetingService.findMeetingWithMatesV1(member1, meeting.getId());
 
         List<String> mateNicknames = response.mates().stream()
                 .map(MateResponse::nickname)
@@ -176,12 +199,50 @@ class MeetingServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("약속 조회 시, 약속이 존재하지 않으면 예외가 발생한다.")
+    @DisplayName("약속 조회 성공 V2: 약속과 참여자들 정보를 조회한다.")
     @Test
-    void findMeetingWithMatesException() {
+    void findMeetingWithMatesV2Success() {
+        Member member1 = fixtureGenerator.generateMember();
+        Member member2 = fixtureGenerator.generateMember();
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Mate mate1 = fixtureGenerator.generateMate(meeting, member1);
+        Mate mate2 = fixtureGenerator.generateMate(meeting, member2);
+        DepartureTime mateDepartureTime = new DepartureTime(meeting, mate1.getEstimatedMinutes());
+        LocalTime expectedDepartureTime = mateDepartureTime.getValue().toLocalTime();
+
+        MeetingWithMatesResponseV2 response = meetingService.findMeetingWithMatesV2(member1, meeting.getId());
+
+        List<String> mateNicknames = response.mates().stream()
+                .map(MateResponse::nickname)
+                .toList();
+
+        assertAll(
+                () -> assertThat(response.id()).isEqualTo(meeting.getId()),
+                () -> assertThat(response.routeTime()).isEqualTo(mate1.getEstimatedMinutes()),
+                () -> assertThat(response.departureTime()).isEqualTo(expectedDepartureTime),
+                () -> assertThat(response.originAddress()).isEqualTo(mate1.getOriginAddress()),
+                () -> assertThat(mateNicknames).containsOnly(
+                        mate1.getNickname().getValue(),
+                        mate2.getNickname().getValue()
+                )
+        );
+    }
+
+    @DisplayName("약속 조회 실패 V1: 약속 조회 시, 약속이 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void findMeetingWithMatesV1Exception() {
         Member member = fixtureGenerator.generateMember();
 
-        assertThatThrownBy(() -> meetingService.findMeetingWithMates(member, 1L))
+        assertThatThrownBy(() -> meetingService.findMeetingWithMatesV1(member, 1L))
+                .isInstanceOf(OdyNotFoundException.class);
+    }
+
+    @DisplayName("약속 조회 실패 V2: 약속 조회 시, 약속이 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void findMeetingWithMatesV2Exception() {
+        Member member = fixtureGenerator.generateMember();
+
+        assertThatThrownBy(() -> meetingService.findMeetingWithMatesV2(member, 1L))
                 .isInstanceOf(OdyNotFoundException.class);
     }
 
@@ -255,9 +316,9 @@ class MeetingServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("약속 참여시 API 호출 카운팅 Redisson 분산락 동시성 테스트")
+    @DisplayName("약속 참여시 API 호출 카운팅 동시성 테스트")
     @Nested
-    public class RedissonDistributedLockTest {
+    class ApiCallCountConcurrencyTest {
 
         private static final int TOTAL_REQUESTS = 100;
 

@@ -9,7 +9,7 @@ import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.mulberry.ody.R
-import com.mulberry.ody.presentation.meetings.MeetingsActivity
+import com.mulberry.ody.presentation.feature.meetings.MeetingsActivity
 import javax.inject.Inject
 
 class EtaDashboardNotification

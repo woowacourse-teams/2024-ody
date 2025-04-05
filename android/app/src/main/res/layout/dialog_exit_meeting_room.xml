@@ -11,7 +11,7 @@
 
         <variable
             name="exitMeetingRoomListener"
-            type="com.mulberry.ody.presentation.room.log.listener.ExitMeetingRoomListener" />
+            type="com.mulberry.ody.presentation.feature.room.log.listener.ExitMeetingRoomListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -66,7 +66,7 @@
 
                 <TextView
                     android:id="@+id/tv_exit_meeting_room_title"
-                    style="@style/pretendard_bold_18"
+                    style="@style/pretendard_medium_16"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/exit_meeting_room_title"

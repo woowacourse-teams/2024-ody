@@ -14,6 +14,6 @@ public class PushEvent extends ApplicationEvent {
     public PushEvent(Object source, Notification notification) {
         super(source);
         this.notification = notification;
-        this.groupMessage = GroupMessage.from(notification);
+        this.groupMessage = GroupMessage.create(notification);
     }
 }

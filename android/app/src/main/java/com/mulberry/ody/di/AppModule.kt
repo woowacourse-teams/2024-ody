@@ -7,7 +7,6 @@ import android.content.Context.NOTIFICATION_SERVICE
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.local.service.EtaDashboard
 import com.mulberry.ody.data.local.service.EtaDashboardNotification
-import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.gps.GeoLocationHelper
 import com.mulberry.ody.presentation.common.gps.LocationHelper
 import com.mulberry.ody.presentation.notification.FCMNotification
@@ -45,14 +44,6 @@ object AppModule {
         @ApplicationContext context: Context,
     ): NotificationManager {
         return context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-    }
-
-    @Provides
-    @Singleton
-    fun providePermissionHelper(
-        @ApplicationContext context: Context,
-    ): PermissionHelper {
-        return PermissionHelper(context)
     }
 
     @Provides

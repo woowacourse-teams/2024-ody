@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.mulberry.ody.presentation.address.AddressSearchViewModel" />
+            type="com.mulberry.ody.presentation.feature.address.AddressSearchViewModel" />
 
         <variable
             name="backListener"
@@ -95,7 +95,7 @@
             android:id="@+id/rv_address"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginVertical="14dp"
+            android:layout_marginTop="14dp"
             android:clipToPadding="false"
             android:overScrollMode="never"
             android:paddingHorizontal="26dp"

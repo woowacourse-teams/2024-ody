@@ -21,7 +21,7 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             select mate
             from Mate mate
             join fetch mate.member
-            where mate.meeting.id = :meetingId 
+            where mate.meeting.id = :meetingId
             and mate.meeting.overdue = false
             """)
     List<Mate> findAllByOverdueFalseMeetingId(Long meetingId);
@@ -44,6 +44,15 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
             where mate.member.id = :memberId
             """)
     List<Mate> findFetchedAllByMemberId(long memberId);
+
+    @Query("""
+            select mate
+            from Mate mate
+            join fetch mate.member
+            join fetch mate.meeting
+            where mate.meeting.id = :meetingId
+            """)
+    List<Mate> findFetchedAllByMeetingId(long meetingId);
 
     boolean existsByMeetingIdAndMemberId(Long meetingId, Long memberId);
 

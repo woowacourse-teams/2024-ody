@@ -1,6 +1,5 @@
 package com.ody.eta.service;
 
-import com.ody.common.aop.DistributedLock;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.domain.EtaStatus;
@@ -29,6 +28,7 @@ public class EtaService {
 
     private final RouteService routeService;
     private final EtaRepository etaRepository;
+    private final EtaSchedulingService etaSchedulingService;
 
     @Transactional
     public Eta saveFirstEtaOfMate(Mate mate, RouteTime routeTime) {
@@ -36,12 +36,12 @@ public class EtaService {
     }
 
     @Transactional
-    @DistributedLock(key = "'FIND_ETAS'")
     public MateEtaResponsesV2 findAllMateEtas(MateEtaRequest mateEtaRequest, Mate mate) {
         Meeting meeting = mate.getMeeting();
         Eta mateEta = findByMateId(mate.getId());
 
         updateMateEta(mateEtaRequest, mateEta, meeting);
+        etaSchedulingService.updateCache(mate);
 
         return etaRepository.findAllByMeetingId(meeting.getId()).stream()
                 .map(eta -> MateEtaResponseV2.of(eta, meeting))

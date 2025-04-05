@@ -26,4 +26,12 @@ public class TimeUtil {
         return time.withSecond(ROUND_DIGITS)
                 .withNano(ROUND_DIGITS);
     }
+
+    public static boolean isPast(LocalDateTime dateTime) {
+        return nowWithTrim().isAfter(dateTime);
+    }
+
+    public static boolean isUpcoming(LocalDateTime dateTime) {
+        return dateTime.isAfter(nowWithTrim());
+    }
 }

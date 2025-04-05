@@ -16,9 +16,6 @@
     <string name="item_notification_member_exit">님이 나갔어요.</string>
     <string name="item_notification_default"> </string>
 
-    <!-- activity_meeting_room.xml -->
-    <string name="meeting_room_dashboard_button">오디?</string>
-
     <!-- item_invite_code_log.xml -->
     <string name="item_invite_code_top">초대 코드를 복사해</string>
     <string name="item_invite_code_bottom">친구에게 전달해 보세요!</string>
@@ -34,16 +31,14 @@
     <string name="meetings_traffic_guide">*대중교통 기준</string>
     <string name="meetings_departure_postfix">에서</string>
     <string name="meetings_arrival_postfix">까지</string>
-    <string name="meetings_eta_form">%1$s분 걸려요</string>
-    <string name="meetings_navigate_to_eta">오디?</string>
+    <string name="meetings_eta_form">%s 걸려요</string>
     <string name="meetings_today">오늘</string>
     <string name="meetings_tomorrow">내일</string>
-    <string name="meetings_post_tomorrow">%1$s일 후</string>
-    <string name="meetings_no_meeting_room_guide">아직 약속이 없어요.\n약속을 만들어 주세요!</string>
+    <string name="meetings_post_tomorrow">%d일 후</string>
+    <string name="meetings_empty">아직 약속이 없어요.\n약속을 만들어 주세요!</string>
     <string name="meetings_notification_permission_required">알림 권한을 거절하실 경우 푸시 알람을 받으실 수 없어요</string>
-    <string name="meetings_notification_permission_guide">알림 권한은 앱 설정에서 확인할 수 있어요</string>
     <string name="meetings_location_permission_required">위치 권한을 거절하면 내 위치를 친구에게 공유할 수 없어요</string>
-    <string name="meetings_entrance_unavailable_guide">약속 시간 30분 전부터 실시간 위치를 확인할 수 있어요</string>
+    <string name="meetings_background_location_permission_required">백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.</string>
     <string name="meetings_back_pressed_guide">"앱을 종료하려면 뒤로 가기를 한 번 더 눌려주세요."</string>
     <string name="meetings_create_meeting">약속 만들기</string>
     <string name="meetings_join_meeting">약속 참여하기</string>
@@ -118,13 +113,7 @@
     <string name="setting_item_logout">로그아웃</string>
     <string name="setting_item_withdraw">회원 탈퇴</string>
 
-    <!-- request_background_permission_dialog -->
-    <string name="request_background_permission_dialog_title">백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.</string>
-    <string name="request_background_permission_dialog_yes">네</string>
-    <string name="request_background_permission_dialog_no">아니오</string>
-
     <!-- fragment_notification_log -->
-    <string name="notification_log_mate_count">%d명</string>
     <string name="invite_code_copy_title">초대 코드 공유하기</string>
     <string name="invite_code_copy">%s 약속에 초대했어요. 오디 앱에서 함께해 보세요.\n초대 코드: %s</string>
 
@@ -166,6 +155,17 @@
     <string name="exit_meeting_room_title">약속을 정말 나가실 건가요?</string>
     <string name="exit_meeting_room">나가기</string>
 
+    <!-- fragment_detail_meeting.xml -->
+    <string name="detail_meeting_time">약속 시간</string>
+    <string name="detail_meeting_address">약속 장소</string>
+    <string name="detail_meeting_departure_address">출발 장소</string>
+    <string name="detail_meeting_departure_time">늦지 않으려면</string>
+    <string name="detail_meeting_departure_time_guide">출발 시간은 대중교통 지연 등을 고려해\n여유 있게 알려드리고 있어요.</string>
+    <string name="detail_meeting_departure_time_content">%s에 나가야 해요.\n출발 장소부터 약속 장소까지 %s 걸려요.</string>
+    <string name="detail_meeting_log">약속 로그</string>
+    <string name="detail_meeting_invite_code_guide">친구를 초대해 보세요!</string>
+    <string name="detail_meeting_invite_code_copy">초대 코드 복사하기</string>
+
     <!-- all -->
     <string name="next_button">다음</string>
     <string name="confirm_button">확인</string>
@@ -177,5 +177,7 @@
     <string name="default_location_error_guide">현재 위치를 가져올 수 없어요. 잠시 후 다시 시도해 주세요.</string>
     <string name="error_guide">오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</string>
     <string name="network_error_guide">네트워크 연결 확인 후 다시 시도해 주세요.</string>
+    <string name="inaccessible_eta_guide">약속 시간 30분 전부터 실시간 위치를 확인할 수 있어요</string>
     <string name="retry_button">재시도</string>
+    <string name="ody_button">오디?</string>
 </resources>

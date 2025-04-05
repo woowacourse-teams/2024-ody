@@ -4,9 +4,9 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import com.mulberry.ody.domain.apiresult.fold
 import com.mulberry.ody.domain.apiresult.getOrNull
 import com.mulberry.ody.domain.apiresult.onNetworkError
-import com.mulberry.ody.domain.apiresult.suspendFold
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
@@ -102,7 +102,7 @@ class EtaDashboardService : Service() {
     }
 
     private suspend fun getLocation(meetingId: Long): MateEtaInfo? {
-        return geoLocationHelper.getCurrentCoordinate().suspendFold(
+        return geoLocationHelper.getCurrentCoordinate().fold(
             onSuccess = { location ->
                 updateMatesEta(
                     meetingId,
