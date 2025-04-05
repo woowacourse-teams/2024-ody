@@ -9,11 +9,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import com.mulberry.ody.R
 import com.mulberry.ody.data.local.db.OdyDatastore
-import com.mulberry.ody.domain.model.FCMNotificationType
-import com.mulberry.ody.presentation.meetings.MeetingsActivity
-import com.mulberry.ody.presentation.room.MeetingRoomActivity
-import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
-import com.mulberry.ody.presentation.room.MeetingRoomActivity.Companion.NAVIGATE_TO_NOTIFICATION_LOG
+import com.mulberry.ody.domain.model.NotificationType
+import com.mulberry.ody.presentation.feature.meetings.MeetingsActivity
+import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity
+import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity.Companion.NAVIGATE_TO_DETAIL_MEETING
+import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity.Companion.NAVIGATE_TO_ETA_DASHBOARD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -44,7 +44,7 @@ class FCMNotification
         }
 
         fun showNotification(
-            type: FCMNotificationType,
+            type: NotificationType,
             nickname: String,
             meetingId: String,
             meetingName: String,
@@ -60,36 +60,36 @@ class FCMNotification
             }
         }
 
-        private suspend fun isNotificationBlock(type: FCMNotificationType): Boolean {
-            if (type == FCMNotificationType.DEPARTURE_REMINDER && !odyDatastore.getIsNotificationOn(type).first()) {
+        private suspend fun isNotificationBlock(type: NotificationType): Boolean {
+            if (type == NotificationType.DEPARTURE_REMINDER && !odyDatastore.getIsNotificationOn(type).first()) {
                 return true
             }
-            if (type == FCMNotificationType.ENTRY && !odyDatastore.getIsNotificationOn(type).first()) {
+            if (type == NotificationType.ENTRY && !odyDatastore.getIsNotificationOn(type).first()) {
                 return true
             }
             return false
         }
 
         private fun getNotificationMessage(
-            type: FCMNotificationType,
+            type: NotificationType,
             nickname: String,
             meetingName: String,
         ): String =
             when (type) {
-                FCMNotificationType.ENTRY -> context.getString(R.string.fcm_notification_entry, nickname)
-                FCMNotificationType.DEPARTURE_REMINDER -> context.getString(R.string.fcm_notification_departure_reminder, nickname)
-                FCMNotificationType.NUDGE -> context.getString(R.string.fcm_notification_nudge, nickname)
-                FCMNotificationType.ETA_NOTICE -> context.getString(R.string.fcm_notification_eta_notice, meetingName)
+                NotificationType.ENTRY -> context.getString(R.string.fcm_notification_entry, nickname)
+                NotificationType.DEPARTURE_REMINDER -> context.getString(R.string.fcm_notification_departure_reminder, nickname)
+                NotificationType.NUDGE -> context.getString(R.string.fcm_notification_nudge, nickname)
+                NotificationType.ETA_NOTICE -> context.getString(R.string.fcm_notification_eta_notice, meetingName)
             }
 
         private fun getPendingIntent(
-            type: FCMNotificationType,
+            type: NotificationType,
             meetingId: String,
         ): PendingIntent? {
             val navigationTarget =
                 when (type) {
-                    FCMNotificationType.ENTRY, FCMNotificationType.DEPARTURE_REMINDER -> NAVIGATE_TO_NOTIFICATION_LOG
-                    FCMNotificationType.NUDGE, FCMNotificationType.ETA_NOTICE -> NAVIGATE_TO_ETA_DASHBOARD
+                    NotificationType.ENTRY, NotificationType.DEPARTURE_REMINDER -> NAVIGATE_TO_DETAIL_MEETING
+                    NotificationType.NUDGE, NotificationType.ETA_NOTICE -> NAVIGATE_TO_ETA_DASHBOARD
                 }
 
             val stackBuilder = TaskStackBuilder.create(context)

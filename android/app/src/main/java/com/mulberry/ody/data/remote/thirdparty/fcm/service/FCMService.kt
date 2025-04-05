@@ -4,8 +4,8 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.local.service.EtaDashboard
-import com.mulberry.ody.domain.model.FCMMessageType
-import com.mulberry.ody.domain.model.FCMNotificationType
+import com.mulberry.ody.domain.model.MessageType
+import com.mulberry.ody.domain.model.NotificationType
 import com.mulberry.ody.domain.model.FCMType
 import com.mulberry.ody.presentation.notification.FCMNotification
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,11 +35,11 @@ class FCMService : FirebaseMessagingService() {
         val meetingName = message.data["meetingName"] ?: ""
         val meetingTime = message.data["meetingTime"]?.toLocalDateTime()
 
-        if (fcmType is FCMNotificationType) {
+        if (fcmType is NotificationType) {
             fcmNotification.showNotification(fcmType, nickname, meetingId, meetingName)
         }
 
-        if (fcmType == FCMMessageType.ETA_SCHEDULING_NOTICE) {
+        if (fcmType == MessageType.ETA_SCHEDULING_NOTICE) {
             etaDashboard.open(meetingId.toLong(), meetingTime ?: return)
         }
     }

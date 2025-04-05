@@ -308,6 +308,10 @@ class MeetingRoomViewModel
             }
         }
 
+        fun handleNavigationVisibility() {
+            _isVisibleNavigation.value = !_isVisibleNavigation.value
+        }
+
         @AssistedFactory
         interface MeetingViewModelFactory {
             fun create(meetingId: Long): MeetingRoomViewModel

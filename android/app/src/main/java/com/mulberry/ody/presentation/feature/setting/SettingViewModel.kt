@@ -67,7 +67,6 @@ class SettingViewModel
             viewModelScope.launch {
                 authRepository.logout()
                 _loginNavigateEvent.emit(LoginNavigatedReason.LOGOUT)
-                matesEtaRepository.clearEtaReservation(isReservationPending = true)
             }
         }
 
@@ -78,7 +77,6 @@ class SettingViewModel
                     .onSuccess {
                         _loginNavigateEvent.emit(LoginNavigatedReason.WITHDRAWAL)
                         matesEtaRepository.clearEtaFetchingJob()
-                        matesEtaRepository.clearEtaReservation(isReservationPending = false)
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
