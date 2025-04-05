@@ -2,13 +2,19 @@ package com.mulberry.ody.domain.repository.ody
 
 import com.mulberry.ody.domain.model.MateEtaInfo
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 
 interface MatesEtaRepository {
     fun fetchMatesEtaInfo(meetingId: Long): Flow<MateEtaInfo?>
 
     suspend fun clearEtaFetchingJob()
 
-    suspend fun stopEtaDashboardService(meetingId: Long)
+    fun openEtaDashboard(
+        meetingId: Long,
+        meetingDateTime: LocalDateTime,
+    )
 
-    suspend fun stopEtaDashboardService()
+    suspend fun closeEtaDashboard(meetingId: Long)
+
+    suspend fun closeEtaDashboard()
 }

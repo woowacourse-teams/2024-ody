@@ -2,7 +2,6 @@ package com.mulberry.ody.presentation.feature.join
 
 import android.location.Location
 import androidx.lifecycle.viewModelScope
-import com.mulberry.ody.data.local.service.EtaDashboard
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
@@ -11,6 +10,7 @@ import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.JoinRepository
+import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.domain.validator.AddressValidator
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
@@ -38,7 +38,7 @@ class MeetingJoinViewModel
         private val joinRepository: JoinRepository,
         private val addressRepository: AddressRepository,
         private val locationHelper: LocationHelper,
-        private val etaDashboard: EtaDashboard,
+        private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel(), MeetingJoinListener {
         val departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
 
@@ -106,7 +106,7 @@ class MeetingJoinViewModel
                 startLoading()
                 joinRepository.postMates(meetingJoinInfo)
                     .onSuccess {
-                        etaDashboard.open(it.meetingId, it.meetingDateTime)
+                        matesEtaRepository.openEtaDashboard(it.meetingId, it.meetingDateTime)
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
                     }.onFailure { code, errorMessage ->

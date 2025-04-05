@@ -5,6 +5,7 @@ import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeJoinRepository
 import com.mulberry.ody.fake.FakeLocationHelper
+import com.mulberry.ody.fake.FakeMatesEtaRepository
 import com.mulberry.ody.meetingId
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
@@ -31,6 +32,7 @@ class MeetingJoinViewModelTest {
                 joinRepository = FakeJoinRepository(meetingId = meetingId),
                 addressRepository = FakeAddressRepository,
                 locationHelper = FakeLocationHelper,
+                matesEtaRepository = FakeMatesEtaRepository,
             )
     }
 

@@ -294,7 +294,7 @@ class MeetingRoomViewModel
                 startLoading()
                 meetingRepository.exitMeeting(_meeting.value.id)
                     .onSuccess {
-                        matesEtaRepository.stopEtaDashboardService(meetingId)
+                        matesEtaRepository.closeEtaDashboard(meetingId)
                         _exitMeetingRoomEvent.emit(Unit)
                     }.onFailure { code, errorMessage ->
                         handleError()
