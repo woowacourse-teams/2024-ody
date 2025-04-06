@@ -31,12 +31,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -57,7 +54,6 @@ import com.mulberry.ody.presentation.theme.Gray400
 import com.mulberry.ody.presentation.theme.Gray400Alpha70
 import com.mulberry.ody.presentation.theme.OdyTheme
 import com.mulberry.ody.presentation.theme.White
-import kotlin.math.roundToInt
 
 @Composable
 fun EtaDashboardScreen() {
@@ -89,7 +85,7 @@ fun EtaDashboardScreen() {
     ) { innerPadding ->
         EtaDashboardContent(
             mateEtas = listOf(
-                MateEtaUiModel("올리브", EtaStatusUiModel.Arrived, true, false, 1L, 1L),
+                MateEtaUiModel("올리브", EtaStatusUiModel.Arrived, true, true, 1L, 1L),
                 MateEtaUiModel("올리브", EtaStatusUiModel.Missing, true, false, 2L, 2L),
                 MateEtaUiModel("올리브", EtaStatusUiModel.ArrivalSoon(20), false, false, 3L, 3L),
                 MateEtaUiModel("올리브", EtaStatusUiModel.LateWarning(20), false, false, 4L, 4L),
@@ -110,7 +106,7 @@ private fun EtaDashboardContent(
         contentPadding = PaddingValues(vertical = 32.dp),
         verticalArrangement = Arrangement.spacedBy(42.dp),
     ) {
-        items(mateEtas) { mateEta ->
+        items(items = mateEtas, key = { it.userId }) { mateEta ->
             EtaDashboardItem(mateEta)
         }
     }
@@ -121,8 +117,6 @@ private fun EtaDashboardItem(
     mateEta: MateEtaUiModel,
 ) {
     val context = LocalContext.current
-    var showMissingPopup by rememberSaveable { mutableStateOf(false) }
-    val popupSize = remember { mutableStateOf(IntSize.Zero) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -137,26 +131,7 @@ private fun EtaDashboardItem(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        Button(
-            onClick = { },
-            modifier = Modifier
-                .width(80.dp)
-                .height(32.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = mateEta.etaStatusUiModel.badgeColor,
-                disabledContainerColor = mateEta.etaStatusUiModel.badgeColor,
-            ),
-            contentPadding = PaddingValues(all = 0.dp),
-            shape = RoundedCornerShape(15.dp),
-            interactionSource = NoRippleInteractionSource,
-            enabled = mateEta.etaStatusUiModel.canNudge()
-        ) {
-            Text(
-                text = stringResource(id = mateEta.etaStatusUiModel.badgeMessageId),
-                style = OdyTheme.typography.pretendardRegular16.copy(White),
-                textAlign = TextAlign.Center,
-            )
-        }
+        EtaBadge(mateEta.etaStatusUiModel)
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -168,56 +143,95 @@ private fun EtaDashboardItem(
             )
             if (mateEta.isMissing) {
                 Spacer(modifier = Modifier.width(4.dp))
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(CircleShape)
-                        .background(Gray400)
-                        .noRippleClickable { showMissingPopup = !showMissingPopup },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.question_mark),
-                        style = OdyTheme.typography.pretendardRegular14.copy(White),
-                    )
-                    if (showMissingPopup) {
-                        val messageId =
-                            if (mateEta.isUserSelf) R.string.location_permission_self_guide else R.string.location_permission_friend_guide
-
-                        Popup(
-                            alignment = Alignment.TopStart,
-                            offset = IntOffset(-popupSize.value.width, -popupSize.value.height),
-                            properties = PopupProperties(focusable = true),
-                            onDismissRequest = { showMissingPopup = false }
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .wrapContentSize()
-                                    .background(Color.Transparent)
-                                    .clip(
-                                        RoundedCornerShape(
-                                            topStart = 20.dp,
-                                            topEnd = 20.dp,
-                                            bottomStart = 20.dp
-                                        )
-                                    )
-                                    .background(Gray400Alpha70)
-                                    .onGloballyPositioned { coordinates ->
-                                        popupSize.value = coordinates.size
-                                    },
-                            ) {
-                                Text(
-                                    text = stringResource(id = messageId),
-                                    style = OdyTheme.typography.pretendardRegular12.copy(color = White),
-                                    modifier = Modifier
-                                        .padding(vertical = 8.dp)
-                                        .padding(horizontal = 16.dp),
-                                )
-                            }
-                        }
-                    }
-                }
+                MissingGuideButton(isUserSelf = mateEta.isUserSelf)
             }
+        }
+    }
+}
+
+@Composable
+private fun EtaBadge(etaStatusUiModel: EtaStatusUiModel) {
+    Button(
+        onClick = { },
+        modifier = Modifier
+            .width(80.dp)
+            .height(32.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = etaStatusUiModel.badgeColor,
+            disabledContainerColor = etaStatusUiModel.badgeColor,
+        ),
+        contentPadding = PaddingValues(all = 0.dp),
+        shape = RoundedCornerShape(15.dp),
+        interactionSource = NoRippleInteractionSource,
+        enabled = etaStatusUiModel.canNudge()
+    ) {
+        Text(
+            text = stringResource(id = etaStatusUiModel.badgeMessageId),
+            style = OdyTheme.typography.pretendardRegular16.copy(White),
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun MissingGuideButton(isUserSelf: Boolean) {
+    var showMissingTooltip by rememberSaveable { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .size(24.dp)
+            .clip(CircleShape)
+            .background(Gray400)
+            .noRippleClickable { showMissingTooltip = !showMissingTooltip },
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = stringResource(id = R.string.question_mark),
+            style = OdyTheme.typography.pretendardRegular14.copy(White),
+        )
+        if (showMissingTooltip) {
+            MissingTooltip(
+                isUserSelf = isUserSelf,
+                onCloseTooltip = { showMissingTooltip = false },
+            )
+        }
+    }
+}
+
+@Composable
+private fun MissingTooltip(
+    isUserSelf: Boolean,
+    onCloseTooltip: () -> Unit
+) {
+    val tooltipSize = remember { mutableStateOf(IntSize.Zero) }
+    val messageId = if (isUserSelf) {
+        R.string.location_permission_self_guide
+    } else {
+        R.string.location_permission_friend_guide
+    }
+
+    Popup(
+        alignment = Alignment.TopStart,
+        offset = IntOffset(-tooltipSize.value.width, -tooltipSize.value.height),
+        properties = PopupProperties(focusable = true),
+        onDismissRequest = onCloseTooltip,
+    ) {
+        Box(
+            modifier = Modifier
+                .wrapContentSize()
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 20.dp))
+                .background(Gray400Alpha70)
+                .onGloballyPositioned { coordinates ->
+                    tooltipSize.value = coordinates.size
+                },
+        ) {
+            Text(
+                text = stringResource(id = messageId),
+                style = OdyTheme.typography.pretendardRegular12.copy(color = White),
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .padding(horizontal = 16.dp),
+            )
         }
     }
 }
