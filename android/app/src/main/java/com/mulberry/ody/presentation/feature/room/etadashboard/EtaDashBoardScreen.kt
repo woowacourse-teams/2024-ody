@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.feature.room.etadashboard
 
+import android.graphics.Picture
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +32,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.draw
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -44,10 +50,14 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
+import com.mulberry.ody.presentation.common.image.toBitmap
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyTopAppBar
+import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.EtaStatusUiModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.theme.Gray400
@@ -56,14 +66,21 @@ import com.mulberry.ody.presentation.theme.OdyTheme
 import com.mulberry.ody.presentation.theme.White
 
 @Composable
-fun EtaDashboardScreen() {
+fun EtaDashboardScreen(
+    onBack: () -> Unit,
+    viewModel: MeetingRoomViewModel = hiltViewModel(),
+) {
+    val context = LocalContext.current
+    val mateEtas by viewModel.mateEtaUiModels.collectAsStateWithLifecycle()
+    val sharedImagePicture = remember { Picture() }
+
     Scaffold(
         containerColor = OdyTheme.colors.primary,
         topBar = {
             OdyTopAppBar(
                 title = "약속 이름",
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = onBack) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_back),
                             tint = Color.Unspecified,
@@ -72,7 +89,15 @@ fun EtaDashboardScreen() {
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(
+                        onClick = {
+                            viewModel.shareEtaDashboard(
+                                title = context.getString(R.string.eta_dashboard_share_description),
+                                buttonTitle = context.getString(R.string.eta_dashboard_share_button),
+                                bitmap = sharedImagePicture.toBitmap(),
+                            )
+                        },
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_share),
                             tint = Color.Unspecified,
@@ -81,16 +106,11 @@ fun EtaDashboardScreen() {
                     }
                 },
             )
-        }
+        },
     ) { innerPadding ->
         EtaDashboardContent(
-            mateEtas = listOf(
-                MateEtaUiModel("올리브", EtaStatusUiModel.Arrived, true, true, 1L, 1L),
-                MateEtaUiModel("올리브", EtaStatusUiModel.Missing, true, false, 2L, 2L),
-                MateEtaUiModel("올리브", EtaStatusUiModel.ArrivalSoon(20), false, false, 3L, 3L),
-                MateEtaUiModel("올리브", EtaStatusUiModel.LateWarning(20), false, false, 4L, 4L),
-                MateEtaUiModel("올리브", EtaStatusUiModel.Late(30), false, false, 5L, 5L),
-            ),
+            mateEtas = mateEtas,
+            picture = sharedImagePicture,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -99,10 +119,30 @@ fun EtaDashboardScreen() {
 @Composable
 private fun EtaDashboardContent(
     mateEtas: List<MateEtaUiModel>,
+    picture: Picture,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier,
+        modifier =
+            modifier
+                .drawWithCache {
+                    val width = size.width.toInt()
+                    val height = size.height.toInt()
+                    onDrawWithContent {
+                        val pictureCanvas =
+                            Canvas(
+                                picture.beginRecording(
+                                    width,
+                                    height,
+                                ),
+                            )
+                        draw(this, this.layoutDirection, pictureCanvas, this.size) {
+                            this@onDrawWithContent.drawContent()
+                        }
+                        picture.endRecording()
+                        drawIntoCanvas { canvas -> canvas.nativeCanvas.drawPicture(picture) }
+                    }
+                },
         contentPadding = PaddingValues(vertical = 32.dp),
         verticalArrangement = Arrangement.spacedBy(42.dp),
     ) {
@@ -113,15 +153,14 @@ private fun EtaDashboardContent(
 }
 
 @Composable
-private fun EtaDashboardItem(
-    mateEta: MateEtaUiModel,
-) {
+private fun EtaDashboardItem(mateEta: MateEtaUiModel) {
     val context = LocalContext.current
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .fillMaxWidth(),
     ) {
         Text(
             text = mateEta.nickname,
@@ -153,17 +192,19 @@ private fun EtaDashboardItem(
 private fun EtaBadge(etaStatusUiModel: EtaStatusUiModel) {
     Button(
         onClick = { },
-        modifier = Modifier
-            .width(80.dp)
-            .height(32.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = etaStatusUiModel.badgeColor,
-            disabledContainerColor = etaStatusUiModel.badgeColor,
-        ),
+        modifier =
+            Modifier
+                .width(80.dp)
+                .height(32.dp),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = etaStatusUiModel.badgeColor,
+                disabledContainerColor = etaStatusUiModel.badgeColor,
+            ),
         contentPadding = PaddingValues(all = 0.dp),
         shape = RoundedCornerShape(15.dp),
         interactionSource = NoRippleInteractionSource,
-        enabled = etaStatusUiModel.canNudge()
+        enabled = etaStatusUiModel.canNudge(),
     ) {
         Text(
             text = stringResource(id = etaStatusUiModel.badgeMessageId),
@@ -178,11 +219,12 @@ private fun MissingGuideButton(isUserSelf: Boolean) {
     var showMissingTooltip by rememberSaveable { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
-            .size(24.dp)
-            .clip(CircleShape)
-            .background(Gray400)
-            .noRippleClickable { showMissingTooltip = !showMissingTooltip },
+        modifier =
+            Modifier
+                .size(24.dp)
+                .clip(CircleShape)
+                .background(Gray400)
+                .noRippleClickable { showMissingTooltip = !showMissingTooltip },
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -201,14 +243,15 @@ private fun MissingGuideButton(isUserSelf: Boolean) {
 @Composable
 private fun MissingTooltip(
     isUserSelf: Boolean,
-    onCloseTooltip: () -> Unit
+    onCloseTooltip: () -> Unit,
 ) {
     val tooltipSize = remember { mutableStateOf(IntSize.Zero) }
-    val messageId = if (isUserSelf) {
-        R.string.location_permission_self_guide
-    } else {
-        R.string.location_permission_friend_guide
-    }
+    val messageId =
+        if (isUserSelf) {
+            R.string.location_permission_self_guide
+        } else {
+            R.string.location_permission_friend_guide
+        }
 
     Popup(
         alignment = Alignment.TopStart,
@@ -217,29 +260,76 @@ private fun MissingTooltip(
         onDismissRequest = onCloseTooltip,
     ) {
         Box(
-            modifier = Modifier
-                .wrapContentSize()
-                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 20.dp))
-                .background(Gray400Alpha70)
-                .onGloballyPositioned { coordinates ->
-                    tooltipSize.value = coordinates.size
-                },
+            modifier =
+                Modifier
+                    .wrapContentSize()
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 20.dp))
+                    .background(Gray400Alpha70)
+                    .onGloballyPositioned { coordinates ->
+                        tooltipSize.value = coordinates.size
+                    },
         ) {
             Text(
                 text = stringResource(id = messageId),
                 style = OdyTheme.typography.pretendardRegular12.copy(color = White),
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .padding(horizontal = 16.dp),
+                modifier =
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .padding(horizontal = 16.dp),
             )
         }
     }
 }
 
 @Composable
-@Preview
+@Preview(showSystemUi = true)
 private fun EtaDashboardScreenPreview() {
     OdyTheme {
-        EtaDashboardScreen()
+        EtaDashboardContent(
+            mateEtas =
+                listOf(
+                    MateEtaUiModel(
+                        "올리브",
+                        EtaStatusUiModel.Arrived,
+                        isMissing = true,
+                        isUserSelf = true,
+                        userId = 1L,
+                        mateId = 1L,
+                    ),
+                    MateEtaUiModel(
+                        "올리브",
+                        EtaStatusUiModel.Missing,
+                        isMissing = true,
+                        isUserSelf = false,
+                        userId = 2L,
+                        mateId = 2L,
+                    ),
+                    MateEtaUiModel(
+                        "올리브",
+                        EtaStatusUiModel.ArrivalSoon(20),
+                        isMissing = false,
+                        isUserSelf = false,
+                        userId = 3L,
+                        mateId = 3L,
+                    ),
+                    MateEtaUiModel(
+                        "올리브",
+                        EtaStatusUiModel.LateWarning(20),
+                        isMissing = false,
+                        isUserSelf = false,
+                        userId = 4L,
+                        mateId = 4L,
+                    ),
+                    MateEtaUiModel(
+                        "올리브",
+                        EtaStatusUiModel.Late(30),
+                        isMissing = false,
+                        isUserSelf = false,
+                        userId = 5L,
+                        mateId = 5L,
+                    ),
+                ),
+            picture = Picture(),
+        )
     }
 }

@@ -31,7 +31,6 @@ class KakaoImageShareHelper(private val context: Context) : ImageShareHelper {
             content =
                 Content(
                     title = imageShareContent.title,
-                    description = imageShareContent.description,
                     imageUrl = imageShareContent.imageUrl,
                     imageWidth = imageShareContent.imageWidthPixel,
                     imageHeight = imageShareContent.imageHeightPixel,

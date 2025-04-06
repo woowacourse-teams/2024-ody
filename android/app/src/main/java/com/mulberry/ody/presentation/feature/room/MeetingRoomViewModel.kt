@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.feature.room
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
@@ -22,6 +23,7 @@ import com.mulberry.ody.presentation.common.analytics.logButtonClicked
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.common.image.ImageShareContent
 import com.mulberry.ody.presentation.common.image.ImageShareHelper
+import com.mulberry.ody.presentation.common.image.toByteArray
 import com.mulberry.ody.presentation.feature.room.detail.model.DetailMeetingUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.InviteCodeCopyInfo
 import com.mulberry.ody.presentation.feature.room.detail.model.MateUiModel
@@ -64,17 +66,18 @@ class MeetingRoomViewModel
         private val matesEta: Flow<MateEtaInfo?> =
             matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
 
-        val mateEtaUiModels: StateFlow<List<MateEtaUiModel>?> =
+        val mateEtaUiModels: StateFlow<List<MateEtaUiModel>> =
             matesEta.map {
-                val mateEtaInfo = it ?: return@map null
+                val mateEtaInfo = it ?: return@map emptyList()
                 mateEtaInfo.toMateEtaUiModels()
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                initialValue = null,
+                initialValue = emptyList(),
             )
 
-        private val _meeting: MutableStateFlow<DetailMeetingUiModel> = MutableStateFlow(DetailMeetingUiModel.DEFAULT)
+        private val _meeting: MutableStateFlow<DetailMeetingUiModel> =
+            MutableStateFlow(DetailMeetingUiModel.DEFAULT)
         val meeting: StateFlow<DetailMeetingUiModel> = _meeting.asStateFlow()
 
         private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
@@ -118,7 +121,7 @@ class MeetingRoomViewModel
             mateId: Long,
         ) {
             viewModelScope.launch {
-                val targetMate = mateEtaUiModels.value?.find { it.mateId == mateId } ?: return@launch
+                val targetMate = mateEtaUiModels.value.find { it.mateId == mateId } ?: return@launch
                 handleNudgeAction(nudgeId, mateId, targetMate.nickname)
             }
         }
@@ -228,39 +231,28 @@ class MeetingRoomViewModel
         fun shareEtaDashboard(
             title: String,
             buttonTitle: String,
-            imageByteArray: ByteArray,
-            imageWidthPixel: Int,
-            imageHeightPixel: Int,
+            bitmap: Bitmap,
         ) {
             viewModelScope.launch {
                 startLoading()
                 imageStorage.upload(
-                    byteArray = imageByteArray,
+                    byteArray = bitmap.toByteArray(),
                     fileName = LocalDateTime.now().toString(),
-                )
-                    .onSuccess {
-                        val imageShareContent =
-                            ImageShareContent(
-                                title = title,
-                                buttonTitle = buttonTitle,
-                                imageUrl = it,
-                                imageWidthPixel = imageWidthPixel,
-                                imageHeightPixel = imageHeightPixel,
-                                link = "https://github.com/woowacourse-teams/2024-ody",
-                            )
-                        shareImage(imageShareContent)
-                    }.onNetworkError {
-                        handleNetworkError()
-                        lastFailedAction = {
-                            shareEtaDashboard(
-                                title,
-                                buttonTitle,
-                                imageByteArray,
-                                imageWidthPixel,
-                                imageHeightPixel,
-                            )
-                        }
-                    }
+                ).onSuccess {
+                    val imageShareContent =
+                        ImageShareContent(
+                            title = title,
+                            buttonTitle = buttonTitle,
+                            imageUrl = it,
+                            imageWidthPixel = bitmap.width,
+                            imageHeightPixel = bitmap.height,
+                            link = "https://play.google.com/store/apps/details?id=com.mulberry.ody",
+                        )
+                    shareImage(imageShareContent)
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = { shareEtaDashboard(title, buttonTitle, bitmap) }
+                }
                 stopLoading()
             }
         }

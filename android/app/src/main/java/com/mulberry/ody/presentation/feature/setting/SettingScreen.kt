@@ -53,7 +53,7 @@ import com.mulberry.ody.presentation.theme.White
 
 @Composable
 fun SettingScreen(
-    onClickBack: () -> Unit,
+    onBack: () -> Unit,
     settingNavigation: SettingNavigation,
     viewModel: SettingViewModel = hiltViewModel(),
 ) {
@@ -100,7 +100,7 @@ fun SettingScreen(
             OdyTopAppBar(
                 title = stringResource(id = R.string.setting_main_title),
                 navigationIcon = {
-                    IconButton(onClick = onClickBack) {
+                    IconButton(onClick = onBack) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_back),
                             tint = OdyTheme.colors.tertiary,
