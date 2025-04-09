@@ -17,14 +17,14 @@ class MeetingLogRepositoryTest extends BaseRepositoryTest {
 
     @DisplayName("특정 시간 이전의 약속 로그를 가져온다")
     @Test
-    void findMeetingLogsBeforeThanEqual() {
+    void findByShowAtBeforeOrEqualTo() {
         LocalDateTime now = LocalDateTime.now();
         Meeting meeting = fixtureGenerator.generateMeeting();
         Mate mate = fixtureGenerator.generateMate(meeting);
         fixtureGenerator.generateMeetingLog(mate, MeetingLogType.ENTRY_LOG, now);
         fixtureGenerator.generateMeetingLog(mate, MeetingLogType.DEPARTURE_REMINDER, now.plusSeconds(1L));
 
-        List<MeetingLog> meetingLogs = meetingLogRepository.findMeetingLogsBeforeThanEqual(meeting.getId(), now);
+        List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(meeting.getId(), now);
 
         assertAll(
                 () -> assertThat(meetingLogs).hasSize(1),

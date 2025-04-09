@@ -14,5 +14,5 @@ public interface MeetingLogRepository extends JpaRepository<MeetingLog, Long> {
              where meetingLog.mate.meeting.id = :meetingId
                          and meetingLog.showAt <= :time
             """)
-    List<MeetingLog> findMeetingLogsBeforeThanEqual(long meetingId, LocalDateTime time);
+    List<MeetingLog> findByShowAtBeforeOrEqualTo(long meetingId, LocalDateTime time);
 }

@@ -3,7 +3,6 @@ package com.ody.meetinglog.service;
 import com.ody.meetinglog.domain.MeetingLog;
 import com.ody.meetinglog.repository.MeetingLogRepository;
 import com.ody.notification.dto.response.NotiLogFindResponses;
-import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class MeetingLogService {
     }
 
     public NotiLogFindResponses findAllByMeetingId(long meetingId) {
-        List<MeetingLog> meetingLogs = meetingLogRepository.findMeetingLogsBeforeThanEqual(meetingId, LocalDateTime.now());
+        List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(meetingId, LocalDateTime.now());
         return NotiLogFindResponses.from(meetingLogs);
     }
 }
