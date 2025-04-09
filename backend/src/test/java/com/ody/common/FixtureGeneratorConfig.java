@@ -27,7 +27,8 @@ public class FixtureGeneratorConfig {
             ApiCallRepository apiCallRepository,
             MemberAppleTokenRepository memberAppleTokenRepository,
             MeetingLogRepository meetingLogRepository,
-            JwtTokenProvider jwtTokenProvider) {
+            JwtTokenProvider jwtTokenProvider
+    ) {
         return new FixtureGenerator(
                 meetingRepository,
                 memberRepository,
