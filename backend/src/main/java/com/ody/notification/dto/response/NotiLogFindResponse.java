@@ -1,5 +1,7 @@
 package com.ody.notification.dto.response;
 
+import com.ody.mate.domain.Mate;
+import com.ody.meetinglog.domain.MeetingLog;
 import com.ody.notification.domain.Notification;
 import com.ody.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,15 +22,16 @@ public record NotiLogFindResponse(
         String imageUrl
 ) {
 
-    public static NotiLogFindResponse from(Notification notification) {
-        String imageUrl = notification.getMate().getMember().getImageUrl();
-        if (notification.getMate().isDeleted()) {
+    public static NotiLogFindResponse from(MeetingLog meetingLog) {
+        Mate mate = meetingLog.getMate();
+        String imageUrl = mate.getMember().getImageUrl();
+        if(mate.isDeleted()){
             imageUrl = "";
         }
         return new NotiLogFindResponse(
-                notification.getType().toString(),
-                notification.getMate().getNickname().getValue(),
-                TimeUtil.trimSecondsAndNanos(notification.getSendAt()),
+                meetingLog.getType().getName(),
+                mate.getNickname().getValue(),
+                TimeUtil.trimSecondsAndNanos(meetingLog.getCreatedAt()),
                 imageUrl
         );
     }
