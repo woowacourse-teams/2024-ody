@@ -52,7 +52,7 @@ public class NotificationService {
         return savedNotification;
     }
 
-    public void scheduleNotification(Notification notification) {
+    private void scheduleNotification(Notification notification) {
         scheduleRunner.runWithTransaction(() -> send(notification), notification.getSendAt());
         log.info("{}에 {} 알림 스케줄링 예약", notification.getSendAt(), notification.getType());
     }
