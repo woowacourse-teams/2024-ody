@@ -1,6 +1,11 @@
 package com.mulberry.ody.presentation.feature.room.etadashboard
 
 import android.graphics.Picture
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,8 +40,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.draw
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -117,7 +124,7 @@ fun EtaDashboardScreen(
 }
 
 @Composable
-private fun EtaDashboardContent(
+fun EtaDashboardContent(
     mateEtas: List<MateEtaUiModel>,
     picture: Picture,
     modifier: Modifier = Modifier,
@@ -129,14 +136,8 @@ private fun EtaDashboardContent(
                     val width = size.width.toInt()
                     val height = size.height.toInt()
                     onDrawWithContent {
-                        val pictureCanvas =
-                            Canvas(
-                                picture.beginRecording(
-                                    width,
-                                    height,
-                                ),
-                            )
-                        draw(this, this.layoutDirection, pictureCanvas, this.size) {
+                        val pictureCanvas = Canvas(picture.beginRecording(width, height))
+                        draw(this, layoutDirection, pictureCanvas, size) {
                             this@onDrawWithContent.drawContent()
                         }
                         picture.endRecording()
@@ -158,9 +159,7 @@ private fun EtaDashboardItem(mateEta: MateEtaUiModel) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier =
-            Modifier
-                .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Text(
             text = mateEta.nickname,
@@ -190,12 +189,25 @@ private fun EtaDashboardItem(mateEta: MateEtaUiModel) {
 
 @Composable
 private fun EtaBadge(etaStatusUiModel: EtaStatusUiModel) {
+    val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 2f,
+        animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse),
+        label = "scale",
+    )
+
     Button(
         onClick = { },
         modifier =
             Modifier
                 .width(80.dp)
-                .height(32.dp),
+                .height(32.dp)
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    transformOrigin = TransformOrigin.Center
+                },
         colors =
             ButtonDefaults.buttonColors(
                 containerColor = etaStatusUiModel.badgeColor,
