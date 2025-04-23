@@ -25,7 +25,7 @@ inline fun <T> ApiResult<T>.onNetworkError(block: (exception: Exception) -> Unit
 
 inline fun <T> ApiResult<T>.onUnexpected(block: (t: Throwable) -> Unit): ApiResult<T> {
     if (this is ApiResult.Unexpected) {
-        block(this.t)
+        block(this.throwable)
     }
     return this
 }
@@ -35,7 +35,7 @@ inline fun <T, R> ApiResult<T>.map(block: (T) -> R): ApiResult<R> {
         is ApiResult.Success -> ApiResult.Success(block(this.data))
         is ApiResult.Failure -> ApiResult.Failure(this.code, this.errorMessage)
         is ApiResult.NetworkError -> ApiResult.NetworkError(this.exception)
-        is ApiResult.Unexpected -> ApiResult.Unexpected(this.t)
+        is ApiResult.Unexpected -> ApiResult.Unexpected(this.throwable)
     }
 }
 
@@ -47,7 +47,7 @@ fun <T> ApiResult<T>.getOrThrow(): T {
     when (this) {
         is ApiResult.Failure -> throw IllegalArgumentException(errorMessage)
         is ApiResult.NetworkError -> throw exception
-        is ApiResult.Unexpected -> throw t
+        is ApiResult.Unexpected -> throw throwable
         is ApiResult.Success -> return data
     }
 }
@@ -84,6 +84,6 @@ inline fun <T, R> ApiResult<T>.flatMap(block: (T) -> ApiResult<R>): ApiResult<R>
         is ApiResult.Success -> block(this.data)
         is ApiResult.Failure -> ApiResult.Failure(this.code, this.errorMessage)
         is ApiResult.NetworkError -> ApiResult.NetworkError(this.exception)
-        is ApiResult.Unexpected -> ApiResult.Unexpected(this.t)
+        is ApiResult.Unexpected -> ApiResult.Unexpected(this.throwable)
     }
 }

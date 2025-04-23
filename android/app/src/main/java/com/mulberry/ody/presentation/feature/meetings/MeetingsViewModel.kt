@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,7 +39,7 @@ class MeetingsViewModel
 
         fun fetchMeetings() {
             viewModelScope.launch {
-                _meetingsUiState.value = MeetingsUiState.Loading
+                startLoading()
                 meetingRepository.fetchMeetings()
                     .onSuccess {
                         val meetings = it.toMeetingUiModels()
@@ -48,11 +47,11 @@ class MeetingsViewModel
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                        Timber.e("$code $errorMessage")
                     }.onNetworkError {
                         handleNetworkError()
                         lastFailedAction = { fetchMeetings() }
                     }
+                stopLoading()
             }
         }
 

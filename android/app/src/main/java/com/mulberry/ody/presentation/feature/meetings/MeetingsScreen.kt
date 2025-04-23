@@ -10,7 +10,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -27,7 +26,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +43,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,12 +56,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
-import com.mulberry.ody.presentation.common.ErrorSnackbarHandler
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
+import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.component.OdyButton
 import com.mulberry.ody.presentation.component.OdyTopAppBar
-import com.mulberry.ody.presentation.feature.meetings.component.BackPressed
+import com.mulberry.ody.presentation.feature.meetings.component.MeetingsBackPressed
 import com.mulberry.ody.presentation.feature.meetings.component.MeetingsLaunchPermission
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
@@ -109,7 +108,7 @@ fun MeetingsScreen(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_setting),
-                            tint = OdyTheme.colors.tertiary,
+                            tint = Color.Unspecified,
                             contentDescription = null,
                         )
                     }
@@ -118,7 +117,6 @@ fun MeetingsScreen(
         },
     ) { innerPadding ->
         when (val state = meetingsUiState) {
-            MeetingsUiState.Loading -> MeetingsLoading()
             MeetingsUiState.Empty -> MeetingsEmpty(modifier = Modifier.padding(innerPadding))
             is MeetingsUiState.Meetings ->
                 MeetingsContent(
@@ -144,9 +142,9 @@ fun MeetingsScreen(
     LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
         viewModel.fetchMeetings()
     }
-    ErrorSnackbarHandler(viewModel)
+    BaseActionHandler(viewModel, snackbarHostState)
     MeetingsLaunchPermission(showSnackbar)
-    BackPressed()
+    MeetingsBackPressed()
 }
 
 @Composable
@@ -204,17 +202,10 @@ private fun MeetingsFloatingActionButton(
             val iconId = if (isExpanded) R.drawable.ic_cancel else R.drawable.ic_plus
             Icon(
                 painter = painterResource(id = iconId),
-                tint = OdyTheme.colors.secondaryVariant,
+                tint = Color.Unspecified,
                 contentDescription = null,
             )
         }
-    }
-}
-
-@Composable
-private fun MeetingsLoading() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
     }
 }
 
@@ -250,7 +241,7 @@ private fun MeetingsContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(top = 24.dp, start = 18.dp, end = 18.dp, bottom = 32.dp),
     ) {
-        items(meetings) {
+        items(items = meetings, key = { it.id }) {
             MeetingItem(
                 meeting = it,
                 onClickMeeting = onClickMeeting,
@@ -297,7 +288,7 @@ private fun MeetingItem(
                 )
                 Icon(
                     painter = painterResource(id = if (isFolded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down),
-                    tint = OdyTheme.colors.secondary,
+                    tint = Color.Unspecified,
                     contentDescription = null,
                     modifier =
                         Modifier

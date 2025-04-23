@@ -3,6 +3,7 @@ package com.mulberry.ody.presentation.feature.creation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -57,11 +58,13 @@ class MeetingCreationActivity :
     }
 
     private fun initializeMeetingInfoViewPager() {
-        val meetingInfoViewPagerAdapter: ViewPagerAdapter =
-            ViewPagerAdapter(this, fragments)
-
+        val meetingInfoViewPagerAdapter = ViewPagerAdapter(this, fragments)
         binding.vpMeetingInfo.adapter = meetingInfoViewPagerAdapter
         binding.wdMeetingInfo.attachTo(binding.vpMeetingInfo)
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            binding.btnNext.visibility = if (supportFragmentManager.backStackEntryCount > 0) View.GONE else View.VISIBLE
+        }
     }
 
     private fun initializeObserve() {

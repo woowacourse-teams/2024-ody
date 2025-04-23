@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.mulberry.ody.R
 
 @Composable
-fun BackPressed() {
+fun MeetingsBackPressed() {
     val context = LocalContext.current
     var backPressedTime by rememberSaveable { mutableLongStateOf(0L) }
 
