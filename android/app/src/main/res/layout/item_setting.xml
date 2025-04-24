@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="setting"
+            type="com.mulberry.ody.presentation.setting.model.SettingItem" />
+
+        <variable
+            name="settingListener"
+            type="com.mulberry.ody.presentation.setting.listener.SettingListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="26dp"
+        android:onClick="@{() -> settingListener.onClickSettingItem(setting.type)}">
+
+        <ImageView
+            android:id="@+id/iv_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="22dp"
+            android:layout_marginStart="10dp"
+            app:imageRes="@{setting.type.icon}"
+            app:layout_constraintBottom_toTopOf="@id/divider"
+            app:layout_constraintEnd_toStartOf="@id/tv_setting_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_user_info" />
+
+        <TextView
+            android:id="@+id/tv_setting_description"
+            style="@style/pretendard_medium_18"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@{setting.type.description}"
+            app:layout_constraintBottom_toTopOf="@id/divider"
+            app:layout_constraintEnd_toStartOf="@id/switch_setting"
+            app:layout_constraintStart_toEndOf="@id/iv_setting"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="개인정보 처리 방침" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:onCheckedChanged="@{(_, checked) -> settingListener.onChangeSettingSwitchItem(switchSetting, setting.type, checked)}"
+            app:layout_constraintBottom_toBottomOf="@id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_setting_description"
+            app:layout_constraintTop_toTopOf="parent"
+            app:visibility="@{setting.type.switch}" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/gray_350"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:visibility="@{!setting.end}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
