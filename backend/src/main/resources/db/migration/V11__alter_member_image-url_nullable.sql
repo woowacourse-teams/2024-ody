@@ -1,0 +1,1 @@
+ALTER TABLE member MODIFY image_url VARCHAR(255);

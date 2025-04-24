@@ -4,6 +4,7 @@
 
     <uses-configuration android:name="android:permission.POST_NOTIFICATIONS" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -44,7 +45,7 @@
             tools:node="remove" />
 
         <activity
-            android:name=".presentation.splash.SplashActivity"
+            android:name=".presentation.feature.splash.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Splash">
@@ -55,11 +56,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.setting.SettingActivity"
+            android:name=".presentation.feature.setting.SettingActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.login.LoginActivity"
+            android:name=".presentation.feature.login.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -72,32 +73,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.meetings.MeetingsActivity"
+            android:name=".presentation.feature.meetings.MeetingsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.invitecode.InviteCodeActivity"
+            android:name=".presentation.feature.invitecode.InviteCodeActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".presentation.join.MeetingJoinActivity"
+            android:name=".presentation.feature.join.MeetingJoinActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".presentation.join.complete.JoinCompleteActivity"
+            android:name=".presentation.feature.join.complete.JoinCompleteActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.creation.MeetingCreationActivity"
+            android:name=".presentation.feature.creation.MeetingCreationActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".presentation.room.MeetingRoomActivity"
+            android:name=".presentation.feature.room.MeetingRoomActivity"
             android:exported="false"
-            android:parentActivityName=".presentation.meetings.MeetingsActivity"
+            android:parentActivityName=".presentation.feature.meetings.MeetingsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
@@ -126,17 +127,6 @@
             android:name=".data.local.service.EtaDashboardService"
             android:exported="false"
             android:foregroundServiceType="location" />
-
-        <receiver android:name=".data.local.service.EtaDashboardOpenBroadcastReceiver" />
-        <receiver android:name=".data.local.service.EtaDashboardCloseBroadcastReceiver" />
-        <receiver
-            android:name=".data.local.service.ReinstallBroadcastReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

@@ -2,14 +2,15 @@ package com.mulberry.ody
 
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.Addresses
+import com.mulberry.ody.domain.model.DetailMeeting
 import com.mulberry.ody.domain.model.EtaStatus
 import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.MateEta
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
-import com.mulberry.ody.domain.model.MeetingCatalog
 import com.mulberry.ody.domain.model.NotificationLog
 import com.mulberry.ody.domain.model.NotificationLogType
+import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -18,8 +19,8 @@ val inviteCode: String = "MDAxMQzv"
 
 val meetingId: Long = 0L
 
-val meeting: Meeting =
-    Meeting(
+val detailMeeting: DetailMeeting =
+    DetailMeeting(
         id = meetingId,
         name = "meetingA",
         destinationAddress = "선릉 캠퍼스",
@@ -32,8 +33,18 @@ val meeting: Meeting =
         inviteCode = inviteCode,
     )
 
-val meetingCatalog =
-    MeetingCatalog(
+val meetingUiModel: MeetingUiModel =
+    MeetingUiModel(
+        id = 1L,
+        name = "올리브와 저녁 마라탕",
+        datetime = LocalDateTime.now().plusMinutes(20),
+        originAddress = "서울 강남구 테헤란로 411",
+        targetAddress = "서울특별시 송파구 올림픽로35다길 42",
+        durationMinutes = "1시간 10분",
+    )
+
+val meeting =
+    Meeting(
         meetingId,
         "meetingA",
         1,
@@ -43,9 +54,9 @@ val meetingCatalog =
         16,
     )
 
-val meetingCatalogs: List<MeetingCatalog> =
+val meetings: List<Meeting> =
     listOf(
-        meetingCatalog,
+        meeting,
     )
 
 val notificationLogs: List<NotificationLog> =

@@ -3,9 +3,9 @@ package com.mulberry.ody.di
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.data.local.db.OdyDatastore
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
-import com.mulberry.ody.data.retrofit.AccessTokenInterceptor
-import com.mulberry.ody.data.retrofit.ApiResultCallAdapter
-import com.mulberry.ody.data.retrofit.RefreshTokenInterceptor
+import com.mulberry.ody.data.remote.retrofit.AccessTokenInterceptor
+import com.mulberry.ody.data.remote.retrofit.ApiResultCallAdapter
+import com.mulberry.ody.data.remote.retrofit.RefreshTokenInterceptor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module

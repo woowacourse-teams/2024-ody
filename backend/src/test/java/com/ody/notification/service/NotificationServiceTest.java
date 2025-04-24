@@ -3,7 +3,6 @@ package com.ody.notification.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
-import com.ody.auth.service.KakaoAuthUnlinkClient;
 import com.ody.common.BaseServiceTest;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
@@ -13,9 +12,9 @@ import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.domain.types.Nudge;
-import com.ody.notification.dto.response.NotiLogFindResponse;
 import com.ody.notification.repository.NotificationRepository;
 import com.ody.notification.service.event.NudgeEvent;
+import com.ody.notification.service.event.PushEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
 import com.ody.route.service.RouteService;
 import java.time.Instant;
@@ -45,9 +44,6 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @Autowired
     private MemberService memberService;
-
-    @MockBean
-    private KakaoAuthUnlinkClient kakaoAuthUnlinkClient;
 
     @DisplayName("PENDING 상태의 알림들을 TaskScheduler로 스케줄링 한다.")
     @Test
@@ -113,34 +109,17 @@ class NotificationServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("삭제 회원이 포함된 로그 목록을 조회한다.")
+    @DisplayName("DISMISSED 상태이면 알림을 보내지 않는다.")
     @Test
-    void findAllMeetingLogsIncludingDeletedMember() {
-        Meeting meeting = fixtureGenerator.generateMeeting();
-        Mate deleteMate = fixtureGenerator.generateMate(meeting);
-        Mate mate = fixtureGenerator.generateMate(meeting);
-        fixtureGenerator.generateNotification(deleteMate);
-        fixtureGenerator.generateNotification(mate);
+    void sendPushNotificationFailure() {
+        Notification dismissedNotification = fixtureGenerator.generateNotification(
+                NotificationType.DEPARTURE_REMINDER,
+                NotificationStatus.DISMISSED
+        );
 
-        int logCountBeforeDelete = notificationService.findAllNotiLogs(meeting.getId()).notiLog().size();
-        memberService.delete(deleteMate.getMember());
-        int logCountAfterDelete = notificationService.findAllNotiLogs(meeting.getId()).notiLog().size();
+        notificationService.send(dismissedNotification);
 
-        assertThat(logCountAfterDelete).isEqualTo(logCountBeforeDelete + 1);
-    }
-
-
-    @DisplayName("DISMISSED 상태의 알림은 조회되지 않는다.")
-    @Test
-    void findAllMeetingLogsExcludingDisMissedStatus() {
-        Meeting meeting = fixtureGenerator.generateMeeting();
-        Mate mate = fixtureGenerator.generateMate(meeting);
-        fixtureGenerator.generateNotification(mate, NotificationStatus.PENDING);
-        fixtureGenerator.generateNotification(mate, NotificationStatus.DONE);
-        fixtureGenerator.generateNotification(mate, NotificationStatus.DISMISSED);
-
-        List<NotiLogFindResponse> notiLogFindResponses = notificationService.findAllNotiLogs(meeting.getId()).notiLog();
-
-        assertThat(notiLogFindResponses).hasSize(2);
+        assertThat(applicationEvents.stream(PushEvent.class))
+                .hasSize(0);
     }
 }

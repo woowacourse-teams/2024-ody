@@ -121,9 +121,9 @@ class EtaServiceTest extends BaseServiceTest {
         assertThat(mateEtaResponse.status()).isEqualTo(EtaStatus.ARRIVED);
     }
 
-    @DisplayName("ETA 목록 조회 시 API 호출 카운팅 Redisson 분산락 동시성 테스트")
+    @DisplayName("ETA 목록 조회 시 API 호출 카운팅 동시성 테스트")
     @Nested
-    public class RedissonDistributedLockTest {
+    class ApiCallCountConcurrencyTest {
 
         private static final int TOTAL_REQUESTS = 100;
 

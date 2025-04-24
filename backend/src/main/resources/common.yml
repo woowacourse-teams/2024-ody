@@ -5,7 +5,7 @@ spring:
   data:
     redis:
       port: 6379
-      connect-timeout: 3000
+      ttl: 30000
   jpa:
     open-in-view: false
     defer-datasource-initialization: false
@@ -28,7 +28,7 @@ route:
   vendors:
     - name: odsay
       base-url: https://api.odsay.com/v1/api/searchPubTransPathT
-      api-key: ENC(7am2oBS6Y/CCfThV+Yv59ZpjjIu8vOxt8v0/cEvGFDfUemAmSpbz+vfR3bsoDrKoJ/EwmeV6VXo=)
+      api-key: ENC(GhWkKC7Mzk3VVY++NGU4a4+LbYKyzlMFNteru6TZXGA748qiSdt/j9IHteHdtOMdDzbNdvQ8HNo=)
     - name: google
       base-url: https://maps.googleapis.com/maps/api/distancematrix/json
       api-key: ENC(B/qgWb19BUQN+qdCHQKP7Ocx4xszftoRM4DfcjSIxCXlwgpfvZW4QpFBMGbNqVsf)
@@ -61,3 +61,12 @@ api-call:
 
 allowed-origins:
   api-call: ENC(QicQ16sDQJlHTuf3E/wIS+VBG0UVfQ62HDBXQbtfM8pmnYsBAH8xmACD7PBVgpLjWAHdJXN6bOKv/Z8BZFFbFyfp5x5f7dNCgok83Cn6jSE=)
+
+apple:
+  private-key: ENC(djEFfc8EilPm0C3bOQImqZjf7FrH27nAzA1F42ILFg5T+NJQ5BCwN6yBC9xOHtxWCGvt3HNL3OqZrj8noTEZDb5oPk+YDsQZaOxVQo5cbHF4XIaU0ro+AglhHfWHx40b7p1ArzQNoxNbGef6OLXD4NuakftUoeLnbPHxIKPDUgdotoynNhfd8Jmog9uV3eNjhBXFCMoz7uR1/qA95i9HEz4CPiwl63+nniXn5ZFOw5nEneZWMLaiT9apnWSePeogw1pBBDjKBqqZ+A/qyRiUOlS6l47aAwvx)
+  key-id: ENC(AoYkUsd51o3yUmg2PDIJOMTUFpuVzHkm)
+  team-id: ENC(AvMhD66HadGSu0RbNa3k03ZsJklGXnG/)
+  client-id: ENC(7JDaIBAHp9y9YAk+PGelE+zzOsR4/h3iV//4blwTuzJ2N2Ne0ILkZQ==)
+  validate-token-uri: /auth/oauth2/v2/token
+  revoke-token-uri: /auth/oauth2/v2/revoke
+  client-secret-expiration-seconds: 3600

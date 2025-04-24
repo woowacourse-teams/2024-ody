@@ -2,6 +2,7 @@ package com.ody.meeting.service;
 
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
+import com.ody.eta.service.EtaSchedulingService;
 import com.ody.mate.domain.Mate;
 import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.response.MateSaveResponseV2;
@@ -16,16 +17,24 @@ import com.ody.meeting.dto.response.MeetingWithMatesResponseV1;
 import com.ody.meeting.dto.response.MeetingWithMatesResponseV2;
 import com.ody.meeting.repository.MeetingRepository;
 import com.ody.member.domain.Member;
-import com.ody.notification.domain.NotificationType;
+import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.message.GroupMessage;
+import com.ody.notification.domain.notice.EtaNotice;
+import com.ody.notification.domain.notice.NoticeType;
+import com.ody.notification.service.NoticeService;
 import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
+import com.ody.util.TimeUtil;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,25 +46,47 @@ import org.springframework.transaction.annotation.Transactional;
 public class MeetingService {
 
     private static final long ETA_NOTICE_TIME_DEFER = 30L;
+    private static final LocalTime LAST_SCHEDULING_NOTI_TIME = LocalTime.of(0, 0);
 
     private final MateService mateService;
     private final MeetingRepository meetingRepository;
     private final MateRepository mateRepository;
     private final NotificationService notificationService;
+    private final EtaSchedulingService etaSchedulingService;
+    private final NoticeService noticeService;
 
     @Transactional
     public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
         String inviteCode = generateUniqueInviteCode();
         Meeting meeting = meetingRepository.save(meetingSaveRequestV1.toMeeting(inviteCode));
         scheduleEtaNotice(meeting);
+        scheduleEtaSchedulingNoticeIfUpcomingMeeting(meeting);
         return MeetingSaveResponseV1.from(meeting);
     }
 
     private void scheduleEtaNotice(Meeting meeting) {
-        GroupMessage noticeMessage = GroupMessage.createMeetingNotice(meeting, NotificationType.ETA_NOTICE);
         LocalDateTime etaNoticeTime = meeting.getMeetingTime().minusMinutes(ETA_NOTICE_TIME_DEFER);
-        notificationService.scheduleNotice(noticeMessage, etaNoticeTime);
-        log.info("{} 타입 알림 {}에 스케줄링 예약", NotificationType.ETA_NOTICE, etaNoticeTime);
+
+        EtaNotice etaNotice = new EtaNotice(etaNoticeTime, meeting);
+        GroupMessage noticeMessage = GroupMessage.create(etaNotice, new FcmTopic(meeting));
+
+        noticeService.schedule(etaNotice, noticeMessage, etaNoticeTime);
+        log.info("{} 타입 알림 {}에 스케줄링 예약", NoticeType.ETA_NOTICE, etaNoticeTime);
+    }
+
+    private void scheduleEtaSchedulingNoticeIfUpcomingMeeting(Meeting meeting) {
+        LocalDateTime meetingDateTime = meeting.getMeetingTime();
+        if (isUpcomingMeeting(meetingDateTime)) {
+            etaSchedulingService.sendNotice(meeting);
+            log.info("당일 약속 1건 스케줄링 알림 예약 완료");
+        }
+    }
+
+    private boolean isUpcomingMeeting(LocalDateTime meetingDateTime) {
+        LocalDateTime include = TimeUtil.nowWithTrim();
+        LocalDateTime exclude = LocalDateTime.of(LocalDate.now().plusDays(1L), LAST_SCHEDULING_NOTI_TIME);
+
+        return meetingDateTime.isAfter(include) && meetingDateTime.isBefore(exclude);
     }
 
     private String generateUniqueInviteCode() {
@@ -131,5 +162,24 @@ public class MeetingService {
         List<Meeting> meetings = meetingRepository.findAllByUpdatedTodayAndOverdue();
         log.info("약속 시간이 지난 약속들 overdue = true로 update 쿼리 실행");
         notificationService.unSubscribeTopic(meetings);
+    }
+
+    @Transactional
+    @EventListener(ApplicationReadyEvent.class)
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    public void scheduleTodayMeetingNotices() {
+        LocalDateTime today = TimeUtil.nowWithTrim();
+        List<Meeting> meetings = findUpcomingMeetingsWithin24Hours(today.toLocalDate(), today.toLocalTime());
+        meetings.forEach(etaSchedulingService::sendNotice);
+        log.info("당일 ETA 스케줄링 알림 {}개 등록", meetings.size());
+    }
+
+    private List<Meeting> findUpcomingMeetingsWithin24Hours(LocalDate startDate, LocalTime startTime) {
+        return meetingRepository.findAllByDateTimeInClosedOpenRange(
+                startDate,
+                startTime,
+                startDate.plusDays(1L),
+                LAST_SCHEDULING_NOTI_TIME
+        );
     }
 }

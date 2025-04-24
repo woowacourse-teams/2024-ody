@@ -37,7 +37,7 @@ public class DatabaseCleaner {
     }
 
     @Transactional
-    public void cleanUp() {
+    public void clear() {
         entityManager.createNativeQuery(FOREIGN_KEY_CHECK_OFF).executeUpdate();
 
         for (String tableName : tableNames) {

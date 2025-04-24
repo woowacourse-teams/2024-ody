@@ -5,9 +5,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import com.mulberry.ody.data.local.db.OdyDatastore
-import com.mulberry.ody.data.local.service.EtaDashboardAlarm
+import com.mulberry.ody.data.local.service.EtaDashboard
 import com.mulberry.ody.data.local.service.EtaDashboardNotification
-import com.mulberry.ody.presentation.common.PermissionHelper
 import com.mulberry.ody.presentation.common.gps.GeoLocationHelper
 import com.mulberry.ody.presentation.common.gps.LocationHelper
 import com.mulberry.ody.presentation.notification.FCMNotification
@@ -49,27 +48,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePermissionHelper(
-        @ApplicationContext context: Context,
-    ): PermissionHelper {
-        return PermissionHelper(context)
-    }
-
-    @Provides
-    @Singleton
     fun provideGpsHelper(
         @ApplicationContext context: Context,
     ): LocationHelper {
         return GeoLocationHelper(context)
-    }
-
-    @Provides
-    @Singleton
-    fun provideEtaDashboardAlarm(
-        @ApplicationContext context: Context,
-        alarmManager: AlarmManager,
-    ): EtaDashboardAlarm {
-        return EtaDashboardAlarm(context, alarmManager)
     }
 
     @Provides
@@ -79,5 +61,14 @@ object AppModule {
         notificationManager: NotificationManager,
     ): EtaDashboardNotification {
         return EtaDashboardNotification(context, notificationManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEtaDashboard(
+        @ApplicationContext context: Context,
+        odyDatastore: OdyDatastore,
+    ): EtaDashboard {
+        return EtaDashboard(context, odyDatastore)
     }
 }

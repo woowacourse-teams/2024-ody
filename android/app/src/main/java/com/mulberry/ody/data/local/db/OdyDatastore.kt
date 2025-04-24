@@ -93,7 +93,7 @@ class OdyDatastore(private val context: Context) {
         return when (this) {
             NotificationType.ENTRY -> IS_NOTIFICATION_ENTRY_ON
             NotificationType.DEPARTURE_REMINDER -> IS_NOTIFICATION_DEPARTURE_ON
-            NotificationType.NUDGE, NotificationType.ETA_NOTICE, NotificationType.DEFAULT -> null
+            NotificationType.NUDGE, NotificationType.ETA_NOTICE -> null
         }
     }
 

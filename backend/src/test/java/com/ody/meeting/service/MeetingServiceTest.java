@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.times;
 
 import com.ody.common.BaseServiceTest;
 import com.ody.common.Fixture;
@@ -131,11 +132,33 @@ class MeetingServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("약속 생성 후 약속 시간 30분 전에 ETA 공지 알림이 예약된다.")
+    @DisplayName("당일 약속 생성 후, 약속 시간 30분 전에 ETA 공지 알림과 ETA 스케줄링 알림이 예약된다.")
+    @Test
+    void saveAndScheduleEtaNoticeAndEtaSchedulingNotice() {
+        LocalDateTime meetingDateTime = TimeUtil.nowWithTrim().plusHours(1);
+        MeetingSaveRequestV1 request = dtoGenerator.generateMeetingRequest(meetingDateTime);
+        meetingService.saveV1(request);
+
+        ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
+        ArgumentCaptor<Instant> timeCaptor = ArgumentCaptor.forClass(Instant.class);
+
+        Mockito.verify(taskScheduler, times(2)).schedule(runnableCaptor.capture(), timeCaptor.capture());
+
+        List<Instant> scheduledTimes = timeCaptor.getAllValues();
+        runnableCaptor.getAllValues().forEach(Runnable::run);
+
+        assertAll(
+                () -> assertThat(scheduledTimes).containsOnly(
+                        meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET)),
+                () -> assertThat(applicationEvents.stream(NoticeEvent.class)).hasSize(2)
+        );
+    }
+
+    @DisplayName("내일 오전 5시 이내 약속을 생성한 경우가 아니면, 약속 시간 30분 전에 ETA 공지 알림만 예약된다.")
     @Test
     void saveAndScheduleEtaNotice() {
-        LocalDateTime meetingDateTime = TimeUtil.nowWithTrim().plusMinutes(40);
-        MeetingSaveRequestV1 request = dtoGenerator.generateMeetingRequest(meetingDateTime);
+        LocalDateTime twoDaysLater = TimeUtil.nowWithTrim().plusDays(2);
+        MeetingSaveRequestV1 request = dtoGenerator.generateMeetingRequest(twoDaysLater);
         meetingService.saveV1(request);
 
         ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
@@ -146,7 +169,7 @@ class MeetingServiceTest extends BaseServiceTest {
         runnableCaptor.getValue().run();
 
         assertAll(
-                () -> assertThat(meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET))
+                () -> assertThat(twoDaysLater.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET))
                         .isEqualTo(scheduledTime),
                 () -> assertThat(applicationEvents.stream(NoticeEvent.class)).hasSize(1)
         );
@@ -293,9 +316,9 @@ class MeetingServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("약속 참여시 API 호출 카운팅 Redisson 분산락 동시성 테스트")
+    @DisplayName("약속 참여시 API 호출 카운팅 동시성 테스트")
     @Nested
-    class RedissonDistributedLockTest {
+    class ApiCallCountConcurrencyTest {
 
         private static final int TOTAL_REQUESTS = 100;
 

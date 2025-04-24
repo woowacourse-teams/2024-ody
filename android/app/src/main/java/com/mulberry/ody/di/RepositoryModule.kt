@@ -1,17 +1,19 @@
 package com.mulberry.ody.di
 
 import com.mulberry.ody.data.auth.repository.KakaoAuthRepository
-import com.mulberry.ody.data.local.repository.DefaultMatesEtaRepository
-import com.mulberry.ody.data.remote.core.repository.DefaultJoinRepository
-import com.mulberry.ody.data.remote.core.repository.DefaultMeetingRepository
-import com.mulberry.ody.data.remote.core.repository.DefaultNotificationLogRepository
-import com.mulberry.ody.data.remote.thirdparty.address.KakaoAddressRepository
+import com.mulberry.ody.data.repository.DefaultJoinRepository
+import com.mulberry.ody.data.repository.DefaultMatesEtaRepository
+import com.mulberry.ody.data.repository.DefaultMeetingRepository
+import com.mulberry.ody.data.repository.DefaultNotificationLogRepository
+import com.mulberry.ody.data.repository.DefaultSettingRepository
+import com.mulberry.ody.data.repository.KakaoAddressRepository
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.AuthRepository
 import com.mulberry.ody.domain.repository.ody.JoinRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.domain.repository.ody.NotificationLogRepository
+import com.mulberry.ody.domain.repository.ody.SettingRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -44,4 +46,8 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindAddressRepository(kakaoGeoLocationRepository: KakaoAddressRepository): AddressRepository
+
+    @Binds
+    @Singleton
+    fun bindSettingRepository(defaultSettingRepository: DefaultSettingRepository): SettingRepository
 }
