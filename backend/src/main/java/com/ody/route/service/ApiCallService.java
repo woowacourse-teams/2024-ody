@@ -1,5 +1,6 @@
 package com.ody.route.service;
 
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.route.domain.ApiCall;
 import com.ody.route.domain.ClientType;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ApiCallService {

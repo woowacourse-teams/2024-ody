@@ -1,5 +1,6 @@
 package com.ody.meeting.service;
 
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.service.EtaSchedulingService;
@@ -21,7 +22,7 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.message.GroupMessage;
 import com.ody.notification.domain.notice.EtaNotice;
 import com.ody.notification.domain.notice.NoticeType;
-import com.ody.notification.service.NoticeService;
+import com.ody.notification.service.NoticeSender;
 import com.ody.notification.service.NotificationService;
 import com.ody.util.InviteCodeGenerator;
 import com.ody.util.TimeUtil;
@@ -41,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MeetingService {
@@ -53,7 +55,7 @@ public class MeetingService {
     private final MateRepository mateRepository;
     private final NotificationService notificationService;
     private final EtaSchedulingService etaSchedulingService;
-    private final NoticeService noticeService;
+    private final NoticeSender noticeSender;
 
     @Transactional
     public MeetingSaveResponseV1 saveV1(MeetingSaveRequestV1 meetingSaveRequestV1) {
@@ -70,7 +72,7 @@ public class MeetingService {
         EtaNotice etaNotice = new EtaNotice(etaNoticeTime, meeting);
         GroupMessage noticeMessage = GroupMessage.create(etaNotice, new FcmTopic(meeting));
 
-        noticeService.schedule(etaNotice, noticeMessage, etaNoticeTime);
+        noticeSender.schedule(etaNotice, noticeMessage, etaNoticeTime);
         log.info("{} 타입 알림 {}에 스케줄링 예약", NoticeType.ETA_NOTICE, etaNoticeTime);
     }
 

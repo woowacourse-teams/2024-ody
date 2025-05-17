@@ -1,5 +1,6 @@
 package com.ody.eta.service;
 
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.eta.domain.EtaSchedulingKey;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 public class EtaSchedulingService {
 
