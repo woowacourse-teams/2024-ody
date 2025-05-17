@@ -77,7 +77,7 @@ public class MeetingService {
     private void scheduleEtaSchedulingNoticeIfUpcomingMeeting(Meeting meeting) {
         LocalDateTime meetingDateTime = meeting.getMeetingTime();
         if (isUpcomingMeeting(meetingDateTime)) {
-            etaSchedulingService.sendNotice(meeting);
+            etaSchedulingService.sendTrigger(meeting);
             log.info("당일 약속 1건 스케줄링 알림 예약 완료");
         }
     }
@@ -170,7 +170,7 @@ public class MeetingService {
     public void scheduleTodayMeetingNotices() {
         LocalDateTime today = TimeUtil.nowWithTrim();
         List<Meeting> meetings = findUpcomingMeetingsWithin24Hours(today.toLocalDate(), today.toLocalTime());
-        meetings.forEach(etaSchedulingService::sendNotice);
+        meetings.forEach(etaSchedulingService::sendTrigger);
         log.info("당일 ETA 스케줄링 알림 {}개 등록", meetings.size());
     }
 
