@@ -9,6 +9,7 @@ import com.ody.auth.dto.response.AuthResponse;
 import com.ody.auth.service.apple.AppleValidateTokenClient;
 import com.ody.auth.token.AccessToken;
 import com.ody.auth.token.RefreshToken;
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.member.domain.Member;
 import com.ody.member.service.MemberService;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 public class AuthService {
 

@@ -1,5 +1,6 @@
 package com.ody.notification.service;
 
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class NotificationService {
@@ -46,8 +48,14 @@ public class NotificationService {
     }
 
     @Transactional
-    public Notification saveAndSchedule(Notification notification) {
+    public Notification saveAndSendOrSchedule(Notification notification) {
         Notification savedNotification = save(notification);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime sendAt = savedNotification.getSendAt();
+        if (sendAt.isBefore(now) || sendAt.equals(now)) {
+            send(savedNotification);
+            return savedNotification;
+        }
         scheduleNotification(savedNotification);
         return savedNotification;
     }

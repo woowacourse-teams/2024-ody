@@ -1,5 +1,6 @@
 package com.ody.route.service;
 
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
 import com.ody.route.domain.RouteTime;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 public class RouteService {
 

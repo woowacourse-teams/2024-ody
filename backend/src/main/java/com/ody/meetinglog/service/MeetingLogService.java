@@ -1,5 +1,6 @@
 package com.ody.meetinglog.service;
 
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.meetinglog.domain.MeetingLog;
 import com.ody.meetinglog.repository.MeetingLogRepository;
 import com.ody.notification.dto.response.NotiLogFindResponses;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@EnableDeletedFilter
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MeetingLogService {

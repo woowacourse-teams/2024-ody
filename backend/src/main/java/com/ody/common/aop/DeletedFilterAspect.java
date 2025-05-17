@@ -16,15 +16,15 @@ public class DeletedFilterAspect {
     @Autowired
     private EntityManager entityManager;
 
-    @Pointcut("within(@org.springframework.stereotype.Service *)")
-    public void serviceClass() {
+    @Pointcut("@within(com.ody.common.aop.EnableDeletedFilter)")
+    public void enableAnnotation() {
     }
 
-    @Pointcut("@annotation(DisabledDeletedFilter)")
+    @Pointcut("@annotation(com.ody.common.aop.DisabledDeletedFilter)")
     public void methodWithDisabledFilter() {
     }
 
-    @Before("serviceClass() && !methodWithDisabledFilter()")
+    @Before("enableAnnotation() && !methodWithDisabledFilter()")
     public void enableFilter() {
         Session session = entityManager.unwrap(Session.class);
         session.enableFilter("deletedMemberFilter");
@@ -32,7 +32,7 @@ public class DeletedFilterAspect {
     }
 
     @Before("methodWithDisabledFilter()")
-    @After("serviceClass()")
+    @After("enableAnnotation()")
     public void disableFilter() {
         Session session = entityManager.unwrap(Session.class);
         session.disableFilter("deletedMemberFilter");

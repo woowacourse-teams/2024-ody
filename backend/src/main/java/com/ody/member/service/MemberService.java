@@ -1,9 +1,10 @@
 package com.ody.member.service;
 
-import com.ody.auth.service.kakao.KakaoAuthUnlinkClient;
 import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.auth.service.SocialAuthUnlinkClientFactory;
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClient;
 import com.ody.auth.token.RefreshToken;
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.common.exception.OdyUnauthorizedException;
 import com.ody.mate.service.MateService;
 import com.ody.member.domain.AuthProvider;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {

@@ -24,6 +24,7 @@ import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
 import com.ody.notification.service.FcmPushSender;
 import com.ody.notification.service.event.NoticeEvent;
+import com.ody.notification.service.event.TriggerEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
 import com.ody.route.domain.ClientType;
 import com.ody.route.domain.DepartureTime;
@@ -149,8 +150,10 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertAll(
                 () -> assertThat(scheduledTimes).containsOnly(
-                        meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET)),
-                () -> assertThat(applicationEvents.stream(NoticeEvent.class)).hasSize(2)
+                        meetingDateTime.minusMinutes(30).toInstant(TimeUtil.KST_OFFSET)
+                ),
+                () -> assertThat(applicationEvents.stream(TriggerEvent.class)).hasSize(1),
+                () -> assertThat(applicationEvents.stream(NoticeEvent.class)).hasSize(1)
         );
     }
 

@@ -11,6 +11,7 @@ import com.ody.notification.service.event.NoticeEvent;
 import com.ody.notification.service.event.NudgeEvent;
 import com.ody.notification.service.event.PushEvent;
 import com.ody.notification.service.event.SubscribeEvent;
+import com.ody.notification.service.event.TriggerEvent;
 import com.ody.notification.service.event.UnSubscribeEvent;
 import com.ody.util.TimeUtil;
 import java.time.Instant;
@@ -53,6 +54,17 @@ public class FcmEventListener {
         log.info(
                 "{} 공지 알림 전송 | 전송 시간 : {}",
                 noticeEvent.getNotice().getType(),
+                Instant.now().atZone(TimeUtil.KST_OFFSET)
+        );
+    }
+
+    @Async("fcmAsyncExecutor")
+    @EventListener
+    public <T extends AbstractMessage> void sendNoticeMessage(TriggerEvent<T> triggerEvent) {
+        fcmPushSender.sendMessage(triggerEvent.getMessage());
+        log.info(
+                "{} 트리거 전송 | 전송 시간 : {}",
+                triggerEvent.getTrigger().getType(),
                 Instant.now().atZone(TimeUtil.KST_OFFSET)
         );
     }

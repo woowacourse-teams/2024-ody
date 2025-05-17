@@ -9,22 +9,17 @@ import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class NoticeService {
+public class NoticeSender {
 
     private final FcmEventPublisher fcmEventPublisher;
     private final TaskScheduler taskScheduler;
-
-    public <T extends AbstractMessage> void send(Notice notice, T t) {
-        NoticeEvent<T> noticeEvent = new NoticeEvent<>(this, notice, t);
-        fcmEventPublisher.publish(noticeEvent);
-    }
 
     public <T extends AbstractMessage> void schedule(Notice notice, T t, LocalDateTime noticeTime) {
         Instant startTime = InstantConverter.kstToInstant(noticeTime);
