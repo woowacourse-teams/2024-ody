@@ -7,11 +7,10 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
-import com.mulberry.ody.data.local.entity.eta.migration.OdyDatabaseMigration
 
 @Database(
     entities = [MateEtaInfoEntity::class],
-    version = 4,
+    version = 5,
 )
 @TypeConverters(MateEtaListTypeConverter::class)
 abstract class OdyDatabase : RoomDatabase() {
@@ -22,7 +21,6 @@ abstract class OdyDatabase : RoomDatabase() {
 
         fun create(context: Context): OdyDatabase {
             return Room.databaseBuilder(context, OdyDatabase::class.java, DATABASE_NAME)
-                .addMigrations(OdyDatabaseMigration(3, 4))
                 .addTypeConverter(MateEtaListTypeConverter())
                 .build()
         }
