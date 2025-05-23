@@ -8,17 +8,14 @@ import androidx.room.TypeConverters
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
 import com.mulberry.ody.data.local.entity.eta.migration.OdyDatabaseMigration
-import com.mulberry.ody.data.local.entity.reserve.EtaReservationEntity
 
 @Database(
-    entities = [MateEtaInfoEntity::class, EtaReservationEntity::class],
+    entities = [MateEtaInfoEntity::class],
     version = 4,
 )
 @TypeConverters(MateEtaListTypeConverter::class)
 abstract class OdyDatabase : RoomDatabase() {
     abstract fun mateEtaInfoDao(): MateEtaInfoDao
-
-    abstract fun etaReservationDao(): EtaReservationDao
 
     companion object {
         private const val DATABASE_NAME = "ody_db"

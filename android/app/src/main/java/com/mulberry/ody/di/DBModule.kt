@@ -1,7 +1,6 @@
 package com.mulberry.ody.di
 
 import android.content.Context
-import com.mulberry.ody.data.local.db.EtaReservationDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
 import com.mulberry.ody.data.local.db.OdyDatabase
 import com.mulberry.ody.data.local.db.OdyDatastore
@@ -33,7 +32,4 @@ object DBModule {
 
     @Provides
     fun provideMateEtaInfoDao(appDatabase: OdyDatabase): MateEtaInfoDao = appDatabase.mateEtaInfoDao()
-
-    @Provides
-    fun provideEtaReserveDao(appDatabase: OdyDatabase): EtaReservationDao = appDatabase.etaReservationDao()
 }
