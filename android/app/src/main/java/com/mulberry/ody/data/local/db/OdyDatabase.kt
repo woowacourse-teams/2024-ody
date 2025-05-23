@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.entity.eta.MateEtaListTypeConverter
 
@@ -19,8 +21,16 @@ abstract class OdyDatabase : RoomDatabase() {
     companion object {
         private const val DATABASE_NAME = "ody_db"
 
+        private val MIGRATION_4_TO_5 =
+            object : Migration(4, 5) {
+                override fun migrate(db: SupportSQLiteDatabase) {
+                    db.execSQL("DROP TABLE IF EXISTS eta_reservation")
+                }
+            }
+
         fun create(context: Context): OdyDatabase {
             return Room.databaseBuilder(context, OdyDatabase::class.java, DATABASE_NAME)
+                .addMigrations(MIGRATION_4_TO_5)
                 .addTypeConverter(MateEtaListTypeConverter())
                 .build()
         }
