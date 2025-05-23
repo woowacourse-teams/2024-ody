@@ -1,6 +1,5 @@
 package com.mulberry.ody.di
 
-import android.app.AlarmManager
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
@@ -28,14 +27,6 @@ object AppModule {
         notificationManager: NotificationManager,
     ): FCMNotification {
         return FCMNotification(context, odyDatastore, notificationManager)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAlarmManager(
-        @ApplicationContext context: Context,
-    ): AlarmManager {
-        return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     }
 
     @Provides
