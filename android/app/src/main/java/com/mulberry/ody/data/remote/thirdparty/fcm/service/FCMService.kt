@@ -2,7 +2,7 @@ package com.mulberry.ody.data.remote.thirdparty.fcm.service
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.mulberry.ody.data.local.db.OdyDatastore
+import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.data.local.service.EtaDashboard
 import com.mulberry.ody.domain.model.FCMType
 import com.mulberry.ody.domain.model.MessageType
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FCMService : FirebaseMessagingService() {
     @Inject
-    lateinit var odyDatastore: OdyDatastore
+    lateinit var odyDataStore: OdyDataStore
 
     @Inject
     lateinit var fcmNotification: FCMNotification
@@ -46,7 +46,7 @@ class FCMService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         CoroutineScope(Dispatchers.Default).launch {
-            odyDatastore.setFCMToken(token)
+            odyDataStore.setFCMToken(token)
         }
     }
 }
