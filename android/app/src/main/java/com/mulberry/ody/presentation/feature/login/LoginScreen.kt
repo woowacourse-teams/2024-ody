@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.feature.login
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -26,12 +28,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.modifier.noRippleClickable
+import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.theme.Cream
 import com.mulberry.ody.presentation.theme.OdyTheme
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
+    navigateToMeetings: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -43,22 +48,50 @@ fun LoginScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.verifyNavigation()
+        viewModel.verifyLogin()
+    }
+    LaunchedEffect(Unit) {
+        viewModel.navigatedReason.collect {
+            when (it) {
+                LoginNavigatedReason.LOGOUT -> {
+                    showSnackbar(R.string.login_logout_success)
+                }
+
+                LoginNavigatedReason.WITHDRAWAL -> {
+                    showSnackbar(R.string.login_withdrawal_success)
+                }
+            }
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.navigateAction.collect {
+            navigateToMeetings()
+        }
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = OdyTheme.colors.primary,
     ) { innerPadding ->
         LoginContent(
+            onClickLogin = { viewModel.loginWithKakao(context) },
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
         )
     }
+    BaseActionHandler(viewModel, snackbarHostState)
 }
 
 @Composable
-private fun LoginContent(modifier: Modifier = Modifier) {
+private fun LoginContent(
+    onClickLogin: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(modifier = modifier) {
-        Spacer(modifier = Modifier.height(146.dp))
+        Spacer(modifier = Modifier.height(162.dp))
         Row(modifier = Modifier.padding(start = 46.dp)) {
             Column {
                 Text(
@@ -98,7 +131,8 @@ private fun LoginContent(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp)
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = 20.dp)
+                .noRippleClickable(onClickLogin),
         )
     }
 }
@@ -107,6 +141,9 @@ private fun LoginContent(modifier: Modifier = Modifier) {
 @Preview
 private fun LoginContentPreview() {
     OdyTheme {
-        LoginContent(modifier = Modifier.background(Cream))
+        LoginContent(
+            onClickLogin = {},
+            modifier = Modifier.background(Cream),
+        )
     }
 }

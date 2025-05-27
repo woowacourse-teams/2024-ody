@@ -1,6 +1,7 @@
 package com.mulberry.ody.presentation.feature.login
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
@@ -25,16 +26,15 @@ class LoginViewModel
         private val authRepository: AuthRepository,
         private val savedStateHandle: SavedStateHandle,
     ) : BaseViewModel() {
-        private val _navigatedReason: MutableSharedFlow<LoginNavigatedReason> =
-            MutableSharedFlow()
+        private val _navigatedReason: MutableSharedFlow<LoginNavigatedReason> = MutableSharedFlow()
         val navigatedReason: SharedFlow<LoginNavigatedReason> get() = _navigatedReason.asSharedFlow()
 
-        private val _navigateAction: MutableSharedFlow<LoginNavigateAction> =
-            MutableSharedFlow()
+        private val _navigateAction: MutableSharedFlow<LoginNavigateAction> = MutableSharedFlow()
         val navigateAction: SharedFlow<LoginNavigateAction> get() = _navigateAction.asSharedFlow()
 
         fun verifyNavigation() {
-            savedStateHandle.get<LoginNavigatedReason>(NAVIGATED_REASON)?.let { reason ->
+            val reseaon = savedStateHandle.get<LoginNavigatedReason>(NAVIGATED_REASON)
+            reseaon?.let { reason ->
                 viewModelScope.launch {
                     _navigatedReason.emit(reason)
                 }
