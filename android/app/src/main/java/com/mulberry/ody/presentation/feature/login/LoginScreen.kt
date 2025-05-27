@@ -52,9 +52,10 @@ fun LoginScreen(
     ) { innerPadding ->
         LoginContent(
             onClickLogin = { viewModel.login(context) },
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
+            modifier =
+                Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
         )
     }
 
@@ -90,10 +91,11 @@ private fun LoginContent(
 ) {
     Column(modifier = modifier) {
         LoginText(
-            modifier = Modifier
-                .padding(top = 162.dp)
-                .padding(start = 46.dp)
-                .padding(bottom = 40.dp)
+            modifier =
+                Modifier
+                    .padding(top = 162.dp)
+                    .padding(start = 46.dp)
+                    .padding(bottom = 40.dp),
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -108,11 +110,12 @@ private fun LoginContent(
         Image(
             painter = painterResource(id = R.drawable.img_kakao_login),
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp)
-                .padding(horizontal = 20.dp)
-                .noRippleClickable(onClickLogin),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp)
+                    .padding(horizontal = 20.dp)
+                    .noRippleClickable(onClickLogin),
         )
     }
 }
