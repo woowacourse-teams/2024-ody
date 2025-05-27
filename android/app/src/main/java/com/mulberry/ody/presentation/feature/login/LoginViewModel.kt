@@ -53,7 +53,7 @@ class LoginViewModel
             }
         }
 
-        fun loginWithKakao(context: Context) {
+        fun login(context: Context) {
             viewModelScope.launch {
                 startLoading()
                 authRepository.login(context)
@@ -64,7 +64,7 @@ class LoginViewModel
                         handleError()
                     }.onNetworkError {
                         handleNetworkError()
-                        lastFailedAction = { loginWithKakao(context) }
+                        lastFailedAction = { login(context) }
                     }
                 stopLoading()
             }

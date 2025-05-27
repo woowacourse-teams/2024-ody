@@ -1,6 +1,5 @@
 package com.mulberry.ody.presentation.feature.login
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -48,6 +47,18 @@ fun LoginScreen(
         }
     }
 
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = OdyTheme.colors.primary,
+    ) { innerPadding ->
+        LoginContent(
+            onClickLogin = { viewModel.login(context) },
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+        )
+    }
+
     LaunchedEffect(Unit) {
         viewModel.verifyNavigation()
         viewModel.verifyLogin()
@@ -69,18 +80,6 @@ fun LoginScreen(
         viewModel.navigateAction.collect {
             navigateToMeetings()
         }
-    }
-
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = OdyTheme.colors.primary,
-    ) { innerPadding ->
-        LoginContent(
-            onClickLogin = { viewModel.loginWithKakao(context) },
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-        )
     }
     BaseActionHandler(viewModel, snackbarHostState)
 }
