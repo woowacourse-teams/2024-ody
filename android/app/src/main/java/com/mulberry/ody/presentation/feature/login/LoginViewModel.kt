@@ -1,7 +1,6 @@
 package com.mulberry.ody.presentation.feature.login
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
@@ -15,6 +14,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +25,7 @@ class LoginViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         private val authRepository: AuthRepository,
-        private val savedStateHandle: SavedStateHandle,
+        savedStateHandle: SavedStateHandle,
     ) : BaseViewModel() {
         private val _navigatedReason: MutableSharedFlow<LoginNavigatedReason> = MutableSharedFlow()
         val navigatedReason: SharedFlow<LoginNavigatedReason> get() = _navigatedReason.asSharedFlow()
@@ -32,12 +33,15 @@ class LoginViewModel
         private val _navigateAction: MutableSharedFlow<LoginNavigateAction> = MutableSharedFlow()
         val navigateAction: SharedFlow<LoginNavigateAction> get() = _navigateAction.asSharedFlow()
 
+        private val loginNavigatedReason = savedStateHandle.get<LoginNavigatedReason>(NAVIGATED_REASON)
+
         fun verifyNavigation() {
-            val reseaon = savedStateHandle.get<LoginNavigatedReason>(NAVIGATED_REASON)
-            reseaon?.let { reason ->
-                viewModelScope.launch {
-                    _navigatedReason.emit(reason)
-                }
+            loginNavigatedReason ?: return
+            viewModelScope.launch {
+                _navigatedReason.subscriptionCount
+                    .filter { it > 0 }
+                    .first()
+                _navigatedReason.emit(loginNavigatedReason)
             }
         }
 
@@ -73,7 +77,7 @@ class LoginViewModel
         }
 
         companion object {
-            private const val TAG = "LOGIN_VIEWMODEL"
+            private const val TAG = "LoginViewModel"
             private const val NAVIGATED_REASON = "NAVIGATED_REASON"
         }
     }
