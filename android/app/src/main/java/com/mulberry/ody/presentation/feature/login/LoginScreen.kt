@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -90,30 +89,12 @@ private fun LoginContent(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Spacer(modifier = Modifier.height(162.dp))
-        Row(modifier = Modifier.padding(start = 46.dp)) {
-            Column {
-                Text(
-                    text = stringResource(id = R.string.login_welcome_top),
-                    style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.quinary),
-                )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(id = R.string.login_welcome_prefix),
-                        style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.quinary),
-                    )
-                    Text(
-                        text = stringResource(id = R.string.login_welcome_ody),
-                        style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.secondary),
-                    )
-                    Text(
-                        text = stringResource(id = R.string.login_welcome_postfix),
-                        style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.quinary),
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(40.dp))
+        LoginText(
+            modifier = Modifier
+                .padding(top = 162.dp)
+                .padding(start = 46.dp)
+                .padding(bottom = 40.dp)
+        )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -133,6 +114,32 @@ private fun LoginContent(
                 .padding(horizontal = 20.dp)
                 .noRippleClickable(onClickLogin),
         )
+    }
+}
+
+@Composable
+private fun LoginText(modifier: Modifier = Modifier) {
+    Row(modifier = modifier) {
+        Column {
+            Text(
+                text = stringResource(id = R.string.login_welcome_top),
+                style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.quinary),
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = stringResource(id = R.string.login_welcome_prefix),
+                    style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.quinary),
+                )
+                Text(
+                    text = stringResource(id = R.string.login_welcome_ody),
+                    style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.secondary),
+                )
+                Text(
+                    text = stringResource(id = R.string.login_welcome_postfix),
+                    style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.quinary),
+                )
+            }
+        }
     }
 }
 
