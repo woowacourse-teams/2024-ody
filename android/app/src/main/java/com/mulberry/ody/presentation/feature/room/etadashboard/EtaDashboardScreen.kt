@@ -131,12 +131,12 @@ fun EtaDashboardScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.nudgeSuccessMate.collect {nickname ->
+        viewModel.nudgeSuccessMate.collect { nickname ->
             showSnackbar(context.getString(R.string.nudge_success, nickname))
         }
     }
     LaunchedEffect(Unit) {
-        viewModel.nudgeFailMate.collect {nickname ->
+        viewModel.nudgeFailMate.collect { nickname ->
             showSnackbar(context.getString(R.string.nudge_failure, nickname))
         }
     }
@@ -145,7 +145,7 @@ fun EtaDashboardScreen(
 @Composable
 private fun EtaDashboardContent(
     mateEtas: List<MateEtaUiModel>,
-    onClickNudge: (MateEtaUiModel)-> Unit,
+    onClickNudge: (MateEtaUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -163,15 +163,16 @@ private fun EtaDashboardContent(
 }
 
 @Composable
-private fun EtaDashboardItem(
+fun EtaDashboardItem(
     mateEta: MateEtaUiModel,
-    onClickNudge: (MateEtaUiModel)-> Unit,
-    ) {
+    onClickNudge: (MateEtaUiModel) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val context = LocalContext.current
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     ) {
         Text(
             text = mateEta.nickname,
@@ -184,7 +185,7 @@ private fun EtaDashboardItem(
         EtaBadge(
             etaStatus = mateEta.status,
             onClick = { onClickNudge(mateEta) },
-            canNudge = mateEta.canNudge
+            canNudge = mateEta.canNudge,
         )
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -208,6 +209,7 @@ private fun EtaBadge(
     etaStatus: EtaStatusUiModel,
     onClick: () -> Unit,
     canNudge: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "")
     val scale by infiniteTransition.animateFloat(
@@ -220,7 +222,7 @@ private fun EtaBadge(
     Button(
         onClick = onClick,
         modifier =
-            Modifier
+            modifier
                 .width(80.dp)
                 .height(32.dp)
                 .scale(scale),
