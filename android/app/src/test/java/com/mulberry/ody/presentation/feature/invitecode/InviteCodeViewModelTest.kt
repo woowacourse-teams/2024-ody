@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.feature.invitecode
 
+import com.mulberry.ody.domain.usecase.CheckInviteCodeUseCase
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.util.CoroutinesTestExtension
@@ -16,17 +17,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(CoroutinesTestExtension::class)
 @ExtendWith(InstantTaskExecutorExtension::class)
 class InviteCodeViewModelTest {
-    private val analyticsHelper = FakeAnalyticsHelper
-    private val meetingRepository = FakeMeetingRepository
     private lateinit var viewModel: InviteCodeViewModel
 
     @BeforeEach
     fun setUp() {
-        viewModel =
-            InviteCodeViewModel(
-                analyticsHelper,
-                meetingRepository,
-            )
+        val checkInviteCodeUseCase = CheckInviteCodeUseCase(FakeMeetingRepository)
+        viewModel = InviteCodeViewModel(FakeAnalyticsHelper, checkInviteCodeUseCase)
     }
 
     @Test
