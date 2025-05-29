@@ -179,7 +179,7 @@ private fun EtaDashboardItem(mateEta: MateEtaUiModel) {
                 text = mateEta.etaStatusUiModel.etaStatusMessage(context),
                 style = OdyTheme.typography.pretendardRegular16.copy(OdyTheme.colors.quinary),
             )
-            if (mateEta.isMissing) {
+            if (mateEta.etaStatusUiModel == EtaStatusUiModel.Missing) {
                 Spacer(modifier = Modifier.width(4.dp))
                 MissingGuideButton(isUserSelf = mateEta.isUserSelf)
             }
@@ -303,7 +303,6 @@ private fun EtaDashboardScreenPreview() {
                     MateEtaUiModel(
                         "올리브",
                         EtaStatusUiModel.Arrived,
-                        isMissing = true,
                         isUserSelf = true,
                         userId = 1L,
                         mateId = 1L,
@@ -311,7 +310,6 @@ private fun EtaDashboardScreenPreview() {
                     MateEtaUiModel(
                         "올리브",
                         EtaStatusUiModel.Missing,
-                        isMissing = true,
                         isUserSelf = false,
                         userId = 2L,
                         mateId = 2L,
@@ -319,7 +317,6 @@ private fun EtaDashboardScreenPreview() {
                     MateEtaUiModel(
                         "올리브",
                         EtaStatusUiModel.ArrivalSoon(20),
-                        isMissing = false,
                         isUserSelf = false,
                         userId = 3L,
                         mateId = 3L,
@@ -327,7 +324,6 @@ private fun EtaDashboardScreenPreview() {
                     MateEtaUiModel(
                         "올리브",
                         EtaStatusUiModel.LateWarning(20),
-                        isMissing = false,
                         isUserSelf = false,
                         userId = 4L,
                         mateId = 4L,
@@ -335,7 +331,6 @@ private fun EtaDashboardScreenPreview() {
                     MateEtaUiModel(
                         "올리브",
                         EtaStatusUiModel.Late(30),
-                        isMissing = false,
                         isUserSelf = false,
                         userId = 5L,
                         mateId = 5L,

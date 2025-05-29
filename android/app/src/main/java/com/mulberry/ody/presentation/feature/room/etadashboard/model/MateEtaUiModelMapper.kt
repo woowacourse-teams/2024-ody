@@ -1,6 +1,5 @@
 package com.mulberry.ody.presentation.feature.room.etadashboard.model
 
-import com.mulberry.ody.domain.model.EtaStatus
 import com.mulberry.ody.domain.model.MateEta
 import com.mulberry.ody.domain.model.MateEtaInfo
 
@@ -12,7 +11,6 @@ private fun MateEta.toMateEtaUiModel(userId: Long): MateEtaUiModel {
     return MateEtaUiModel(
         nickname = nickname,
         etaStatusUiModel = etaStatus.toEtaStatusUiModel(),
-        isMissing = etaStatus is EtaStatus.Missing,
         isUserSelf = userId == mateId,
         userId = userId,
         mateId = mateId,
