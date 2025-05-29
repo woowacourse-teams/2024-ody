@@ -27,11 +27,15 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -65,23 +69,33 @@ import com.mulberry.ody.presentation.theme.Gray400
 import com.mulberry.ody.presentation.theme.Gray400Alpha70
 import com.mulberry.ody.presentation.theme.OdyTheme
 import com.mulberry.ody.presentation.theme.White
+import kotlinx.coroutines.launch
 
 @Composable
 fun EtaDashboardScreen(
-    onBack: () -> Unit,
+    onClickBack: () -> Unit,
     viewModel: MeetingRoomViewModel = hiltViewModel(),
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val showSnackbar: (String) -> Unit = { message ->
+        coroutineScope.launch {
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
     val mateEtas by viewModel.mateEtaUiModels.collectAsStateWithLifecycle()
     val sharedImagePicture = remember { Picture() }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = OdyTheme.colors.primary,
         topBar = {
             OdyTopAppBar(
                 title = "약속 이름",
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = onClickBack) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_back),
                             tint = Color.Unspecified,
@@ -111,16 +125,25 @@ fun EtaDashboardScreen(
     ) { innerPadding ->
         EtaDashboardContent(
             mateEtas = mateEtas,
-            picture = sharedImagePicture,
             modifier = Modifier.padding(innerPadding),
         )
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.nudgeSuccessMate.collect {nickname ->
+            showSnackbar(context.getString(R.string.nudge_success, nickname))
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.nudgeFailMate.collect {nickname ->
+            showSnackbar(context.getString(R.string.nudge_failure, nickname))
+        }
     }
 }
 
 @Composable
 fun EtaDashboardContent(
     mateEtas: List<MateEtaUiModel>,
-    picture: Picture,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -150,17 +173,17 @@ fun EtaDashboardItem(mateEta: MateEtaUiModel) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        EtaBadge(mateEta.etaStatusUiModel)
+        EtaBadge(mateEta.status)
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.weight(1f),
         ) {
             Text(
-                text = mateEta.etaStatusUiModel.etaStatusMessage(context),
+                text = mateEta.status.etaStatusMessage(context),
                 style = OdyTheme.typography.pretendardRegular16.copy(OdyTheme.colors.quinary),
             )
-            if (mateEta.etaStatusUiModel == EtaStatusUiModel.Missing) {
+            if (mateEta.isMissing) {
                 Spacer(modifier = Modifier.width(4.dp))
                 MissingGuideButton(isUserSelf = mateEta.isUserSelf)
             }
@@ -274,46 +297,44 @@ private fun MissingTooltip(
 @Preview(showSystemUi = true)
 private fun EtaDashboardScreenPreview() {
     OdyTheme {
-        EtaDashboardContent(
-            mateEtas =
-                listOf(
-                    MateEtaUiModel(
-                        "올리브",
-                        EtaStatusUiModel.Arrived,
-                        isUserSelf = true,
-                        userId = 1L,
-                        mateId = 1L,
-                    ),
-                    MateEtaUiModel(
-                        "올리브",
-                        EtaStatusUiModel.Missing,
-                        isUserSelf = false,
-                        userId = 2L,
-                        mateId = 2L,
-                    ),
-                    MateEtaUiModel(
-                        "올리브",
-                        EtaStatusUiModel.ArrivalSoon(20),
-                        isUserSelf = false,
-                        userId = 3L,
-                        mateId = 3L,
-                    ),
-                    MateEtaUiModel(
-                        "올리브",
-                        EtaStatusUiModel.LateWarning(20),
-                        isUserSelf = false,
-                        userId = 4L,
-                        mateId = 4L,
-                    ),
-                    MateEtaUiModel(
-                        "올리브",
-                        EtaStatusUiModel.Late(30),
-                        isUserSelf = false,
-                        userId = 5L,
-                        mateId = 5L,
-                    ),
+        val mateEtas =
+            listOf(
+                MateEtaUiModel(
+                    "올리브",
+                    EtaStatusUiModel.Arrived,
+                    isUserSelf = true,
+                    userId = 1L,
+                    mateId = 1L,
                 ),
-            picture = Picture(),
-        )
+                MateEtaUiModel(
+                    "올리브",
+                    EtaStatusUiModel.Missing,
+                    isUserSelf = false,
+                    userId = 2L,
+                    mateId = 2L,
+                ),
+                MateEtaUiModel(
+                    "올리브",
+                    EtaStatusUiModel.ArrivalSoon(20),
+                    isUserSelf = false,
+                    userId = 3L,
+                    mateId = 3L,
+                ),
+                MateEtaUiModel(
+                    "올리브",
+                    EtaStatusUiModel.LateWarning(20),
+                    isUserSelf = false,
+                    userId = 4L,
+                    mateId = 4L,
+                ),
+                MateEtaUiModel(
+                    "올리브",
+                    EtaStatusUiModel.Late(30),
+                    isUserSelf = false,
+                    userId = 5L,
+                    mateId = 5L,
+                ),
+            )
+        EtaDashboardContent(mateEtas = mateEtas)
     }
 }
