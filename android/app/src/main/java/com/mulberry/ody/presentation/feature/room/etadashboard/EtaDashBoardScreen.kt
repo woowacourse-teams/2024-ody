@@ -143,7 +143,7 @@ fun EtaDashboardScreen(
 }
 
 @Composable
-fun EtaDashboardContent(
+private fun EtaDashboardContent(
     mateEtas: List<MateEtaUiModel>,
     onClickNudge: (MateEtaUiModel)-> Unit,
     modifier: Modifier = Modifier,
@@ -163,7 +163,7 @@ fun EtaDashboardContent(
 }
 
 @Composable
-fun EtaDashboardItem(
+private fun EtaDashboardItem(
     mateEta: MateEtaUiModel,
     onClickNudge: (MateEtaUiModel)-> Unit,
     ) {
@@ -204,7 +204,7 @@ fun EtaDashboardItem(
 }
 
 @Composable
-fun EtaBadge(
+private fun EtaBadge(
     etaStatus: EtaStatusUiModel,
     onClick: () -> Unit,
     canNudge: Boolean,
