@@ -11,7 +11,6 @@ private fun MateEta.toMateEtaUiModel(userId: Long): MateEtaUiModel {
     return MateEtaUiModel(
         nickname = nickname,
         status = etaStatus.toEtaStatusUiModel(),
-        isUserSelf = userId == mateId,
         userId = userId,
         mateId = mateId,
     )

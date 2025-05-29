@@ -116,17 +116,17 @@ class MeetingRoomViewModel
         }
 
         fun nudgeMate(
-            nudgeId: Long,
+            userId: Long,
             mateId: Long,
         ) {
             viewModelScope.launch {
                 val targetMate = mateEtaUiModels.value.find { it.mateId == mateId } ?: return@launch
-                handleNudgeAction(nudgeId, mateId, targetMate.nickname)
+                handleNudgeAction(userId, mateId, targetMate.nickname)
             }
         }
 
         private suspend fun handleNudgeAction(
-            nudgeId: Long,
+            userId: Long,
             mateId: Long,
             mateNickname: String,
         ) {
@@ -137,7 +137,7 @@ class MeetingRoomViewModel
 
             if (recentNudgeTime == DEFAULT_NUDGE_TIME || elapsedSeconds >= NUDGE_DELAY_SECONDS) {
                 matesNudgeTimes[mateId] = currentTime
-                performNudge(nudgeId, mateId, mateNickname)
+                performNudge(userId, mateId, mateNickname)
                 return
             }
 
@@ -145,11 +145,11 @@ class MeetingRoomViewModel
         }
 
         private suspend fun performNudge(
-            nudgeId: Long,
+            userId: Long,
             mateId: Long,
             mateNickname: String,
         ) {
-            meetingRepository.postNudge(Nudge(nudgeId, mateId))
+            meetingRepository.postNudge(Nudge(userId, mateId))
                 .onSuccess {
                     _nudgeSuccessMate.emit(mateNickname)
                 }.onFailure { code, errorMessage ->
@@ -160,7 +160,7 @@ class MeetingRoomViewModel
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                 }.onNetworkError {
                     handleNetworkError()
-                    lastFailedAction = { nudgeMate(nudgeId, mateId) }
+                    lastFailedAction = { nudgeMate(userId, mateId) }
                 }
         }
 

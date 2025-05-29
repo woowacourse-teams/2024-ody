@@ -125,6 +125,7 @@ fun EtaDashboardScreen(
     ) { innerPadding ->
         EtaDashboardContent(
             mateEtas = mateEtas,
+            onClickNudge = { viewModel.nudgeMate(it.userId, it.mateId) },
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -144,6 +145,7 @@ fun EtaDashboardScreen(
 @Composable
 fun EtaDashboardContent(
     mateEtas: List<MateEtaUiModel>,
+    onClickNudge: (MateEtaUiModel)-> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -152,13 +154,19 @@ fun EtaDashboardContent(
         verticalArrangement = Arrangement.spacedBy(42.dp),
     ) {
         items(items = mateEtas, key = { it.userId }) { mateEta ->
-            EtaDashboardItem(mateEta)
+            EtaDashboardItem(
+                mateEta = mateEta,
+                onClickNudge = onClickNudge,
+            )
         }
     }
 }
 
 @Composable
-fun EtaDashboardItem(mateEta: MateEtaUiModel) {
+fun EtaDashboardItem(
+    mateEta: MateEtaUiModel,
+    onClickNudge: (MateEtaUiModel)-> Unit,
+    ) {
     val context = LocalContext.current
 
     Row(
@@ -173,7 +181,11 @@ fun EtaDashboardItem(mateEta: MateEtaUiModel) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        EtaBadge(mateEta.status)
+        EtaBadge(
+            etaStatus = mateEta.status,
+            onClick = { onClickNudge(mateEta) },
+            canNudge = mateEta.canNudge
+        )
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -192,17 +204,21 @@ fun EtaDashboardItem(mateEta: MateEtaUiModel) {
 }
 
 @Composable
-fun EtaBadge(etaStatusUiModel: EtaStatusUiModel) {
-    val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
+fun EtaBadge(
+    etaStatus: EtaStatusUiModel,
+    onClick: () -> Unit,
+    canNudge: Boolean,
+) {
+    val infiniteTransition = rememberInfiniteTransition(label = "")
     val scale by infiniteTransition.animateFloat(
-        initialValue = 0.85f,
+        initialValue = if (canNudge) 0.85f else 1.0f,
         targetValue = 1.0f,
         animationSpec = infiniteRepeatable(tween(500), RepeatMode.Reverse),
-        label = "scale",
+        label = "",
     )
 
     Button(
-        onClick = { },
+        onClick = onClick,
         modifier =
             Modifier
                 .width(80.dp)
@@ -210,16 +226,16 @@ fun EtaBadge(etaStatusUiModel: EtaStatusUiModel) {
                 .scale(scale),
         colors =
             ButtonDefaults.buttonColors(
-                containerColor = etaStatusUiModel.badgeColor,
-                disabledContainerColor = etaStatusUiModel.badgeColor,
+                containerColor = etaStatus.badgeColor,
+                disabledContainerColor = etaStatus.badgeColor,
             ),
         contentPadding = PaddingValues(all = 0.dp),
         shape = RoundedCornerShape(15.dp),
         interactionSource = NoRippleInteractionSource,
-        enabled = etaStatusUiModel.canNudge(),
+        enabled = canNudge,
     ) {
         Text(
-            text = stringResource(id = etaStatusUiModel.badgeMessageId),
+            text = stringResource(id = etaStatus.badgeMessageId),
             style = OdyTheme.typography.pretendardRegular16.copy(White),
             textAlign = TextAlign.Center,
         )
@@ -302,39 +318,37 @@ private fun EtaDashboardScreenPreview() {
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.Arrived,
-                    isUserSelf = true,
                     userId = 1L,
                     mateId = 1L,
                 ),
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.Missing,
-                    isUserSelf = false,
                     userId = 2L,
                     mateId = 2L,
                 ),
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.ArrivalSoon(20),
-                    isUserSelf = false,
                     userId = 3L,
                     mateId = 3L,
                 ),
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.LateWarning(20),
-                    isUserSelf = false,
                     userId = 4L,
                     mateId = 4L,
                 ),
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.Late(30),
-                    isUserSelf = false,
                     userId = 5L,
                     mateId = 5L,
                 ),
             )
-        EtaDashboardContent(mateEtas = mateEtas)
+        EtaDashboardContent(
+            mateEtas = mateEtas,
+            onClickNudge = { },
+        )
     }
 }
