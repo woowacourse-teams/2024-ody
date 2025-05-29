@@ -38,12 +38,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.draw
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -154,7 +153,7 @@ fun EtaDashboardContent(
 }
 
 @Composable
-private fun EtaDashboardItem(mateEta: MateEtaUiModel) {
+fun EtaDashboardItem(mateEta: MateEtaUiModel) {
     val context = LocalContext.current
 
     Row(
@@ -188,12 +187,12 @@ private fun EtaDashboardItem(mateEta: MateEtaUiModel) {
 }
 
 @Composable
-private fun EtaBadge(etaStatusUiModel: EtaStatusUiModel) {
+fun EtaBadge(etaStatusUiModel: EtaStatusUiModel) {
     val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
     val scale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 2f,
-        animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse),
+        initialValue = 0.85f,
+        targetValue = 1.0f,
+        animationSpec = infiniteRepeatable(tween(500), RepeatMode.Reverse),
         label = "scale",
     )
 
@@ -203,11 +202,7 @@ private fun EtaBadge(etaStatusUiModel: EtaStatusUiModel) {
             Modifier
                 .width(80.dp)
                 .height(32.dp)
-                .graphicsLayer {
-                    scaleX = scale
-                    scaleY = scale
-                    transformOrigin = TransformOrigin.Center
-                },
+                .scale(scale),
         colors =
             ButtonDefaults.buttonColors(
                 containerColor = etaStatusUiModel.badgeColor,
