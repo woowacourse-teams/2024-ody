@@ -1,11 +1,15 @@
 package com.mulberry.ody.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource
 import com.mulberry.ody.data.remote.thirdparty.address.KakaoAddressService
-import com.mulberry.ody.data.remote.thirdparty.address.response.toAddresses
 import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.apiresult.map
-import com.mulberry.ody.domain.model.Addresses
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.repository.location.AddressRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class KakaoAddressRepository
@@ -13,10 +17,12 @@ class KakaoAddressRepository
     constructor(private val service: KakaoAddressService) : AddressRepository {
         override suspend fun fetchAddresses(
             keyword: String,
-            page: Int,
             pageSize: Int,
-        ): ApiResult<Addresses> {
-            return service.fetchAddresses(keyword, page, pageSize).map { it.toAddresses() }
+        ): Flow<PagingData<Address>> {
+            return Pager(
+                config = PagingConfig(pageSize = pageSize),
+                pagingSourceFactory = { AddressPagingSource(service, keyword, pageSize) },
+            ).flow
         }
 
         override suspend fun fetchAddressesByCoordinate(

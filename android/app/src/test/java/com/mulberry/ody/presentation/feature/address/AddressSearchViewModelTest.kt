@@ -2,6 +2,7 @@ package com.mulberry.ody.presentation.feature.address
 
 import androidx.paging.map
 import com.mulberry.ody.address
+import com.mulberry.ody.domain.usecase.SearchAddressUseCase
 import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
@@ -20,8 +21,8 @@ class AddressSearchViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel =
-            AddressSearchViewModel(addressRepository = FakeAddressRepository)
+        val searchAddressUseCase = SearchAddressUseCase(FakeAddressRepository)
+        viewModel = AddressSearchViewModel(searchAddressUseCase)
     }
 
     @Test

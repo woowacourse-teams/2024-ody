@@ -1,19 +1,14 @@
 package com.mulberry.ody.presentation.feature.address
 
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource
-import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource.Companion.PAGE_SIZE
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.domain.repository.location.AddressRepository
+import com.mulberry.ody.domain.usecase.SearchAddressUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
@@ -22,7 +17,7 @@ import javax.inject.Inject
 class AddressSearchViewModel
     @Inject
     constructor(
-        private val addressRepository: AddressRepository,
+        private val searchAddressUseCase: SearchAddressUseCase,
     ) : BaseViewModel() {
         private val _address: MutableStateFlow<PagingData<Address>> = MutableStateFlow(PagingData.empty())
         val address: StateFlow<PagingData<Address>> get() = _address
@@ -34,17 +29,9 @@ class AddressSearchViewModel
                 }
 
                 startLoading()
-                Pager(
-                    config = PagingConfig(pageSize = PAGE_SIZE),
-                    pagingSourceFactory = {
-                        AddressPagingSource(
-                            keyword = addressSearchKeyword,
-                            addressRepository = addressRepository,
-                        )
-                    },
-                ).flow
+                searchAddressUseCase(addressSearchKeyword)
                     .cachedIn(viewModelScope)
-                    .collectLatest {
+                    .collect {
                         _address.emit(it)
                         stopLoading()
                     }
