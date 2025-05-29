@@ -58,11 +58,11 @@ class EtaDashboardFragment : Fragment() {
     }
 
     private fun startEtaDashboardGuide() {
-        childFragmentManager.commit {
-            add(R.id.fcv_eta_dashboard, EtaDashboardGuideFirstFragment())
-            setReorderingAllowed(true)
-            addToBackStack(null)
-        }
+//        childFragmentManager.commit {
+//            add(R.id.fcv_eta_dashboard, EtaDashboardGuideFirstFragment())
+//            setReorderingAllowed(true)
+//            addToBackStack(null)
+//        }
     }
 
     private fun onBack() {

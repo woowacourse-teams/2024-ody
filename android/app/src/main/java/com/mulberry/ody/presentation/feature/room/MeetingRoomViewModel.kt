@@ -29,7 +29,6 @@ import com.mulberry.ody.presentation.feature.room.detail.model.InviteCodeCopyInf
 import com.mulberry.ody.presentation.feature.room.detail.model.MateUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.toDetailMeetingUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.toMateUiModels
-import com.mulberry.ody.presentation.feature.room.etadashboard.listener.NudgeListener
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.toMateEtaUiModels
 import com.mulberry.ody.presentation.feature.room.log.model.NotificationLogUiModel
@@ -62,7 +61,7 @@ class MeetingRoomViewModel
         private val meetingRepository: MeetingRepository,
         private val imageStorage: ImageStorage,
         private val imageShareHelper: ImageShareHelper,
-    ) : BaseViewModel(), NudgeListener {
+    ) : BaseViewModel() {
         private val matesEta: Flow<MateEtaInfo?> =
             matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
 
@@ -116,7 +115,7 @@ class MeetingRoomViewModel
             fetchMeeting()
         }
 
-        override fun nudgeMate(
+        fun nudgeMate(
             nudgeId: Long,
             mateId: Long,
         ) {
