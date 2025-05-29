@@ -10,7 +10,7 @@ fun MateEtaInfo.toMateEtaUiModels(): List<MateEtaUiModel> {
 private fun MateEta.toMateEtaUiModel(userId: Long): MateEtaUiModel {
     return MateEtaUiModel(
         nickname = nickname,
-        etaStatusUiModel = etaStatus.toEtaStatusUiModel(),
+        status = etaStatus.toEtaStatusUiModel(),
         isUserSelf = userId == mateId,
         userId = userId,
         mateId = mateId,
