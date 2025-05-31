@@ -14,13 +14,14 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Coordinates;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.dto.response.MateEtaResponsesV2;
+import com.ody.meetinglog.domain.MeetingLog;
+import com.ody.meetinglog.domain.MeetingLogType;
+import com.ody.meetinglog.service.MeetingLogService;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.types.DepartureReminder;
 import com.ody.notification.domain.types.Entry;
-import com.ody.notification.domain.types.MateLeave;
-import com.ody.notification.domain.types.MemberDeletion;
 import com.ody.notification.domain.types.Nudge;
 import com.ody.notification.service.NotificationService;
 import com.ody.route.domain.DepartureTime;
@@ -30,9 +31,11 @@ import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -41,6 +44,7 @@ public class MateService {
     private static final long AVAILABLE_NUDGE_DURATION = 30L;
 
     private final MateRepository mateRepository;
+    private final MeetingLogService meetingLogService;
     private final EtaService etaService;
     private final NotificationService notificationService;
     private final RouteService routeService;
@@ -57,21 +61,28 @@ public class MateService {
         Mate mate = saveMateAndEta(mateSaveRequest, member, meeting);
 
         FcmTopic fcmTopic = new FcmTopic(meeting);
-        sendEntry(mate, fcmTopic);
+        saveAndSendEntry(mate, fcmTopic);
         notificationService.subscribeTopic(member.getDeviceToken(), fcmTopic);
-        sendDepartureReminder(meeting, mate, fcmTopic);
+        saveAndSendDepartureReminder(meeting, mate, fcmTopic);
         return MateSaveResponseV2.from(meeting);
     }
 
-    private void sendEntry(Mate mate, FcmTopic fcmTopic) {
+    private void saveAndSendEntry(Mate mate, FcmTopic fcmTopic) {
+        MeetingLog entryLog = new MeetingLog(mate, MeetingLogType.ENTRY_LOG);
+        meetingLogService.save(entryLog);
+
         Entry entry = new Entry(mate, fcmTopic);
-        notificationService.saveAndSchedule(entry.toNotification());
+        notificationService.saveAndSend(entry.toNotification());
     }
 
-    private void sendDepartureReminder(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
+    private void saveAndSendDepartureReminder(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
         DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
         DepartureReminder departureReminder = new DepartureReminder(mate, departureTime, fcmTopic);
-        notificationService.saveAndSchedule(departureReminder.toNotification());
+        Notification savedDepartureReminder = notificationService.saveAndSchedule(departureReminder.toNotification());
+        LocalDateTime sendAt = savedDepartureReminder.getSendAt();
+
+        MeetingLog departureReminderLog = new MeetingLog(mate, MeetingLogType.DEPARTURE_REMINDER, sendAt);
+        meetingLogService.save(departureReminderLog);
     }
 
     private void validateMeetingOverdue(Meeting meeting) {
@@ -105,6 +116,10 @@ public class MateService {
         Mate requestMate = findFetchedMate(nudgeRequest.requestMateId());
         Mate nudgedMate = findFetchedMate(nudgeRequest.nudgedMateId());
         validateNudgeCondition(requestMate, nudgedMate);
+
+        MeetingLog nudgeLog = new MeetingLog(nudgedMate, MeetingLogType.NUDGE_LOG);
+        meetingLogService.save(nudgeLog);
+
         Nudge nudge = new Nudge(nudgedMate);
         notificationService.sendNudgeMessage(requestMate, nudge);
     }
@@ -133,7 +148,7 @@ public class MateService {
         return etaStatus == EtaStatus.LATE_WARNING || etaStatus == EtaStatus.LATE;
     }
 
-    private Mate findFetchedMate(Long mateId) {
+    private Mate findFetchedMate(long mateId) {
         Mate mate = mateRepository.findFetchedMateById(mateId)
                 .orElseThrow(() -> new OdyBadRequestException("존재하지 않는 약속 참여자입니다."));
         if (mate.getMeeting().isOverdue()) {
@@ -161,16 +176,16 @@ public class MateService {
 
     @Transactional
     public void withdraw(Mate mate) {
-        Notification memberDeletionNotification = new MemberDeletion(mate).toNotification();
-        notificationService.save(memberDeletionNotification);
+        MeetingLog deletionLog = new MeetingLog(mate, MeetingLogType.MEMBER_DELETION_LOG);
+        meetingLogService.save(deletionLog);
         delete(mate);
     }
 
     @Transactional
     public void leaveByMeetingIdAndMemberId(Long meetingId, Long memberId) {
         Mate mate = findByMeetingIdAndMemberId(meetingId, memberId);
-        Notification leaveNotification = new MateLeave(mate).toNotification();
-        notificationService.save(leaveNotification);
+        MeetingLog leaveLog = new MeetingLog(mate, MeetingLogType.LEAVE_LOG);
+        meetingLogService.save(leaveLog);
         delete(mate);
     }
 

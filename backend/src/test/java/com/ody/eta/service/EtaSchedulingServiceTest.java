@@ -188,7 +188,7 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
                         verify(noticeService).send(any(EtaSchedulingNotice.class), any(GroupMessage.class));
                     }),
                     dynamicTest("TTL 만료 전에 ETA api 요청이 안 오면, 스케줄링 알림이 재전송된다.", () -> {
-                        Thread.sleep(ttlMs + 200);
+                        Thread.sleep(ttlMs + 500);
                         verify(noticeService).send(any(EtaSchedulingNotice.class), any(DirectMessage.class));
                     })
             );

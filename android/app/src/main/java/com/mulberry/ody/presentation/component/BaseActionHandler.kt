@@ -1,22 +1,23 @@
-package com.mulberry.ody.presentation.common
+package com.mulberry.ody.presentation.component
 
 import android.content.Context
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.BaseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun ErrorSnackbarHandler(
+fun BaseActionHandler(
     viewModel: BaseViewModel,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    snackbarHostState: SnackbarHostState,
     context: Context = LocalContext.current,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ) {
@@ -36,7 +37,6 @@ fun ErrorSnackbarHandler(
                 snackbarHostState.showSnackbar(
                     message = context.getString(messageId),
                     actionLabel = context.getString(actionLabelId),
-                    duration = SnackbarDuration.Short,
                 )
             if (result == SnackbarResult.ActionPerformed) {
                 action()
@@ -58,5 +58,10 @@ fun ErrorSnackbarHandler(
         viewModel.errorEvent.collect {
             showSnackbar(R.string.error_guide)
         }
+    }
+
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    if (isLoading) {
+        OdyLoading()
     }
 }

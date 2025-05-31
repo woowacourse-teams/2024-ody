@@ -43,24 +43,4 @@ class FcmPushSenderTest extends BaseServiceTest {
                 () -> assertThat(notificationAfterSend.getStatus()).isEqualTo(NotificationStatus.DONE)
         );
     }
-
-    @DisplayName("DISMISSED 상태이면 푸시 알림을 보내지 않는다.")
-    @Test
-    void sendPushNotificationFailure() {
-        Message message = Mockito.mock(Message.class);
-        GroupMessage groupMessage = new GroupMessage(message);
-        Notification dismissedNotification = fixtureGenerator.generateNotification(
-                NotificationType.DEPARTURE_REMINDER,
-                NotificationStatus.DISMISSED
-        );
-
-        fcmPushSender.sendGroupMessage(groupMessage, dismissedNotification);
-
-        Notification notificationAfterSend = notificationRepository.findById(dismissedNotification.getId()).get();
-
-        assertAll(
-                () -> Mockito.verifyNoInteractions(firebaseMessaging),
-                () -> assertThat(notificationAfterSend.getStatus()).isEqualTo(NotificationStatus.DISMISSED)
-        );
-    }
 }

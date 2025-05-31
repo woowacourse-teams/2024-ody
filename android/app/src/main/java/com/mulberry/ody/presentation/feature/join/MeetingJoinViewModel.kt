@@ -36,9 +36,9 @@ class MeetingJoinViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         private val joinRepository: JoinRepository,
-        private val matesEtaRepository: MatesEtaRepository,
         private val addressRepository: AddressRepository,
         private val locationHelper: LocationHelper,
+        private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel(), MeetingJoinListener {
         val departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
 
@@ -106,7 +106,7 @@ class MeetingJoinViewModel
                 startLoading()
                 joinRepository.postMates(meetingJoinInfo)
                     .onSuccess {
-                        matesEtaRepository.reserveEtaFetchingJob(it.meetingId, it.meetingDateTime)
+                        matesEtaRepository.openEtaDashboard(it.meetingId, it.meetingDateTime)
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
                     }.onFailure { code, errorMessage ->

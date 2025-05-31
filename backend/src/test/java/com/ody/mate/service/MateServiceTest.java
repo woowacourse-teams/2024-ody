@@ -14,6 +14,9 @@ import com.ody.mate.dto.request.MateSaveRequestV2;
 import com.ody.mate.dto.request.NudgeRequest;
 import com.ody.mate.dto.response.MateSaveResponseV2;
 import com.ody.meeting.domain.Meeting;
+import com.ody.meetinglog.domain.MeetingLog;
+import com.ody.meetinglog.domain.MeetingLogType;
+import com.ody.meetinglog.repository.MeetingLogRepository;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
 import com.ody.notification.domain.FcmTopic;
@@ -30,6 +33,9 @@ class MateServiceTest extends BaseServiceTest {
 
     @Autowired
     private MateService mateService;
+
+    @Autowired
+    private MeetingLogRepository meetingLogRepository;
 
     @DisplayName("회원이 참여하고 있는 특정 약속의 참여자 리스트를 조회한다.")
     @Test
@@ -62,6 +68,27 @@ class MateServiceTest extends BaseServiceTest {
     @DisplayName("재촉하기 테스트")
     @Nested
     class NudgeTest {
+
+        @DisplayName("약속 재촉에 성공하면 재촉 로그가 남는다")
+        @Test
+        void saveNudgeLogWhenNudgeSuccess() {
+            Meeting oneMinuteLaterMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().plusMinutes(1L));
+            Mate requestMate = fixtureGenerator.generateMate(oneMinuteLaterMeeting);
+            Mate nudgedLateWarningMate = fixtureGenerator.generateMate(oneMinuteLaterMeeting);
+            Eta lateWarningEta = fixtureGenerator.generateEta(nudgedLateWarningMate, 2L);
+
+            NudgeRequest nudgeRequest = new NudgeRequest(requestMate.getId(), nudgedLateWarningMate.getId());
+            mateService.nudge(nudgeRequest);
+
+            List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(
+                    oneMinuteLaterMeeting.getId(), LocalDateTime.now()
+            );
+
+            assertAll(
+                    () -> assertThat(meetingLogs).hasSize(1),
+                    () -> assertThat(meetingLogs.get(0).getType()).isEqualTo(MeetingLogType.NUDGE_LOG)
+            );
+        }
 
         @DisplayName("약속이 1분 뒤이고 소요시간이 2분으로 Eta상태가 지각 위기인 mate를 재촉할 수 있다")
         @Test
@@ -173,6 +200,45 @@ class MateServiceTest extends BaseServiceTest {
     @Nested
     class saveAndSendNotifications {
 
+        @DisplayName("나중에 출발해야 할 때 : 입장 로그가 남는다")
+        @Test
+        void saveEntryLogWhenLateDeparture() {
+            Member member = fixtureGenerator.generateMember();
+            Meeting laterMeeting = fixtureGenerator.generateMeeting(LocalDateTime.now().plusHours(1L));
+
+            MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateSaveRequest(laterMeeting);
+            mateService.saveAndSendNotifications(mateSaveRequest, member, laterMeeting);
+
+            List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(
+                    laterMeeting.getId(), LocalDateTime.now()
+            );
+
+            assertAll(
+                    () -> assertThat(meetingLogs).hasSize(1),
+                    () -> assertThat(meetingLogs.get(0).getType()).isEqualTo(MeetingLogType.ENTRY_LOG)
+            );
+        }
+
+        @DisplayName("당장 출발해야 할 때 : 입장 로그 + 출발 알림 로그가 남는다")
+        @Test
+        void saveEntryAndDepartureReminderLogWhenNowDeparture() throws InterruptedException {
+            Member member = fixtureGenerator.generateMember();
+            Meeting now = fixtureGenerator.generateMeeting(LocalDateTime.now());
+            MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateSaveRequest(now);
+
+            mateService.saveAndSendNotifications(mateSaveRequest, member, now);
+
+            List<MeetingLogType> meetingLogTypes = meetingLogRepository.findByShowAtBeforeOrEqualTo(now.getId(), LocalDateTime.now())
+                    .stream()
+                    .map(MeetingLog::getType)
+                    .toList();
+
+            assertAll(
+                    () -> assertThat(meetingLogTypes).hasSize(2),
+                    () -> assertThat(meetingLogTypes).containsExactly(MeetingLogType.ENTRY_LOG, MeetingLogType.DEPARTURE_REMINDER)
+            );
+        }
+
         @DisplayName("하나의 약속에 동일한 닉네임을 가진 참여자가 존재할 수 있다.")
         @Test
         void saveMateWithDuplicateNickname() {
@@ -204,6 +270,24 @@ class MateServiceTest extends BaseServiceTest {
             assertThatThrownBy(() -> mateService.saveAndSendNotifications(mateSaveRequest, member, meeting))
                     .isInstanceOf(OdyBadRequestException.class);
         }
+    }
+
+    @DisplayName("참여자 삭제 시, 삭제 로그가 남는다")
+    @Test
+    void saveMemberDeleteLogWhenDeleteMate() {
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Mate mate = fixtureGenerator.generateMate(meeting);
+        FcmTopic fcmTopic = new FcmTopic(meeting);
+        DeviceToken deviceToken = mate.getMember().getDeviceToken();
+
+        mateService.withdraw(mate);
+
+        List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(meeting.getId(), LocalDateTime.now());
+
+        assertAll(
+                () -> assertThat(meetingLogs).hasSize(1),
+                () -> assertThat(meetingLogs.get(0).getType()).isEqualTo(MeetingLogType.MEMBER_DELETION_LOG)
+        );
     }
 
     @DisplayName("참여자 삭제 시, 구독하고 있는 fcmTopic 취소힌다.")
@@ -253,5 +337,22 @@ class MateServiceTest extends BaseServiceTest {
 
         assertThatThrownBy(() -> mateService.findAllByMeetingIdIfMate(kaki, meeting.getId()))
                 .isInstanceOf(OdyNotFoundException.class);
+    }
+
+    @DisplayName("방을 나갔다면 방 나가기 로그가 남는다")
+    @Test
+    void saveLeaveLogWhenMateLeave() {
+        Meeting meeting = fixtureGenerator.generateMeeting();
+        Member kaki = fixtureGenerator.generateMember("kaki");
+        fixtureGenerator.generateMate(meeting, kaki);
+
+        mateService.leaveByMeetingIdAndMemberId(meeting.getId(), kaki.getId());
+
+        List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(meeting.getId(), LocalDateTime.now());
+
+        assertAll(
+                () -> assertThat(meetingLogs).hasSize(1),
+                () -> assertThat(meetingLogs.get(0).getType()).isEqualTo(MeetingLogType.LEAVE_LOG)
+        );
     }
 }

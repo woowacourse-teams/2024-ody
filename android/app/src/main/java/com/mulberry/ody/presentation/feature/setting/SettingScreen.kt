@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,8 +37,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
-import com.mulberry.ody.presentation.common.ErrorSnackbarHandler
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
+import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.component.OdySadDialog
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.login.LoginNavigatedReason
@@ -103,7 +104,7 @@ fun SettingScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_back),
-                            tint = OdyTheme.colors.tertiary,
+                            tint = Color.Unspecified,
                             contentDescription = null,
                         )
                     }
@@ -125,7 +126,7 @@ fun SettingScreen(
         )
     }
 
-    ErrorSnackbarHandler(viewModel)
+    BaseActionHandler(viewModel, snackbarHostState)
     LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
         viewModel.fetchNotificationSetting()
         settingState.updatePermission()
@@ -319,7 +320,7 @@ private fun SettingItem(
     ) {
         Icon(
             painter = painterResource(id = settingItemType.icon),
-            tint = OdyTheme.colors.quarternary,
+            tint = Color.Unspecified,
             contentDescription = null,
         )
         Spacer(Modifier.width(16.dp))

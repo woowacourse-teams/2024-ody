@@ -77,14 +77,9 @@ class FCMNotification
         ): String =
             when (type) {
                 NotificationType.ENTRY -> context.getString(R.string.fcm_notification_entry, nickname)
-                NotificationType.DEPARTURE_REMINDER ->
-                    context.getString(R.string.fcm_notification_departure_reminder, nickname)
-
+                NotificationType.DEPARTURE_REMINDER -> context.getString(R.string.fcm_notification_departure_reminder, nickname)
                 NotificationType.NUDGE -> context.getString(R.string.fcm_notification_nudge, nickname)
-                NotificationType.ETA_NOTICE ->
-                    context.getString(R.string.fcm_notification_eta_notice, meetingName)
-
-                NotificationType.DEFAULT -> ""
+                NotificationType.ETA_NOTICE -> context.getString(R.string.fcm_notification_eta_notice, meetingName)
             }
 
         private fun getPendingIntent(
@@ -95,7 +90,6 @@ class FCMNotification
                 when (type) {
                     NotificationType.ENTRY, NotificationType.DEPARTURE_REMINDER -> NAVIGATE_TO_DETAIL_MEETING
                     NotificationType.NUDGE, NotificationType.ETA_NOTICE -> NAVIGATE_TO_ETA_DASHBOARD
-                    NotificationType.DEFAULT -> ""
                 }
 
             val stackBuilder = TaskStackBuilder.create(context)

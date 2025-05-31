@@ -172,4 +172,5 @@ dependencies {
 
     // paging
     implementation(libs.androidx.paging)
+    implementation(libs.androidx.compose.paging)
 }

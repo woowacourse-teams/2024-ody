@@ -11,6 +11,9 @@ import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Location;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
+import com.ody.meetinglog.domain.MeetingLog;
+import com.ody.meetinglog.domain.MeetingLogType;
+import com.ody.meetinglog.repository.MeetingLogRepository;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.DeviceToken;
 import com.ody.member.domain.Member;
@@ -40,6 +43,7 @@ public class FixtureGenerator {
     private final EtaRepository etaRepository;
     private final ApiCallRepository apiCallRepository;
     private final MemberAppleTokenRepository memberAppleTokenRepository;
+    private final MeetingLogRepository meetingLogRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     public FixtureGenerator(
@@ -50,6 +54,7 @@ public class FixtureGenerator {
             EtaRepository etaRepository,
             ApiCallRepository apiCallRepository,
             MemberAppleTokenRepository memberAppleTokenRepository,
+            MeetingLogRepository meetingLogRepository,
             JwtTokenProvider jwtTokenProvider
     ) {
         this.meetingRepository = meetingRepository;
@@ -59,6 +64,7 @@ public class FixtureGenerator {
         this.etaRepository = etaRepository;
         this.apiCallRepository = apiCallRepository;
         this.memberAppleTokenRepository = memberAppleTokenRepository;
+        this.meetingLogRepository = meetingLogRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -209,6 +215,11 @@ public class FixtureGenerator {
 
     public ApiCall generateApiCall(ClientType clientType, int count, LocalDate date) {
         return apiCallRepository.save(new ApiCall(clientType, count, date));
+    }
+
+    public MeetingLog generateMeetingLog(Mate mate, MeetingLogType type, LocalDateTime showAt) {
+        MeetingLog meetingLog = new MeetingLog(mate, type, showAt);
+        return meetingLogRepository.save(meetingLog);
     }
 
     @Transactional

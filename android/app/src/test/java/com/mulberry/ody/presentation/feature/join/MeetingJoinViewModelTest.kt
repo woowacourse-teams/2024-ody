@@ -30,9 +30,9 @@ class MeetingJoinViewModelTest {
             MeetingJoinViewModel(
                 analyticsHelper = FakeAnalyticsHelper,
                 joinRepository = FakeJoinRepository(meetingId = meetingId),
-                matesEtaRepository = FakeMatesEtaRepository,
                 addressRepository = FakeAddressRepository,
                 locationHelper = FakeLocationHelper,
+                matesEtaRepository = FakeMatesEtaRepository,
             )
     }
 
