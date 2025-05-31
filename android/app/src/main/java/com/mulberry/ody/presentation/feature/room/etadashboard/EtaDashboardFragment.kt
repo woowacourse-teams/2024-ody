@@ -38,7 +38,7 @@ class EtaDashboardFragment : Fragment() {
                     EtaDashboardScreen(
                         onClickBack = ::onBack,
                         viewModel = viewModel,
-                        )
+                    )
                 }
             }
         }

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -56,18 +55,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
+import com.mulberry.ody.presentation.component.OdyTooltip
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.EtaStatusUiModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.theme.Gray400
-import com.mulberry.ody.presentation.theme.Gray400Alpha70
 import com.mulberry.ody.presentation.theme.OdyTheme
 import com.mulberry.ody.presentation.theme.White
 import kotlinx.coroutines.launch
@@ -129,15 +126,16 @@ fun EtaDashboardScreen(
         EtaDashboardContent(
             mateEtas = mateEtas,
             onClickNudge = { viewModel.nudgeMate(it.userId, it.mateId) },
-            modifier = Modifier
-                .padding(innerPadding)
-                .drawWithContent {
-                    graphicsLayer.record {
-                        this@drawWithContent.drawContent()
+            modifier =
+                Modifier
+                    .padding(innerPadding)
+                    .drawWithContent {
+                        graphicsLayer.record {
+                            this@drawWithContent.drawContent()
+                        }
+                        drawLayer(graphicsLayer)
                     }
-                    drawLayer(graphicsLayer)
-                }
-                .background(OdyTheme.colors.primary)
+                    .background(OdyTheme.colors.primary),
         )
     }
 
@@ -196,7 +194,7 @@ fun EtaDashboardItem(
         EtaBadge(
             etaStatus = mateEta.status,
             onClick = { onClickNudge(mateEta) },
-            canNudge = mateEta.canNudge,
+            enabled = mateEta.canNudge,
         )
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -219,12 +217,12 @@ fun EtaDashboardItem(
 private fun EtaBadge(
     etaStatus: EtaStatusUiModel,
     onClick: () -> Unit,
-    canNudge: Boolean,
+    enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "")
     val scale by infiniteTransition.animateFloat(
-        initialValue = if (canNudge) 0.85f else 1.0f,
+        initialValue = if (enabled) 0.85f else 1.0f,
         targetValue = 1.0f,
         animationSpec = infiniteRepeatable(tween(500), RepeatMode.Reverse),
         label = "",
@@ -245,7 +243,7 @@ private fun EtaBadge(
         contentPadding = PaddingValues(all = 0.dp),
         shape = RoundedCornerShape(15.dp),
         interactionSource = NoRippleInteractionSource,
-        enabled = canNudge,
+        enabled = enabled,
     ) {
         Text(
             text = stringResource(id = etaStatus.badgeMessageId),
@@ -294,32 +292,15 @@ private fun MissingTooltip(
             R.string.location_permission_friend_guide
         }
 
-    Popup(
-        alignment = Alignment.TopStart,
+    OdyTooltip(
+        title = stringResource(id = messageId),
         offset = IntOffset(-tooltipSize.value.width, -tooltipSize.value.height),
-        properties = PopupProperties(focusable = true),
         onDismissRequest = onCloseTooltip,
-    ) {
-        Box(
-            modifier =
-                Modifier
-                    .wrapContentSize()
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 20.dp))
-                    .background(Gray400Alpha70)
-                    .onGloballyPositioned { coordinates ->
-                        tooltipSize.value = coordinates.size
-                    },
-        ) {
-            Text(
-                text = stringResource(id = messageId),
-                style = OdyTheme.typography.pretendardRegular12.copy(color = White),
-                modifier =
-                    Modifier
-                        .padding(vertical = 8.dp)
-                        .padding(horizontal = 16.dp),
-            )
-        }
-    }
+        modifier =
+            Modifier.onGloballyPositioned { coordinates ->
+                tooltipSize.value = coordinates.size
+            },
+    )
 }
 
 @Composable
@@ -330,13 +311,13 @@ private fun EtaDashboardScreenPreview() {
             listOf(
                 MateEtaUiModel(
                     "올리브",
-                    EtaStatusUiModel.Arrived,
+                    EtaStatusUiModel.Missing,
                     userId = 1L,
                     mateId = 1L,
                 ),
                 MateEtaUiModel(
                     "올리브",
-                    EtaStatusUiModel.Missing,
+                    EtaStatusUiModel.Arrived,
                     userId = 2L,
                     mateId = 2L,
                 ),
@@ -348,13 +329,13 @@ private fun EtaDashboardScreenPreview() {
                 ),
                 MateEtaUiModel(
                     "올리브",
-                    EtaStatusUiModel.LateWarning(20),
+                    EtaStatusUiModel.Late(30),
                     userId = 4L,
                     mateId = 4L,
                 ),
                 MateEtaUiModel(
                     "올리브",
-                    EtaStatusUiModel.Late(30),
+                    EtaStatusUiModel.LateWarning(20),
                     userId = 5L,
                     mateId = 5L,
                 ),
