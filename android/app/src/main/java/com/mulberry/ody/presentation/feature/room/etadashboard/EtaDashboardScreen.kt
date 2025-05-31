@@ -1,6 +1,5 @@
 package com.mulberry.ody.presentation.feature.room.etadashboard
 
-import android.graphics.Picture
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -41,8 +40,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -55,11 +58,9 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
-import com.mulberry.ody.presentation.common.image.toBitmap
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
@@ -74,7 +75,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun EtaDashboardScreen(
     onClickBack: () -> Unit,
-    viewModel: MeetingRoomViewModel = hiltViewModel(),
+    viewModel: MeetingRoomViewModel,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -84,9 +85,8 @@ fun EtaDashboardScreen(
             snackbarHostState.showSnackbar(message)
         }
     }
-
     val mateEtas by viewModel.mateEtaUiModels.collectAsStateWithLifecycle()
-    val sharedImagePicture = remember { Picture() }
+    val graphicsLayer = rememberGraphicsLayer()
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -106,11 +106,14 @@ fun EtaDashboardScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            viewModel.shareEtaDashboard(
-                                title = context.getString(R.string.eta_dashboard_share_description),
-                                buttonTitle = context.getString(R.string.eta_dashboard_share_button),
-                                bitmap = sharedImagePicture.toBitmap(),
-                            )
+                            coroutineScope.launch {
+                                val bitmap = graphicsLayer.toImageBitmap().asAndroidBitmap()
+                                viewModel.shareEtaDashboard(
+                                    title = context.getString(R.string.eta_dashboard_share_description),
+                                    buttonTitle = context.getString(R.string.eta_dashboard_share_button),
+                                    bitmap = bitmap,
+                                )
+                            }
                         },
                     ) {
                         Icon(
@@ -126,7 +129,15 @@ fun EtaDashboardScreen(
         EtaDashboardContent(
             mateEtas = mateEtas,
             onClickNudge = { viewModel.nudgeMate(it.userId, it.mateId) },
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier
+                .padding(innerPadding)
+                .drawWithContent {
+                    graphicsLayer.record {
+                        this@drawWithContent.drawContent()
+                    }
+                    drawLayer(graphicsLayer)
+                }
+                .background(OdyTheme.colors.primary)
         )
     }
 

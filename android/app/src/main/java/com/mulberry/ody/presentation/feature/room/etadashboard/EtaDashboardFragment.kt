@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.data.local.db.OdyDatastore
+import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -19,6 +21,8 @@ import javax.inject.Inject
 class EtaDashboardFragment : Fragment() {
     @Inject
     lateinit var odyDatastore: OdyDatastore
+
+    private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +35,10 @@ class EtaDashboardFragment : Fragment() {
             )
             setContent {
                 OdyTheme {
-                    EtaDashboardScreen(onClickBack = ::onBack)
+                    EtaDashboardScreen(
+                        onClickBack = ::onBack,
+                        viewModel = viewModel,
+                        )
                 }
             }
         }
