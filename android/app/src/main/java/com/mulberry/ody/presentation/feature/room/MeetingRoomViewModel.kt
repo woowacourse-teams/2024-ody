@@ -62,8 +62,7 @@ class MeetingRoomViewModel
         private val imageStorage: ImageStorage,
         private val imageShareHelper: ImageShareHelper,
     ) : BaseViewModel() {
-        private val matesEta: Flow<MateEtaInfo?> =
-            matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
+        private val matesEta: Flow<MateEtaInfo?> = matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
 
         val mateEtaUiModels: StateFlow<List<MateEtaUiModel>> =
             matesEta.map {
@@ -75,8 +74,7 @@ class MeetingRoomViewModel
                 initialValue = emptyList(),
             )
 
-        private val _meeting: MutableStateFlow<DetailMeetingUiModel> =
-            MutableStateFlow(DetailMeetingUiModel.DEFAULT)
+        private val _meeting: MutableStateFlow<DetailMeetingUiModel> = MutableStateFlow(DetailMeetingUiModel.DEFAULT)
         val meeting: StateFlow<DetailMeetingUiModel> = _meeting.asStateFlow()
 
         private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
