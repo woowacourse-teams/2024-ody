@@ -82,6 +82,7 @@ fun EtaDashboardScreen(
             snackbarHostState.showSnackbar(message)
         }
     }
+    val meeting by viewModel.meeting.collectAsStateWithLifecycle()
     val mateEtas by viewModel.mateEtaUiModels.collectAsStateWithLifecycle()
     val graphicsLayer = rememberGraphicsLayer()
 
@@ -90,7 +91,7 @@ fun EtaDashboardScreen(
         containerColor = OdyTheme.colors.primary,
         topBar = {
             OdyTopAppBar(
-                title = "약속 이름",
+                title = meeting.name,
                 navigationIcon = {
                     IconButton(onClick = onClickBack) {
                         Icon(
