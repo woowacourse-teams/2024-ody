@@ -173,7 +173,7 @@ private fun EtaDashboardContent(
 }
 
 @Composable
-fun EtaDashboardItem(
+private fun EtaDashboardItem(
     mateEta: MateEtaUiModel,
     onClickNudge: (MateEtaUiModel) -> Unit,
     modifier: Modifier = Modifier,
