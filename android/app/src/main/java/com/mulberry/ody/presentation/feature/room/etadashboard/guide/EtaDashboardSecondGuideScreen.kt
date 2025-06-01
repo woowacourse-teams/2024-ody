@@ -1,0 +1,57 @@
+package com.mulberry.ody.presentation.feature.room.etadashboard.guide
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import com.mulberry.ody.R
+import com.mulberry.ody.presentation.feature.room.etadashboard.guide.model.EtaDashboardGuideUiModel
+import com.mulberry.ody.presentation.feature.room.etadashboard.model.EtaStatusUiModel
+import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiModel
+import com.mulberry.ody.presentation.theme.OdyTheme
+
+@Composable
+fun EtaDashboardSecondGuideScreen() {
+    val mateEtas = listOf(
+        MateEtaUiModel(
+            "올리브",
+            EtaStatusUiModel.Arrived,
+            userId = 1L,
+            mateId = 1L,
+        ),
+        MateEtaUiModel(
+            "콜리",
+            EtaStatusUiModel.Late(12),
+            userId = 2L,
+            mateId = 2L,
+        ),
+        MateEtaUiModel(
+            "해음",
+            EtaStatusUiModel.Arrived,
+            userId = 3L,
+            mateId = 3L,
+        ),
+        MateEtaUiModel(
+            "제리",
+            EtaStatusUiModel.Arrived,
+            userId = 4L,
+            mateId = 4L,
+        ),
+    )
+
+    EtaDashboardGuideScreen(
+        guideUiModel = EtaDashboardGuideUiModel(
+            mateEtas = mateEtas,
+            nudgeMessageId = R.string.eta_dashboard_guide_late_nudge,
+            messageId = R.string.eta_dashboard_guide_after_meeting_time,
+            buttonMessageId = R.string.close_button,
+            buttonImageId = R.drawable.ic_close,
+        )
+    )
+}
+
+@Composable
+@Preview(showSystemUi = true)
+private fun EtaDashboardSecondGuideScreenPreview() {
+    OdyTheme {
+        EtaDashboardSecondGuideScreen()
+    }
+}
