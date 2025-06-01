@@ -42,10 +42,7 @@ fun OdyTooltip(
             Text(
                 text = title,
                 style = OdyTheme.typography.pretendardRegular12.copy(color = White),
-                modifier =
-                    Modifier
-                        .padding(vertical = 8.dp)
-                        .padding(horizontal = 16.dp),
+                modifier = Modifier.padding(vertical = 8.dp).padding(horizontal = 16.dp),
             )
         }
     }
