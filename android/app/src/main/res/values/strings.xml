@@ -87,8 +87,8 @@
 
     <!-- activity_login -->
     <string name="login_welcome_top">카카오톡으로</string>
-    <string name="login_welcome_prefix">간편하게</string>
-    <string name="login_welcome_ody">오디</string>
+    <string name="login_welcome_prefix">간편하게&#160;</string>
+    <string name="login_welcome_ody">오디&#160;</string>
     <string name="login_welcome_postfix">시작하기</string>
     <string name="login_logout_success">로그아웃 되었습니다.</string>
     <string name="login_withdrawal_success">회원 탈퇴 되었습니다.</string>
