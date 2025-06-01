@@ -8,7 +8,7 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import com.mulberry.ody.R
-import com.mulberry.ody.data.local.db.OdyDatastore
+import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.domain.model.NotificationType
 import com.mulberry.ody.presentation.feature.meetings.MeetingsActivity
 import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity
@@ -24,7 +24,7 @@ class FCMNotification
     @Inject
     constructor(
         private val context: Context,
-        private val odyDatastore: OdyDatastore,
+        private val odyDataStore: OdyDataStore,
         private val notificationManager: NotificationManager,
     ) {
         init {
@@ -61,10 +61,10 @@ class FCMNotification
         }
 
         private suspend fun isNotificationBlock(type: NotificationType): Boolean {
-            if (type == NotificationType.DEPARTURE_REMINDER && !odyDatastore.getIsNotificationOn(type).first()) {
+            if (type == NotificationType.DEPARTURE_REMINDER && !odyDataStore.getIsNotificationOn(type).first()) {
                 return true
             }
-            if (type == NotificationType.ENTRY && !odyDatastore.getIsNotificationOn(type).first()) {
+            if (type == NotificationType.ENTRY && !odyDataStore.getIsNotificationOn(type).first()) {
                 return true
             }
             return false

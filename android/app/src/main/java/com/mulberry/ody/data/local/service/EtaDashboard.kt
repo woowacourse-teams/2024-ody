@@ -1,7 +1,7 @@
 package com.mulberry.ody.data.local.service
 
 import android.content.Context
-import com.mulberry.ody.data.local.db.OdyDatastore
+import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.domain.common.toMilliSeconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +15,7 @@ class EtaDashboard
     @Inject
     constructor(
         private val context: Context,
-        private val odyDatastore: OdyDatastore,
+        private val odyDataStore: OdyDataStore,
     ) {
         fun open(
             meetingId: Long,
@@ -31,7 +31,7 @@ class EtaDashboard
         }
 
         private suspend fun isLoggedIn(): Boolean {
-            return coroutineScope { odyDatastore.getAuthToken().first().isSuccess }
+            return coroutineScope { odyDataStore.getAuthToken().first().isSuccess }
         }
 
         private fun LocalDateTime.isOpenTime(): Boolean {
