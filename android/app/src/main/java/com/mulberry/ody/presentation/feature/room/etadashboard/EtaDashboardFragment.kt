@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.mulberry.ody.data.local.db.OdyDatastore
+import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class EtaDashboardFragment : Fragment() {
     @Inject
-    lateinit var odyDatastore: OdyDatastore
+    lateinit var odyDatastore: OdyDataStore
 
     private val viewModel: MeetingRoomViewModel by activityViewModels<MeetingRoomViewModel>()
 
