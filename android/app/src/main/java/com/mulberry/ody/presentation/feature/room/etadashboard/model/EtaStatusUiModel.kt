@@ -7,6 +7,7 @@ import com.mulberry.ody.R
 import com.mulberry.ody.presentation.theme.Blue
 import com.mulberry.ody.presentation.theme.Gray400
 import com.mulberry.ody.presentation.theme.Green
+import com.mulberry.ody.presentation.theme.Red
 import com.mulberry.ody.presentation.theme.Yellow
 
 sealed interface EtaStatusUiModel {
@@ -63,7 +64,7 @@ sealed interface EtaStatusUiModel {
     }
 
     data class Late(val durationMinutes: Int) : EtaStatusUiModel {
-        override val badgeColor: Color = Color.Red
+        override val badgeColor: Color = Red
         override val badgeMessageId: Int = R.string.badge_late
 
         override fun etaStatusMessage(context: Context): String {
