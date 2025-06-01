@@ -1,10 +1,9 @@
 package com.mulberry.ody.di
 
 import android.content.Context
-import com.mulberry.ody.data.local.db.EtaReservationDao
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
+import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.data.local.db.OdyDatabase
-import com.mulberry.ody.data.local.db.OdyDatastore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,10 +16,10 @@ import javax.inject.Singleton
 object DBModule {
     @Provides
     @Singleton
-    fun provideDataStore(
+    fun provideOdyDataStore(
         @ApplicationContext context: Context,
-    ): OdyDatastore {
-        return OdyDatastore(context)
+    ): OdyDataStore {
+        return OdyDataStore(context)
     }
 
     @Provides
@@ -33,7 +32,4 @@ object DBModule {
 
     @Provides
     fun provideMateEtaInfoDao(appDatabase: OdyDatabase): MateEtaInfoDao = appDatabase.mateEtaInfoDao()
-
-    @Provides
-    fun provideEtaReserveDao(appDatabase: OdyDatabase): EtaReservationDao = appDatabase.etaReservationDao()
 }

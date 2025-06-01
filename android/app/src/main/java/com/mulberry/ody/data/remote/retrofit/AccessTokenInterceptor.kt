@@ -1,6 +1,6 @@
 package com.mulberry.ody.data.remote.retrofit
 
-import com.mulberry.ody.data.local.db.OdyDatastore
+import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.data.remote.core.entity.login.mapper.toAuthToken
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.domain.apiresult.ApiResult
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class AccessTokenInterceptor
     @Inject
     constructor(
-        private val odyDatastore: OdyDatastore,
+        private val odyDataStore: OdyDataStore,
         private val refreshTokenService: RefreshTokenService,
     ) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
@@ -48,7 +48,7 @@ class AccessTokenInterceptor
 
         private fun fetchAuthToken(): Result<AuthToken> =
             runBlocking {
-                odyDatastore.getAuthToken().first()
+                odyDataStore.getAuthToken().first()
             }
 
         private fun refreshAuthToken(): ApiResult<AuthToken> =
@@ -56,7 +56,7 @@ class AccessTokenInterceptor
                 refreshTokenService.postRefreshToken()
                     .map { it.toAuthToken() }
                     .onSuccess {
-                        odyDatastore.setAuthToken(it)
+                        odyDataStore.setAuthToken(it)
                     }
             }
     }

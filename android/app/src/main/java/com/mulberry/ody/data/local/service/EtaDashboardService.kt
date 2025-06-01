@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
@@ -36,7 +37,7 @@ class EtaDashboardService : Service() {
     @Inject
     lateinit var etaDashboardNotification: EtaDashboardNotification
 
-    private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val meetingJobs: MutableMap<Long, Job> = mutableMapOf()
 
     override fun onBind(intent: Intent?): IBinder? {

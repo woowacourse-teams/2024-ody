@@ -14,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import com.mulberry.ody.R
-import com.mulberry.ody.data.local.db.OdyDatastore
+import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.databinding.FragmentEtaDashboardBinding
 import com.mulberry.ody.databinding.LayoutMissingTooltipBinding
 import com.mulberry.ody.presentation.common.binding.BindingFragment
@@ -41,7 +41,7 @@ class EtaDashboardFragment :
     private val parentActivity: Activity by lazy { requireActivity() }
 
     @Inject
-    lateinit var odyDatastore: OdyDatastore
+    lateinit var odyDataStore: OdyDataStore
 
     override fun onViewCreated(
         view: View,
@@ -56,10 +56,10 @@ class EtaDashboardFragment :
 
     private fun initializeGuide() {
         lifecycleScope.launch {
-            val isFirstSeenEtaDashboard = odyDatastore.getIsFirstSeenEtaDashboard().first()
+            val isFirstSeenEtaDashboard = odyDataStore.getIsFirstSeenEtaDashboard().first()
             if (isFirstSeenEtaDashboard) {
                 startEtaDashboardGuide()
-                odyDatastore.setIsFirstSeenEtaDashboard(false)
+                odyDataStore.setIsFirstSeenEtaDashboard(false)
             }
         }
     }
