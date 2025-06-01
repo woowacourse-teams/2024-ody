@@ -51,7 +51,7 @@ fun LoginScreen(
         containerColor = OdyTheme.colors.primary,
     ) { innerPadding ->
         LoginContent(
-            onClickLogin = { viewModel.login(context) },
+            onClickLogin = { viewModel.login() },
             modifier =
                 Modifier
                     .padding(innerPadding)

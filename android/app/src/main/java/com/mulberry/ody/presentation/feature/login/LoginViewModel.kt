@@ -1,6 +1,5 @@
 package com.mulberry.ody.presentation.feature.login
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
@@ -53,10 +52,10 @@ class LoginViewModel
             }
         }
 
-        fun login(context: Context) {
+        fun login() {
             viewModelScope.launch {
                 startLoading()
-                authRepository.login(context)
+                authRepository.login()
                     .onSuccess {
                         navigateToMeetings()
                     }.onFailure { code, errorMessage ->
@@ -64,7 +63,7 @@ class LoginViewModel
                         handleError()
                     }.onNetworkError {
                         handleNetworkError()
-                        lastFailedAction = { login(context) }
+                        lastFailedAction = { login() }
                     }
                 stopLoading()
             }
