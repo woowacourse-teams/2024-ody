@@ -243,7 +243,7 @@ class MeetingRoomViewModel
                             imageUrl = it,
                             imageWidthPixel = bitmap.width,
                             imageHeightPixel = bitmap.height,
-                            link = "https://play.google.com/store/apps/details?id=com.mulberry.ody",
+                            link = ODY_PLAY_STORE_LINK,
                         )
                     shareImage(imageShareContent)
                 }.onNetworkError {
@@ -311,6 +311,7 @@ class MeetingRoomViewModel
             private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
             private const val NUDGE_DELAY_SECONDS = 10L
             private val DEFAULT_NUDGE_TIME = LocalDateTime.of(2000, 1, 1, 1, 1)
+            private const val ODY_PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=com.mulberry.ody"
 
             fun provideFactory(
                 assistedFactory: MeetingViewModelFactory,
