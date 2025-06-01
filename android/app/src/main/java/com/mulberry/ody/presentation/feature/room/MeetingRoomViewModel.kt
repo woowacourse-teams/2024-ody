@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.feature.room
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
@@ -22,12 +23,12 @@ import com.mulberry.ody.presentation.common.analytics.logButtonClicked
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.common.image.ImageShareContent
 import com.mulberry.ody.presentation.common.image.ImageShareHelper
+import com.mulberry.ody.presentation.common.image.toByteArray
 import com.mulberry.ody.presentation.feature.room.detail.model.DetailMeetingUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.InviteCodeCopyInfo
 import com.mulberry.ody.presentation.feature.room.detail.model.MateUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.toDetailMeetingUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.toMateUiModels
-import com.mulberry.ody.presentation.feature.room.etadashboard.listener.NudgeListener
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.toMateEtaUiModels
 import com.mulberry.ody.presentation.feature.room.log.model.NotificationLogUiModel
@@ -60,18 +61,17 @@ class MeetingRoomViewModel
         private val meetingRepository: MeetingRepository,
         private val imageStorage: ImageStorage,
         private val imageShareHelper: ImageShareHelper,
-    ) : BaseViewModel(), NudgeListener {
-        private val matesEta: Flow<MateEtaInfo?> =
-            matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
+    ) : BaseViewModel() {
+        private val matesEta: Flow<MateEtaInfo?> = matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
 
-        val mateEtaUiModels: StateFlow<List<MateEtaUiModel>?> =
+        val mateEtaUiModels: StateFlow<List<MateEtaUiModel>> =
             matesEta.map {
-                val mateEtaInfo = it ?: return@map null
+                val mateEtaInfo = it ?: return@map emptyList()
                 mateEtaInfo.toMateEtaUiModels()
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                initialValue = null,
+                initialValue = emptyList(),
             )
 
         private val _meeting: MutableStateFlow<DetailMeetingUiModel> = MutableStateFlow(DetailMeetingUiModel.DEFAULT)
@@ -113,18 +113,18 @@ class MeetingRoomViewModel
             fetchMeeting()
         }
 
-        override fun nudgeMate(
-            nudgeId: Long,
+        fun nudgeMate(
+            userId: Long,
             mateId: Long,
         ) {
             viewModelScope.launch {
-                val targetMate = mateEtaUiModels.value?.find { it.mateId == mateId } ?: return@launch
-                handleNudgeAction(nudgeId, mateId, targetMate.nickname)
+                val targetMate = mateEtaUiModels.value.find { it.mateId == mateId } ?: return@launch
+                handleNudgeAction(userId, mateId, targetMate.nickname)
             }
         }
 
         private suspend fun handleNudgeAction(
-            nudgeId: Long,
+            userId: Long,
             mateId: Long,
             mateNickname: String,
         ) {
@@ -135,7 +135,7 @@ class MeetingRoomViewModel
 
             if (recentNudgeTime == DEFAULT_NUDGE_TIME || elapsedSeconds >= NUDGE_DELAY_SECONDS) {
                 matesNudgeTimes[mateId] = currentTime
-                performNudge(nudgeId, mateId, mateNickname)
+                performNudge(userId, mateId, mateNickname)
                 return
             }
 
@@ -143,11 +143,11 @@ class MeetingRoomViewModel
         }
 
         private suspend fun performNudge(
-            nudgeId: Long,
+            userId: Long,
             mateId: Long,
             mateNickname: String,
         ) {
-            meetingRepository.postNudge(Nudge(nudgeId, mateId))
+            meetingRepository.postNudge(Nudge(userId, mateId))
                 .onSuccess {
                     _nudgeSuccessMate.emit(mateNickname)
                 }.onFailure { code, errorMessage ->
@@ -158,7 +158,7 @@ class MeetingRoomViewModel
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                 }.onNetworkError {
                     handleNetworkError()
-                    lastFailedAction = { nudgeMate(nudgeId, mateId) }
+                    lastFailedAction = { nudgeMate(userId, mateId) }
                 }
         }
 
@@ -228,39 +228,28 @@ class MeetingRoomViewModel
         fun shareEtaDashboard(
             title: String,
             buttonTitle: String,
-            imageByteArray: ByteArray,
-            imageWidthPixel: Int,
-            imageHeightPixel: Int,
+            bitmap: Bitmap,
         ) {
             viewModelScope.launch {
                 startLoading()
                 imageStorage.upload(
-                    byteArray = imageByteArray,
+                    byteArray = bitmap.toByteArray(),
                     fileName = LocalDateTime.now().toString(),
-                )
-                    .onSuccess {
-                        val imageShareContent =
-                            ImageShareContent(
-                                title = title,
-                                buttonTitle = buttonTitle,
-                                imageUrl = it,
-                                imageWidthPixel = imageWidthPixel,
-                                imageHeightPixel = imageHeightPixel,
-                                link = "https://github.com/woowacourse-teams/2024-ody",
-                            )
-                        shareImage(imageShareContent)
-                    }.onNetworkError {
-                        handleNetworkError()
-                        lastFailedAction = {
-                            shareEtaDashboard(
-                                title,
-                                buttonTitle,
-                                imageByteArray,
-                                imageWidthPixel,
-                                imageHeightPixel,
-                            )
-                        }
-                    }
+                ).onSuccess {
+                    val imageShareContent =
+                        ImageShareContent(
+                            title = title,
+                            buttonTitle = buttonTitle,
+                            imageUrl = it,
+                            imageWidthPixel = bitmap.width,
+                            imageHeightPixel = bitmap.height,
+                            link = ODY_PLAY_STORE_LINK,
+                        )
+                    shareImage(imageShareContent)
+                }.onNetworkError {
+                    handleNetworkError()
+                    lastFailedAction = { shareEtaDashboard(title, buttonTitle, bitmap) }
+                }
                 stopLoading()
             }
         }
@@ -322,6 +311,7 @@ class MeetingRoomViewModel
             private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
             private const val NUDGE_DELAY_SECONDS = 10L
             private val DEFAULT_NUDGE_TIME = LocalDateTime.of(2000, 1, 1, 1, 1)
+            private const val ODY_PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=com.mulberry.ody"
 
             fun provideFactory(
                 assistedFactory: MeetingViewModelFactory,
