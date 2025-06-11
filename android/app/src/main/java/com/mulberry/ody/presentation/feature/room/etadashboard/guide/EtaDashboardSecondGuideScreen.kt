@@ -10,41 +10,43 @@ import com.mulberry.ody.presentation.theme.OdyTheme
 
 @Composable
 fun EtaDashboardSecondGuideScreen(onClick: () -> Unit) {
-    val mateEtas = listOf(
-        MateEtaUiModel(
-            "올리브",
-            EtaStatusUiModel.Arrived,
-            userId = 1L,
-            mateId = 1L,
-        ),
-        MateEtaUiModel(
-            "콜리",
-            EtaStatusUiModel.Late(12),
-            userId = 2L,
-            mateId = 2L,
-        ),
-        MateEtaUiModel(
-            "해음",
-            EtaStatusUiModel.Arrived,
-            userId = 3L,
-            mateId = 3L,
-        ),
-        MateEtaUiModel(
-            "제리",
-            EtaStatusUiModel.Arrived,
-            userId = 4L,
-            mateId = 4L,
-        ),
-    )
+    val mateEtas =
+        listOf(
+            MateEtaUiModel(
+                "올리브",
+                EtaStatusUiModel.Arrived,
+                userId = 1L,
+                mateId = 1L,
+            ),
+            MateEtaUiModel(
+                "콜리",
+                EtaStatusUiModel.Late(12),
+                userId = 2L,
+                mateId = 2L,
+            ),
+            MateEtaUiModel(
+                "해음",
+                EtaStatusUiModel.Arrived,
+                userId = 3L,
+                mateId = 3L,
+            ),
+            MateEtaUiModel(
+                "제리",
+                EtaStatusUiModel.Arrived,
+                userId = 4L,
+                mateId = 4L,
+            ),
+        )
 
     EtaDashboardGuideLayout(
-        guideUiModel = EtaDashboardGuideUiModel(
-            mateEtas = mateEtas,
-            nudgeMessageId = R.string.eta_dashboard_guide_late_nudge,
-            messageId = R.string.eta_dashboard_guide_after_meeting_time,
-            buttonMessageId = R.string.close_button,
-            buttonImageId = R.drawable.ic_close,
-        ),
+        guideUiModel =
+            EtaDashboardGuideUiModel(
+                mateEtas = mateEtas,
+                nudgeMessageId = R.string.eta_dashboard_guide_late_nudge,
+                messageId = R.string.eta_dashboard_guide_after_meeting_time,
+                buttonMessageId = R.string.close_button,
+                buttonImageId = R.drawable.ic_close,
+            ),
         onClick = onClick,
     )
 }

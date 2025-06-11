@@ -109,12 +109,13 @@ class MeetingRoomViewModel
         private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
         val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent.asSharedFlow()
 
-        val isFirstSeenEtaDashboard: StateFlow<Boolean> = matesEtaRepository.isFirstSeenEtaDashboard()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                initialValue = false,
-            )
+        val isFirstSeenEtaDashboard: StateFlow<Boolean> =
+            matesEtaRepository.isFirstSeenEtaDashboard()
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
+                    initialValue = false,
+                )
 
         init {
             fetchMeeting()
@@ -308,13 +309,13 @@ class MeetingRoomViewModel
             _isVisibleNavigation.value = !_isVisibleNavigation.value
         }
 
-    fun updateEtaDashboardSeen() {
-        viewModelScope.launch {
-            matesEtaRepository.updateEtaDashboardSeen()
+        fun updateEtaDashboardSeen() {
+            viewModelScope.launch {
+                matesEtaRepository.updateEtaDashboardSeen()
+            }
         }
-    }
 
-    @AssistedFactory
+        @AssistedFactory
         interface MeetingViewModelFactory {
             fun create(meetingId: Long): MeetingRoomViewModel
         }

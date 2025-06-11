@@ -14,7 +14,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -33,9 +32,7 @@ import com.mulberry.ody.R
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.component.EtaDashboardItem
-import com.mulberry.ody.presentation.feature.room.etadashboard.guide.EtaDashboardFirstGuideScreen
 import com.mulberry.ody.presentation.feature.room.etadashboard.guide.EtaDashboardGuideScreen
-import com.mulberry.ody.presentation.feature.room.etadashboard.guide.EtaDashboardSecondGuideScreen
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.EtaStatusUiModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.theme.OdyTheme
@@ -104,15 +101,15 @@ fun EtaDashboardScreen(
                 mateEtas = mateEtas,
                 onClickNudge = { viewModel.nudgeMate(it.userId, it.mateId) },
                 modifier =
-                Modifier
-                    .padding(innerPadding)
-                    .drawWithContent {
-                        graphicsLayer.record {
-                            this@drawWithContent.drawContent()
+                    Modifier
+                        .padding(innerPadding)
+                        .drawWithContent {
+                            graphicsLayer.record {
+                                this@drawWithContent.drawContent()
+                            }
+                            drawLayer(graphicsLayer)
                         }
-                        drawLayer(graphicsLayer)
-                    }
-                    .background(OdyTheme.colors.primary),
+                        .background(OdyTheme.colors.primary),
             )
         }
     }

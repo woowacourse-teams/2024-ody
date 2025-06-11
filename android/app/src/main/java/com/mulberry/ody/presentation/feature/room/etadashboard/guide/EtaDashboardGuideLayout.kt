@@ -57,7 +57,7 @@ fun EtaDashboardGuideLayout(
         EtaDashboardGuideContent(
             guideUiModel = guideUiModel,
             onClick = onClick,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         )
     }
 }
@@ -90,9 +90,9 @@ private fun EtaDashboardGuideTopBar() {
         )
         Box(
             modifier =
-            Modifier
-                .matchParentSize()
-                .background(Gray900Alpha50),
+                Modifier
+                    .matchParentSize()
+                    .background(Gray900Alpha50),
         )
     }
 }
@@ -109,18 +109,18 @@ private fun EtaDashboardGuideContent(
 
     Box(
         modifier =
-        modifier
-            .fillMaxSize()
-            .onGloballyPositioned { coordinates ->
-                rootLayoutHeight = coordinates.size.height
-            },
+            modifier
+                .fillMaxSize()
+                .onGloballyPositioned { coordinates ->
+                    rootLayoutHeight = coordinates.size.height
+                },
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             LazyColumn {
                 itemsIndexed(
                     guideUiModel.mateEtas,
                     key = { _, item -> item.mateId },
-                    ) { index, mateEta ->
+                ) { index, mateEta ->
                     EtaDashboardGuideItem(
                         mateEta = mateEta,
                         isTargetItem = index == 1,
@@ -128,26 +128,26 @@ private fun EtaDashboardGuideContent(
                         isLast = index == guideUiModel.mateEtas.lastIndex,
                         onTargetItemPositioned = {
                             guideOverlayStartY = it.positionInRoot().y.toInt()
-                        }
+                        },
                     )
                 }
             }
             Box(
                 modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(Gray900Alpha50),
+                    Modifier
+                        .fillMaxSize()
+                        .background(Gray900Alpha50),
             )
         }
         EtaDashboardGuideOverlay(
             guideUiModel = guideUiModel,
             onClick = onClick,
             modifier =
-            Modifier
-                .offset { IntOffset(0, guideOverlayStartY) }
-                .offset(y = (-20).dp)
-                .fillMaxWidth()
-                .height(guideOverlayHeight),
+                Modifier
+                    .offset { IntOffset(0, guideOverlayStartY) }
+                    .offset(y = (-20).dp)
+                    .fillMaxWidth()
+                    .height(guideOverlayHeight),
         )
     }
 }
@@ -166,22 +166,24 @@ private fun EtaDashboardGuideItem(
     Box {
         EtaDashboardItem(
             mateEta = mateEta,
-            modifier = Modifier.padding(top = topPadding, bottom = bottomPadding)
+            modifier = Modifier.padding(top = topPadding, bottom = bottomPadding),
         )
         Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(Gray900Alpha50)
+            modifier =
+                Modifier
+                    .matchParentSize()
+                    .background(Gray900Alpha50),
         )
 
         if (isTargetItem) {
             EtaDashboardItem(
                 mateEta = mateEta,
-                modifier = Modifier
-                    .matchParentSize()
-                    .padding(horizontal = 18.dp, vertical = 10.dp)
-                    .background(OdyTheme.colors.primary, RoundedCornerShape(20.dp))
-                    .onGloballyPositioned(onTargetItemPositioned)
+                modifier =
+                    Modifier
+                        .matchParentSize()
+                        .padding(horizontal = 18.dp, vertical = 10.dp)
+                        .background(OdyTheme.colors.primary, RoundedCornerShape(20.dp))
+                        .onGloballyPositioned(onTargetItemPositioned),
             )
         }
     }
@@ -204,9 +206,9 @@ private fun EtaDashboardGuideOverlay(
             Image(
                 painter = painterResource(id = R.drawable.ic_diagonal_line),
                 modifier =
-                Modifier
-                    .padding(end = 12.dp)
-                    .padding(bottom = 8.dp),
+                    Modifier
+                        .padding(end = 12.dp)
+                        .padding(bottom = 8.dp),
                 contentDescription = null,
             )
             Text(
@@ -245,40 +247,42 @@ private fun EtaDashboardGuideOverlay(
 @Preview(showSystemUi = true)
 private fun EtaDashboardGuideLayoutPreview() {
     OdyTheme {
-        val mateEtas = listOf(
-            MateEtaUiModel(
-                "올리브",
-                EtaStatusUiModel.ArrivalSoon(10),
-                userId = 1L,
-                mateId = 1L,
-            ),
-            MateEtaUiModel(
-                "콜리",
-                EtaStatusUiModel.LateWarning(28),
-                userId = 2L,
-                mateId = 2L,
-            ),
-            MateEtaUiModel(
-                "해음",
-                EtaStatusUiModel.Arrived,
-                userId = 3L,
-                mateId = 3L,
-            ),
-            MateEtaUiModel(
-                "제리",
-                EtaStatusUiModel.Arrived,
-                userId = 4L,
-                mateId = 4L,
-            ),
-        )
+        val mateEtas =
+            listOf(
+                MateEtaUiModel(
+                    "올리브",
+                    EtaStatusUiModel.ArrivalSoon(10),
+                    userId = 1L,
+                    mateId = 1L,
+                ),
+                MateEtaUiModel(
+                    "콜리",
+                    EtaStatusUiModel.LateWarning(28),
+                    userId = 2L,
+                    mateId = 2L,
+                ),
+                MateEtaUiModel(
+                    "해음",
+                    EtaStatusUiModel.Arrived,
+                    userId = 3L,
+                    mateId = 3L,
+                ),
+                MateEtaUiModel(
+                    "제리",
+                    EtaStatusUiModel.Arrived,
+                    userId = 4L,
+                    mateId = 4L,
+                ),
+            )
         EtaDashboardGuideLayout(
-            guideUiModel = EtaDashboardGuideUiModel(
-                mateEtas = mateEtas,
-                nudgeMessageId = R.string.eta_dashboard_guide_late_warning_nudge,
-                messageId = R.string.eta_dashboard_guide_before_meeting_time,
-                buttonMessageId = R.string.next_button,
-                buttonImageId = R.drawable.ic_arrow_right,
-            ),
+            guideUiModel =
+                EtaDashboardGuideUiModel(
+                    mateEtas = mateEtas,
+                    nudgeMessageId = R.string.eta_dashboard_guide_late_warning_nudge,
+                    messageId = R.string.eta_dashboard_guide_before_meeting_time,
+                    buttonMessageId = R.string.next_button,
+                    buttonImageId = R.drawable.ic_arrow_right,
+                ),
             onClick = { },
         )
     }

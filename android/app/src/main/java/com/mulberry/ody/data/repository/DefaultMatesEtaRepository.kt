@@ -47,13 +47,13 @@ class DefaultMatesEtaRepository
             context.stopService(serviceIntent)
         }
 
-    override fun isFirstSeenEtaDashboard(): Flow<Boolean> {
-        return odyDataStore.getIsFirstSeenEtaDashboard()
-    }
+        override fun isFirstSeenEtaDashboard(): Flow<Boolean> {
+            return odyDataStore.getIsFirstSeenEtaDashboard()
+        }
 
-    override suspend fun updateEtaDashboardSeen() {
-        odyDataStore.updateEtaDashboardGuideSeen()
-    }
+        override suspend fun updateEtaDashboardSeen() {
+            odyDataStore.updateEtaDashboardGuideSeen()
+        }
 
-    private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
+        private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
     }
