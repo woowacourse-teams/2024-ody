@@ -117,7 +117,9 @@ private fun EtaDashboardGuideContent(
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             LazyColumn {
-                itemsIndexed(guideUiModel.mateEtas, key = { _, item -> item.userId }) { index, mateEta ->
+                itemsIndexed(
+                    guideUiModel.mateEtas,
+                    key = { _, item -> item.userId }) { index, mateEta ->
                     EtaDashboardGuideItem(
                         mateEta = mateEta,
                         isTargetItem = index == 1,
@@ -212,13 +214,16 @@ private fun EtaDashboardGuideOverlay(
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.weight(1f))
-            Column(modifier = Modifier.noRippleClickable(onClick)) {
-                Text(
-                    text = stringResource(id = guideUiModel.messageId),
-                    style = OdyTheme.typography.pretendardMedium20.copy(color = OdyTheme.colors.octonary),
-                    textAlign = TextAlign.Center,
-                )
-                Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(id = guideUiModel.messageId),
+                style = OdyTheme.typography.pretendardMedium20.copy(color = OdyTheme.colors.octonary),
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Column(
+                modifier = Modifier.noRippleClickable(onClick),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 Image(
                     painter = painterResource(id = guideUiModel.buttonImageId),
                     contentDescription = null,
