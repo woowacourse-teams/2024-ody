@@ -140,7 +140,7 @@ private fun EtaDashboardContent(
         contentPadding = PaddingValues(vertical = 32.dp),
         verticalArrangement = Arrangement.spacedBy(40.dp),
     ) {
-        items(items = mateEtas, key = { it.userId }) { mateEta ->
+        items(items = mateEtas, key = { it.mateId }) { mateEta ->
             EtaDashboardItem(
                 mateEta = mateEta,
                 onClickNudge = onClickNudge,
@@ -164,25 +164,25 @@ private fun EtaDashboardContentPreview() {
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.Arrived,
-                    userId = 2L,
+                    userId = 1L,
                     mateId = 2L,
                 ),
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.ArrivalSoon(20),
-                    userId = 3L,
+                    userId = 1L,
                     mateId = 3L,
                 ),
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.Late(30),
-                    userId = 4L,
+                    userId = 1L,
                     mateId = 4L,
                 ),
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.LateWarning(20),
-                    userId = 5L,
+                    userId = 1L,
                     mateId = 5L,
                 ),
             )

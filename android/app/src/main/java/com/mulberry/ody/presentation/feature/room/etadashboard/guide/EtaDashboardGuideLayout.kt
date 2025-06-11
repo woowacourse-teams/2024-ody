@@ -119,7 +119,8 @@ private fun EtaDashboardGuideContent(
             LazyColumn {
                 itemsIndexed(
                     guideUiModel.mateEtas,
-                    key = { _, item -> item.userId }) { index, mateEta ->
+                    key = { _, item -> item.mateId },
+                    ) { index, mateEta ->
                     EtaDashboardGuideItem(
                         mateEta = mateEta,
                         isTargetItem = index == 1,

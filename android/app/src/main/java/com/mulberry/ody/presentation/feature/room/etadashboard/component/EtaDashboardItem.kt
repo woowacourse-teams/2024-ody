@@ -203,7 +203,7 @@ private fun EtaDashboardItemPreview() {
                     MateEtaUiModel(
                         "올리브",
                         EtaStatusUiModel.Arrived,
-                        userId = 2L,
+                        userId = 1L,
                         mateId = 2L,
                     ),
             )
