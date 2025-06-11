@@ -5,6 +5,7 @@ import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.mateEtaInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
 
 object FakeMatesEtaRepository : MatesEtaRepository {
@@ -22,4 +23,8 @@ object FakeMatesEtaRepository : MatesEtaRepository {
     override suspend fun closeEtaDashboard(meetingId: Long) = Unit
 
     override suspend fun closeEtaDashboard() = Unit
+
+    override fun isFirstSeenEtaDashboard(): Flow<Boolean> = flowOf(false)
+
+    override suspend fun updateEtaDashboardSeen() = Unit
 }

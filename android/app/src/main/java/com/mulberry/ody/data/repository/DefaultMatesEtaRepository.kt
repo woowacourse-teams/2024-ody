@@ -2,6 +2,7 @@ package com.mulberry.ody.data.repository
 
 import android.content.Context
 import com.mulberry.ody.data.local.db.MateEtaInfoDao
+import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.service.EtaDashboard
 import com.mulberry.ody.data.local.service.EtaDashboardService
@@ -19,6 +20,7 @@ class DefaultMatesEtaRepository
         @ApplicationContext private val context: Context,
         private val matesEtaInfoDao: MateEtaInfoDao,
         private val etaDashboard: EtaDashboard,
+        private val odyDataStore: OdyDataStore,
     ) : MatesEtaRepository {
         override fun fetchMatesEtaInfo(meetingId: Long): Flow<MateEtaInfo?> {
             return matesEtaInfoDao.getMateEtaInfo(meetingId).map { it?.toMateEtaInfo() }
@@ -45,5 +47,13 @@ class DefaultMatesEtaRepository
             context.stopService(serviceIntent)
         }
 
-        private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
+    override fun isFirstSeenEtaDashboard(): Flow<Boolean> {
+        return odyDataStore.getIsFirstSeenEtaDashboard()
+    }
+
+    override suspend fun updateEtaDashboardSeen() {
+        odyDataStore.updateEtaDashboardGuideSeen()
+    }
+
+    private fun MateEtaInfoEntity.toMateEtaInfo(): MateEtaInfo = MateEtaInfo(mateId, mateEtas)
     }

@@ -9,7 +9,7 @@ import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiMo
 import com.mulberry.ody.presentation.theme.OdyTheme
 
 @Composable
-fun EtaDashboardSecondGuideScreen() {
+fun EtaDashboardSecondGuideScreen(onClick: () -> Unit) {
     val mateEtas = listOf(
         MateEtaUiModel(
             "올리브",
@@ -37,14 +37,15 @@ fun EtaDashboardSecondGuideScreen() {
         ),
     )
 
-    EtaDashboardGuideScreen(
+    EtaDashboardGuideLayout(
         guideUiModel = EtaDashboardGuideUiModel(
             mateEtas = mateEtas,
             nudgeMessageId = R.string.eta_dashboard_guide_late_nudge,
             messageId = R.string.eta_dashboard_guide_after_meeting_time,
             buttonMessageId = R.string.close_button,
             buttonImageId = R.drawable.ic_close,
-        )
+        ),
+        onClick = onClick,
     )
 }
 
@@ -52,6 +53,6 @@ fun EtaDashboardSecondGuideScreen() {
 @Preview(showSystemUi = true)
 private fun EtaDashboardSecondGuideScreenPreview() {
     OdyTheme {
-        EtaDashboardSecondGuideScreen()
+        EtaDashboardSecondGuideScreen(onClick = { })
     }
 }

@@ -60,9 +60,9 @@ class OdyDataStore(private val context: Context) {
         }
     }
 
-    suspend fun setIsFirstSeenEtaDashboard(isFirstSeenEtaDashboard: Boolean) {
+    suspend fun updateEtaDashboardGuideSeen() {
         context.dataStore.edit {
-            it[IS_FIRST_SEEN_ETA_DASHBOARD] = isFirstSeenEtaDashboard
+            it[IS_FIRST_SEEN_ETA_DASHBOARD] = false
         }
     }
 

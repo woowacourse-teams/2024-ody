@@ -14,8 +14,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
@@ -31,6 +33,9 @@ import com.mulberry.ody.R
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.component.EtaDashboardItem
+import com.mulberry.ody.presentation.feature.room.etadashboard.guide.EtaDashboardFirstGuideScreen
+import com.mulberry.ody.presentation.feature.room.etadashboard.guide.EtaDashboardGuideScreen
+import com.mulberry.ody.presentation.feature.room.etadashboard.guide.EtaDashboardSecondGuideScreen
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.EtaStatusUiModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.theme.OdyTheme
@@ -53,48 +58,52 @@ fun EtaDashboardScreen(
     val mateEtas by viewModel.mateEtaUiModels.collectAsStateWithLifecycle()
     val graphicsLayer = rememberGraphicsLayer()
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = OdyTheme.colors.primary,
-        topBar = {
-            OdyTopAppBar(
-                title = meeting.name,
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_arrow_back),
-                            tint = Color.Unspecified,
-                            contentDescription = null,
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                val bitmap = graphicsLayer.toImageBitmap().asAndroidBitmap()
-                                viewModel.shareEtaDashboard(
-                                    title = context.getString(R.string.eta_dashboard_share_description),
-                                    buttonTitle = context.getString(R.string.eta_dashboard_share_button),
-                                    bitmap = bitmap,
-                                )
-                            }
-                        },
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_share),
-                            tint = Color.Unspecified,
-                            contentDescription = null,
-                        )
-                    }
-                },
-            )
-        },
-    ) { innerPadding ->
-        EtaDashboardContent(
-            mateEtas = mateEtas,
-            onClickNudge = { viewModel.nudgeMate(it.userId, it.mateId) },
-            modifier =
+    val showGuide by viewModel.isFirstSeenEtaDashboard.collectAsStateWithLifecycle()
+    if (showGuide) {
+        EtaDashboardGuideScreen(onDismiss = { viewModel.updateEtaDashboardSeen() })
+    } else {
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            containerColor = OdyTheme.colors.primary,
+            topBar = {
+                OdyTopAppBar(
+                    title = meeting.name,
+                    navigationIcon = {
+                        IconButton(onClick = onClickBack) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_arrow_back),
+                                tint = Color.Unspecified,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    val bitmap = graphicsLayer.toImageBitmap().asAndroidBitmap()
+                                    viewModel.shareEtaDashboard(
+                                        title = context.getString(R.string.eta_dashboard_share_description),
+                                        buttonTitle = context.getString(R.string.eta_dashboard_share_button),
+                                        bitmap = bitmap,
+                                    )
+                                }
+                            },
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_share),
+                                tint = Color.Unspecified,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                )
+            },
+        ) { innerPadding ->
+            EtaDashboardContent(
+                mateEtas = mateEtas,
+                onClickNudge = { viewModel.nudgeMate(it.userId, it.mateId) },
+                modifier =
                 Modifier
                     .padding(innerPadding)
                     .drawWithContent {
@@ -104,7 +113,8 @@ fun EtaDashboardScreen(
                         drawLayer(graphicsLayer)
                     }
                     .background(OdyTheme.colors.primary),
-        )
+            )
+        }
     }
 
     LaunchedEffect(Unit) {

@@ -17,4 +17,8 @@ interface MatesEtaRepository {
     suspend fun closeEtaDashboard(meetingId: Long)
 
     suspend fun closeEtaDashboard()
+
+    fun isFirstSeenEtaDashboard(): Flow<Boolean>
+
+    suspend fun updateEtaDashboardSeen()
 }
