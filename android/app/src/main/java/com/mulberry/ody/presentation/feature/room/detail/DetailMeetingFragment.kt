@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.activityViewModels
 import com.mulberry.ody.R
 import com.mulberry.ody.databinding.FragmentDetailMeetingBinding
@@ -22,8 +24,11 @@ import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.feature.room.detail.adapter.MatesAdapter
 import com.mulberry.ody.presentation.feature.room.detail.listener.DepartureTimeGuideListener
 import com.mulberry.ody.presentation.feature.room.detail.listener.InviteCodeCopyListener
+import com.mulberry.ody.presentation.feature.room.detail.model.InviteCodeCopyInfo
 import com.mulberry.ody.presentation.feature.room.detail.model.InviteCodeCopyUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.MatesUiModel
+import com.mulberry.ody.presentation.feature.room.etadashboard.EtaDashboardScreen
+import com.mulberry.ody.presentation.theme.OdyTheme
 
 class DetailMeetingFragment :
     BindingFragment<FragmentDetailMeetingBinding>(R.layout.fragment_detail_meeting),
@@ -33,11 +38,33 @@ class DetailMeetingFragment :
     private val parentActivity: Activity by lazy { requireActivity() }
     private val matesAdapter: MatesAdapter by lazy { MatesAdapter(this) }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed,
+            )
+            setContent {
+                OdyTheme {
+                    DetailMeetingScreen(
+                        onBack = (requireActivity() as MeetingRoomActivity)::onBack,
+                        onCopyInviteCode = ::onCopyInviteCode,
+                        viewModel = viewModel,
+                    )
+                }
+            }
+        }
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+
         initializeBinding()
         initializeObserve()
     }
@@ -66,6 +93,17 @@ class DetailMeetingFragment :
             val chooserTitle = getString(R.string.invite_code_copy_title)
             startActivity(Intent.createChooser(intent, chooserTitle))
         }
+    }
+
+    private fun onCopyInviteCode(info: InviteCodeCopyInfo) {
+        val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
+        intent.type = "text/plain"
+
+        val shareMessage = getString(R.string.invite_code_copy, info.meetingName, info.inviteCode)
+        intent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+
+        val chooserTitle = getString(R.string.invite_code_copy_title)
+        startActivity(Intent.createChooser(intent, chooserTitle))
     }
 
     override fun toggleDepartureTimeGuide(point: Point) {

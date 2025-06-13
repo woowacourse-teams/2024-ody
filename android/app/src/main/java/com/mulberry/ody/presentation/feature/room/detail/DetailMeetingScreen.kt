@@ -38,6 +38,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,13 +56,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTopAppBar
+import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.feature.room.detail.model.DetailMeetingUiModel
+import com.mulberry.ody.presentation.feature.room.detail.model.InviteCodeCopyInfo
 import com.mulberry.ody.presentation.feature.room.detail.model.MateUiModel
 import com.mulberry.ody.presentation.theme.Gray300
 import com.mulberry.ody.presentation.theme.Gray350
@@ -70,25 +74,31 @@ import com.mulberry.ody.presentation.theme.OdyTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun DetailMeetingScreen() {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-    val showSnackbar: (Int) -> Unit = { id ->
-        coroutineScope.launch {
-            snackbarHostState.showSnackbar(context.getString(id))
-        }
-    }
+fun DetailMeetingScreen(
+    onBack: () -> Unit,
+    onCopyInviteCode: (InviteCodeCopyInfo) -> Unit,
+    viewModel: MeetingRoomViewModel,
+) {
+    val mates by viewModel.mates.collectAsStateWithLifecycle()
+    val detailMeeting by viewModel.meeting.collectAsStateWithLifecycle()
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = OdyTheme.colors.primary,
         topBar = {
             OdyTopAppBar(
-                title = stringResource(id = R.string.app_name),
+                title = detailMeeting.name,
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_arrow_back),
+                            tint = Color.Unspecified,
+                            contentDescription = null,
+                        )
+                    }
+                },
                 actions = {
                     IconButton(
-                        onClick = { },
+                        onClick = { viewModel.exitMeetingRoom() },
                         interactionSource = NoRippleInteractionSource,
                     ) {
                         Icon(
@@ -102,36 +112,20 @@ fun DetailMeetingScreen() {
         },
     ) { innerPadding ->
         DetailMeetingContent(
-            mates = listOf(
-                MateUiModel(
-                    "올리브1",
-                    "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
-                ),
-                MateUiModel(
-                    "올리브2",
-                    "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
-                ),
-                MateUiModel(
-                    "올리브3",
-                    "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
-                ),
-                MateUiModel(
-                    "올리브4",
-                    "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
-                ),
-            ),
-            detailMeeting = DetailMeetingUiModel(
-                id = 1L,
-                name = "성수에서 감자탕 먹기",
-                destinationAddress = "서울특별시 강남구 테헤란로 411 (성담빌딩)",
-                departureAddress = "서울특별시 송파구 올림픽로 35다길 (한국루터회관)",
-                dateTime = "2024년 7월 11일 오후 3시",
-                departureTime = "오후 2시 30분",
-                durationTime = "20분",
-                inviteCode = "123456",
-            ),
+            mates = mates,
+            detailMeeting = detailMeeting,
+            navigateToEta = { viewModel.navigateToEtaDashboard() },
+            navigateToLog = { viewModel.navigateToNotificationLog() },
+            onCopyInviteCode = { viewModel.copyInviteCodeEvent },
             modifier = Modifier.padding(innerPadding)
         )
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.copyInviteCodeEvent.collect {
+            val inviteCodeCopyInfo = InviteCodeCopyInfo(detailMeeting.name, detailMeeting.inviteCode)
+            onCopyInviteCode(inviteCodeCopyInfo)
+        }
     }
 }
 
@@ -139,6 +133,9 @@ fun DetailMeetingScreen() {
 private fun DetailMeetingContent(
     mates: List<MateUiModel>,
     detailMeeting: DetailMeetingUiModel,
+    navigateToEta: () -> Unit,
+    navigateToLog: () -> Unit,
+    onCopyInviteCode: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -147,6 +144,7 @@ private fun DetailMeetingContent(
     ) {
         MatesCard(
             mates = mates,
+            onCopyInviteCode = onCopyInviteCode,
             modifier = Modifier.padding(bottom = 6.dp),
         )
         DetailMeetingInformation(
@@ -154,13 +152,17 @@ private fun DetailMeetingContent(
             modifier = Modifier.padding(top = 28.dp),
         )
         Spacer(modifier = modifier.weight(1f))
-        DetailMeetingNavigation(modifier = Modifier.padding(bottom = 24.dp))
+        DetailMeetingNavigation(
+            navigateToEta = navigateToEta,
+            navigateToLog = navigateToLog,
+            modifier = Modifier.padding(bottom = 24.dp))
     }
 }
 
 @Composable
 private fun MatesCard(
     mates: List<MateUiModel>,
+    onCopyInviteCode: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -185,7 +187,7 @@ private fun MatesCard(
                 MateItem(mates[index])
                 if (index == mates.lastIndex) {
                     Spacer(modifier = Modifier.width(36.dp))
-                    InviteCodeCopyItem(onClick = {})
+                    InviteCodeCopyItem(onClick = onCopyInviteCode)
                 }
             }
         }
@@ -315,7 +317,10 @@ private fun DetailMeetingInformation(
 }
 
 @Composable
-private fun DetailMeetingNavigation(modifier: Modifier = Modifier) {
+private fun DetailMeetingNavigation(
+    navigateToEta: () -> Unit,
+    navigateToLog: () -> Unit,
+    modifier: Modifier = Modifier) {
     var showNavigationButton by rememberSaveable { mutableStateOf(false) }
 
     Row(
@@ -328,7 +333,7 @@ private fun DetailMeetingNavigation(modifier: Modifier = Modifier) {
             exit = fadeOut(tween(durationMillis = 300)) + shrinkVertically(tween(durationMillis = 300)),
         ) {
             Button(
-                onClick = { },
+                onClick = navigateToEta,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 shape = RoundedCornerShape(15.dp),
                 border = BorderStroke(width = 1.dp, color = OdyTheme.colors.secondary),
@@ -368,7 +373,7 @@ private fun DetailMeetingNavigation(modifier: Modifier = Modifier) {
             exit = fadeOut(tween(durationMillis = 300)) + shrinkVertically(tween(durationMillis = 300)),
         ) {
             Button(
-                onClick = { },
+                onClick = navigateToLog,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 shape = RoundedCornerShape(15.dp),
                 border = BorderStroke(width = 1.dp, color = OdyTheme.colors.secondary),
@@ -419,6 +424,9 @@ private fun DetailMeetingContentPreview() {
         DetailMeetingContent(
             detailMeeting = detailMeeting,
             mates = mates,
+            navigateToEta = { },
+            navigateToLog = { },
+            onCopyInviteCode = { },
         )
     }
 }
