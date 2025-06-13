@@ -1,26 +1,20 @@
 package com.mulberry.ody.presentation.feature.room.detail
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -34,8 +28,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,8 +48,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.mulberry.ody.R
-import com.mulberry.ody.domain.model.DetailMeeting
-import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTopAppBar
@@ -62,8 +58,6 @@ import com.mulberry.ody.presentation.theme.Gray350
 import com.mulberry.ody.presentation.theme.Gray500
 import com.mulberry.ody.presentation.theme.OdyTheme
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalTime
 
 @Composable
 fun DetailMeetingScreen() {
@@ -129,7 +123,6 @@ fun DetailMeetingScreen() {
             modifier = Modifier.padding(innerPadding)
         )
     }
-
 }
 
 @Composable
@@ -138,88 +131,55 @@ private fun DetailMeetingContent(
     detailMeeting: DetailMeetingUiModel,
     modifier: Modifier = Modifier,
 ) {
+    var showNavigationButton by rememberSaveable { mutableStateOf(false) }
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Card(
-            shape = RoundedCornerShape(
-                topStart = 0.dp,
-                topEnd = 0.dp,
-                bottomStart = 24.dp,
-                bottomEnd = 24.dp
-            ),
-            colors = CardDefaults.cardColors(containerColor = OdyTheme.colors.primary),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 6.dp)
-                .height(136.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        MatesCard(
+            mates = mates,
+            modifier = Modifier.padding(bottom = 6.dp),
+        )
+        DetailMeetingInformation(
+            detailMeeting = detailMeeting,
+            modifier = Modifier.padding(top = 28.dp),
+        )
+        Spacer(modifier = modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun MatesCard(
+    mates: List<MateUiModel>,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        shape = RoundedCornerShape(
+            topStart = 0.dp,
+            topEnd = 0.dp,
+            bottomStart = 24.dp,
+            bottomEnd = 24.dp
+        ),
+        colors = CardDefaults.cardColors(containerColor = OdyTheme.colors.primary),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(136.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    ) {
+        LazyRow(
+            modifier = Modifier.fillMaxHeight(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = 18.dp),
         ) {
-            LazyRow(
-                modifier = Modifier.fillMaxHeight(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 18.dp),
-            ) {
-                items(count = mates.size) { index ->
-                    MateItem(mates[index])
-                    if (index == mates.lastIndex) {
-                        Spacer(modifier = Modifier.width(36.dp))
-                        InviteCodeCopyItem(onClick = {})
-                    }
+            items(count = mates.size) { index ->
+                MateItem(mates[index])
+                if (index == mates.lastIndex) {
+                    Spacer(modifier = Modifier.width(36.dp))
+                    InviteCodeCopyItem(onClick = {})
                 }
             }
         }
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 28.dp)
-                .padding(top = 28.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.detail_meeting_time),
-                style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = detailMeeting.dateTime,
-                style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
-            )
-            Spacer(modifier = Modifier.height(28.dp))
-            Text(
-                text = stringResource(id = R.string.detail_meeting_address),
-                style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = detailMeeting.destinationAddress,
-                style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
-            )
-            Spacer(modifier = Modifier.height(28.dp))
-            Text(
-                text = stringResource(id = R.string.detail_meeting_departure_address),
-                style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = detailMeeting.departureAddress,
-                style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
-            )
-            Spacer(modifier = Modifier.height(28.dp))
-            Text(
-                text = stringResource(id = R.string.detail_meeting_departure_time),
-                style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = stringResource(
-                    id = R.string.detail_meeting_departure_time_content,
-                    detailMeeting.departureTime,
-                    detailMeeting.durationTime,
-                ),
-                style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
-            )
-        }
-        Spacer(modifier = modifier.weight(1f))
     }
 }
 
@@ -288,6 +248,60 @@ private fun InviteCodeCopyItem(
                 style = OdyTheme.typography.pretendardRegular14.copy(color = Gray500),
             )
         }
+    }
+}
+
+@Composable
+private fun DetailMeetingInformation(
+    detailMeeting: DetailMeetingUiModel,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.padding(horizontal = 28.dp)
+    ) {
+        Text(
+            text = stringResource(id = R.string.detail_meeting_time),
+            style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = detailMeeting.dateTime,
+            style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
+        )
+        Spacer(modifier = Modifier.height(28.dp))
+        Text(
+            text = stringResource(id = R.string.detail_meeting_address),
+            style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = detailMeeting.destinationAddress,
+            style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
+        )
+        Spacer(modifier = Modifier.height(28.dp))
+        Text(
+            text = stringResource(id = R.string.detail_meeting_departure_address),
+            style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = detailMeeting.departureAddress,
+            style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
+        )
+        Spacer(modifier = Modifier.height(28.dp))
+        Text(
+            text = stringResource(id = R.string.detail_meeting_departure_time),
+            style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = stringResource(
+                id = R.string.detail_meeting_departure_time_content,
+                detailMeeting.departureTime,
+                detailMeeting.durationTime,
+            ),
+            style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
+        )
     }
 }
 
