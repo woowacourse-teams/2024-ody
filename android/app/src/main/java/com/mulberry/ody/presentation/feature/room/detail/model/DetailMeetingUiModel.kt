@@ -11,7 +11,6 @@ data class DetailMeetingUiModel(
     val departureAddress: String,
     val departureTime: String,
     val durationTime: String,
-    val mates: List<String>,
     val inviteCode: String,
 ) {
     fun isEtaAccessible(): Boolean {
@@ -33,7 +32,6 @@ data class DetailMeetingUiModel(
                 departureAddress = "-",
                 departureTime = "-",
                 durationTime = "-",
-                mates = listOf("-"),
                 inviteCode = "",
             )
     }

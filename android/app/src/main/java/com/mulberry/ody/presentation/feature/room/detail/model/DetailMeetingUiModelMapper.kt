@@ -14,7 +14,6 @@ fun DetailMeeting.toDetailMeetingUiModel(): DetailMeetingUiModel {
         departureAddress = destinationAddress,
         departureTime = departureTime.toMessage(),
         durationTime = durationTime.toDurationTimeMessage(),
-        mates = mates.map { it.nickname },
         inviteCode = inviteCode,
     )
 }

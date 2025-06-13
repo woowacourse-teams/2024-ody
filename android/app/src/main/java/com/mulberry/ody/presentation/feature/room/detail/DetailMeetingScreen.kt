@@ -50,15 +50,20 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.mulberry.ody.R
+import com.mulberry.ody.domain.model.DetailMeeting
+import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTopAppBar
+import com.mulberry.ody.presentation.feature.room.detail.model.DetailMeetingUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.MateUiModel
 import com.mulberry.ody.presentation.theme.Gray300
 import com.mulberry.ody.presentation.theme.Gray350
 import com.mulberry.ody.presentation.theme.Gray500
 import com.mulberry.ody.presentation.theme.OdyTheme
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Composable
 fun DetailMeetingScreen() {
@@ -111,6 +116,16 @@ fun DetailMeetingScreen() {
                     "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
                 ),
             ),
+            detailMeeting = DetailMeetingUiModel(
+                id = 1L,
+                name = "성수에서 감자탕 먹기",
+                destinationAddress = "서울특별시 강남구 테헤란로 411 (성담빌딩)",
+                departureAddress = "서울특별시 송파구 올림픽로 35다길 (한국루터회관)",
+                dateTime = "2024년 7월 11일 오후 3시",
+                departureTime = "오후 2시 30분",
+                durationTime = "20분",
+                inviteCode = "123456",
+            ),
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -120,6 +135,7 @@ fun DetailMeetingScreen() {
 @Composable
 private fun DetailMeetingContent(
     mates: List<MateUiModel>,
+    detailMeeting: DetailMeetingUiModel,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -154,6 +170,56 @@ private fun DetailMeetingContent(
                 }
             }
         }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 28.dp)
+                .padding(top = 28.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.detail_meeting_time),
+                style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = detailMeeting.dateTime,
+                style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
+            )
+            Spacer(modifier = Modifier.height(28.dp))
+            Text(
+                text = stringResource(id = R.string.detail_meeting_address),
+                style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = detailMeeting.destinationAddress,
+                style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
+            )
+            Spacer(modifier = Modifier.height(28.dp))
+            Text(
+                text = stringResource(id = R.string.detail_meeting_departure_address),
+                style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = detailMeeting.departureAddress,
+                style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
+            )
+            Spacer(modifier = Modifier.height(28.dp))
+            Text(
+                text = stringResource(id = R.string.detail_meeting_departure_time),
+                style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = stringResource(
+                    id = R.string.detail_meeting_departure_time_content,
+                    detailMeeting.departureTime,
+                    detailMeeting.durationTime,
+                ),
+                style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
+            )
+        }
+        Spacer(modifier = modifier.weight(1f))
     }
 }
 
@@ -247,6 +313,19 @@ private fun DetailMeetingContentPreview() {
                 "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
             ),
         )
-        DetailMeetingContent(mates = mates)
+        val detailMeeting = DetailMeetingUiModel(
+            id = 1L,
+            name = "성수에서 감자탕 먹기",
+            destinationAddress = "서울특별시 강남구 테헤란로 411 (성담빌딩)",
+            departureAddress = "서울특별시 송파구 올림픽로 35다길 (한국루터회관)",
+            dateTime = "2024년 7월 11일 오후 3시",
+            departureTime = "오후 2시 30분",
+            durationTime = "20분",
+            inviteCode = "123456",
+        )
+        DetailMeetingContent(
+            detailMeeting = detailMeeting,
+            mates = mates,
+        )
     }
 }
