@@ -50,18 +50,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
+import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyLoading
+import com.mulberry.ody.presentation.component.OdyTooltip
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.feature.room.detail.model.DetailMeetingUiModel
@@ -71,7 +76,6 @@ import com.mulberry.ody.presentation.theme.Gray300
 import com.mulberry.ody.presentation.theme.Gray350
 import com.mulberry.ody.presentation.theme.Gray500
 import com.mulberry.ody.presentation.theme.OdyTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun DetailMeetingScreen(
@@ -123,7 +127,8 @@ fun DetailMeetingScreen(
 
     LaunchedEffect(Unit) {
         viewModel.copyInviteCodeEvent.collect {
-            val inviteCodeCopyInfo = InviteCodeCopyInfo(detailMeeting.name, detailMeeting.inviteCode)
+            val inviteCodeCopyInfo =
+                InviteCodeCopyInfo(detailMeeting.name, detailMeeting.inviteCode)
             onCopyInviteCode(inviteCodeCopyInfo)
         }
     }
@@ -155,7 +160,8 @@ private fun DetailMeetingContent(
         DetailMeetingNavigation(
             navigateToEta = navigateToEta,
             navigateToLog = navigateToLog,
-            modifier = Modifier.padding(bottom = 24.dp))
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
     }
 }
 
@@ -169,8 +175,8 @@ private fun MatesCard(
         shape = RoundedCornerShape(
             topStart = 0.dp,
             topEnd = 0.dp,
-            bottomStart = 24.dp,
-            bottomEnd = 24.dp
+            bottomStart = 30.dp,
+            bottomEnd = 30.dp
         ),
         colors = CardDefaults.cardColors(containerColor = OdyTheme.colors.primary),
         modifier = modifier
@@ -300,10 +306,42 @@ private fun DetailMeetingInformation(
             style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
         )
         Spacer(modifier = Modifier.height(28.dp))
-        Text(
-            text = stringResource(id = R.string.detail_meeting_departure_time),
-            style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(id = R.string.detail_meeting_departure_time),
+                style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.secondary),
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Box(modifier = Modifier.wrapContentSize()) {
+                var showTooltip by rememberSaveable { mutableStateOf(false) }
+                var tooltipSize by remember { mutableStateOf(IntSize.Zero) }
+                var iconSize by remember { mutableStateOf(IntSize.Zero) }
+
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_information),
+                    contentDescription = null,
+                    tint = OdyTheme.colors.senary,
+                    modifier = Modifier
+                        .noRippleClickable { showTooltip = !showTooltip }
+                        .onGloballyPositioned { coordinates ->
+                            iconSize = coordinates.size
+                        }
+                )
+
+                if (showTooltip) {
+                    OdyTooltip(
+                        title = stringResource(id = R.string.detail_meeting_departure_time_guide),
+                        offset = IntOffset(iconSize.width, -tooltipSize.height),
+                        onDismissRequest = { showTooltip = !showTooltip },
+                        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomEnd = 20.dp),
+                        modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            tooltipSize = coordinates.size
+                        },
+                    )
+                }
+            }
+        }
         Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = stringResource(
@@ -313,6 +351,7 @@ private fun DetailMeetingInformation(
             ),
             style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
         )
+
     }
 }
 
@@ -320,7 +359,8 @@ private fun DetailMeetingInformation(
 private fun DetailMeetingNavigation(
     navigateToEta: () -> Unit,
     navigateToLog: () -> Unit,
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier
+) {
     var showNavigationButton by rememberSaveable { mutableStateOf(false) }
 
     Row(
