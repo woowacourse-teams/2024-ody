@@ -83,7 +83,7 @@ fun EtaDashboardScreen(
         }
     }
     val meeting by viewModel.meeting.collectAsStateWithLifecycle()
-    val mateEtas by viewModel.mateEtaUiModels.collectAsStateWithLifecycle()
+    val mateEtas by viewModel.mateEtas.collectAsStateWithLifecycle()
     val graphicsLayer = rememberGraphicsLayer()
 
     Scaffold(

@@ -64,7 +64,7 @@ class MeetingRoomViewModel
     ) : BaseViewModel() {
         private val matesEta: Flow<MateEtaInfo?> = matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
 
-        val mateEtaUiModels: StateFlow<List<MateEtaUiModel>> =
+        val mateEtas: StateFlow<List<MateEtaUiModel>> =
             matesEta.map {
                 val mateEtaInfo = it ?: return@map emptyList()
                 mateEtaInfo.toMateEtaUiModels()
@@ -103,9 +103,6 @@ class MeetingRoomViewModel
 
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
-        private val _isVisibleNavigation: MutableStateFlow<Boolean> = MutableStateFlow(false)
-        val isVisibleNavigation: StateFlow<Boolean> get() = _isVisibleNavigation
-
         private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
         val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent
 
@@ -118,7 +115,7 @@ class MeetingRoomViewModel
             mateId: Long,
         ) {
             viewModelScope.launch {
-                val targetMate = mateEtaUiModels.value.find { it.mateId == mateId } ?: return@launch
+                val targetMate = mateEtas.value.find { it.mateId == mateId } ?: return@launch
                 handleNudgeAction(userId, mateId, targetMate.nickname)
             }
         }
@@ -254,16 +251,6 @@ class MeetingRoomViewModel
             }
         }
 
-        fun copyInviteCode() {
-            val meeting = meeting.value
-            if (meeting.isDefault()) return
-            val inviteCodeCopyInfo = InviteCodeCopyInfo(meeting.name, meeting.inviteCode)
-
-            viewModelScope.launch {
-                _copyInviteCodeEvent.emit(inviteCodeCopyInfo)
-            }
-        }
-
         private fun shareImage(imageShareContent: ImageShareContent) {
             viewModelScope.launch {
                 imageShareHelper.share(imageShareContent)
@@ -295,10 +282,6 @@ class MeetingRoomViewModel
                     }
                 stopLoading()
             }
-        }
-
-        fun handleNavigationVisibility() {
-            _isVisibleNavigation.value = !_isVisibleNavigation.value
         }
 
         @AssistedFactory
