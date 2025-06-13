@@ -1,12 +1,22 @@
 package com.mulberry.ody.presentation.feature.room.detail
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -131,8 +141,6 @@ private fun DetailMeetingContent(
     detailMeeting: DetailMeetingUiModel,
     modifier: Modifier = Modifier,
 ) {
-    var showNavigationButton by rememberSaveable { mutableStateOf(false) }
-
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -146,6 +154,7 @@ private fun DetailMeetingContent(
             modifier = Modifier.padding(top = 28.dp),
         )
         Spacer(modifier = modifier.weight(1f))
+        DetailMeetingNavigation(modifier = Modifier.padding(bottom = 24.dp))
     }
 }
 
@@ -241,7 +250,7 @@ private fun InviteCodeCopyItem(
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(containerColor = Gray300),
             shape = RoundedCornerShape(15.dp),
-            contentPadding = PaddingValues(all = 10.dp),
+            contentPadding = PaddingValues(vertical = 10.dp, horizontal = 14.dp),
         ) {
             Text(
                 text = stringResource(id = R.string.detail_meeting_invite_code_copy),
@@ -302,6 +311,76 @@ private fun DetailMeetingInformation(
             ),
             style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
         )
+    }
+}
+
+@Composable
+private fun DetailMeetingNavigation(modifier: Modifier = Modifier) {
+    var showNavigationButton by rememberSaveable { mutableStateOf(false) }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
+    ) {
+        AnimatedVisibility(
+            visible = showNavigationButton,
+            enter = fadeIn(tween(durationMillis = 300)) + expandVertically(tween(durationMillis = 300)),
+            exit = fadeOut(tween(durationMillis = 300)) + shrinkVertically(tween(durationMillis = 300)),
+        ) {
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                shape = RoundedCornerShape(15.dp),
+                border = BorderStroke(width = 1.dp, color = OdyTheme.colors.secondary),
+                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 12.dp),
+                interactionSource = NoRippleInteractionSource,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_ody),
+                    contentDescription = null,
+                    tint = OdyTheme.colors.secondary,
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = stringResource(id = R.string.ody_button),
+                    style = OdyTheme.typography.pretendardBold16.copy(color = OdyTheme.colors.secondary),
+                )
+            }
+        }
+        Button(
+            onClick = { showNavigationButton = !showNavigationButton },
+            colors = ButtonDefaults.buttonColors(containerColor = OdyTheme.colors.secondary),
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier
+                .padding(horizontal = 18.dp)
+                .size(55.dp),
+            contentPadding = PaddingValues(all = 6.dp),
+            interactionSource = NoRippleInteractionSource,
+        ) {
+            Image(
+                painter = painterResource(id = if (showNavigationButton) R.drawable.ic_cancel else R.drawable.ic_ody),
+                contentDescription = null,
+            )
+        }
+        AnimatedVisibility(
+            visible = showNavigationButton,
+            enter = fadeIn(tween(durationMillis = 300)) + expandVertically(tween(durationMillis = 300)),
+            exit = fadeOut(tween(durationMillis = 300)) + shrinkVertically(tween(durationMillis = 300)),
+        ) {
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                shape = RoundedCornerShape(15.dp),
+                border = BorderStroke(width = 1.dp, color = OdyTheme.colors.secondary),
+                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 12.dp),
+                interactionSource = NoRippleInteractionSource,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.detail_meeting_log),
+                    style = OdyTheme.typography.pretendardBold16.copy(color = OdyTheme.colors.secondary),
+                )
+            }
+        }
     }
 }
 
