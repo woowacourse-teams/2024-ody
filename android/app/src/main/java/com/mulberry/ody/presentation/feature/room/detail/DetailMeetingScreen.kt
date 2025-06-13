@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,15 +33,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -66,6 +62,7 @@ import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyLoading
+import com.mulberry.ody.presentation.component.OdySadDialog
 import com.mulberry.ody.presentation.component.OdyTooltip
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
@@ -85,6 +82,7 @@ fun DetailMeetingScreen(
 ) {
     val mates by viewModel.mates.collectAsStateWithLifecycle()
     val detailMeeting by viewModel.meeting.collectAsStateWithLifecycle()
+    var showExitDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         containerColor = OdyTheme.colors.primary,
@@ -102,7 +100,7 @@ fun DetailMeetingScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { viewModel.exitMeetingRoom() },
+                        onClick = { showExitDialog = true },
                         interactionSource = NoRippleInteractionSource,
                     ) {
                         Icon(
@@ -123,6 +121,30 @@ fun DetailMeetingScreen(
             onCopyInviteCode = { viewModel.copyInviteCodeEvent },
             modifier = Modifier.padding(innerPadding)
         )
+        if (showExitDialog) {
+            OdySadDialog(
+                title = {
+                    Text(
+                        text = detailMeeting.name,
+                        style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.secondary),
+                    )
+                },
+                subtitle = {
+                    Text(
+                        text = stringResource(id = R.string.exit_meeting_room_title),
+                        style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.quinary),
+                    )
+                },
+                onClickConfirm = {
+                    viewModel.exitMeetingRoom()
+                    showExitDialog = false
+                },
+                onClickCancel = {
+                    showExitDialog = false
+                },
+                confirmButtonText = stringResource(id = R.string.exit_meeting_room)
+            )
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -333,7 +355,11 @@ private fun DetailMeetingInformation(
                         title = stringResource(id = R.string.detail_meeting_departure_time_guide),
                         offset = IntOffset(iconSize.width, -tooltipSize.height),
                         onDismissRequest = { showTooltip = !showTooltip },
-                        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomEnd = 20.dp),
+                        shape = RoundedCornerShape(
+                            topStart = 20.dp,
+                            topEnd = 20.dp,
+                            bottomEnd = 20.dp
+                        ),
                         modifier =
                         Modifier.onGloballyPositioned { coordinates ->
                             tooltipSize = coordinates.size
