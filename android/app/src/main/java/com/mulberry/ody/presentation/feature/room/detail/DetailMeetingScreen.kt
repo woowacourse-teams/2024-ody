@@ -296,7 +296,7 @@ private fun DetailMeetingInformation(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.padding(horizontal = 28.dp),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 28.dp),
     ) {
         Text(
             text = stringResource(id = R.string.detail_meeting_time),
@@ -401,8 +401,20 @@ private fun DetailMeetingNavigation(
         ) {
             AnimatedVisibility(
                 visible = showNavigationButton,
-                enter = fadeIn(tween(durationMillis = 300)) + expandHorizontally(tween(durationMillis = 300)),
-                exit = fadeOut(tween(durationMillis = 300)) + shrinkHorizontally(tween(durationMillis = 300)),
+                enter =
+                    fadeIn(tween(durationMillis = 300)) +
+                        expandHorizontally(
+                            tween(
+                                durationMillis = 300,
+                            ),
+                        ),
+                exit =
+                    fadeOut(tween(durationMillis = 300)) +
+                        shrinkHorizontally(
+                            tween(
+                                durationMillis = 300,
+                            ),
+                        ),
             ) {
                 Button(
                     onClick = navigateToEta,
@@ -447,8 +459,20 @@ private fun DetailMeetingNavigation(
         ) {
             AnimatedVisibility(
                 visible = showNavigationButton,
-                enter = fadeIn(tween(durationMillis = 300)) + expandHorizontally(tween(durationMillis = 300)),
-                exit = fadeOut(tween(durationMillis = 300)) + shrinkHorizontally(tween(durationMillis = 300)),
+                enter =
+                    fadeIn(tween(durationMillis = 300)) +
+                        expandHorizontally(
+                            tween(
+                                durationMillis = 300,
+                            ),
+                        ),
+                exit =
+                    fadeOut(tween(durationMillis = 300)) +
+                        shrinkHorizontally(
+                            tween(
+                                durationMillis = 300,
+                            ),
+                        ),
             ) {
                 Button(
                     onClick = navigateToLog,
