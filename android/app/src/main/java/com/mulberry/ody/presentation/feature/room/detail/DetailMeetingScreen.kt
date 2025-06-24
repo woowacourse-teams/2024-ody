@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -68,6 +69,7 @@ import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.feature.room.detail.model.DetailMeetingUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.InviteCodeCopyInfo
 import com.mulberry.ody.presentation.feature.room.detail.model.MateUiModel
+import com.mulberry.ody.presentation.theme.Cream
 import com.mulberry.ody.presentation.theme.Gray300
 import com.mulberry.ody.presentation.theme.Gray350
 import com.mulberry.ody.presentation.theme.Gray500
@@ -196,9 +198,11 @@ private fun MatesCard(
                 bottomEnd = 30.dp,
             ),
         colors = CardDefaults.cardColors(containerColor = OdyTheme.colors.primary),
+        border = BorderStroke(width = 1.dp, color = Cream),
         modifier =
             modifier
                 .fillMaxWidth()
+                .offset(y = (-1).dp)
                 .height(136.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     ) {
