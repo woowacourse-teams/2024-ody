@@ -2,9 +2,11 @@ package com.mulberry.ody.presentation.feature.room.detail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -12,6 +14,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -118,7 +121,11 @@ fun DetailMeetingScreen(
             detailMeeting = detailMeeting,
             navigateToEta = { viewModel.navigateToEtaDashboard() },
             navigateToLog = { viewModel.navigateToNotificationLog() },
-            onCopyInviteCode = { viewModel.copyInviteCodeEvent },
+            onCopyInviteCode = {
+                val inviteCodeCopyInfo =
+                    InviteCodeCopyInfo(detailMeeting.name, detailMeeting.inviteCode)
+                onCopyInviteCode(inviteCodeCopyInfo)
+            },
             modifier = Modifier.padding(innerPadding)
         )
         if (showExitDialog) {
@@ -144,14 +151,6 @@ fun DetailMeetingScreen(
                 },
                 confirmButtonText = stringResource(id = R.string.exit_meeting_room)
             )
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.copyInviteCodeEvent.collect {
-            val inviteCodeCopyInfo =
-                InviteCodeCopyInfo(detailMeeting.name, detailMeeting.inviteCode)
-            onCopyInviteCode(inviteCodeCopyInfo)
         }
     }
 }
@@ -209,7 +208,7 @@ private fun MatesCard(
         LazyRow(
             modifier = Modifier.fillMaxHeight(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 18.dp),
+            contentPadding = PaddingValues(horizontal = 24.dp),
         ) {
             items(count = mates.size) { index ->
                 MateItem(mates[index])
@@ -377,7 +376,6 @@ private fun DetailMeetingInformation(
             ),
             style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
         )
-
     }
 }
 
@@ -393,29 +391,34 @@ private fun DetailMeetingNavigation(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier,
     ) {
-        AnimatedVisibility(
-            visible = showNavigationButton,
-            enter = fadeIn(tween(durationMillis = 300)) + expandVertically(tween(durationMillis = 300)),
-            exit = fadeOut(tween(durationMillis = 300)) + shrinkVertically(tween(durationMillis = 300)),
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.End,
         ) {
-            Button(
-                onClick = navigateToEta,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                shape = RoundedCornerShape(15.dp),
-                border = BorderStroke(width = 1.dp, color = OdyTheme.colors.secondary),
-                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 12.dp),
-                interactionSource = NoRippleInteractionSource,
+            AnimatedVisibility(
+                visible = showNavigationButton,
+                enter = fadeIn(tween(durationMillis = 300)) + expandHorizontally(tween(durationMillis = 300)),
+                exit = fadeOut(tween(durationMillis = 300)) + shrinkHorizontally(tween(durationMillis = 300)),
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_ody),
-                    contentDescription = null,
-                    tint = OdyTheme.colors.secondary,
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = stringResource(id = R.string.ody_button),
-                    style = OdyTheme.typography.pretendardBold16.copy(color = OdyTheme.colors.secondary),
-                )
+                Button(
+                    onClick = navigateToEta,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    shape = RoundedCornerShape(15.dp),
+                    border = BorderStroke(width = 1.dp, color = OdyTheme.colors.secondary),
+                    contentPadding = PaddingValues(vertical = 8.dp, horizontal = 12.dp),
+                    interactionSource = NoRippleInteractionSource,
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_ody),
+                        contentDescription = null,
+                        tint = OdyTheme.colors.secondary,
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = stringResource(id = R.string.ody_button),
+                        style = OdyTheme.typography.pretendardBold16.copy(color = OdyTheme.colors.secondary),
+                    )
+                }
             }
         }
         Button(
@@ -433,23 +436,28 @@ private fun DetailMeetingNavigation(
                 contentDescription = null,
             )
         }
-        AnimatedVisibility(
-            visible = showNavigationButton,
-            enter = fadeIn(tween(durationMillis = 300)) + expandVertically(tween(durationMillis = 300)),
-            exit = fadeOut(tween(durationMillis = 300)) + shrinkVertically(tween(durationMillis = 300)),
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.Start,
         ) {
-            Button(
-                onClick = navigateToLog,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                shape = RoundedCornerShape(15.dp),
-                border = BorderStroke(width = 1.dp, color = OdyTheme.colors.secondary),
-                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 12.dp),
-                interactionSource = NoRippleInteractionSource,
+            AnimatedVisibility(
+                visible = showNavigationButton,
+                enter = fadeIn(tween(durationMillis = 300)) + expandHorizontally(tween(durationMillis = 300)),
+                exit = fadeOut(tween(durationMillis = 300)) + shrinkHorizontally(tween(durationMillis = 300)),
             ) {
-                Text(
-                    text = stringResource(id = R.string.detail_meeting_log),
-                    style = OdyTheme.typography.pretendardBold16.copy(color = OdyTheme.colors.secondary),
-                )
+                Button(
+                    onClick = navigateToLog,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    shape = RoundedCornerShape(15.dp),
+                    border = BorderStroke(width = 1.dp, color = OdyTheme.colors.secondary),
+                    contentPadding = PaddingValues(vertical = 8.dp, horizontal = 12.dp),
+                    interactionSource = NoRippleInteractionSource,
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.detail_meeting_log),
+                        style = OdyTheme.typography.pretendardBold16.copy(color = OdyTheme.colors.secondary),
+                    )
+                }
             }
         }
     }

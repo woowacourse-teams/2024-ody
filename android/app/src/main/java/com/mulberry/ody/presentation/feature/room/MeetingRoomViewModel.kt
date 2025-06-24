@@ -98,9 +98,6 @@ class MeetingRoomViewModel
         private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
         val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
 
-        private val _copyInviteCodeEvent: MutableSharedFlow<InviteCodeCopyInfo> = MutableSharedFlow()
-        val copyInviteCodeEvent: SharedFlow<InviteCodeCopyInfo> get() = _copyInviteCodeEvent.asSharedFlow()
-
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
         private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
