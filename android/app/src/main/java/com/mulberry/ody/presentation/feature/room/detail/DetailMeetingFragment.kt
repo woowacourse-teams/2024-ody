@@ -1,11 +1,7 @@
 package com.mulberry.ody.presentation.feature.room.detail
 
-import android.app.Activity
-import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.content.Intent
-import android.graphics.Point
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

@@ -24,7 +24,7 @@ fun OdyTooltip(
     title: String,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    offset: IntOffset = IntOffset(0,0),
+    offset: IntOffset = IntOffset(0, 0),
     shape: RoundedCornerShape = RoundedCornerShape(size = 20.dp),
 ) {
     Popup(
@@ -35,17 +35,18 @@ fun OdyTooltip(
     ) {
         Box(
             modifier =
-            modifier
-                .wrapContentSize()
-                .clip(shape)
-                .background(Gray400Alpha70),
+                modifier
+                    .wrapContentSize()
+                    .clip(shape)
+                    .background(Gray400Alpha70),
         ) {
             Text(
                 text = title,
                 style = OdyTheme.typography.pretendardRegular12.copy(color = White),
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .padding(horizontal = 16.dp),
+                modifier =
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .padding(horizontal = 16.dp),
             )
         }
     }

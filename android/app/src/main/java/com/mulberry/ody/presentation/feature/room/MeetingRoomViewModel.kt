@@ -25,7 +25,6 @@ import com.mulberry.ody.presentation.common.image.ImageShareContent
 import com.mulberry.ody.presentation.common.image.ImageShareHelper
 import com.mulberry.ody.presentation.common.image.toByteArray
 import com.mulberry.ody.presentation.feature.room.detail.model.DetailMeetingUiModel
-import com.mulberry.ody.presentation.feature.room.detail.model.InviteCodeCopyInfo
 import com.mulberry.ody.presentation.feature.room.detail.model.MateUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.toDetailMeetingUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.toMateUiModels

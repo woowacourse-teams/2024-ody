@@ -3,18 +3,15 @@ package com.mulberry.ody.presentation.feature.room.detail
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,7 +35,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -122,11 +118,10 @@ fun DetailMeetingScreen(
             navigateToEta = { viewModel.navigateToEtaDashboard() },
             navigateToLog = { viewModel.navigateToNotificationLog() },
             onCopyInviteCode = {
-                val inviteCodeCopyInfo =
-                    InviteCodeCopyInfo(detailMeeting.name, detailMeeting.inviteCode)
+                val inviteCodeCopyInfo = InviteCodeCopyInfo(detailMeeting.name, detailMeeting.inviteCode)
                 onCopyInviteCode(inviteCodeCopyInfo)
             },
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         )
         if (showExitDialog) {
             OdySadDialog(
@@ -144,12 +139,12 @@ fun DetailMeetingScreen(
                 },
                 onClickConfirm = {
                     viewModel.exitMeetingRoom()
-                    showExitDialog = false
+                    onBack()
                 },
                 onClickCancel = {
                     showExitDialog = false
                 },
-                confirmButtonText = stringResource(id = R.string.exit_meeting_room)
+                confirmButtonText = stringResource(id = R.string.exit_meeting_room),
             )
         }
     }
@@ -181,7 +176,7 @@ private fun DetailMeetingContent(
         DetailMeetingNavigation(
             navigateToEta = navigateToEta,
             navigateToLog = navigateToLog,
-            modifier = Modifier.padding(bottom = 24.dp)
+            modifier = Modifier.padding(bottom = 24.dp),
         )
     }
 }
@@ -193,17 +188,19 @@ private fun MatesCard(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        shape = RoundedCornerShape(
-            topStart = 0.dp,
-            topEnd = 0.dp,
-            bottomStart = 30.dp,
-            bottomEnd = 30.dp
-        ),
+        shape =
+            RoundedCornerShape(
+                topStart = 0.dp,
+                topEnd = 0.dp,
+                bottomStart = 30.dp,
+                bottomEnd = 30.dp,
+            ),
         colors = CardDefaults.cardColors(containerColor = OdyTheme.colors.primary),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(136.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(136.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     ) {
         LazyRow(
             modifier = Modifier.fillMaxHeight(),
@@ -227,15 +224,17 @@ private fun MateItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .wrapContentWidth()
-            .fillMaxHeight(),
+        modifier =
+            modifier
+                .wrapContentWidth()
+                .fillMaxHeight(),
         verticalArrangement = Arrangement.Center,
     ) {
         SubcomposeAsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current)
-                .data(mate.imageUrl)
-                .build(),
+            model =
+                ImageRequest.Builder(context = LocalContext.current)
+                    .data(mate.imageUrl)
+                    .build(),
             loading = {
                 OdyLoading(modifier = Modifier.wrapContentSize())
             },
@@ -243,9 +242,10 @@ private fun MateItem(
                 Box(modifier = Modifier.background(Gray350))
             },
             contentDescription = null,
-            modifier = Modifier
-                .size(58.dp)
-                .clip(CircleShape),
+            modifier =
+                Modifier
+                    .size(58.dp)
+                    .clip(CircleShape),
             contentScale = ContentScale.FillWidth,
         )
         Spacer(modifier = Modifier.height(6.dp))
@@ -253,7 +253,7 @@ private fun MateItem(
             text = mate.nickname,
             style = OdyTheme.typography.pretendardRegular14.copy(color = OdyTheme.colors.quinary),
             textAlign = TextAlign.Center,
-            modifier = Modifier.width(58.dp)
+            modifier = Modifier.width(58.dp),
         )
     }
 }
@@ -264,9 +264,10 @@ private fun InviteCodeCopyItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .wrapContentWidth()
-            .fillMaxHeight(),
+        modifier =
+            modifier
+                .wrapContentWidth()
+                .fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -295,7 +296,7 @@ private fun DetailMeetingInformation(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.padding(horizontal = 28.dp)
+        modifier = modifier.padding(horizontal = 28.dp),
     ) {
         Text(
             text = stringResource(id = R.string.detail_meeting_time),
@@ -342,11 +343,12 @@ private fun DetailMeetingInformation(
                     painter = painterResource(id = R.drawable.ic_information),
                     contentDescription = null,
                     tint = OdyTheme.colors.senary,
-                    modifier = Modifier
-                        .noRippleClickable { showTooltip = !showTooltip }
-                        .onGloballyPositioned { coordinates ->
-                            iconSize = coordinates.size
-                        }
+                    modifier =
+                        Modifier
+                            .noRippleClickable { showTooltip = !showTooltip }
+                            .onGloballyPositioned { coordinates ->
+                                iconSize = coordinates.size
+                            },
                 )
 
                 if (showTooltip) {
@@ -354,26 +356,28 @@ private fun DetailMeetingInformation(
                         title = stringResource(id = R.string.detail_meeting_departure_time_guide),
                         offset = IntOffset(iconSize.width, -tooltipSize.height),
                         onDismissRequest = { showTooltip = !showTooltip },
-                        shape = RoundedCornerShape(
-                            topStart = 20.dp,
-                            topEnd = 20.dp,
-                            bottomEnd = 20.dp
-                        ),
+                        shape =
+                            RoundedCornerShape(
+                                topStart = 20.dp,
+                                topEnd = 20.dp,
+                                bottomEnd = 20.dp,
+                            ),
                         modifier =
-                        Modifier.onGloballyPositioned { coordinates ->
-                            tooltipSize = coordinates.size
-                        },
+                            Modifier.onGloballyPositioned { coordinates ->
+                                tooltipSize = coordinates.size
+                            },
                     )
                 }
             }
         }
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = stringResource(
-                id = R.string.detail_meeting_departure_time_content,
-                detailMeeting.departureTime,
-                detailMeeting.durationTime,
-            ),
+            text =
+                stringResource(
+                    id = R.string.detail_meeting_departure_time_content,
+                    detailMeeting.departureTime,
+                    detailMeeting.durationTime,
+                ),
             style = OdyTheme.typography.pretendardRegular16.copy(color = OdyTheme.colors.quinary),
         )
     }
@@ -383,7 +387,7 @@ private fun DetailMeetingInformation(
 private fun DetailMeetingNavigation(
     navigateToEta: () -> Unit,
     navigateToLog: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var showNavigationButton by rememberSaveable { mutableStateOf(false) }
 
@@ -425,9 +429,10 @@ private fun DetailMeetingNavigation(
             onClick = { showNavigationButton = !showNavigationButton },
             colors = ButtonDefaults.buttonColors(containerColor = OdyTheme.colors.secondary),
             shape = RoundedCornerShape(10.dp),
-            modifier = Modifier
-                .padding(horizontal = 18.dp)
-                .size(55.dp),
+            modifier =
+                Modifier
+                    .padding(horizontal = 18.dp)
+                    .size(55.dp),
             contentPadding = PaddingValues(all = 6.dp),
             interactionSource = NoRippleInteractionSource,
         ) {
@@ -467,34 +472,36 @@ private fun DetailMeetingNavigation(
 @Preview(showSystemUi = true)
 private fun DetailMeetingContentPreview() {
     OdyTheme {
-        val mates = listOf(
-            MateUiModel(
-                "올리브1",
-                "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
-            ),
-            MateUiModel(
-                "올리브2",
-                "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
-            ),
-            MateUiModel(
-                "올리브3",
-                "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
-            ),
-            MateUiModel(
-                "올리브4",
-                "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
-            ),
-        )
-        val detailMeeting = DetailMeetingUiModel(
-            id = 1L,
-            name = "성수에서 감자탕 먹기",
-            destinationAddress = "서울특별시 강남구 테헤란로 411 (성담빌딩)",
-            departureAddress = "서울특별시 송파구 올림픽로 35다길 (한국루터회관)",
-            dateTime = "2024년 7월 11일 오후 3시",
-            departureTime = "오후 2시 30분",
-            durationTime = "20분",
-            inviteCode = "123456",
-        )
+        val mates =
+            listOf(
+                MateUiModel(
+                    "올리브1",
+                    "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false",
+                ),
+                MateUiModel(
+                    "올리브2",
+                    "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false",
+                ),
+                MateUiModel(
+                    "올리브3",
+                    "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false",
+                ),
+                MateUiModel(
+                    "올리브4",
+                    "https://thumbnail.10x10.co.kr/webimage/image/basic600/168/B001689583.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false",
+                ),
+            )
+        val detailMeeting =
+            DetailMeetingUiModel(
+                id = 1L,
+                name = "성수에서 감자탕 먹기",
+                destinationAddress = "서울특별시 강남구 테헤란로 411 (성담빌딩)",
+                departureAddress = "서울특별시 송파구 올림픽로 35다길 (한국루터회관)",
+                dateTime = "2024년 7월 11일 오후 3시",
+                departureTime = "오후 2시 30분",
+                durationTime = "20분",
+                inviteCode = "123456",
+            )
         DetailMeetingContent(
             detailMeeting = detailMeeting,
             mates = mates,

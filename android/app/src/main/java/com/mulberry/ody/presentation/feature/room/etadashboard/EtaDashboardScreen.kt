@@ -311,7 +311,6 @@ private fun EtaDashboardScreenPreview() {
     OdyTheme {
         val mateEtas =
             listOf(
-
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.Arrived,
