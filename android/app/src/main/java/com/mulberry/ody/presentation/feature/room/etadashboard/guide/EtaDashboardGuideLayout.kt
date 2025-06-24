@@ -45,6 +45,8 @@ import com.mulberry.ody.presentation.theme.Gray900Alpha50
 import com.mulberry.ody.presentation.theme.OdyTheme
 import com.tbuonomo.viewpagerdotsindicator.pxToDp
 
+private const val GUIDE_TARGET_INDEX = 1
+
 @Composable
 fun EtaDashboardGuideLayout(
     guideUiModel: EtaDashboardGuideUiModel,
@@ -123,7 +125,7 @@ private fun EtaDashboardGuideContent(
                 ) { index, mateEta ->
                     EtaDashboardGuideItem(
                         mateEta = mateEta,
-                        isTargetItem = index == 1,
+                        isTargetItem = index == GUIDE_TARGET_INDEX,
                         isFirst = index == 0,
                         isLast = index == guideUiModel.mateEtas.lastIndex,
                         onTargetItemPositioned = {
