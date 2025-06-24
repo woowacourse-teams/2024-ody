@@ -147,9 +147,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     testImplementation(libs.kotlinx.coroutines.test)
 
-    // glide
-    implementation(libs.glide)
-
     // kakao share
     implementation(libs.kakao.share)
 

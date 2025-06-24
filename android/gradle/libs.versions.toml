@@ -23,7 +23,6 @@ firebaseMessagingKtx = "24.0.1"
 firebaseStorageKtx = "21.0.0"
 fragmentKtx = "1.8.3"
 fragmentTesting = "1.8.3"
-glide = "4.16.0"
 googleServices = "4.4.2"
 hilt = "2.52"
 hiltNavigationCompose = "1.2.0"
@@ -113,9 +112,6 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 
 # kakao sdk
 kakao-sdk-v2-user = { module = "com.kakao.sdk:v2-user", version.ref = "kakaoSdk" }
-
-# glide
-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 
 # kakao share
 kakao-share = { module = "com.kakao.sdk:v2-share", version.ref = "kakaoShare" }
