@@ -102,6 +102,14 @@ class MeetingRoomViewModel
         private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
         val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent
 
+        val isFirstSeenEtaDashboard: StateFlow<Boolean> =
+            matesEtaRepository.isFirstSeenEtaDashboard()
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
+                    initialValue = false,
+                )
+
         init {
             fetchMeeting()
         }
@@ -277,6 +285,12 @@ class MeetingRoomViewModel
                         lastFailedAction = { exitMeetingRoom() }
                     }
                 stopLoading()
+            }
+        }
+
+        fun updateEtaDashboardSeen() {
+            viewModelScope.launch {
+                matesEtaRepository.updateEtaDashboardSeen()
             }
         }
 
