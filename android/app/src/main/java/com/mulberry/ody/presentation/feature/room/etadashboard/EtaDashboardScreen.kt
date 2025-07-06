@@ -83,7 +83,7 @@ fun EtaDashboardScreen(
         }
     }
     val meeting by viewModel.meeting.collectAsStateWithLifecycle()
-    val mateEtas by viewModel.mateEtaUiModels.collectAsStateWithLifecycle()
+    val mateEtas by viewModel.mateEtas.collectAsStateWithLifecycle()
     val graphicsLayer = rememberGraphicsLayer()
 
     Scaffold(
@@ -285,7 +285,7 @@ private fun MissingTooltip(
     isUserSelf: Boolean,
     onCloseTooltip: () -> Unit,
 ) {
-    val tooltipSize = remember { mutableStateOf(IntSize.Zero) }
+    var tooltipSize by remember { mutableStateOf(IntSize.Zero) }
     val messageId =
         if (isUserSelf) {
             R.string.location_permission_self_guide
@@ -295,11 +295,12 @@ private fun MissingTooltip(
 
     OdyTooltip(
         title = stringResource(id = messageId),
-        offset = IntOffset(-tooltipSize.value.width, -tooltipSize.value.height),
+        offset = IntOffset(-tooltipSize.width, -tooltipSize.height),
+        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 20.dp),
         onDismissRequest = onCloseTooltip,
         modifier =
             Modifier.onGloballyPositioned { coordinates ->
-                tooltipSize.value = coordinates.size
+                tooltipSize = coordinates.size
             },
     )
 }
@@ -310,12 +311,6 @@ private fun EtaDashboardScreenPreview() {
     OdyTheme {
         val mateEtas =
             listOf(
-                MateEtaUiModel(
-                    "올리브",
-                    EtaStatusUiModel.Missing,
-                    userId = 1L,
-                    mateId = 1L,
-                ),
                 MateEtaUiModel(
                     "올리브",
                     EtaStatusUiModel.Arrived,
@@ -333,6 +328,12 @@ private fun EtaDashboardScreenPreview() {
                     EtaStatusUiModel.Late(30),
                     userId = 4L,
                     mateId = 4L,
+                ),
+                MateEtaUiModel(
+                    "올리브",
+                    EtaStatusUiModel.Missing,
+                    userId = 1L,
+                    mateId = 1L,
                 ),
                 MateEtaUiModel(
                     "올리브",

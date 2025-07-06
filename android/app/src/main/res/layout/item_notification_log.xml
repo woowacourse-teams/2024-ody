@@ -24,7 +24,6 @@
             android:background="@drawable/oval"
             android:backgroundTint="@color/gray_350"
             android:scaleType="centerCrop"
-            app:circleImageUrl="@{log.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_nickname"
             app:layout_constraintStart_toStartOf="parent"

@@ -22,9 +22,10 @@ import com.mulberry.ody.presentation.theme.White
 @Composable
 fun OdyTooltip(
     title: String,
-    offset: IntOffset,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
+    offset: IntOffset = IntOffset(0, 0),
+    shape: RoundedCornerShape = RoundedCornerShape(size = 20.dp),
 ) {
     Popup(
         alignment = Alignment.TopStart,
@@ -36,13 +37,16 @@ fun OdyTooltip(
             modifier =
                 modifier
                     .wrapContentSize()
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 20.dp))
+                    .clip(shape)
                     .background(Gray400Alpha70),
         ) {
             Text(
                 text = title,
                 style = OdyTheme.typography.pretendardRegular12.copy(color = White),
-                modifier = Modifier.padding(vertical = 8.dp).padding(horizontal = 16.dp),
+                modifier =
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .padding(horizontal = 16.dp),
             )
         }
     }

@@ -147,9 +147,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     testImplementation(libs.kotlinx.coroutines.test)
 
-    // glide
-    implementation(libs.glide)
-
     // kakao share
     implementation(libs.kakao.share)
 
@@ -173,4 +170,7 @@ dependencies {
     // paging
     implementation(libs.androidx.paging)
     implementation(libs.androidx.compose.paging)
+
+    // coil
+    implementation(libs.coil.compose)
 }
