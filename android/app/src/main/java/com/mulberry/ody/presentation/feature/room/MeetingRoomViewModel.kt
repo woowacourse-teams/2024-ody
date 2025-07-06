@@ -51,269 +51,275 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 class MeetingRoomViewModel
-@AssistedInject
-constructor(
-    private val analyticsHelper: AnalyticsHelper,
-    @Assisted private val meetingId: Long,
-    private val matesEtaRepository: MatesEtaRepository,
-    private val notificationLogRepository: NotificationLogRepository,
-    private val meetingRepository: MeetingRepository,
-    private val imageStorage: ImageStorage,
-    private val imageShareHelper: ImageShareHelper,
-) : BaseViewModel() {
-    private val matesEta: Flow<MateEtaInfo?> = matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
+    @AssistedInject
+    constructor(
+        private val analyticsHelper: AnalyticsHelper,
+        @Assisted private val meetingId: Long,
+        private val matesEtaRepository: MatesEtaRepository,
+        private val notificationLogRepository: NotificationLogRepository,
+        private val meetingRepository: MeetingRepository,
+        private val imageStorage: ImageStorage,
+        private val imageShareHelper: ImageShareHelper,
+    ) : BaseViewModel() {
+        private val matesEta: Flow<MateEtaInfo?> = matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
 
-    val mateEtas: StateFlow<List<MateEtaUiModel>> =
-        matesEta.map {
-            val mateEtaInfo = it ?: return@map emptyList()
-            mateEtaInfo.toMateEtaUiModels()
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-            initialValue = emptyList(),
-        )
-
-    private val _meeting: MutableStateFlow<DetailMeetingUiModel> = MutableStateFlow(DetailMeetingUiModel.DEFAULT)
-    val meeting: StateFlow<DetailMeetingUiModel> = _meeting.asStateFlow()
-
-    private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
-    val mates: StateFlow<List<MateUiModel>> = _mates.asStateFlow()
-
-    private val _notificationLogs = MutableStateFlow<List<NotificationLogUiModel>>(listOf())
-    val notificationLogs: StateFlow<List<NotificationLogUiModel>> = _notificationLogs.asStateFlow()
-
-    private val _navigationEvent: MutableSharedFlow<MeetingRoomNavigateAction> = MutableSharedFlow()
-    val navigationEvent: SharedFlow<MeetingRoomNavigateAction> get() = _navigationEvent.asSharedFlow()
-
-    private val _nudgeSuccessMate: MutableSharedFlow<String> = MutableSharedFlow()
-    val nudgeSuccessMate: SharedFlow<String> get() = _nudgeSuccessMate.asSharedFlow()
-
-    private val _expiredNudgeTimeLimit: MutableSharedFlow<Unit> = MutableSharedFlow()
-    val expiredNudgeTimeLimit: SharedFlow<Unit> get() = _expiredNudgeTimeLimit.asSharedFlow()
-
-    private val _nudgeFailMate: MutableSharedFlow<Int> = MutableSharedFlow()
-    val nudgeFailMate: SharedFlow<Int> get() = _nudgeFailMate.asSharedFlow()
-
-    private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-    val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
-
-    private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
-
-    private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-    val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent
-
-    val isFirstSeenEtaDashboard: StateFlow<Boolean> =
-        matesEtaRepository.isFirstSeenEtaDashboard()
-            .stateIn(
+        val mateEtas: StateFlow<List<MateEtaUiModel>> =
+            matesEta.map {
+                val mateEtaInfo = it ?: return@map emptyList()
+                mateEtaInfo.toMateEtaUiModels()
+            }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                initialValue = false,
+                initialValue = emptyList(),
             )
 
-    init {
-        fetchMeeting()
-    }
+        private val _meeting: MutableStateFlow<DetailMeetingUiModel> = MutableStateFlow(DetailMeetingUiModel.DEFAULT)
+        val meeting: StateFlow<DetailMeetingUiModel> = _meeting.asStateFlow()
 
-    fun nudgeMate(
-        userId: Long,
-        mateId: Long,
-    ) {
-        viewModelScope.launch {
-            val targetMate = mateEtas.value.find { it.mateId == mateId } ?: return@launch
-            handleNudgeAction(userId, mateId, targetMate.nickname)
+        private val _mates: MutableStateFlow<List<MateUiModel>> = MutableStateFlow(listOf())
+        val mates: StateFlow<List<MateUiModel>> = _mates.asStateFlow()
+
+        private val _notificationLogs = MutableStateFlow<List<NotificationLogUiModel>>(listOf())
+        val notificationLogs: StateFlow<List<NotificationLogUiModel>> = _notificationLogs.asStateFlow()
+
+        private val _navigationEvent: MutableSharedFlow<MeetingRoomNavigateAction> = MutableSharedFlow()
+        val navigationEvent: SharedFlow<MeetingRoomNavigateAction> get() = _navigationEvent.asSharedFlow()
+
+        private val _nudgeSuccessMate: MutableSharedFlow<String> = MutableSharedFlow()
+        val nudgeSuccessMate: SharedFlow<String> get() = _nudgeSuccessMate.asSharedFlow()
+
+        private val _expiredNudgeTimeLimit: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val expiredNudgeTimeLimit: SharedFlow<Unit> get() = _expiredNudgeTimeLimit.asSharedFlow()
+
+        private val _nudgeFailMate: MutableSharedFlow<Int> = MutableSharedFlow()
+        val nudgeFailMate: SharedFlow<Int> get() = _nudgeFailMate.asSharedFlow()
+
+        private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
+
+        private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
+
+        private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent
+
+        val isFirstSeenEtaDashboard: StateFlow<Boolean> =
+            matesEtaRepository.isFirstSeenEtaDashboard()
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
+                    initialValue = false,
+                )
+
+        init {
+            fetchMeeting()
         }
-    }
 
-    private suspend fun handleNudgeAction(
-        userId: Long,
-        mateId: Long,
-        mateNickname: String,
-    ) {
-        val recentNudgeTime = matesNudgeTimes.getOrDefault(mateId, DEFAULT_NUDGE_TIME)
-        val currentTime = LocalDateTime.now()
-        val elapsedSeconds = Duration.between(recentNudgeTime, currentTime).seconds
-        val remainingCooldown = NUDGE_DELAY_SECONDS - elapsedSeconds
-
-        if (recentNudgeTime == DEFAULT_NUDGE_TIME || elapsedSeconds >= NUDGE_DELAY_SECONDS) {
-            matesNudgeTimes[mateId] = currentTime
-            performNudge(userId, mateId, mateNickname)
-            return
-        }
-
-        _nudgeFailMate.emit(remainingCooldown.toInt())
-    }
-
-    private suspend fun performNudge(
-        userId: Long,
-        mateId: Long,
-        mateNickname: String,
-    ) {
-        meetingRepository.postNudge(Nudge(userId, mateId))
-            .onSuccess {
-                _nudgeSuccessMate.emit(mateNickname)
-            }.onFailure { code, errorMessage ->
-                when (code) {
-                    400 -> _expiredNudgeTimeLimit.emit(Unit)
-                    else -> handleError()
-                }
-                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-            }.onNetworkError {
-                handleNetworkError()
-                lastFailedAction = { nudgeMate(userId, mateId) }
+        fun nudgeMate(
+            userId: Long,
+            mateId: Long,
+        ) {
+            viewModelScope.launch {
+                val targetMate = mateEtas.value.find { it.mateId == mateId } ?: return@launch
+                handleNudgeAction(userId, mateId, targetMate.nickname)
             }
-    }
+        }
 
-    private fun fetchNotificationLogs() {
-        viewModelScope.launch {
-            startLoading()
-            notificationLogRepository.fetchNotificationLogs(meetingId)
+        private suspend fun handleNudgeAction(
+            userId: Long,
+            mateId: Long,
+            mateNickname: String,
+        ) {
+            val recentNudgeTime = matesNudgeTimes.getOrDefault(mateId, DEFAULT_NUDGE_TIME)
+            val currentTime = LocalDateTime.now()
+            val elapsedSeconds = Duration.between(recentNudgeTime, currentTime).seconds
+            val remainingCooldown = NUDGE_DELAY_SECONDS - elapsedSeconds
+
+            if (recentNudgeTime == DEFAULT_NUDGE_TIME || elapsedSeconds >= NUDGE_DELAY_SECONDS) {
+                matesNudgeTimes[mateId] = currentTime
+                performNudge(userId, mateId, mateNickname)
+                return
+            }
+
+            _nudgeFailMate.emit(remainingCooldown.toInt())
+        }
+
+        private suspend fun performNudge(
+            userId: Long,
+            mateId: Long,
+            mateNickname: String,
+        ) {
+            meetingRepository.postNudge(Nudge(userId, mateId))
                 .onSuccess {
-                    _notificationLogs.value = it.toNotificationUiModels()
+                    _nudgeSuccessMate.emit(mateNickname)
                 }.onFailure { code, errorMessage ->
-                    handleError()
+                    when (code) {
+                        400 -> _expiredNudgeTimeLimit.emit(Unit)
+                        else -> handleError()
+                    }
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    Timber.e("$code $errorMessage")
                 }.onNetworkError {
                     handleNetworkError()
-                    lastFailedAction = { fetchNotificationLogs() }
+                    lastFailedAction = { nudgeMate(userId, mateId) }
                 }
-            stopLoading()
         }
-    }
 
-    private fun fetchMeeting() {
-        viewModelScope.launch {
-            startLoading()
-            meetingRepository.fetchMeeting(meetingId)
-                .onSuccess {
-                    _meeting.value = it.toDetailMeetingUiModel()
-                    _mates.value = it.toMateUiModels()
-                    fetchNotificationLogs()
-                }.onFailure { code, errorMessage ->
-                    handleError()
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    Timber.e("$code $errorMessage")
+        private fun fetchNotificationLogs() {
+            viewModelScope.launch {
+                startLoading()
+                notificationLogRepository.fetchNotificationLogs(meetingId)
+                    .onSuccess {
+                        _notificationLogs.value = it.toNotificationUiModels()
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { fetchNotificationLogs() }
+                    }
+                stopLoading()
+            }
+        }
+
+        private fun fetchMeeting() {
+            viewModelScope.launch {
+                startLoading()
+                meetingRepository.fetchMeeting(meetingId)
+                    .onSuccess {
+                        _meeting.value = it.toDetailMeetingUiModel()
+                        _mates.value = it.toMateUiModels()
+                        fetchNotificationLogs()
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { fetchMeeting() }
+                    }
+                stopLoading()
+            }
+        }
+
+        fun navigateToEtaDashboard() {
+            viewModelScope.launch {
+                if (!meeting.value.isEtaAccessible()) {
+                    _inaccessibleEtaEvent.emit(Unit)
+                    return@launch
+                }
+
+                analyticsHelper.logButtonClicked(
+                    eventName = "navigate_to_eta_dashboard",
+                    location = TAG,
+                )
+                _navigationEvent.emit(MeetingRoomNavigateAction.NavigateToEtaDashboard)
+            }
+        }
+
+        fun navigateToNotificationLog() {
+            viewModelScope.launch {
+                analyticsHelper.logButtonClicked(
+                    eventName = "navigate_to_notification_log",
+                    location = TAG,
+                )
+                _navigationEvent.emit(MeetingRoomNavigateAction.NavigateToNotificationLog)
+            }
+        }
+
+        fun shareEtaDashboard(
+            title: String,
+            buttonTitle: String,
+            bitmap: Bitmap,
+        ) {
+            viewModelScope.launch {
+                startLoading()
+                imageStorage.upload(
+                    byteArray = bitmap.toByteArray(),
+                    fileName = LocalDateTime.now().toString(),
+                ).onSuccess {
+                    val imageShareContent =
+                        ImageShareContent(
+                            title = title,
+                            buttonTitle = buttonTitle,
+                            imageUrl = it,
+                            imageWidthPixel = bitmap.width,
+                            imageHeightPixel = bitmap.height,
+                            link = ODY_PLAY_STORE_LINK,
+                        )
+                    shareImage(imageShareContent)
                 }.onNetworkError {
                     handleNetworkError()
-                    lastFailedAction = { fetchMeeting() }
+                    lastFailedAction = { shareEtaDashboard(title, buttonTitle, bitmap) }
                 }
-            stopLoading()
-        }
-    }
-
-    fun navigateToEtaDashboard() {
-        viewModelScope.launch {
-            if (!meeting.value.isEtaAccessible()) {
-                _inaccessibleEtaEvent.emit(Unit)
-                return@launch
+                stopLoading()
             }
-
-            analyticsHelper.logButtonClicked(
-                eventName = "navigate_to_eta_dashboard",
-                location = TAG,
-            )
-            _navigationEvent.emit(MeetingRoomNavigateAction.NavigateToEtaDashboard)
         }
-    }
 
-    fun navigateToNotificationLog() {
-        viewModelScope.launch {
-            analyticsHelper.logButtonClicked(
-                eventName = "navigate_to_notification_log",
-                location = TAG,
-            )
-            _navigationEvent.emit(MeetingRoomNavigateAction.NavigateToNotificationLog)
-        }
-    }
-
-    fun shareEtaDashboard(
-        title: String,
-        buttonTitle: String,
-        bitmap: Bitmap,
-    ) {
-        viewModelScope.launch {
-            startLoading()
-            imageStorage.upload(
-                byteArray = bitmap.toByteArray(),
-                fileName = LocalDateTime.now().toString(),
-            ).onSuccess {
-                val imageShareContent =
-                    ImageShareContent(
-                        title = title,
-                        buttonTitle = buttonTitle,
-                        imageUrl = it,
-                        imageWidthPixel = bitmap.width,
-                        imageHeightPixel = bitmap.height,
-                        link = ODY_PLAY_STORE_LINK,
-                    )
-                shareImage(imageShareContent)
-            }.onNetworkError {
-                handleNetworkError()
-                lastFailedAction = { shareEtaDashboard(title, buttonTitle, bitmap) }
+        private fun shareImage(imageShareContent: ImageShareContent) {
+            viewModelScope.launch {
+                imageShareHelper.share(imageShareContent)
+                    .onUnexpected {
+                        handleError()
+                    }
             }
-            stopLoading()
         }
-    }
 
-    private fun shareImage(imageShareContent: ImageShareContent) {
-        viewModelScope.launch {
-            imageShareHelper.share(imageShareContent)
-                .onUnexpected {
+        fun exitMeetingRoom() {
+            viewModelScope.launch {
+                if (_meeting.value.isDefault()) {
                     handleError()
+                    return@launch
+                }
+
+                startLoading()
+                meetingRepository.exitMeeting(_meeting.value.id)
+                    .onSuccess {
+                        matesEtaRepository.closeEtaDashboard(meetingId)
+                        _exitMeetingRoomEvent.emit(Unit)
+                    }.onFailure { code, errorMessage ->
+                        handleError()
+                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                        Timber.e("$code $errorMessage")
+                    }.onNetworkError {
+                        handleNetworkError()
+                        lastFailedAction = { exitMeetingRoom() }
+                    }
+                stopLoading()
+            }
+        }
+
+        fun updateEtaDashboardSeen() {
+            viewModelScope.launch {
+                matesEtaRepository.updateEtaDashboardSeen()
+            }
+        }
+
+        @AssistedFactory
+        interface MeetingViewModelFactory {
+            fun create(meetingId: Long): MeetingRoomViewModel
+        }
+
+        companion object {
+            private const val TAG = "MeetingRoomViewModel"
+            private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
+            private const val NUDGE_DELAY_SECONDS = 10L
+            private val DEFAULT_NUDGE_TIME = LocalDateTime.of(2000, 1, 1, 1, 1)
+            private const val ODY_PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=com.mulberry.ody"
+
+            fun provideFactory(
+                assistedFactory: MeetingViewModelFactory,
+                owner: SavedStateRegistryOwner,
+                defaultArgs: Bundle? = null,
+                meetingId: Long,
+            ): AbstractSavedStateViewModelFactory =
+                object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+                    override fun <T : ViewModel> create(
+                        key: String,
+                        modelClass: Class<T>,
+                        handle: SavedStateHandle,
+                    ): T {
+                        return assistedFactory.create(meetingId) as T
+                    }
                 }
         }
     }
-
-    fun exitMeetingRoom() {
-        viewModelScope.launch {
-            if (_meeting.value.isDefault()) {
-                handleError()
-                return@launch
-            }
-
-            startLoading()
-            meetingRepository.exitMeeting(_meeting.value.id)
-                .onSuccess {
-                    matesEtaRepository.closeEtaDashboard(meetingId)
-                    _exitMeetingRoomEvent.emit(Unit)
-                }.onFailure { code, errorMessage ->
-                    handleError()
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                    Timber.e("$code $errorMessage")
-                }.onNetworkError {
-                    handleNetworkError()
-                    lastFailedAction = { exitMeetingRoom() }
-                }
-            stopLoading()
-        }
-    }
-
-    @AssistedFactory
-    interface MeetingViewModelFactory {
-        fun create(meetingId: Long): MeetingRoomViewModel
-    }
-
-    companion object {
-        private const val TAG = "MeetingRoomViewModel"
-        private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
-        private const val NUDGE_DELAY_SECONDS = 10L
-        private val DEFAULT_NUDGE_TIME = LocalDateTime.of(2000, 1, 1, 1, 1)
-        private const val ODY_PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=com.mulberry.ody"
-
-        fun provideFactory(
-            assistedFactory: MeetingViewModelFactory,
-            owner: SavedStateRegistryOwner,
-            defaultArgs: Bundle? = null,
-            meetingId: Long,
-        ): AbstractSavedStateViewModelFactory =
-            object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
-                override fun <T : ViewModel> create(
-                    key: String,
-                    modelClass: Class<T>,
-                    handle: SavedStateHandle,
-                ): T {
-                    return assistedFactory.create(meetingId) as T
-                }
-            }
-    }
-}

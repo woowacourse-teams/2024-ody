@@ -52,7 +52,7 @@ fun EtaDashboardScreen(
         }
     }
     val meeting by viewModel.meeting.collectAsStateWithLifecycle()
-    val mateEtas by viewModel.mateEtaUiModels.collectAsStateWithLifecycle()
+    val mateEtas by viewModel.mateEtas.collectAsStateWithLifecycle()
     val graphicsLayer = rememberGraphicsLayer()
 
     val showGuide by viewModel.isFirstSeenEtaDashboard.collectAsStateWithLifecycle()
@@ -101,15 +101,15 @@ fun EtaDashboardScreen(
                 mateEtas = mateEtas,
                 onClickNudge = { viewModel.nudgeMate(it.userId, it.mateId) },
                 modifier =
-                Modifier
-                    .padding(innerPadding)
-                    .drawWithContent {
-                        graphicsLayer.record {
-                            this@drawWithContent.drawContent()
+                    Modifier
+                        .padding(innerPadding)
+                        .drawWithContent {
+                            graphicsLayer.record {
+                                this@drawWithContent.drawContent()
+                            }
+                            drawLayer(graphicsLayer)
                         }
-                        drawLayer(graphicsLayer)
-                    }
-                    .background(OdyTheme.colors.primary),
+                        .background(OdyTheme.colors.primary),
             )
         }
     }
