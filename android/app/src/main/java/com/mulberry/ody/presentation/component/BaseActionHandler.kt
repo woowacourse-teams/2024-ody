@@ -1,12 +1,14 @@
 package com.mulberry.ody.presentation.component
 
 import android.content.Context
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
@@ -62,6 +64,6 @@ fun BaseActionHandler(
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     if (isLoading) {
-        OdyLoading()
+        OdyLoading(modifier = Modifier.fillMaxSize())
     }
 }

@@ -101,15 +101,15 @@ fun EtaDashboardScreen(
                 mateEtas = mateEtas,
                 onClickNudge = { viewModel.nudgeMate(it.userId, it.mateId) },
                 modifier =
-                    Modifier
-                        .padding(innerPadding)
-                        .drawWithContent {
-                            graphicsLayer.record {
-                                this@drawWithContent.drawContent()
-                            }
-                            drawLayer(graphicsLayer)
+                Modifier
+                    .padding(innerPadding)
+                    .drawWithContent {
+                        graphicsLayer.record {
+                            this@drawWithContent.drawContent()
                         }
-                        .background(OdyTheme.colors.primary),
+                        drawLayer(graphicsLayer)
+                    }
+                    .background(OdyTheme.colors.primary),
             )
         }
     }

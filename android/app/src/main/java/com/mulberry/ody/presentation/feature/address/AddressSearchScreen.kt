@@ -92,7 +92,7 @@ fun AddressSearchScreen(
     ) { innerPadding ->
         val addressState = addresses.loadState.refresh
         if (addressState is LoadState.Loading) {
-            OdyLoading()
+            OdyLoading(modifier = Modifier.fillMaxSize())
         } else if (addressState is LoadState.Error) {
             viewModel.handleAddressPageError(addressSearchKeyword, addressState.error)
         }

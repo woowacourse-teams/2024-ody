@@ -51,7 +51,7 @@ class MeetingRoomViewModelTest {
     fun `친구들과 나의 위치 현황을 볼 수 있다`() {
         runTest {
             // when
-            val actual = viewModel.mateEtaUiModels.first()
+            val actual = viewModel.mateEtas.first()
 
             // then
             val expected = mateEtaInfo.toMateEtaUiModels()
@@ -76,7 +76,7 @@ class MeetingRoomViewModelTest {
     fun `친구 재촉을 하면 친구 재촉이 성공한다`() {
         runTest {
             // when
-            viewModel.mateEtaUiModels.first()
+            viewModel.mateEtas.first()
             val actual = viewModel.nudgeSuccessMate.valueOnAction { viewModel.nudgeMate(1, 0) }
 
             // then
