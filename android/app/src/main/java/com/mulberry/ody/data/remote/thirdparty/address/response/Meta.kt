@@ -7,10 +7,4 @@ import kotlinx.serialization.Serializable
 data class Meta(
     @SerialName("is_end")
     val isEnd: Boolean,
-    @SerialName("pageable_count")
-    val pageableCount: Int,
-    @SerialName("same_name")
-    val sameName: SameName,
-    @SerialName("total_count")
-    val totalCount: Int,
 )

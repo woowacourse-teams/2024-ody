@@ -7,6 +7,4 @@ import kotlinx.serialization.Serializable
 data class Document(
     @SerialName("address")
     val address: Address?,
-    @SerialName("road_address")
-    val roadAddress: RoadAddress?,
 )

@@ -1,6 +1,3 @@
 package com.mulberry.ody.data.remote.thirdparty.address.response.coord
 
-data class AddressByCoordinateResponse(
-    val documents: List<Document>,
-    val meta: Meta,
-)
+data class AddressByCoordinateResponse(val documents: List<Document>)
