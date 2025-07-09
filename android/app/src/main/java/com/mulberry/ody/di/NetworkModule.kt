@@ -175,9 +175,7 @@ object NetworkModule {
     @Provides
     @Singleton
     @DefaultOkHttpClient
-    fun provideOkHttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor,
-    ): OkHttpClient {
+    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         val builder =
             OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
@@ -225,10 +223,11 @@ object NetworkModule {
 
     @Provides
     fun provideConverterFactory(): Converter.Factory {
-        val json = Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-        }
+        val json =
+            Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            }
         return json.asConverterFactory("application/json".toMediaType())
     }
 }

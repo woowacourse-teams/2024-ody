@@ -8,10 +8,11 @@ import kotlinx.serialization.json.Json
 
 @ProvidedTypeConverter
 class MateEtaListTypeConverter {
-    private val json = Json {
-        encodeDefaults = true
-        ignoreUnknownKeys = true
-    }
+    private val json =
+        Json {
+            encodeDefaults = true
+            ignoreUnknownKeys = true
+        }
 
     @TypeConverter
     fun fromMateEtaList(value: List<MateEta>): String {

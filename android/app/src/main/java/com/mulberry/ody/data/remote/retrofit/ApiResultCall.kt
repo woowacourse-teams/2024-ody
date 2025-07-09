@@ -32,10 +32,11 @@ class ApiResultCall<T>(private val call: Call<T>) : Call<ApiResult<T>> {
                             Response.success(ApiResult.Success(body)),
                         )
                     } else {
-                        val json = Json {
-                            ignoreUnknownKeys = true
-                            isLenient = true
-                        }
+                        val json =
+                            Json {
+                                ignoreUnknownKeys = true
+                                isLenient = true
+                            }
                         val errorBody = response.errorBody()?.string()
                         val errorResponse = errorBody?.let { Json.decodeFromString<ErrorResponse>(it) }
 
