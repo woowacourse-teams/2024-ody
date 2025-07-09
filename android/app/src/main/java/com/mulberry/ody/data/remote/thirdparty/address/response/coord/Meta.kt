@@ -1,10 +1,10 @@
 package com.mulberry.ody.data.remote.thirdparty.address.response.coord
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Meta(
-    @Json(name = "total_count")
+    @SerialName("total_count")
     val totalCount: Int,
 )

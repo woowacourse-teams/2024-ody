@@ -1,14 +1,14 @@
 package com.mulberry.ody.data.remote.thirdparty.address.response
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class SameName(
-    @Json(name = "keyword")
+    @SerialName("keyword")
     val keyword: String,
-    @Json(name = "region")
+    @SerialName("region")
     val region: List<String>,
-    @Json(name = "selected_region")
+    @SerialName("selected_region")
     val selectedRegion: String,
 )
