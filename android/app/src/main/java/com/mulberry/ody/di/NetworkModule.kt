@@ -1,22 +1,23 @@
 package com.mulberry.ody.di
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mulberry.ody.BuildConfig
 import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.data.remote.core.service.RefreshTokenService
 import com.mulberry.ody.data.remote.retrofit.AccessTokenInterceptor
 import com.mulberry.ody.data.remote.retrofit.ApiResultCallAdapter
 import com.mulberry.ody.data.remote.retrofit.RefreshTokenInterceptor
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -63,10 +64,6 @@ annotation class AuthRefreshTokenInterceptor
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class LoggingInterceptor
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
 annotation class KakaoInterceptor
 
 @Module
@@ -80,12 +77,13 @@ object NetworkModule {
     @DefaultRetrofit
     fun provideDefaultRetrofit(
         @AuthHttpClient httpClient: OkHttpClient,
+        converterFactory: Converter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
             .client(httpClient)
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(ApiResultCallAdapter.Factory())
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(converterFactory)
             .build()
     }
 
@@ -94,16 +92,14 @@ object NetworkModule {
     @KakaoRetrofit
     fun provideKakaoRetrofit(
         @KakaohHttpClient httpClient: OkHttpClient,
+        converterFactory: Converter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
             .client(httpClient)
             .baseUrl("https://dapi.kakao.com/")
             .addCallAdapterFactory(ApiResultCallAdapter.Factory())
-            .addConverterFactory(
-                MoshiConverterFactory.create(
-                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build(),
-                ),
-            ).build()
+            .addConverterFactory(converterFactory)
+            .build()
     }
 
     @Provides
@@ -111,12 +107,13 @@ object NetworkModule {
     @RefreshRetrofit
     fun provideRefreshRetrofit(
         @RefreshHttpClient httpClient: OkHttpClient,
+        converterFactory: Converter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
             .client(httpClient)
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(ApiResultCallAdapter.Factory())
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(converterFactory)
             .build()
     }
 
@@ -125,12 +122,13 @@ object NetworkModule {
     @LoginRetrofit
     fun provideLoginRetrofit(
         @DefaultOkHttpClient httpClient: OkHttpClient,
+        converterFactory: Converter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
             .client(httpClient)
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(ApiResultCallAdapter.Factory())
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(converterFactory)
             .build()
     }
 
@@ -139,7 +137,7 @@ object NetworkModule {
     @AuthHttpClient
     fun provideAuthHttpClient(
         @AuthTokenInterceptor interceptor: Interceptor,
-        @LoggingInterceptor httpLoggingInterceptor: HttpLoggingInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor,
     ): OkHttpClient {
         val builder =
             OkHttpClient.Builder()
@@ -153,7 +151,7 @@ object NetworkModule {
     @RefreshHttpClient
     fun provideRefreshHttpClient(
         @AuthRefreshTokenInterceptor interceptor: Interceptor,
-        @LoggingInterceptor httpLoggingInterceptor: HttpLoggingInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor,
     ): OkHttpClient {
         val builder =
             OkHttpClient.Builder()
@@ -178,7 +176,7 @@ object NetworkModule {
     @Singleton
     @DefaultOkHttpClient
     fun provideOkHttpClient(
-        @LoggingInterceptor httpLoggingInterceptor: HttpLoggingInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor,
     ): OkHttpClient {
         val builder =
             OkHttpClient.Builder()
@@ -205,7 +203,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @LoggingInterceptor
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         val logger =
             HttpLoggingInterceptor.Logger { message ->
@@ -224,5 +221,14 @@ object NetworkModule {
                     .addHeader("Authorization", "KakaoAK ${BuildConfig.KAKAO_API_KEY}").build()
             it.proceed(newRequest)
         }
+    }
+
+    @Provides
+    fun provideConverterFactory(): Converter.Factory {
+        val json = Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+        }
+        return json.asConverterFactory("application/json".toMediaType())
     }
 }
