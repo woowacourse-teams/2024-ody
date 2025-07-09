@@ -1,16 +1,16 @@
 package com.mulberry.ody.data.remote.core.entity.login.request
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class LoginRequest(
-    @Json(name = "deviceToken")
+    @SerialName("deviceToken")
     val deviceToken: String,
-    @Json(name = "providerId")
+    @SerialName("providerId")
     val providerId: String,
-    @Json(name = "nickname")
+    @SerialName("nickname")
     val nickname: String,
-    @Json(name = "imageUrl")
+    @SerialName("imageUrl")
     val imageUrl: String,
 )

@@ -1,16 +1,16 @@
 package com.mulberry.ody.data.remote.core.entity.join.request
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class JoinRequest(
-    @Json(name = "inviteCode")
+    @SerialName("id")
     val inviteCode: String,
-    @Json(name = "originAddress")
+    @SerialName("originAddress")
     val originAddress: String,
-    @Json(name = "originLatitude")
+    @SerialName("originLatitude")
     val originLatitude: String,
-    @Json(name = "originLongitude")
+    @SerialName("originLongitude")
     val originLongitude: String,
 )

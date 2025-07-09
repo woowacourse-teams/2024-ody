@@ -2,8 +2,7 @@ package com.mulberry.ody.data.remote.retrofit
 
 import com.mulberry.ody.data.remote.core.entity.ErrorResponse
 import com.mulberry.ody.domain.apiresult.ApiResult
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.serialization.json.Json
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -33,10 +32,12 @@ class ApiResultCall<T>(private val call: Call<T>) : Call<ApiResult<T>> {
                             Response.success(ApiResult.Success(body)),
                         )
                     } else {
+                        val json = Json {
+                            ignoreUnknownKeys = true
+                            isLenient = true
+                        }
                         val errorBody = response.errorBody()?.string()
-                        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-                        val adapter = moshi.adapter(ErrorResponse::class.java)
-                        val errorResponse = errorBody?.let { adapter.fromJson(it) }
+                        val errorResponse = errorBody?.let { Json.decodeFromString<ErrorResponse>(it) }
 
                         callback.onResponse(
                             this@ApiResultCall,
