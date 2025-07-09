@@ -31,8 +31,7 @@ junitJupiter = "5.10.2"
 junitVersion = "1.2.1"
 kakaoShare = "2.20.3"
 kotlin = "1.9.23"
-kotlinxSerialization = "2.1.0"
-kotlinxSerializationJson = "1.8.0"
+kotlinxSerializationJson = "1.6.3"
 retrofitConverter = "1.0.0"
 
 ksp = "1.9.23-1.0.20"
@@ -148,4 +147,4 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 android-junit-jupiter = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunitJupiter" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
-kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerialization" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
