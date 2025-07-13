@@ -1,5 +1,6 @@
 package com.ody.notification.service;
 
+import com.ody.eta.domain.EtaTriggerTime;
 import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.message.AbstractMessage;
@@ -36,9 +37,10 @@ public class TriggerSender {
         fcmEventPublisher.publish(triggerEvent);
     }
 
-    public void sendNowOrScheduleLater(LocalDateTime triggerTime, Runnable task) {
-        if (TimeUtil.isUpcoming(triggerTime)) {
-            Instant startTime = InstantConverter.kstToInstant(triggerTime);
+    public void sendNowOrScheduleLater(EtaTriggerTime triggerTime, Runnable task) {
+        LocalDateTime time = triggerTime.getTime();
+        if (TimeUtil.isUpcoming(time)) {
+            Instant startTime = InstantConverter.kstToInstant(time);
             taskScheduler.schedule(task, startTime);
             return;
         }

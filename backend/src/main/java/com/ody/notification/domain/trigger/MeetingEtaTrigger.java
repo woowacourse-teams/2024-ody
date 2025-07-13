@@ -30,8 +30,4 @@ public class MeetingEtaTrigger extends EtaTrigger {
         this.triggerTime = triggerTime;
         this.fcmTopic = fcmTopic;
     }
-
-    public LocalDateTime getTime() {
-        return triggerTime.getTime();
-    }
 }

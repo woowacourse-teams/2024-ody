@@ -28,7 +28,7 @@ public class EtaSchedulingService {
             return;
         }
         MeetingEtaTrigger trigger = MeetingEtaTrigger.from(meeting);
-        triggerSender.sendNowOrScheduleLater(trigger.getTime(), () -> sendEtaSchedulingNoticeAndCache(trigger));
+        triggerSender.sendNowOrScheduleLater(trigger.getTriggerTime(), () -> sendEtaSchedulingNoticeAndCache(trigger));
     }
 
     private void sendEtaSchedulingNoticeAndCache(MeetingEtaTrigger trigger) {
