@@ -1,6 +1,7 @@
 package com.ody.notification.domain.trigger;
 
 import com.ody.eta.domain.EtaSchedulingKey;
+import com.ody.member.domain.DeviceToken;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -9,14 +10,14 @@ import lombok.Getter;
 public class MateEtaTrigger extends EtaTrigger {
 
     private final LocalDateTime triggerTime;
-    private final String deviceToken;
+    private final DeviceToken deviceToken;
 
     public static MateEtaTrigger from(EtaSchedulingKey key) {
         return new MateEtaTrigger(
                 key.meetingId(),
                 key.meetingDateTime(),
                 TimeUtil.nowWithTrim(),
-                key.deviceToken()
+                new DeviceToken(key.deviceToken())
         );
     }
 
@@ -24,7 +25,7 @@ public class MateEtaTrigger extends EtaTrigger {
             long meetingId,
             LocalDateTime meetingTime,
             LocalDateTime triggerTime,
-            String deviceToken
+            DeviceToken deviceToken
     ) {
         super(meetingId, meetingTime);
         this.triggerTime = triggerTime;

@@ -30,8 +30,8 @@ public class TriggerSender {
         fcmEventPublisher.publish(triggerEvent);
     }
 
-    public void sendDirectTrigger(EtaTrigger trigger, String deviceToken) {
-        DirectMessage directMessage = DirectMessage.create(trigger, new DeviceToken(deviceToken));
+    public void sendDirectTrigger(EtaTrigger trigger, DeviceToken deviceToken) {
+        DirectMessage directMessage = DirectMessage.create(trigger, deviceToken);
         TriggerEvent<DirectMessage> triggerEvent = new TriggerEvent<>(this, trigger, directMessage);
         fcmEventPublisher.publish(triggerEvent);
     }

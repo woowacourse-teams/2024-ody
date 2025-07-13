@@ -132,7 +132,7 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
 
             etaSchedulingService.sendFallbackNotice(etaSchedulingKey);
 
-            verify(triggerSender).sendDirectTrigger(any(MateEtaTrigger.class), anyString());
+            verify(triggerSender).sendDirectTrigger(any(MateEtaTrigger.class), any());
         }
 
         @DisplayName("이미 지난 약속이면 ETA 스케줄링 알림을 발송하지 않는다.")
@@ -146,7 +146,7 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
 
             etaSchedulingService.sendFallbackNotice(etaSchedulingKey);
 
-            verify(triggerSender, never()).sendDirectTrigger(any(MateEtaTrigger.class), anyString());
+            verify(triggerSender, never()).sendDirectTrigger(any(MateEtaTrigger.class), any());
         }
     }
 
@@ -171,7 +171,7 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
                         Thread.sleep(ttlMs - 200);
                         etaService.findAllMateEtas(dtoGenerator.generateMateEtaRequest(), mate);
                         Thread.sleep(ttlMs - 200);
-                        verify(triggerSender, never()).sendDirectTrigger(any(MateEtaTrigger.class), anyString());
+                        verify(triggerSender, never()).sendDirectTrigger(any(MateEtaTrigger.class), any());
                     })
             );
         }
@@ -191,7 +191,7 @@ class EtaSchedulingServiceTest extends BaseServiceTest {
                     }),
                     dynamicTest("TTL 만료 전에 ETA api 요청이 안 오면, 스케줄링 알림이 재전송된다.", () -> {
                         Thread.sleep(ttlMs + 500);
-                        verify(triggerSender).sendDirectTrigger(any(MateEtaTrigger.class), anyString());
+                        verify(triggerSender).sendDirectTrigger(any(MateEtaTrigger.class), any());
                     })
             );
         }
