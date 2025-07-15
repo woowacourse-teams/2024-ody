@@ -31,7 +31,7 @@ import com.mulberry.ody.presentation.feature.room.detail.model.toMateUiModels
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.toMateEtaUiModels
 import com.mulberry.ody.presentation.feature.room.log.model.NotificationLogUiModel
-import com.mulberry.ody.presentation.feature.room.log.model.toNotificationUiModels
+import com.mulberry.ody.presentation.feature.room.log.model.toNotificationLogUiModels
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -168,7 +168,7 @@ class MeetingRoomViewModel
                 startLoading()
                 notificationLogRepository.fetchNotificationLogs(meetingId)
                     .onSuccess {
-                        _notificationLogs.value = it.toNotificationUiModels()
+                        _notificationLogs.value = it.toNotificationLogUiModels()
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
