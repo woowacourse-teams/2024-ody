@@ -16,11 +16,6 @@
     <string name="item_notification_member_exit">님이 나갔어요.</string>
     <string name="item_notification_default"> </string>
 
-    <!-- item_invite_code_log.xml -->
-    <string name="item_invite_code_top">초대 코드를 복사해</string>
-    <string name="item_invite_code_bottom">친구에게 전달해 보세요!</string>
-    <string name="item_invite_code_copy">복사하기</string>"
-
     <!-- fragment_destination.xml -->
     <string name="destination_question_front">오디</string>
     <string name="destination_question_back">서 만나시나요?</string>
@@ -82,8 +77,6 @@
     <string name="invite_code_input_front">초대 코드</string>
     <string name="invite_code_input_back">를 입력해 주세요!</string>
     <string name="invite_code_input_placeholder">초대 코드</string>
-    <string name="invite_code_invalid_invite_code">초대 코드가 뭔가 이상한데요? 🤔</string>
-    <string name="invite_code_already_participated">이미 참여한 약속입니다.</string>
 
     <!-- activity_login -->
     <string name="login_welcome_top">카카오톡으로</string>
