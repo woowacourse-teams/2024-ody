@@ -2,6 +2,7 @@ package com.ody.notification.domain.trigger;
 
 import com.ody.eta.domain.EtaSchedulingKey;
 import com.ody.member.domain.DeviceToken;
+import com.ody.notification.domain.message.MessagePriority;
 import com.ody.util.TimeUtil;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -30,5 +31,10 @@ public class MateEtaTrigger extends EtaTrigger {
         super(meetingId, meetingTime);
         this.triggerTime = triggerTime;
         this.deviceToken = deviceToken;
+    }
+
+    @Override
+    public MessagePriority getPriority() {
+        return MessagePriority.NORMAL;
     }
 }

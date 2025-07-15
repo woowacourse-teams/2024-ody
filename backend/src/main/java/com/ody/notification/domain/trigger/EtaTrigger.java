@@ -1,5 +1,6 @@
 package com.ody.notification.domain.trigger;
 
+import com.ody.notification.domain.message.MessagePriority;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,4 +16,6 @@ public abstract class EtaTrigger {
     public final TriggerType getType() {
         return TriggerType.ETA_SCHEDULING;
     }
+
+    public abstract MessagePriority getPriority();
 }
