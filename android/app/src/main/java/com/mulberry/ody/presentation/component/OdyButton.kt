@@ -25,19 +25,22 @@ import com.mulberry.ody.presentation.theme.White
 
 @Composable
 fun OdyButton(
-    isEnabled: Boolean,
-    onClick: () -> Unit = {},
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
-    val backgroundColor = if (isEnabled) OdyTheme.colors.secondary else OdyTheme.colors.octonary
-    val odyIconColor = if (isEnabled) White else Gray350
-    val textColor = if (isEnabled) OdyTheme.colors.secondaryVariant else Gray350
+    val backgroundColor = if (enabled) OdyTheme.colors.secondary else OdyTheme.colors.octonary
+    val odyIconColor = if (enabled) White else Gray350
+    val textColor = if (enabled) OdyTheme.colors.secondaryVariant else Gray350
+
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
         shape = RoundedCornerShape(15.dp),
-        border = BorderStroke(width = if (isEnabled) 0.dp else 1.dp, color = Gray350),
+        border = BorderStroke(width = if (enabled) 0.dp else 1.dp, color = Gray350),
         contentPadding = PaddingValues(all = 10.dp),
         interactionSource = NoRippleInteractionSource,
+        modifier = modifier,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -59,8 +62,14 @@ fun OdyButton(
 fun OdyButtonPreview() {
     OdyTheme {
         Column {
-            OdyButton(false)
-            OdyButton(true)
+            OdyButton(
+                onClick = {},
+                enabled = true,
+            )
+            OdyButton(
+                onClick = {},
+                enabled = false,
+            )
         }
     }
 }

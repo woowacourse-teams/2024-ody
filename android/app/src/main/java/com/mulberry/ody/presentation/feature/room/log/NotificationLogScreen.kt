@@ -43,6 +43,7 @@ import coil.request.ImageRequest
 import com.mulberry.ody.R
 import com.mulberry.ody.domain.model.NotificationLogType
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
+import com.mulberry.ody.presentation.component.OdyButton
 import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
@@ -92,6 +93,8 @@ fun NotificationLogScreen(
     ) { innerPadding ->
         NotificationLogContent(
             notificationLogs = notificationLogs,
+            showOdyButton = detailMeeting.isEtaAccessible(),
+            onClickOdyButton = { viewModel.navigateToEtaDashboard() },
             modifier = Modifier.padding(innerPadding),
         )
         if (showExitDialog) {
@@ -112,16 +115,29 @@ fun NotificationLogScreen(
 @Composable
 private fun NotificationLogContent(
     notificationLogs: List<NotificationLogUiModel>,
+    showOdyButton: Boolean,
+    onClickOdyButton: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(18.dp),
-        contentPadding = PaddingValues(vertical = 24.dp, horizontal = 20.dp),
-    ) {
-        items(items = notificationLogs) { notificationLog ->
-            NotificationLogItem(
-                notificationLog = notificationLog,
+    Box(modifier = modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+            contentPadding = PaddingValues(vertical = 24.dp, horizontal = 20.dp),
+        ) {
+            items(items = notificationLogs) { notificationLog ->
+                NotificationLogItem(
+                    notificationLog = notificationLog,
+                )
+            }
+        }
+        if (showOdyButton) {
+            OdyButton(
+                onClick = onClickOdyButton,
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(all = 18.dp),
             )
         }
     }
@@ -205,6 +221,8 @@ private fun NotificationLogContentPreview() {
     OdyTheme {
         NotificationLogContent(
             notificationLogs = notificationLogs,
+            showOdyButton = true,
+            onClickOdyButton = {},
             modifier = Modifier.background(Cream),
         )
     }
