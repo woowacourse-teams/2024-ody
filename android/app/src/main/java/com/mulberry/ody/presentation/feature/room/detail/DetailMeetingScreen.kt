@@ -62,7 +62,6 @@ import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyLoading
-import com.mulberry.ody.presentation.component.OdySadDialog
 import com.mulberry.ody.presentation.component.OdyTooltip
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
@@ -135,7 +134,7 @@ fun DetailMeetingScreen(
                 },
                 onClickCancel = {
                     showExitDialog = false
-                }
+                },
             )
         }
     }

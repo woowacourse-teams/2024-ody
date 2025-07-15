@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.annotation.StringRes
 import com.mulberry.ody.R
 
-enum class NotificationLogType(@StringRes val messageResId: Int) {
+enum class NotificationLogType(
+    @StringRes val messageResId: Int,
+) {
     ENTRY(R.string.item_notification_entry),
     DEPARTURE_REMINDER(R.string.item_notification_departure_reminder),
     DEPARTURE(R.string.item_notification_departure),

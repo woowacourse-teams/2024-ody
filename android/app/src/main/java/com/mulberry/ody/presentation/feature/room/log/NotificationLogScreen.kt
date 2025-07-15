@@ -92,7 +92,7 @@ fun NotificationLogScreen(
     ) { innerPadding ->
         NotificationLogContent(
             notificationLogs = notificationLogs,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         )
         if (showExitDialog) {
             ExitMeetingRoomDialog(
@@ -103,7 +103,7 @@ fun NotificationLogScreen(
                 },
                 onClickCancel = {
                     showExitDialog = false
-                }
+                },
             )
         }
     }
@@ -121,7 +121,7 @@ private fun NotificationLogContent(
     ) {
         items(items = notificationLogs) { notificationLog ->
             NotificationLogItem(
-                notificationLog = notificationLog
+                notificationLog = notificationLog,
             )
         }
     }
@@ -140,9 +140,9 @@ private fun NotificationLogItem(
     ) {
         SubcomposeAsyncImage(
             model =
-            ImageRequest.Builder(context = context)
-                .data(notificationLog.imageUrl)
-                .build(),
+                ImageRequest.Builder(context = context)
+                    .data(notificationLog.imageUrl)
+                    .build(),
             loading = {
                 OdyLoading(modifier = Modifier.wrapContentSize())
             },
@@ -151,21 +151,22 @@ private fun NotificationLogItem(
             },
             contentDescription = null,
             modifier =
-            Modifier
-                .size(44.dp)
-                .clip(CircleShape),
+                Modifier
+                    .size(44.dp)
+                    .clip(CircleShape),
             contentScale = ContentScale.Crop,
         )
         Column(modifier = Modifier.padding(start = 8.dp)) {
             Text(
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = OdyTheme.colors.quinary)) {
-                        append(notificationLog.nickname)
-                    }
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Medium, color = OdyTheme.colors.quinary)) {
-                        append(notificationLog.type.getMessage(context))
-                    }
-                },
+                text =
+                    buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = OdyTheme.colors.quinary)) {
+                            append(notificationLog.nickname)
+                        }
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Medium, color = OdyTheme.colors.quinary)) {
+                            append(notificationLog.type.getMessage(context))
+                        }
+                    },
                 style = OdyTheme.typography.pretendardMedium18,
             )
             Spacer(modifier = Modifier.height(2.dp))
@@ -180,26 +181,27 @@ private fun NotificationLogItem(
 @Composable
 @Preview
 private fun NotificationLogContentPreview() {
-    val notificationLogs = listOf(
-        NotificationLogUiModel(
-            type = NotificationLogType.ENTRY,
-            nickname = "올리브올리브올리브올리브올리브",
-            created = "2024-08-16 18:35",
-            imageUrl = "",
-        ),
-        NotificationLogUiModel(
-            type = NotificationLogType.ENTRY,
-            nickname = "올리브",
-            created = "2024-08-16 20:12",
-            imageUrl = "",
-        ),
-        NotificationLogUiModel(
-            type = NotificationLogType.DEPARTURE_REMINDER,
-            nickname = "해음",
-            created = "2024-08-18 13:01",
-            imageUrl = "",
-        ),
-    )
+    val notificationLogs =
+        listOf(
+            NotificationLogUiModel(
+                type = NotificationLogType.ENTRY,
+                nickname = "올리브올리브올리브올리브올리브",
+                created = "2024-08-16 18:35",
+                imageUrl = "",
+            ),
+            NotificationLogUiModel(
+                type = NotificationLogType.ENTRY,
+                nickname = "올리브",
+                created = "2024-08-16 20:12",
+                imageUrl = "",
+            ),
+            NotificationLogUiModel(
+                type = NotificationLogType.DEPARTURE_REMINDER,
+                nickname = "해음",
+                created = "2024-08-18 13:01",
+                imageUrl = "",
+            ),
+        )
     OdyTheme {
         NotificationLogContent(
             notificationLogs = notificationLogs,
