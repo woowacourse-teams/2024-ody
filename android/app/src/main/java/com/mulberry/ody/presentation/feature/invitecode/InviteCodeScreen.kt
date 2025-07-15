@@ -122,22 +122,30 @@ private fun InviteCodeContent(
                 .padding(horizontal = 40.dp),
         )
         Spacer(modifier = Modifier.height(32.dp))
+        InviteCodeConfirmButton(enabled = inviteCode.isNotBlank())
+    }
+}
 
-        val enabled = inviteCode.isNotBlank()
-        val backgroundColor = if (enabled) OdyTheme.colors.secondary else OdyTheme.colors.senary
-        Button(
-            onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
-            shape = RoundedCornerShape(20.dp),
-            enabled = enabled,
-            contentPadding = PaddingValues(vertical = 14.dp, horizontal = 60.dp),
-            interactionSource = NoRippleInteractionSource,
-        ) {
-            Text(
-                text = stringResource(id = R.string.confirm_button),
-                style = OdyTheme.typography.pretendardBold18.copy(color = White),
-            )
-        }
+@Composable
+private fun InviteCodeConfirmButton(
+    enabled: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val backgroundColor = if (enabled) OdyTheme.colors.secondary else OdyTheme.colors.senary
+
+    Button(
+        onClick = { /*TODO*/ },
+        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+        shape = RoundedCornerShape(20.dp),
+        enabled = enabled,
+        contentPadding = PaddingValues(vertical = 14.dp, horizontal = 60.dp),
+        interactionSource = NoRippleInteractionSource,
+        modifier = modifier,
+    ) {
+        Text(
+            text = stringResource(id = R.string.confirm_button),
+            style = OdyTheme.typography.pretendardBold18.copy(color = White),
+        )
     }
 }
 
