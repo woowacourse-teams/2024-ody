@@ -46,6 +46,7 @@ import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
+import com.mulberry.ody.presentation.feature.room.component.ExitMeetingRoomDialog
 import com.mulberry.ody.presentation.feature.room.log.model.NotificationLogUiModel
 import com.mulberry.ody.presentation.theme.Cream
 import com.mulberry.ody.presentation.theme.Gray350
@@ -93,6 +94,18 @@ fun NotificationLogScreen(
             notificationLogs = notificationLogs,
             modifier = Modifier.padding(innerPadding)
         )
+        if (showExitDialog) {
+            ExitMeetingRoomDialog(
+                meetingName = detailMeeting.name,
+                onClickExit = {
+                    viewModel.exitMeetingRoom()
+                    onBack()
+                },
+                onClickCancel = {
+                    showExitDialog = false
+                }
+            )
+        }
     }
 }
 
