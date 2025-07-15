@@ -110,7 +110,7 @@ private fun InviteCodeContent(
     onInviteCodeChange: (String) -> Unit,
     confirmInviteCode: () -> Unit,
     clearInviteCode: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -138,13 +138,14 @@ private fun InviteCodeContent(
                         painter = painterResource(id = R.drawable.ic_round_cancel),
                         modifier = Modifier.noRippleClickable { clearInviteCode() },
                         tint = Color.Unspecified,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 40.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 40.dp),
         )
         Spacer(modifier = Modifier.height(32.dp))
         InviteCodeConfirmButton(

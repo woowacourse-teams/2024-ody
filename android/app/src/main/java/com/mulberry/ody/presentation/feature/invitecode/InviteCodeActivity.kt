@@ -17,7 +17,7 @@ class InviteCodeActivity : ComponentActivity() {
             enableEdgeToEdge()
             OdyTheme {
                 InviteCodeScreen(
-                    onClickBack = { finish() }
+                    onClickBack = { finish() },
                 )
             }
         }
