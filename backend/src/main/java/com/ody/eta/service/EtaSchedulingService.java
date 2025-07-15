@@ -1,58 +1,40 @@
 package com.ody.eta.service;
 
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.eta.domain.EtaSchedulingKey;
 import com.ody.mate.domain.Mate;
 import com.ody.meeting.domain.Meeting;
 import com.ody.meeting.repository.MeetingRepository;
-import com.ody.notification.domain.FcmTopic;
-import com.ody.notification.domain.message.DirectMessage;
-import com.ody.notification.domain.message.GroupMessage;
-import com.ody.notification.domain.notice.EtaSchedulingNotice;
-import com.ody.notification.service.NoticeService;
-import com.ody.util.InstantConverter;
+import com.ody.notification.domain.trigger.MateEtaTrigger;
+import com.ody.notification.domain.trigger.MeetingEtaTrigger;
+import com.ody.notification.service.TriggerSender;
 import com.ody.util.TimeUtil;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 public class EtaSchedulingService {
 
-    private static final long NOTICE_TIME_DEFER = 30L;
-
-    private final TaskScheduler taskScheduler;
     private final MeetingRepository meetingRepository;
     private final EtaSchedulingRedisTemplate etaSchedulingRedisTemplate;
-    private final NoticeService noticeService;
+    private final TriggerSender triggerSender;
 
-    public void sendNotice(Meeting meeting) {
+    public void sendTrigger(Meeting meeting) {
         if (TimeUtil.isPast(meeting.getMeetingTime())) {
             return;
         }
-        LocalDateTime noticeTime = meeting.getMeetingTime().minusMinutes(NOTICE_TIME_DEFER);
-        EtaSchedulingNotice notice = new EtaSchedulingNotice(noticeTime, meeting.getId(), meeting.getMeetingTime());
-        sendNowOrScheduleLater(noticeTime, () -> sendEtaSchedulingNoticeAndCache(notice));
+        MeetingEtaTrigger trigger = MeetingEtaTrigger.from(meeting);
+        triggerSender.sendNowOrScheduleLater(trigger.getTriggerTime(), () -> sendEtaSchedulingNoticeAndCache(trigger));
     }
 
-    private void sendNowOrScheduleLater(LocalDateTime noticeTime, Runnable task) {
-        if (TimeUtil.isUpcoming(noticeTime)) {
-            Instant startTime = InstantConverter.kstToInstant(noticeTime);
-            taskScheduler.schedule(task, startTime);
-            return;
-        }
-        task.run();
-    }
-
-    private void sendEtaSchedulingNoticeAndCache(EtaSchedulingNotice notice) {
-        meetingRepository.findById(notice.getMeetingId())
+    private void sendEtaSchedulingNoticeAndCache(MeetingEtaTrigger trigger) {
+        meetingRepository.findById(trigger.getMeetingId())
                 .ifPresent(meeting -> {
-                    GroupMessage groupMessage = GroupMessage.create(notice, new FcmTopic(meeting));
-                    noticeService.send(notice, groupMessage);
+                    triggerSender.sendGroupTrigger(trigger, trigger.getFcmTopic());
                     etaSchedulingRedisTemplate.addAll(meeting);
                 });
     }
@@ -61,9 +43,8 @@ public class EtaSchedulingService {
         if (TimeUtil.isPast(etaSchedulingKey.meetingDateTime())) {
             return;
         }
-        EtaSchedulingNotice notice = new EtaSchedulingNotice(TimeUtil.nowWithTrim(), etaSchedulingKey);
-        DirectMessage directMessage = DirectMessage.create(notice, etaSchedulingKey.deviceToken());
-        noticeService.send(notice, directMessage);
+        MateEtaTrigger fallBackTrigger = MateEtaTrigger.from(etaSchedulingKey);
+        triggerSender.sendDirectTrigger(fallBackTrigger, fallBackTrigger.getDeviceToken());
         etaSchedulingRedisTemplate.add(etaSchedulingKey);
     }
 
