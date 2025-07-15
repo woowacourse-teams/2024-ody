@@ -81,7 +81,7 @@
     <!-- activity_invite_code.xml -->
     <string name="invite_code_input_front">초대 코드</string>
     <string name="invite_code_input_back">를 입력해 주세요!</string>
-    <string name="invite_code_input_hint">초대 코드</string>
+    <string name="invite_code_input_placeholder">초대 코드</string>
     <string name="invite_code_invalid_invite_code">초대 코드가 뭔가 이상한데요? 🤔</string>
     <string name="invite_code_already_participated">이미 참여한 약속입니다.</string>
 
