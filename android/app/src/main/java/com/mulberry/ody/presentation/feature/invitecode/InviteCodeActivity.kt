@@ -23,34 +23,6 @@ class InviteCodeActivity : ComponentActivity() {
         }
     }
 
-//    private fun initializeObserve() {
-//        collectWhenStarted(viewModel.invalidCodeEvent) { errorMmessage ->
-//            viewModel.clearInviteCode()
-//            showSnackBar(errorMmessage)
-//        }
-//        collectWhenStarted(viewModel.navigateAction) {
-//            navigateToJoinView()
-//            finish()
-//        }
-//        collectWhenStarted(viewModel.networkErrorEvent) {
-//            showRetrySnackBar {
-//                viewModel.retryLastAction()
-//            }
-//        }
-//        collectWhenStarted(viewModel.isLoading) { isLoading ->
-//            if (isLoading) {
-//                showLoadingDialog()
-//                return@collectWhenStarted
-//            }
-//            hideLoadingDialog()
-//        }
-//    }
-//
-//    private fun navigateToJoinView() {
-//        val inviteCode = viewModel.inviteCode.value
-//        startActivity(MeetingJoinActivity.getIntent(inviteCode, this))
-//    }
-
     companion object {
         fun getIntent(context: Context): Intent = Intent(context, InviteCodeActivity::class.java)
     }
