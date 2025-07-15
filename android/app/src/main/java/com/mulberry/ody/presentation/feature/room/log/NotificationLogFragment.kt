@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.mulberry.ody.presentation.feature.room.MeetingRoomActivity
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
 
@@ -26,6 +27,7 @@ class NotificationLogFragment : Fragment() {
             setContent {
                 OdyTheme {
                     NotificationLogScreen(
+                        onBack = (requireActivity() as MeetingRoomActivity)::onBack,
                         viewModel = viewModel,
                     )
                 }

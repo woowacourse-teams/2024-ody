@@ -250,7 +250,7 @@ private fun MateItem(
                 Modifier
                     .size(58.dp)
                     .clip(CircleShape),
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.Crop,
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
