@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class JoinRequest(
-    @SerialName("id")
+    @SerialName("inviteCode")
     val inviteCode: String,
     @SerialName("originAddress")
     val originAddress: String,

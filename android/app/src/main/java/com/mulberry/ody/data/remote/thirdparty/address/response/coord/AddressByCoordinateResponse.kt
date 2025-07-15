@@ -1,3 +1,10 @@
 package com.mulberry.ody.data.remote.thirdparty.address.response.coord
 
-data class AddressByCoordinateResponse(val documents: List<Document>)
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class AddressByCoordinateResponse(
+    @SerialName("documents")
+    val documents: List<Document>,
+)
