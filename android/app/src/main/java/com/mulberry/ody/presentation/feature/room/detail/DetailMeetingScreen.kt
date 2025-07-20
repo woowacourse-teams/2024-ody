@@ -62,10 +62,10 @@ import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyLoading
-import com.mulberry.ody.presentation.component.OdySadDialog
 import com.mulberry.ody.presentation.component.OdyTooltip
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
+import com.mulberry.ody.presentation.feature.room.component.ExitMeetingRoomDialog
 import com.mulberry.ody.presentation.feature.room.detail.model.DetailMeetingUiModel
 import com.mulberry.ody.presentation.feature.room.detail.model.InviteCodeCopyInfo
 import com.mulberry.ody.presentation.feature.room.detail.model.MateUiModel
@@ -126,27 +126,15 @@ fun DetailMeetingScreen(
             modifier = Modifier.padding(innerPadding),
         )
         if (showExitDialog) {
-            OdySadDialog(
-                title = {
-                    Text(
-                        text = detailMeeting.name,
-                        style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.secondary),
-                    )
-                },
-                subtitle = {
-                    Text(
-                        text = stringResource(id = R.string.exit_meeting_room_title),
-                        style = OdyTheme.typography.pretendardBold18.copy(color = OdyTheme.colors.quinary),
-                    )
-                },
-                onClickConfirm = {
+            ExitMeetingRoomDialog(
+                meetingName = detailMeeting.name,
+                onClickExit = {
                     viewModel.exitMeetingRoom()
                     onBack()
                 },
                 onClickCancel = {
                     showExitDialog = false
                 },
-                confirmButtonText = stringResource(id = R.string.exit_meeting_room),
             )
         }
     }
@@ -250,7 +238,7 @@ private fun MateItem(
                 Modifier
                     .size(58.dp)
                     .clip(CircleShape),
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.Crop,
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(

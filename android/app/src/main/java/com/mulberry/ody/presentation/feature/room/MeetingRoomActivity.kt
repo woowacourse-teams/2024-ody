@@ -11,20 +11,15 @@ import com.mulberry.ody.R
 import com.mulberry.ody.databinding.ActivityMeetingRoomBinding
 import com.mulberry.ody.presentation.common.binding.BindingActivity
 import com.mulberry.ody.presentation.common.collectWhenStarted
-import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.feature.room.detail.DetailMeetingFragment
 import com.mulberry.ody.presentation.feature.room.etadashboard.EtaDashboardFragment
-import com.mulberry.ody.presentation.feature.room.listener.MeetingRoomListener
-import com.mulberry.ody.presentation.feature.room.log.ExitMeetingRoomDialog
 import com.mulberry.ody.presentation.feature.room.log.NotificationLogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MeetingRoomActivity :
-    BindingActivity<ActivityMeetingRoomBinding>(R.layout.activity_meeting_room),
-    BackListener,
-    MeetingRoomListener {
+    BindingActivity<ActivityMeetingRoomBinding>(R.layout.activity_meeting_room) {
     @Inject
     lateinit var viewModelFactory: MeetingRoomViewModel.MeetingViewModelFactory
 
@@ -76,13 +71,6 @@ class MeetingRoomActivity :
         collectWhenStarted(viewModel.expiredNudgeTimeLimit) {
             showSnackBar(R.string.nudge_time_limit_expired)
         }
-        collectWhenStarted(viewModel.isLoading) { isLoading ->
-            if (isLoading) {
-                showLoadingDialog()
-                return@collectWhenStarted
-            }
-            hideLoadingDialog()
-        }
         collectWhenStarted(viewModel.inaccessibleEtaEvent) {
             showSnackBar(R.string.inaccessible_eta_guide)
         }
@@ -105,7 +93,7 @@ class MeetingRoomActivity :
         }
     }
 
-    override fun onBack() {
+    fun onBack() {
         if (supportFragmentManager.backStackEntryCount == 1) {
             finish()
         } else {
@@ -117,13 +105,7 @@ class MeetingRoomActivity :
 
     private fun getNavigateView(): String = intent.getStringExtra(NAVIGATE_VIEW_KEY) ?: NAVIGATE_TO_DETAIL_MEETING
 
-    override fun onExitMeetingRoom() {
-        ExitMeetingRoomDialog().show(supportFragmentManager, EXIT_MEETING_ROOM_DIALOG_TAG)
-    }
-
     companion object {
-        private const val EXIT_MEETING_ROOM_DIALOG_TAG = "exitMeetingRoomDialog"
-
         private const val MEETING_ID_KEY = "meeting_id"
         private const val MEETING_ID_DEFAULT_VALUE = -1L
 
