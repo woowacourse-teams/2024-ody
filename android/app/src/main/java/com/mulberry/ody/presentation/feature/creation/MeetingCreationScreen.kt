@@ -1,4 +1,4 @@
-package com.mulberry.ody.presentation.feature
+package com.mulberry.ody.presentation.feature.creation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.component.OdyActionButton
 import com.mulberry.ody.presentation.component.OdyIndicator
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.theme.OdyTheme
@@ -82,7 +83,10 @@ private fun MeetingCreationContent(
                 .fillMaxWidth()
                 .padding(top = 50.dp)
         )
-        pages[currentPage]()
+        Box(modifier = Modifier.weight(1f)) {
+            pages[currentPage]()
+        }
+        OdyActionButton(onClick = { /*TODO*/ })
     }
 }
 
