@@ -1,12 +1,12 @@
 package com.mulberry.ody.data.remote.core.entity.meeting.response
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class MateResponse(
-    @Json(name = "nickname")
+    @SerialName("nickname")
     val nickname: String,
-    @Json(name = "imageUrl")
+    @SerialName("imageUrl")
     val imageUrl: String,
 )

@@ -31,6 +31,9 @@ junitJupiter = "5.10.2"
 junitVersion = "1.2.1"
 kakaoShare = "2.20.3"
 kotlin = "1.9.23"
+kotlinxSerializationJson = "1.6.3"
+retrofitConverter = "1.0.0"
+
 ksp = "1.9.23-1.0.20"
 ktlint = "12.1.1"
 kakaoSdk = "2.20.3"
@@ -38,7 +41,6 @@ lifecycle = "2.2.0"
 lifecycleViewmodel = "2.8.6"
 loggingInterceptor = "4.12.0"
 material = "1.12.0"
-moshi = "1.15.1"
 playServicesLocation = "21.3.0"
 retrofit = "2.11.0"
 room = "2.6.1"
@@ -86,13 +88,7 @@ firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage
 
 # retrofit
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
-retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
-
-# moshi
-moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
-moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
-moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
+retrofit-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitConverter" }
 
 # timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
@@ -115,6 +111,9 @@ kakao-sdk-v2-user = { module = "com.kakao.sdk:v2-user", version.ref = "kakaoSdk"
 
 # kakao share
 kakao-share = { module = "com.kakao.sdk:v2-share", version.ref = "kakaoShare" }
+
+# kotlinx serialization
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 # hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
@@ -148,3 +147,4 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 android-junit-jupiter = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunitJupiter" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

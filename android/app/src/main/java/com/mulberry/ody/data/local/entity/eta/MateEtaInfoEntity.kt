@@ -3,10 +3,10 @@ package com.mulberry.ody.data.local.entity.eta
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mulberry.ody.domain.model.MateEta
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
 @Entity(tableName = "eta_info")
-@JsonClass(generateAdapter = true)
+@Serializable
 data class MateEtaInfoEntity(
     @PrimaryKey
     val meetingId: Long,

@@ -1,18 +1,18 @@
 package com.mulberry.ody.data.remote.core.entity
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class ErrorResponse(
-    @Json(name = "type")
+    @SerialName("type")
     val type: String,
-    @Json(name = "title")
+    @SerialName("title")
     val title: String,
-    @Json(name = "status")
+    @SerialName("status")
     val status: Int,
-    @Json(name = "detail")
+    @SerialName("detail")
     val detail: String,
-    @Json(name = "instance")
+    @SerialName("instance")
     val instance: String,
 )

@@ -1,12 +1,12 @@
 package com.mulberry.ody.data.remote.core.entity.meeting.request
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class NudgeRequest(
-    @Json(name = "requestMateId")
+    @SerialName("requestMateId")
     val requestMateId: Long,
-    @Json(name = "nudgedMateId")
+    @SerialName("nudgedMateId")
     val nudgedMateId: Long,
 )

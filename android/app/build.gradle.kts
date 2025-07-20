@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.googleServices)
     alias(libs.plugins.android.application)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.android.junit.jupiter)
     alias(libs.plugins.jetbrains.kotlin.kapt)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -121,18 +122,15 @@ dependencies {
     // retrofit
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
-    implementation(libs.retrofit.converter.moshi)
-    implementation(libs.retrofit.converter.scalars)
+    implementation(libs.retrofit.converter)
 
     // room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    // moshi
-    implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
-    ksp(libs.moshi.kotlin.codegen)
+    // kotlinx serialization
+    implementation(libs.kotlinx.serialization.json)
 
     // timber
     implementation(libs.timber)
