@@ -3,6 +3,7 @@ package com.ody.notification.domain.trigger;
 import com.ody.eta.domain.EtaTriggerTime;
 import com.ody.meeting.domain.Meeting;
 import com.ody.notification.domain.FcmTopic;
+import com.ody.notification.domain.message.MessagePriority;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
@@ -29,5 +30,10 @@ public class MeetingEtaTrigger extends EtaTrigger {
         super(meetingId, meetingTime);
         this.triggerTime = triggerTime;
         this.fcmTopic = fcmTopic;
+    }
+
+    @Override
+    public MessagePriority getPriority() {
+        return MessagePriority.HIGH;
     }
 }

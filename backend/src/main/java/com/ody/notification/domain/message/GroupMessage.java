@@ -5,6 +5,7 @@ import com.ody.notification.domain.FcmTopic;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.notice.EtaNotice;
 import com.ody.notification.domain.trigger.EtaTrigger;
+import com.ody.notification.dto.response.MessagePriorityConfigs;
 import java.time.format.DateTimeFormatter;
 
 public class GroupMessage extends AbstractMessage {
@@ -34,7 +35,10 @@ public class GroupMessage extends AbstractMessage {
     }
 
     public static GroupMessage create(EtaTrigger etaTrigger, FcmTopic fcmTopic) {
+        MessagePriorityConfigs messagePriorityConfigs = FcmPriorityResolver.resolve(etaTrigger.getPriority());
         Message message = Message.builder()
+                .setAndroidConfig(messagePriorityConfigs.androidConfig())
+                .setApnsConfig(messagePriorityConfigs.apnsConfig())
                 .putData("type", etaTrigger.getType().name())
                 .putData("meetingId", String.valueOf(etaTrigger.getMeetingId()))
                 .putData("meetingTime", etaTrigger.getMeetingTime().format(FORMATTER))
