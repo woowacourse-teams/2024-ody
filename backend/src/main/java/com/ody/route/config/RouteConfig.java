@@ -2,7 +2,7 @@ package com.ody.route.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ody.route.service.GoogleRouteClient;
-import com.ody.route.service.OdsayRouteClient;
+import com.ody.route.service.OdsayAppRouteClient;
 import com.ody.route.service.RouteClient;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class RouteConfig {
     @Order(1)
     public RouteClient odysayRouteClient(ObjectMapper objectMapper) {
         RouteClientProperty property = properties.getProperty("odsay");
-        return new OdsayRouteClient(property, builder(objectMapper));
+        return new OdsayAppRouteClient(property, builder(objectMapper));
     }
 
     @Bean

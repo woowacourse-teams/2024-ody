@@ -23,8 +23,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
-@RestClientTest(OdsayRouteClient.class)
-class OdsayRouteClientTest extends BaseRouteClientTest {
+@RestClientTest(OdsayAppRouteClient.class)
+class OdsayAppRouteClientTest extends BaseRouteClientTest {
 
     @DisplayName("길찾기 api 요청 성공 시, 올바른 소요시간을 반환한다")
     @Test
@@ -119,6 +119,6 @@ class OdsayRouteClientTest extends BaseRouteClientTest {
 
     @Override
     protected RouteClient createRouteClient() {
-        return new OdsayRouteClient(property, restClientBuilder);
+        return new OdsayAppRouteClient(property, restClientBuilder);
     }
 }
