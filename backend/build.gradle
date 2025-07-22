@@ -42,6 +42,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.github.coli-geonwoo:odsay-utils:1.0.1'
     implementation 'com.google.firebase:firebase-admin:9.2.0'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
