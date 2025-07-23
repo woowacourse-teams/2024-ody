@@ -92,7 +92,7 @@ fun OdyNumberPicker(
                     text = getItem(index),
                     textAlign = TextAlign.Center,
                     style = OdyTheme.typography.pretendardBold28,
-                    color = if (isCenter) OdyTheme.colors.tertiary else OdyTheme.colors.senary,
+                    color = if (isCenter) OdyTheme.colors.quinary else OdyTheme.colors.senary,
                     modifier = Modifier
                         .onSizeChanged {
                             if (!isCenter) {

@@ -35,26 +35,17 @@ fun MeetingNameScreen() {
             text =
             buildAnnotatedString {
                 withStyle(
-                    style = SpanStyle(
-                        fontWeight = FontWeight.Bold,
-                        color = OdyTheme.colors.quinary
-                    )
+                    style = SpanStyle(color = OdyTheme.colors.quinary)
                 ) {
                     append(stringResource(id = R.string.meeting_name_question_front))
                 }
                 withStyle(
-                    style = SpanStyle(
-                        fontWeight = FontWeight.Bold,
-                        color = OdyTheme.colors.secondary
-                    )
+                    style = SpanStyle(color = OdyTheme.colors.secondary)
                 ) {
                     append(stringResource(id = R.string.meeting_name_question_middle))
                 }
                 withStyle(
-                    style = SpanStyle(
-                        fontWeight = FontWeight.Bold,
-                        color = OdyTheme.colors.quinary
-                    )
+                    style = SpanStyle(color = OdyTheme.colors.quinary)
                 ) {
                     append(stringResource(id = R.string.meeting_name_question_back))
                 }
