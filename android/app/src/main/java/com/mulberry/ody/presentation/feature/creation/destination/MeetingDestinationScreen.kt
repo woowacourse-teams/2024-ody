@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -16,10 +18,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.component.OdyTextField
+import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
 
 @Composable
-fun MeetingDestinationScreen() {
+fun MeetingDestinationScreen(
+    showSnackBar: (String) -> Unit,
+    viewModel: MeetingCreationViewModel,
+) {
+    val context = LocalContext.current
+
+    MeetingDestinationContent()
+
+    LaunchedEffect(Unit) {
+        viewModel.invalidDestinationEvent.collect {
+            showSnackBar(context.getString(R.string.invalid_address))
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.defaultLocationError.collect {
+            showSnackBar(context.getString(R.string.default_location_error_guide))
+        }
+    }
+    // TODO: 주소 입력 화면 연결, 주소 받아서 띄우기
+}
+
+@Composable
+private fun MeetingDestinationContent() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -50,8 +75,8 @@ fun MeetingDestinationScreen() {
 
 @Composable
 @Preview(showBackground = true)
-private fun MeetingDestinationScreenPreview() {
+private fun MeetingDestinationContentPreview() {
     OdyTheme {
-        MeetingDestinationScreen()
+        MeetingDestinationContent()
     }
 }

@@ -10,12 +10,10 @@ import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -24,6 +22,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.component.OdyTextField
 import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
@@ -31,9 +30,27 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
+@Composable
+fun MeetingDateScreen(
+    showSnackBar: (String) -> Unit,
+    viewModel: MeetingCreationViewModel,
+) {
+    val context = LocalContext.current
+
+    MeetingDateContent()
+
+    LaunchedEffect(Unit) {
+        viewModel.invalidMeetingDateEvent.collect {
+            showSnackBar(context.getString(R.string.meeting_date_date_guide))
+        }
+    }
+
+    // TODO: 오늘 날짜 디폴트로 선택, 과거 날짜 선택 불가능
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MeetingDateScreen() {
+private fun MeetingDateContent() {
     val datePickerState = rememberDatePickerState(
         initialDisplayMode = DisplayMode.Picker,
         initialSelectedDateMillis = System.currentTimeMillis(),
@@ -75,8 +92,8 @@ fun MeetingDateScreen() {
 
 @Composable
 @Preview(showBackground = true)
-private fun MeetingDateScreenPreview() {
+private fun MeetingDateContentPreview() {
     OdyTheme {
-        MeetingDateScreen()
+        MeetingDateContent()
     }
 }

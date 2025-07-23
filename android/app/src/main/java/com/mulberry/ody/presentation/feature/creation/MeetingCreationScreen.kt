@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.component.OdyActionButton
 import com.mulberry.ody.presentation.component.OdyIndicator
@@ -34,7 +35,10 @@ fun MeetingCreationSubScreen(index: Int) {
 }
 
 @Composable
-fun MeetingCreationScreen(onBack: () -> Unit) {
+fun MeetingCreationScreen(
+    onBack: () -> Unit,
+    viewModel: MeetingCreationViewModel = hiltViewModel(),
+) {
     val pages: List<(@Composable () -> Unit)> = listOf(
         { MeetingCreationSubScreen(1) },
         { MeetingCreationSubScreen(2) },
