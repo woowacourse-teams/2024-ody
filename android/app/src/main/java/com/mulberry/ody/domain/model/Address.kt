@@ -6,4 +6,12 @@ class Address(
     val detailAddress: String,
     val longitude: String,
     val latitude: String,
-)
+) {
+    fun isValid() : Boolean {
+        return CAPITAL_REGIONS.any { detailAddress.contains(it) }
+    }
+
+    companion object {
+        private val CAPITAL_REGIONS = listOf("서울", "경기", "인천")
+    }
+}
