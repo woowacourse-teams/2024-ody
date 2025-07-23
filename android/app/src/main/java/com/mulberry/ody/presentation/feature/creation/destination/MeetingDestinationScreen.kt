@@ -17,12 +17,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.R
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.component.OdyTextField
 import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
 
 @Composable
 fun MeetingDestinationScreen(
+    destination: Address?,
+    onDestinationChanged: (Address) -> Unit,
     showSnackBar: (String) -> Unit,
     viewModel: MeetingCreationViewModel,
 ) {
@@ -36,7 +39,7 @@ fun MeetingDestinationScreen(
         }
     }
     LaunchedEffect(Unit) {
-        viewModel.defaultLocationError.collect {
+        viewModel.currentLocationError.collect {
             showSnackBar(context.getString(R.string.default_location_error_guide))
         }
     }

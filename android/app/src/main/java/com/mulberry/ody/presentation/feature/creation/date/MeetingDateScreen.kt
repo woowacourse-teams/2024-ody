@@ -22,22 +22,29 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.R
+import com.mulberry.ody.domain.common.toMilliSeconds
 import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.component.OdyTextField
 import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Locale
 import java.util.TimeZone
 
 @Composable
 fun MeetingDateScreen(
+    date: LocalDate,
+    onDateChanged: (LocalDate) -> Unit,
     showSnackBar: (String) -> Unit,
     viewModel: MeetingCreationViewModel,
 ) {
     val context = LocalContext.current
 
-    MeetingDateContent()
+    MeetingDateContent(
+        date = date,
+        onDateChanged = onDateChanged,
+    )
 
     LaunchedEffect(Unit) {
         viewModel.invalidMeetingDateEvent.collect {
@@ -50,10 +57,13 @@ fun MeetingDateScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MeetingDateContent() {
+private fun MeetingDateContent(
+    date: LocalDate,
+    onDateChanged: (LocalDate) -> Unit,
+) {
     val datePickerState = rememberDatePickerState(
         initialDisplayMode = DisplayMode.Picker,
-        initialSelectedDateMillis = System.currentTimeMillis(),
+        initialSelectedDateMillis = date.toMilliSeconds(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis > System.currentTimeMillis()
@@ -94,6 +104,6 @@ private fun MeetingDateContent() {
 @Preview(showBackground = true)
 private fun MeetingDateContentPreview() {
     OdyTheme {
-        MeetingDateContent()
+        MeetingDateContent(date = LocalDate.now(), onDateChanged = {})
     }
 }

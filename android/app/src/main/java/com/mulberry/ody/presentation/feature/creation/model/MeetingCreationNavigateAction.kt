@@ -1,4 +1,4 @@
-package com.mulberry.ody.presentation.feature.creation
+package com.mulberry.ody.presentation.feature.creation.model
 
 sealed interface MeetingCreationNavigateAction {
     data object NavigateToMeetings : MeetingCreationNavigateAction

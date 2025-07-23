@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
 import com.mulberry.ody.presentation.feature.join.MeetingJoinActivity
 import com.mulberry.ody.presentation.theme.OdyTheme
 import dagger.hilt.android.AndroidEntryPoint

@@ -26,15 +26,18 @@ import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.component.OdyNumberPicker
 import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
+import java.time.LocalTime
 
 @Composable
 fun MeetingTimeScreen(
+    time: LocalTime,
+    onTimeChanged: (LocalTime) -> Unit,
     showSnackBar: (String) -> Unit,
     viewModel: MeetingCreationViewModel,
 ) {
     val context = LocalContext.current
 
-    MeetingTimeContent()
+    MeetingTimeContent(time = time, onTimeChanged = onTimeChanged)
 
     LaunchedEffect(Unit) {
         viewModel.invalidMeetingTimeEvent.collect {
@@ -44,7 +47,10 @@ fun MeetingTimeScreen(
 }
 
 @Composable
-private fun MeetingTimeContent() {
+private fun MeetingTimeContent(
+    time: LocalTime,
+    onTimeChanged: (LocalTime) -> Unit,
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -93,6 +99,6 @@ private fun MeetingTimeContent() {
 @Preview(showBackground = true)
 private fun MeetingTimeContentPreview() {
     OdyTheme {
-        MeetingTimeContent()
+        MeetingTimeContent(time = LocalTime.now(), onTimeChanged = {})
     }
 }

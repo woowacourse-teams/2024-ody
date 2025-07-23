@@ -10,25 +10,18 @@ import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingCreationInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
-import com.mulberry.ody.domain.validator.AddressValidator
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.common.gps.LocationHelper
+import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,24 +33,8 @@ class MeetingCreationViewModel
         private val addressRepository: AddressRepository,
         private val locationHelper: LocationHelper,
     ) : BaseViewModel() {
-        val isValidInfo: MutableStateFlow<Boolean> = MutableStateFlow(false)
-
-        val meetingName: MutableStateFlow<String> = MutableStateFlow("")
-        val meetingNameLength: StateFlow<Int> =
-            meetingName.map { it.length }
-                .stateIn(
-                    viewModelScope,
-                    SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                    0,
-                )
-
-        val meetingDate = MutableStateFlow(LocalDate.now())
-
         private val _invalidMeetingDateEvent = MutableSharedFlow<Unit>()
         val invalidMeetingDateEvent: SharedFlow<Unit> = _invalidMeetingDateEvent.asSharedFlow()
-
-        val meetingHour = MutableStateFlow(MEETING_HOUR_DEFAULT_VALUE)
-        val meetingMinute = MutableStateFlow(MEETING_MINUTE_DEFAULT_VALUE)
 
         private val _invalidMeetingTimeEvent = MutableSharedFlow<Unit>()
         val invalidMeetingTimeEvent: SharedFlow<Unit> = _invalidMeetingTimeEvent.asSharedFlow()
@@ -70,31 +47,8 @@ class MeetingCreationViewModel
         private val _navigateAction = MutableSharedFlow<MeetingCreationNavigateAction>()
         val navigateAction: SharedFlow<MeetingCreationNavigateAction> = _navigateAction.asSharedFlow()
 
-        private val _defaultLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val defaultLocationError: SharedFlow<Unit> get() = _defaultLocationError.asSharedFlow()
-
-//        private fun initializeIsValidInfo() {
-//            viewModelScope.launch {
-//                combine(
-//                    meetingCreationInfoType,
-//                    meetingName,
-//                    destinationAddress,
-//                    meetingHour,
-//                    meetingMinute,
-//                ) { _, _, _, _, _ ->
-//                    checkInfoValidity()
-//                }.collect { isValid ->
-//                    isValidInfo.value = isValid
-//                }
-//            }
-//        }
-
-        fun initializeMeetingTime() {
-            if (meetingHour.value != MEETING_HOUR_DEFAULT_VALUE || meetingMinute.value != MEETING_MINUTE_DEFAULT_VALUE) return
-            val now = LocalTime.now()
-            meetingHour.value = now.hour
-            meetingMinute.value = now.minute
-        }
+        private val _currentLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val currentLocationError: SharedFlow<Unit> get() = _currentLocationError.asSharedFlow()
 
         fun getDefaultLocation() {
             viewModelScope.launch {
@@ -104,7 +58,7 @@ class MeetingCreationViewModel
                         fetchAddressesByCoordinate(location)
                     }
                     .onUnexpected {
-                        _defaultLocationError.emit(Unit)
+                        _currentLocationError.emit(Unit)
                     }
                 stopLoading()
             }
@@ -125,15 +79,13 @@ class MeetingCreationViewModel
                 handleError()
                 analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
             }.onUnexpected {
-                _defaultLocationError.emit(Unit)
+                _currentLocationError.emit(Unit)
             }.onNetworkError {
                 handleNetworkError()
             }
         }
 
-        fun createMeeting() {
-            val meetingCreationInfo = createMeetingCreationInfo() ?: return
-
+        fun createMeeting(meetingCreationInfo: MeetingCreationInfo) {
             viewModelScope.launch {
                 startLoading()
                 meetingRepository.postMeeting(meetingCreationInfo)
@@ -145,86 +97,14 @@ class MeetingCreationViewModel
                         Timber.e("$code $errorMessage")
                     }.onNetworkError {
                         handleNetworkError()
-                        lastFailedAction = { createMeeting() }
+                        lastFailedAction = { createMeeting(meetingCreationInfo) }
                     }
                 stopLoading()
             }
         }
 
-        private fun createMeetingCreationInfo(): MeetingCreationInfo? {
-            val name = meetingName.value.ifBlank { return null }
-            val date = meetingDate.value ?: return null
-
-            val hour = meetingHour.value
-            val minute = meetingMinute.value
-
-            if (meetingHour.value == -1) return null
-            if (meetingMinute.value == -1) return null
-
-            val address = destinationAddress.value ?: return null
-
-            return MeetingCreationInfo(
-                name = name,
-                dateTime = LocalDateTime.of(date, LocalTime.of(hour, minute)),
-                destinationAddress = address,
-            )
-        }
-
-        fun clearMeetingName() {
-            meetingName.value = ""
-        }
-
-        private fun checkInfoValidity(): Boolean {
-//            val meetingCreationInfoType = meetingCreationInfoType.value ?: return false
-
-//            return when (meetingCreationInfoType) {
-//                MeetingCreationInfoType.NAME -> isValidMeetingName()
-//                MeetingCreationInfoType.DATE -> true
-//                MeetingCreationInfoType.TIME -> isValidMeetingDateTime()
-//                MeetingCreationInfoType.DESTINATION -> isValidDestination()
-//            }
-            return true
-        }
-
-        private fun isValidMeetingName(): Boolean {
-            val meetingName = meetingName.value
-            return meetingName.isNotBlank() && meetingName.length <= MEETING_NAME_MAX_LENGTH
-        }
-
-        private fun isValidMeetingDateTime(): Boolean {
-            val date = meetingDate.value ?: return false
-            val hour = meetingHour.value ?: return false
-            val minute = meetingMinute.value ?: return false
-            val dateTime = LocalDateTime.of(date, LocalTime.of(hour, minute))
-            return LocalDateTime.now().isBefore(dateTime)
-        }
-
-        private fun isValidDestination(): Boolean {
-            val destinationAddress = destinationAddress.value ?: return false
-            return AddressValidator.isValid(destinationAddress.detailAddress).also {
-                viewModelScope.launch {
-                    if (!it) _invalidDestinationEvent.emit(Unit)
-                }
-            }
-        }
-
-        fun updateMeetingDate(meetingDate: LocalDate) {
-            val now = LocalDate.now()
-            if (now.isAfter(meetingDate)) {
-                viewModelScope.launch { _invalidMeetingDateEvent.emit(Unit) }
-                return
-            }
-            this.meetingDate.value = meetingDate
-        }
-
         companion object {
             private const val TAG = "MeetingCreationViewModel"
-
-            val MEETING_HOURS = (0..<24).toList()
-            val MEETING_MINUTES = (0..<60).toList()
             const val MEETING_NAME_MAX_LENGTH = 15
-            private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
-            private const val MEETING_HOUR_DEFAULT_VALUE = -1
-            private const val MEETING_MINUTE_DEFAULT_VALUE = -1
         }
     }
