@@ -39,6 +39,7 @@ import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.creation.date.MeetingDateScreen
 import com.mulberry.ody.presentation.feature.creation.destination.MeetingDestinationScreen
 import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationUiModel
+import com.mulberry.ody.presentation.feature.creation.model.rememberSaveableMeetingCreationUiModel
 import com.mulberry.ody.presentation.feature.creation.name.MeetingNameScreen
 import com.mulberry.ody.presentation.feature.creation.time.MeetingTimeScreen
 import com.mulberry.ody.presentation.theme.OdyTheme
@@ -57,7 +58,7 @@ fun MeetingCreationScreen(
         }
     }
 
-    var uiModel by rememberSaveable { mutableStateOf(MeetingCreationUiModel()) }
+    var uiModel = rememberSaveableMeetingCreationUiModel()
     val isValid by remember { derivedStateOf { uiModel.isValid() } }
 
     val pages: List<(@Composable () -> Unit)> = listOf(
