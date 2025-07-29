@@ -11,7 +11,6 @@ import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.JoinRepository
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
-import com.mulberry.ody.domain.validator.AddressValidator
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
@@ -131,7 +130,7 @@ class MeetingJoinViewModel
 
         private suspend fun isValidDeparturePoint(): Boolean {
             val departureAddress = departureAddress.value ?: return false
-            return AddressValidator.isValid(departureAddress.detailAddress).also {
+            return departureAddress.isValid().also {
                 if (!it) _invalidDepartureEvent.emit(Unit)
             }
         }
