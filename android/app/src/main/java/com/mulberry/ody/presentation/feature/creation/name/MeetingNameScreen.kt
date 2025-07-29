@@ -63,7 +63,7 @@ fun MeetingNameScreen(
                     style = OdyTheme.typography.pretendardMedium16.copy(color = OdyTheme.colors.senary),
                 )
             },
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier.padding(horizontal = 40.dp)
         )
     }
 }

@@ -38,10 +38,10 @@ fun OdyIndicator(
             )
             Box(
                 modifier = Modifier
-                    .padding(2.dp)
+                    .padding(3.dp)
                     .clip(CircleShape)
                     .background(color)
-                    .size(size = 10.dp),
+                    .size(size = 8.dp),
             )
         }
     }

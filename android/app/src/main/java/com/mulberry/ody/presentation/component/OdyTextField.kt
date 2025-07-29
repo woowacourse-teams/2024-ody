@@ -123,7 +123,7 @@ private fun OdyTextFieldDecorationBox(
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     Column {
-        Row(modifier = Modifier.padding(vertical = 8.dp)) {
+        Row(modifier = Modifier.padding(vertical = 4.dp)) {
             Box(
                 modifier =
                     Modifier

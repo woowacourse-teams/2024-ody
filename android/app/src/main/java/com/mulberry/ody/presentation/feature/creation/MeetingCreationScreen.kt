@@ -66,8 +66,6 @@ fun MeetingCreationScreen(
             MeetingDateScreen(
                 date = uiModel.date,
                 onDateChanged = { uiModel.updateDate(it) },
-                showSnackBar = showSnackbar,
-                viewModel = viewModel,
             )
         },
         {
@@ -105,7 +103,7 @@ fun MeetingCreationScreen(
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        modifier = Modifier.navigationBarsPadding()
+        modifier = Modifier.navigationBarsPadding(),
     ) { innerPadding ->
         MeetingCreationContent(
             pages = pages,
@@ -135,7 +133,7 @@ private fun MeetingCreationContent(
     modifier: Modifier = Modifier
 ) {
     val currentPage = pagerState.currentPage
-    Column {
+    Column(modifier = modifier.fillMaxSize()) {
         OdyIndicator(
             pagerState = pagerState,
             modifier = Modifier
@@ -145,7 +143,7 @@ private fun MeetingCreationContent(
         )
         HorizontalPager(
             state = pagerState,
-            modifier = modifier
+            modifier = Modifier
                 .weight(1f)
                 .pointerInput(nextButtonEnabled) {
                     detectDragGestures { change, dragAmount ->

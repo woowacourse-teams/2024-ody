@@ -50,9 +50,8 @@
     <string name="meeting_name_length">%d/%d</string>
 
     <!-- fragment_meeting_date.xml -->
-    <string name="meeting_date_question_front">언제</string>
+    <string name="meeting_date_question_front">언제&#160;</string>
     <string name="meeting_date_question_back"> 만나시나요?</string>
-    <string name="meeting_date_date_guide">오늘 이후의 날짜를 선택해 주세요!</string>
 
     <!-- fragment_meeting_time.xml -->
     <string name="meeting_time_question_front">몇시</string>

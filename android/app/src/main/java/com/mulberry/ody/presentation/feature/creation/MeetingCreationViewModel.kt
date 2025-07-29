@@ -33,9 +33,6 @@ class MeetingCreationViewModel
         private val addressRepository: AddressRepository,
         private val locationHelper: LocationHelper,
     ) : BaseViewModel() {
-        private val _invalidMeetingDateEvent = MutableSharedFlow<Unit>()
-        val invalidMeetingDateEvent: SharedFlow<Unit> = _invalidMeetingDateEvent.asSharedFlow()
-
         private val _invalidMeetingTimeEvent = MutableSharedFlow<Unit>()
         val invalidMeetingTimeEvent: SharedFlow<Unit> = _invalidMeetingTimeEvent.asSharedFlow()
 

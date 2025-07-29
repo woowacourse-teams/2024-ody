@@ -1,9 +1,12 @@
 package com.mulberry.ody.presentation.feature.creation.date
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
@@ -11,69 +14,64 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.R
+import com.mulberry.ody.domain.common.millisToLocalDate
 import com.mulberry.ody.domain.common.toMilliSeconds
-import com.mulberry.ody.presentation.common.collectWhenStarted
-import com.mulberry.ody.presentation.component.OdyTextField
-import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
+import com.mulberry.ody.presentation.common.toMessage
 import com.mulberry.ody.presentation.theme.OdyTheme
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.Locale
-import java.util.TimeZone
-
-@Composable
-fun MeetingDateScreen(
-    date: LocalDate,
-    onDateChanged: (LocalDate) -> Unit,
-    showSnackBar: (String) -> Unit,
-    viewModel: MeetingCreationViewModel,
-) {
-    val context = LocalContext.current
-
-    MeetingDateContent(
-        date = date,
-        onDateChanged = onDateChanged,
-    )
-
-    LaunchedEffect(Unit) {
-        viewModel.invalidMeetingDateEvent.collect {
-            showSnackBar(context.getString(R.string.meeting_date_date_guide))
-        }
-    }
-
-    // TODO: 오늘 날짜 디폴트로 선택, 과거 날짜 선택 불가능
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MeetingDateContent(
+fun MeetingDateScreen(
     date: LocalDate,
     onDateChanged: (LocalDate) -> Unit,
 ) {
     val datePickerState = rememberDatePickerState(
         initialDisplayMode = DisplayMode.Picker,
-        initialSelectedDateMillis = date.toMilliSeconds(),
+        initialSelectedDateMillis = date.toMilliSeconds("UTC"),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis > System.currentTimeMillis()
+                val nowMillis = LocalDate.now().toMilliSeconds("UTC")
+                return utcTimeMillis >= nowMillis
             }
         }
     )
-    val selectedDate = datePickerState.selectedDateMillis
 
+    MeetingDateContent(
+        datePickerState = datePickerState,
+        date = date,
+    )
+
+    LaunchedEffect(datePickerState.selectedDateMillis) {
+        val selectedDate = datePickerState.selectedDateMillis ?: return@LaunchedEffect
+        val localDate = selectedDate.millisToLocalDate()
+        if (localDate != date) {
+            onDateChanged(localDate)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MeetingDateContent(
+    datePickerState: DatePickerState,
+    date: LocalDate,
+    modifier: Modifier = Modifier,
+) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -96,14 +94,28 @@ private fun MeetingDateContent(
         DatePicker(
             state = datePickerState,
             showModeToggle = false,
+            title = null,
+            headline = {
+                Text(
+                    text = date.toMessage(),
+                    style = OdyTheme.typography.pretendardBold24.copy(color = OdyTheme.colors.quinary),
+                    modifier = Modifier.padding(all = 12.dp).padding(start = 12.dp),
+                )
+            },
+            colors = DatePickerDefaults.colors(containerColor = OdyTheme.colors.primary),
+            modifier = Modifier.padding(horizontal = 20.dp)
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview(showBackground = true)
 private fun MeetingDateContentPreview() {
     OdyTheme {
-        MeetingDateContent(date = LocalDate.now(), onDateChanged = {})
+        MeetingDateContent(
+            datePickerState = rememberDatePickerState(),
+            date = LocalDate.now(),
+        )
     }
 }
