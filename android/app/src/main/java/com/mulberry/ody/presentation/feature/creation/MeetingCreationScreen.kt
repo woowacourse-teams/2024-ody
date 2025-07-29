@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -17,13 +19,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +35,6 @@ import com.mulberry.ody.presentation.component.OdyIndicator
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.creation.date.MeetingDateScreen
 import com.mulberry.ody.presentation.feature.creation.destination.MeetingDestinationScreen
-import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationUiModel
 import com.mulberry.ody.presentation.feature.creation.model.rememberSaveableMeetingCreationUiModel
 import com.mulberry.ody.presentation.feature.creation.name.MeetingNameScreen
 import com.mulberry.ody.presentation.feature.creation.time.MeetingTimeScreen
@@ -58,20 +54,18 @@ fun MeetingCreationScreen(
         }
     }
 
-    var uiModel = rememberSaveableMeetingCreationUiModel()
-    val isValid by remember { derivedStateOf { uiModel.isValid() } }
-
+    val uiModel = rememberSaveableMeetingCreationUiModel()
     val pages: List<(@Composable () -> Unit)> = listOf(
         {
             MeetingNameScreen(
                 name = uiModel.name,
-                onNameChanged = { uiModel = uiModel.copy(name = it) }
+                onNameChanged = { uiModel.updateName(it) }
             )
         },
         {
             MeetingDateScreen(
                 date = uiModel.date,
-                onDateChanged = { uiModel = uiModel.copy(date = it) },
+                onDateChanged = { uiModel.updateDate(it) },
                 showSnackBar = showSnackbar,
                 viewModel = viewModel,
             )
@@ -79,7 +73,7 @@ fun MeetingCreationScreen(
         {
             MeetingTimeScreen(
                 time = uiModel.time,
-                onTimeChanged = { uiModel = uiModel.copy(time = it) },
+                onTimeChanged = { uiModel.updateTime(it) },
                 showSnackBar = showSnackbar,
                 viewModel = viewModel,
             )
@@ -87,13 +81,14 @@ fun MeetingCreationScreen(
         {
             MeetingDestinationScreen(
                 destination = uiModel.destination,
-                onDestinationChanged = { uiModel = uiModel.copy(destination = it) },
+                onDestinationChanged = { uiModel.updateDestination(it) },
                 showSnackBar = showSnackbar,
                 viewModel = viewModel,
             )
         },
     )
-    val pagerState = rememberPagerState(pageCount = { 4 })
+    val pagerState = rememberPagerState(pageCount = { pages.size })
+
     Scaffold(
         containerColor = OdyTheme.colors.primary,
         topBar = {
@@ -110,6 +105,7 @@ fun MeetingCreationScreen(
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
+        modifier = Modifier.navigationBarsPadding()
     ) { innerPadding ->
         MeetingCreationContent(
             pages = pages,
@@ -124,7 +120,7 @@ fun MeetingCreationScreen(
                     }
                 }
             },
-            nextButtonEnabled = isValid,
+            nextButtonEnabled = uiModel.isValid,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -150,7 +146,7 @@ private fun MeetingCreationContent(
         HorizontalPager(
             state = pagerState,
             modifier = modifier
-                .fillMaxSize()
+                .weight(1f)
                 .pointerInput(nextButtonEnabled) {
                     detectDragGestures { change, dragAmount ->
                         if (!nextButtonEnabled && dragAmount.x < 0) {
@@ -166,6 +162,7 @@ private fun MeetingCreationContent(
         OdyActionButton(
             onClick = onNext,
             enabled = nextButtonEnabled,
+            modifier = Modifier.imePadding(),
         )
     }
 }
