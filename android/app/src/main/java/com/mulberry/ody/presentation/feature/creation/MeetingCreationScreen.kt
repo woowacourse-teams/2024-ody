@@ -55,36 +55,37 @@ fun MeetingCreationScreen(
     }
 
     val uiModel = rememberSaveableMeetingCreationUiModel()
-    val pages: List<(@Composable () -> Unit)> = listOf(
-        {
-            MeetingNameScreen(
-                name = uiModel.name,
-                onNameChanged = { uiModel.updateName(it) }
-            )
-        },
-        {
-            MeetingDateScreen(
-                date = uiModel.date,
-                onDateChanged = { uiModel.updateDate(it) },
-            )
-        },
-        {
-            MeetingTimeScreen(
-                time = uiModel.time,
-                onTimeChanged = { uiModel.updateTime(it) },
-                showSnackBar = showSnackbar,
-                viewModel = viewModel,
-            )
-        },
-        {
-            MeetingDestinationScreen(
-                destination = uiModel.destination,
-                onDestinationChanged = { uiModel.updateDestination(it) },
-                showSnackBar = showSnackbar,
-                viewModel = viewModel,
-            )
-        },
-    )
+    val pages: List<(@Composable () -> Unit)> =
+        listOf(
+            {
+                MeetingNameScreen(
+                    name = uiModel.name,
+                    onNameChanged = { uiModel.updateName(it) },
+                )
+            },
+            {
+                MeetingDateScreen(
+                    date = uiModel.date,
+                    onDateChanged = { uiModel.updateDate(it) },
+                )
+            },
+            {
+                MeetingTimeScreen(
+                    time = uiModel.time,
+                    onTimeChanged = { uiModel.updateTime(it) },
+                    showSnackBar = showSnackbar,
+                    viewModel = viewModel,
+                )
+            },
+            {
+                MeetingDestinationScreen(
+                    destination = uiModel.destination,
+                    onDestinationChanged = { uiModel.updateDestination(it) },
+                    showSnackBar = showSnackbar,
+                    viewModel = viewModel,
+                )
+            },
+        )
     val pagerState = rememberPagerState(pageCount = { pages.size })
 
     Scaffold(
@@ -130,28 +131,30 @@ private fun MeetingCreationContent(
     pagerState: PagerState,
     onNext: () -> Unit,
     nextButtonEnabled: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val currentPage = pagerState.currentPage
     Column(modifier = modifier.fillMaxSize()) {
         OdyIndicator(
             pagerState = pagerState,
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(top = 50.dp)
+            modifier =
+                Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(top = 50.dp),
         )
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .weight(1f)
-                .pointerInput(nextButtonEnabled) {
-                    detectDragGestures { change, dragAmount ->
-                        if (!nextButtonEnabled && dragAmount.x < 0) {
-                            change.consume()
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .pointerInput(nextButtonEnabled) {
+                        detectDragGestures { change, dragAmount ->
+                            if (!nextButtonEnabled && dragAmount.x < 0) {
+                                change.consume()
+                            }
                         }
-                    }
-                },
+                    },
         ) {
             Box(modifier = Modifier.weight(1f)) {
                 pages[currentPage]()
@@ -172,7 +175,7 @@ private fun MeetingCreationContentPreview() {
         val page = @Composable {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "MeetingCreationSubScreen",

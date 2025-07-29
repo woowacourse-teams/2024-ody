@@ -29,23 +29,23 @@ fun MeetingNameScreen(
     ) {
         Text(
             text =
-            buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(color = OdyTheme.colors.quinary)
-                ) {
-                    append(stringResource(id = R.string.meeting_name_question_front))
-                }
-                withStyle(
-                    style = SpanStyle(color = OdyTheme.colors.secondary)
-                ) {
-                    append(stringResource(id = R.string.meeting_name_question_middle))
-                }
-                withStyle(
-                    style = SpanStyle(color = OdyTheme.colors.quinary)
-                ) {
-                    append(stringResource(id = R.string.meeting_name_question_back))
-                }
-            },
+                buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(color = OdyTheme.colors.quinary),
+                    ) {
+                        append(stringResource(id = R.string.meeting_name_question_front))
+                    }
+                    withStyle(
+                        style = SpanStyle(color = OdyTheme.colors.secondary),
+                    ) {
+                        append(stringResource(id = R.string.meeting_name_question_middle))
+                    }
+                    withStyle(
+                        style = SpanStyle(color = OdyTheme.colors.quinary),
+                    ) {
+                        append(stringResource(id = R.string.meeting_name_question_back))
+                    }
+                },
             style = OdyTheme.typography.pretendardBold24,
             modifier = Modifier.padding(top = 52.dp, bottom = 32.dp),
         )
@@ -55,15 +55,16 @@ fun MeetingNameScreen(
             placeholder = stringResource(id = R.string.meeting_name_question_hint),
             trailingIcon = {
                 Text(
-                    text = stringResource(
-                        id = R.string.meeting_name_length,
-                        name.length,
-                        MeetingCreationViewModel.MEETING_NAME_MAX_LENGTH,
-                    ),
+                    text =
+                        stringResource(
+                            id = R.string.meeting_name_length,
+                            name.length,
+                            MeetingCreationViewModel.MEETING_NAME_MAX_LENGTH,
+                        ),
                     style = OdyTheme.typography.pretendardMedium16.copy(color = OdyTheme.colors.senary),
                 )
             },
-            modifier = Modifier.padding(horizontal = 40.dp)
+            modifier = Modifier.padding(horizontal = 40.dp),
         )
     }
 }

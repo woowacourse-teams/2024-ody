@@ -37,11 +37,12 @@ fun OdyIndicator(
                 label = "indicatorColor",
             )
             Box(
-                modifier = Modifier
-                    .padding(3.dp)
-                    .clip(CircleShape)
-                    .background(color)
-                    .size(size = 8.dp),
+                modifier =
+                    Modifier
+                        .padding(3.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .size(size = 8.dp),
             )
         }
     }
@@ -52,13 +53,15 @@ fun OdyIndicator(
 private fun OdyIndicatorPreview() {
     OdyTheme {
         OdyIndicator(
-            pagerState = rememberPagerState(
-                initialPage = 1,
-                pageCount = { 5 },
-            ),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 58.dp)
+            pagerState =
+                rememberPagerState(
+                    initialPage = 1,
+                    pageCount = { 5 },
+                ),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(top = 58.dp),
         )
     }
 }

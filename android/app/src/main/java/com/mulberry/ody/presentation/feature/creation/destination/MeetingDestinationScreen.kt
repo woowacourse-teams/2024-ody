@@ -54,14 +54,14 @@ private fun MeetingDestinationContent() {
     ) {
         Text(
             text =
-            buildAnnotatedString {
-                withStyle(style = SpanStyle(color = OdyTheme.colors.secondary)) {
-                    append(stringResource(id = R.string.meeting_destination_question_front))
-                }
-                withStyle(style = SpanStyle(color = OdyTheme.colors.quinary)) {
-                    append(stringResource(id = R.string.meeting_destination_question_back))
-                }
-            },
+                buildAnnotatedString {
+                    withStyle(style = SpanStyle(color = OdyTheme.colors.secondary)) {
+                        append(stringResource(id = R.string.meeting_destination_question_front))
+                    }
+                    withStyle(style = SpanStyle(color = OdyTheme.colors.quinary)) {
+                        append(stringResource(id = R.string.meeting_destination_question_back))
+                    }
+                },
             style = OdyTheme.typography.pretendardBold24,
             modifier = Modifier.padding(top = 52.dp, bottom = 32.dp),
         )
@@ -71,7 +71,7 @@ private fun MeetingDestinationContent() {
             onValueChange = {},
             placeholder = stringResource(id = R.string.destination_question_placeholder),
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 40.dp)
+            modifier = Modifier.padding(horizontal = 40.dp),
         )
     }
 }

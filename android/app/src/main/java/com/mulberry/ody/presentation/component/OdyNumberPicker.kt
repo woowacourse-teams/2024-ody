@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
@@ -27,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.presentation.theme.OdyTheme
@@ -67,9 +63,10 @@ fun OdyNumberPicker(
     }
 
     Box(
-        modifier = modifier
-            .width(60.dp)
-            .height(itemHeightDp * visibleItemCount + 32.dp)
+        modifier =
+            modifier
+                .width(60.dp)
+                .height(itemHeightDp * visibleItemCount + 32.dp),
     ) {
         LazyColumn(
             state = listState,
@@ -84,7 +81,7 @@ fun OdyNumberPicker(
                     HorizontalDivider(
                         color = OdyTheme.colors.primaryVariant,
                         thickness = 2.dp,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                 }
@@ -93,20 +90,21 @@ fun OdyNumberPicker(
                     textAlign = TextAlign.Center,
                     style = OdyTheme.typography.pretendardBold28,
                     color = if (isCenter) OdyTheme.colors.quinary else OdyTheme.colors.senary,
-                    modifier = Modifier
-                        .onSizeChanged {
-                            if (!isCenter) {
-                                itemHeightPx = it.height
+                    modifier =
+                        Modifier
+                            .onSizeChanged {
+                                if (!isCenter) {
+                                    itemHeightPx = it.height
+                                }
                             }
-                        }
-                        .fillMaxWidth()
+                            .fillMaxWidth(),
                 )
                 if (isCenter) {
                     Spacer(modifier = Modifier.height(4.dp))
                     HorizontalDivider(
                         color = OdyTheme.colors.primaryVariant,
                         thickness = 2.dp,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                 }

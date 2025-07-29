@@ -2,7 +2,7 @@ package com.mulberry.ody.domain.model
 
 class MeetingName(val name: String) {
     init {
-        require(name.length in LENGTH_RANGE) { "약속 이름은 $MIN_LENGTH~${MAX_LENGTH}자 사이여야 합니다."}
+        require(name.length in LENGTH_RANGE) { "약속 이름은 $MIN_LENGTH~${MAX_LENGTH}자 사이여야 합니다." }
     }
 
     companion object {

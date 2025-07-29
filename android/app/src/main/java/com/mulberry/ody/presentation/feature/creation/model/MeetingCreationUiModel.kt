@@ -75,7 +75,7 @@ class MeetingCreationUiModel(
         return MeetingCreationInfo(
             name = MeetingName(name),
             dateTime = MeetingDateTime(date, time),
-            destinationAddress = destination ?: return null
+            destinationAddress = destination ?: return null,
         )
     }
 
@@ -115,7 +115,7 @@ class MeetingCreationUiModel(
                         initialDestination = destination,
                         initialIsValid = it[8] as Boolean,
                     )
-                }
+                },
             )
     }
 }

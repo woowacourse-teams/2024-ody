@@ -7,7 +7,7 @@ class Address(
     val longitude: String,
     val latitude: String,
 ) {
-    fun isValid() : Boolean {
+    fun isValid(): Boolean {
         return CAPITAL_REGIONS.any { detailAddress.contains(it) }
     }
 

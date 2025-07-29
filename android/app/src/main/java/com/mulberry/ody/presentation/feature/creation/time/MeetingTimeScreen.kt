@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -17,12 +16,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.R
-import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.component.OdyNumberPicker
 import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
@@ -57,18 +54,18 @@ private fun MeetingTimeContent(
     ) {
         Text(
             text =
-            buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(color = OdyTheme.colors.secondary)
-                ) {
-                    append(stringResource(id = R.string.meeting_time_question_front))
-                }
-                withStyle(
-                    style = SpanStyle(color = OdyTheme.colors.quinary)
-                ) {
-                    append(stringResource(id = R.string.meeting_time_question_back))
-                }
-            },
+                buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(color = OdyTheme.colors.secondary),
+                    ) {
+                        append(stringResource(id = R.string.meeting_time_question_front))
+                    }
+                    withStyle(
+                        style = SpanStyle(color = OdyTheme.colors.quinary),
+                    ) {
+                        append(stringResource(id = R.string.meeting_time_question_back))
+                    }
+                },
             style = OdyTheme.typography.pretendardBold24,
             modifier = Modifier.padding(top = 52.dp, bottom = 32.dp),
         )
@@ -84,7 +81,7 @@ private fun MeetingTimeContent(
             )
             Text(
                 text = stringResource(id = R.string.meeting_time_separator),
-                style = OdyTheme.typography.pretendardBold28.copy(color = OdyTheme.colors.tertiary)
+                style = OdyTheme.typography.pretendardBold28.copy(color = OdyTheme.colors.tertiary),
             )
             OdyNumberPicker(
                 value = 0,
