@@ -25,14 +25,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mulberry.ody.R
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.component.OdyActionButton
 import com.mulberry.ody.presentation.component.OdyIndicator
 import com.mulberry.ody.presentation.component.OdyTopAppBar
+import com.mulberry.ody.presentation.feature.address.AddressSearchFragment
 import com.mulberry.ody.presentation.feature.creation.date.MeetingDateScreen
 import com.mulberry.ody.presentation.feature.creation.destination.MeetingDestinationScreen
 import com.mulberry.ody.presentation.feature.creation.model.rememberSaveableMeetingCreationUiModel
@@ -40,6 +45,7 @@ import com.mulberry.ody.presentation.feature.creation.name.MeetingNameScreen
 import com.mulberry.ody.presentation.feature.creation.time.MeetingTimeScreen
 import com.mulberry.ody.presentation.theme.OdyTheme
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 @Composable
 fun MeetingCreationScreen(
@@ -53,6 +59,7 @@ fun MeetingCreationScreen(
             snackbarHostState.showSnackbar(message)
         }
     }
+    val activity = LocalContext.current as FragmentActivity
 
     val uiModel = rememberSaveableMeetingCreationUiModel()
     val pages: List<(@Composable () -> Unit)> =
@@ -73,16 +80,24 @@ fun MeetingCreationScreen(
                 MeetingTimeScreen(
                     time = uiModel.time,
                     onTimeChanged = { uiModel.updateTime(it) },
-                    showSnackBar = showSnackbar,
-                    viewModel = viewModel,
                 )
             },
             {
                 MeetingDestinationScreen(
-                    destination = uiModel.destination,
-                    onDestinationChanged = { uiModel.updateDestination(it) },
-                    showSnackBar = showSnackbar,
-                    viewModel = viewModel,
+                    address = uiModel.destination,
+                    showAddressSearch = {
+                        activity.supportFragmentManager.setFragmentResultListener(
+                            "address_result_key",
+                            activity,
+                        ) { _, bundle ->
+                            val json = bundle.getString("selected_address") ?: return@setFragmentResultListener
+                            val address = Json.decodeFromString(Address.serializer(), json)
+                            uiModel.updateDestination(address)
+                        }
+
+                        val dialog = AddressSearchFragment()
+                        dialog.show(activity.supportFragmentManager, "address_dialog")
+                    }
                 )
             },
         )
@@ -138,23 +153,23 @@ private fun MeetingCreationContent(
         OdyIndicator(
             pagerState = pagerState,
             modifier =
-                Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-                    .padding(top = 50.dp),
+            Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .padding(top = 50.dp),
         )
         HorizontalPager(
             state = pagerState,
             modifier =
-                Modifier
-                    .weight(1f)
-                    .pointerInput(nextButtonEnabled) {
-                        detectDragGestures { change, dragAmount ->
-                            if (!nextButtonEnabled && dragAmount.x < 0) {
-                                change.consume()
-                            }
+            Modifier
+                .weight(1f)
+                .pointerInput(nextButtonEnabled) {
+                    detectDragGestures { change, dragAmount ->
+                        if (!nextButtonEnabled && dragAmount.x < 0) {
+                            change.consume()
                         }
-                    },
+                    }
+                },
         ) {
             Box(modifier = Modifier.weight(1f)) {
                 pages[currentPage]()

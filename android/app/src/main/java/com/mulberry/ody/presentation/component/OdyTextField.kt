@@ -51,6 +51,8 @@ fun OdyTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    readOnly: Boolean = false,
+    enabled: Boolean = true,
     placeholder: String = "",
     textAlign: TextAlign = Start,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -91,6 +93,8 @@ fun OdyTextField(
             cursorBrush = SolidColor(Gray500),
             keyboardOptions = keyboardType,
             keyboardActions = modifiedKeyboardActions,
+            enabled = enabled,
+            readOnly = readOnly,
             decorationBox = { innerTextField ->
                 OdyTextFieldDecorationBox(
                     innerTextField = innerTextField,

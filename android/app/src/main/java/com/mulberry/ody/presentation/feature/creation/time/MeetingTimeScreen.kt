@@ -10,6 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,43 +34,33 @@ import java.time.LocalTime
 fun MeetingTimeScreen(
     time: LocalTime,
     onTimeChanged: (LocalTime) -> Unit,
-    showSnackBar: (String) -> Unit,
-    viewModel: MeetingCreationViewModel,
 ) {
-    val context = LocalContext.current
+    var hour by remember { mutableIntStateOf(time.hour) }
+    var minute  by remember { mutableIntStateOf(time.minute) }
 
-    MeetingTimeContent(time = time, onTimeChanged = onTimeChanged)
-
-    LaunchedEffect(Unit) {
-        viewModel.invalidMeetingTimeEvent.collect {
-            showSnackBar(context.getString(R.string.invalid_meeting_time))
-        }
+    LaunchedEffect(hour, minute) {
+        val localTime = LocalTime.of(hour, minute)
+        onTimeChanged(localTime)
     }
-}
 
-@Composable
-private fun MeetingTimeContent(
-    time: LocalTime,
-    onTimeChanged: (LocalTime) -> Unit,
-) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text =
-                buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(color = OdyTheme.colors.secondary),
-                    ) {
-                        append(stringResource(id = R.string.meeting_time_question_front))
-                    }
-                    withStyle(
-                        style = SpanStyle(color = OdyTheme.colors.quinary),
-                    ) {
-                        append(stringResource(id = R.string.meeting_time_question_back))
-                    }
-                },
+            buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(color = OdyTheme.colors.secondary),
+                ) {
+                    append(stringResource(id = R.string.meeting_time_question_front))
+                }
+                withStyle(
+                    style = SpanStyle(color = OdyTheme.colors.quinary),
+                ) {
+                    append(stringResource(id = R.string.meeting_time_question_back))
+                }
+            },
             style = OdyTheme.typography.pretendardBold24,
             modifier = Modifier.padding(top = 52.dp, bottom = 32.dp),
         )
@@ -75,18 +70,18 @@ private fun MeetingTimeContent(
             horizontalArrangement = Arrangement.spacedBy(32.dp),
         ) {
             OdyNumberPicker(
-                value = 0,
-                range = 0..24,
-                onValueChange = {},
+                value = hour,
+                range = 0..23,
+                onValueChange = { hour = it },
             )
             Text(
                 text = stringResource(id = R.string.meeting_time_separator),
                 style = OdyTheme.typography.pretendardBold28.copy(color = OdyTheme.colors.tertiary),
             )
             OdyNumberPicker(
-                value = 0,
+                value = minute,
                 range = 0..59,
-                onValueChange = {},
+                onValueChange = { minute = it },
             )
         }
     }
@@ -94,8 +89,8 @@ private fun MeetingTimeContent(
 
 @Composable
 @Preview(showBackground = true)
-private fun MeetingTimeContentPreview() {
+private fun MeetingTimeScreenPreview() {
     OdyTheme {
-        MeetingTimeContent(time = LocalTime.now(), onTimeChanged = {})
+        MeetingTimeScreen(time = LocalTime.now(), onTimeChanged = {})
     }
 }

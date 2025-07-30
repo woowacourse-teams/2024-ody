@@ -1,5 +1,8 @@
 package com.mulberry.ody.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class Address(
     val id: Long = -1,
     val placeName: String = "",
