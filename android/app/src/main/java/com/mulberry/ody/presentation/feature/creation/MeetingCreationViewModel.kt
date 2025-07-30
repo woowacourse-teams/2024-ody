@@ -91,8 +91,8 @@ class MeetingCreationViewModel
 
         fun createMeeting() {
             viewModelScope.launch {
-                startLoading()
                 val meetingCreationInfo = _meetingCreationUiModel.value.convertMeetingCreationInfo() ?: return@launch
+                startLoading()
                 meetingRepository.postMeeting(meetingCreationInfo)
                     .onSuccess {
                         _navigateAction.emit(MeetingCreationNavigateAction.NavigateToMeetingJoin(it))

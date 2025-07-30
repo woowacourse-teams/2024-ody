@@ -43,9 +43,11 @@ import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.address.AddressSearchFragment
 import com.mulberry.ody.presentation.feature.creation.date.MeetingDateScreen
 import com.mulberry.ody.presentation.feature.creation.destination.MeetingDestinationScreen
+import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
 import com.mulberry.ody.presentation.feature.creation.name.MeetingNameScreen
 import com.mulberry.ody.presentation.feature.creation.time.MeetingTimeScreen
 import com.mulberry.ody.presentation.theme.OdyTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -53,6 +55,7 @@ import kotlinx.serialization.json.Json
 @Composable
 fun MeetingCreationScreen(
     onBack: () -> Unit,
+    navigate: (MeetingCreationNavigateAction) -> Unit,
     viewModel: MeetingCreationViewModel = hiltViewModel(),
 ) {
     val scope = rememberCoroutineScope()
@@ -116,7 +119,7 @@ fun MeetingCreationScreen(
         topBar = {
             OdyTopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = { scope.moveToPreviousPage(pagerState, onBack) }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_back),
                             tint = Color.Unspecified,
@@ -132,15 +135,7 @@ fun MeetingCreationScreen(
         MeetingCreationContent(
             pages = pages,
             pagerState = pagerState,
-            onNext = {
-                if (pagerState.currentPage == pagerState.pageCount - 1) {
-                    viewModel.createMeeting()
-                } else {
-                    scope.launch {
-                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                    }
-                }
-            },
+            onNext = { scope.moveToNextPage(pagerState, onNext = { viewModel.createMeeting() }) },
             nextButtonEnabled = isCreationValid,
             modifier = Modifier.padding(innerPadding),
         )
@@ -156,7 +151,38 @@ fun MeetingCreationScreen(
             showSnackbar(context.getString(R.string.default_location_error_guide))
         }
     }
+    LaunchedEffect(Unit) {
+        viewModel.navigateAction.collectLatest {
+            navigate(it)
+        }
+    }
     BaseActionHandler(viewModel = viewModel, snackbarHostState = snackbarHostState)
+}
+
+private fun CoroutineScope.moveToPreviousPage(
+    pagerState: PagerState,
+    onBack: () -> Unit,
+) {
+    if (pagerState.currentPage == 0) {
+        onBack()
+    } else {
+        launch {
+            pagerState.animateScrollToPage(pagerState.currentPage - 1)
+        }
+    }
+}
+
+private fun CoroutineScope.moveToNextPage(
+    pagerState: PagerState,
+    onNext: () -> Unit,
+) {
+    if (pagerState.currentPage == pagerState.pageCount - 1) {
+        onNext()
+    } else {
+        launch {
+            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+        }
+    }
 }
 
 @Composable

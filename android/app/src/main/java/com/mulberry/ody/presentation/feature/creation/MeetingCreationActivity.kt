@@ -18,17 +18,16 @@ class MeetingCreationActivity : FragmentActivity() {
         setContent {
             enableEdgeToEdge()
             OdyTheme {
-                MeetingCreationScreen(onBack = { finish() })
+                MeetingCreationScreen(
+                    onBack = ::finish,
+                    navigate = ::navigate,
+                )
             }
         }
     }
 
     private fun navigate(navigateAction: MeetingCreationNavigateAction) {
         when (navigateAction) {
-            MeetingCreationNavigateAction.NavigateToMeetings -> {
-                finish()
-            }
-
             is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
                 val intent = MeetingJoinActivity.getIntent(navigateAction.inviteCode, this@MeetingCreationActivity)
                 startActivity(intent)

@@ -12,7 +12,6 @@ data class MeetingCreationUiModel(
     val date: LocalDate = LocalDate.now(),
     val time: LocalTime = LocalTime.now(),
     val destination: Address? = null,
-    val isValid: Boolean = false
 ) {
     fun isValidName(): Boolean = runCatching { MeetingName(name) }.isSuccess
 
@@ -23,9 +22,6 @@ data class MeetingCreationUiModel(
     fun isValidDestination(): Boolean = destination?.isValid() ?: false
 
     fun convertMeetingCreationInfo(): MeetingCreationInfo? {
-        if (!isValid) {
-            return null
-        }
         return MeetingCreationInfo(
             name = MeetingName(name),
             dateTime = MeetingDateTime(date, time),
