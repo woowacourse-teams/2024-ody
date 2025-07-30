@@ -7,7 +7,6 @@ import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.domain.model.MeetingCreationInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
@@ -39,7 +38,7 @@ class MeetingCreationViewModel
         private val locationHelper: LocationHelper,
     ) : BaseViewModel() {
         private val _meetingCreationUiModel = MutableStateFlow(MeetingCreationUiModel())
-        val meetingCreationUiModel: StateFlow<MeetingCreationUiModel> get() =_meetingCreationUiModel.asStateFlow()
+        val meetingCreationUiModel: StateFlow<MeetingCreationUiModel> get() = _meetingCreationUiModel.asStateFlow()
 
         private val _isCreationValid = MutableStateFlow(false)
         val isCreationValid: StateFlow<Boolean> get() = _isCreationValid.asStateFlow()
@@ -117,36 +116,36 @@ class MeetingCreationViewModel
             }
         }
 
-    fun updateMeetingDate(date: LocalDate) {
-        viewModelScope.launch {
-            val oldUiModel = _meetingCreationUiModel.value
-            _meetingCreationUiModel.emit(oldUiModel.copy(date = date))
-            val newUiModel = _meetingCreationUiModel.value
-            _isCreationValid.emit(newUiModel.isValidDate())
-        }
-    }
-
-    fun updateMeetingTime(time: LocalTime) {
-        viewModelScope.launch {
-            val oldUiModel = _meetingCreationUiModel.value
-            _meetingCreationUiModel.emit(oldUiModel.copy(time = time))
-            val newUiModel = _meetingCreationUiModel.value
-            _isCreationValid.emit(newUiModel.isValidTime())
-        }
-    }
-
-    fun updateMeetingDestination(destination: Address) {
-        viewModelScope.launch {
-            val oldUiModel = _meetingCreationUiModel.value
-            _meetingCreationUiModel.emit(oldUiModel.copy(destination = destination))
-            val newUiModel = _meetingCreationUiModel.value
-            _isCreationValid.emit(newUiModel.isValidDestination())
-
-            if (!newUiModel.isValidDestination()) {
-                _invalidDestinationEvent.emit(Unit)
+        fun updateMeetingDate(date: LocalDate) {
+            viewModelScope.launch {
+                val oldUiModel = _meetingCreationUiModel.value
+                _meetingCreationUiModel.emit(oldUiModel.copy(date = date))
+                val newUiModel = _meetingCreationUiModel.value
+                _isCreationValid.emit(newUiModel.isValidDate())
             }
         }
-    }
+
+        fun updateMeetingTime(time: LocalTime) {
+            viewModelScope.launch {
+                val oldUiModel = _meetingCreationUiModel.value
+                _meetingCreationUiModel.emit(oldUiModel.copy(time = time))
+                val newUiModel = _meetingCreationUiModel.value
+                _isCreationValid.emit(newUiModel.isValidTime())
+            }
+        }
+
+        fun updateMeetingDestination(destination: Address) {
+            viewModelScope.launch {
+                val oldUiModel = _meetingCreationUiModel.value
+                _meetingCreationUiModel.emit(oldUiModel.copy(destination = destination))
+                val newUiModel = _meetingCreationUiModel.value
+                _isCreationValid.emit(newUiModel.isValidDestination())
+
+                if (!newUiModel.isValidDestination()) {
+                    _invalidDestinationEvent.emit(Unit)
+                }
+            }
+        }
 
         companion object {
             private const val TAG = "MeetingCreationViewModel"

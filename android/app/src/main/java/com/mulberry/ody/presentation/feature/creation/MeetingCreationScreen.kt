@@ -31,16 +31,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
-import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.component.OdyActionButton
 import com.mulberry.ody.presentation.component.OdyIndicator
 import com.mulberry.ody.presentation.component.OdyTopAppBar
-import com.mulberry.ody.presentation.feature.address.AddressSearchFragment
 import com.mulberry.ody.presentation.feature.creation.date.MeetingDateScreen
 import com.mulberry.ody.presentation.feature.creation.destination.MeetingDestinationScreen
 import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
@@ -50,11 +47,10 @@ import com.mulberry.ody.presentation.theme.OdyTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 @Composable
 fun MeetingCreationScreen(
-    showAddressSearch: (OnReceiveAddress) ->Unit,
+    showAddressSearch: (OnReceiveAddress) -> Unit,
     onBack: () -> Unit,
     navigate: (MeetingCreationNavigateAction) -> Unit,
     viewModel: MeetingCreationViewModel = hiltViewModel(),
@@ -185,23 +181,23 @@ private fun MeetingCreationContent(
         OdyIndicator(
             pagerState = pagerState,
             modifier =
-            Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(top = 50.dp),
+                Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(top = 50.dp),
         )
         HorizontalPager(
             state = pagerState,
             modifier =
-            Modifier
-                .weight(1f)
-                .pointerInput(nextButtonEnabled) {
-                    detectDragGestures { change, dragAmount ->
-                        if (!nextButtonEnabled && dragAmount.x < 0) {
-                            change.consume()
+                Modifier
+                    .weight(1f)
+                    .pointerInput(nextButtonEnabled) {
+                        detectDragGestures { change, dragAmount ->
+                            if (!nextButtonEnabled && dragAmount.x < 0) {
+                                change.consume()
+                            }
                         }
-                    }
-                },
+                    },
         ) {
             Box(modifier = Modifier.weight(1f)) {
                 pages[currentPage]()

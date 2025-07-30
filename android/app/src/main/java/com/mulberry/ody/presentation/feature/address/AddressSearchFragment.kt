@@ -49,7 +49,7 @@ class AddressSearchFragment : DialogFragment() {
         super.onStart()
         dialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
+            ViewGroup.LayoutParams.MATCH_PARENT,
         )
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
