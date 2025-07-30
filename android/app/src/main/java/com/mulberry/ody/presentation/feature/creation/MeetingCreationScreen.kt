@@ -1,6 +1,5 @@
 package com.mulberry.ody.presentation.feature.creation
 
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +25,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -176,7 +174,6 @@ private fun MeetingCreationContent(
     nextButtonEnabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val currentPage = pagerState.currentPage
     Column(modifier = modifier.fillMaxSize()) {
         OdyIndicator(
             pagerState = pagerState,
@@ -188,18 +185,10 @@ private fun MeetingCreationContent(
         )
         HorizontalPager(
             state = pagerState,
-            modifier =
-                Modifier
-                    .weight(1f)
-                    .pointerInput(nextButtonEnabled) {
-                        detectDragGestures { change, dragAmount ->
-                            if (!nextButtonEnabled && dragAmount.x < 0) {
-                                change.consume()
-                            }
-                        }
-                    },
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
+            modifier = Modifier.weight(1f),
+            userScrollEnabled = false,
+        ) { currentPage ->
+            Box(modifier = Modifier.fillMaxSize()) {
                 pages[currentPage]()
             }
         }
