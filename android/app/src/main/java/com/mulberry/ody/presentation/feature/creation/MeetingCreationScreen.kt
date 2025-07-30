@@ -19,6 +19,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -29,9 +30,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.component.OdyActionButton
@@ -40,7 +41,6 @@ import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.address.AddressSearchFragment
 import com.mulberry.ody.presentation.feature.creation.date.MeetingDateScreen
 import com.mulberry.ody.presentation.feature.creation.destination.MeetingDestinationScreen
-import com.mulberry.ody.presentation.feature.creation.model.rememberSaveableMeetingCreationUiModel
 import com.mulberry.ody.presentation.feature.creation.name.MeetingNameScreen
 import com.mulberry.ody.presentation.feature.creation.time.MeetingTimeScreen
 import com.mulberry.ody.presentation.theme.OdyTheme
@@ -61,30 +61,32 @@ fun MeetingCreationScreen(
     }
     val activity = LocalContext.current as FragmentActivity
 
-    val uiModel = rememberSaveableMeetingCreationUiModel()
+    val meetingCreationUiModel by viewModel.meetingCreationUiModel.collectAsStateWithLifecycle()
+    val isCreationValid by viewModel.isCreationValid.collectAsStateWithLifecycle()
+
     val pages: List<(@Composable () -> Unit)> =
         listOf(
             {
                 MeetingNameScreen(
-                    name = uiModel.name,
-                    onNameChanged = { uiModel.updateName(it) },
+                    name = meetingCreationUiModel.name,
+                    onNameChanged = { viewModel.updateMeetingName(it) },
                 )
             },
             {
                 MeetingDateScreen(
-                    date = uiModel.date,
-                    onDateChanged = { uiModel.updateDate(it) },
+                    date = meetingCreationUiModel.date,
+                    onDateChanged = { viewModel.updateMeetingDate(it) },
                 )
             },
             {
                 MeetingTimeScreen(
-                    time = uiModel.time,
-                    onTimeChanged = { uiModel.updateTime(it) },
+                    time = meetingCreationUiModel.time,
+                    onTimeChanged = { viewModel.updateMeetingTime(it) },
                 )
             },
             {
                 MeetingDestinationScreen(
-                    address = uiModel.destination,
+                    address = meetingCreationUiModel.destination,
                     showAddressSearch = {
                         activity.supportFragmentManager.setFragmentResultListener(
                             "address_result_key",
@@ -92,7 +94,7 @@ fun MeetingCreationScreen(
                         ) { _, bundle ->
                             val json = bundle.getString("selected_address") ?: return@setFragmentResultListener
                             val address = Json.decodeFromString(Address.serializer(), json)
-                            uiModel.updateDestination(address)
+                            viewModel.updateMeetingDestination(address)
                         }
 
                         val dialog = AddressSearchFragment()
@@ -126,15 +128,14 @@ fun MeetingCreationScreen(
             pagerState = pagerState,
             onNext = {
                 if (pagerState.currentPage == pagerState.pageCount - 1) {
-                    val info = uiModel.convertMeetingCreationInfo() ?: return@MeetingCreationContent
-                    viewModel.createMeeting(info)
+                    viewModel.createMeeting()
                 } else {
                     scope.launch {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                     }
                 }
             },
-            nextButtonEnabled = uiModel.isValid,
+            nextButtonEnabled = isCreationValid,
             modifier = Modifier.padding(innerPadding),
         )
     }
