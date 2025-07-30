@@ -19,6 +19,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
 import com.mulberry.ody.domain.model.Address
+import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.component.OdyActionButton
 import com.mulberry.ody.presentation.component.OdyIndicator
 import com.mulberry.ody.presentation.component.OdyTopAppBar
@@ -44,6 +46,7 @@ import com.mulberry.ody.presentation.feature.creation.destination.MeetingDestina
 import com.mulberry.ody.presentation.feature.creation.name.MeetingNameScreen
 import com.mulberry.ody.presentation.feature.creation.time.MeetingTimeScreen
 import com.mulberry.ody.presentation.theme.OdyTheme
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -59,7 +62,8 @@ fun MeetingCreationScreen(
             snackbarHostState.showSnackbar(message)
         }
     }
-    val activity = LocalContext.current as FragmentActivity
+    val context = LocalContext.current
+    val activity = context as FragmentActivity
 
     val meetingCreationUiModel by viewModel.meetingCreationUiModel.collectAsStateWithLifecycle()
     val isCreationValid by viewModel.isCreationValid.collectAsStateWithLifecycle()
@@ -92,14 +96,16 @@ fun MeetingCreationScreen(
                             "address_result_key",
                             activity,
                         ) { _, bundle ->
-                            val json = bundle.getString("selected_address") ?: return@setFragmentResultListener
+                            val json = bundle.getString("selected_address")
+                                ?: return@setFragmentResultListener
                             val address = Json.decodeFromString(Address.serializer(), json)
                             viewModel.updateMeetingDestination(address)
                         }
 
                         val dialog = AddressSearchFragment()
                         dialog.show(activity.supportFragmentManager, "address_dialog")
-                    }
+                    },
+                    getDefaultLocation = { viewModel.getDefaultLocation() },
                 )
             },
         )
@@ -139,6 +145,18 @@ fun MeetingCreationScreen(
             modifier = Modifier.padding(innerPadding),
         )
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.invalidDestinationEvent.collectLatest {
+            showSnackbar(context.getString(R.string.address_question_information))
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.currentLocationError.collectLatest {
+            showSnackbar(context.getString(R.string.default_location_error_guide))
+        }
+    }
+    BaseActionHandler(viewModel = viewModel, snackbarHostState = snackbarHostState)
 }
 
 @Composable

@@ -44,9 +44,6 @@ class MeetingCreationViewModel
         private val _isCreationValid = MutableStateFlow(false)
         val isCreationValid: StateFlow<Boolean> get() = _isCreationValid.asStateFlow()
 
-        private val _invalidMeetingTimeEvent = MutableSharedFlow<Unit>()
-        val invalidMeetingTimeEvent: SharedFlow<Unit> = _invalidMeetingTimeEvent.asSharedFlow()
-
         private val _invalidDestinationEvent = MutableSharedFlow<Unit>()
         val invalidDestinationEvent: SharedFlow<Unit> = _invalidDestinationEvent.asSharedFlow()
 
@@ -144,7 +141,8 @@ class MeetingCreationViewModel
             _meetingCreationUiModel.emit(oldUiModel.copy(destination = destination))
             val newUiModel = _meetingCreationUiModel.value
             _isCreationValid.emit(newUiModel.isValidDestination())
-            if (newUiModel.isValidDestination()) {
+
+            if (!newUiModel.isValidDestination()) {
                 _invalidDestinationEvent.emit(Unit)
             }
         }

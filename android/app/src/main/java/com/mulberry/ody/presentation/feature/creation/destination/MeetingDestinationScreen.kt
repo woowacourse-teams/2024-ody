@@ -1,13 +1,15 @@
 package com.mulberry.ody.presentation.feature.creation.destination
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -25,8 +27,8 @@ import com.mulberry.ody.presentation.theme.OdyTheme
 fun MeetingDestinationScreen(
     address: Address?,
     showAddressSearch: () -> Unit,
+    getDefaultLocation: () -> Unit,
 ) {
-    Log.e("TEST", "MeetingDestinationScreen ${address?.detailAddress}")
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,6 +56,14 @@ fun MeetingDestinationScreen(
                 .padding(horizontal = 40.dp)
                 .noRippleClickable(showAddressSearch),
             enabled = false,
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_current_location),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.noRippleClickable(getDefaultLocation)
+                )
+            }
         )
     }
 }
@@ -65,6 +75,7 @@ private fun MeetingDestinationScreenPreview() {
         MeetingDestinationScreen(
             address = null,
             showAddressSearch = {},
+            getDefaultLocation = {},
         )
     }
 }
