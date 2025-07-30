@@ -39,8 +39,8 @@ class AddressSearchFragment : DialogFragment() {
     private fun sendAddress(address: Address) {
         val json = Json.encodeToString(Address.serializer(), address)
         parentFragmentManager.setFragmentResult(
-            "address_result_key",
-            bundleOf("selected_address" to json),
+            FRAGMENT_RESULT_KEY,
+            bundleOf(ADDRESS_KEY to json),
         )
         dismiss()
     }
@@ -53,5 +53,10 @@ class AddressSearchFragment : DialogFragment() {
         )
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+    }
+
+    companion object {
+        const val FRAGMENT_RESULT_KEY = "address_result_key"
+        const val ADDRESS_KEY = "selected_address_json"
     }
 }

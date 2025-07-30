@@ -54,6 +54,7 @@ import kotlinx.serialization.json.Json
 
 @Composable
 fun MeetingCreationScreen(
+    showAddressSearch: (OnReceiveAddress) ->Unit,
     onBack: () -> Unit,
     navigate: (MeetingCreationNavigateAction) -> Unit,
     viewModel: MeetingCreationViewModel = hiltViewModel(),
@@ -66,7 +67,6 @@ fun MeetingCreationScreen(
         }
     }
     val context = LocalContext.current
-    val activity = context as FragmentActivity
 
     val meetingCreationUiModel by viewModel.meetingCreationUiModel.collectAsStateWithLifecycle()
     val isCreationValid by viewModel.isCreationValid.collectAsStateWithLifecycle()
@@ -94,20 +94,7 @@ fun MeetingCreationScreen(
             {
                 MeetingDestinationScreen(
                     address = meetingCreationUiModel.destination,
-                    showAddressSearch = {
-                        activity.supportFragmentManager.setFragmentResultListener(
-                            "address_result_key",
-                            activity,
-                        ) { _, bundle ->
-                            val json = bundle.getString("selected_address")
-                                ?: return@setFragmentResultListener
-                            val address = Json.decodeFromString(Address.serializer(), json)
-                            viewModel.updateMeetingDestination(address)
-                        }
-
-                        val dialog = AddressSearchFragment()
-                        dialog.show(activity.supportFragmentManager, "address_dialog")
-                    },
+                    showAddressSearch = { showAddressSearch { viewModel.updateMeetingDestination(it) } },
                     getDefaultLocation = { viewModel.getDefaultLocation() },
                 )
             },
