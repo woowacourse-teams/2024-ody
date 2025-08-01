@@ -3,16 +3,18 @@ package com.mulberry.ody.data.remote.core.entity.meeting.mapper
 import com.mulberry.ody.data.remote.core.entity.meeting.response.DetailMeetingResponse
 import com.mulberry.ody.domain.model.DetailMeeting
 import com.mulberry.ody.domain.model.Mate
+import com.mulberry.ody.domain.model.MeetingDateTime
+import com.mulberry.ody.domain.model.MeetingName
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 fun DetailMeetingResponse.toDetailMeeting(): DetailMeeting =
     DetailMeeting(
         id = id,
-        name = name,
-        date = date.toLocalDate(),
-        time = time.toLocalTime(),
+        name = MeetingName(name),
+        dateTime = convertMeetingDateTime(date, time),
         destinationAddress = targetAddress,
         departureAddress = originAddress,
         departureTime = departureTime.toLocalTime(),
@@ -20,6 +22,11 @@ fun DetailMeetingResponse.toDetailMeeting(): DetailMeeting =
         mates = mates.map { Mate(nickname = it.nickname, imageUrl = it.imageUrl) },
         inviteCode = inviteCode,
     )
+
+private fun convertMeetingDateTime(date: String, time: String): MeetingDateTime {
+    val localDateTime = LocalDateTime.of(date.toLocalDate(), time.toLocalTime())
+    return MeetingDateTime(dateTime = localDateTime)
+}
 
 private fun String.toLocalDate(): LocalDate {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")

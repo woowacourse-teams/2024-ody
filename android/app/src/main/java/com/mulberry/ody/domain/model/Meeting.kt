@@ -1,12 +1,10 @@
 package com.mulberry.ody.domain.model
 
-import java.time.LocalDateTime
-
 data class Meeting(
     val id: Long,
-    val name: String,
+    val name: MeetingName,
     val mateCount: Int,
-    val datetime: LocalDateTime,
+    val dateTime: MeetingDateTime,
     val targetAddress: String,
     val originAddress: String,
     val durationMinutes: Long,

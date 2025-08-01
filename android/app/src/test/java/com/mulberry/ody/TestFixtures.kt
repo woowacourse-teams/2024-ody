@@ -8,10 +8,11 @@ import com.mulberry.ody.domain.model.Mate
 import com.mulberry.ody.domain.model.MateEta
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
+import com.mulberry.ody.domain.model.MeetingDateTime
+import com.mulberry.ody.domain.model.MeetingName
 import com.mulberry.ody.domain.model.NotificationLog
 import com.mulberry.ody.domain.model.NotificationLogType
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingUiModel
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -22,11 +23,10 @@ val meetingId: Long = 0L
 val detailMeeting: DetailMeeting =
     DetailMeeting(
         id = meetingId,
-        name = "meetingA",
+        name = MeetingName("meetingA"),
         destinationAddress = "선릉 캠퍼스",
         departureAddress = "잠실 캠퍼스",
-        date = LocalDate.of(2024, 1, 1),
-        time = LocalTime.of(10, 0),
+        dateTime = MeetingDateTime(LocalDateTime.of(2024, 1, 1, 10, 0)),
         departureTime = LocalTime.of(2, 30),
         durationTime = 30,
         mates = listOf(Mate("A", ""), Mate("B", ""), Mate("C", "")),
@@ -37,7 +37,7 @@ val meetingUiModel: MeetingUiModel =
     MeetingUiModel(
         id = 1L,
         name = "올리브와 저녁 마라탕",
-        datetime = LocalDateTime.now().plusMinutes(20),
+        dateTime = LocalDateTime.now().plusMinutes(20),
         originAddress = "서울 강남구 테헤란로 411",
         targetAddress = "서울특별시 송파구 올림픽로35다길 42",
         durationMinutes = "1시간 10분",
@@ -46,9 +46,9 @@ val meetingUiModel: MeetingUiModel =
 val meeting =
     Meeting(
         meetingId,
-        "meetingA",
+        MeetingName("meetingA"),
         1,
-        LocalDateTime.of(2024, 1, 1, 10, 0),
+        MeetingDateTime(LocalDateTime.of(2024, 1, 1, 10, 0)),
         "서울 강남구 테헤란로 411",
         "서울 송파구 올림픽로35다길 42",
         16,
