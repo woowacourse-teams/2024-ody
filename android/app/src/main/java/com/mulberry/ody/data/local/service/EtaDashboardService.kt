@@ -1,9 +1,12 @@
 package com.mulberry.ody.data.local.service
 
+import android.Manifest
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.IBinder
+import androidx.core.content.ContextCompat
 import com.mulberry.ody.domain.apiresult.fold
 import com.mulberry.ody.domain.apiresult.getOrNull
 import com.mulberry.ody.domain.apiresult.onNetworkError
@@ -42,6 +45,22 @@ class EtaDashboardService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        val requiredPermissions = arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+        )
+
+        if (requiredPermissions.all {
+                ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_DENIED
+            }) {
+            stopSelf()
+            return
+        }
     }
 
     override fun onStartCommand(
