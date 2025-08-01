@@ -131,15 +131,15 @@ val mateEtaInfo =
 
 fun Address(
     id: Long,
-    roadNameAddress: String,
+    detailAddress: String,
 ): Address {
-    return Address(id = id, detailAddress = roadNameAddress, placeName = "", latitude = "0.0", longitude = "0.0")
+    return Address(id = id, detailAddress = detailAddress, placeName = "", latitude = "0.0", longitude = "0.0")
 }
 
-val address = Address(id = 0L, roadNameAddress = "")
+val address = Address(id = 0L, detailAddress = "")
 
 val addresses: Addresses =
     Addresses(
-        addresses = List(5) { Address(id = it.toLong(), roadNameAddress = "") },
+        addresses = List(5) { Address(id = it.toLong(), detailAddress = "") },
         isEnd = true,
     )
