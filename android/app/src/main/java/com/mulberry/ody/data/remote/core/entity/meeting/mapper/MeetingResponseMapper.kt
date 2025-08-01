@@ -23,7 +23,10 @@ fun DetailMeetingResponse.toDetailMeeting(): DetailMeeting =
         inviteCode = inviteCode,
     )
 
-private fun convertMeetingDateTime(date: String, time: String): MeetingDateTime {
+private fun convertMeetingDateTime(
+    date: String,
+    time: String,
+): MeetingDateTime {
     val localDateTime = LocalDateTime.of(date.toLocalDate(), time.toLocalTime())
     return MeetingDateTime(dateTime = localDateTime)
 }
