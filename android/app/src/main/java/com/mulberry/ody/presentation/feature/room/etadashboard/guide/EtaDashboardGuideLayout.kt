@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
+import com.mulberry.ody.presentation.common.toDp
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.etadashboard.component.EtaDashboardItem
 import com.mulberry.ody.presentation.feature.room.etadashboard.guide.model.EtaDashboardGuideUiModel
@@ -43,7 +44,6 @@ import com.mulberry.ody.presentation.feature.room.etadashboard.model.EtaStatusUi
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiModel
 import com.mulberry.ody.presentation.theme.Gray900Alpha50
 import com.mulberry.ody.presentation.theme.OdyTheme
-import com.tbuonomo.viewpagerdotsindicator.pxToDp
 
 private const val GUIDE_TARGET_INDEX = 1
 
@@ -107,7 +107,7 @@ private fun EtaDashboardGuideContent(
 ) {
     var guideOverlayStartY by remember { mutableIntStateOf(0) }
     var rootLayoutHeight by remember { mutableIntStateOf(0) }
-    val guideOverlayHeight = (rootLayoutHeight - guideOverlayStartY).pxToDp()
+    val guideOverlayHeight = (rootLayoutHeight - guideOverlayStartY).toDp()
 
     Box(
         modifier =

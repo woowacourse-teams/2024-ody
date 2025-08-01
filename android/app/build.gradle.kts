@@ -97,9 +97,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.core.android)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.fragment.testing)
     kapt(libs.androidx.hilt.compiler)
 
     // firebase
@@ -134,9 +131,6 @@ dependencies {
 
     // timber
     implementation(libs.timber)
-
-    // dotsindicator
-    implementation(libs.dotsindicator)
 
     // play service
     implementation(libs.play.services.location)
