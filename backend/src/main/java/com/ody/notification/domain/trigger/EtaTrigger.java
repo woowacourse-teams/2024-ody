@@ -14,7 +14,7 @@ public abstract class EtaTrigger {
     private final LocalDateTime meetingTime;
 
     public final TriggerType getType() {
-        return TriggerType.ETA_SCHEDULING;
+        return TriggerType.ETA_SCHEDULING_NOTICE;
     }
 
     public abstract MessagePriority getPriority();
