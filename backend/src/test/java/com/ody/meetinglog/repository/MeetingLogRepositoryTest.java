@@ -22,7 +22,7 @@ class MeetingLogRepositoryTest extends BaseRepositoryTest {
         Meeting meeting = fixtureGenerator.generateMeeting();
         Mate mate = fixtureGenerator.generateMate(meeting);
         fixtureGenerator.generateMeetingLog(mate, MeetingLogType.ENTRY_LOG, now);
-        fixtureGenerator.generateMeetingLog(mate, MeetingLogType.DEPARTURE_REMINDER, now.plusSeconds(1L));
+        fixtureGenerator.generateMeetingLog(mate, MeetingLogType.DEPARTURE_REMINDER, now.plusSeconds(5L));
 
         List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(meeting.getId(), now);
 
