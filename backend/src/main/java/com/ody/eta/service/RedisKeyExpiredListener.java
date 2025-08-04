@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisKeyExpiredListener extends KeyExpirationEventMessageListener {
 
+    private final RedisMessageListenerContainer listenerContainer;
     private final EtaSchedulingService etaSchedulingService;
 
     public RedisKeyExpiredListener(
@@ -18,7 +19,13 @@ public class RedisKeyExpiredListener extends KeyExpirationEventMessageListener {
             EtaSchedulingService etaSchedulingService
     ) {
         super(listenerContainer);
+        this.listenerContainer = listenerContainer;
         this.etaSchedulingService = etaSchedulingService;
+    }
+
+    @Override
+    public void init() {
+        super.doRegister(listenerContainer);
     }
 
     @Override
