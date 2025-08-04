@@ -60,7 +60,7 @@ class MeetingJoinViewModel
         private val _currentLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
         val currentLocationError: SharedFlow<Unit> get() = _currentLocationError.asSharedFlow()
 
-        fun updateMeetingDeparture(departure: Address)  {
+        fun updateMeetingDeparture(departure: Address) {
             viewModelScope.launch {
                 val oldUiModel = _departureAddress.value
                 if (departure.isValid()) {

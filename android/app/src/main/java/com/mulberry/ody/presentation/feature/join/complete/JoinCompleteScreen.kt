@@ -37,9 +37,10 @@ fun JoinCompleteScreen(
 @Composable
 private fun JoinCompleteContent(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(OdyTheme.colors.primary),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(OdyTheme.colors.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

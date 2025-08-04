@@ -132,7 +132,7 @@ private fun MeetingJoinContent(
                     }
                 },
             style = OdyTheme.typography.pretendardBold24,
-            modifier = Modifier.padding(top = 52.dp, bottom = 32.dp),
+            modifier = Modifier.padding(top = 110.dp, bottom = 32.dp),
         )
 
         OdyTextField(
