@@ -1,4 +1,4 @@
-package com.mulberry.ody.presentation.feature.room
+package com.mulberry.ody.presentation.feature.room.model
 
 sealed interface MeetingRoomNavigateAction {
     data object NavigateToEtaDashboard : MeetingRoomNavigateAction

@@ -14,6 +14,7 @@ import com.mulberry.ody.presentation.common.collectWhenStarted
 import com.mulberry.ody.presentation.feature.room.detail.DetailMeetingFragment
 import com.mulberry.ody.presentation.feature.room.etadashboard.EtaDashboardFragment
 import com.mulberry.ody.presentation.feature.room.log.NotificationLogFragment
+import com.mulberry.ody.presentation.feature.room.model.MeetingRoomNavigateAction
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

@@ -32,6 +32,7 @@ import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiMo
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.toMateEtaUiModels
 import com.mulberry.ody.presentation.feature.room.log.model.NotificationLogUiModel
 import com.mulberry.ody.presentation.feature.room.log.model.toNotificationLogUiModels
+import com.mulberry.ody.presentation.feature.room.model.MeetingRoomNavigateAction
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

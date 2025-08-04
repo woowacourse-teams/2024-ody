@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.snackbar.Snackbar
 import com.mulberry.ody.R
-import com.mulberry.ody.presentation.common.LoadingDialog
 
 abstract class BindingActivity<T : ViewDataBinding>(
     @LayoutRes private val layoutRes: Int,
@@ -59,16 +58,6 @@ abstract class BindingActivity<T : ViewDataBinding>(
             Snackbar.make(binding.root, R.string.network_error_guide, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.retry_button) { action() }
         snackBar?.show()
-    }
-
-    protected fun showLoadingDialog() {
-        dialog?.dismiss()
-        dialog = LoadingDialog(this)
-        dialog?.show()
-    }
-
-    protected fun hideLoadingDialog() {
-        dialog?.dismiss()
     }
 
     override fun onDestroy() {

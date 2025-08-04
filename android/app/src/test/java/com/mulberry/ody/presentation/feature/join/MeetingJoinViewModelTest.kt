@@ -7,6 +7,7 @@ import com.mulberry.ody.fake.FakeJoinRepository
 import com.mulberry.ody.fake.FakeLocationHelper
 import com.mulberry.ody.fake.FakeMatesEtaRepository
 import com.mulberry.ody.meetingId
+import com.mulberry.ody.presentation.feature.join.model.MeetingJoinNavigateAction
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
 import com.mulberry.ody.util.valueOnAction
@@ -45,7 +46,7 @@ class MeetingJoinViewModelTest {
             // when
             val actual =
                 viewModel.navigateAction.valueOnAction {
-                    viewModel.onClickMeetingJoin("abc123")
+                    viewModel.joinMeeting("abc123")
                 }
 
             // then
@@ -57,7 +58,7 @@ class MeetingJoinViewModelTest {
     fun `입력하지 않은 값이 있는 경우 약속 참여할 수 없다`() {
         runTest {
             // when
-            viewModel.onClickMeetingJoin("abc123")
+            viewModel.joinMeeting("abc123")
 
             // then
             val actual = viewModel.navigateAction.valueOnAction {}
@@ -75,7 +76,7 @@ class MeetingJoinViewModelTest {
             viewModel.departureAddress.value = Address(0, "인천광역시 남동구")
 
             // then
-            assertThat(viewModel.isValidDeparture.first()).isTrue
+            assertThat(viewModel.isJoinValid.first()).isTrue
         }
     }
 
@@ -89,7 +90,7 @@ class MeetingJoinViewModelTest {
             viewModel.departureAddress.value = Address(0, "부산광역시 동구")
 
             // then
-            assertThat(viewModel.isValidDeparture.first()).isFalse
+            assertThat(viewModel.isJoinValid.first()).isFalse
         }
     }
 
