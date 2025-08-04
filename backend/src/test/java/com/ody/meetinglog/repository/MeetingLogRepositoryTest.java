@@ -21,8 +21,8 @@ class MeetingLogRepositoryTest extends BaseRepositoryTest {
         LocalDateTime now = LocalDateTime.now();
         Meeting meeting = fixtureGenerator.generateMeeting();
         Mate mate = fixtureGenerator.generateMate(meeting);
-        fixtureGenerator.generateMeetingLog(mate, MeetingLogType.ENTRY_LOG, now);
-        fixtureGenerator.generateMeetingLog(mate, MeetingLogType.DEPARTURE_REMINDER, now.plusSeconds(5L));
+        fixtureGenerator.generateMeetingLog(mate, MeetingLogType.ENTRY_LOG, now.minusSeconds(1L));
+        fixtureGenerator.generateMeetingLog(mate, MeetingLogType.DEPARTURE_REMINDER, now.plusSeconds(1L));
 
         List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(meeting.getId(), now);
 
