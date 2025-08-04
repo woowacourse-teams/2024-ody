@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.feature.creation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -138,6 +139,9 @@ fun MeetingCreationScreen(
         }
     }
     BaseActionHandler(viewModel = viewModel, snackbarHostState = snackbarHostState)
+    BackHandler {
+        scope.moveToPreviousPage(pagerState, onBack)
+    }
 }
 
 private fun CoroutineScope.moveToPreviousPage(
@@ -178,10 +182,10 @@ private fun MeetingCreationContent(
         OdyIndicator(
             pagerState = pagerState,
             modifier =
-                Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-                    .padding(top = 50.dp),
+            Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .padding(top = 50.dp),
         )
         HorizontalPager(
             state = pagerState,
