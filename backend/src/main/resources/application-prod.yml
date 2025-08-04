@@ -1,10 +1,10 @@
 spring:
   data:
     redis:
-      host: ENC(GX1MD3orjN5/EAPkGxjnHncdtJrflG/0083r4QZD8XDbPYNPIPv1Up7a7r1KcaV2doECmXdcdOB0fxif92J1nA==)
+      host: ENC(5nqfvZOp7cFmH44W4OZdWf4uL1hCILFCaYDUVbrtNqMd/B/TeJugMt4v0ZSaZEulEROw11g8ERwF/2WN5E9gEA==)
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
   datasource:
     write:
       driver-class-name: com.mysql.cj.jdbc.Driver
