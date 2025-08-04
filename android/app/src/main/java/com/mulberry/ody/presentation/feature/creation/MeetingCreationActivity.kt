@@ -61,4 +61,3 @@ class MeetingCreationActivity : FragmentActivity() {
         fun getIntent(context: Context): Intent = Intent(context, MeetingCreationActivity::class.java)
     }
 }
-

@@ -62,7 +62,7 @@
     <string name="join_departure_question_back">서 출발하시나요?</string>
 
     <!-- activity_join_completion.xml -->
-    <string name="join_completion_second_explain">약속에 참여했어요!</string>
+    <string name="join_completion_information">약속에 참여했어요!</string>
 
     <!-- activity_invite_code.xml -->
     <string name="invite_code_input_front">초대 코드</string>
