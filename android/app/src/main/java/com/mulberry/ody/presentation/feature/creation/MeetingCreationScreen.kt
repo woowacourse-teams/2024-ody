@@ -182,10 +182,10 @@ private fun MeetingCreationContent(
         OdyIndicator(
             pagerState = pagerState,
             modifier =
-            Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(top = 50.dp),
+                Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(top = 50.dp),
         )
         HorizontalPager(
             state = pagerState,
