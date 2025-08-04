@@ -8,12 +8,12 @@ spring:
   datasource:
     write:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: ENC(nGNUghpA8FeT+tMLwfEKAERnVh2hkipqMo5pKAhyvvQgbD3ZmzBnkOdjZTcd0e/95OEsj8zuyoVKdlPajyya+haWQRkmPP8E)
+      jdbc-url: ENC(JgObubvcGIG2QP/rPVCY5WE9DBnpmxZF46zOTXpJe2No44Kf9UVL+ziprdEJrpslbvowXDQl/1xZqEiB0r2iK+WXhQP3l55E14VmDN/6FHbdVWAgxrcRmg==)
       username: ENC(hUSFqr+kl28AIVDKBfyRHA==)
       password: ENC(yjnFbKAlVVvzzQuWNECa7DcpWubhBn0Q)
     read:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: ENC(nGNUghpA8FeT+tMLwfEKAERnVh2hkipqMo5pKAhyvvQgbD3ZmzBnkOdjZTcd0e/95OEsj8zuyoVKdlPajyya+haWQRkmPP8E)
+      jdbc-url: ENC(JgObubvcGIG2QP/rPVCY5WE9DBnpmxZF46zOTXpJe2No44Kf9UVL+ziprdEJrpslbvowXDQl/1xZqEiB0r2iK+WXhQP3l55E14VmDN/6FHbdVWAgxrcRmg==)
       username: ENC(hUSFqr+kl28AIVDKBfyRHA==)
       password: ENC(yjnFbKAlVVvzzQuWNECa7DcpWubhBn0Q)
   flyway:
