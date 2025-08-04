@@ -26,7 +26,7 @@ val detailMeeting: DetailMeeting =
         name = MeetingName("meetingA"),
         destinationAddress = "선릉 캠퍼스",
         departureAddress = "잠실 캠퍼스",
-        dateTime = MeetingDateTime(LocalDateTime.of(2024, 1, 1, 10, 0)),
+        dateTime = MeetingDateTime(LocalDateTime.now().plusMinutes(20)),
         departureTime = LocalTime.of(2, 30),
         durationTime = 30,
         mates = listOf(Mate("A", ""), Mate("B", ""), Mate("C", "")),
@@ -48,16 +48,13 @@ val meeting =
         meetingId,
         MeetingName("meetingA"),
         1,
-        MeetingDateTime(LocalDateTime.of(2024, 1, 1, 10, 0)),
+        MeetingDateTime(LocalDateTime.now().plusMinutes(20)),
         "서울 강남구 테헤란로 411",
         "서울 송파구 올림픽로35다길 42",
         16,
     )
 
-val meetings: List<Meeting> =
-    listOf(
-        meeting,
-    )
+val meetings: List<Meeting> = listOf(meeting)
 
 val notificationLogs: List<NotificationLog> =
     listOf(
