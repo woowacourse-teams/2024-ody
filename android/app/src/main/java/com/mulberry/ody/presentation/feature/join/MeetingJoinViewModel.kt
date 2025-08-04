@@ -15,7 +15,7 @@ import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.common.gps.LocationHelper
-import com.mulberry.ody.presentation.feature.join.listener.MeetingJoinListener
+import com.mulberry.ody.presentation.feature.join.model.MeetingJoinNavigateAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -38,28 +39,39 @@ class MeetingJoinViewModel
         private val addressRepository: AddressRepository,
         private val locationHelper: LocationHelper,
         private val matesEtaRepository: MatesEtaRepository,
-    ) : BaseViewModel(), MeetingJoinListener {
-        val departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
+    ) : BaseViewModel() {
+        private val _departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
+        val departureAddress: StateFlow<Address?> get() = _departureAddress.asStateFlow()
 
         private val _invalidDepartureEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
         val invalidDepartureEvent: SharedFlow<Unit> get() = _invalidDepartureEvent.asSharedFlow()
 
-        val isValidDeparture: StateFlow<Boolean> =
-            departureAddress.map { isValidDeparturePoint() }
+        val isJoinValid: StateFlow<Boolean> =
+            departureAddress.map { it?.isValid() ?: false }
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
                     initialValue = false,
                 )
 
-        private val _navigateAction: MutableSharedFlow<MeetingJoinNavigateAction> =
-            MutableSharedFlow(replay = 1)
+        private val _navigateAction: MutableSharedFlow<MeetingJoinNavigateAction> = MutableSharedFlow(replay = 1)
         val navigateAction: SharedFlow<MeetingJoinNavigateAction> get() = _navigateAction.asSharedFlow()
 
-        private val _defaultLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val defaultLocationError: SharedFlow<Unit> get() = _defaultLocationError.asSharedFlow()
+        private val _currentLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
+        val currentLocationError: SharedFlow<Unit> get() = _currentLocationError.asSharedFlow()
 
-        fun getDefaultLocation() {
+        fun updateMeetingDeparture(departure: Address)  {
+            viewModelScope.launch {
+                val oldUiModel = _departureAddress.value
+                if (departure.isValid()) {
+                    _departureAddress.emit(departure)
+                } else {
+                    _invalidDepartureEvent.emit(Unit)
+                }
+            }
+        }
+
+        fun getCurrentLocation() {
             viewModelScope.launch {
                 startLoading()
                 locationHelper.getCurrentCoordinate()
@@ -67,7 +79,7 @@ class MeetingJoinViewModel
                         fetchAddressesByCoordinate(location)
                     }
                     .onUnexpected {
-                        _defaultLocationError.emit(Unit)
+                        _currentLocationError.emit(Unit)
                     }
                 stopLoading()
             }
@@ -78,27 +90,24 @@ class MeetingJoinViewModel
             val latitude = location.latitude.toString()
 
             addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
-                departureAddress.value =
+                val address =
                     Address(
                         detailAddress = it ?: "",
                         longitude = longitude,
                         latitude = latitude,
                     )
+                updateMeetingDeparture(address)
             }.onFailure { code, errorMessage ->
                 handleError()
                 analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
             }.onUnexpected {
-                _defaultLocationError.emit(Unit)
+                _currentLocationError.emit(Unit)
             }.onNetworkError {
                 handleNetworkError()
             }
         }
 
-        override fun onClickMeetingJoin(inviteCode: String) {
-            joinMeeting(inviteCode)
-        }
-
-        private fun joinMeeting(inviteCode: String) {
+        fun joinMeeting(inviteCode: String) {
             val meetingJoinInfo = createMeetingJoinInfo(inviteCode) ?: return
 
             viewModelScope.launch {
@@ -122,17 +131,7 @@ class MeetingJoinViewModel
 
         private fun createMeetingJoinInfo(inviteCode: String): MeetingJoinInfo? {
             val address = departureAddress.value ?: return null
-            return MeetingJoinInfo(
-                inviteCode = inviteCode,
-                departureAddress = address,
-            )
-        }
-
-        private suspend fun isValidDeparturePoint(): Boolean {
-            val departureAddress = departureAddress.value ?: return false
-            return departureAddress.isValid().also {
-                if (!it) _invalidDepartureEvent.emit(Unit)
-            }
+            return MeetingJoinInfo(inviteCode = inviteCode, departureAddress = address)
         }
 
         companion object {
