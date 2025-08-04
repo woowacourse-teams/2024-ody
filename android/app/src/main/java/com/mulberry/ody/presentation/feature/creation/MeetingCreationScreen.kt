@@ -91,7 +91,7 @@ fun MeetingCreationScreen(
                 MeetingDestinationScreen(
                     address = meetingCreationUiModel.destination,
                     showAddressSearch = { showAddressSearch { viewModel.updateMeetingDestination(it) } },
-                    getDefaultLocation = { viewModel.getDefaultLocation() },
+                    getDefaultLocation = { viewModel.getCurrentLocation() },
                 )
             },
         )
