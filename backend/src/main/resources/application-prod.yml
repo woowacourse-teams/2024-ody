@@ -17,7 +17,7 @@ spring:
       username: ENC(hUSFqr+kl28AIVDKBfyRHA==)
       password: ENC(yjnFbKAlVVvzzQuWNECa7DcpWubhBn0Q)
   flyway:
-    baseline-version: 2
+    baseline-version: 1
 
 log:
   file:
