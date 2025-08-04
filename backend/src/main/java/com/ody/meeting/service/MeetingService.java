@@ -84,11 +84,13 @@ public class MeetingService {
         }
     }
 
+    //TODO 이거 왜 이렇게 구현했었는지 물어보기
     private boolean isUpcomingMeeting(LocalDateTime meetingDateTime) {
         LocalDateTime include = TimeUtil.nowWithTrim();
-        LocalDateTime exclude = LocalDateTime.of(LocalDate.now().plusDays(1L), LAST_SCHEDULING_NOTI_TIME);
+//        LocalDateTime exclude = LocalDateTime.of(LocalDate.now().plusDays(1L), LAST_SCHEDULING_NOTI_TIME);
 
-        return meetingDateTime.isAfter(include) && meetingDateTime.isBefore(exclude);
+//        return meetingDateTime.isAfter(include) && meetingDateTime.isBefore(exclude);
+        return meetingDateTime.isAfter(include);
     }
 
     private String generateUniqueInviteCode() {
