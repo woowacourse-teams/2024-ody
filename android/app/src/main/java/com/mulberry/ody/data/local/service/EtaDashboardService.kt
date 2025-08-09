@@ -53,14 +53,16 @@ class EtaDashboardService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        val requiredPermissions = arrayOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        )
+        val requiredPermissions =
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            )
 
         if (requiredPermissions.all {
                 ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_DENIED
-            }) {
+            }
+        ) {
             stopSelf()
             return
         }
