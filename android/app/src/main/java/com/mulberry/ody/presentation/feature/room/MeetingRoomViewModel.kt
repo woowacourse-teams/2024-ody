@@ -95,9 +95,6 @@ class MeetingRoomViewModel
         private val _nudgeFailMate: MutableSharedFlow<Int> = MutableSharedFlow()
         val nudgeFailMate: SharedFlow<Int> get() = _nudgeFailMate.asSharedFlow()
 
-        private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
-
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
         private val _inaccessibleEtaEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
@@ -276,7 +273,6 @@ class MeetingRoomViewModel
                 meetingRepository.exitMeeting(_meeting.value.id)
                     .onSuccess {
                         matesEtaRepository.closeEtaDashboard(meetingId)
-                        _exitMeetingRoomEvent.emit(Unit)
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")

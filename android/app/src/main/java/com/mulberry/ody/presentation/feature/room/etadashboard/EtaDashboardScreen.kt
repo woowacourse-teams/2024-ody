@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.component.OdyTopAppBar
 import com.mulberry.ody.presentation.feature.room.MeetingRoomViewModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.component.EtaDashboardItem
@@ -50,6 +51,7 @@ fun EtaDashboardScreen(
             snackbarHostState.showSnackbar(message)
         }
     }
+
     val meeting by viewModel.meeting.collectAsStateWithLifecycle()
     val mateEtas by viewModel.mateEtas.collectAsStateWithLifecycle()
     val graphicsLayer = rememberGraphicsLayer()
@@ -119,10 +121,16 @@ fun EtaDashboardScreen(
         }
     }
     LaunchedEffect(Unit) {
-        viewModel.nudgeFailMate.collect { nickname ->
-            showSnackbar(context.getString(R.string.nudge_failure, nickname))
+        viewModel.nudgeFailMate.collect { seconds ->
+            showSnackbar(context.getString(R.string.nudge_failure, seconds))
         }
     }
+    LaunchedEffect(Unit) {
+        viewModel.expiredNudgeTimeLimit.collect {
+            showSnackbar(context.getString(R.string.nudge_time_limit_expired))
+        }
+    }
+    BaseActionHandler(viewModel, snackbarHostState)
 }
 
 @Composable

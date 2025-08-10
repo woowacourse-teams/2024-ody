@@ -34,11 +34,15 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -61,6 +65,7 @@ import coil.request.ImageRequest
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.NoRippleInteractionSource
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
+import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.component.OdyLoading
 import com.mulberry.ody.presentation.component.OdyTooltip
 import com.mulberry.ody.presentation.component.OdyTopAppBar
@@ -74,6 +79,7 @@ import com.mulberry.ody.presentation.theme.Gray300
 import com.mulberry.ody.presentation.theme.Gray350
 import com.mulberry.ody.presentation.theme.Gray500
 import com.mulberry.ody.presentation.theme.OdyTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailMeetingScreen(
@@ -81,11 +87,21 @@ fun DetailMeetingScreen(
     onCopyInviteCode: (InviteCodeCopyInfo) -> Unit,
     viewModel: MeetingRoomViewModel,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val showSnackbar: (String) -> Unit = { message ->
+        coroutineScope.launch {
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
     val mates by viewModel.mates.collectAsStateWithLifecycle()
     val detailMeeting by viewModel.meeting.collectAsStateWithLifecycle()
     var showExitDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = OdyTheme.colors.primary,
         topBar = {
             OdyTopAppBar(
@@ -138,6 +154,13 @@ fun DetailMeetingScreen(
             )
         }
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.inaccessibleEtaEvent.collect {
+            showSnackbar(context.getString(R.string.inaccessible_eta_guide))
+        }
+    }
+    BaseActionHandler(viewModel, snackbarHostState)
 }
 
 @Composable
