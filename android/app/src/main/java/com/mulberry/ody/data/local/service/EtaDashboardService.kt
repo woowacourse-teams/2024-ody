@@ -86,7 +86,7 @@ class EtaDashboardService : Service() {
                 }
 
                 if (!meetingJobs.contains(meetingId)) {
-                    startForeground(meetingId)
+                    initializeForeground(meetingId)
                     openEtaDashboard(meetingId, meetingTime)
                 }
             }
@@ -98,7 +98,7 @@ class EtaDashboardService : Service() {
         return START_REDELIVER_INTENT
     }
 
-    private fun startForeground(meetingId: Long) {
+    private fun initializeForeground(meetingId: Long) {
         val notification = etaDashboardNotification.createNotification(meetingId)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ServiceCompat.startForeground(
