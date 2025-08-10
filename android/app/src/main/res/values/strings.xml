@@ -19,8 +19,7 @@
     <!-- fragment_destination.xml -->
     <string name="destination_question_front">오디</string>
     <string name="destination_question_back">서 만나시나요?</string>
-    <string name="destination_question_hint">주소를 찾아보세요</string>
-    <string name="destination_question_information">오디는 아직 수도권 외 지역을 지원하지 않아요</string>
+    <string name="destination_question_placeholder">주소를 찾아보세요</string>
 
     <!-- activity_meetings.xml -->
     <string name="meetings_traffic_guide">*대중교통 기준</string>
@@ -47,24 +46,16 @@
     <string name="meeting_name_question_middle">약속</string>
     <string name="meeting_name_question_back">인가요?</string>
     <string name="meeting_name_question_hint">올리브와 저녁에 마라탕</string>
-    <string name="meeting_name_length_separator">/</string>
+    <string name="meeting_name_length">%d/%d</string>
 
     <!-- fragment_meeting_date.xml -->
-    <string name="meeting_date_question_front">언제</string>
-    <string name="meeting_date_question_back">만나시나요?</string>
-    <string name="meeting_date_date_guide">오늘 이후의 날짜를 선택해 주세요!</string>
+    <string name="meeting_date_question_front">언제&#160;</string>
+    <string name="meeting_date_question_back"> 만나시나요?</string>
 
     <!-- fragment_meeting_time.xml -->
     <string name="meeting_time_question_front">몇시</string>
     <string name="meeting_time_question_back">에 만나시나요?</string>
     <string name="meeting_time_separator">:</string>
-    <string name="invalid_meeting_time">현재 이후의 시간을 선택해 주세요!</string>
-
-    <!-- fragment_join_nickname.xml -->
-    <string name="nickname_question_front">닉네임</string>
-    <string name="nickname_question_back">을 알려주세요!</string>
-    <string name="nickname_question_hint">올리브</string>
-    <string name="nickname_length_separator">/</string>
 
     <!-- fragment_join_departure.xml -->
     <string name="departure_question_front">오디</string>

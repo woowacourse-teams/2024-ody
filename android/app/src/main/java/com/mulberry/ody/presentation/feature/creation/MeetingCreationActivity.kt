@@ -3,140 +3,62 @@ package com.mulberry.ody.presentation.feature.creation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import com.mulberry.ody.R
-import com.mulberry.ody.databinding.ActivityMeetingCreationBinding
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.fragment.app.FragmentActivity
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.presentation.common.ViewPagerAdapter
-import com.mulberry.ody.presentation.common.binding.BindingActivity
-import com.mulberry.ody.presentation.common.collectWhenStarted
-import com.mulberry.ody.presentation.common.listener.BackListener
 import com.mulberry.ody.presentation.feature.address.AddressSearchFragment
-import com.mulberry.ody.presentation.feature.address.listener.AddressSearchListener
-import com.mulberry.ody.presentation.feature.creation.date.MeetingDateFragment
-import com.mulberry.ody.presentation.feature.creation.destination.MeetingDestinationFragment
-import com.mulberry.ody.presentation.feature.creation.name.MeetingNameFragment
-import com.mulberry.ody.presentation.feature.creation.time.MeetingTimeFragment
+import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
 import com.mulberry.ody.presentation.feature.join.MeetingJoinActivity
+import com.mulberry.ody.presentation.theme.OdyTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
-class MeetingCreationActivity :
-    BindingActivity<ActivityMeetingCreationBinding>(R.layout.activity_meeting_creation),
-    BackListener,
-    AddressSearchListener {
-    private val viewModel: MeetingCreationViewModel by viewModels<MeetingCreationViewModel>()
-    private val fragments: List<Fragment> by lazy {
-        listOf(
-            MeetingNameFragment(),
-            MeetingDestinationFragment(),
-            MeetingDateFragment(),
-            MeetingTimeFragment(),
-        )
-    }
-    private val onBackPressedCallback: OnBackPressedCallback =
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                onBack()
-            }
-        }
-
+class MeetingCreationActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeBinding()
-        initializeObserve()
-    }
-
-    override fun initializeBinding() {
-        binding.vm = viewModel
-        binding.backListener = this
-        initializeMeetingInfoViewPager()
-    }
-
-    private fun initializeMeetingInfoViewPager() {
-        val meetingInfoViewPagerAdapter = ViewPagerAdapter(this, fragments)
-        binding.vpMeetingInfo.adapter = meetingInfoViewPagerAdapter
-        binding.wdMeetingInfo.attachTo(binding.vpMeetingInfo)
-
-        supportFragmentManager.addOnBackStackChangedListener {
-            binding.btnNext.visibility = if (supportFragmentManager.backStackEntryCount > 0) View.GONE else View.VISIBLE
-        }
-    }
-
-    private fun initializeObserve() {
-        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        collectWhenStarted(viewModel.inviteCode) {
-            viewModel.onClickCreationMeeting()
-        }
-        collectWhenStarted(viewModel.nextPageEvent) {
-            handleMeetingInfoNextClick()
-        }
-        collectWhenStarted(viewModel.navigateAction) {
-            when (it) {
-                MeetingCreationNavigateAction.NavigateToMeetings -> {
-                    finish()
-                }
-
-                is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
-                    startActivity(
-                        MeetingJoinActivity.getIntent(
-                            it.inviteCode,
-                            this@MeetingCreationActivity,
-                        ),
-                    )
-                    finish()
-                }
+        setContent {
+            enableEdgeToEdge()
+            OdyTheme {
+                MeetingCreationScreen(
+                    showAddressSearch = ::showAddressSearchFragment,
+                    onBack = ::finish,
+                    navigate = ::navigate,
+                )
             }
         }
-        collectWhenStarted(viewModel.networkErrorEvent) {
-            showRetrySnackBar { viewModel.retryLastAction() }
-        }
-        collectWhenStarted(viewModel.errorEvent) {
-            showSnackBar(R.string.error_guide)
-        }
-        collectWhenStarted(viewModel.isLoading) { isLoading ->
-            if (isLoading) {
-                showLoadingDialog()
-                return@collectWhenStarted
+    }
+
+    private fun navigate(navigateAction: MeetingCreationNavigateAction) {
+        when (navigateAction) {
+            is MeetingCreationNavigateAction.NavigateToMeetingJoin -> {
+                val intent = MeetingJoinActivity.getIntent(navigateAction.inviteCode, this@MeetingCreationActivity)
+                startActivity(intent)
+                finish()
             }
-            hideLoadingDialog()
         }
     }
 
-    private fun handleMeetingInfoNextClick() {
-        if (binding.vpMeetingInfo.currentItem == fragments.size - 1) {
-            viewModel.createMeeting()
-            return
+    private fun showAddressSearchFragment(onReceiveAddress: OnReceiveAddress) {
+        supportFragmentManager.setFragmentResultListener(
+            AddressSearchFragment.FRAGMENT_RESULT_KEY,
+            this,
+        ) { _, bundle ->
+            val json = bundle.getString(AddressSearchFragment.ADDRESS_KEY) ?: return@setFragmentResultListener
+            val address = Json.decodeFromString(Address.serializer(), json)
+            onReceiveAddress(address)
         }
-        binding.vpMeetingInfo.currentItem += 1
-    }
 
-    override fun onBack() {
-        if (binding.vpMeetingInfo.currentItem > 0) {
-            binding.vpMeetingInfo.currentItem -= 1
-        } else {
-            viewModel.navigateToIntro()
-            finish()
-        }
-    }
-
-    override fun onSearch() {
-        supportFragmentManager.commit {
-            add(R.id.fcv_creation, AddressSearchFragment())
-            setReorderingAllowed(true)
-            addToBackStack(null)
-        }
-    }
-
-    override fun onReceive(address: Address) {
-        viewModel.destinationAddress.value = address
+        val dialog = AddressSearchFragment()
+        dialog.show(supportFragmentManager, ADDRESS_SEARCH_DIALOG_TAG)
     }
 
     companion object {
+        private const val ADDRESS_SEARCH_DIALOG_TAG = "address_dialog"
+
         fun getIntent(context: Context): Intent = Intent(context, MeetingCreationActivity::class.java)
     }
 }
+
+typealias OnReceiveAddress = (Address) -> Unit

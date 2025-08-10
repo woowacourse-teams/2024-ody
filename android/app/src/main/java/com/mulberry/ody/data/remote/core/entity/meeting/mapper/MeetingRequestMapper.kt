@@ -8,9 +8,9 @@ import com.mulberry.ody.domain.model.Nudge
 
 fun MeetingCreationInfo.toMeetingRequest(): MeetingRequest =
     MeetingRequest(
-        name = name,
-        date = dateTime.toLocalDate().toString(),
-        time = dateTime.toLocalTime().toString(),
+        name = name.name,
+        date = dateTime.dateTime.toLocalDate().toString(),
+        time = dateTime.dateTime.toLocalTime().toString(),
         targetPlaceName = destinationAddress.toAddressString(),
         targetLatitude = destinationAddress.latitude,
         targetLongitude = destinationAddress.longitude,

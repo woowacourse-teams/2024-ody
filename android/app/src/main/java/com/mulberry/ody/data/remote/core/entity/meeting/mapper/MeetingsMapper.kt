@@ -3,6 +3,8 @@ package com.mulberry.ody.data.remote.core.entity.meeting.mapper
 import com.mulberry.ody.data.remote.core.entity.meeting.response.MeetingResponse
 import com.mulberry.ody.data.remote.core.entity.meeting.response.MeetingsResponse
 import com.mulberry.ody.domain.model.Meeting
+import com.mulberry.ody.domain.model.MeetingDateTime
+import com.mulberry.ody.domain.model.MeetingName
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -14,10 +16,10 @@ private fun MeetingResponse.toMeeting(): Meeting {
         durationMinutes = durationMinutes,
         id = id,
         mateCount = mateCount,
-        name = name,
+        name = MeetingName(name),
         originAddress = originAddress,
         targetAddress = targetAddress,
-        datetime = dateTime,
+        dateTime = MeetingDateTime(dateTime),
     )
 }
 

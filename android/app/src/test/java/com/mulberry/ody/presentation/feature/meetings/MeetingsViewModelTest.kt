@@ -69,7 +69,7 @@ class MeetingsViewModelTest {
     fun `약속 모임 리스트 화면에서 친구 위치 현황 화면으로 이동한다`() {
         runTest {
             // given
-            val meeting = meetingUiModel.copy(datetime = LocalDateTime.now().plusMinutes(20))
+            val meeting = meetingUiModel.copy(dateTime = LocalDateTime.now().plusMinutes(20))
 
             // when
             val actual =
@@ -87,7 +87,7 @@ class MeetingsViewModelTest {
     fun `약속 시간이 1시간 후인 경우 친구 위치 현황 화면으로 이동하지 않는다`() {
         runTest {
             // given
-            val meeting = meetingUiModel.copy(datetime = LocalDateTime.now().plusMinutes(60))
+            val meeting = meetingUiModel.copy(dateTime = LocalDateTime.now().plusMinutes(60))
 
             // when
             val actual =

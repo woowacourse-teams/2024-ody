@@ -1,16 +1,16 @@
 package com.mulberry.ody.presentation.feature.creation
 
-import com.mulberry.ody.Address
+import android.location.Location
+import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeLocationHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
-import com.mulberry.ody.inviteCode
+import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
 import com.mulberry.ody.util.CoroutinesTestExtension
-import com.mulberry.ody.util.InstantTaskExecutorExtension
-import com.mulberry.ody.util.valueOnAction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -21,9 +21,21 @@ import java.time.LocalTime
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
-@ExtendWith(InstantTaskExecutorExtension::class)
 class MeetingCreationViewModelTest {
     private lateinit var viewModel: MeetingCreationViewModel
+    private val fakeAddress =
+        Address(
+            id = 1L,
+            placeName = "사당역",
+            detailAddress = "서울 동작구",
+            latitude = "",
+            longitude = "",
+        )
+    private val fakeCurrentLocation =
+        Location("test_provider").apply {
+            latitude = 12345.0
+            longitude = 12345.0
+        }
 
     @BeforeEach
     fun setUp() {
@@ -32,195 +44,130 @@ class MeetingCreationViewModelTest {
                 analyticsHelper = FakeAnalyticsHelper,
                 meetingRepository = FakeMeetingRepository,
                 addressRepository = FakeAddressRepository,
-                locationHelper = FakeLocationHelper,
+                locationHelper = FakeLocationHelper(fakeCurrentLocation),
             )
     }
 
     @Test
-    fun `약속 시간의 초깃값을 현재로 설정한다`() {
+    fun `초기에는 약속을 생성할 수 없다`() =
         runTest {
-            // given
-            val nowTime = LocalTime.now()
-
             // when
-            viewModel.initializeMeetingTime()
+            val actual = viewModel.isCreationValid.first()
 
             // then
-            assertThat(viewModel.meetingHour.first()).isEqualTo(nowTime.hour)
-            assertThat(viewModel.meetingMinute.first()).isEqualTo(nowTime.minute)
+            assertThat(actual).isFalse
         }
-    }
 
     @Test
-    fun `약속을 생성한다`() {
+    fun `약속 이름을 설정한다`() =
         runTest {
-            // given
-            setUpInitializeInfo()
-
             // when
-            viewModel.createMeeting()
+            viewModel.updateMeetingName("올리브와 마라탕 먹기")
 
             // then
-            assertThat(viewModel.inviteCode.first()).isEqualTo(inviteCode)
+            val actual = viewModel.meetingCreationUiModel.first().name
+            assertThat(actual).isEqualTo("올리브와 마라탕 먹기")
         }
-    }
 
     @Test
-    fun `입력하지 않은 값이 있는 경우 약속이 생성되지 않는다`() {
+    fun `약속 날짜의 초기값은 오늘과 동일하다`() =
         runTest {
             // when
-            viewModel.createMeeting()
+            val actual = viewModel.meetingCreationUiModel.first().date
 
             // then
-            assertThat(viewModel.inviteCode.first()).isBlank()
+            assertThat(actual).isEqualTo(LocalDate.now())
         }
-    }
 
     @Test
-    fun `약속 이름이 1자에서 15자인 경우 유효하다`() {
+    fun `약속 날짜를 설정한다`() =
         runTest {
-            // given
-            setUpInitializeInfo()
-            viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.NAME
-
             // when
-            viewModel.meetingName.value = "카키와 술 먹기"
+            viewModel.updateMeetingDate(LocalDate.now().plusDays(3))
 
             // then
-            assertThat(viewModel.isValidInfo.first()).isTrue
+            val actual = viewModel.meetingCreationUiModel.first().date
+            assertThat(actual).isEqualTo(LocalDate.now().plusDays(3))
         }
-    }
 
     @Test
-    fun `약속 이름이 1자에서 15자가 아닌 경우 유효하지 않다`() {
+    fun `약속 시간의 초기값은 오늘과 동일하다`() =
         runTest {
-            // given
-            setUpInitializeInfo()
-            viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.NAME
-
             // when
-            viewModel.meetingName.value = "카키와 술 먹기 카키와 술 먹기 카키와 술 먹기"
+            val actual = viewModel.meetingCreationUiModel.first().time
 
             // then
-            assertThat(viewModel.isValidInfo.first()).isFalse
+            assertThat(actual.hour).isEqualTo(LocalTime.now().hour)
+            assertThat(actual.minute).isEqualTo(LocalTime.now().minute)
         }
-    }
 
     @Test
-    fun `약속 날짜가 오늘보다 이전인 경우 선택할 수 없다`() {
+    fun `약속 시간을 설정한다`() =
         runTest {
             // given
-            val meetingDate = LocalDate.of(2023, 7, 28)
+            val expected = LocalTime.now().plusHours(10)
 
             // when
-            val actual =
-                viewModel.invalidMeetingDateEvent.valueOnAction {
-                    viewModel.updateMeetingDate(meetingDate)
-                }
+            viewModel.updateMeetingTime(expected)
 
             // then
-            assertThat(actual).isNotNull
+            val actual = viewModel.meetingCreationUiModel.first().time
+            assertThat(actual).isEqualTo(expected)
         }
-    }
 
     @Test
-    fun `약속 날짜가 오늘과 같은 경우 선택할 수 있다`() {
+    fun `현재 위치를 가져와서 약속 장소로 설정한다`() =
         runTest {
-            // given
-            val meetingDate = LocalDate.now()
-
             // when
-            viewModel.updateMeetingDate(meetingDate)
+            viewModel.getDefaultLocation()
 
             // then
-            assertThat(viewModel.meetingDate.first()).isEqualTo(LocalDate.now())
+            val actual = viewModel.meetingCreationUiModel.first().destination
+            assertThat(actual?.latitude).isEqualTo(fakeCurrentLocation.latitude.toString())
+            assertThat(actual?.longitude).isEqualTo(fakeCurrentLocation.longitude.toString())
         }
-    }
 
     @Test
-    fun `약속 날짜가 오늘보다 이후인 경우 선택할 수 있다`() {
+    fun `약속 장소를 설정한다`() =
         runTest {
-            // given
-            val meetingDate = LocalDate.of(2030, 7, 28)
-
             // when
-            viewModel.updateMeetingDate(meetingDate)
+            viewModel.updateMeetingDestination(fakeAddress)
 
             // then
-            assertThat(viewModel.meetingDate.first()).isEqualTo(LocalDate.of(2030, 7, 28))
+            val actual = viewModel.meetingCreationUiModel.first().destination
+            assertThat(actual).isEqualTo(fakeAddress)
         }
-    }
 
     @Test
-    fun `약속 날짜와 시간이 현재보다 이후인 경우 유효하다`() {
+    fun `모든 값이 설정되면 약속을 생성할 수 있다`() =
         runTest {
-            // given
-            setUpInitializeInfo()
-            viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.TIME
-
             // when
-            viewModel.meetingDate.value = LocalDate.of(2030, 7, 28)
-            viewModel.meetingHour.value = 18
-            viewModel.meetingMinute.value = 0
+            viewModel.updateMeetingName("올리브와 마라탕 먹기")
+            viewModel.updateMeetingDate(LocalDate.now().plusDays(3))
+            viewModel.updateMeetingTime(LocalTime.now().plusHours(10))
+            viewModel.updateMeetingDestination(fakeAddress)
 
             // then
-            assertThat(viewModel.isValidInfo.first()).isTrue
+            val actual = viewModel.isCreationValid.first()
+            assertThat(actual).isTrue
         }
-    }
 
     @Test
-    fun `약속 날짜와 시간이 현재보다 이전인 경우 유효하지 않다`() {
+    fun `약속을 생성하면 약속 참여 화면으로 이동한다`() =
         runTest {
             // given
-            setUpInitializeInfo()
-            viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.TIME
+            viewModel.updateMeetingName("올리브와 마라탕 먹기")
+            viewModel.updateMeetingDate(LocalDate.now().plusDays(3))
+            viewModel.updateMeetingTime(LocalTime.now().plusHours(10))
+            viewModel.updateMeetingDestination(fakeAddress)
 
             // when
-            viewModel.meetingDate.value = LocalDate.of(2023, 7, 28)
-            viewModel.meetingHour.value = 17
-            viewModel.meetingMinute.value = 0
+            launch {
+                viewModel.createMeeting()
+            }
 
             // then
-            assertThat(viewModel.isValidInfo.first()).isFalse
+            val actual = viewModel.navigateAction.first()
+            assertThat(actual).isInstanceOf(MeetingCreationNavigateAction.NavigateToMeetingJoin::class.java)
         }
-    }
-
-    @Test
-    fun `약속 장소가 수도권인 경우 유효하다`() {
-        runTest {
-            // given
-            setUpInitializeInfo()
-            viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.DESTINATION
-
-            // when
-            viewModel.destinationAddress.value = Address(0, "인천광역시 남동구")
-
-            // then
-            assertThat(viewModel.isValidInfo.first()).isTrue
-        }
-    }
-
-    @Test
-    fun `약속 장소가 수도권이 아닌 경우 유효하지 않다`() {
-        runTest {
-            // given
-            setUpInitializeInfo()
-            viewModel.meetingCreationInfoType.value = MeetingCreationInfoType.DESTINATION
-
-            // when
-            viewModel.destinationAddress.value = Address(0, "부산광역시 동구")
-
-            // then
-            assertThat(viewModel.isValidInfo.first()).isFalse
-        }
-    }
-
-    private fun setUpInitializeInfo() {
-        viewModel.meetingName.value = "올리브와 마라탕 먹기"
-        viewModel.meetingDate.value = LocalDate.of(2030, 7, 28)
-        viewModel.meetingHour.value = 18
-        viewModel.meetingMinute.value = 0
-        viewModel.destinationAddress.value = Address(id = 0, roadNameAddress = "인천광역시 남동구")
-        viewModel.isValidInfo.value = true
-    }
 }
