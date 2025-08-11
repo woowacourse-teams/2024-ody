@@ -27,7 +27,6 @@ kakaoShare = "2.20.3"
 kotlin = "1.9.23"
 kotlinxSerializationJson = "1.6.3"
 retrofitConverter = "1.0.0"
-
 ksp = "1.9.23-1.0.20"
 ktlint = "12.1.1"
 kakaoSdk = "2.20.3"
