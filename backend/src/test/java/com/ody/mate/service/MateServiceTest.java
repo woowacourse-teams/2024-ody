@@ -280,7 +280,7 @@ class MateServiceTest extends BaseServiceTest {
         FcmTopic fcmTopic = new FcmTopic(meeting);
         DeviceToken deviceToken = mate.getMember().getDeviceToken();
 
-        mateService.withdraw(mate);
+        mateService.deleteAllByMember(mate.getMember());
 
         List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(meeting.getId(), LocalDateTime.now());
 
@@ -297,14 +297,14 @@ class MateServiceTest extends BaseServiceTest {
         FcmTopic fcmTopic = new FcmTopic(mate.getMeeting());
         DeviceToken deviceToken = mate.getMember().getDeviceToken();
 
-        mateService.withdraw(mate);
+        mateService.deleteAllByMember(mate.getMember());
 
         assertThat(applicationEvents.stream(UnSubscribeEvent.class))
                 .hasSize(1)
                 .anySatisfy(event -> {
                             assertAll(
-                                    () -> assertThat(event.getTopic()).isEqualTo(fcmTopic),
-                                    () -> assertThat(event.getDeviceToken()).isEqualTo(deviceToken)
+                                    () -> assertThat(event.getTopic().getValue()).isEqualTo(fcmTopic.getValue()),
+                                    () -> assertThat(event.getDeviceToken().getValue()).isEqualTo(deviceToken.getValue())
                             );
                         }
                 );

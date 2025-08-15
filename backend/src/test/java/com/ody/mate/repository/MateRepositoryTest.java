@@ -1,6 +1,7 @@
 package com.ody.mate.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.ody.common.BaseRepositoryTest;
 import com.ody.common.Fixture;
@@ -81,6 +82,26 @@ class MateRepositoryTest extends BaseRepositoryTest {
         Optional<Mate> actual = mateRepository.findById(mate.getId());
         assertThat(actual).isPresent();
         assertThat(actual.get().getDeletedAt()).isNotNull();
+    }
+
+    @DisplayName("참여자들을 삭제(soft delete)한다.")
+    @Test
+    void deleteAll() {
+        Mate mate1 = fixtureGenerator.generateMate();
+        Mate mate2 = fixtureGenerator.generateMate();
+
+        mateRepository.deleteAll(List.of(mate1, mate2));
+
+        entityManager.flush();
+        Optional<Mate> actual1 = mateRepository.findById(mate1.getId());
+        Optional<Mate> actual2 = mateRepository.findById(mate2.getId());
+
+        assertAll(
+                () -> assertThat(actual1).isPresent(),
+                () -> assertThat(actual1.get().getDeletedAt()).isNotNull(),
+                () -> assertThat(actual2).isPresent(),
+                () -> assertThat(actual2.get().getDeletedAt()).isNotNull()
+        );
     }
 
     @DisplayName("멤버가 참여하고 있는 모든 mate를 찾는다.")
