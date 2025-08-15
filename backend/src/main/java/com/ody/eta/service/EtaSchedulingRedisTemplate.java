@@ -5,6 +5,7 @@ import com.ody.eta.domain.EtaSchedulingKey;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,5 +51,12 @@ public class EtaSchedulingRedisTemplate {
 
     public void delete(EtaSchedulingKey etaSchedulingKey) {
         redisTemplate.delete(etaSchedulingKey.serialize());
+    }
+
+    public void deleteAll(List<EtaSchedulingKey> etaSchedulingKeys) {
+        List<String> keys = etaSchedulingKeys.stream()
+                .map(EtaSchedulingKey::serialize)
+                .toList();
+        redisTemplate.delete(keys);
     }
 }

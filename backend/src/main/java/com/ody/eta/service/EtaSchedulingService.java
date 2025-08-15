@@ -9,6 +9,7 @@ import com.ody.notification.domain.trigger.MateEtaTrigger;
 import com.ody.notification.domain.trigger.MeetingEtaTrigger;
 import com.ody.notification.service.TriggerSender;
 import com.ody.util.TimeUtil;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,12 @@ public class EtaSchedulingService {
 
     public void deleteCache(Mate mate) {
         etaSchedulingRedisTemplate.delete(EtaSchedulingKey.from(mate));
+    }
+
+    public void deleteCache(List<Mate> mates) {
+        List<EtaSchedulingKey> keys = mates.stream()
+                .map(EtaSchedulingKey::from)
+                .toList();
+        etaSchedulingRedisTemplate.deleteAll(keys);
     }
 }
