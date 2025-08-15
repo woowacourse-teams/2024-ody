@@ -103,4 +103,9 @@ public class EtaService {
     public void deleteByMates(List<Mate> mates) {
         etaRepository.deleteAllByMateIn(mates);
     }
+
+    @Transactional
+    public void deleteByMates2(List<Mate> mates) {
+        etaRepository.softDeleteAllByMateIn(mates);
+    }
 }

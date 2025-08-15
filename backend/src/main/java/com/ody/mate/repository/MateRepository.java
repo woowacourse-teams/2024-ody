@@ -4,7 +4,10 @@ import com.ody.mate.domain.Mate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface MateRepository extends JpaRepository<Mate, Long> {
 
@@ -57,4 +60,9 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
     boolean existsByMeetingIdAndMemberId(Long meetingId, Long memberId);
 
     int countByMeetingId(Long meetingId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Mate m SET m.deletedAt = CURRENT_TIMESTAMP WHERE m IN :mates AND m.deletedAt IS NULL")
+    void softDeleteAllByMateIn(@Param("mates") List<Mate> mates);
 }

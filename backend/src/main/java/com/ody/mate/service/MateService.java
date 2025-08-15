@@ -178,8 +178,9 @@ public class MateService {
                 .map(mate -> new MeetingLog(mate, MeetingLogType.MEMBER_DELETION_LOG))
                 .toList();
         meetingLogService.saveAll(matesDeletionLogs);
-        deleteAll(memberMates);
+        deleteAll2(memberMates);
     }
+
 
     @Transactional
     public void leaveByMeetingIdAndMemberId(Long meetingId, Long memberId) {
@@ -198,11 +199,20 @@ public class MateService {
     }
 
     private void deleteAll(List<Mate> mates) {
-        notificationService.updateAllStatusToDismissByMateIdAndSendAtAfterNow2(mates);
+        notificationService.updateAllMatesPendingNotificationsToDismissed(mates);
         mates.forEach(mate
                 -> notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken()));
         etaService.deleteByMates(mates);
         mateRepository.deleteAll(mates);
+        etaSchedulingService.deleteCache(mates);
+    }
+
+    private void deleteAll2(List<Mate> mates) {
+        notificationService.updateAllMatesPendingNotificationsToDismissed(mates);
+        mates.forEach(mate
+                -> notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken()));
+        etaService.deleteByMates2(mates);
+        mateRepository.softDeleteAllByMateIn(mates);
         etaSchedulingService.deleteCache(mates);
     }
 }

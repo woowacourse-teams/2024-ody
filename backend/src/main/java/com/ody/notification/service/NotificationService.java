@@ -117,7 +117,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void updateAllStatusToDismissByMateIdAndSendAtAfterNow2(List<Mate> mates) {
+    public void updateAllMatesPendingNotificationsToDismissed(List<Mate> mates) {
         notificationRepository.updateMatesPendingNotificationsToDismissed(mates, LocalDateTime.now());
     }
 
