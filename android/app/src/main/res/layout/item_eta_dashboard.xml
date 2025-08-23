@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="eta"
+            type="com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiModel" />
+
+        <variable
+            name="missingTooltipListener"
+            type="com.mulberry.ody.presentation.feature.room.etadashboard.listener.MissingToolTipListener" />
+
+        <variable
+            name="nudgeListener"
+            type="com.mulberry.ody.presentation.feature.room.etadashboard.listener.NudgeListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="21dp">
+
+        <TextView
+            android:id="@+id/tv_nickname_dashboard"
+            style="@style/pretendard_bold_20"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="1"
+            android:text="@{eta.nickname}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_badge_dashboard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="크림묻은올리브" />
+
+        <TextView
+            android:id="@+id/tv_badge_dashboard"
+            style="@style/pretendard_medium_16"
+            android:layout_width="80dp"
+            android:layout_height="32dp"
+            android:background="@drawable/rectangle_radius_15"
+            android:gravity="center"
+            android:textColor="@color/secondaryVariant"
+            app:canNudge="@{eta}"
+            app:etaBadgeAnimation="@{eta.etaStatusUiModel}"
+            app:etaType="@{eta.etaStatusUiModel}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:nudgeListener="@{nudgeListener}"
+            tools:backgroundTint="@color/yellow"
+            tools:text="지각" />
+
+        <LinearLayout
+            android:id="@+id/layout_status_dashboard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_badge_dashboard"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_status_dashboard"
+                style="@style/pretendard_regular_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                app:etaStatus="@{eta.etaStatusUiModel}"
+                tools:text="13분 후 도착" />
+
+            <TextView
+                android:id="@+id/tv_missing_tooltip"
+                style="@style/pretendard_regular_14"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/oval"
+                android:backgroundTint="@color/gray_400"
+                android:gravity="center"
+                android:text="@string/question_mark"
+                android:textColor="@color/secondaryVariant"
+                android:visibility="gone"
+                app:isUserSelf="@{eta.userSelf}"
+                app:missingToolTipListener="@{missingTooltipListener}"
+                app:visibility="@{eta.missing}"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
