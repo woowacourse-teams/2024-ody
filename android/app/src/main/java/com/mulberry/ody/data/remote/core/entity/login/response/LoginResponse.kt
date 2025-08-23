@@ -1,14 +1,14 @@
 package com.mulberry.ody.data.remote.core.entity.login.response
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class LoginResponse(
-    @Json(name = "tokenType")
+    @SerialName("tokenType")
     val tokenType: String,
-    @Json(name = "accessToken")
+    @SerialName("accessToken")
     val accessToken: String,
-    @Json(name = "refreshToken")
+    @SerialName("refreshToken")
     val refreshToken: String,
 )

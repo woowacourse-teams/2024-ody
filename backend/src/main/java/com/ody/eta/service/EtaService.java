@@ -1,5 +1,6 @@
 package com.ody.eta.service;
 
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.domain.Eta;
 import com.ody.eta.domain.EtaStatus;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 public class EtaService {
 

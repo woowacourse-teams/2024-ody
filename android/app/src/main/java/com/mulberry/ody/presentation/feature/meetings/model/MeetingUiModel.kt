@@ -9,19 +9,19 @@ import java.time.LocalDateTime
 data class MeetingUiModel(
     val id: Long,
     val name: String,
-    val datetime: LocalDateTime,
+    val dateTime: LocalDateTime,
     val originAddress: String,
     val targetAddress: String,
     val durationMinutes: String,
 ) {
     fun isAccessible(): Boolean {
         val now = LocalDateTime.now()
-        return !datetime.isBefore(now.plusMinutes(30))
+        return !dateTime.isBefore(now.plusMinutes(30))
     }
 
     fun dateTimeMessage(context: Context): String {
-        val meetingDate = datetime.toLocalDate()
-        val meetingTimeMessage = datetime.toLocalTime().toMessage()
+        val meetingDate = dateTime.toLocalDate()
+        val meetingTimeMessage = dateTime.toLocalTime().toMessage()
 
         return when {
             meetingDate.isToday() -> {

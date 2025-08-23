@@ -1,10 +1,10 @@
 package com.mulberry.ody.data.remote.core.entity.notification.response
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class NotificationLogsResponse(
-    @Json(name = "notiLog")
+    @SerialName("notiLog")
     val logList: List<NotificationLogResponse>,
 )

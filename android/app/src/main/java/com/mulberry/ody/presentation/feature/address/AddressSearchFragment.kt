@@ -4,16 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.fragment.app.Fragment
+import androidx.core.os.bundleOf
+import androidx.fragment.app.DialogFragment
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.presentation.feature.address.listener.AddressSearchListener
 import com.mulberry.ody.presentation.theme.OdyTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
-class AddressSearchFragment : Fragment() {
+class AddressSearchFragment : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -26,7 +28,7 @@ class AddressSearchFragment : Fragment() {
             setContent {
                 OdyTheme {
                     AddressSearchScreen(
-                        onClickBack = ::onBack,
+                        onClickBack = { dismiss() },
                         onClickAddress = ::sendAddress,
                     )
                 }
@@ -35,12 +37,28 @@ class AddressSearchFragment : Fragment() {
     }
 
     private fun sendAddress(address: Address) {
-        (parentFragment as? AddressSearchListener)?.onReceive(address)
-        (activity as? AddressSearchListener)?.onReceive(address)
-        onBack()
+        val json = Json.encodeToString(Address.serializer(), address)
+        parentFragmentManager.setFragmentResult(
+            FRAGMENT_RESULT_KEY,
+            bundleOf(ADDRESS_KEY to json),
+        )
+        dismiss()
     }
 
-    private fun onBack() {
-        parentFragmentManager.popBackStack()
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        )
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+    }
+
+    companion object {
+        const val FRAGMENT_RESULT_KEY = "address_result_key"
+        const val ADDRESS_KEY = "selected_address_json"
     }
 }
+
+typealias OnReceiveAddress = (Address) -> Unit

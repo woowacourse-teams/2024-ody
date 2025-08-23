@@ -1,24 +1,24 @@
 package com.mulberry.ody.data.remote.core.entity.meeting.response
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class MeetingCreationResponse(
-    @Json(name = "id")
+    @SerialName("id")
     val id: Long,
-    @Json(name = "name")
+    @SerialName("name")
     val name: String,
-    @Json(name = "date")
+    @SerialName("date")
     val date: String,
-    @Json(name = "time")
+    @SerialName("time")
     val time: String,
-    @Json(name = "targetAddress")
+    @SerialName("targetAddress")
     val targetAddress: String,
-    @Json(name = "targetLatitude")
+    @SerialName("targetLatitude")
     val targetLatitude: String,
-    @Json(name = "targetLongitude")
+    @SerialName("targetLongitude")
     val targetLongitude: String,
-    @Json(name = "inviteCode")
+    @SerialName("inviteCode")
     val inviteCode: String,
 )

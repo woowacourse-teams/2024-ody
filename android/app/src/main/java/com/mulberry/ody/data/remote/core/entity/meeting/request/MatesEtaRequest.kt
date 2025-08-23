@@ -1,14 +1,14 @@
 package com.mulberry.ody.data.remote.core.entity.meeting.request
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class MatesEtaRequest(
-    @Json(name = "isMissing")
+    @SerialName("isMissing")
     val isMissing: Boolean,
-    @Json(name = "currentLatitude")
+    @SerialName("currentLatitude")
     val currentLatitude: String,
-    @Json(name = "currentLongitude")
+    @SerialName("currentLongitude")
     val currentLongitude: String,
 )

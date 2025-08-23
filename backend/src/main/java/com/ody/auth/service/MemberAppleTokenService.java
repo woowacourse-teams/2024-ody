@@ -2,6 +2,7 @@ package com.ody.auth.service;
 
 import com.ody.auth.domain.MemberAppleToken;
 import com.ody.auth.repository.MemberAppleTokenRepository;
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.member.domain.AuthProvider;
 import com.ody.member.domain.Member;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberAppleTokenService {

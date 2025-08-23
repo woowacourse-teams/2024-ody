@@ -6,8 +6,8 @@ import com.mulberry.ody.presentation.common.toDurationTimeMessage
 private fun Meeting.toMeetingUiModel(): MeetingUiModel {
     return MeetingUiModel(
         id = id,
-        name = name,
-        datetime = datetime,
+        name = name.name,
+        dateTime = dateTime.dateTime,
         durationMinutes = durationMinutes.toInt().toDurationTimeMessage(),
         originAddress = originAddress,
         targetAddress = targetAddress,

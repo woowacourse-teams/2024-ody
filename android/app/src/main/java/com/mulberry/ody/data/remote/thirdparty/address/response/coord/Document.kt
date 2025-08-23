@@ -1,12 +1,10 @@
 package com.mulberry.ody.data.remote.thirdparty.address.response.coord
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Document(
-    @Json(name = "address")
+    @SerialName("address")
     val address: Address?,
-    @Json(name = "road_address")
-    val roadAddress: RoadAddress?,
 )

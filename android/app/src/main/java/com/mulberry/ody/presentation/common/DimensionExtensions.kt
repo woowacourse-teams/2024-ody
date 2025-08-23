@@ -1,16 +1,30 @@
 package com.mulberry.ody.presentation.common
 
-import android.content.Context
-import android.graphics.Point
-import android.view.View
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-fun Int.toPixel(context: Context): Int {
-    val density = context.resources.displayMetrics.density
-    return (this * density).toInt()
+@Composable
+internal fun Dp.toPx(): Float {
+    val density = LocalDensity.current
+    return with(density) { this@toPx.toPx() }
 }
 
-fun View.getPointOnScreen(): Point {
-    val location = IntArray(2)
-    this.getLocationOnScreen(location)
-    return Point(location[0], location[1])
+@Composable
+internal fun Float.toDp(): Dp {
+    val density = LocalDensity.current
+    return with(density) { this@toDp.toDp() }
+}
+
+@Composable
+internal fun Int.toDp(): Dp {
+    val density = LocalDensity.current
+    return with(density) { this@toDp.toDp() }
+}
+
+@Composable
+internal fun Int.dpToPx(): Float {
+    val density = LocalDensity.current
+    return with(density) { this@dpToPx.dp.toPx() }
 }

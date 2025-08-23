@@ -1,5 +1,6 @@
 package com.ody.mate.service;
 
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
 import com.ody.eta.domain.EtaStatus;
@@ -37,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@EnableDeletedFilter
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MateService {
@@ -78,7 +80,8 @@ public class MateService {
     private void saveAndSendDepartureReminder(Meeting meeting, Mate mate, FcmTopic fcmTopic) {
         DepartureTime departureTime = new DepartureTime(meeting, mate.getEstimatedMinutes());
         DepartureReminder departureReminder = new DepartureReminder(mate, departureTime, fcmTopic);
-        Notification savedDepartureReminder = notificationService.saveAndSchedule(departureReminder.toNotification());
+        Notification savedDepartureReminder = notificationService.saveAndSendOrSchedule(
+                departureReminder.toNotification());
         LocalDateTime sendAt = savedDepartureReminder.getSendAt();
 
         MeetingLog departureReminderLog = new MeetingLog(mate, MeetingLogType.DEPARTURE_REMINDER, sendAt);

@@ -1,14 +1,14 @@
 package com.mulberry.ody.data.remote.core.entity.join.response
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class JoinResponse(
-    @Json(name = "meetingId")
+    @SerialName("meetingId")
     val meetingId: Long,
-    @Json(name = "date")
+    @SerialName("date")
     val date: String,
-    @Json(name = "time")
+    @SerialName("time")
     val time: String,
 )

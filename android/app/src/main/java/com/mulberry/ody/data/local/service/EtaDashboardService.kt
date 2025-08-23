@@ -1,9 +1,15 @@
 package com.mulberry.ody.data.local.service
 
+import android.Manifest
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo
+import android.os.Build
 import android.os.IBinder
+import androidx.core.app.ServiceCompat
+import androidx.core.content.ContextCompat
 import com.mulberry.ody.domain.apiresult.fold
 import com.mulberry.ody.domain.apiresult.getOrNull
 import com.mulberry.ody.domain.apiresult.onNetworkError
@@ -16,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
@@ -36,11 +43,29 @@ class EtaDashboardService : Service() {
     @Inject
     lateinit var etaDashboardNotification: EtaDashboardNotification
 
-    private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val meetingJobs: MutableMap<Long, Job> = mutableMapOf()
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        val requiredPermissions =
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            )
+
+        if (requiredPermissions.all {
+                ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_DENIED
+            }
+        ) {
+            stopSelf()
+            return
+        }
     }
 
     override fun onStartCommand(
@@ -61,6 +86,7 @@ class EtaDashboardService : Service() {
                 }
 
                 if (!meetingJobs.contains(meetingId)) {
+                    initializeForeground(meetingId)
                     openEtaDashboard(meetingId, meetingTime)
                 }
             }
@@ -72,13 +98,24 @@ class EtaDashboardService : Service() {
         return START_REDELIVER_INTENT
     }
 
+    private fun initializeForeground(meetingId: Long) {
+        val notification = etaDashboardNotification.createNotification(meetingId)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ServiceCompat.startForeground(
+                this,
+                meetingId.toInt(),
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION or ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
+            )
+        } else {
+            startForeground(meetingId.toInt(), notification)
+        }
+    }
+
     private fun openEtaDashboard(
         meetingId: Long,
         meetingTime: Long,
     ) {
-        val notification = etaDashboardNotification.createNotification(meetingId)
-        startForeground(meetingId.toInt(), notification)
-
         val job =
             serviceScope.launch {
                 while (isInETARange(meetingTime)) {

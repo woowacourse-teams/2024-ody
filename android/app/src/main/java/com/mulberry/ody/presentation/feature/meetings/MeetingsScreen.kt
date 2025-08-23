@@ -356,7 +356,7 @@ private fun MeetingItem(
                     )
                 }
                 OdyButton(
-                    isEnabled = !meeting.isAccessible(),
+                    enabled = !meeting.isAccessible(),
                     onClick = { onClickOdy(meeting) },
                 )
             }
@@ -379,7 +379,7 @@ private fun MeetingItemPreview() {
         MeetingUiModel(
             id = 1L,
             name = "올리브와 저녁 마라탕",
-            datetime = LocalDateTime.now().plusMinutes(20),
+            dateTime = LocalDateTime.now().plusMinutes(20),
             originAddress = "서울 강남구 테헤란로 411",
             targetAddress = "서울특별시 송파구 올림픽로35다길 42",
             durationMinutes = "1시간 10분",

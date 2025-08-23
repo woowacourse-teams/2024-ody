@@ -8,15 +8,11 @@ import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
+import com.mulberry.ody.presentation.feature.invitecode.model.InviteCodeNavigateAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,28 +23,14 @@ class InviteCodeViewModel
         private val analyticsHelper: AnalyticsHelper,
         private val meetingRepository: MeetingRepository,
     ) : BaseViewModel() {
-        val inviteCode: MutableStateFlow<String> = MutableStateFlow("")
-        val hasInviteCode: StateFlow<Boolean> =
-            inviteCode.map { it.isNotEmpty() }
-                .stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                    initialValue = false,
-                )
-
         private val _invalidCodeEvent: MutableSharedFlow<String> = MutableSharedFlow()
         val invalidCodeEvent: SharedFlow<String> get() = _invalidCodeEvent.asSharedFlow()
 
         private val _navigateAction: MutableSharedFlow<InviteCodeNavigateAction> = MutableSharedFlow()
         val navigateAction: SharedFlow<InviteCodeNavigateAction> get() = _navigateAction.asSharedFlow()
 
-        fun clearInviteCode() {
-            inviteCode.value = ""
-        }
-
-        fun checkInviteCode() {
+        fun checkInviteCode(inviteCode: String) {
             viewModelScope.launch {
-                val inviteCode = inviteCode.value.ifBlank { return@launch }
                 startLoading()
                 meetingRepository.fetchInviteCodeValidity(inviteCode)
                     .onSuccess {
@@ -58,7 +40,7 @@ class InviteCodeViewModel
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
                     }.onNetworkError {
                         handleNetworkError()
-                        lastFailedAction = { checkInviteCode() }
+                        lastFailedAction = { checkInviteCode(inviteCode) }
                     }
                 stopLoading()
             }
@@ -66,6 +48,5 @@ class InviteCodeViewModel
 
         companion object {
             private const val TAG = "InviteCodeViewModel"
-            private const val STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
         }
     }

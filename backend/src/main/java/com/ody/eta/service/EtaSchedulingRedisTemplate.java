@@ -1,5 +1,6 @@
 package com.ody.eta.service;
 
+import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.eta.domain.EtaSchedulingKey;
 import com.ody.mate.repository.MateRepository;
 import com.ody.meeting.domain.Meeting;
@@ -9,10 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Component
+@EnableDeletedFilter
 public class EtaSchedulingRedisTemplate {
 
     private final long ttlMs;

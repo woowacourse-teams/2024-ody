@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.mulberry.ody.R
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
+import com.mulberry.ody.presentation.theme.Cream
 import com.mulberry.ody.presentation.theme.OdyTheme
 import com.mulberry.ody.presentation.theme.Red
 
@@ -46,10 +48,8 @@ fun OdySadDialog(
         Card(
             modifier = modifier.wrapContentSize(),
             shape = RoundedCornerShape(20.dp),
-            colors =
-                CardDefaults.cardColors().copy(
-                    containerColor = OdyTheme.colors.primary,
-                ),
+            border = BorderStroke(width = 1.dp, color = Cream),
+            colors = CardDefaults.cardColors().copy(containerColor = OdyTheme.colors.primary),
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

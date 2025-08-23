@@ -7,8 +7,8 @@ plugins {
     alias(libs.plugins.googleServices)
     alias(libs.plugins.android.application)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.android.junit.jupiter)
-    alias(libs.plugins.jetbrains.kotlin.kapt)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
@@ -17,14 +17,14 @@ properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "com.mulberry.ody"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.mulberry.ody"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 34
-        versionName = "1.3.1"
+        targetSdk = 35
+        versionCode = 35
+        versionName = "1.3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_DEV_URL", properties["BASE_DEV_URL"].toString())
@@ -70,17 +70,11 @@ android {
     }
     buildFeatures {
         buildConfig = true
-        dataBinding = true
-        viewBinding = true
         compose = true
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 dependencies {
@@ -89,17 +83,11 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle)
-    implementation(libs.androidx.view.pager)
     implementation(libs.androidx.fragment.ktx)
-    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.core.android)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.fragment.testing)
-    kapt(libs.androidx.hilt.compiler)
 
     // firebase
     implementation(libs.firebase.analytics)
@@ -121,24 +109,18 @@ dependencies {
     // retrofit
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
-    implementation(libs.retrofit.converter.moshi)
-    implementation(libs.retrofit.converter.scalars)
+    implementation(libs.retrofit.converter)
 
     // room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    // moshi
-    implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
-    ksp(libs.moshi.kotlin.codegen)
+    // kotlinx serialization
+    implementation(libs.kotlinx.serialization.json)
 
     // timber
     implementation(libs.timber)
-
-    // dotsindicator
-    implementation(libs.dotsindicator)
 
     // play service
     implementation(libs.play.services.location)
@@ -146,9 +128,6 @@ dependencies {
     // coroutines
     implementation(libs.kotlinx.coroutines.core)
     testImplementation(libs.kotlinx.coroutines.test)
-
-    // glide
-    implementation(libs.glide)
 
     // kakao share
     implementation(libs.kakao.share)
@@ -162,15 +141,18 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling)
-    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.tooling.preview)
 
     // hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     // paging
     implementation(libs.androidx.paging)
     implementation(libs.androidx.compose.paging)
+
+    // coil
+    implementation(libs.coil.compose)
 }

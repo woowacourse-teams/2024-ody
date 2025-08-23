@@ -21,7 +21,7 @@ class SettingActivity : ComponentActivity(), SettingNavigation {
         setContent {
             OdyTheme {
                 SettingScreen(
-                    onClickBack = { finish() },
+                    onBack = { finish() },
                     settingNavigation = this,
                 )
             }

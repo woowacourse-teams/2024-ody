@@ -2,8 +2,10 @@ package com.ody.notification.domain.message;
 
 import com.google.firebase.messaging.Message;
 import com.ody.mate.domain.Mate;
+import com.ody.member.domain.DeviceToken;
 import com.ody.notification.domain.Notification;
-import com.ody.notification.domain.notice.EtaSchedulingNotice;
+import com.ody.notification.domain.trigger.EtaTrigger;
+import com.ody.notification.dto.response.MessagePriorityConfigs;
 import java.time.format.DateTimeFormatter;
 
 public class DirectMessage extends AbstractMessage {
@@ -21,12 +23,15 @@ public class DirectMessage extends AbstractMessage {
         return new DirectMessage(message);
     }
 
-    public static DirectMessage create(EtaSchedulingNotice etaSchedulingNotice, String deviceToken) {
+    public static DirectMessage create(EtaTrigger trigger, DeviceToken deviceToken) {
+        MessagePriorityConfigs messagePriorityConfigs = FcmPriorityResolver.resolve(trigger.getPriority());
         Message message = Message.builder()
-                .putData("type", etaSchedulingNotice.getType().name())
-                .putData("meetingId", String.valueOf(etaSchedulingNotice.getMeetingId()))
-                .putData("meetingTime", etaSchedulingNotice.getMeetingTime().format(FORMATTER))
-                .setToken(deviceToken)
+                .setAndroidConfig(messagePriorityConfigs.androidConfig())
+                .setApnsConfig(messagePriorityConfigs.apnsConfig())
+                .putData("type", trigger.getType().name())
+                .putData("meetingId", String.valueOf(trigger.getMeetingId()))
+                .putData("meetingTime", trigger.getMeetingTime().format(FORMATTER))
+                .setToken(deviceToken.getValue())
                 .build();
 
         return new DirectMessage(message);

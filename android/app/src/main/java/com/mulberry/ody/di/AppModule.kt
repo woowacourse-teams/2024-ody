@@ -1,10 +1,9 @@
 package com.mulberry.ody.di
 
-import android.app.AlarmManager
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
-import com.mulberry.ody.data.local.db.OdyDatastore
+import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.data.local.service.EtaDashboard
 import com.mulberry.ody.data.local.service.EtaDashboardNotification
 import com.mulberry.ody.presentation.common.gps.GeoLocationHelper
@@ -24,18 +23,10 @@ object AppModule {
     @Singleton
     fun provideFCMNotification(
         @ApplicationContext context: Context,
-        odyDatastore: OdyDatastore,
+        odyDataStore: OdyDataStore,
         notificationManager: NotificationManager,
     ): FCMNotification {
-        return FCMNotification(context, odyDatastore, notificationManager)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAlarmManager(
-        @ApplicationContext context: Context,
-    ): AlarmManager {
-        return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        return FCMNotification(context, odyDataStore, notificationManager)
     }
 
     @Provides
@@ -67,8 +58,8 @@ object AppModule {
     @Singleton
     fun provideEtaDashboard(
         @ApplicationContext context: Context,
-        odyDatastore: OdyDatastore,
+        odyDataStore: OdyDataStore,
     ): EtaDashboard {
-        return EtaDashboard(context, odyDatastore)
+        return EtaDashboard(context, odyDataStore)
     }
 }

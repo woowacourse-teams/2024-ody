@@ -1,18 +1,22 @@
 package com.mulberry.ody.presentation.feature.room.etadashboard.model
 
 import android.content.Context
-import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
+import androidx.compose.ui.graphics.Color
 import com.mulberry.ody.R
+import com.mulberry.ody.presentation.theme.Blue
+import com.mulberry.ody.presentation.theme.Gray400
+import com.mulberry.ody.presentation.theme.Green
+import com.mulberry.ody.presentation.theme.Red
+import com.mulberry.ody.presentation.theme.Yellow
 
-sealed class EtaStatusUiModel {
-    @get:ColorRes
-    abstract val badgeColorId: Int
+sealed interface EtaStatusUiModel {
+    val badgeColor: Color
 
     @get:StringRes
-    abstract val badgeMessageId: Int
+    val badgeMessageId: Int
 
-    protected fun etaDurationMinutesMessage(
+    fun etaDurationMinutesMessage(
         context: Context,
         durationMinutes: Int,
     ): String {
@@ -22,12 +26,12 @@ sealed class EtaStatusUiModel {
         return context.getString(R.string.status_arrival_remain_time, durationMinutes)
     }
 
-    abstract fun canNudge(): Boolean
+    fun canNudge(): Boolean
 
-    abstract fun etaStatusMessage(context: Context): String
+    fun etaStatusMessage(context: Context): String
 
-    data object Arrived : EtaStatusUiModel() {
-        override val badgeColorId: Int = R.color.blue
+    data object Arrived : EtaStatusUiModel {
+        override val badgeColor: Color = Blue
         override val badgeMessageId: Int = R.string.badge_arrived
 
         override fun etaStatusMessage(context: Context): String {
@@ -37,8 +41,8 @@ sealed class EtaStatusUiModel {
         override fun canNudge(): Boolean = false
     }
 
-    data class ArrivalSoon(val durationMinutes: Int) : EtaStatusUiModel() {
-        override val badgeColorId: Int = R.color.green
+    data class ArrivalSoon(val durationMinutes: Int) : EtaStatusUiModel {
+        override val badgeColor: Color = Green
         override val badgeMessageId: Int = R.string.badge_arrival_soon
 
         override fun etaStatusMessage(context: Context): String {
@@ -48,8 +52,8 @@ sealed class EtaStatusUiModel {
         override fun canNudge(): Boolean = false
     }
 
-    data class LateWarning(val durationMinutes: Int) : EtaStatusUiModel() {
-        override val badgeColorId: Int = R.color.yellow
+    data class LateWarning(val durationMinutes: Int) : EtaStatusUiModel {
+        override val badgeColor: Color = Yellow
         override val badgeMessageId: Int = R.string.badge_late_warning
 
         override fun etaStatusMessage(context: Context): String {
@@ -59,8 +63,8 @@ sealed class EtaStatusUiModel {
         override fun canNudge(): Boolean = true
     }
 
-    data class Late(val durationMinutes: Int) : EtaStatusUiModel() {
-        override val badgeColorId: Int = R.color.red
+    data class Late(val durationMinutes: Int) : EtaStatusUiModel {
+        override val badgeColor: Color = Red
         override val badgeMessageId: Int = R.string.badge_late
 
         override fun etaStatusMessage(context: Context): String {
@@ -70,8 +74,8 @@ sealed class EtaStatusUiModel {
         override fun canNudge(): Boolean = true
     }
 
-    data object Missing : EtaStatusUiModel() {
-        override val badgeColorId: Int = R.color.gray_400
+    data object Missing : EtaStatusUiModel {
+        override val badgeColor: Color = Gray400
         override val badgeMessageId: Int = R.string.badge_missing
 
         override fun etaStatusMessage(context: Context): String {

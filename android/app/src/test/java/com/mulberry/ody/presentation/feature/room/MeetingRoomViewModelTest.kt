@@ -13,7 +13,7 @@ import com.mulberry.ody.meetingId
 import com.mulberry.ody.notificationLogs
 import com.mulberry.ody.presentation.feature.room.detail.model.toDetailMeetingUiModel
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.toMateEtaUiModels
-import com.mulberry.ody.presentation.feature.room.log.model.toNotificationUiModels
+import com.mulberry.ody.presentation.feature.room.log.model.toNotificationLogUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
 import com.mulberry.ody.util.InstantTaskExecutorExtension
 import com.mulberry.ody.util.valueOnAction
@@ -51,7 +51,7 @@ class MeetingRoomViewModelTest {
     fun `친구들과 나의 위치 현황을 볼 수 있다`() {
         runTest {
             // when
-            val actual = viewModel.mateEtaUiModels.first()
+            val actual = viewModel.mateEtas.first()
 
             // then
             val expected = mateEtaInfo.toMateEtaUiModels()
@@ -68,7 +68,7 @@ class MeetingRoomViewModelTest {
             assertThat(meetingUiModel).isEqualTo(detailMeeting.toDetailMeetingUiModel())
 
             val notificationLogUiModel = viewModel.notificationLogs.first()
-            assertThat(notificationLogUiModel).isEqualTo(notificationLogs.toNotificationUiModels())
+            assertThat(notificationLogUiModel).isEqualTo(notificationLogs.toNotificationLogUiModels())
         }
     }
 
@@ -76,7 +76,7 @@ class MeetingRoomViewModelTest {
     fun `친구 재촉을 하면 친구 재촉이 성공한다`() {
         runTest {
             // when
-            viewModel.mateEtaUiModels.first()
+            viewModel.mateEtas.first()
             val actual = viewModel.nudgeSuccessMate.valueOnAction { viewModel.nudgeMate(1, 0) }
 
             // then
