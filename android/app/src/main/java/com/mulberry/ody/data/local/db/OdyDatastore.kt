@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class OdyDatastore(private val context: Context) {
+class OdyDataStore(private val context: Context) {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = ODY_KEY)
 
     suspend fun setFCMToken(token: String) {
@@ -60,9 +60,9 @@ class OdyDatastore(private val context: Context) {
         }
     }
 
-    suspend fun setIsFirstSeenEtaDashboard(isFirstSeenEtaDashboard: Boolean) {
+    suspend fun updateEtaDashboardGuideSeen() {
         context.dataStore.edit {
-            it[IS_FIRST_SEEN_ETA_DASHBOARD] = isFirstSeenEtaDashboard
+            it[IS_FIRST_SEEN_ETA_DASHBOARD] = false
         }
     }
 
