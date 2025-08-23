@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.FragmentActivity
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.presentation.feature.address.AddressSearchFragment
+import com.mulberry.ody.presentation.feature.address.OnReceiveAddress
 import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
 import com.mulberry.ody.presentation.feature.join.MeetingJoinActivity
 import com.mulberry.ody.presentation.theme.OdyTheme
@@ -60,5 +61,3 @@ class MeetingCreationActivity : FragmentActivity() {
         fun getIntent(context: Context): Intent = Intent(context, MeetingCreationActivity::class.java)
     }
 }
-
-typealias OnReceiveAddress = (Address) -> Unit

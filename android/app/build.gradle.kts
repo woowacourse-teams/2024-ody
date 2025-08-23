@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.android.junit.jupiter)
-    alias(libs.plugins.jetbrains.kotlin.kapt)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
@@ -71,17 +70,11 @@ android {
     }
     buildFeatures {
         buildConfig = true
-        dataBinding = true
-        viewBinding = true
         compose = true
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 dependencies {
@@ -90,14 +83,11 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle)
-    implementation(libs.androidx.view.pager)
     implementation(libs.androidx.fragment.ktx)
-    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.core.android)
-    kapt(libs.androidx.hilt.compiler)
 
     // firebase
     implementation(libs.firebase.analytics)
@@ -157,7 +147,7 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     // paging
     implementation(libs.androidx.paging)

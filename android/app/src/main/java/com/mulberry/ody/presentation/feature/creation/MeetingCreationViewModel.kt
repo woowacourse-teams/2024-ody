@@ -52,7 +52,7 @@ class MeetingCreationViewModel
         private val _currentLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
         val currentLocationError: SharedFlow<Unit> get() = _currentLocationError.asSharedFlow()
 
-        fun getDefaultLocation() {
+        fun getCurrentLocation() {
             viewModelScope.launch {
                 startLoading()
                 locationHelper.getCurrentCoordinate()
