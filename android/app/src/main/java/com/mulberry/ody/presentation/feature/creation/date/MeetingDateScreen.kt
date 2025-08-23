@@ -108,7 +108,7 @@ private fun MeetingDateContent(
                 )
             },
             colors = DatePickerDefaults.colors(containerColor = OdyTheme.colors.primary),
-            modifier = Modifier.padding(horizontal = 20.dp),
+            modifier = Modifier.padding(horizontal = 14.dp),
         )
     }
 }
