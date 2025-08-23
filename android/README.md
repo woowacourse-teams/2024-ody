@@ -9,22 +9,23 @@
 <br>
 
 ## 기술 스택 🧑‍💻
-| 구분           |                                                                |
-|---------------|----------------------------------------------------------------|
-| Launguage     | Kotlin, XML                                                    |
-| Architecture  | MVVM, Clean Architecture                                       |
-| Network       | Retrofit, OkHttp                                               |
-| Serialization | Moshi                                                          |
-| Async         | Coroutines, Flow                                               |
-| Jetpack       | ViewModel, DataBinding, ViewPager2, SplashScreen, AlarmManager |
-| Local DB      | Room, DataStore                                                |
-| DI            | Hilt                                                           |
-| Firebase      | FCM, Analytics, Crashlytics, Storage                           |
-| Test          | Junit5, Junit4, Espresso, AssertJ                              |
-| Third-Party   | dotsindicator, Timber                                          |
-| Kakao         | Login, Message, Address                                        |
-| GPS           | Google Service                                                 |
-| CI/CD         | Github Actions                                                 |
+| 구분            |                                      |
+|---------------|--------------------------------------|
+| Launguage     | Kotlin                               |
+| Architecture  | MVVM, Clean Architecture             |
+| Network       | Retrofit, OkHttp                     |
+| Serialization | Kotlinx Serialization                |
+| Async         | Coroutines, Flow                     |
+| Jetpack       | Compose, ViewModel, SplashScreen     |
+| Local DB      | Room, DataStore                      |
+| DI            | Hilt                                 |
+| Image         | Coil                                 |
+| Firebase      | FCM, Analytics, Crashlytics, Storage |
+| Test          | Junit5, Junit4, AssertJ              |
+| Third-Party   | Timber                               |
+| Kakao         | Login, Message, Address              |
+| GPS           | Google Service                       |
+| CI/CD         | Github Actions                       |
 
 <br>
 
