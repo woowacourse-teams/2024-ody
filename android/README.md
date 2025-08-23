@@ -22,7 +22,6 @@
 | Image         | Coil                                 |
 | Firebase      | FCM, Analytics, Crashlytics, Storage |
 | Test          | Junit5, Junit4, AssertJ              |
-| Third-Party   | Timber                               |
 | Kakao         | Login, Message, Address              |
 | GPS           | Google Service                       |
 | CI/CD         | Github Actions                       |
