@@ -173,16 +173,14 @@ public class MateService {
 
     @Transactional
     public void deleteAllByMember(Member member) {
-        mateRepository.findFetchedAllByMemberId(member.getId())
-                .forEach(this::withdraw);
+        List<Mate> memberMates = mateRepository.findFetchedAllByMemberId(member.getId());
+        List<MeetingLog> matesDeletionLogs = memberMates.stream()
+                .map(mate -> new MeetingLog(mate, MeetingLogType.MEMBER_DELETION_LOG))
+                .toList();
+        meetingLogService.saveAll(matesDeletionLogs);
+        deleteAll2(memberMates);
     }
 
-    @Transactional
-    public void withdraw(Mate mate) {
-        MeetingLog deletionLog = new MeetingLog(mate, MeetingLogType.MEMBER_DELETION_LOG);
-        meetingLogService.save(deletionLog);
-        delete(mate);
-    }
 
     @Transactional
     public void leaveByMeetingIdAndMemberId(Long meetingId, Long memberId) {
@@ -198,5 +196,23 @@ public class MateService {
         etaService.deleteByMateId(mate.getId());
         mateRepository.deleteById(mate.getId());
         etaSchedulingService.deleteCache(mate);
+    }
+
+    private void deleteAll(List<Mate> mates) {
+        notificationService.updateAllMatesPendingNotificationsToDismissed(mates);
+        mates.forEach(mate
+                -> notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken()));
+        etaService.deleteByMates(mates);
+        mateRepository.deleteAll(mates);
+        etaSchedulingService.deleteCache(mates);
+    }
+
+    private void deleteAll2(List<Mate> mates) {
+        notificationService.updateAllMatesPendingNotificationsToDismissed(mates);
+        mates.forEach(mate
+                -> notificationService.unSubscribeTopic(mate.getMeeting(), mate.getMember().getDeviceToken()));
+        etaService.deleteByMates2(mates);
+        mateRepository.softDeleteAllByMateIn(mates);
+        etaSchedulingService.deleteCache(mates);
     }
 }

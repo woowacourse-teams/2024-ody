@@ -1,10 +1,13 @@
 package com.ody.eta.repository;
 
 import com.ody.eta.domain.Eta;
+import com.ody.mate.domain.Mate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface EtaRepository extends JpaRepository<Eta, Long> {
 
@@ -17,4 +20,10 @@ public interface EtaRepository extends JpaRepository<Eta, Long> {
             where me.id = :meetingId
             """)
     List<Eta> findAllByMeetingId(Long meetingId);
+
+    void deleteAllByMateIn(List<Mate> mates);
+
+    @Modifying
+    @Query("UPDATE Eta e SET e.deletedAt = CURRENT_TIMESTAMP WHERE e.mate IN :mates AND e.deletedAt IS NULL")
+    void softDeleteAllByMateIn(@Param("mates") List<Mate> mates);
 }

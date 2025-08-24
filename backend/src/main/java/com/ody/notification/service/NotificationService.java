@@ -116,6 +116,11 @@ public class NotificationService {
         notificationRepository.updateAllStatusToDismissedByMateIdAndSendAtAfterDateTime(mateId, LocalDateTime.now());
     }
 
+    @Transactional
+    public void updateAllMatesPendingNotificationsToDismissed(List<Mate> mates) {
+        notificationRepository.updateMatesPendingNotificationsToDismissed(mates, LocalDateTime.now());
+    }
+
     public void unSubscribeTopic(Meeting meeting, DeviceToken deviceToken) {
         FcmTopic fcmTopic = new FcmTopic(meeting);
         UnSubscribeEvent unSubscribeEvent = new UnSubscribeEvent(this, deviceToken, fcmTopic);

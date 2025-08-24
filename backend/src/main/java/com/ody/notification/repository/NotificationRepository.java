@@ -1,5 +1,6 @@
 package com.ody.notification.repository;
 
+import com.ody.mate.domain.Mate;
 import com.ody.notification.domain.Notification;
 import com.ody.notification.domain.NotificationStatus;
 import com.ody.notification.domain.NotificationType;
@@ -43,7 +44,11 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             """)
     List<Notification> findAllMeetingIdAndType(Long meetingId, NotificationType type);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Notification n set n.status = 'DISMISSED' where n.mate.id = :mateId and n.sendAt > :dateTime")
     void updateAllStatusToDismissedByMateIdAndSendAtAfterDateTime(long mateId, LocalDateTime dateTime);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("update Notification n set n.status = 'DISMISSED' where n.mate in :mates and n.sendAt > :dateTime")
+    void updateMatesPendingNotificationsToDismissed(List<Mate> mates, LocalDateTime dateTime);
 }
