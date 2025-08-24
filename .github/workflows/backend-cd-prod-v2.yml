@@ -1,0 +1,125 @@
+name: backend-cd-prod-v2
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+env:
+  DOCKERHUB_REPOSITORY: ody-official
+
+jobs:
+  build-and-push:
+    if: github.event.pull_request.merged == true && (startsWith(github.event.pull_request.head.ref, 'release-be/') || startsWith(github.event.pull_request.head.ref, 'hotfix-be/'))
+
+    runs-on: ubuntu-latest
+    env:
+      TZ: 'Asia/Seoul'
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Check system timezone
+        run: |
+          echo "Current date and time: $(date)"
+          echo "TZ environment variable: $TZ"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Clean Build With Gradle Wrapper
+        run: ./gradlew clean build
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: ${{ github.workspace }}/backend/build/test-results/**/*.xml
+
+      - name: JUnit Report Action
+        uses: mikepenz/action-junit-report@v4
+        if: always()
+        with:
+          report_paths: ${{ github.workspace }}/backend/build/test-results/**/*.xml
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Back Up Image For Rollback
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-latest || true
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-latest ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-previous || true
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-previous || true
+
+      - name: Docker Image Build And Push
+        run: docker build --platform linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod_v2 -f Dockerfile . --push
+
+  pull-and-deploy:
+    needs: build-and-push
+    runs-on: prod
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Clean Up Legacy Image
+        run: |
+          docker compose down || true
+          docker rmi $(docker images -q) -f || true
+
+      - name: Docker Compose up
+        run: |
+          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+          export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
+          export PROD_MYSQL_PASSWORD=${{ secrets.PROD_MYSQL_PASSWORD }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
+          export TAG=${{ github.sha }}-prod_v2
+          docker compose up -d
+
+      #TODO: 도메인 연결 시, health check 필요
+
+      - name: Rollback if Health Check fails
+        if: failure()
+        run: |
+          docker compose down || true
+          docker rmi $(docker images -q) -f || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-previous
+          
+          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+          export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
+          export PROD_MYSQL_PASSWORD=${{ secrets.PROD_MYSQL_PASSWORD }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
+          export TAG=prod-previous
+          docker compose up -d
+
+      - name: Tag successful deployment as latest
+        if: success()
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-prod_v2 ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:prod-latest
+
+      - name: Check Docker Process
+        if: always()
+        run: docker ps
