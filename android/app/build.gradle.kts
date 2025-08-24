@@ -23,8 +23,8 @@ android {
         applicationId = "com.mulberry.ody"
         minSdk = 26
         targetSdk = 35
-        versionCode = 14
-        versionName = "1.1.1"
+        versionCode = 35
+        versionName = "1.3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_DEV_URL", properties["BASE_DEV_URL"].toString())
@@ -141,7 +141,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.tooling.preview)
 
     // hilt
