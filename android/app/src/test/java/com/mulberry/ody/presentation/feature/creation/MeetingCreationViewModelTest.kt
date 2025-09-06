@@ -119,7 +119,7 @@ class MeetingCreationViewModelTest {
     fun `현재 위치를 가져와서 약속 장소로 설정한다`() =
         runTest {
             // when
-            viewModel.getDefaultLocation()
+            viewModel.getCurrentLocation()
 
             // then
             val actual = viewModel.meetingCreationUiModel.first().destination

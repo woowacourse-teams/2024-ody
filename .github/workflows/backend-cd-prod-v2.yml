@@ -1,4 +1,4 @@
-name: backend-cd-prod
+name: backend-cd-prod-v2
 
 on:
   pull_request:
@@ -76,7 +76,7 @@ jobs:
 
   pull-and-deploy:
     needs: build-and-push
-    runs-on: prod-v2
+    runs-on: prod
     steps:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -98,22 +98,7 @@ jobs:
           export TAG=${{ github.sha }}-prod_v2
           docker compose up -d
 
-      - name: Health Check with Retry
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 1
-          max_attempts: 5
-          retry_wait_seconds: 6
-          command: |
-            response=$(curl -s https://prod.oody.site/actuator/health)
-            status=$(echo $response | jq -r '.status')
-            if [ "$status" = "UP" ]; then
-              echo "Status is UP. Continuing..."
-              exit 0
-            else
-              echo "Status is NOT UP."
-              exit 1
-            fi
+      #TODO: 도메인 연결 시, health check 필요
 
       - name: Rollback if Health Check fails
         if: failure()

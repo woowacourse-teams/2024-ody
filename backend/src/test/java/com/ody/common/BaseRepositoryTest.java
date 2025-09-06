@@ -12,7 +12,6 @@ import com.ody.route.repository.ApiCallRepository;
 import jakarta.persistence.EntityManager;
 import java.util.TimeZone;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -55,6 +54,7 @@ public abstract class BaseRepositoryTest {
 
     @BeforeAll
     static void setUp() {
-        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+        TimeZone seoulTimeZone = TimeZone.getTimeZone("Asia/Seoul");
+        TimeZone.setDefault(seoulTimeZone);
     }
 }

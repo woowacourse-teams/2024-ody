@@ -32,6 +32,7 @@ import com.mulberry.ody.presentation.feature.room.etadashboard.model.MateEtaUiMo
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.toMateEtaUiModels
 import com.mulberry.ody.presentation.feature.room.log.model.NotificationLogUiModel
 import com.mulberry.ody.presentation.feature.room.log.model.toNotificationLogUiModels
+import com.mulberry.ody.presentation.feature.room.model.MeetingRoomNavigateAction
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -93,9 +94,6 @@ class MeetingRoomViewModel
 
         private val _nudgeFailMate: MutableSharedFlow<Int> = MutableSharedFlow()
         val nudgeFailMate: SharedFlow<Int> get() = _nudgeFailMate.asSharedFlow()
-
-        private val _exitMeetingRoomEvent: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val exitMeetingRoomEvent: SharedFlow<Unit> get() = _exitMeetingRoomEvent.asSharedFlow()
 
         private val matesNudgeTimes: MutableMap<Long, LocalDateTime> = mutableMapOf()
 
@@ -275,7 +273,6 @@ class MeetingRoomViewModel
                 meetingRepository.exitMeeting(_meeting.value.id)
                     .onSuccess {
                         matesEtaRepository.closeEtaDashboard(meetingId)
-                        _exitMeetingRoomEvent.emit(Unit)
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")

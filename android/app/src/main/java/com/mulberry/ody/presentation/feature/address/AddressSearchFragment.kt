@@ -60,3 +60,5 @@ class AddressSearchFragment : DialogFragment() {
         const val ADDRESS_KEY = "selected_address_json"
     }
 }
+
+typealias OnReceiveAddress = (Address) -> Unit

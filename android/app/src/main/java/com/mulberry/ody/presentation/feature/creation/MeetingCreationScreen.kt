@@ -37,6 +37,7 @@ import com.mulberry.ody.presentation.component.BaseActionHandler
 import com.mulberry.ody.presentation.component.OdyActionButton
 import com.mulberry.ody.presentation.component.OdyIndicator
 import com.mulberry.ody.presentation.component.OdyTopAppBar
+import com.mulberry.ody.presentation.feature.address.OnReceiveAddress
 import com.mulberry.ody.presentation.feature.creation.date.MeetingDateScreen
 import com.mulberry.ody.presentation.feature.creation.destination.MeetingDestinationScreen
 import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
@@ -90,7 +91,7 @@ fun MeetingCreationScreen(
                 MeetingDestinationScreen(
                     address = meetingCreationUiModel.destination,
                     showAddressSearch = { showAddressSearch { viewModel.updateMeetingDestination(it) } },
-                    getDefaultLocation = { viewModel.getDefaultLocation() },
+                    getDefaultLocation = { viewModel.getCurrentLocation() },
                 )
             },
         )
@@ -130,7 +131,7 @@ fun MeetingCreationScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.currentLocationError.collectLatest {
-            showSnackbar(context.getString(R.string.default_location_error_guide))
+            showSnackbar(context.getString(R.string.current_location_error_guide))
         }
     }
     LaunchedEffect(Unit) {
