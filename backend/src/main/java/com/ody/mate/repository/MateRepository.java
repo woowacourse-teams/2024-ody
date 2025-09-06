@@ -60,9 +60,4 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
     boolean existsByMeetingIdAndMemberId(Long meetingId, Long memberId);
 
     int countByMeetingId(Long meetingId);
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE Mate m SET m.deletedAt = CURRENT_TIMESTAMP WHERE m IN :mates AND m.deletedAt IS NULL")
-    void softDeleteAllByMateIn(@Param("mates") List<Mate> mates);
 }

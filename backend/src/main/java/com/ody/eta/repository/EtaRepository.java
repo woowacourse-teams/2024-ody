@@ -22,8 +22,4 @@ public interface EtaRepository extends JpaRepository<Eta, Long> {
     List<Eta> findAllByMeetingId(Long meetingId);
 
     void deleteAllByMateIn(List<Mate> mates);
-
-    @Modifying
-    @Query("UPDATE Eta e SET e.deletedAt = CURRENT_TIMESTAMP WHERE e.mate IN :mates AND e.deletedAt IS NULL")
-    void softDeleteAllByMateIn(@Param("mates") List<Mate> mates);
 }
