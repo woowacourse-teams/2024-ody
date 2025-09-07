@@ -23,6 +23,11 @@ public class MeetingLogService {
         return meetingLogRepository.save(meetingLog);
     }
 
+    @Transactional
+    public List<MeetingLog> saveAll(List<MeetingLog> meetingLogs) {
+        return meetingLogRepository.saveAll(meetingLogs);
+    }
+
     public NotiLogFindResponses findAllByMeetingId(long meetingId) {
         List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(meetingId, LocalDateTime.now());
         return NotiLogFindResponses.from(meetingLogs);

@@ -167,4 +167,25 @@ class NotificationRepositoryTest extends BaseRepositoryTest {
                 () -> assertThat(notifications.get(0).getId()).isEqualTo(notification1.getId())
         );
     }
+
+    @DisplayName("mate들의 미발송 알림을 DISMISSED로 갱신한다")
+    @Test
+    void updateMatesPendingNotificationsToDismissed() {
+        LocalDateTime now = LocalDateTime.now();
+        Meeting oneHourLaterMeeting = fixtureGenerator.generateMeeting(now.plusHours(1L));
+        Mate mate1 = fixtureGenerator.generateMate(oneHourLaterMeeting);
+        Mate mate2 = fixtureGenerator.generateMate(oneHourLaterMeeting);
+        Notification pendingNoti1 = fixtureGenerator.generateNotification(mate1, now.plusMinutes(10L), NotificationStatus.PENDING);
+        Notification pendingNoti2 = fixtureGenerator.generateNotification(mate2, now.plusMinutes(10L), NotificationStatus.PENDING);
+
+        notificationRepository.updateMatesPendingNotificationsToDismissed(List.of(mate1, mate2), now);
+
+        Notification updatedNoti1 = notificationRepository.findById(pendingNoti1.getId()).get();
+        Notification updatedNoti2 = notificationRepository.findById(pendingNoti2.getId()).get();
+
+        assertAll(
+                () -> assertThat(updatedNoti1.getStatus()).isEqualTo(NotificationStatus.DISMISSED),
+                () -> assertThat(updatedNoti2.getStatus()).isEqualTo(NotificationStatus.DISMISSED)
+        );
+    }
 }
