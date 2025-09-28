@@ -36,8 +36,8 @@ route:
 auth:
   access-key: ENC(Ve3QKOE7PzbTOpQ6b58Oyi1Qrr9DojPgUA+jCwYcmDdSVdP34Z2eKw==)
   refresh-key: ENC(Ve3QKOE7PzbTOpQ6b58Oyi1Qrr9DojPgUA+jCwYcmDdSVdP34Z2eKw==)
-  access-expiration: 7200000 // 2 hours
-  refresh-expiration: 2419200000 // 28 days
+  access-expiration: 7200000 # 2 hours
+  refresh-expiration: 2419200000 # 28 days
 
 fcm:
   config:
