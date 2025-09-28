@@ -18,5 +18,5 @@ log:
     path: /ody-dev-logs
 
 auth:
-  access-expiration: 300000 // 5 mins
+  access-expiration: 300000 # 5 mins
 
