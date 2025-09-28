@@ -16,3 +16,7 @@ spring:
 log:
   file:
     path: /ody-dev-logs
+
+auth:
+  access-expiration: 300000 // 5 mins
+
