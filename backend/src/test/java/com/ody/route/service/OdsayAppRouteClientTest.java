@@ -97,7 +97,7 @@ class OdsayAppRouteClientTest extends BaseRouteClientTest {
                 + "&SY=" + origin.getLatitude()
                 + "&EX=" + target.getLongitude()
                 + "&EY=" + target.getLatitude()
-                + "&apiKey=" + property.apiKey();
+                + "&apiKey=" + property.apiKeys()[0];
 
         try {
             return new URI(uri);

@@ -3,7 +3,7 @@ package com.ody.route.service;
 import com.devoops.client.OdsayRouteClient;
 import com.devoops.exception.OdsayBadRequestException;
 import com.devoops.exception.OdsayClosestPlaceException;
-import com.devoops.exception.OdsayUtilException;
+import com.devoops.exception.OdsayException;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.meeting.domain.Coordinates;
@@ -38,7 +38,7 @@ public class OdsayAppRouteClient implements RouteClient {
             return new RouteTime(-1L);
         } catch (OdsayBadRequestException badRequestException) {
             throw new OdyBadRequestException(badRequestException.getMessage());
-        } catch (OdsayUtilException odsayUtilException) {
+        } catch (OdsayException odsayException) {
             throw new OdyServerErrorException("오디세이 요청 과정에서 오류가 발생했습니다");
         }
     }
