@@ -40,7 +40,7 @@ public class GoogleRouteClient implements RouteClient {
                 .queryParam("origins", mapCoordinatesToUrl(origin))
                 .queryParam("mode", "transit")
                 .queryParam("transit_mode", "bus|subway")
-                .queryParam("key", property.apiKey())
+                .queryParam("key", property.apiKeys()[0])
                 .build(false)
                 .toUriString();
 
