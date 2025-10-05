@@ -21,8 +21,13 @@
 #-renamesourcefileattribute SourceFile
 
 # kakao share
+-dontwarn com.google.gson.Gson
+-dontwarn com.google.gson.JsonElement
+-dontwarn com.google.gson.JsonObject
+-dontwarn com.google.gson.annotations.JsonAdapter
+-dontwarn com.google.gson.annotations.SerializedName
 -keep class com.kakao.sdk.**.model.* { *; }
--keep class * extends com.google.gson.TypeAdapter
+-dontwarn com.kakao.sdk.common.json.MapToQueryAdapter
 
 # https://github.com/square/okhttp/pull/6792
 -dontwarn org.bouncycastle.jsse.**
@@ -37,7 +42,6 @@
 -keep class com.mulberry.ody.data.local.entity.eta.* { *; }
 -keep class com.mulberry.ody.domain.model.* { *; }
 
-# moshi
--keep class com.squareup.moshi.** { *; }
+# serialization
 -keep class com.mulberry.ody.data.remote.thirdparty.address.response.* { *; }
 -keep class com.mulberry.ody.data.remote.thirdparty.address.response.coord.* { *; }

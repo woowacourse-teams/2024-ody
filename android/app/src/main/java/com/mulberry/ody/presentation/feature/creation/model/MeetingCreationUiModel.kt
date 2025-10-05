@@ -15,9 +15,9 @@ data class MeetingCreationUiModel(
 ) {
     fun isValidName(): Boolean = runCatching { MeetingName(name) }.isSuccess
 
-    fun isValidDate(): Boolean = runCatching { MeetingDateTime(date, LocalTime.of(23, 59)) }.isSuccess
+    fun isValidDate(): Boolean = MeetingDateTime(date, LocalTime.of(23, 59)).isValid()
 
-    fun isValidTime(): Boolean = runCatching { MeetingDateTime(date, time) }.isSuccess
+    fun isValidTime(): Boolean = MeetingDateTime(date, time).isValid()
 
     fun isValidDestination(): Boolean = destination?.isValid() ?: false
 
