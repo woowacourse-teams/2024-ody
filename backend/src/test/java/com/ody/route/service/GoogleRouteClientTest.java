@@ -110,7 +110,7 @@ class GoogleRouteClientTest extends BaseRouteClientTest {
                 .queryParam("origins", mapCoordinatesToUrl(origin))
                 .queryParam("mode", "transit")
                 .queryParam("transit_mode", "bus%7Csubway")
-                .queryParam("key", property.apiKey())
+                .queryParam("key", property.apiKeys()[0])
                 .build()
                 .toUriString();
     }
