@@ -6,7 +6,7 @@ import com.mulberry.ody.domain.model.DetailMeeting
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
 import com.mulberry.ody.domain.model.MeetingCreationInfo
-import com.mulberry.ody.domain.model.Nudge
+import com.mulberry.ody.domain.model.NudgeInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.inviteCode
 import com.mulberry.ody.mateEtaInfo
@@ -46,7 +46,7 @@ object FakeMeetingRepository : MeetingRepository {
 
     override suspend fun fetchMeeting(meetingId: Long): ApiResult<DetailMeeting> = ApiResult.Success(detailMeeting)
 
-    override suspend fun postNudge(nudge: Nudge): ApiResult<Unit> = ApiResult.Success(Unit)
+    override suspend fun postNudge(nudgeInfo: NudgeInfo): ApiResult<Unit> = ApiResult.Success(Unit)
 
     override suspend fun exitMeeting(meetingId: Long): ApiResult<Unit> = ApiResult.Success(Unit)
 }

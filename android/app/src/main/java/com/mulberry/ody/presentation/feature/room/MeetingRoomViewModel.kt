@@ -12,7 +12,7 @@ import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
 import com.mulberry.ody.domain.model.MateEtaInfo
-import com.mulberry.ody.domain.model.Nudge
+import com.mulberry.ody.domain.model.NudgeInfo
 import com.mulberry.ody.domain.repository.image.ImageStorage
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
@@ -120,7 +120,7 @@ class MeetingRoomViewModel
                 }
 
                 val targetMate = mateEtas.value.find { it.mateId == mateEta.mateId } ?: return@launch
-                nudgeMateUseCase(Nudge(mateEta.userId, targetMate.mateId))
+                nudgeMateUseCase(NudgeInfo(mateEta.userId, targetMate.mateId))
                     .onSuccess {
                         _nudgeSuccessMate.emit(targetMate.nickname)
                     }.onUnexpected { throwable ->
