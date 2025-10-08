@@ -110,7 +110,7 @@ fun NotificationLogScreen(
     ) { innerPadding ->
         NotificationLogContent(
             notificationLogs = notificationLogs,
-            showOdyButton = detailMeeting.isEtaAccessible(),
+            showOdyButton = detailMeeting.isEtaOpenTime(),
             onClickOdyButton = { viewModel.navigateToEtaDashboard() },
             modifier = Modifier.padding(innerPadding),
         )

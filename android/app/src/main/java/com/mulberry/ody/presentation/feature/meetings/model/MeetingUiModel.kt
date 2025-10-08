@@ -2,6 +2,7 @@ package com.mulberry.ody.presentation.feature.meetings.model
 
 import android.content.Context
 import com.mulberry.ody.R
+import com.mulberry.ody.domain.model.MeetingDateTime
 import com.mulberry.ody.presentation.common.toMessage
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -14,9 +15,9 @@ data class MeetingUiModel(
     val targetAddress: String,
     val durationMinutes: String,
 ) {
-    fun isAccessible(): Boolean {
-        val now = LocalDateTime.now()
-        return !dateTime.isBefore(now.plusMinutes(30))
+    fun isEtaOpenTime(): Boolean {
+        val meetingDateTime = MeetingDateTime(dateTime)
+        return meetingDateTime.isEtaOpenTime()
     }
 
     fun dateTimeMessage(context: Context): String {

@@ -7,10 +7,11 @@ import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
 import com.mulberry.ody.domain.model.Address
+import com.mulberry.ody.domain.model.MeetingDateTime
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.JoinRepository
-import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
+import com.mulberry.ody.domain.usecase.OpenEtaDashboardUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
@@ -38,7 +39,7 @@ class MeetingJoinViewModel
         private val joinRepository: JoinRepository,
         private val addressRepository: AddressRepository,
         private val locationHelper: LocationHelper,
-        private val matesEtaRepository: MatesEtaRepository,
+        private val openEtaDashboardUseCase: OpenEtaDashboardUseCase,
     ) : BaseViewModel() {
         private val _departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
         val departureAddress: StateFlow<Address?> get() = _departureAddress.asStateFlow()
@@ -114,7 +115,7 @@ class MeetingJoinViewModel
                 startLoading()
                 joinRepository.postMates(meetingJoinInfo)
                     .onSuccess {
-                        matesEtaRepository.openEtaDashboard(it.meetingId, it.meetingDateTime)
+                        openEtaDashboardUseCase(it.meetingId, MeetingDateTime(it.meetingDateTime))
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
                     }.onFailure { code, errorMessage ->
