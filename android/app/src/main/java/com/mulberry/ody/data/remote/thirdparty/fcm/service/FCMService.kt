@@ -3,6 +3,7 @@ package com.mulberry.ody.data.remote.thirdparty.fcm.service
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.mulberry.ody.data.local.db.OdyDataStore
+import com.mulberry.ody.domain.model.EtaOpenInfo
 import com.mulberry.ody.domain.model.FCMType
 import com.mulberry.ody.domain.model.MeetingDateTime
 import com.mulberry.ody.domain.model.MessageType
@@ -42,15 +43,24 @@ class FCMService : FirebaseMessagingService() {
         val meetingTime = message.data["meetingTime"]?.toLocalDateTime() ?: return
 
         if (fcmType == MessageType.ETA_SCHEDULING_NOTICE) {
-            CoroutineScope(Dispatchers.Default).launch {
-                openEtaDashboardUseCase(meetingId, MeetingDateTime(meetingTime))
-            }
+            openEta(meetingId, meetingTime)
+
         }
     }
 
     override fun onNewToken(token: String) {
         CoroutineScope(Dispatchers.Default).launch {
             odyDataStore.setFCMToken(token)
+        }
+    }
+
+    private fun openEta(
+        meetingId: Long,
+        meetingTime: LocalDateTime,
+    ) {
+        CoroutineScope(Dispatchers.Default).launch {
+            val etaOpenInfo = EtaOpenInfo(meetingId, MeetingDateTime(meetingTime))
+            openEtaDashboardUseCase(etaOpenInfo)
         }
     }
 }

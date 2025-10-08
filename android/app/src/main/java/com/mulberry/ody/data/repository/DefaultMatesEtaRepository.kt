@@ -6,6 +6,7 @@ import com.mulberry.ody.data.local.db.OdyDataStore
 import com.mulberry.ody.data.local.entity.eta.MateEtaInfoEntity
 import com.mulberry.ody.data.local.service.EtaDashboardService
 import com.mulberry.ody.domain.common.toMilliSeconds
+import com.mulberry.ody.domain.model.EtaOpenInfo
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.MeetingDateTime
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
@@ -29,12 +30,9 @@ class DefaultMatesEtaRepository
             matesEtaInfoDao.deleteAll()
         }
 
-        override fun openEtaDashboard(
-            meetingId: Long,
-            meetingDateTime: MeetingDateTime,
-        ) {
-            val meetingTimeMills = meetingDateTime.dateTime.toMilliSeconds()
-            val serviceIntent = EtaDashboardService.getIntent(context, meetingId, meetingTimeMills, isOpen = true)
+        override fun openEtaDashboard(etaOpenInfo: EtaOpenInfo) {
+            val meetingTimeMills = etaOpenInfo.meetingDateTime.dateTime.toMilliSeconds()
+            val serviceIntent = EtaDashboardService.getIntent(context, etaOpenInfo.meetingId, meetingTimeMills, isOpen = true)
             context.startForegroundService(serviceIntent)
         }
 

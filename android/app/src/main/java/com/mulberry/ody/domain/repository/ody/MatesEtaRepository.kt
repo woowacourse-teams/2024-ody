@@ -1,5 +1,6 @@
 package com.mulberry.ody.domain.repository.ody
 
+import com.mulberry.ody.domain.model.EtaOpenInfo
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.MeetingDateTime
 import kotlinx.coroutines.flow.Flow
@@ -10,10 +11,7 @@ interface MatesEtaRepository {
 
     suspend fun clearEtaFetchingJob()
 
-    fun openEtaDashboard(
-        meetingId: Long,
-        meetingDateTime: MeetingDateTime,
-    )
+    fun openEtaDashboard(etaOpenInfo: EtaOpenInfo)
 
     suspend fun closeEtaDashboard(meetingId: Long)
 
