@@ -64,7 +64,7 @@ class MeetingCreationViewModel
                 startLoading()
                 locationHelper.getCurrentCoordinate()
                     .onSuccess { location ->
-                        fetchAddressesByCoordinate(location)
+                        fetchAddressNameByCoordinate(location)
                     }
                     .onUnexpected {
                         _currentLocationError.emit(Unit)
@@ -73,11 +73,11 @@ class MeetingCreationViewModel
             }
         }
 
-        private suspend fun fetchAddressesByCoordinate(location: Location) {
+        private suspend fun fetchAddressNameByCoordinate(location: Location) {
             val longitude = location.longitude.toString()
             val latitude = location.latitude.toString()
 
-            addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+            addressRepository.fetchAddressNameByCoordinate(longitude, latitude).onSuccess {
                 val address =
                     Address(
                         detailAddress = it ?: "",

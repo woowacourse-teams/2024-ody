@@ -38,8 +38,8 @@ class MeetingJoinViewModel
         private val analyticsHelper: AnalyticsHelper,
         private val joinRepository: JoinRepository,
         private val addressRepository: AddressRepository,
-        private val locationHelper: LocationHelper,
         private val openEtaDashboardUseCase: OpenEtaDashboardUseCase,
+        private val locationHelper: LocationHelper,
     ) : BaseViewModel() {
         private val _departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
         val departureAddress: StateFlow<Address?> get() = _departureAddress.asStateFlow()
@@ -77,7 +77,7 @@ class MeetingJoinViewModel
                 startLoading()
                 locationHelper.getCurrentCoordinate()
                     .onSuccess { location ->
-                        fetchAddressesByCoordinate(location)
+                        fetchAddressNameByCoordinate(location)
                     }
                     .onUnexpected {
                         _currentLocationError.emit(Unit)
@@ -86,11 +86,11 @@ class MeetingJoinViewModel
             }
         }
 
-        private suspend fun fetchAddressesByCoordinate(location: Location) {
+        private suspend fun fetchAddressNameByCoordinate(location: Location) {
             val longitude = location.longitude.toString()
             val latitude = location.latitude.toString()
 
-            addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+            addressRepository.fetchAddressNameByCoordinate(longitude, latitude).onSuccess {
                 val address =
                     Address(
                         detailAddress = it ?: "",

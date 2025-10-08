@@ -19,11 +19,11 @@ class KakaoAddressRepository
             return service.fetchAddresses(keyword, page, pageSize).map { it.toAddresses() }
         }
 
-        override suspend fun fetchAddressesByCoordinate(
+        override suspend fun fetchAddressNameByCoordinate(
             x: String,
             y: String,
         ): ApiResult<String?> {
-            return service.fetchAddressesByCoordinate(x, y).map {
+            return service.fetchAddressByCoordinate(x, y).map {
                 if (it.documents.isNotEmpty()) {
                     it.documents[0].address?.addressName
                 } else {
