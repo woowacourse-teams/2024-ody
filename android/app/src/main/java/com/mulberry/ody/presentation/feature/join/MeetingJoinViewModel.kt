@@ -115,7 +115,7 @@ class MeetingJoinViewModel
                 joinMeetingUseCase(meetingJoinInfo)
                     .onSuccess { etaOpenInfo ->
                         val meetingId = etaOpenInfo.meetingId
-                        val meetingDateTime = MeetingDateTime(etaOpenInfo.meetingDateTime)
+                        val meetingDateTime = etaOpenInfo.meetingDateTime
 
                         openEtaDashboardUseCase(meetingId, meetingDateTime)
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(meetingId))
