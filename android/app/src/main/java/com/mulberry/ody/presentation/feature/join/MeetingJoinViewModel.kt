@@ -11,6 +11,7 @@ import com.mulberry.ody.domain.model.MeetingDateTime
 import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import com.mulberry.ody.domain.repository.ody.JoinRepository
+import com.mulberry.ody.domain.usecase.FetchAddressNameByCoordinateUseCase
 import com.mulberry.ody.domain.usecase.OpenEtaDashboardUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
@@ -37,7 +38,7 @@ class MeetingJoinViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         private val joinRepository: JoinRepository,
-        private val addressRepository: AddressRepository,
+        private val fetchAddressNameByCoordinateUseCase: FetchAddressNameByCoordinateUseCase,
         private val openEtaDashboardUseCase: OpenEtaDashboardUseCase,
         private val locationHelper: LocationHelper,
     ) : BaseViewModel() {
@@ -63,7 +64,6 @@ class MeetingJoinViewModel
 
         fun updateMeetingDeparture(departure: Address) {
             viewModelScope.launch {
-                val oldUiModel = _departureAddress.value
                 if (departure.isValid()) {
                     _departureAddress.emit(departure)
                 } else {
@@ -90,7 +90,7 @@ class MeetingJoinViewModel
             val longitude = location.longitude.toString()
             val latitude = location.latitude.toString()
 
-            addressRepository.fetchAddressNameByCoordinate(longitude, latitude).onSuccess {
+            fetchAddressNameByCoordinateUseCase(longitude, latitude).onSuccess {
                 val address =
                     Address(
                         detailAddress = it ?: "",

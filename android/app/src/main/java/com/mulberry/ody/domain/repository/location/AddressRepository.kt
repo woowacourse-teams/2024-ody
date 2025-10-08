@@ -11,7 +11,7 @@ interface AddressRepository {
     ): ApiResult<Addresses>
 
     suspend fun fetchAddressNameByCoordinate(
-        x: String,
-        y: String,
+        longitude: String,
+        latitude: String,
     ): ApiResult<String?>
 }

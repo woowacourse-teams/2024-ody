@@ -20,10 +20,10 @@ class KakaoAddressRepository
         }
 
         override suspend fun fetchAddressNameByCoordinate(
-            x: String,
-            y: String,
+            longitude: String,
+            latitude: String,
         ): ApiResult<String?> {
-            return service.fetchAddressByCoordinate(x, y).map {
+            return service.fetchAddressByCoordinate(longitude, latitude).map {
                 if (it.documents.isNotEmpty()) {
                     it.documents[0].address?.addressName
                 } else {
