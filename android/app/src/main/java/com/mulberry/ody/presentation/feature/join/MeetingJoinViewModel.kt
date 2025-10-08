@@ -9,9 +9,8 @@ import com.mulberry.ody.domain.apiresult.onUnexpected
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingDateTime
 import com.mulberry.ody.domain.model.MeetingJoinInfo
-import com.mulberry.ody.domain.repository.location.AddressRepository
-import com.mulberry.ody.domain.repository.ody.JoinRepository
 import com.mulberry.ody.domain.usecase.FetchAddressNameByCoordinateUseCase
+import com.mulberry.ody.domain.usecase.JoinMeetingUseCase
 import com.mulberry.ody.domain.usecase.OpenEtaDashboardUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
@@ -37,7 +36,7 @@ class MeetingJoinViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val joinRepository: JoinRepository,
+        private val joinMeetingUseCase: JoinMeetingUseCase,
         private val fetchAddressNameByCoordinateUseCase: FetchAddressNameByCoordinateUseCase,
         private val openEtaDashboardUseCase: OpenEtaDashboardUseCase,
         private val locationHelper: LocationHelper,
@@ -113,7 +112,7 @@ class MeetingJoinViewModel
 
             viewModelScope.launch {
                 startLoading()
-                joinRepository.postMates(meetingJoinInfo)
+                joinMeetingUseCase(meetingJoinInfo)
                     .onSuccess {
                         openEtaDashboardUseCase(it.meetingId, MeetingDateTime(it.meetingDateTime))
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))

@@ -13,7 +13,7 @@ import javax.inject.Inject
 class DefaultJoinRepository
     @Inject
     constructor(private val service: JoinService) : JoinRepository {
-        override suspend fun postMates(meetingJoinInfo: MeetingJoinInfo): ApiResult<ReserveInfo> {
+        override suspend fun joinMeeting(meetingJoinInfo: MeetingJoinInfo): ApiResult<ReserveInfo> {
             return service.postMates(meetingJoinInfo.toJoinRequest()).map { it.toReserveInfo() }
         }
     }

@@ -5,5 +5,5 @@ import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.model.ReserveInfo
 
 interface JoinRepository {
-    suspend fun postMates(meetingJoinInfo: MeetingJoinInfo): ApiResult<ReserveInfo>
+    suspend fun joinMeeting(meetingJoinInfo: MeetingJoinInfo): ApiResult<ReserveInfo>
 }
