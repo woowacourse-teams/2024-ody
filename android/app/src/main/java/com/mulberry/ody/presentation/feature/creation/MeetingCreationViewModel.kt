@@ -156,6 +156,5 @@ class MeetingCreationViewModel
 
         companion object {
             private const val TAG = "MeetingCreationViewModel"
-            const val MEETING_NAME_MAX_LENGTH = 15
         }
     }
