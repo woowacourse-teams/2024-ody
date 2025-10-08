@@ -113,9 +113,12 @@ class MeetingJoinViewModel
             viewModelScope.launch {
                 startLoading()
                 joinMeetingUseCase(meetingJoinInfo)
-                    .onSuccess {
-                        openEtaDashboardUseCase(it.meetingId, MeetingDateTime(it.meetingDateTime))
-                        _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
+                    .onSuccess { etaOpenInfo ->
+                        val meetingId = etaOpenInfo.meetingId
+                        val meetingDateTime = MeetingDateTime(etaOpenInfo.meetingDateTime)
+
+                        openEtaDashboardUseCase(meetingId, meetingDateTime)
+                        _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(meetingId))
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
                     }.onFailure { code, errorMessage ->
                         handleError()
