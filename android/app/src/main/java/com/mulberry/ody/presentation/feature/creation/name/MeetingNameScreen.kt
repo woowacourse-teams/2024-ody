@@ -23,7 +23,6 @@ import com.mulberry.ody.R
 import com.mulberry.ody.domain.model.MeetingName
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyTextField
-import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
 
 @Composable

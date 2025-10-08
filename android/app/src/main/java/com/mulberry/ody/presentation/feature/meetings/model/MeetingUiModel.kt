@@ -41,17 +41,11 @@ data class MeetingUiModel(
         }
     }
 
-    private fun LocalDate.isToday(): Boolean {
-        return this == LocalDate.now()
-    }
+    private fun LocalDate.isToday(): Boolean = this == LocalDate.now()
 
-    private fun LocalDate.isTomorrow(): Boolean {
-        return this == LocalDate.now().plusDays(1)
-    }
+    private fun LocalDate.isTomorrow(): Boolean = this == LocalDate.now().plusDays(1)
 
-    private fun LocalDate.isShowDaysLater(): Boolean {
-        return daysDifferenceByNow() in 2..7
-    }
+    private fun LocalDate.isShowDaysLater(): Boolean = daysDifferenceByNow() in 2..7
 
     private fun LocalDate.daysDifferenceByNow(): Int = this.dayOfYear - LocalDate.now().dayOfYear
 }
