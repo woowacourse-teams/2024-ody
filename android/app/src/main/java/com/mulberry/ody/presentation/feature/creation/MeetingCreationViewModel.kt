@@ -79,21 +79,21 @@ class MeetingCreationViewModel
 
             getAddressNameByCoordinateUseCase(longitude, latitude)
                 .onSuccess {
-                val address =
-                    Address(
-                        detailAddress = it ?: "",
-                        longitude = longitude,
-                        latitude = latitude,
-                    )
-                updateMeetingDestination(address)
-            }.onFailure { code, errorMessage ->
-                handleError()
-                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-            }.onUnexpected {
-                _currentLocationError.emit(Unit)
-            }.onNetworkError {
-                handleNetworkError()
-            }
+                    val address =
+                        Address(
+                            detailAddress = it ?: "",
+                            longitude = longitude,
+                            latitude = latitude,
+                        )
+                    updateMeetingDestination(address)
+                }.onFailure { code, errorMessage ->
+                    handleError()
+                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+                }.onUnexpected {
+                    _currentLocationError.emit(Unit)
+                }.onNetworkError {
+                    handleNetworkError()
+                }
         }
 
         fun createMeeting() {

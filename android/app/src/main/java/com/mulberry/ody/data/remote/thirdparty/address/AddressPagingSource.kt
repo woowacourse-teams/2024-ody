@@ -6,7 +6,6 @@ import com.mulberry.ody.data.remote.thirdparty.address.response.toAddresses
 import com.mulberry.ody.domain.apiresult.getOrThrow
 import com.mulberry.ody.domain.apiresult.map
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.domain.repository.location.AddressRepository
 
 class AddressPagingSource(
     private val keyword: String,

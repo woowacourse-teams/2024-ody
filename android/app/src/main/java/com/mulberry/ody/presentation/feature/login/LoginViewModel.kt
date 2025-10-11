@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
-import com.mulberry.ody.domain.repository.ody.AuthRepository
 import com.mulberry.ody.domain.usecase.IsLoggedInUseCase
 import com.mulberry.ody.domain.usecase.LoginUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
