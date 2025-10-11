@@ -2,8 +2,12 @@ package com.mulberry.ody.presentation.feature.join
 
 import android.location.Location
 import com.mulberry.ody.domain.model.Address
+import com.mulberry.ody.domain.usecase.GetAddressNameByCoordinateUseCase
+import com.mulberry.ody.domain.usecase.JoinMeetingUseCase
+import com.mulberry.ody.domain.usecase.OpenEtaDashboardUseCase
 import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.fake.FakeAnalyticsHelper
+import com.mulberry.ody.fake.FakeAuthRepository
 import com.mulberry.ody.fake.FakeJoinRepository
 import com.mulberry.ody.fake.FakeLocationHelper
 import com.mulberry.ody.fake.FakeMatesEtaRepository
@@ -40,13 +44,20 @@ class MeetingJoinViewModelTest {
 
     @BeforeEach
     fun setUp() {
+        val joinMeetingUseCase = JoinMeetingUseCase(FakeJoinRepository(meetingId))
+        val getAddressNameByCoordinateUseCase = GetAddressNameByCoordinateUseCase(FakeAddressRepository)
+        val openEtaDashboardUseCase = OpenEtaDashboardUseCase(
+            authRepository = FakeAuthRepository(),
+            matesEtaRepository = FakeMatesEtaRepository,
+        )
+
         viewModel =
             MeetingJoinViewModel(
                 analyticsHelper = FakeAnalyticsHelper,
-                joinRepository = FakeJoinRepository(meetingId = meetingId),
-                addressRepository = FakeAddressRepository,
+                joinMeetingUseCase = joinMeetingUseCase,
+                getAddressNameByCoordinateUseCase = getAddressNameByCoordinateUseCase,
+                openEtaDashboardUseCase = openEtaDashboardUseCase,
                 locationHelper = FakeLocationHelper(fakeCurrentLocation),
-                matesEtaRepository = FakeMatesEtaRepository,
             )
     }
 

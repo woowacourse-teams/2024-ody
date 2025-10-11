@@ -356,7 +356,7 @@ private fun MeetingItem(
                     )
                 }
                 OdyButton(
-                    enabled = !meeting.isAccessible(),
+                    enabled = meeting.isEtaOpenTime(),
                     onClick = { onClickOdy(meeting) },
                 )
             }
