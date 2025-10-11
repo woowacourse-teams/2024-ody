@@ -1,5 +1,6 @@
 package com.mulberry.ody.presentation.feature.meetings
 
+import com.mulberry.ody.domain.usecase.GetMeetingsUseCase
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.meetingUiModel
@@ -19,16 +20,15 @@ import java.time.LocalDateTime
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
 class MeetingsViewModelTest {
-    private val analyticsHelper = FakeAnalyticsHelper
-    private val meetingRepository = FakeMeetingRepository
     private lateinit var viewModel: MeetingsViewModel
 
     @BeforeEach
     fun setUp() {
+        val getMeetingsUseCase = GetMeetingsUseCase(FakeMeetingRepository)
         viewModel =
             MeetingsViewModel(
-                analyticsHelper,
-                meetingRepository,
+                analyticsHelper = FakeAnalyticsHelper,
+                getMeetingsUseCase = getMeetingsUseCase,
             )
     }
 
