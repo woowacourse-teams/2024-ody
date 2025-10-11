@@ -5,6 +5,7 @@ import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
+import com.mulberry.ody.domain.usecase.GetMeetingsUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
@@ -26,7 +27,7 @@ class MeetingsViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val meetingRepository: MeetingRepository,
+        private val getMeetingsUseCase: GetMeetingsUseCase,
     ) : BaseViewModel() {
         private val _meetingsUiState: MutableStateFlow<MeetingsUiState> = MutableStateFlow(MeetingsUiState.Empty)
         val meetingsUiState: StateFlow<MeetingsUiState> get() = _meetingsUiState.asStateFlow()
@@ -40,7 +41,7 @@ class MeetingsViewModel
         fun fetchMeetings() {
             viewModelScope.launch {
                 startLoading()
-                meetingRepository.fetchMeetings()
+                getMeetingsUseCase()
                     .onSuccess {
                         val meetings = it.toMeetingUiModels()
                         _meetingsUiState.value = if (meetings.isEmpty()) MeetingsUiState.Empty else MeetingsUiState.Meetings(meetings)
