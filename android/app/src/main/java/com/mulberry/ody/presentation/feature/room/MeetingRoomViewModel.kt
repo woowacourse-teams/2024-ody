@@ -17,6 +17,9 @@ import com.mulberry.ody.domain.repository.image.ImageStorage
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.domain.repository.ody.NotificationLogRepository
+import com.mulberry.ody.domain.usecase.ExitMeetingUseCase
+import com.mulberry.ody.domain.usecase.GetDetailMeetingUseCase
+import com.mulberry.ody.domain.usecase.GetNotificationLogsUseCase
 import com.mulberry.ody.domain.usecase.NudgeCooldownException
 import com.mulberry.ody.domain.usecase.NudgeMateUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
@@ -58,9 +61,10 @@ class MeetingRoomViewModel
         private val analyticsHelper: AnalyticsHelper,
         @Assisted private val meetingId: Long,
         private val matesEtaRepository: MatesEtaRepository,
-        private val notificationLogRepository: NotificationLogRepository,
-        private val meetingRepository: MeetingRepository,
+        private val getNotificationLogsUseCase: GetNotificationLogsUseCase,
+        private val getDetailMeetingUseCase: GetDetailMeetingUseCase,
         private val nudgeMateUseCase: NudgeMateUseCase,
+        private val exitMeetingUseCase: ExitMeetingUseCase,
         private val imageStorage: ImageStorage,
         private val imageShareHelper: ImageShareHelper,
     ) : BaseViewModel() {
@@ -141,7 +145,7 @@ class MeetingRoomViewModel
         private fun fetchNotificationLogs() {
             viewModelScope.launch {
                 startLoading()
-                notificationLogRepository.fetchNotificationLogs(meetingId)
+                getNotificationLogsUseCase(meetingId)
                     .onSuccess {
                         _notificationLogs.value = it.toNotificationLogUiModels()
                     }.onFailure { code, errorMessage ->
@@ -159,7 +163,7 @@ class MeetingRoomViewModel
         private fun fetchMeeting() {
             viewModelScope.launch {
                 startLoading()
-                meetingRepository.fetchMeeting(meetingId)
+                getDetailMeetingUseCase(meetingId)
                     .onSuccess {
                         _meeting.value = it.toDetailMeetingUiModel()
                         _mates.value = it.toMateUiModels()
@@ -247,7 +251,7 @@ class MeetingRoomViewModel
                 }
 
                 startLoading()
-                meetingRepository.exitMeeting(_meeting.value.id)
+                exitMeetingUseCase(_meeting.value.id)
                     .onSuccess {
                         matesEtaRepository.closeEtaDashboard(meetingId)
                     }.onFailure { code, errorMessage ->
