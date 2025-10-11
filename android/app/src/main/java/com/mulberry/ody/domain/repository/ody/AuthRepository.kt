@@ -6,7 +6,7 @@ import com.mulberry.ody.domain.model.AuthToken
 interface AuthRepository {
     suspend fun isLoggedIn(): Boolean
 
-    suspend fun login(): ApiResult<AuthToken>
+    suspend fun login(): ApiResult<Unit>
 
     suspend fun logout(): ApiResult<Unit>
 
