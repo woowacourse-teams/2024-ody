@@ -7,9 +7,8 @@ import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.domain.model.MeetingDateTime
 import com.mulberry.ody.domain.model.MeetingJoinInfo
-import com.mulberry.ody.domain.usecase.FetchAddressNameByCoordinateUseCase
+import com.mulberry.ody.domain.usecase.GetAddressNameByCoordinateUseCase
 import com.mulberry.ody.domain.usecase.JoinMeetingUseCase
 import com.mulberry.ody.domain.usecase.OpenEtaDashboardUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
@@ -37,7 +36,7 @@ class MeetingJoinViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         private val joinMeetingUseCase: JoinMeetingUseCase,
-        private val fetchAddressNameByCoordinateUseCase: FetchAddressNameByCoordinateUseCase,
+        private val getAddressNameByCoordinateUseCase: GetAddressNameByCoordinateUseCase,
         private val openEtaDashboardUseCase: OpenEtaDashboardUseCase,
         private val locationHelper: LocationHelper,
     ) : BaseViewModel() {
@@ -89,7 +88,7 @@ class MeetingJoinViewModel
             val longitude = location.longitude.toString()
             val latitude = location.latitude.toString()
 
-            fetchAddressNameByCoordinateUseCase(longitude, latitude).onSuccess {
+            getAddressNameByCoordinateUseCase(longitude, latitude).onSuccess {
                 val address =
                     Address(
                         detailAddress = it ?: "",

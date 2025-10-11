@@ -4,7 +4,7 @@ import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.repository.location.AddressRepository
 import javax.inject.Inject
 
-class FetchAddressNameByCoordinateUseCase @Inject constructor(
+class GetAddressNameByCoordinateUseCase @Inject constructor(
     private val addressRepository: AddressRepository,
 ){
     suspend operator fun invoke(
