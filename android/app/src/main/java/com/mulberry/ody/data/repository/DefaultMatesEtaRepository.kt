@@ -8,7 +8,6 @@ import com.mulberry.ody.data.local.service.EtaDashboardService
 import com.mulberry.ody.domain.common.toMilliSeconds
 import com.mulberry.ody.domain.model.EtaOpenInfo
 import com.mulberry.ody.domain.model.MateEtaInfo
-import com.mulberry.ody.domain.model.MeetingDateTime
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -39,11 +38,6 @@ class DefaultMatesEtaRepository
         override suspend fun closeEtaDashboard(meetingId: Long) {
             val serviceIntent = EtaDashboardService.getIntent(context, meetingId, isOpen = false)
             context.startForegroundService(serviceIntent)
-        }
-
-        override suspend fun closeEtaDashboard() {
-            val serviceIntent = EtaDashboardService.getIntent(context)
-            context.stopService(serviceIntent)
         }
 
         override fun isFirstSeenEtaDashboard(): Flow<Boolean> {

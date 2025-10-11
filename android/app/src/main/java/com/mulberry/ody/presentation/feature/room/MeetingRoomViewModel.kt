@@ -11,17 +11,17 @@ import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
-import com.mulberry.ody.domain.model.MateEtaInfo
+import com.mulberry.ody.domain.model.NudgeCooldownException
 import com.mulberry.ody.domain.model.NudgeInfo
 import com.mulberry.ody.domain.repository.image.ImageStorage
-import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
-import com.mulberry.ody.domain.repository.ody.MeetingRepository
-import com.mulberry.ody.domain.repository.ody.NotificationLogRepository
+import com.mulberry.ody.domain.usecase.CloseEtaDashboardUseCase
 import com.mulberry.ody.domain.usecase.ExitMeetingUseCase
 import com.mulberry.ody.domain.usecase.GetDetailMeetingUseCase
+import com.mulberry.ody.domain.usecase.GetMatesEtaInfoUseCase
 import com.mulberry.ody.domain.usecase.GetNotificationLogsUseCase
-import com.mulberry.ody.domain.usecase.NudgeCooldownException
+import com.mulberry.ody.domain.usecase.IsFirstSeenEtaDashboardUseCase
 import com.mulberry.ody.domain.usecase.NudgeMateUseCase
+import com.mulberry.ody.domain.usecase.UpdateEtaDashboardSeenUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logButtonClicked
@@ -41,7 +41,6 @@ import com.mulberry.ody.presentation.feature.room.model.MeetingRoomNavigateActio
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -60,7 +59,10 @@ class MeetingRoomViewModel
     constructor(
         private val analyticsHelper: AnalyticsHelper,
         @Assisted private val meetingId: Long,
-        private val matesEtaRepository: MatesEtaRepository,
+        getMatesEtaInfoUseCase: GetMatesEtaInfoUseCase,
+        isFirstSeenEtaDashboardUseCase: IsFirstSeenEtaDashboardUseCase,
+        private val closeEtaDashboardUseCase: CloseEtaDashboardUseCase,
+        private val updateEtaDashboardSeenUseCase: UpdateEtaDashboardSeenUseCase,
         private val getNotificationLogsUseCase: GetNotificationLogsUseCase,
         private val getDetailMeetingUseCase: GetDetailMeetingUseCase,
         private val nudgeMateUseCase: NudgeMateUseCase,
@@ -68,10 +70,9 @@ class MeetingRoomViewModel
         private val imageStorage: ImageStorage,
         private val imageShareHelper: ImageShareHelper,
     ) : BaseViewModel() {
-        private val matesEta: Flow<MateEtaInfo?> = matesEtaRepository.fetchMatesEtaInfo(meetingId = meetingId)
-
         val mateEtas: StateFlow<List<MateEtaUiModel>> =
-            matesEta.map {
+            getMatesEtaInfoUseCase(meetingId)
+                .map {
                 val mateEtaInfo = it ?: return@map emptyList()
                 mateEtaInfo.toMateEtaUiModels()
             }.stateIn(
@@ -105,7 +106,7 @@ class MeetingRoomViewModel
         val inaccessibleEtaEvent: SharedFlow<Unit> get() = _inaccessibleEtaEvent
 
         val isFirstSeenEtaDashboard: StateFlow<Boolean> =
-            matesEtaRepository.isFirstSeenEtaDashboard()
+            isFirstSeenEtaDashboardUseCase()
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
@@ -253,7 +254,7 @@ class MeetingRoomViewModel
                 startLoading()
                 exitMeetingUseCase(_meeting.value.id)
                     .onSuccess {
-                        matesEtaRepository.closeEtaDashboard(meetingId)
+                        closeEtaDashboardUseCase(meetingId)
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
@@ -268,7 +269,7 @@ class MeetingRoomViewModel
 
         fun updateEtaDashboardSeen() {
             viewModelScope.launch {
-                matesEtaRepository.updateEtaDashboardSeen()
+                updateEtaDashboardSeenUseCase()
             }
         }
 

@@ -1,6 +1,7 @@
 package com.mulberry.ody.domain.usecase
 
 import com.mulberry.ody.domain.apiresult.ApiResult
+import com.mulberry.ody.domain.model.NudgeCooldownException
 import com.mulberry.ody.domain.model.NudgeInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import java.time.Duration
@@ -33,5 +34,3 @@ class NudgeMateUseCase @Inject constructor(
         private val DEFAULT_NUDGE_TIME = LocalDateTime.of(2000, 1, 1, 1, 1)
     }
 }
-
-class NudgeCooldownException(val remainingTime: Long) : Exception()
