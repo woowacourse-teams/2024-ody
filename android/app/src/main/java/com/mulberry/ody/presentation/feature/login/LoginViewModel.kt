@@ -25,7 +25,6 @@ class LoginViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val authRepository: AuthRepository,
         private val isLoggedInUseCase: IsLoggedInUseCase,
         private val loginUseCase: LoginUseCase,
         savedStateHandle: SavedStateHandle,
