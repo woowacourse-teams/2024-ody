@@ -46,10 +46,11 @@ class MeetingJoinViewModelTest {
     fun setUp() {
         val joinMeetingUseCase = JoinMeetingUseCase(FakeJoinRepository(meetingId))
         val getAddressNameByCoordinateUseCase = GetAddressNameByCoordinateUseCase(FakeAddressRepository)
-        val openEtaDashboardUseCase = OpenEtaDashboardUseCase(
-            authRepository = FakeAuthRepository(),
-            matesEtaRepository = FakeMatesEtaRepository,
-        )
+        val openEtaDashboardUseCase =
+            OpenEtaDashboardUseCase(
+                authRepository = FakeAuthRepository(),
+                matesEtaRepository = FakeMatesEtaRepository,
+            )
 
         viewModel =
             MeetingJoinViewModel(

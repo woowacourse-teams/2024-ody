@@ -95,12 +95,13 @@ class MeetingRoomViewModelTest {
     fun `친구 재촉을 하면 친구 재촉이 성공한다`() {
         runTest {
             // given
-            val mateEta = MateEtaUiModel(
-                nickname = "콜리",
-                status = EtaStatusUiModel.Late(3),
-                userId = 1L,
-                mateId = 0L,
-            )
+            val mateEta =
+                MateEtaUiModel(
+                    nickname = "콜리",
+                    status = EtaStatusUiModel.Late(3),
+                    userId = 1L,
+                    mateId = 0L,
+                )
 
             // when
             viewModel.mateEtas.first()

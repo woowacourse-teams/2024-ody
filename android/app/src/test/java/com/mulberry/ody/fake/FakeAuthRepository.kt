@@ -6,7 +6,7 @@ import com.mulberry.ody.domain.repository.ody.AuthRepository
 
 class FakeAuthRepository(
     private val isLoggedIn: Boolean = true,
-    private val authToken: AuthToken = AuthToken("", "")
+    private val authToken: AuthToken = AuthToken("", ""),
 ) : AuthRepository {
     override suspend fun isLoggedIn(): Boolean {
         return isLoggedIn
