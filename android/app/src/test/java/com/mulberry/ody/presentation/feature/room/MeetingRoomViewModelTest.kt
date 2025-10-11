@@ -15,7 +15,6 @@ import com.mulberry.ody.presentation.feature.room.detail.model.toDetailMeetingUi
 import com.mulberry.ody.presentation.feature.room.etadashboard.model.toMateEtaUiModels
 import com.mulberry.ody.presentation.feature.room.log.model.toNotificationLogUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
-import com.mulberry.ody.util.InstantTaskExecutorExtension
 import com.mulberry.ody.util.valueOnAction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -27,7 +26,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
-@ExtendWith(InstantTaskExecutorExtension::class)
 class MeetingRoomViewModelTest {
     private lateinit var viewModel: MeetingRoomViewModel
     private lateinit var matesEtaRepository: MatesEtaRepository

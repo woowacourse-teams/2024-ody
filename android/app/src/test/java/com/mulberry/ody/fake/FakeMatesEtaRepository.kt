@@ -1,5 +1,6 @@
 package com.mulberry.ody.fake
 
+import com.mulberry.ody.domain.model.EtaOpenInfo
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
 import com.mulberry.ody.mateEtaInfo
@@ -15,14 +16,9 @@ object FakeMatesEtaRepository : MatesEtaRepository {
 
     override suspend fun clearEtaFetchingJob() = Unit
 
-    override fun openEtaDashboard(
-        meetingId: Long,
-        meetingDateTime: LocalDateTime,
-    ) = Unit
+    override fun openEtaDashboard(etaOpenInfo: EtaOpenInfo) = Unit
 
     override suspend fun closeEtaDashboard(meetingId: Long) = Unit
-
-    override suspend fun closeEtaDashboard() = Unit
 
     override fun isFirstSeenEtaDashboard(): Flow<Boolean> = flowOf(false)
 

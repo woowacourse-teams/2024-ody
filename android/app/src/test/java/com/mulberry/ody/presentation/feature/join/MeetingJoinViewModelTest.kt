@@ -10,7 +10,6 @@ import com.mulberry.ody.fake.FakeMatesEtaRepository
 import com.mulberry.ody.meetingId
 import com.mulberry.ody.presentation.feature.join.model.MeetingJoinNavigateAction
 import com.mulberry.ody.util.CoroutinesTestExtension
-import com.mulberry.ody.util.InstantTaskExecutorExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -22,7 +21,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
-@ExtendWith(InstantTaskExecutorExtension::class)
 class MeetingJoinViewModelTest {
     private lateinit var viewModel: MeetingJoinViewModel
 

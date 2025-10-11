@@ -7,7 +7,6 @@ import com.mulberry.ody.meetings
 import com.mulberry.ody.presentation.feature.meetings.model.MeetingsUiState
 import com.mulberry.ody.presentation.feature.meetings.model.toMeetingUiModels
 import com.mulberry.ody.util.CoroutinesTestExtension
-import com.mulberry.ody.util.InstantTaskExecutorExtension
 import com.mulberry.ody.util.valueOnAction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -19,7 +18,6 @@ import java.time.LocalDateTime
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
-@ExtendWith(InstantTaskExecutorExtension::class)
 class MeetingsViewModelTest {
     private val analyticsHelper = FakeAnalyticsHelper
     private val meetingRepository = FakeMeetingRepository
