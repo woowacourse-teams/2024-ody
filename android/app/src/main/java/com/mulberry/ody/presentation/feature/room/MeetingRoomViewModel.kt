@@ -73,13 +73,13 @@ class MeetingRoomViewModel
         val mateEtas: StateFlow<List<MateEtaUiModel>> =
             getMatesEtaInfoUseCase(meetingId)
                 .map {
-                val mateEtaInfo = it ?: return@map emptyList()
-                mateEtaInfo.toMateEtaUiModels()
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
-                initialValue = emptyList(),
-            )
+                    val mateEtaInfo = it ?: return@map emptyList()
+                    mateEtaInfo.toMateEtaUiModels()
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(STATE_FLOW_SUBSCRIPTION_TIMEOUT_MILLIS),
+                    initialValue = emptyList(),
+                )
 
         private val _meeting: MutableStateFlow<DetailMeetingUiModel> = MutableStateFlow(DetailMeetingUiModel.DEFAULT)
         val meeting: StateFlow<DetailMeetingUiModel> = _meeting.asStateFlow()

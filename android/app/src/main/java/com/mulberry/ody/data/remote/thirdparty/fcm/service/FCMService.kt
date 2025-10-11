@@ -44,7 +44,6 @@ class FCMService : FirebaseMessagingService() {
 
         if (fcmType == MessageType.ETA_SCHEDULING_NOTICE) {
             openEta(meetingId, meetingTime)
-
         }
     }
 

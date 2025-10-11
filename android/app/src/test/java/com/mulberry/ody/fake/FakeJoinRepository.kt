@@ -1,8 +1,8 @@
 package com.mulberry.ody.fake
 
 import com.mulberry.ody.domain.apiresult.ApiResult
-import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.model.EtaOpenInfo
+import com.mulberry.ody.domain.model.MeetingJoinInfo
 import com.mulberry.ody.domain.repository.ody.JoinRepository
 import java.time.LocalDateTime
 
