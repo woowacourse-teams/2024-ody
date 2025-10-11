@@ -6,7 +6,7 @@ import com.mulberry.ody.domain.model.Addresses
 import com.mulberry.ody.domain.repository.location.AddressRepository
 
 object FakeAddressRepository : AddressRepository {
-    override suspend fun fetchAddresses(
+    override suspend fun fetchAddress(
         keyword: String,
         page: Int,
         pageSize: Int,
