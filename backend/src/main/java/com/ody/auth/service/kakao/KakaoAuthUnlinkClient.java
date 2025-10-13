@@ -4,6 +4,7 @@ import com.google.common.net.HttpHeaders;
 import com.ody.auth.config.KakaoProperties;
 import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.common.exception.OdyBadRequestException;
+import com.ody.member.domain.Member;
 import com.ody.member.domain.ProviderType;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +35,10 @@ public class KakaoAuthUnlinkClient implements SocialAuthUnlinkClient {
     }
 
     @Override
-    public void unlink(String providerId) {
+    public void unlink(Member member) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("target_id_type", "user_id");
-        body.add("target_id", providerId);
+        body.add("target_id", member.getAuthProvider().getProviderId());
 
         try {
             Map responseBody = restClient.post()
@@ -47,7 +48,6 @@ public class KakaoAuthUnlinkClient implements SocialAuthUnlinkClient {
                     .toEntity(Map.class).getBody();
             log.info("카카오 유저의 연결을 끊었습니다. (회원번호: {})", responseBody.get("id"));
         } catch (OdyBadRequestException exception) {
-
         }
     }
 

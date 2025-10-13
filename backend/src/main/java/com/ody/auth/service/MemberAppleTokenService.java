@@ -30,6 +30,11 @@ public class MemberAppleTokenService {
                 .orElseThrow(() -> new OdyNotFoundException("AppleRefreshToken을 찾을 수 없습니다."));
     }
 
+    public MemberAppleToken findByMemberId(long memberId) {
+        return memberAppleTokenRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new OdyNotFoundException("AppleRefreshToken을 찾을 수 없습니다."));
+    }
+
     @Transactional
     public void delete(AuthProvider authProvider) {
         memberAppleTokenRepository.deleteByMember_AuthProvider(authProvider);

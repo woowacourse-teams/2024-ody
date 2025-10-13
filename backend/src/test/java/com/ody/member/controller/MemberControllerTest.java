@@ -1,6 +1,6 @@
 package com.ody.member.controller;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
 import com.ody.auth.service.apple.AppleRevokeTokenClient;
@@ -32,8 +32,8 @@ class MemberControllerTest extends BaseControllerTest {
 
     @BeforeEach
     void setUp() {
-        doNothing().when(kakaoAuthUnlinkClient).unlink(anyString());
-        doNothing().when(appleRevokeTokenClient).unlink(anyString());
+        doNothing().when(kakaoAuthUnlinkClient).unlink(any());
+        doNothing().when(appleRevokeTokenClient).unlink(any());
     }
 
     @DisplayName("이미 삭제한 회원에 대한 회원 삭제 요청 시 204를 반환한다.")
