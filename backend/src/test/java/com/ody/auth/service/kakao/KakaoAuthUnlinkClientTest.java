@@ -38,15 +38,6 @@ class KakaoAuthUnlinkClientTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @TestConfiguration
-    static class FakeKakaoProperties {
-
-        @Bean
-        public KakaoProperties kakaoProperties() {
-            return new KakaoProperties("https://kapi.kakao.com/v1/user/unlink", "admin-key");
-        }
-    }
-
     @DisplayName("카카오 연결 끊기 성공")
     @Test
     void unlinkSuccess() throws JsonProcessingException {
