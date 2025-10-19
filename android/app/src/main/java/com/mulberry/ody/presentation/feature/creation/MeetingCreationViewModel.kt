@@ -31,131 +31,131 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MeetingCreationViewModel
-    @Inject
-    constructor(
-        private val analyticsHelper: AnalyticsHelper,
-        private val createMeetingUseCase: CreateMeetingUseCase,
-        private val getAddressNameByCoordinateUseCase: GetAddressNameByCoordinateUseCase,
-        private val locationHelper: LocationHelper,
-    ) : BaseViewModel() {
-        private val _meetingCreationUiModel = MutableStateFlow(MeetingCreationUiModel())
-        val meetingCreationUiModel: StateFlow<MeetingCreationUiModel> get() = _meetingCreationUiModel.asStateFlow()
+@Inject
+constructor(
+    private val analyticsHelper: AnalyticsHelper,
+    private val createMeetingUseCase: CreateMeetingUseCase,
+    private val getAddressNameByCoordinateUseCase: GetAddressNameByCoordinateUseCase,
+    private val locationHelper: LocationHelper,
+) : BaseViewModel() {
+    private val _meetingCreationUiModel = MutableStateFlow(MeetingCreationUiModel())
+    val meetingCreationUiModel: StateFlow<MeetingCreationUiModel> get() = _meetingCreationUiModel.asStateFlow()
 
-        private val _isCreationValid = MutableStateFlow(false)
-        val isCreationValid: StateFlow<Boolean> get() = _isCreationValid.asStateFlow()
+    private val _isCreationValid = MutableStateFlow(false)
+    val isCreationValid: StateFlow<Boolean> get() = _isCreationValid.asStateFlow()
 
-        private val _invalidDestinationEvent = MutableSharedFlow<Unit>()
-        val invalidDestinationEvent: SharedFlow<Unit> = _invalidDestinationEvent.asSharedFlow()
+    private val _invalidDestinationEvent = MutableSharedFlow<Unit>()
+    val invalidDestinationEvent: SharedFlow<Unit> = _invalidDestinationEvent.asSharedFlow()
 
-        private val _navigateAction = MutableSharedFlow<MeetingCreationNavigateAction>()
-        val navigateAction: SharedFlow<MeetingCreationNavigateAction> = _navigateAction.asSharedFlow()
+    private val _navigateAction = MutableSharedFlow<MeetingCreationNavigateAction>()
+    val navigateAction: SharedFlow<MeetingCreationNavigateAction> = _navigateAction.asSharedFlow()
 
-        private val _currentLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
-        val currentLocationError: SharedFlow<Unit> get() = _currentLocationError.asSharedFlow()
+    private val _currentLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
+    val currentLocationError: SharedFlow<Unit> get() = _currentLocationError.asSharedFlow()
 
-        fun navigateToMeetingCreationPage(type: MeetingCreationType) {
-            viewModelScope.launch {
-                _isCreationValid.emit(_meetingCreationUiModel.value.isValid(type))
-            }
+    fun navigateToMeetingCreationPage(type: MeetingCreationType) {
+        viewModelScope.launch {
+            _isCreationValid.emit(_meetingCreationUiModel.value.isValid(type))
         }
+    }
 
-        fun getCurrentLocation() {
-            viewModelScope.launch {
-                startLoading()
-                locationHelper.getCurrentCoordinate()
-                    .onSuccess { location ->
-                        fetchAddressNameByCoordinate(location)
-                    }
-                    .onUnexpected {
-                        _currentLocationError.emit(Unit)
-                    }
-                stopLoading()
-            }
+    fun getCurrentLocation() {
+        viewModelScope.launch {
+            startLoading()
+            locationHelper.getCurrentCoordinate()
+                .onSuccess { location ->
+                    fetchAddressNameByCoordinate(location)
+                }
+                .onUnexpected {
+                    _currentLocationError.emit(Unit)
+                }
+            stopLoading()
         }
+    }
 
-        private suspend fun fetchAddressNameByCoordinate(location: Location) {
-            val longitude = location.longitude.toString()
-            val latitude = location.latitude.toString()
+    private suspend fun fetchAddressNameByCoordinate(location: Location) {
+        val longitude = location.longitude.toString()
+        val latitude = location.latitude.toString()
 
-            getAddressNameByCoordinateUseCase(longitude, latitude)
+        getAddressNameByCoordinateUseCase(longitude, latitude)
+            .onSuccess {
+                val address =
+                    Address(
+                        detailAddress = it ?: "",
+                        longitude = longitude,
+                        latitude = latitude,
+                    )
+                updateMeetingDestination(address)
+            }.onFailure { code, errorMessage ->
+                handleError()
+                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+            }.onUnexpected {
+                _currentLocationError.emit(Unit)
+            }.onNetworkError {
+                handleNetworkError()
+            }
+    }
+
+    fun createMeeting() {
+        viewModelScope.launch {
+            val meetingCreationInfo = _meetingCreationUiModel.value.convertMeetingCreationInfo() ?: return@launch
+            startLoading()
+            createMeetingUseCase(meetingCreationInfo)
                 .onSuccess {
-                    val address =
-                        Address(
-                            detailAddress = it ?: "",
-                            longitude = longitude,
-                            latitude = latitude,
-                        )
-                    updateMeetingDestination(address)
+                    _navigateAction.emit(MeetingCreationNavigateAction.NavigateToMeetingJoin(it))
                 }.onFailure { code, errorMessage ->
                     handleError()
                     analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                }.onUnexpected {
-                    _currentLocationError.emit(Unit)
+                    Timber.e("$code $errorMessage")
                 }.onNetworkError {
                     handleNetworkError()
+                    lastFailedAction = { createMeeting() }
                 }
-        }
-
-        fun createMeeting() {
-            viewModelScope.launch {
-                val meetingCreationInfo = _meetingCreationUiModel.value.convertMeetingCreationInfo() ?: return@launch
-                startLoading()
-                createMeetingUseCase(meetingCreationInfo)
-                    .onSuccess {
-                        _navigateAction.emit(MeetingCreationNavigateAction.NavigateToMeetingJoin(it))
-                    }.onFailure { code, errorMessage ->
-                        handleError()
-                        analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                        Timber.e("$code $errorMessage")
-                    }.onNetworkError {
-                        handleNetworkError()
-                        lastFailedAction = { createMeeting() }
-                    }
-                stopLoading()
-            }
-        }
-
-        fun updateMeetingName(name: String) {
-            viewModelScope.launch {
-                val oldUiModel = _meetingCreationUiModel.value
-                _meetingCreationUiModel.emit(oldUiModel.copy(name = name))
-                val newUiModel = _meetingCreationUiModel.value
-                _isCreationValid.emit(newUiModel.isValidName())
-            }
-        }
-
-        fun updateMeetingDate(date: LocalDate) {
-            viewModelScope.launch {
-                val oldUiModel = _meetingCreationUiModel.value
-                _meetingCreationUiModel.emit(oldUiModel.copy(date = date))
-                val newUiModel = _meetingCreationUiModel.value
-                _isCreationValid.emit(newUiModel.isValidDate())
-            }
-        }
-
-        fun updateMeetingTime(time: LocalTime) {
-            viewModelScope.launch {
-                val oldUiModel = _meetingCreationUiModel.value
-                _meetingCreationUiModel.emit(oldUiModel.copy(time = time))
-                val newUiModel = _meetingCreationUiModel.value
-                _isCreationValid.emit(newUiModel.isValidTime())
-            }
-        }
-
-        fun updateMeetingDestination(destination: Address) {
-            viewModelScope.launch {
-                val oldUiModel = _meetingCreationUiModel.value
-                _meetingCreationUiModel.emit(oldUiModel.copy(destination = destination))
-                val newUiModel = _meetingCreationUiModel.value
-                _isCreationValid.emit(newUiModel.isValidDestination())
-
-                if (!newUiModel.isValidDestination()) {
-                    _invalidDestinationEvent.emit(Unit)
-                }
-            }
-        }
-
-        companion object {
-            private const val TAG = "MeetingCreationViewModel"
+            stopLoading()
         }
     }
+
+    fun updateMeetingName(name: String) {
+        viewModelScope.launch {
+            val oldUiModel = _meetingCreationUiModel.value
+            _meetingCreationUiModel.emit(oldUiModel.copy(name = name))
+            val newUiModel = _meetingCreationUiModel.value
+            _isCreationValid.emit(newUiModel.isValidName())
+        }
+    }
+
+    fun updateMeetingDate(date: LocalDate) {
+        viewModelScope.launch {
+            val oldUiModel = _meetingCreationUiModel.value
+            _meetingCreationUiModel.emit(oldUiModel.copy(date = date))
+            val newUiModel = _meetingCreationUiModel.value
+            _isCreationValid.emit(newUiModel.isValidDate())
+        }
+    }
+
+    fun updateMeetingTime(time: LocalTime) {
+        viewModelScope.launch {
+            val oldUiModel = _meetingCreationUiModel.value
+            _meetingCreationUiModel.emit(oldUiModel.copy(time = time))
+            val newUiModel = _meetingCreationUiModel.value
+            _isCreationValid.emit(newUiModel.isValidTime())
+        }
+    }
+
+    fun updateMeetingDestination(destination: Address) {
+        viewModelScope.launch {
+            val oldUiModel = _meetingCreationUiModel.value
+            _meetingCreationUiModel.emit(oldUiModel.copy(destination = destination))
+            val newUiModel = _meetingCreationUiModel.value
+            _isCreationValid.emit(newUiModel.isValidDestination())
+
+            if (!newUiModel.isValidDestination()) {
+                _invalidDestinationEvent.emit(Unit)
+            }
+        }
+    }
+
+    companion object {
+        private const val TAG = "MeetingCreationViewModel"
+    }
+}

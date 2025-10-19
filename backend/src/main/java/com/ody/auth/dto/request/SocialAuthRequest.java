@@ -8,6 +8,7 @@ import com.ody.member.domain.ProviderType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class SocialAuthRequest {
+
+    private static final String DEFAULT_IMAGE_URL = "https://img1.kakaocdn.net/thumb/R110x110.q70/?fname=https://t1.kakaocdn.net/account_images/default_profile.jpeg";
 
     @Schema(description = "디바이스 토큰", example = "devicetokendevicetoken")
     @NotBlank
@@ -33,6 +36,9 @@ public abstract class SocialAuthRequest {
 
     protected Member toMember(ProviderType providerType) {
         AuthProvider authProvider = new AuthProvider(providerType, providerId);
-        return new Member(authProvider, new Nickname(nickname), imageUrl, new DeviceToken(deviceToken));
+        String finalImageUrl = Optional.ofNullable(imageUrl)
+                .filter(s -> !s.isBlank())
+                .orElse(DEFAULT_IMAGE_URL);
+        return new Member(authProvider, new Nickname(nickname), finalImageUrl, new DeviceToken(deviceToken));
     }
 }
