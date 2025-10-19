@@ -4,7 +4,6 @@ import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeMeetingRepository
 import com.mulberry.ody.presentation.feature.invitecode.model.InviteCodeNavigateAction
 import com.mulberry.ody.util.CoroutinesTestExtension
-import com.mulberry.ody.util.InstantTaskExecutorExtension
 import com.mulberry.ody.util.valueOnAction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
-@ExtendWith(InstantTaskExecutorExtension::class)
 class InviteCodeViewModelTest {
     private val analyticsHelper = FakeAnalyticsHelper
     private val meetingRepository = FakeMeetingRepository

@@ -14,6 +14,7 @@ import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.common.gps.LocationHelper
 import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
+import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationType
 import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -52,12 +53,18 @@ class MeetingCreationViewModel
         private val _currentLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
         val currentLocationError: SharedFlow<Unit> get() = _currentLocationError.asSharedFlow()
 
+        fun navigateToMeetingCreationPage(type: MeetingCreationType) {
+            viewModelScope.launch {
+                _isCreationValid.emit(_meetingCreationUiModel.value.isValid(type))
+            }
+        }
+
         fun getCurrentLocation() {
             viewModelScope.launch {
                 startLoading()
                 locationHelper.getCurrentCoordinate()
                     .onSuccess { location ->
-                        fetchAddressesByCoordinate(location)
+                        fetchAddressNameByCoordinate(location)
                     }
                     .onUnexpected {
                         _currentLocationError.emit(Unit)
@@ -66,11 +73,11 @@ class MeetingCreationViewModel
             }
         }
 
-        private suspend fun fetchAddressesByCoordinate(location: Location) {
+        private suspend fun fetchAddressNameByCoordinate(location: Location) {
             val longitude = location.longitude.toString()
             val latitude = location.latitude.toString()
 
-            addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+            addressRepository.fetchAddressNameByCoordinate(longitude, latitude).onSuccess {
                 val address =
                     Address(
                         detailAddress = it ?: "",
@@ -149,6 +156,5 @@ class MeetingCreationViewModel
 
         companion object {
             private const val TAG = "MeetingCreationViewModel"
-            const val MEETING_NAME_MAX_LENGTH = 15
         }
     }

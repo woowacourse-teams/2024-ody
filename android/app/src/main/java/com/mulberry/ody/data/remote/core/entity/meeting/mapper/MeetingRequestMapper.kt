@@ -4,7 +4,7 @@ import com.mulberry.ody.data.remote.core.entity.meeting.request.MeetingRequest
 import com.mulberry.ody.data.remote.core.entity.meeting.request.NudgeRequest
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingCreationInfo
-import com.mulberry.ody.domain.model.Nudge
+import com.mulberry.ody.domain.model.NudgeInfo
 
 fun MeetingCreationInfo.toMeetingRequest(): MeetingRequest =
     MeetingRequest(
@@ -21,8 +21,8 @@ private fun Address.toAddressString(): String {
     return "$detailAddress ($placeName)"
 }
 
-fun Nudge.toNudgeRequest(): NudgeRequest =
+fun NudgeInfo.toNudgeRequest(): NudgeRequest =
     NudgeRequest(
-        requestMateId = requestMateId,
-        nudgedMateId = nudgedMateId,
+        requestMateId = userId,
+        nudgedMateId = mateId,
     )

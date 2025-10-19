@@ -69,7 +69,7 @@ class MeetingsViewModel
 
         fun navigateToEta(meeting: MeetingUiModel) {
             viewModelScope.launch {
-                if (meeting.isAccessible()) {
+                if (!meeting.isEtaOpenTime()) {
                     _inaccessibleEtaEvent.emit(Unit)
                     return@launch
                 }

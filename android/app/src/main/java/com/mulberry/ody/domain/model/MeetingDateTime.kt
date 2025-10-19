@@ -10,4 +10,12 @@ class MeetingDateTime(val dateTime: LocalDateTime) {
     fun isValid(): Boolean {
         return dateTime.isAfter(LocalDateTime.now())
     }
+
+    fun isEtaOpenTime(): Boolean {
+        return LocalDateTime.now() >= dateTime.minusMinutes(ETA_OPEN_MINUTE)
+    }
+
+    companion object {
+        private const val ETA_OPEN_MINUTE = 30L
+    }
 }

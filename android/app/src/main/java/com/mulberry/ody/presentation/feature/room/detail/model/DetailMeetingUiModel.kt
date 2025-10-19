@@ -1,7 +1,7 @@
 package com.mulberry.ody.presentation.feature.room.detail.model
 
+import com.mulberry.ody.domain.model.MeetingDateTime
 import com.mulberry.ody.presentation.common.toLocalDateTime
-import java.time.LocalDateTime
 
 data class DetailMeetingUiModel(
     val id: Long,
@@ -13,16 +13,14 @@ data class DetailMeetingUiModel(
     val durationTime: String,
     val inviteCode: String,
 ) {
-    fun isEtaAccessible(): Boolean {
-        val localDateTime = dateTime.toLocalDateTime()
-        return localDateTime.minusMinutes(ETA_ACCESSIBLE_MINUTE) <= LocalDateTime.now()
+    fun isEtaOpenTime(): Boolean {
+        val meetingDateTime = MeetingDateTime(dateTime.toLocalDateTime())
+        return meetingDateTime.isEtaOpenTime()
     }
 
     fun isDefault(): Boolean = this == DEFAULT
 
     companion object {
-        private const val ETA_ACCESSIBLE_MINUTE = 30L
-
         val DEFAULT: DetailMeetingUiModel =
             DetailMeetingUiModel(
                 id = -1L,

@@ -15,7 +15,7 @@ import com.mulberry.ody.domain.model.DetailMeeting
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
 import com.mulberry.ody.domain.model.MeetingCreationInfo
-import com.mulberry.ody.domain.model.Nudge
+import com.mulberry.ody.domain.model.NudgeInfo
 import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ class DefaultMeetingRepository
             return service.fetchMeeting(meetingId).map { it.toDetailMeeting() }
         }
 
-        override suspend fun postNudge(nudge: Nudge): ApiResult<Unit> = service.postNudge(nudge.toNudgeRequest())
+        override suspend fun postNudge(nudgeInfo: NudgeInfo): ApiResult<Unit> = service.postNudge(nudgeInfo.toNudgeRequest())
 
         override suspend fun postMeeting(meetingCreationInfo: MeetingCreationInfo): ApiResult<String> {
             return service.postMeeting(meetingCreationInfo.toMeetingRequest()).map { it.inviteCode }

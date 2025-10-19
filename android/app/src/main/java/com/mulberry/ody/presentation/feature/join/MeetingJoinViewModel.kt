@@ -8,9 +8,9 @@ import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
 import com.mulberry.ody.domain.model.Address
 import com.mulberry.ody.domain.model.MeetingJoinInfo
-import com.mulberry.ody.domain.repository.location.AddressRepository
-import com.mulberry.ody.domain.repository.ody.JoinRepository
-import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
+import com.mulberry.ody.domain.usecase.GetAddressNameByCoordinateUseCase
+import com.mulberry.ody.domain.usecase.JoinMeetingUseCase
+import com.mulberry.ody.domain.usecase.OpenEtaDashboardUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
@@ -35,10 +35,10 @@ class MeetingJoinViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val joinRepository: JoinRepository,
-        private val addressRepository: AddressRepository,
+        private val joinMeetingUseCase: JoinMeetingUseCase,
+        private val getAddressNameByCoordinateUseCase: GetAddressNameByCoordinateUseCase,
+        private val openEtaDashboardUseCase: OpenEtaDashboardUseCase,
         private val locationHelper: LocationHelper,
-        private val matesEtaRepository: MatesEtaRepository,
     ) : BaseViewModel() {
         private val _departureAddress: MutableStateFlow<Address?> = MutableStateFlow(null)
         val departureAddress: StateFlow<Address?> get() = _departureAddress.asStateFlow()
@@ -62,7 +62,6 @@ class MeetingJoinViewModel
 
         fun updateMeetingDeparture(departure: Address) {
             viewModelScope.launch {
-                val oldUiModel = _departureAddress.value
                 if (departure.isValid()) {
                     _departureAddress.emit(departure)
                 } else {
@@ -76,7 +75,7 @@ class MeetingJoinViewModel
                 startLoading()
                 locationHelper.getCurrentCoordinate()
                     .onSuccess { location ->
-                        fetchAddressesByCoordinate(location)
+                        fetchAddressNameByCoordinate(location)
                     }
                     .onUnexpected {
                         _currentLocationError.emit(Unit)
@@ -85,11 +84,11 @@ class MeetingJoinViewModel
             }
         }
 
-        private suspend fun fetchAddressesByCoordinate(location: Location) {
+        private suspend fun fetchAddressNameByCoordinate(location: Location) {
             val longitude = location.longitude.toString()
             val latitude = location.latitude.toString()
 
-            addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+            getAddressNameByCoordinateUseCase(longitude, latitude).onSuccess {
                 val address =
                     Address(
                         detailAddress = it ?: "",
@@ -112,10 +111,10 @@ class MeetingJoinViewModel
 
             viewModelScope.launch {
                 startLoading()
-                joinRepository.postMates(meetingJoinInfo)
-                    .onSuccess {
-                        matesEtaRepository.openEtaDashboard(it.meetingId, it.meetingDateTime)
-                        _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(it.meetingId))
+                joinMeetingUseCase(meetingJoinInfo)
+                    .onSuccess { etaOpenInfo ->
+                        openEtaDashboardUseCase(etaOpenInfo)
+                        _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToRoom(etaOpenInfo.meetingId))
                         _navigateAction.emit(MeetingJoinNavigateAction.JoinNavigateToJoinComplete)
                     }.onFailure { code, errorMessage ->
                         handleError()

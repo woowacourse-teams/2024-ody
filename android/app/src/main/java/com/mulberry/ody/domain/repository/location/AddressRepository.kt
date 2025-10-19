@@ -10,8 +10,8 @@ interface AddressRepository {
         pageSize: Int,
     ): ApiResult<Addresses>
 
-    suspend fun fetchAddressesByCoordinate(
-        x: String,
-        y: String,
+    suspend fun fetchAddressNameByCoordinate(
+        longitude: String,
+        latitude: String,
     ): ApiResult<String?>
 }
