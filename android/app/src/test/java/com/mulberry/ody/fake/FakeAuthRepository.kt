@@ -4,16 +4,13 @@ import com.mulberry.ody.domain.apiresult.ApiResult
 import com.mulberry.ody.domain.model.AuthToken
 import com.mulberry.ody.domain.repository.ody.AuthRepository
 
-class FakeAuthRepository(
-    private val isLoggedIn: Boolean = true,
-    private val authToken: AuthToken = AuthToken("", ""),
-) : AuthRepository {
+object FakeAuthRepository : AuthRepository {
     override suspend fun isLoggedIn(): Boolean {
-        return isLoggedIn
+        return true
     }
 
     override suspend fun login(): ApiResult<AuthToken> {
-        return ApiResult.Success(authToken)
+        return ApiResult.Success(AuthToken("accessToken", "refreshToken"))
     }
 
     override suspend fun logout(): ApiResult<Unit> {

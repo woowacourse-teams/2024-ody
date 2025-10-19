@@ -2,6 +2,7 @@ package com.mulberry.ody.presentation.feature.address
 
 import androidx.paging.map
 import com.mulberry.ody.address
+import com.mulberry.ody.domain.usecase.GetAddressUseCase
 import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.util.CoroutinesTestExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,8 +19,8 @@ class AddressSearchViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel =
-            AddressSearchViewModel(addressRepository = FakeAddressRepository)
+        val getAddressUseCase = GetAddressUseCase(FakeAddressRepository)
+        viewModel = AddressSearchViewModel(getAddressUseCase = getAddressUseCase)
     }
 
     @Test

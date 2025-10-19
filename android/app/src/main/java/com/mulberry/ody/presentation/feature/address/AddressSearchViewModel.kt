@@ -1,14 +1,10 @@
 package com.mulberry.ody.presentation.feature.address
 
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource
-import com.mulberry.ody.data.remote.thirdparty.address.AddressPagingSource.Companion.PAGE_SIZE
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.domain.repository.location.AddressRepository
+import com.mulberry.ody.domain.usecase.GetAddressUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +18,7 @@ import javax.inject.Inject
 class AddressSearchViewModel
     @Inject
     constructor(
-        private val addressRepository: AddressRepository,
+        private val getAddressUseCase: GetAddressUseCase,
     ) : BaseViewModel() {
         private val _address: MutableStateFlow<PagingData<Address>> = MutableStateFlow(PagingData.empty())
         val address: StateFlow<PagingData<Address>> get() = _address
@@ -34,15 +30,7 @@ class AddressSearchViewModel
                 }
 
                 startLoading()
-                Pager(
-                    config = PagingConfig(pageSize = PAGE_SIZE),
-                    pagingSourceFactory = {
-                        AddressPagingSource(
-                            keyword = addressSearchKeyword,
-                            addressRepository = addressRepository,
-                        )
-                    },
-                ).flow
+                getAddressUseCase(addressSearchKeyword)
                     .cachedIn(viewModelScope)
                     .collectLatest {
                         _address.emit(it)
