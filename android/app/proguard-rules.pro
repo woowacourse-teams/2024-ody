@@ -21,13 +21,8 @@
 #-renamesourcefileattribute SourceFile
 
 # kakao share
--dontwarn com.google.gson.Gson
--dontwarn com.google.gson.JsonElement
--dontwarn com.google.gson.JsonObject
--dontwarn com.google.gson.annotations.JsonAdapter
--dontwarn com.google.gson.annotations.SerializedName
 -keep class com.kakao.sdk.**.model.* { *; }
--dontwarn com.kakao.sdk.common.json.MapToQueryAdapter
+-keep class * extends com.google.gson.TypeAdapter
 
 # https://github.com/square/okhttp/pull/6792
 -dontwarn org.bouncycastle.jsse.**
