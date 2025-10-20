@@ -5,10 +5,9 @@ import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.model.NotificationType
-import com.mulberry.ody.domain.usecase.IsNotificationOnUseCase
-import com.mulberry.ody.domain.usecase.LogoutUseCase
-import com.mulberry.ody.domain.usecase.UpdateNotificationSetting
-import com.mulberry.ody.domain.usecase.WithDrawAccountUseCase
+import com.mulberry.ody.domain.repository.ody.AuthRepository
+import com.mulberry.ody.domain.repository.ody.MatesEtaRepository
+import com.mulberry.ody.domain.repository.ody.SettingRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
@@ -30,10 +29,9 @@ class SettingViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val isNotificationOnUseCase: IsNotificationOnUseCase,
-        private val updateNotificationSetting: UpdateNotificationSetting,
-        private val logoutUseCase: LogoutUseCase,
-        private val withDrawAccountUseCase: WithDrawAccountUseCase,
+        private val authRepository: AuthRepository,
+        private val matesEtaRepository: MatesEtaRepository,
+        private val settingRepository: SettingRepository,
     ) : BaseViewModel() {
         private val _loginNavigateEvent: MutableSharedFlow<LoginNavigatedReason> = MutableSharedFlow()
         val loginNavigateEvent: SharedFlow<LoginNavigatedReason> get() = _loginNavigateEvent.asSharedFlow()
@@ -46,28 +44,28 @@ class SettingViewModel
 
         fun fetchNotificationSetting() {
             viewModelScope.launch {
-                _isDepartureNotificationOn.value = isNotificationOnUseCase(NotificationType.DEPARTURE_REMINDER).first()
-                _isEntryNotificationOn.value = isNotificationOnUseCase(NotificationType.ENTRY).first()
+                _isDepartureNotificationOn.value = settingRepository.isNotificationOn(NotificationType.DEPARTURE_REMINDER).first()
+                _isEntryNotificationOn.value = settingRepository.isNotificationOn(NotificationType.ENTRY).first()
             }
         }
 
         fun changeDepartureNotification(isOn: Boolean) {
             viewModelScope.launch {
-                updateNotificationSetting(NotificationType.DEPARTURE_REMINDER, isOn)
+                settingRepository.changeNotificationSetting(NotificationType.DEPARTURE_REMINDER, isOn)
                 _isDepartureNotificationOn.value = isOn
             }
         }
 
         fun changeEntryNotification(isOn: Boolean) {
             viewModelScope.launch {
-                updateNotificationSetting(NotificationType.ENTRY, isOn)
+                settingRepository.changeNotificationSetting(NotificationType.ENTRY, isOn)
                 _isEntryNotificationOn.value = isOn
             }
         }
 
         fun logout() {
             viewModelScope.launch {
-                logoutUseCase()
+                authRepository.logout()
                 _loginNavigateEvent.emit(LoginNavigatedReason.LOGOUT)
             }
         }
@@ -75,9 +73,10 @@ class SettingViewModel
         fun withdraw() {
             viewModelScope.launch {
                 startLoading()
-                withDrawAccountUseCase()
+                authRepository.withdrawAccount()
                     .onSuccess {
                         _loginNavigateEvent.emit(LoginNavigatedReason.WITHDRAWAL)
+                        matesEtaRepository.clearEtaFetchingJob()
                     }.onFailure { code, errorMessage ->
                         handleError()
                         analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")

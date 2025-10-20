@@ -1,22 +1,20 @@
 package com.mulberry.ody.fake
 
-import androidx.paging.PagingData
 import com.mulberry.ody.addresses
 import com.mulberry.ody.domain.apiresult.ApiResult
-import com.mulberry.ody.domain.model.Address
+import com.mulberry.ody.domain.model.Addresses
 import com.mulberry.ody.domain.repository.location.AddressRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
 object FakeAddressRepository : AddressRepository {
-    override fun fetchAddress(
+    override suspend fun fetchAddresses(
         keyword: String,
+        page: Int,
         pageSize: Int,
-    ): Flow<PagingData<Address>> {
-        return flowOf(PagingData.from(addresses.addresses))
+    ): ApiResult<Addresses> {
+        return ApiResult.Success(addresses)
     }
 
-    override suspend fun fetchAddressNameByCoordinate(
+    override suspend fun fetchAddressesByCoordinate(
         x: String,
         y: String,
     ): ApiResult<String?> {

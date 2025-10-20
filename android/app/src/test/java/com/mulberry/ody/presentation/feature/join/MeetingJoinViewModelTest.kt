@@ -2,18 +2,15 @@ package com.mulberry.ody.presentation.feature.join
 
 import android.location.Location
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.domain.usecase.GetAddressNameByCoordinateUseCase
-import com.mulberry.ody.domain.usecase.JoinMeetingUseCase
-import com.mulberry.ody.domain.usecase.OpenEtaDashboardUseCase
 import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.fake.FakeAnalyticsHelper
-import com.mulberry.ody.fake.FakeAuthRepository
 import com.mulberry.ody.fake.FakeJoinRepository
 import com.mulberry.ody.fake.FakeLocationHelper
 import com.mulberry.ody.fake.FakeMatesEtaRepository
 import com.mulberry.ody.meetingId
 import com.mulberry.ody.presentation.feature.join.model.MeetingJoinNavigateAction
 import com.mulberry.ody.util.CoroutinesTestExtension
+import com.mulberry.ody.util.InstantTaskExecutorExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -25,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
+@ExtendWith(InstantTaskExecutorExtension::class)
 class MeetingJoinViewModelTest {
     private lateinit var viewModel: MeetingJoinViewModel
 
@@ -44,21 +42,13 @@ class MeetingJoinViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        val joinMeetingUseCase = JoinMeetingUseCase(FakeJoinRepository(meetingId))
-        val getAddressNameByCoordinateUseCase = GetAddressNameByCoordinateUseCase(FakeAddressRepository)
-        val openEtaDashboardUseCase =
-            OpenEtaDashboardUseCase(
-                authRepository = FakeAuthRepository,
-                matesEtaRepository = FakeMatesEtaRepository,
-            )
-
         viewModel =
             MeetingJoinViewModel(
                 analyticsHelper = FakeAnalyticsHelper,
-                joinMeetingUseCase = joinMeetingUseCase,
-                getAddressNameByCoordinateUseCase = getAddressNameByCoordinateUseCase,
-                openEtaDashboardUseCase = openEtaDashboardUseCase,
+                joinRepository = FakeJoinRepository(meetingId = meetingId),
+                addressRepository = FakeAddressRepository,
                 locationHelper = FakeLocationHelper(fakeCurrentLocation),
+                matesEtaRepository = FakeMatesEtaRepository,
             )
     }
 

@@ -20,9 +20,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mulberry.ody.R
-import com.mulberry.ody.domain.model.MeetingName
 import com.mulberry.ody.presentation.common.modifier.noRippleClickable
 import com.mulberry.ody.presentation.component.OdyTextField
+import com.mulberry.ody.presentation.feature.creation.MeetingCreationViewModel
 import com.mulberry.ody.presentation.theme.OdyTheme
 
 @Composable
@@ -67,7 +67,7 @@ fun MeetingNameScreen(
                             stringResource(
                                 id = R.string.meeting_name_length,
                                 name.length,
-                                MeetingName.MAX_LENGTH,
+                                MeetingCreationViewModel.MEETING_NAME_MAX_LENGTH,
                             ),
                         style = OdyTheme.typography.pretendardMedium16.copy(color = OdyTheme.colors.senary),
                     )

@@ -7,14 +7,13 @@ import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
 import com.mulberry.ody.domain.apiresult.onUnexpected
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.domain.usecase.CreateMeetingUseCase
-import com.mulberry.ody.domain.usecase.GetAddressNameByCoordinateUseCase
+import com.mulberry.ody.domain.repository.location.AddressRepository
+import com.mulberry.ody.domain.repository.ody.MeetingRepository
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
 import com.mulberry.ody.presentation.common.gps.LocationHelper
 import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
-import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationType
 import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -34,8 +33,8 @@ class MeetingCreationViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val createMeetingUseCase: CreateMeetingUseCase,
-        private val getAddressNameByCoordinateUseCase: GetAddressNameByCoordinateUseCase,
+        private val meetingRepository: MeetingRepository,
+        private val addressRepository: AddressRepository,
         private val locationHelper: LocationHelper,
     ) : BaseViewModel() {
         private val _meetingCreationUiModel = MutableStateFlow(MeetingCreationUiModel())
@@ -53,18 +52,12 @@ class MeetingCreationViewModel
         private val _currentLocationError: MutableSharedFlow<Unit> = MutableSharedFlow()
         val currentLocationError: SharedFlow<Unit> get() = _currentLocationError.asSharedFlow()
 
-        fun navigateToMeetingCreationPage(type: MeetingCreationType) {
-            viewModelScope.launch {
-                _isCreationValid.emit(_meetingCreationUiModel.value.isValid(type))
-            }
-        }
-
         fun getCurrentLocation() {
             viewModelScope.launch {
                 startLoading()
                 locationHelper.getCurrentCoordinate()
                     .onSuccess { location ->
-                        fetchAddressNameByCoordinate(location)
+                        fetchAddressesByCoordinate(location)
                     }
                     .onUnexpected {
                         _currentLocationError.emit(Unit)
@@ -73,34 +66,33 @@ class MeetingCreationViewModel
             }
         }
 
-        private suspend fun fetchAddressNameByCoordinate(location: Location) {
+        private suspend fun fetchAddressesByCoordinate(location: Location) {
             val longitude = location.longitude.toString()
             val latitude = location.latitude.toString()
 
-            getAddressNameByCoordinateUseCase(longitude, latitude)
-                .onSuccess {
-                    val address =
-                        Address(
-                            detailAddress = it ?: "",
-                            longitude = longitude,
-                            latitude = latitude,
-                        )
-                    updateMeetingDestination(address)
-                }.onFailure { code, errorMessage ->
-                    handleError()
-                    analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
-                }.onUnexpected {
-                    _currentLocationError.emit(Unit)
-                }.onNetworkError {
-                    handleNetworkError()
-                }
+            addressRepository.fetchAddressesByCoordinate(longitude, latitude).onSuccess {
+                val address =
+                    Address(
+                        detailAddress = it ?: "",
+                        longitude = longitude,
+                        latitude = latitude,
+                    )
+                updateMeetingDestination(address)
+            }.onFailure { code, errorMessage ->
+                handleError()
+                analyticsHelper.logNetworkErrorEvent(TAG, "$code $errorMessage")
+            }.onUnexpected {
+                _currentLocationError.emit(Unit)
+            }.onNetworkError {
+                handleNetworkError()
+            }
         }
 
         fun createMeeting() {
             viewModelScope.launch {
                 val meetingCreationInfo = _meetingCreationUiModel.value.convertMeetingCreationInfo() ?: return@launch
                 startLoading()
-                createMeetingUseCase(meetingCreationInfo)
+                meetingRepository.postMeeting(meetingCreationInfo)
                     .onSuccess {
                         _navigateAction.emit(MeetingCreationNavigateAction.NavigateToMeetingJoin(it))
                     }.onFailure { code, errorMessage ->
@@ -157,5 +149,6 @@ class MeetingCreationViewModel
 
         companion object {
             private const val TAG = "MeetingCreationViewModel"
+            const val MEETING_NAME_MAX_LENGTH = 15
         }
     }

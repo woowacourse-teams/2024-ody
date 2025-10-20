@@ -2,8 +2,6 @@ package com.mulberry.ody.presentation.feature.creation
 
 import android.location.Location
 import com.mulberry.ody.domain.model.Address
-import com.mulberry.ody.domain.usecase.CreateMeetingUseCase
-import com.mulberry.ody.domain.usecase.GetAddressNameByCoordinateUseCase
 import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.fake.FakeAnalyticsHelper
 import com.mulberry.ody.fake.FakeLocationHelper
@@ -41,14 +39,11 @@ class MeetingCreationViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        val createMeetingUseCase = CreateMeetingUseCase(FakeMeetingRepository)
-        val getAddressNameByCoordinateUseCase = GetAddressNameByCoordinateUseCase(FakeAddressRepository)
-
         viewModel =
             MeetingCreationViewModel(
                 analyticsHelper = FakeAnalyticsHelper,
-                createMeetingUseCase = createMeetingUseCase,
-                getAddressNameByCoordinateUseCase = getAddressNameByCoordinateUseCase,
+                meetingRepository = FakeMeetingRepository,
+                addressRepository = FakeAddressRepository,
                 locationHelper = FakeLocationHelper(fakeCurrentLocation),
             )
     }

@@ -7,7 +7,7 @@ class MeetingName(val name: String) {
 
     companion object {
         private const val MIN_LENGTH = 1
-        const val MAX_LENGTH = 15
+        private const val MAX_LENGTH = 15
         private val LENGTH_RANGE = MIN_LENGTH..MAX_LENGTH
     }
 }

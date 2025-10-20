@@ -2,12 +2,11 @@ package com.mulberry.ody.data.remote.core.entity.join.mapper
 
 import com.mulberry.ody.data.remote.core.entity.join.response.JoinResponse
 import com.mulberry.ody.data.util.convertLocalDateTime
-import com.mulberry.ody.domain.model.EtaOpenInfo
-import com.mulberry.ody.domain.model.MeetingDateTime
+import com.mulberry.ody.domain.model.ReserveInfo
 
-fun JoinResponse.toEtaOpenInfo(): EtaOpenInfo {
-    return EtaOpenInfo(
+fun JoinResponse.toReserveInfo(): ReserveInfo {
+    return ReserveInfo(
         meetingId,
-        MeetingDateTime(convertLocalDateTime(date, time)),
+        convertLocalDateTime(date, time),
     )
 }

@@ -5,7 +5,7 @@ import com.mulberry.ody.domain.model.DetailMeeting
 import com.mulberry.ody.domain.model.MateEtaInfo
 import com.mulberry.ody.domain.model.Meeting
 import com.mulberry.ody.domain.model.MeetingCreationInfo
-import com.mulberry.ody.domain.model.NudgeInfo
+import com.mulberry.ody.domain.model.Nudge
 
 interface MeetingRepository {
     suspend fun fetchInviteCodeValidity(inviteCode: String): ApiResult<Unit>
@@ -28,7 +28,7 @@ interface MeetingRepository {
 
     suspend fun fetchMeeting(meetingId: Long): ApiResult<DetailMeeting>
 
-    suspend fun postNudge(nudgeInfo: NudgeInfo): ApiResult<Unit>
+    suspend fun postNudge(nudge: Nudge): ApiResult<Unit>
 
     suspend fun exitMeeting(meetingId: Long): ApiResult<Unit>
 }

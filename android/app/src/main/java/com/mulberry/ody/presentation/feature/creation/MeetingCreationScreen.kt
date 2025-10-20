@@ -23,7 +23,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,13 +41,11 @@ import com.mulberry.ody.presentation.feature.address.OnReceiveAddress
 import com.mulberry.ody.presentation.feature.creation.date.MeetingDateScreen
 import com.mulberry.ody.presentation.feature.creation.destination.MeetingDestinationScreen
 import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationNavigateAction
-import com.mulberry.ody.presentation.feature.creation.model.MeetingCreationType
 import com.mulberry.ody.presentation.feature.creation.name.MeetingNameScreen
 import com.mulberry.ody.presentation.feature.creation.time.MeetingTimeScreen
 import com.mulberry.ody.presentation.theme.OdyTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @Composable
@@ -125,15 +122,6 @@ fun MeetingCreationScreen(
             nextButtonEnabled = isCreationValid,
             modifier = Modifier.padding(innerPadding),
         )
-    }
-
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }
-            .distinctUntilChanged()
-            .collectLatest { page ->
-                val type = MeetingCreationType.from(page)
-                viewModel.navigateToMeetingCreationPage(type)
-            }
     }
 
     LaunchedEffect(Unit) {

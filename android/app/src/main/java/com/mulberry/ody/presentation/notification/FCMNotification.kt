@@ -46,7 +46,7 @@ class FCMNotification
         fun showNotification(
             type: NotificationType,
             nickname: String,
-            meetingId: Long,
+            meetingId: String,
             meetingName: String,
         ) {
             CoroutineScope(Dispatchers.Default).launch {
@@ -84,7 +84,7 @@ class FCMNotification
 
         private fun getPendingIntent(
             type: NotificationType,
-            meetingId: Long,
+            meetingId: String,
         ): PendingIntent? {
             val navigationTarget =
                 when (type) {
@@ -96,7 +96,7 @@ class FCMNotification
             val parentIntent = MeetingsActivity.getIntent(context)
             stackBuilder.addNextIntent(parentIntent)
 
-            val meetingRoomIntent = MeetingRoomActivity.getIntent(context, meetingId, navigationTarget)
+            val meetingRoomIntent = MeetingRoomActivity.getIntent(context, meetingId.toLong(), navigationTarget)
             stackBuilder.addNextIntent(meetingRoomIntent)
 
             return stackBuilder.getPendingIntent(
