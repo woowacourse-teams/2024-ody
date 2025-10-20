@@ -14,6 +14,7 @@ import com.ody.meeting.dto.response.MateEtaResponsesV2;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.DistanceCalculator;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
@@ -96,5 +97,10 @@ public class EtaService {
     public void deleteByMateId(long mateId) {
         etaRepository.findByMateId(mateId)
                 .ifPresent(etaRepository::delete);
+    }
+
+    @Transactional
+    public void deleteByMates(List<Mate> mates) {
+        etaRepository.deleteAllByMateIn(mates);
     }
 }

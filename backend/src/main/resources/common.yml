@@ -28,16 +28,23 @@ route:
   vendors:
     - name: odsay
       base-url: https://api.odsay.com/v1/api/searchPubTransPathT
-      api-key: ENC(GhWkKC7Mzk3VVY++NGU4a4+LbYKyzlMFNteru6TZXGA748qiSdt/j9IHteHdtOMdDzbNdvQ8HNo=)
+      api-keys:
+        - ENC(060CxJdbrdoqS9I5zpaf0unxJS8BceYFES4VVjZJSbuALmYhocLaU7zMQ6bY5oxDF3UqmK2/I/U=)
+        - ENC(2+eyfQ8qSHcVGr0xrvqWCeK3+Z8krEh+rk7f5otb1ccKXCOZWCNLvagNh2zNzVWbsQRxkgmNsbw=)
+        - ENC(ws5pkqBLpCn0+KDBBvP0jsaitK7zNX5K+E+0fbTTH53tHQnsjB42rNZDn5LUZh6Y7hfnQdHa3EQ=)
+        - ENC(j7Pn0f+Vecvbxy52FyBFo4F0oFSrOZiG/1zoIxHS/tMj/XFpvYV1wW+d1RViMjFwzR2YOZDCb74=)
+        - ENC(H6BytUSHA9dPLaOccRLtjbpN4etoieIEKLhzDIJ7Aoc6DceHuNHhDmm7FRkE2Vpq4ao7E62RaSE=)
+        - ENC(ONezsMfCAlhRQD0bM2TwuyePte1qu9xoDVpDLMn0dwLkAwLru2upqyCrb+dlENjmpsJaAYOQ//w=)
     - name: google
       base-url: https://maps.googleapis.com/maps/api/distancematrix/json
-      api-key: ENC(B/qgWb19BUQN+qdCHQKP7Ocx4xszftoRM4DfcjSIxCXlwgpfvZW4QpFBMGbNqVsf)
+      api-keys:
+        - ENC(n5h1CqLDdLepTHuq8znLmAyQrUWQ4V9aTGHqsqcvbqCJVu/49QQpv2mVuuvipe4x)
 
 auth:
   access-key: ENC(Ve3QKOE7PzbTOpQ6b58Oyi1Qrr9DojPgUA+jCwYcmDdSVdP34Z2eKw==)
   refresh-key: ENC(Ve3QKOE7PzbTOpQ6b58Oyi1Qrr9DojPgUA+jCwYcmDdSVdP34Z2eKw==)
-  access-expiration: 7200000
-  refresh-expiration: 2419200000
+  access-expiration: 7200000 # 2 hours
+  refresh-expiration: 2419200000 # 28 days
 
 fcm:
   config:

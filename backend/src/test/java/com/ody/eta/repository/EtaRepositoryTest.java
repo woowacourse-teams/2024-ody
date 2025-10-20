@@ -63,6 +63,27 @@ class EtaRepositoryTest extends BaseRepositoryTest {
         assertThat(actual.getDeletedAt()).isNotNull();
     }
 
+    @DisplayName("Mate에 속하는 Eta를 삭제(soft delete)한다.")
+    @Test
+    void deleteAllByMateIn() {
+        Mate mate1 = fixtureGenerator.generateMate();
+        Mate mate2 = fixtureGenerator.generateMate();
+        Eta eta1 = fixtureGenerator.generateEta(mate1);
+        Eta eta2 = fixtureGenerator.generateEta(mate2);
+
+        etaRepository.deleteAllByMateIn(List.of(mate1, mate2));
+
+        List<Eta> actual = entityManager.createNativeQuery("select * from eta where id in (?, ?)", Eta.class)
+                .setParameter(1, eta1.getId())
+                .setParameter(2, eta2.getId())
+                .getResultList();
+
+        assertAll(
+                () -> assertThat(actual.get(0).getDeletedAt()).isNotNull(),
+                () -> assertThat(actual.get(1).getDeletedAt()).isNotNull()
+        );
+    }
+
     @DisplayName("삭제된 Eta는 조회하지 않는다.")
     @Test
     void doNotFindDeletedEta() {
