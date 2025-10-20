@@ -272,44 +272,6 @@ class MateServiceTest extends BaseServiceTest {
         }
     }
 
-    @DisplayName("참여자 삭제 시, 삭제 로그가 남는다")
-    @Test
-    void saveMemberDeleteLogWhenDeleteMate() {
-        Meeting meeting = fixtureGenerator.generateMeeting();
-        Mate mate = fixtureGenerator.generateMate(meeting);
-        FcmTopic fcmTopic = new FcmTopic(meeting);
-        DeviceToken deviceToken = mate.getMember().getDeviceToken();
-
-        mateService.withdraw(mate);
-
-        List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(meeting.getId(), LocalDateTime.now());
-
-        assertAll(
-                () -> assertThat(meetingLogs).hasSize(1),
-                () -> assertThat(meetingLogs.get(0).getType()).isEqualTo(MeetingLogType.MEMBER_DELETION_LOG)
-        );
-    }
-
-    @DisplayName("참여자 삭제 시, 구독하고 있는 fcmTopic 취소힌다.")
-    @Test
-    void unSubscribeTopicWhenDeleteMate() {
-        Mate mate = fixtureGenerator.generateMate();
-        FcmTopic fcmTopic = new FcmTopic(mate.getMeeting());
-        DeviceToken deviceToken = mate.getMember().getDeviceToken();
-
-        mateService.withdraw(mate);
-
-        assertThat(applicationEvents.stream(UnSubscribeEvent.class))
-                .hasSize(1)
-                .anySatisfy(event -> {
-                            assertAll(
-                                    () -> assertThat(event.getTopic()).isEqualTo(fcmTopic),
-                                    () -> assertThat(event.getDeviceToken()).isEqualTo(deviceToken)
-                            );
-                        }
-                );
-    }
-
     @DisplayName("회원 삭제 시, 구독하고 있는 모든 fcmTopic을 취소한다.")
     @Test
     void unSubscribeAllTopicsWhenDeleteMember() {

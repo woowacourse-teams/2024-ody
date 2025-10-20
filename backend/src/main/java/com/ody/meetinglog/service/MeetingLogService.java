@@ -27,4 +27,8 @@ public class MeetingLogService {
         List<MeetingLog> meetingLogs = meetingLogRepository.findByShowAtBeforeOrEqualTo(meetingId, LocalDateTime.now());
         return NotiLogFindResponses.from(meetingLogs);
     }
+
+    public void saveAll(List<MeetingLog> meetingLogs) {
+        meetingLogRepository.saveAll(meetingLogs);
+    }
 }
