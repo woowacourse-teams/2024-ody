@@ -1,10 +1,12 @@
 package com.ody.auth.service.apple;
 
 import com.ody.auth.config.AppleProperties;
+import com.ody.auth.domain.MemberAppleToken;
 import com.ody.auth.service.MemberAppleTokenService;
 import com.ody.auth.service.SocialAuthUnlinkClient;
 import com.ody.common.exception.OdyServerErrorException;
 import com.ody.member.domain.AuthProvider;
+import com.ody.member.domain.Member;
 import com.ody.member.domain.ProviderType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,13 +31,13 @@ public class AppleRevokeTokenClient implements SocialAuthUnlinkClient {
     private final AppleClientSecretGenerator appleClientSecretGenerator;
 
     @Override
-    public void unlink(String providerId) {
+    public void unlink(Member member) {
         String clientSecret = appleClientSecretGenerator.generate();
 
-        AuthProvider authProvider = new AuthProvider(ProviderType.APPLE, providerId);
-        String appleRefreshToken = memberAppleTokenService.findAppleRefreshToken(authProvider);
+        AuthProvider authProvider = new AuthProvider(ProviderType.APPLE, member.getAuthProvider().getProviderId());
+        MemberAppleToken appleRefreshToken = memberAppleTokenService.findByMemberId(member.getId());
 
-        revokeToken(clientSecret, authProvider, appleRefreshToken);
+        revokeToken(clientSecret, authProvider, appleRefreshToken.getAppleRefreshToken());
     }
 
     private void revokeToken(String clientSecret, AuthProvider authProvider, String appleRefreshToken) {

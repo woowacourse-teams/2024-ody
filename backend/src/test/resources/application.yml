@@ -30,3 +30,7 @@ route:
 
 allowed-origins:
   api-call: testOrigin
+
+kakao:
+  url: https://kapi.kakao.com/v1/user/unlink
+  admin-key: admin-key
