@@ -105,7 +105,7 @@ jobs:
           max_attempts: 5
           retry_wait_seconds: 6
           command: |
-            response=$(curl -s https://prod.oody.site/actuator/health)
+            response=$(curl -s https://prod.oody.shop/actuator/health)
             status=$(echo $response | jq -r '.status')
             if [ "$status" = "UP" ]; then
               echo "Status is UP. Continuing..."
