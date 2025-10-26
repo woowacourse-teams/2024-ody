@@ -5,9 +5,17 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 
 class MeetingDateTime(val dateTime: LocalDateTime) {
-    init {
-        require(dateTime.isAfter(LocalDateTime.now())) { "약속 시간은 현재 시간보다 이후여야 합니다." }
+    constructor(date: LocalDate, time: LocalTime) : this(LocalDateTime.of(date, time))
+
+    fun isValid(): Boolean {
+        return dateTime.isAfter(LocalDateTime.now())
     }
 
-    constructor(date: LocalDate, time: LocalTime) : this(LocalDateTime.of(date, time))
+    fun isEtaOpenTime(): Boolean {
+        return LocalDateTime.now() >= dateTime.minusMinutes(ETA_OPEN_MINUTE)
+    }
+
+    companion object {
+        private const val ETA_OPEN_MINUTE = 30L
+    }
 }

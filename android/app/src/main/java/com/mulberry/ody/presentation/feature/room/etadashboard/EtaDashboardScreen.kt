@@ -100,7 +100,7 @@ fun EtaDashboardScreen(
         ) { innerPadding ->
             EtaDashboardContent(
                 mateEtas = mateEtas,
-                onClickNudge = { viewModel.nudgeMate(it.userId, it.mateId) },
+                onClickNudge = { viewModel.nudgeMate(it) },
                 modifier =
                     Modifier
                         .padding(innerPadding)

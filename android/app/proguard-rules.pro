@@ -37,7 +37,6 @@
 -keep class com.mulberry.ody.data.local.entity.eta.* { *; }
 -keep class com.mulberry.ody.domain.model.* { *; }
 
-# moshi
--keep class com.squareup.moshi.** { *; }
+# serialization
 -keep class com.mulberry.ody.data.remote.thirdparty.address.response.* { *; }
 -keep class com.mulberry.ody.data.remote.thirdparty.address.response.coord.* { *; }

@@ -13,11 +13,20 @@ data class MeetingCreationUiModel(
     val time: LocalTime = LocalTime.now(),
     val destination: Address? = null,
 ) {
+    fun isValid(type: MeetingCreationType): Boolean {
+        return when (type) {
+            MeetingCreationType.NAME -> isValidName()
+            MeetingCreationType.DATE -> isValidDate()
+            MeetingCreationType.TIME -> isValidTime()
+            MeetingCreationType.DESTINATION -> isValidDestination()
+        }
+    }
+
     fun isValidName(): Boolean = runCatching { MeetingName(name) }.isSuccess
 
-    fun isValidDate(): Boolean = runCatching { MeetingDateTime(date, LocalTime.of(23, 59)) }.isSuccess
+    fun isValidDate(): Boolean = MeetingDateTime(date, LocalTime.of(23, 59)).isValid()
 
-    fun isValidTime(): Boolean = runCatching { MeetingDateTime(date, time) }.isSuccess
+    fun isValidTime(): Boolean = MeetingDateTime(date, time).isValid()
 
     fun isValidDestination(): Boolean = destination?.isValid() ?: false
 

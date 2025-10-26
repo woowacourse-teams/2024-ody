@@ -4,7 +4,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import com.mulberry.ody.data.local.db.OdyDataStore
-import com.mulberry.ody.data.local.service.EtaDashboard
 import com.mulberry.ody.data.local.service.EtaDashboardNotification
 import com.mulberry.ody.presentation.common.gps.GeoLocationHelper
 import com.mulberry.ody.presentation.common.gps.LocationHelper
@@ -52,14 +51,5 @@ object AppModule {
         notificationManager: NotificationManager,
     ): EtaDashboardNotification {
         return EtaDashboardNotification(context, notificationManager)
-    }
-
-    @Provides
-    @Singleton
-    fun provideEtaDashboard(
-        @ApplicationContext context: Context,
-        odyDataStore: OdyDataStore,
-    ): EtaDashboard {
-        return EtaDashboard(context, odyDataStore)
     }
 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
-import com.mulberry.ody.domain.repository.ody.MeetingRepository
+import com.mulberry.ody.domain.usecase.IsValidInviteCodeUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
@@ -21,7 +21,7 @@ class InviteCodeViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val meetingRepository: MeetingRepository,
+        private val isValidInviteCodeUseCase: IsValidInviteCodeUseCase,
     ) : BaseViewModel() {
         private val _invalidCodeEvent: MutableSharedFlow<String> = MutableSharedFlow()
         val invalidCodeEvent: SharedFlow<String> get() = _invalidCodeEvent.asSharedFlow()
@@ -32,7 +32,7 @@ class InviteCodeViewModel
         fun checkInviteCode(inviteCode: String) {
             viewModelScope.launch {
                 startLoading()
-                meetingRepository.fetchInviteCodeValidity(inviteCode)
+                isValidInviteCodeUseCase(inviteCode)
                     .onSuccess {
                         _navigateAction.emit(InviteCodeNavigateAction.CodeNavigateToJoin)
                     }.onFailure { code, errorMessage ->

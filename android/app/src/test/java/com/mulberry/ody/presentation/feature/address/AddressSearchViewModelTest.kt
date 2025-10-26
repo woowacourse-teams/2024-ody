@@ -2,9 +2,9 @@ package com.mulberry.ody.presentation.feature.address
 
 import androidx.paging.map
 import com.mulberry.ody.address
+import com.mulberry.ody.domain.usecase.GetAddressUseCase
 import com.mulberry.ody.fake.FakeAddressRepository
 import com.mulberry.ody.util.CoroutinesTestExtension
-import com.mulberry.ody.util.InstantTaskExecutorExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -14,14 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
-@ExtendWith(InstantTaskExecutorExtension::class)
 class AddressSearchViewModelTest {
     private lateinit var viewModel: AddressSearchViewModel
 
     @BeforeEach
     fun setUp() {
-        viewModel =
-            AddressSearchViewModel(addressRepository = FakeAddressRepository)
+        val getAddressUseCase = GetAddressUseCase(FakeAddressRepository)
+        viewModel = AddressSearchViewModel(getAddressUseCase = getAddressUseCase)
     }
 
     @Test

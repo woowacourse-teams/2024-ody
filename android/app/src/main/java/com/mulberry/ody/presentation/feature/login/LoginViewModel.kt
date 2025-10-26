@@ -5,7 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.mulberry.ody.domain.apiresult.onFailure
 import com.mulberry.ody.domain.apiresult.onNetworkError
 import com.mulberry.ody.domain.apiresult.onSuccess
-import com.mulberry.ody.domain.repository.ody.AuthRepository
+import com.mulberry.ody.domain.usecase.IsLoggedInUseCase
+import com.mulberry.ody.domain.usecase.LoginUseCase
 import com.mulberry.ody.presentation.common.BaseViewModel
 import com.mulberry.ody.presentation.common.analytics.AnalyticsHelper
 import com.mulberry.ody.presentation.common.analytics.logNetworkErrorEvent
@@ -23,7 +24,8 @@ class LoginViewModel
     @Inject
     constructor(
         private val analyticsHelper: AnalyticsHelper,
-        private val authRepository: AuthRepository,
+        private val isLoggedInUseCase: IsLoggedInUseCase,
+        private val loginUseCase: LoginUseCase,
         savedStateHandle: SavedStateHandle,
     ) : BaseViewModel() {
         private val _navigatedReason: MutableSharedFlow<LoginNavigatedReason> = MutableSharedFlow()
@@ -46,7 +48,7 @@ class LoginViewModel
 
         fun verifyLogin() {
             viewModelScope.launch {
-                if (authRepository.isLoggedIn()) {
+                if (isLoggedInUseCase()) {
                     navigateToMeetings()
                 }
             }
@@ -55,7 +57,7 @@ class LoginViewModel
         fun login() {
             viewModelScope.launch {
                 startLoading()
-                authRepository.login()
+                loginUseCase()
                     .onSuccess {
                         navigateToMeetings()
                     }.onFailure { code, errorMessage ->

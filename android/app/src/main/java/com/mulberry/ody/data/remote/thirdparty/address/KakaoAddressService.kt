@@ -15,7 +15,7 @@ interface KakaoAddressService {
     ): ApiResult<AddressResponse>
 
     @GET("/v2/local/geo/coord2address.json")
-    suspend fun fetchAddressesByCoordinate(
+    suspend fun fetchAddressByCoordinate(
         @Query("x") x: String,
         @Query("y") y: String,
     ): ApiResult<AddressByCoordinateResponse>

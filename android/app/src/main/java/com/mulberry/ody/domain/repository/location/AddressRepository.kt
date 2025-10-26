@@ -1,17 +1,18 @@
 package com.mulberry.ody.domain.repository.location
 
+import androidx.paging.PagingData
 import com.mulberry.ody.domain.apiresult.ApiResult
-import com.mulberry.ody.domain.model.Addresses
+import com.mulberry.ody.domain.model.Address
+import kotlinx.coroutines.flow.Flow
 
 interface AddressRepository {
-    suspend fun fetchAddresses(
+    fun fetchAddress(
         keyword: String,
-        page: Int,
         pageSize: Int,
-    ): ApiResult<Addresses>
+    ): Flow<PagingData<Address>>
 
-    suspend fun fetchAddressesByCoordinate(
-        x: String,
-        y: String,
+    suspend fun fetchAddressNameByCoordinate(
+        longitude: String,
+        latitude: String,
     ): ApiResult<String?>
 }
