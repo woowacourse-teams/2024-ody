@@ -55,7 +55,7 @@ public class MemberService {
 
     @Transactional
     public void delete(Member member) {
-        kakaoAuthUnlinkClient.unlink(member);
+        kakaoAuthUnlinkClient.unlink(member.getAuthProvider().getProviderId());
 
         mateService.deleteAllByMember(member);
         memberRepository.delete(member);
@@ -65,7 +65,7 @@ public class MemberService {
     public void deleteV2(Member member) {
         ProviderType providerType = member.getAuthProvider().getProviderType();
         SocialAuthUnlinkClient socialAuthUnlinkClient = socialAuthUnlinkClientFactory.getClient(providerType);
-        socialAuthUnlinkClient.unlink(member);
+        socialAuthUnlinkClient.unlink(member.getAuthProvider().getProviderId());
 
         mateService.deleteAllByMember(member);
         memberRepository.delete(member);

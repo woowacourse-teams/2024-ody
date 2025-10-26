@@ -10,9 +10,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ody.auth.config.KakaoConfig;
 import com.ody.auth.config.KakaoProperties;
-import com.ody.common.Fixture;
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClient;
+import com.ody.auth.service.kakao.KakaoAuthUnlinkClientErrorHandler;
 import com.ody.common.exception.OdyServerErrorException;
-import com.ody.member.domain.Member;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,23 +38,29 @@ class KakaoAuthUnlinkClientTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @TestConfiguration
+    static class FakeKakaoProperties {
+
+        @Bean
+        public KakaoProperties kakaoProperties() {
+            return new KakaoProperties("https://kapi.kakao.com/v1/user/unlink", "admin-key");
+        }
+    }
+
     @DisplayName("카카오 연결 끊기 성공")
     @Test
     void unlinkSuccess() throws JsonProcessingException {
-        Member unlinkMember = Fixture.MEMBER1;
-        Map<String, Object> response = Map.of("id", unlinkMember.getAuthProvider().getProviderId());
+        Map<String, Object> response = Map.of("id", 123456789);
         server.expect(requestTo("https://kapi.kakao.com/v1/user/unlink"))
                 .andRespond(withSuccess(objectMapper.writeValueAsString(response), MediaType.APPLICATION_JSON));
 
-        assertThatCode(() -> kakaoAuthUnlinkClient.unlink(unlinkMember))
+        assertThatCode(() -> kakaoAuthUnlinkClient.unlink("123456789"))
                 .doesNotThrowAnyException();
     }
 
     @DisplayName("카카오 연결 끊기 재시도")
     @Test
     void unlinkWithUnlinkedUser() throws JsonProcessingException {
-        Member unlinkMember = Fixture.MEMBER1;
-
         Map<String, Object> response = Map.of(
                 "msg", "NotRegisteredUserException",
                 "code", -101
@@ -64,15 +70,13 @@ class KakaoAuthUnlinkClientTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(objectMapper.writeValueAsString(response)));
 
-        assertThatCode(() -> kakaoAuthUnlinkClient.unlink(unlinkMember))
+        assertThatCode(() -> kakaoAuthUnlinkClient.unlink("123456789"))
                 .doesNotThrowAnyException();
     }
 
     @DisplayName("카카오 연결 끊기 실패")
     @Test
     void unlinkException() throws JsonProcessingException {
-        Member unlinkMember = Fixture.MEMBER1;
-
         Map<String, Object> response = Map.of(
                 "msg", "IllegalParamException",
                 "code", -2
@@ -82,7 +86,7 @@ class KakaoAuthUnlinkClientTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(objectMapper.writeValueAsString(response)));
 
-        assertThatThrownBy(() -> kakaoAuthUnlinkClient.unlink(unlinkMember))
+        assertThatThrownBy(() -> kakaoAuthUnlinkClient.unlink("123456789"))
                 .isInstanceOf(OdyServerErrorException.class);
     }
 }

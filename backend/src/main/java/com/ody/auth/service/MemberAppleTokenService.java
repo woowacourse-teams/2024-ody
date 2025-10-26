@@ -24,8 +24,9 @@ public class MemberAppleTokenService {
                 .orElseGet(() -> memberAppleTokenRepository.save(new MemberAppleToken(member, appleRefreshToken)));
     }
 
-    public MemberAppleToken findByMemberId(long memberId) {
-        return memberAppleTokenRepository.findByMemberId(memberId)
+    public String findAppleRefreshToken(AuthProvider authProvider) {
+        return memberAppleTokenRepository.findByMember_AuthProvider(authProvider)
+                .map(MemberAppleToken::getAppleRefreshToken)
                 .orElseThrow(() -> new OdyNotFoundException("AppleRefreshToken을 찾을 수 없습니다."));
     }
 

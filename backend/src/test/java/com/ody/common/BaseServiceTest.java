@@ -1,6 +1,6 @@
 package com.ody.common;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -63,8 +63,8 @@ public abstract class BaseServiceTest {
 
     @BeforeEach
     void setUp() {
-        doNothing().when(kakaoAuthUnlinkClient).unlink(any());
-        doNothing().when(appleRevokeTokenClient).unlink(any());
+        doNothing().when(kakaoAuthUnlinkClient).unlink(anyString());
+        doNothing().when(appleRevokeTokenClient).unlink(anyString());
 
         databaseCleaner.clear();
         applicationEvents.clear();

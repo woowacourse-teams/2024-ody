@@ -70,7 +70,7 @@ class MemberServiceTest extends BaseServiceTest {
 
         memberService.deleteV2(member);
 
-        verify(kakaoAuthUnlinkClient, times(1)).unlink(member);
+        verify(kakaoAuthUnlinkClient, times(1)).unlink(member.getAuthProvider().getProviderId());
     }
 
     @DisplayName("애플 회원 탈퇴 시 애플 클라이언트가 호출된다.")
@@ -80,7 +80,7 @@ class MemberServiceTest extends BaseServiceTest {
 
         memberService.deleteV2(member);
 
-        verify(appleRevokeTokenClient, times(1)).unlink(member);
+        verify(appleRevokeTokenClient, times(1)).unlink(member.getAuthProvider().getProviderId());
     }
 
     @DisplayName("삭제 회원을 조회할 수 없다.")
