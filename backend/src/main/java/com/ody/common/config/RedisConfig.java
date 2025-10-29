@@ -1,5 +1,8 @@
 package com.ody.common.config;
 
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -32,5 +35,18 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory);
         return container;
+    }
+
+    @Bean
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        config.useSingleServer()
+                .setAddress("redis://" + redisHost + ":" + redisPort)
+                .setConnectionPoolSize(50)
+                .setConnectionMinimumIdleSize(10)
+                .setIdleConnectionTimeout(10000)
+                .setConnectTimeout(10000)
+                .setTimeout(3000);
+        return Redisson.create(config);
     }
 }
