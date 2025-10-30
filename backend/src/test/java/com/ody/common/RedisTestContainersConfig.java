@@ -52,7 +52,7 @@ public class RedisTestContainersConfig {
     public RedissonClient redissonClient() {
         Config config = new Config();
         config.useSingleServer()
-                .setAddress("redis://" + redisContainer.getHost() + ":" + REDIS_PORT)
+                .setAddress("redis://" + redisContainer.getHost() + ":" + redisContainer.getMappedPort(REDIS_PORT))
                 .setConnectionPoolSize(50)
                 .setConnectionMinimumIdleSize(10)
                 .setIdleConnectionTimeout(10000)
