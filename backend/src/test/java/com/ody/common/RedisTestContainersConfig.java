@@ -1,6 +1,9 @@
 package com.ody.common;
 
 import java.time.Duration;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -43,5 +46,18 @@ public class RedisTestContainersConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory);
         return container;
+    }
+
+    @Bean
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        config.useSingleServer()
+                .setAddress("redis://" + redisContainer.getHost() + ":" + redisContainer.getMappedPort(REDIS_PORT))
+                .setConnectionPoolSize(50)
+                .setConnectionMinimumIdleSize(10)
+                .setIdleConnectionTimeout(10000)
+                .setConnectTimeout(10000)
+                .setTimeout(3000);
+        return Redisson.create(config);
     }
 }

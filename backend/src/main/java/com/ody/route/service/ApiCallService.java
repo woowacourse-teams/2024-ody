@@ -51,11 +51,13 @@ public class ApiCallService {
         return new ApiCallEnabledResponse(enabled);
     }
 
+    @Transactional
     public boolean getEnabledByClientType(ClientType clientType) {
         ApiCall apiCall = findOrSaveTodayApiCallByClientType(clientType);
         return apiCall.getEnabled();
     }
 
+    @Transactional
     public ApiCall findOrSaveTodayApiCallByClientType(ClientType clientType) {
         LocalDate now = LocalDate.now();
         return apiCallRepository.findByDateAndClientType(now, clientType)

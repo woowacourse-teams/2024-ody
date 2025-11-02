@@ -39,6 +39,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -259,6 +260,68 @@ class MeetingServiceTest extends BaseServiceTest {
 
         assertThatCode(() -> meetingService.saveMateAndSendNotifications(mateSaveRequest, member))
                 .doesNotThrowAnyException();
+    }
+
+    @DisplayName("이미 약속에 참여해 있으면 참여하지 못한다.")
+    @Test
+    void saveMateFail_When_AlreadyAttended() {
+        LocalDateTime oneMinutesLater = TimeUtil.nowWithTrim().plusMinutes(1L);
+        Meeting notOverdueMeeting = fixtureGenerator.generateMeeting(oneMinutesLater);
+        Member member = fixtureGenerator.generateMember();
+        MateSaveRequestV2 mateSaveRequest = dtoGenerator.generateMateSaveRequest(notOverdueMeeting);
+
+        meetingService.saveMateAndSendNotifications(mateSaveRequest, member);
+
+        assertThatThrownBy(() -> meetingService.saveMateAndSendNotifications(mateSaveRequest, member))
+                .isInstanceOf(OdyBadRequestException.class);
+    }
+
+    @DisplayName("회원의 약속 참여 동시성 문제가 발생하지 않는다")
+    @Test
+    void saveMate_ConCurrencyTest() throws InterruptedException {
+        // given
+        int threadCount = 2;
+        LocalDateTime oneMinutesLater = TimeUtil.nowWithTrim().plusMinutes(1L);
+        Meeting meeting = fixtureGenerator.generateMeeting(oneMinutesLater);
+        Member member = fixtureGenerator.generateMember();
+        MateSaveRequestV2 request = dtoGenerator.generateMateSaveRequest(meeting);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        CountDownLatch startLatch = new CountDownLatch(1);
+        CountDownLatch doneLatch = new CountDownLatch(threadCount);
+
+        AtomicInteger successCount = new AtomicInteger(0);
+        AtomicInteger failCount = new AtomicInteger(0);
+
+        // when
+        for (int i = 0; i < threadCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    startLatch.await();
+                    try {
+                        meetingService.saveMateAndSendNotifications(request, member);
+                        successCount.incrementAndGet();
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        failCount.incrementAndGet();
+                    }
+
+                } catch (InterruptedException ignored) {
+                } finally {
+                    doneLatch.countDown();
+                }
+            });
+        }
+
+        // 모든 스레드 동시에 실행
+        startLatch.countDown();
+        doneLatch.await();
+
+        // then
+        assertThat(successCount.get()).isEqualTo(1);
+        assertThat(failCount.get()).isEqualTo(threadCount - 1);
+
+        executorService.shutdown();
     }
 
     @DisplayName("지난 약속에 참여가 불가하다")

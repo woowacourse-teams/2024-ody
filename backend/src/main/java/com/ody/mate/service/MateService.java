@@ -1,8 +1,10 @@
 package com.ody.mate.service;
 
+import com.ody.common.annotation.DistributedLock;
 import com.ody.common.aop.EnableDeletedFilter;
 import com.ody.common.exception.OdyBadRequestException;
 import com.ody.common.exception.OdyNotFoundException;
+import com.ody.common.exception.OdyServerErrorException;
 import com.ody.eta.domain.EtaStatus;
 import com.ody.eta.dto.request.MateEtaRequest;
 import com.ody.eta.service.EtaSchedulingService;
@@ -29,11 +31,14 @@ import com.ody.route.domain.DepartureTime;
 import com.ody.route.domain.RouteTime;
 import com.ody.route.service.RouteService;
 import com.ody.util.TimeUtil;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -53,6 +58,11 @@ public class MateService {
     private final EtaSchedulingService etaSchedulingService;
 
     @Transactional
+    @DistributedLock(
+            key = "'mate:create:' + #meeting.id + ':' + #member.id",
+            waitTime = 5,
+            leaseTime = 10
+    )
     public MateSaveResponseV2 saveAndSendNotifications(
             MateSaveRequestV2 mateSaveRequest,
             Member member,
