@@ -2,7 +2,8 @@ name: backend-cd-prod-v3
 
 on:
   push:
-    - feature/1082
+    branches:
+      - feature/1082
 
 env:
   DOCKERHUB_REPOSITORY: ody-official
