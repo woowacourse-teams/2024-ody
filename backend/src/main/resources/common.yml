@@ -29,7 +29,7 @@ route:
     - name: odsay
       base-url: https://api.odsay.com/v1/api/searchPubTransPathT
       api-keys:
-        - ENC(SaP3S8go6g4ggZMxccJ9vJFeir+JnftDa47wetE8+bEPUk8WS6il8roz3M2ZTzBp0hDS4LxfDWc=)
+        - ENC(p6lWQPHqRPhrvgB3vCf9PeZGM7B2DVdOwG/lmaA03AqQnXOw+yfoP8e2zCXEdDKY9aSMxAghQr8=)
     - name: google
       base-url: https://maps.googleapis.com/maps/api/distancematrix/json
       api-keys:
