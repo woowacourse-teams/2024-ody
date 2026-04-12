@@ -29,12 +29,7 @@ route:
     - name: odsay
       base-url: https://api.odsay.com/v1/api/searchPubTransPathT
       api-keys:
-        - ENC(060CxJdbrdoqS9I5zpaf0unxJS8BceYFES4VVjZJSbuALmYhocLaU7zMQ6bY5oxDF3UqmK2/I/U=)
-        - ENC(2+eyfQ8qSHcVGr0xrvqWCeK3+Z8krEh+rk7f5otb1ccKXCOZWCNLvagNh2zNzVWbsQRxkgmNsbw=)
-        - ENC(ws5pkqBLpCn0+KDBBvP0jsaitK7zNX5K+E+0fbTTH53tHQnsjB42rNZDn5LUZh6Y7hfnQdHa3EQ=)
-        - ENC(j7Pn0f+Vecvbxy52FyBFo4F0oFSrOZiG/1zoIxHS/tMj/XFpvYV1wW+d1RViMjFwzR2YOZDCb74=)
-        - ENC(H6BytUSHA9dPLaOccRLtjbpN4etoieIEKLhzDIJ7Aoc6DceHuNHhDmm7FRkE2Vpq4ao7E62RaSE=)
-        - ENC(ONezsMfCAlhRQD0bM2TwuyePte1qu9xoDVpDLMn0dwLkAwLru2upqyCrb+dlENjmpsJaAYOQ//w=)
+        - ENC(p6lWQPHqRPhrvgB3vCf9PeZGM7B2DVdOwG/lmaA03AqQnXOw+yfoP8e2zCXEdDKY9aSMxAghQr8=)
     - name: google
       base-url: https://maps.googleapis.com/maps/api/distancematrix/json
       api-keys:
